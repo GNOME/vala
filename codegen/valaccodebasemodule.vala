@@ -5192,6 +5192,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_typeof_expression (TypeofExpression expr) {
+		cfile.add_include ("glib-object.h");
+
 		set_cvalue (expr, get_type_id_expression (expr.type_reference));
 	}
 

@@ -187,6 +187,7 @@ TESTS = \
 	control-semantic/printf-too-few.test \
 	control-semantic/printf-too-many.test \
 	control-semantic/variadic-argument-invalid.test \
+	enums/default-gtype.vala \
 	enums/enum_only.vala \
 	enums/enum-no-gtype.vala \
 	enums/enums.vala \
@@ -205,6 +206,7 @@ TESTS = \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
+	structs/default-gtype.vala \
 	structs/gvalue.vala \
 	structs/bug530605.vala \
 	structs/bug572091.vala \
@@ -378,6 +380,7 @@ TESTS = \
 	objects/bug795521.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
+	errors/default-gtype.vala \
 	errors/errors.vala \
 	errors/errorcode.vala \
 	errors/errordomain.vala \
