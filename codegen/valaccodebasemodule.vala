@@ -1400,7 +1400,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		pop_line ();
 	}
 
-	public bool is_constant_ccode_expression (CCodeExpression cexpr) {
+	public static bool is_constant_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant) {
 			return true;
 		} else if (cexpr is CCodeCastExpression) {
@@ -1431,7 +1431,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	 * Returns whether the passed cexpr is a pure expression, i.e. an
 	 * expression without side-effects.
 	 */
-	public bool is_pure_ccode_expression (CCodeExpression cexpr) {
+	public static bool is_pure_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant || cexpr is CCodeIdentifier) {
 			return true;
 		} else if (cexpr is CCodeBinaryExpression) {
@@ -2442,7 +2442,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	bool is_foreach_element_variable (LocalVariable local) {
+	static bool is_foreach_element_variable (LocalVariable local) {
 		var block = local.parent_symbol;
 		if (block != null) {
 			var stmt = block.parent_symbol as ForeachStatement;
@@ -4046,7 +4046,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_expression (ccall);
 	}
 
-	bool is_compact_class_destructor_call (Expression expr) {
+	static bool is_compact_class_destructor_call (Expression expr) {
 		unowned Class? cl = expr.value_type.data_type as Class;
 		if (cl != null && cl.is_compact && expr.parent_node is MemberAccess) {
 			unowned MethodType? mt = ((MemberAccess) expr.parent_node).value_type as MethodType;
@@ -4313,7 +4313,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return null;
 	}
 
-	bool is_limited_generic_type (GenericType type) {
+	static bool is_limited_generic_type (GenericType type) {
 		var cl = type.type_parameter.parent_symbol as Class;
 		var st = type.type_parameter.parent_symbol as Struct;
 		if ((cl != null && cl.is_compact) || st != null) {
@@ -4324,7 +4324,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return false;
 	}
 
-	public bool requires_copy (DataType type) {
+	public static bool requires_copy (DataType type) {
 		if (!type.is_disposable ()) {
 			return false;
 		}
@@ -4345,7 +4345,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return true;
 	}
 
-	public bool requires_destroy (DataType type) {
+	public static bool requires_destroy (DataType type) {
 		if (!type.is_disposable ()) {
 			return false;
 		}
