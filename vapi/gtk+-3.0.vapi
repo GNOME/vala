@@ -10076,6 +10076,7 @@ namespace Gtk {
 		public void move (int x, int y);
 		[Version (deprecated = true, deprecated_since = "3.20")]
 		public bool parse_geometry (string geometry);
+		[Version (deprecated = true, deprecated_since = "3.24")]
 		public void present ();
 		[Version (since = "2.8")]
 		public void present_with_time (uint32 timestamp);

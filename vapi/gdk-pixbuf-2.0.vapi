@@ -83,6 +83,8 @@ namespace Gdk {
 		public unowned uint8[] get_pixels_with_length ();
 		public int get_rowstride ();
 		public int get_width ();
+		[Version (since = "2.40")]
+		public static bool init_modules (string path) throws GLib.Error;
 		[Version (since = "2.32")]
 		public GLib.Bytes read_pixel_bytes ();
 		[Version (since = "2.32")]
