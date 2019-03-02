@@ -552,8 +552,20 @@ public class Vala.CodeContext {
 	 * @param target_glib a string of the format "%d.%d"
 	 */
 	public void set_target_glib_version (string target_glib) {
-		int glib_major = target_glib_major;
-		int glib_minor = target_glib_minor;
+		int glib_major = 0;
+		int glib_minor = 0;
+
+		if (target_glib == "auto") {
+			var available_glib = pkg_config_modversion ("glib-2.0");
+			if (available_glib != null && available_glib.scanf ("%d.%d", out glib_major, out glib_minor) >= 2) {
+				glib_minor -= ++glib_minor % 2;
+				set_target_glib_version ("%d.%d".printf (glib_major, glib_minor));
+				return;
+			}
+		}
+
+		glib_major = target_glib_major;
+		glib_minor = target_glib_minor;
 
 		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2
 		    || glib_minor % 2 != 0) {
