@@ -1,3 +1,33 @@
+Vala 0.42.6
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Replace some unfortunate asserts with internal error reports
+    + Properly handle and catch inner-error of finally-block (#742)
+    + Pass lambda expression of variable initializer to signal connect
+    + Respect array_length_cname attribute for global fields
+  - vala:
+	+ Check inferred variable_type of LocalVariables
+	+ Parser doesn't ensure "protected" to be applied on TypeSymbol members
+  - girparser: Correctly set array_length_type for delegates returning an array
+  - girwriter:
+    + Support transfer-ownership="container" for arrays
+    + Always use get_gir_name() for TypeSymbols
+  - libvaladoc:
+    + Don't change the size of an array in-parameter
+    + Properly support the output of async constructors (#753)
+  - valadoc: Report warning if resources for doclet could not be copied
+  - g-i: Fix return value on error in start_discriminator()
+
+ * Bindings:
+  - atk-1.0: Adjust for upstream revert of Implementor using G_DEFINE_INTERFACE
+  - clutter-1.0: Drop deprecated from Actor.pick() (#625)
+  - gdk-3.0: Update to 3.24.4+a0129f55
+  - gtk+-unix-print-*.0: Fix PrintJob.get_page_ranges(),
+    Printer.get_hard_margins()
+  - gobject-2.0: Add SignalHandler.disconnect_by_data()
+  - poppler-glib: Update to 0.74
+
 Vala 0.42.5
 ===========
  * Various improvements and bug fixes:
