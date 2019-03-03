@@ -1,3 +1,30 @@
+Vala 0.43.92
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Allow to associate CCodeFile to actual SourceFile
+    + Only emit declaration of *_register_type if needed
+    + Add get_variable_array_length_cname() and use as possible
+    + Respect array_length_cname attribute for global fields
+    + Replace gvaluecollector_h_needed with dedidated add_include() calls
+    + Respect finish[_vfunc]_name attributes defined in vala sources
+    + Include "glib-object.h" for typeof expression
+  - vala:
+    + Correctly perform compatibility check of array length-type [#607]
+    + Don't ignore qualified parent when inferring type of enum member [#666035]
+  - girwriter:
+    + Support transfer-ownership="container" for arrays
+    + Always use get_gir_name() for TypeSymbols
+  - testrunner: Add support for Genie source files (.gs)
+  - tests: Add some Genie tests to increase coverage
+  - genie: Allow main function "init" to return integer as exit status [#402]
+
+ * Bindings:
+  - gobject-2.0: Add SignalHandler.disconnect_by_data()
+  - poppler-glib: Update to 0.74
+  - gtk4: Update to 3.94.0+b4ae491b
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.91
 ============
  * Various improvements and bug fixes:
