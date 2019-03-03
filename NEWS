@@ -1,3 +1,45 @@
+Vala 0.36.18
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use temp-vars for ellipsis out-arguments to fix memory management (#722)
+    + Don't check boolean values for (in)equality in GTask API (#726)
+    + Properly set annotations field of GDBus*Info struct to NULL
+    + Cast instance and result of g_async_initable_new_finish() call
+    + Use a parameter-map for creation of delegate declaration [#728]
+    + Emit struct declaration typedef before resolving its fields [#318]
+    + Don't apply address-of operator on literals when casting to array
+    + Replace some unfortunate asserts with internal error reports
+    + Properly handle and catch inner-error of finally-block (#742)
+  - vala:
+    + Report invalid instance member access to property (#605)
+	+ Check inferred variable_type of LocalVariables
+	+ Parser doesn't ensure "protected" to be applied on TypeSymbol members
+  - girparser:
+    + Async methods don't allow out-parameters before in-parameters
+    + Correctly set array_length_type for delegates returning an array
+  - girwriter:
+    + Support transfer-ownership="container" for arrays
+    + Always use get_gir_name() for TypeSymbols
+  - g-i: Fix return value on error in start_discriminator()
+  - compiler: Report deprecated command-line option "--thread"
+  - Add a basic CONTRIBUTING.md file that links to the relevant Wiki page
+
+ * Bindings:
+  - clutter-1.0: Fix BindingPool.override_action()
+  - clutter-1.0: Drop deprecated from Actor.pick() (#625)
+  - gdk-3.0: Fix ownership of FrameClock.get_current_timings/get_timings()
+  - gtk+-unix-print-*.0: Fix PrintJob.get_page_ranges(),
+    Printer.get_hard_margins()
+  - glib-2.0: Use correct array-length-type for returned arrays (#171)
+  - gio-2.0: Fix File.replace_contents_bytes_async() (!37)
+  - gobject-2.0: Minor syncing from GIR
+  - gobject-2.0: Use correct array-length-type for returned arrays
+  - gobject-2.0: Add SignalHandler.disconnect_by_data()
+  - libsoup-2.4: Fix Message.add_*_handler() [#731]
+  - poppler-glib: Update to 0.74
+  - sqlite3: Correct return C type of Statement.column_text & Value.to_text
+
 Vala 0.36.17
 ============
  * Various improvements and bug fixes:
