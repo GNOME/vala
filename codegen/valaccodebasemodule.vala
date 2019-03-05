@@ -4043,9 +4043,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
-		var pointer_type = (PointerType) stmt.expression.value_type;
-		DataType type = pointer_type;
-		if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
+		unowned DataType type = stmt.expression.value_type;
+		unowned PointerType? pointer_type = type as PointerType;
+		if (pointer_type != null && pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
 			type = pointer_type.base_type;
 		}
 
