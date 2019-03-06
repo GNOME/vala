@@ -3308,14 +3308,14 @@ namespace Linux {
         [CCode (cname="CN_NETLINK_USERS")]
         public const int NETLINK_USERS;
 
-        [CCode (cname = "struct cb_id", has_type_id = false, destroy_function = "")]
+        [CCode (cname = "struct cb_id", has_type_id = false)]
         public struct CbId {
-            public Linux.Connector.IDX idx;
+            public Linux.Connector.Idx idx;
             public Linux.Connector.Val val;
         }
 
-        [CCode (cname = "struct cn_msg", has_type_id = false, destroy_function = "")]
-        public struct CnMsg {
+        [CCode (cname = "struct cn_msg", has_type_id = false)]
+        public struct Message {
             public Linux.Connector.CbId id;
 
             public uint32 seq;
@@ -3334,7 +3334,7 @@ namespace Linux {
         }
 
         [CCode (cname = "__u32", has_type_id = false, cprefix = "CN_IDX_")]
-        public enum IDX {
+        public enum Idx {
             PROC,
             CIFS,
             [CCode (cname = "CN_W1_IDX")]
