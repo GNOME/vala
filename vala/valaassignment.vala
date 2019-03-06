@@ -413,6 +413,10 @@ public class Vala.Assignment : Expression {
 			value_type = null;
 		}
 
+		if (value_type != null) {
+			value_type.check (context);
+		}
+
 		return !error;
 	}
 

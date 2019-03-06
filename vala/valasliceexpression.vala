@@ -145,6 +145,7 @@ public class Vala.SliceExpression : Expression {
 		if (container.value_type is ArrayType) {
 			value_type = container.value_type.copy ();
 			value_type.value_owned = false;
+			value_type.check (context);
 
 			/* check if the index is of type integer */
 			if (!(start.value_type is IntegerType || start.value_type is EnumValueType)) {

@@ -630,6 +630,8 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
+		value_type.check (context);
+
 		if (tree_can_fail) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call

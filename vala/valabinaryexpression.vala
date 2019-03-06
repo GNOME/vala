@@ -528,6 +528,8 @@ public class Vala.BinaryExpression : Expression {
 			assert_not_reached ();
 		}
 
+		value_type.check (context);
+
 		return !error;
 	}
 

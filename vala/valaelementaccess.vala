@@ -247,6 +247,8 @@ public class Vala.ElementAccess : Expression {
 			}
 		}
 
+		value_type.check (context);
+
 		return !error;
 	}
 

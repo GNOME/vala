@@ -109,6 +109,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 		value_type = inner.value_type.copy ();
 		value_type.value_owned = true;
+		value_type.check (context);
 
 		return !error;
 	}

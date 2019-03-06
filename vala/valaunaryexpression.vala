@@ -236,6 +236,8 @@ public class Vala.UnaryExpression : Expression {
 			return false;
 		}
 
+		value_type.check (context);
+
 		return !error;
 	}
 

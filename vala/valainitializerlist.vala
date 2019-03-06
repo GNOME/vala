@@ -247,6 +247,10 @@ public class Vala.InitializerList : Expression {
 			value_type.nullable = false;
 		}
 
+		if (value_type != null) {
+			value_type.check (context);
+		}
+
 		return !error;
 	}
 
