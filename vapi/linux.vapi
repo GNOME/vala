@@ -3218,15 +3218,15 @@ namespace Linux {
         [CCode (cname="CN_NETLINK_USERS")]
         public const int NETLINK_USERS;
 
-        [CCode (cname = "struct cb_id", has_type_id = false, destroy_function = "")]
-        public struct CbId {
+        [CCode (cname = "struct cb_id", has_type_id = false)]
+        public struct CallbackId {
             public Linux.Connector.IDX idx;
             public Linux.Connector.Val val;
         }
 
-        [CCode (cname = "struct cn_msg", has_type_id = false, destroy_function = "")]
-        public struct CnMsg {
-            public Linux.Connector.CbId id;
+        [CCode (cname = "struct cn_msg", has_type_id = false)]
+        public struct Message {
+            public Linux.Connector.CallbackId id;
 
             public uint32 seq;
             public uint32 ack;
