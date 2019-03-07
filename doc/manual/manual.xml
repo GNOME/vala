@@ -2342,6 +2342,11 @@
 <para>destroy_notify_pos</para></entry><entry colsep="1" rowsep="1">
 <para>parameter</para></entry><entry colsep="1" rowsep="1">
 <para>double</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
+<para>direct_generics</para></entry><entry colsep="1" rowsep="1">
+<para>generic type</para></entry><entry colsep="1" rowsep="1">
+<para>boolean</para></entry><entry colsep="1" rowsep="1">
+<para>true</para></entry></row><row rowsep="1"><entry colsep="1" nameend="col_3" namest="col_0" rowsep="1">
+<para> Indicates that the generic parameters are used directly and need not fit in a pointer</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>free_function</para></entry><entry colsep="1" rowsep="1">
 <para>class</para></entry><entry colsep="1" rowsep="1">
 <para>string</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
