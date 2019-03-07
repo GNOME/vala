@@ -5291,16 +5291,17 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.22")]
-	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
+	[CCode (direct_generics = true, ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
 	public class Array<G> {
 		[CCode (cname = "len")]
 		public uint length;
 		[CCode (cname = "data", array_length_cname = "len", array_length_type = "uint")]
 		public G[] data;
 
-		public Array (bool zero_terminated = true, bool clear = true, ulong element_size = 0);
+		public Array (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G));
 		[CCode (cname = "g_array_sized_new")]
-		public Array.sized (bool zero_terminated, bool clear, ulong element_size, uint reserved_size);
+		public Array.sized (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G), uint reserved_size = 0);
+
 		public void append_val (owned G value);
 		public void append_vals (void* data, uint len);
 		public void prepend_val (owned G value);
