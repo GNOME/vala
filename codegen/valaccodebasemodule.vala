@@ -4644,6 +4644,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	bool is_direct_generic_argument (DataType type_arg) {
+		return !type_arg.nullable
+			&& type_arg.data_type != null
+			&& type_arg.data_type is Struct;
+	}
+
+	bool is_direct_generic_type (DataType type) {
+		if (type.data_type != null) {
+			return type.data_type.get_attribute_bool ("CCode", "direct_generics", false);
+		}
+
+		return false;
+	}
+
 	public void check_type (DataType type) {
 		var array_type = type as ArrayType;
 		if (array_type != null) {
@@ -4657,9 +4671,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 		}
+		var direct_generics = is_direct_generic_type (type);
 		foreach (var type_arg in type.get_type_arguments ()) {
 			check_type (type_arg);
-			check_type_argument (type_arg);
+			check_type_argument (type_arg, direct_generics);
 		}
 	}
 
@@ -4670,13 +4685,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	void check_type_argument (DataType type_arg) {
+	void check_type_argument (DataType type_arg, bool direct_generics = false) {
 		if (type_arg is GenericType
 		    || type_arg is PointerType
 		    || is_reference_type_argument (type_arg)
 		    || is_nullable_value_type_argument (type_arg)
 		    || is_signed_integer_type_argument (type_arg)
-		    || is_unsigned_integer_type_argument (type_arg)) {
+		    || is_unsigned_integer_type_argument (type_arg)
+		    || (direct_generics ? is_direct_generic_argument (type_arg) : false)) {
 			// no error
 		} else if (type_arg is DelegateType) {
 			var delegate_type = (DelegateType) type_arg;
@@ -5143,10 +5159,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (cl == garray_type) {
 				var type_arg = expr.type_reference.get_type_arguments ().get (0);
 				if (requires_destroy (type_arg)) {
-					var free_wrapper = generate_destroy_function_content_of_wrapper (type_arg);
 					var clear_func = new CCodeFunctionCall (new CCodeIdentifier ("g_array_set_clear_func"));
 					clear_func.add_argument (get_cvalue_ (expr.target_value));
-					clear_func.add_argument (new CCodeIdentifier (free_wrapper));
+					if (is_direct_generic_argument (type_arg)) {
+						clear_func.add_argument (new CCodeCastExpression (new CCodeIdentifier (get_ccode_destroy_function (type_arg.data_type)), "GDestroyNotify"));
+					} else {
+						var free_wrapper = generate_destroy_function_content_of_wrapper (type_arg);
+						clear_func.add_argument (new CCodeIdentifier (free_wrapper));
+					}
 					ccode.add_expression (clear_func);
 				}
 			}
