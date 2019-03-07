@@ -6217,12 +6217,39 @@ namespace Gsk {
 		public TextureNode (Gdk.Texture texture, Graphene.Rect bounds);
 		public unowned Gdk.Texture get_texture ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_transform_ref", type_id = "gsk_transform_get_type ()", unref_function = "gsk_transform_unref")]
+	[Compact]
+	public class Transform {
+		[CCode (has_construct_function = false)]
+		public Transform ();
+		public bool equal (Gsk.Transform second);
+		public Gsk.TransformCategory get_category ();
+		public Gsk.Transform invert ();
+		public Gsk.Transform matrix (Graphene.Matrix matrix);
+		public Gsk.Transform perspective (float depth);
+		public void print (GLib.StringBuilder string);
+		public unowned Gsk.Transform @ref ();
+		public Gsk.Transform rotate (float angle);
+		public Gsk.Transform rotate_3d (float angle, Graphene.Vec3 axis);
+		public Gsk.Transform scale (float factor_x, float factor_y);
+		public Gsk.Transform scale_3d (float factor_x, float factor_y, float factor_z);
+		public void to_2d (out float out_xx, out float out_yx, out float out_xy, out float out_yy, out float out_dx, out float out_dy);
+		public void to_affine (out float out_scale_x, out float out_scale_y, out float out_dx, out float out_dy);
+		public Graphene.Matrix to_matrix ();
+		public string to_string ();
+		public void to_translate (out float out_dx, out float out_dy);
+		public Gsk.Transform transform (Gsk.Transform? other);
+		public Graphene.Rect transform_bounds (Graphene.Rect rect);
+		public Gsk.Transform translate (Graphene.Point point);
+		public Gsk.Transform translate_3d (Graphene.Point3D point);
+		public void unref ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TransformNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public TransformNode (Gsk.RenderNode child, Graphene.Matrix transform);
+		public TransformNode (Gsk.RenderNode child, Gsk.Transform transform);
 		public unowned Gsk.RenderNode get_child ();
-		public unowned Graphene.Matrix? peek_transform ();
+		public Gsk.Transform get_transform ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
 	public struct ColorStop {
@@ -6308,6 +6335,16 @@ namespace Gsk {
 		LINEAR,
 		NEAREST,
 		TRILINEAR
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_TRANSFORM_CATEGORY_", type_id = "gsk_transform_category_get_type ()")]
+	public enum TransformCategory {
+		UNKNOWN,
+		ANY,
+		@3D,
+		@2D,
+		@2D_AFFINE,
+		@2D_TRANSLATE,
+		IDENTITY
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SERIALIZATION_")]
 	public errordomain SerializationError {
@@ -7555,7 +7592,6 @@ namespace Gtk {
 		public Gtk.InputPurpose get_input_purpose ();
 		public unichar get_invisible_char ();
 		public int get_max_length ();
-		public int get_max_width_chars ();
 		public bool get_overwrite_mode ();
 		public unowned string? get_placeholder_text ();
 		public double get_progress_fraction ();
@@ -7563,7 +7599,6 @@ namespace Gtk {
 		public unowned Pango.TabArray? get_tabs ();
 		public uint16 get_text_length ();
 		public bool get_visibility ();
-		public int get_width_chars ();
 		public void grab_focus_without_selecting ();
 		public void progress_pulse ();
 		public void reset_im_context ();
@@ -7585,15 +7620,12 @@ namespace Gtk {
 		public void set_input_purpose (Gtk.InputPurpose purpose);
 		public void set_invisible_char (unichar ch);
 		public void set_max_length (int max);
-		public void set_max_width_chars (int n_chars);
 		public void set_overwrite_mode (bool overwrite);
 		public void set_placeholder_text (string? text);
 		public void set_progress_fraction (double fraction);
 		public void set_progress_pulse_step (double fraction);
 		public void set_tabs (Pango.TabArray? tabs);
-		public void set_text (string text);
 		public void set_visibility (bool visible);
-		public void set_width_chars (int n_chars);
 		public void unset_invisible_char ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Entry.with_buffer (Gtk.EntryBuffer buffer);
@@ -10337,6 +10369,7 @@ namespace Gtk {
 		public Gsk.RenderNode free_to_node ();
 		[DestroysInstance]
 		public Gdk.Paintable free_to_paintable (Graphene.Size? size);
+		public void perspective (float depth);
 		public void pop ();
 		public void push_blend (Gsk.BlendMode blend_mode);
 		public void push_blur (double radius);
@@ -10361,7 +10394,7 @@ namespace Gtk {
 		public void scale_3d (float factor_x, float factor_y, float factor_z);
 		public Gsk.RenderNode to_node ();
 		public Gdk.Paintable to_paintable (Graphene.Size? size);
-		public void transform (Gtk.Transform? transform);
+		public void transform (Gsk.Transform? transform);
 		public void transform_matrix (Graphene.Matrix matrix);
 		public void translate (Graphene.Point point);
 		public void translate_3d (Graphene.Point3D point);
@@ -10390,26 +10423,21 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_adjustment ();
 		public uint get_digits ();
 		public void get_increments (out double step, out double page);
-		public int get_max_width_chars ();
 		public bool get_numeric ();
 		public void get_range (out double min, out double max);
 		public bool get_snap_to_ticks ();
 		public Gtk.SpinButtonUpdatePolicy get_update_policy ();
 		public double get_value ();
 		public int get_value_as_int ();
-		public int get_width_chars ();
 		public bool get_wrap ();
 		public void set_adjustment (Gtk.Adjustment adjustment);
 		public void set_digits (uint digits);
 		public void set_increments (double step, double page);
-		public void set_max_width_chars (int max_width_chars);
 		public void set_numeric (bool numeric);
 		public void set_range (double min, double max);
 		public void set_snap_to_ticks (bool snap_to_ticks);
-		public void set_text (string text);
 		public void set_update_policy (Gtk.SpinButtonUpdatePolicy policy);
 		public void set_value (double value);
-		public void set_width_chars (int width_chars);
 		public void set_wrap (bool wrap);
 		public void spin (Gtk.SpinType direction, double increment);
 		public void update ();
@@ -11228,29 +11256,6 @@ namespace Gtk {
 		protected ToplevelAccessible ();
 		public unowned GLib.List<Gtk.Window> get_children ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_transform_ref", type_id = "gtk_transform_get_type ()", unref_function = "gtk_transform_unref")]
-	[Compact]
-	public class Transform {
-		[CCode (has_construct_function = false)]
-		public Transform ();
-		public bool equal (Gtk.Transform second);
-		public unowned Gtk.Transform? get_next ();
-		public Gtk.TransformType get_transform_type ();
-		public Gtk.Transform identity ();
-		public Gtk.Transform matrix (Graphene.Matrix matrix);
-		public void print (GLib.StringBuilder str);
-		public unowned Gtk.Transform @ref ();
-		public Gtk.Transform rotate (float angle);
-		public Gtk.Transform rotate_3d (float angle, Graphene.Vec3 axis);
-		public Gtk.Transform scale (float factor_x, float factor_y);
-		public Gtk.Transform scale_3d (float factor_x, float factor_y, float factor_z);
-		public Graphene.Matrix to_matrix ();
-		public string to_string ();
-		public Gtk.Transform transform (Gtk.Transform? other);
-		public Gtk.Transform translate (Graphene.Point point);
-		public Gtk.Transform translate_3d (Graphene.Point3D point);
-		public void unref ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_list_model_get_type ()")]
 	public class TreeListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
@@ -11693,7 +11698,7 @@ namespace Gtk {
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
-		public void allocate (int width, int height, int baseline, Gtk.Transform? transform);
+		public void allocate (int width, int height, int baseline, Gsk.Transform? transform);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
@@ -13498,14 +13503,6 @@ namespace Gtk {
 		TEXT,
 		BOTH,
 		BOTH_HORIZ
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TRANSFORM_TYPE_", type_id = "gtk_transform_type_get_type ()")]
-	public enum TransformType {
-		IDENTITY,
-		TRANSFORM,
-		TRANSLATE,
-		ROTATE,
-		SCALE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TREE_MODEL_", type_id = "gtk_tree_model_flags_get_type ()")]
 	[Flags]
