@@ -176,6 +176,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			public Gst.FlowReturn finish_frame (Gst.Buffer buf, int frames);
+			[Version (since = "1.16")]
+			public Gst.FlowReturn finish_subframe (Gst.Buffer buf);
 			[NoWrapper]
 			public virtual void flush (bool hard);
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);

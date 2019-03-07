@@ -1580,7 +1580,7 @@ namespace Gst {
 		public Message.error (Gst.Object? src, GLib.Error error, string debug);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
-		public Message.error_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
+		public Message.error_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure? details);
 		[Version (since = "1.10")]
 		public size_t get_num_redirect_entries ();
 		public uint32 get_seqnum ();
@@ -1594,7 +1594,7 @@ namespace Gst {
 		public Message.info (Gst.Object? src, GLib.Error error, string debug);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
-		public Message.info_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
+		public Message.info_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure? details);
 		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object? src);
 		[CCode (has_construct_function = false)]
@@ -1711,7 +1711,7 @@ namespace Gst {
 		public Message.warning (Gst.Object? src, GLib.Error error, string debug);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
-		public Message.warning_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure details);
+		public Message.warning_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure? details);
 		[Version (since = "1.14")]
 		public unowned Gst.Structure writable_structure ();
 	}
@@ -2586,7 +2586,7 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public GLib.HashTable<string,string>? get_media_fragment_table ();
 		[Version (since = "1.6")]
-		public string get_path ();
+		public string? get_path ();
 		[Version (since = "1.6")]
 		public GLib.List<string> get_path_segments ();
 		[Version (since = "1.6")]
