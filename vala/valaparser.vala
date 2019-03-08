@@ -2678,6 +2678,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 		expect (TokenType.CLOSE_BRACE);
+		initializer.source_reference = get_src (begin);
 		return initializer;
 	}
 
