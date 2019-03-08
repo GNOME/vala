@@ -966,11 +966,13 @@ public class Vala.Parser : CodeVisitor {
 			expect (TokenType.CLOSE_BRACKET);
 		} while (accept (TokenType.OPEN_BRACKET));
 
+		var src = get_src (begin);
+
 		InitializerList initializer = null;
 		if (current () == TokenType.OPEN_BRACE) {
 			initializer = parse_initializer ();
 		}
-		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
+		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, src);
 		if (size_specified) {
 			foreach (Expression size in size_specifier_list) {
 				expr.append_size (size);
