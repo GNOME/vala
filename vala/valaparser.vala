@@ -2040,15 +2040,17 @@ public class Vala.Parser : CodeVisitor {
 	Statement parse_break_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.BREAK);
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new BreakStatement (get_src (begin));
+		return new BreakStatement (src);
 	}
 
 	Statement parse_continue_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.CONTINUE);
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new ContinueStatement (get_src (begin));
+		return new ContinueStatement (src);
 	}
 
 	Statement parse_return_statement () throws ParseError {
@@ -2058,8 +2060,9 @@ public class Vala.Parser : CodeVisitor {
 		if (current () != TokenType.SEMICOLON) {
 			expr = parse_expression ();
 		}
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new ReturnStatement (expr, get_src (begin));
+		return new ReturnStatement (expr, src);
 	}
 
 	Statement parse_yield_statement () throws ParseError {
@@ -2074,16 +2077,18 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.RETURN)) {
 			expr = parse_expression ();
 		}
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new YieldStatement (expr, get_src (begin));
+		return new YieldStatement (expr, src);
 	}
 
 	Statement parse_throw_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.THROW);
 		var expr = parse_expression ();
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new ThrowStatement (expr, get_src (begin));
+		return new ThrowStatement (expr, src);
 	}
 
 	Statement parse_try_statement () throws ParseError {
@@ -2145,8 +2150,9 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.DELETE);
 		var expr = parse_expression ();
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new DeleteStatement (expr, get_src (begin));
+		return new DeleteStatement (expr, src);
 	}
 
 	string parse_attribute_value () throws ParseError {
