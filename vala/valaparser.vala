@@ -2581,19 +2581,13 @@ public class Vala.Parser : CodeVisitor {
 
 		type = parse_inline_array_type (type);
 
-		Expression initializer = null;
-		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_expression ();
-		}
-		expect (TokenType.SEMICOLON);
-
 		// constant arrays don't own their element
 		var array_type = type as ArrayType;
 		if (array_type != null) {
 			array_type.element_type.value_owned = false;
 		}
 
-		var c = new Constant (id, type, initializer, get_src (begin), comment);
+		var c = new Constant (id, type, null, get_src (begin), comment);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			c.external = true;
@@ -2606,6 +2600,11 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.STATIC in flags) {
 			Report.warning (c.source_reference, "the modifier `static' is not applicable to constants");
 		}
+
+		if (accept (TokenType.ASSIGN)) {
+			c.value = parse_expression ();
+		}
+		expect (TokenType.SEMICOLON);
 
 		parent.add_constant (c);
 	}
