@@ -782,6 +782,8 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var arg_list = parse_argument_list ();
 		expect (TokenType.CLOSE_PARENS);
+		var src = get_src (begin);
+
 		var init_list = parse_object_initializer ();
 
 		if (init_list.size > 0 && inner is MemberAccess) {
@@ -789,7 +791,7 @@ public class Vala.Parser : CodeVisitor {
 			var member = (MemberAccess) inner;
 			member.creation_member = true;
 
-			var expr = new ObjectCreationExpression (member, get_src (begin));
+			var expr = new ObjectCreationExpression (member, src);
 			expr.struct_creation = true;
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
@@ -799,7 +801,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return expr;
 		} else {
-			var expr = new MethodCall (inner, get_src (begin));
+			var expr = new MethodCall (inner, src);
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
 			}
@@ -893,9 +895,11 @@ public class Vala.Parser : CodeVisitor {
 		member.creation_member = true;
 		var arg_list = parse_argument_list ();
 		expect (TokenType.CLOSE_PARENS);
+		var src = get_src (begin);
+
 		var init_list = parse_object_initializer ();
 
-		var expr = new ObjectCreationExpression (member, get_src (begin));
+		var expr = new ObjectCreationExpression (member, src);
 		foreach (Expression arg in arg_list) {
 			expr.add_argument (arg);
 		}
