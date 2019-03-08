@@ -2113,8 +2113,9 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void parse_catch_clauses (List<CatchClause> catch_clauses) throws ParseError {
-		while (accept (TokenType.CATCH)) {
+		while (current () == TokenType.CATCH) {
 			var begin = get_location ();
+			expect (TokenType.CATCH);
 			DataType type = null;
 			string id = null;
 			if (accept (TokenType.OPEN_PARENS)) {
@@ -2122,8 +2123,9 @@ public class Vala.Parser : CodeVisitor {
 				id = parse_identifier ();
 				expect (TokenType.CLOSE_PARENS);
 			}
+			var src = get_src (begin);
 			var block = parse_block ();
-			catch_clauses.add (new CatchClause (type, id, block, get_src (begin)));
+			catch_clauses.add (new CatchClause (type, id, block, src));
 		}
 	}
 
@@ -2139,11 +2141,12 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var expr = parse_expression ();
 		expect (TokenType.CLOSE_PARENS);
+		var src = get_src (begin);
 		Block? stmt = null;
 		if (current () != TokenType.SEMICOLON) {
 			stmt = parse_embedded_statement ("lock", false);
 		}
-		return new LockStatement (expr, stmt, get_src (begin));
+		return new LockStatement (expr, stmt, src);
 	}
 
 	Statement parse_unlock_statement () throws ParseError {
