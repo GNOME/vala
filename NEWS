@@ -1,3 +1,14 @@
+Vala 0.44.0
+===========
+ * Various improvements and bug fixes:
+  - parser: Adjust various source references
+  - vala: More regular invocations of check() on inferred Expression.value_type
+
+ * Bindings:
+  - gstreamer: Update from 1.15.2+ git master
+  - gtk4: Update to 3.94.0+eacbeb9e
+  - vapi: Update GIR-based bindings
+
 Vala 0.43.92
 ============
  * Various improvements and bug fixes:
