@@ -29,9 +29,10 @@ struct StructWithNamedCreationMethod {
 delegate void Func ();
 
 struct StructWithFunc {
-	int foo;
+	public Func foo;
 
-	public StructWithFunc (Func f) {
+	public StructWithFunc (owned Func f) {
+		foo = (owned) f;
 	}
 }
 
