@@ -121,6 +121,7 @@ TESTS = \
 	methods/bug653391.vala \
 	methods/bug653908.vala \
 	methods/bug663210.vala \
+	methods/bug699956.vala \
 	methods/bug710862.vala \
 	methods/bug723009.vala \
 	methods/bug723195.vala \
