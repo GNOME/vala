@@ -509,6 +509,16 @@ public class Vala.MethodCall : Expression {
 				value_type.nullable = true;
 			}
 
+			unowned Signal? sig = m.parent_symbol as Signal;
+			if (sig != null && m.name == "disconnect") {
+				var param = get_argument_list ()[0];
+				if (param is LambdaExpression) {
+					error = true;
+					Report.error (source_reference, "Cannot disconnect lambda expression from signal");
+					return false;
+				}
+			}
+
 			var dynamic_sig = m.parent_symbol as DynamicSignal;
 			if (dynamic_sig != null && dynamic_sig.handler != null) {
 				dynamic_sig.return_type = dynamic_sig.handler.value_type.get_return_type ().copy ();

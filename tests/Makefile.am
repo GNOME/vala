@@ -664,6 +664,7 @@ TESTS = \
 	semantic/signal-detail-invalid.test \
 	semantic/signal-detail-non-string.test \
 	semantic/struct-derived.test \
+	semantic/signal-disconnect-invalid.test \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
