@@ -4874,13 +4874,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							carg_map = out_arg_map;
 						}
 
-						// g_array_new: element size
-						if (cl == garray_type && param.name == "element_size") {
-							var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-							csizeof.add_argument (new CCodeIdentifier (get_ccode_name (expr.type_reference.get_type_arguments ().get (0))));
-							cexpr = csizeof;
-						}
-
 						if (get_ccode_array_length (param) && param.variable_type is ArrayType) {
 							var array_type = (ArrayType) param.variable_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
