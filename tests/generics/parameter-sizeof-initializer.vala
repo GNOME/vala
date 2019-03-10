@@ -14,6 +14,10 @@ void main () {
 		var garray = new GLib.Array<uint32> ();
 	}
 	{
+		var foo = new Foo<int64> (sizeof (int64));
+		foo.bar (8);
+	}
+	{
 		var foo = new Foo<uint32> (sizeof (uint32));
 		foo.bar (4);
 	}

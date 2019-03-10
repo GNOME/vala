@@ -4325,8 +4325,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	bool is_limited_generic_type (GenericType type) {
-		var cl = type.type_parameter.parent_symbol as Class;
-		var st = type.type_parameter.parent_symbol as Struct;
+		return has_limited_generics (type.type_parameter.parent_symbol);
+	}
+
+	bool has_limited_generics (Symbol sym) {
+		unowned Class? cl = sym as Class;
+		unowned Struct? st = sym as Struct;
 		if ((cl != null && cl.is_compact) || st != null) {
 			// compact classes and structs only
 			// have very limited generics support
@@ -4659,6 +4663,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		    || is_nullable_value_type_argument (type_arg)
 		    || is_signed_integer_type_argument (type_arg)
 		    || is_unsigned_integer_type_argument (type_arg)) {
+			// no error
+		} else if (has_limited_generics (((DataType) type_arg.parent_node).data_type)) {
 			// no error
 		} else if (type_arg is DelegateType) {
 			var delegate_type = (DelegateType) type_arg;
