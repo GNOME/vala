@@ -233,6 +233,7 @@ TESTS = \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
+	objects/signals-enum-marshal.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \
