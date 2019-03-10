@@ -1250,7 +1250,12 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_default_value () {
 		if (sym is Enum) {
-			return "0";
+			unowned Enum en = (Enum) sym;
+			if (en.is_flags) {
+				return "0U";
+			} else {
+				return "0";
+			}
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
 			var base_st = st.base_struct;
