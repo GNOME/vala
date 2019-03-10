@@ -109,7 +109,7 @@ public class Vala.GSignalModule : GObjectModule {
 		return signature;
 	}
 
-	private CCodeExpression? get_signal_name_cexpression (Signal sig, Expression? detail_expr, CodeNode node) {
+	private CCodeExpression get_signal_name_cexpression (Signal sig, Expression? detail_expr, CodeNode node) {
 		if (detail_expr == null) {
 			return get_signal_canonical_constant (sig);
 		}
@@ -138,7 +138,7 @@ public class Vala.GSignalModule : GObjectModule {
 		return new CCodeElementAccess (signal_array, signal_enum_value);
 	}
 
-	private CCodeExpression? get_detail_cexpression (Expression detail_expr, CodeNode node) {
+	private CCodeExpression get_detail_cexpression (Expression detail_expr, CodeNode node) {
 		var detail_cexpr = get_cvalue (detail_expr);
 		CCodeFunctionCall detail_ccall;
 		if (is_constant_ccode_expression (detail_cexpr)) {
@@ -486,17 +486,13 @@ public class Vala.GSignalModule : GObjectModule {
 					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
 					ccall.add_argument (get_cvalue (ma.inner));
 					ccall.add_argument (get_signal_id_cexpression (sig));
-					if (detail_cexpr != null) {
-						ccall.add_argument (detail_cexpr);
-					}
+					ccall.add_argument (detail_cexpr);
 				} else {
 					var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
 
 					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
 					ccall.add_argument (get_cvalue (ma.inner));
-					if (signal_name_cexpr != null) {
-						ccall.add_argument (signal_name_cexpr);
-					}
+					ccall.add_argument (signal_name_cexpr);
 				}
 
 				set_cvalue (expr, ccall);
@@ -647,9 +643,6 @@ public class Vala.GSignalModule : GObjectModule {
 			ma = (MemberAccess) ea.container;
 			var detail_expr = ea.get_indices ().get (0);
 			signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
-			if (signal_name_cexpr == null) {
-				return null;
-			}
 		} else {
 			ma = (MemberAccess) signal_access;
 			signal_name_cexpr = get_signal_name_cexpression (sig, null, expr);
