@@ -68,7 +68,12 @@ public class Vala.GSignalModule : GObjectModule {
 				return "gpointer";
 			}
 		} else if (t.data_type is Enum) {
-			return "gint";
+			var en = (Enum) t.data_type;
+			if (en.is_flags) {
+				return "guint";
+			} else {
+				return "gint";
+			}
 		} else if (t is ArrayType) {
 			return "gpointer";
 		} else if (t is DelegateType) {
