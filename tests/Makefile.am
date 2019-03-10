@@ -277,6 +277,7 @@ TESTS = \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
+	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-lambda-delegate.vala \
 	objects/test-025.vala \
