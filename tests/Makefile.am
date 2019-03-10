@@ -193,6 +193,7 @@ TESTS = \
 	enums/enum-no-gtype.vala \
 	enums/enums.vala \
 	enums/flags.vala \
+	enums/from-0-literal.vala \
 	enums/no_gtype_to_string.vala \
 	enums/bug666035.vala \
 	enums/bug666035-1.test \
