@@ -59,7 +59,7 @@ public class Vala.IntegerType : ValueType {
 					return true;
 				}
 			}
-		} else if (target_type.data_type is Enum && literal_type_name == "int") {
+		} else if (target_type.data_type is Enum && (literal_type_name == "int" || literal_type_name == "uint")) {
 			// allow implicit conversion from 0 to enum and flags types
 			if (int.parse (literal_value) == 0) {
 				return true;
