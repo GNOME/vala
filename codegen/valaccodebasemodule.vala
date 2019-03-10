@@ -5125,10 +5125,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (cl == garray_type) {
 				var type_arg = expr.type_reference.get_type_arguments ().get (0);
 				if (requires_destroy (type_arg)) {
-					var free_wrapper = generate_destroy_function_content_of_wrapper (type_arg);
 					var clear_func = new CCodeFunctionCall (new CCodeIdentifier ("g_array_set_clear_func"));
 					clear_func.add_argument (get_cvalue_ (expr.target_value));
-					clear_func.add_argument (new CCodeIdentifier (free_wrapper));
+					string destroy_func;
+					if (type_arg.is_non_null_simple_type () || type_arg.is_real_non_null_struct_type ()) {
+						destroy_func = get_ccode_destroy_function (type_arg.data_type);
+					} else {
+						destroy_func = generate_destroy_function_content_of_wrapper (type_arg);
+					}
+					clear_func.add_argument (new CCodeCastExpression (new CCodeIdentifier (destroy_func), "GDestroyNotify"));
 					ccode.add_expression (clear_func);
 				}
 			}
