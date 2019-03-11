@@ -489,6 +489,15 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		}
 
+		//Resolve possible generic-type in SizeofExpression used as parameter default-value
+		foreach (Expression arg in get_argument_list ()) {
+			unowned SizeofExpression sizeof_expr = arg as SizeofExpression;
+			if (sizeof_expr != null && sizeof_expr.type_reference is GenericType) {
+				var sizeof_type = sizeof_expr.type_reference.get_actual_type (type_reference, type_reference.get_type_arguments (), this);
+				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
+			}
+		}
+
 		foreach (MemberInitializer init in get_object_initializer ()) {
 			context.analyzer.visit_member_initializer (init, type_reference);
 		}
