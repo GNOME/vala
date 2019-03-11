@@ -632,6 +632,15 @@ public class Vala.MethodCall : Expression {
 			return false;
 		}
 
+		//Resolve possible generic-type in SizeofExpression used as parameter default-value
+		foreach (Expression arg in get_argument_list ()) {
+			unowned SizeofExpression sizeof_expr = arg as SizeofExpression;
+			if (sizeof_expr != null && sizeof_expr.type_reference is GenericType) {
+				var sizeof_type = sizeof_expr.type_reference.get_actual_type (target_object_type, method_type_args, this);
+				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
+			}
+		}
+
 		/* Check for constructv chain up */
 		if (base_cm != null && base_cm.is_variadic () && args.size == base_cm.get_parameters ().size) {
 			var this_last_arg = args[args.size-1];
