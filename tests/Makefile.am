@@ -359,6 +359,7 @@ TESTS = \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
+	generics/parameter-sizeof-initializer.vala \
 	generics/bug694765-1.vala \
 	generics/bug694765-2.vala \
 	generics/bug694765-3.vala \
