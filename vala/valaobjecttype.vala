@@ -29,11 +29,14 @@ public class Vala.ObjectType : ReferenceType {
 	/**
 	 * The referred class or interface.
 	 */
-	public weak ObjectTypeSymbol object_type_symbol { get; set; }
+	public weak ObjectTypeSymbol object_type_symbol {
+		get {
+			return (ObjectTypeSymbol) symbol;
+		}
+	}
 
 	public ObjectType (ObjectTypeSymbol type_symbol) {
-		this.type_symbol = type_symbol;
-		this.object_type_symbol = type_symbol;
+		base (type_symbol);
 	}
 
 	public override DataType copy () {

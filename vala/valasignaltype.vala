@@ -26,14 +26,18 @@ using GLib;
  * The type of a signal referencea.
  */
 public class Vala.SignalType : CallableType {
-	public weak Signal signal_symbol { get; set; }
+	public weak Signal signal_symbol {
+		get {
+			return (Signal) symbol;
+		}
+	}
 
 	Method? connect_method;
 	Method? connect_after_method;
 	Method? disconnect_method;
 
 	public SignalType (Signal signal_symbol) {
-		this.signal_symbol = signal_symbol;
+		base (signal_symbol);
 	}
 
 	public override bool is_invokable () {

@@ -30,7 +30,11 @@ public class Vala.ErrorType : ReferenceType {
 	/**
 	 * The error domain or null for generic error.
 	 */
-	public weak ErrorDomain? error_domain { get; set; }
+	public weak ErrorDomain? error_domain {
+		get {
+			return symbol as ErrorDomain;
+		}
+	}
 
 	/**
 	 * The error code or null for generic error.
@@ -40,8 +44,7 @@ public class Vala.ErrorType : ReferenceType {
 	public bool dynamic_error { get; set; }
 
 	public ErrorType (ErrorDomain? error_domain, ErrorCode? error_code, SourceReference? source_reference = null) {
-		this.error_domain = error_domain;
-		this.type_symbol = error_domain;
+		base (error_domain);
 		this.error_code = error_code;
 		this.source_reference = source_reference;
 	}

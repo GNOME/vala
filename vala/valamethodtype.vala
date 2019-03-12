@@ -26,10 +26,14 @@ using GLib;
  * The type of a method referencea.
  */
 public class Vala.MethodType : CallableType {
-	public weak Method method_symbol { get; set; }
+	public weak Method method_symbol {
+		get {
+			return (Method) symbol;
+		}
+	}
 
 	public MethodType (Method method_symbol) {
-		this.method_symbol = method_symbol;
+		base (method_symbol);
 	}
 
 	public override bool is_invokable () {
