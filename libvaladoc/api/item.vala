@@ -42,7 +42,7 @@ public abstract class Valadoc.Api.Item : Object {
 		get;
 	}
 
-	public Item (Vala.CodeNode? data) {
+	protected Item (Vala.CodeNode? data) {
 		this.data = data;
 	}
 

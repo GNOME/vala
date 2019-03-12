@@ -28,7 +28,7 @@ public abstract class Valadoc.Importer.DocumentationImporter : Object, ResourceL
 
 	public abstract string file_extension { get; }
 
-	public DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings) {
+	protected DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings) {
 		this.settings = settings;
 		this.modules = null;
 		this.tree = tree;
