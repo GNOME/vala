@@ -2,7 +2,7 @@
 namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public abstract class AbstractObjectTest : GLib.Object {
-		public AbstractObjectTest ();
+		protected AbstractObjectTest ();
 		public abstract void method_int8_in (int8 param);
 		public abstract void method_int8_inout (ref int8 param);
 		public abstract void method_int8_out (out int8 param);
