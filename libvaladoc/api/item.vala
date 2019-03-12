@@ -42,7 +42,7 @@ public abstract class Valadoc.Api.Item : Object {
 		get;
 	}
 
-	public Item (void* data) {
+	protected Item (void* data) {
 		this.data = data;
 	}
 

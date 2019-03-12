@@ -27,7 +27,7 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 	protected ResourceLocator locator;
 	private ContentElement _content;
 
-	public InlineTaglet () {
+	protected InlineTaglet () {
 		base ();
 	}
 

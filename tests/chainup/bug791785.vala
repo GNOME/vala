@@ -5,7 +5,7 @@ struct Foo {
 abstract class AbstractBar {
 	public Foo foo;
 
-	public AbstractBar (Foo foo) {
+	protected AbstractBar (Foo foo) {
 		this.foo = foo;
 	}
 }
