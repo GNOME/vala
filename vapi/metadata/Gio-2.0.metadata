@@ -375,6 +375,9 @@ LoadableIcon
   .load_finish.type nullable default=null
 Socket
   .receive_message.address nullable
+SocketAddress
+	// Factory method
+	.new_from_native symbol_type="function" name="from_native" nullable
 Task
   .get_source_object name="get_unowned_source_object" nullable
 TlsBackend

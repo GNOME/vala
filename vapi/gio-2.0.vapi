@@ -2570,9 +2570,9 @@ namespace GLib {
 	public abstract class SocketAddress : GLib.Object, GLib.SocketConnectable {
 		[CCode (has_construct_function = false)]
 		protected SocketAddress ();
-		[CCode (has_construct_function = false)]
+		[CCode (cname = "g_socket_address_new_from_native")]
 		[Version (since = "2.22")]
-		public SocketAddress.from_native (void* native, size_t len);
+		public static GLib.SocketAddress? from_native (void* native, size_t len);
 		[Version (since = "2.22")]
 		public virtual GLib.SocketFamily get_family ();
 		[Version (since = "2.22")]
