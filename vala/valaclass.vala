@@ -296,6 +296,16 @@ public class Vala.Class : ObjectTypeSymbol {
 				m.error = true;
 				return;
 			}
+			if (is_abstract && cm.access == SymbolAccessibility.PUBLIC) {
+				//TODO Report an error for external constructors too
+				if (external_package) {
+					Report.warning (m.source_reference, "Creation method of abstract class cannot be public.");
+				} else {
+					Report.error (m.source_reference, "Creation method of abstract class cannot be public.");
+					error = true;
+					return;
+				}
+			}
 		}
 
 		base.add_method (m);
