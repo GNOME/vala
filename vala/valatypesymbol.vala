@@ -29,7 +29,7 @@ using GLib;
  * code or imported from an external library with a Vala API file.
  */
 public abstract class Vala.TypeSymbol : Symbol {
-	public TypeSymbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
+	protected TypeSymbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 

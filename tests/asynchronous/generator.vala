@@ -7,7 +7,7 @@ abstract class Generator<G> {
 	unowned G value;
 	SourceFunc callback;
 
-	public Generator () {
+	protected Generator () {
 		helper.begin ();
 	}
 

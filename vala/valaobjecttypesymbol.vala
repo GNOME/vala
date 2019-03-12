@@ -31,7 +31,7 @@
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
+	protected ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 
