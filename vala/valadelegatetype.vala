@@ -26,12 +26,16 @@ using GLib;
  * The type of an instance of a delegate.
  */
 public class Vala.DelegateType : CallableType {
-	public weak Delegate delegate_symbol { get; set; }
+	public weak Delegate delegate_symbol {
+		get {
+			return (Delegate) symbol;
+		}
+	}
 
 	public bool is_called_once { get; set; }
 
 	public DelegateType (Delegate delegate_symbol) {
-		this.delegate_symbol = delegate_symbol;
+		base (delegate_symbol);
 		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
 	}
 

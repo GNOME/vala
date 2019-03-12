@@ -40,9 +40,18 @@ public abstract class Vala.DataType : CodeNode {
 	public bool nullable { get; set; }
 
 	/**
+	 * The referred symbol.
+	 */
+	public weak Symbol? symbol { get; private set; }
+
+	/**
 	 * The referred type symbol.
 	 */
-	public weak TypeSymbol type_symbol { get; set; }
+	public weak TypeSymbol? type_symbol {
+		get {
+			return symbol as TypeSymbol;
+		}
+	}
 
 	/**
 	 * Specifies that the expression transfers a floating reference.
@@ -56,6 +65,10 @@ public abstract class Vala.DataType : CodeNode {
 
 	private List<DataType> type_argument_list;
 	private static List<DataType> _empty_type_list;
+
+	protected DataType.with_symbol (Symbol? symbol) {
+		this.symbol = symbol;
+	}
 
 	/**
 	 * Appends the specified type as generic type argument.

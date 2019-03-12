@@ -29,10 +29,14 @@ public class Vala.ClassType : ReferenceType {
 	/**
 	 * The referred class.
 	 */
-	public weak Class class_symbol { get; set; }
+	public weak Class class_symbol{
+		get {
+			return (Class) symbol;
+		}
+	}
 
 	public ClassType (Class class_symbol) {
-		this.class_symbol = class_symbol;
+		base (class_symbol);
 	}
 
 	public override DataType copy () {

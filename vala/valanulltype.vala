@@ -27,6 +27,7 @@ using GLib;
  */
 public class Vala.NullType : ReferenceType {
 	public NullType (SourceReference? source_reference) {
+		base (null);
 		this.nullable = true;
 		this.source_reference = source_reference;
 	}

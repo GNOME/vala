@@ -26,6 +26,10 @@ using GLib;
  * A value type, i.e. a struct or an enum type.
  */
 public abstract class Vala.ValueType : DataType {
+	protected ValueType (TypeSymbol type_symbol) {
+		base.with_symbol (type_symbol);
+	}
+
 	public override bool is_disposable () {
 		if (!value_owned) {
 			return false;

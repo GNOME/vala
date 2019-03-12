@@ -26,6 +26,10 @@ using GLib;
  * A callable type, i.e. a delegate, method, or signal type.
  */
 public abstract class Vala.CallableType : DataType {
+	protected CallableType (Symbol symbol) {
+		base.with_symbol (symbol);
+	}
+
 	public override string to_prototype_string (string? override_name = null) {
 		StringBuilder builder = new StringBuilder ();
 

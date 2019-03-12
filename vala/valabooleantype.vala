@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.BooleanType : ValueType {
 	public BooleanType (Struct type_symbol) {
-		this.type_symbol = type_symbol;
+		base (type_symbol);
 	}
 
 	public override DataType copy () {

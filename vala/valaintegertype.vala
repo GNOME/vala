@@ -30,7 +30,7 @@ public class Vala.IntegerType : ValueType {
 	string? literal_type_name;
 
 	public IntegerType (Struct type_symbol, string? literal_value = null, string? literal_type_name = null) {
-		this.type_symbol = type_symbol;
+		base (type_symbol);
 		this.literal_value = literal_value;
 		this.literal_type_name = literal_type_name;
 	}

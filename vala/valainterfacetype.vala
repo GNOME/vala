@@ -29,10 +29,14 @@ public class Vala.InterfaceType : ReferenceType {
 	/**
 	 * The referred interface.
 	 */
-	public weak Interface interface_symbol { get; set; }
+	public weak Interface interface_symbol {
+		get {
+			return (Interface) symbol;
+		}
+	}
 
 	public InterfaceType (Interface interface_symbol) {
-		this.interface_symbol = interface_symbol;
+		base (interface_symbol);
 	}
 
 	public override DataType copy () {

@@ -26,4 +26,7 @@ using GLib;
  * A reference type, i.e. a class, interface, or array type.
  */
 public abstract class Vala.ReferenceType : DataType {
+	protected ReferenceType (Symbol? symbol) {
+		base.with_symbol (symbol);
+	}
 }
