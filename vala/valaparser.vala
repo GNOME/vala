@@ -2564,7 +2564,7 @@ public class Vala.Parser : CodeVisitor {
 		if (scanner.source_file.file_type == SourceFileType.SOURCE
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
-			m.access = SymbolAccessibility.PUBLIC;
+			m.access = (cl.is_abstract ? SymbolAccessibility.PROTECTED : SymbolAccessibility.PUBLIC);
 			m.body = new Block (cl.source_reference);
 			cl.add_method (m);
 		}
