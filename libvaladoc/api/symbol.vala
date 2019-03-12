@@ -35,7 +35,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 		get;
 	}
 
-	public Symbol (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility,
+	protected Symbol (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility,
 				   SourceComment? comment, Vala.Symbol data)
 	{
 		base (parent, file, name, data);

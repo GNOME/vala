@@ -352,7 +352,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public static int ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
 
-	public CCodeBaseModule () {
+	protected CCodeBaseModule () {
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
 		predefined_marshal_set.add ("VOID:BOOLEAN");

@@ -26,7 +26,7 @@
  * Represents a runtime data type.
  */
 public abstract class Valadoc.Api.TypeSymbol : Symbol {
-	public TypeSymbol (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
+	protected TypeSymbol (Node parent, SourceFile file, string name, Vala.SymbolAccessibility accessibility,
 					   SourceComment? comment, bool is_basic_type,
 					   Vala.TypeSymbol data)
 	{

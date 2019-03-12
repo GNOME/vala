@@ -47,7 +47,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 
 	private List<Constant> constants = new ArrayList<Constant> ();
 
-	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
+	protected ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 
