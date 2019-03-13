@@ -1,4 +1,4 @@
-/* valaccodefeaturetestmacro.vala
+/* valaccodedefine.vala
  *
  * Copyright (C) 2018  Dr. Michael 'Mickey' Lauer
  *
@@ -18,27 +18,51 @@
  *
  * Author:
  * 	Dr. Michael 'Mickey' Lauer <mickey@vanille-media.de>
+ * 	Rico Tzschichholz <ricotz@ubuntu.com>
  */
 
 using GLib;
 
 /**
- * Represents a feature test macro definition in the C code.
+ * Represents a definition in the C code.
  */
-public class Vala.CCodeFeatureTestMacro : CCodeNode {
+public class Vala.CCodeDefine : CCodeNode {
 	/**
-	 * The name of this macro.
+	 * The name of this definition.
 	 */
 	public string name { get; set; }
 
-	public CCodeFeatureTestMacro (string name) {
+	/**
+	 * The value of this definition.
+	 */
+	public string? @value { get; set; }
+
+	/**
+	 * The value expression of this definition.
+	 */
+	public CCodeExpression? value_expression { get; set; }
+
+	public CCodeDefine (string name, string? @value = null) {
 		this.name = name;
+		this.@value = @value;
+	}
+
+	public CCodeDefine.with_expression (string name, CCodeExpression expression) {
+		this.name = name;
+		this.value_expression = expression;
 	}
 
 	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("#define ");
 		writer.write_string (name);
+		if (@value != null) {
+			writer.write_string (" ");
+			writer.write_string (@value);
+		} else if (value_expression != null) {
+			writer.write_string (" ");
+			value_expression.write_inner (writer);
+		}
 		writer.write_newline ();
 	}
 }
