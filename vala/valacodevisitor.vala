@@ -205,6 +205,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for defines.
+	 *
+	 * @param ns a define
+	 */
+	public virtual void visit_define (Define d) {
+	}
+
+	/**
 	 * Visit operation called for type references.
 	 *
 	 * @param type a type reference

@@ -1047,6 +1047,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		pop_line ();
 	}
 
+	public override void visit_define (Define d) {
+		push_line (d.source_reference);
+
+		d.accept_children (this);
+
+		CCodeDefine cdefine;
+		if (d.value == null) {
+			cdefine = new CCodeDefine (get_ccode_name (d));
+		} else {
+			cdefine = new CCodeDefine.with_expression (get_ccode_name (d), get_cvalue (d.value));
+		}
+		cfile.add_define (cdefine);
+
+		pop_line ();
+	}
+
 	public void generate_field_declaration (Field f, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, f, get_ccode_name (f))) {
 			return;
