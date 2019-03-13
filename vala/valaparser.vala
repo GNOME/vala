@@ -190,6 +190,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.CONSTRUCT:
 		case TokenType.CONTINUE:
 		case TokenType.DEFAULT:
+		case TokenType.DEFINE:
 		case TokenType.DELEGATE:
 		case TokenType.DELETE:
 		case TokenType.DO:
@@ -338,6 +339,7 @@ public class Vala.Parser : CodeVisitor {
 
 
 		try {
+			parse_defines ();
 			parse_using_directives (context.root);
 			parse_declarations (context.root, true);
 			if (accept (TokenType.CLOSE_BRACE)) {
@@ -2530,6 +2532,22 @@ public class Vala.Parser : CodeVisitor {
 				var ns_ref = new UsingDirective (sym, get_src (begin));
 				scanner.source_file.add_using_directive (ns_ref);
 				ns.add_using_directive (ns_ref);
+			} while (accept (TokenType.COMMA));
+			expect (TokenType.SEMICOLON);
+		}
+	}
+
+	void parse_defines () throws ParseError {
+		while (accept (TokenType.DEFINE)) {
+			do {
+				var begin = get_location ();
+				var name = parse_identifier ();
+				Expression? val = null;
+				if (accept (TokenType.ASSIGN)) {
+					val = parse_literal ();
+				}
+				var def = new Define (name, val, get_src (begin), comment);
+				scanner.source_file.add_define (def);
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.SEMICOLON);
 		}

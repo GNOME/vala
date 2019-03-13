@@ -177,6 +177,18 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = old_scope;
 	}
 
+	public override void visit_define (Define d) {
+		if (d.checked) {
+			return;
+		}
+
+		var old_scope = current_scope;
+
+		d.accept_children (this);
+
+		current_scope = old_scope;
+	}
+
 	public override void visit_field (Field f) {
 		if (f.checked) {
 			return;

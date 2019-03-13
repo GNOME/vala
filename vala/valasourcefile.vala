@@ -129,6 +129,7 @@ public class Vala.SourceFile {
 	public List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
 
 	private List<CodeNode> nodes = new ArrayList<CodeNode> ();
+	private List<Define> defines = new ArrayList<Define> ();
 
 	string? _relative_filename;
 
@@ -188,6 +189,24 @@ public class Vala.SourceFile {
 	}
 
 	/**
+	 * Adds the specified define to this source file.
+	 *
+	 * @param define a define
+	 */
+	public void add_define (Define define) {
+		defines.add (define);
+	}
+
+	/**
+	 * Returns the list of defines.
+	 *
+	 * @return define list
+	 */
+	public List<Define> get_defines () {
+		return defines;
+	}
+
+	/**
 	 * Adds the specified code node to this source file.
 	 *
 	 * @param node a code node
@@ -214,6 +233,9 @@ public class Vala.SourceFile {
 	}
 
 	public void accept_children (CodeVisitor visitor) {
+		foreach (Define define in defines) {
+			define.accept (visitor);
+		}
 		foreach (CodeNode node in nodes) {
 			node.accept (visitor);
 		}
