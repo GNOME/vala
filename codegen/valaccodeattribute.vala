@@ -682,7 +682,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private string get_default_name () {
 		if (sym != null) {
-			if (sym is Constant && !(sym is EnumValue)) {
+			if (sym is Define) {
+				return sym.name;
+			} else if (sym is Constant && !(sym is EnumValue)) {
 				if (sym.parent_symbol is Block) {
 					// local constant
 					return sym.name;

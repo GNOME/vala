@@ -424,7 +424,14 @@ public class Vala.Scanner {
 		case 6:
 			switch (begin[0]) {
 			case 'd':
-				if (matches (begin, "delete")) return TokenType.DELETE;
+				switch (begin[2]) {
+				case 'f':
+					if (matches (begin, "define")) return TokenType.DEFINE;
+					break;
+				case 'l':
+					if (matches (begin, "delete")) return TokenType.DELETE;
+					break;
+				}
 				break;
 			case 'e':
 				if (matches (begin, "extern")) return TokenType.EXTERN;
