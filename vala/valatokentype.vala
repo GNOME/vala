@@ -57,6 +57,7 @@ public enum Vala.TokenType {
 	CONSTRUCT,
 	CONTINUE,
 	DEFAULT,
+	DEFINE,
 	DELEGATE,
 	DELETE,
 	DIV,
@@ -190,6 +191,7 @@ public enum Vala.TokenType {
 		case CONSTRUCT: return "`construct'";
 		case CONTINUE: return "`continue'";
 		case DEFAULT: return "`default'";
+		case DEFINE: return "`define'";
 		case DELEGATE: return "`delegate'";
 		case DELETE: return "`delete'";
 		case DIV: return "`/'";
