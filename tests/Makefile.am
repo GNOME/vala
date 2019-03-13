@@ -514,6 +514,7 @@ TESTS = \
 	parser/creation-no-abstract.test \
 	parser/creation-no-override.test \
 	parser/creation-no-virtual.test \
+	parser/define.vala \
 	parser/delegate-no-new.test \
 	parser/destructor-class-exists.test \
 	parser/destructor-exists.test \

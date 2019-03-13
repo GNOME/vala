@@ -26,11 +26,11 @@ public class Vala.CCodeFile {
 
 	public weak SourceFile? file { get; private set; }
 
-	Set<string> features = new HashSet<string> (str_hash, str_equal);
+	Set<string> defines = new HashSet<string> (str_hash, str_equal);
 	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
 	CCodeFragment comments = new CCodeFragment ();
-	CCodeFragment feature_test_macros = new CCodeFragment ();
+	CCodeFragment define_directives = new CCodeFragment ();
 	CCodeFragment include_directives = new CCodeFragment ();
 	CCodeFragment type_declaration = new CCodeFragment ();
 	CCodeFragment type_definition = new CCodeFragment ();
@@ -54,10 +54,17 @@ public class Vala.CCodeFile {
 		comments.append (comment);
 	}
 
+	public void add_define (CCodeDefine node) {
+		if (!(node.name in defines)) {
+			define_directives.append (node);
+			defines.add (node.name);
+		}
+	}
+
 	public void add_feature_test_macro (string feature_test_macro) {
-		if (!(feature_test_macro in features)) {
-			feature_test_macros.append (new CCodeDefine (feature_test_macro));
-			features.add (feature_test_macro);
+		if (!(feature_test_macro in defines)) {
+			define_directives.append (new CCodeDefine (feature_test_macro));
+			defines.add (feature_test_macro);
 		}
 	}
 
@@ -148,7 +155,7 @@ public class Vala.CCodeFile {
 
 			comments.write (writer);
 			writer.write_newline ();
-			feature_test_macros.write (writer);
+			define_directives.write (writer);
 			writer.write_newline ();
 			include_directives.write (writer);
 			writer.write_newline ();
