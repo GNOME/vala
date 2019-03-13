@@ -56,7 +56,7 @@ public class Vala.CCodeFile {
 
 	public void add_feature_test_macro (string feature_test_macro) {
 		if (!(feature_test_macro in features)) {
-			feature_test_macros.append (new CCodeFeatureTestMacro (feature_test_macro));
+			feature_test_macros.append (new CCodeDefine (feature_test_macro));
 			features.add (feature_test_macro);
 		}
 	}

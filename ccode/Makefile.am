@@ -29,13 +29,13 @@ libvalaccode_la_VALASOURCES = \
 	valaccodecontinuestatement.vala \
 	valaccodedeclaration.vala \
 	valaccodedeclarator.vala \
+	valaccodedefine.vala \
 	valaccodedostatement.vala \
 	valaccodeemptystatement.vala \
 	valaccodeenum.vala \
 	valaccodeenumvalue.vala \
 	valaccodeexpression.vala \
 	valaccodeexpressionstatement.vala \
-	valaccodefeaturetestmacro.vala \
 	valaccodefile.vala \
 	valaccodeforstatement.vala \
 	valaccodefragment.vala \
