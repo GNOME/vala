@@ -253,10 +253,6 @@ dist_vapi_DATA = \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
-	vte.deps \
-	vte.vapi \
-	vte-2.90.deps \
-	vte-2.90.vapi \
 	webkit-1.0.deps \
 	webkit-1.0.vapi \
 	webkit2gtk-4.0.vapi \
@@ -305,7 +301,6 @@ GIDL_BINDINGS = \
 	loudmouth-1.0 \
 	purple \
 	unique-1.0 \
-	vte \
 	webkit-1.0 \
 	$(NULL)
 
@@ -377,7 +372,6 @@ GIR_BINDINGS = \
 	rest-0.7 \
 	rest-extras-0.7 \
 	udisks2 \
-	vte-2.90 \
 	webkit2gtk-4.0 \
 	webkit2gtk-web-extension-4.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
@@ -685,12 +679,6 @@ udisks2:
 
 unique-1.0:
 	$(GENVAPI) --library $(srcdir)/unique-1.0 $(PACKAGESDIR)/unique-1.0/unique-1.0.gi
-
-vte:
-	$(GENVAPI) --library $(srcdir)/vte $(PACKAGESDIR)/vte/vte.gi
-
-vte-2.90:
-	$(GENVAPI) --library $(srcdir)/vte-2.90 --metadatadir $(METADATADIR) --pkg atk --pkg gdk-3.0 --pkg gtk+-3.0 --pkg gio-2.0 --pkg pango $(GIRDIR)/Vte-2.90.gir $(METADATADIR)/Vte-2.90-custom.vala
 
 webkit-1.0:
 	$(GENVAPI) --library $(srcdir)/webkit-1.0 $(PACKAGESDIR)/webkit-1.0/webkit-1.0.gi
