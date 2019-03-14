@@ -35,6 +35,21 @@ public class Vala.YieldStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 	}
 
+	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
+			error = true;
+			Report.error (source_reference, "yield statement not available outside async method");
+		}
+
+		return !error;
+	}
+
 	public override void emit (CodeGenerator codegen) {
 		codegen.visit_yield_statement (this);
 	}

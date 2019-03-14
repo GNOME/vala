@@ -715,6 +715,7 @@ TESTS = \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
 	semantic/yield-creation-requires-async-method.test \
+	semantic/yield-statement-requires-async-context.test \
 	$(NULL)
 
 NON_NULL_TESTS = \
