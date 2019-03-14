@@ -142,14 +142,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		CCodeExpression task_is_complete;
 
-		if (context.require_glib_version (2, 44)) {
-			var task_complete = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_completed"));
-			task_complete.add_argument (async_result_expr);
-			task_is_complete = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, task_complete);
-		} else {
-			var task_complete = new CCodeMemberAccess.pointer (data_var, "_task_complete_");
-			task_is_complete = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, task_complete);
-		}
+		var task_complete = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_completed"));
+		task_complete.add_argument (async_result_expr);
+		task_is_complete = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, task_complete);
 
 		ccode.open_while (task_is_complete);
 		var task_context = new CCodeFunctionCall (new CCodeIdentifier ("g_task_get_context"));

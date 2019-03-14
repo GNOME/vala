@@ -3913,13 +3913,8 @@ namespace GLib {
 	}
 
 	[Compact]
-#if GLIB_2_44
 	[Version (since = "2.44")]
 	[CCode (ref_function = "g_option_group_ref", unref_function = "g_option_group_unref", type_id = "G_TYPE_OPTION_GROUP")]
-#else
-	[Version (since = "2.6")]
-	[CCode (free_function = "g_option_group_free")]
-#endif
 	public class OptionGroup {
 		public OptionGroup (string name, string description, string help_description, void* user_data = null, DestroyNotify? destroy = null);
 		public void add_entries ([CCode (array_length = false, array_null_terminated = true)] OptionEntry[] entries);
