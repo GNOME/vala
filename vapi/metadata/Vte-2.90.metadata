@@ -1,3 +1,5 @@
+Vte replacement="vte-2.91"
+
 // Deprecated from start
 Terminal.pty skip
 
