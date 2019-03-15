@@ -189,6 +189,9 @@ fi
 AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 AM_CONDITIONAL(ENABLE_VALADOC, test x$enable_valadoc = xyes)
 
+AC_ARG_ENABLE(devhelp-doclet, AS_HELP_STRING([--enable-devhelp-doclet], [Use the devhelp doclet instead of HTML when building the documentation]), enable_devhelp_doclet=$enableval, enable_devhelp_doclet=no)
+AM_CONDITIONAL(ENABLE_DEVHELP_DOCLET, test x$enable_devhelp_doclet = xyes)
+
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 

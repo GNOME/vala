@@ -67,6 +67,16 @@ endif
 	cd $(DESTDIR)$(man1dir) && $(LN_S) -f vapigen@PACKAGE_SUFFIX@.1 vapigen.1
 endif
 
+if ENABLE_DEVHELP_DOCLET
+COMMON_VALADOCFLAGS_DOCLET = \
+	--doclet=$(top_builddir)/valadoc/doclets/devhelp/.libs \
+	$(NULL)
+else
+COMMON_VALADOCFLAGS_DOCLET = \
+	--doclet=$(top_builddir)/valadoc/doclets/html/.libs \
+	--doclet-arg "--no-browsable-check" \
+	$(NULL)
+endif
 
 if ENABLE_VALADOC
 COMMON_VALADOCFLAGS = \
@@ -79,9 +89,8 @@ COMMON_VALADOCFLAGS = \
 	--pkg config \
 	--pkg gmodule-2.0 \
 	--directory=internal-apis/ \
-	--doclet=$(top_builddir)/valadoc/doclets/html/.libs \
-	--doclet-arg "--no-browsable-check" \
 	--basedir=internal-apis/ \
+	$(COMMON_VALADOCFLAGS_DOCLET) \
 	$(NULL)
 
 if HAVE_CGRAPH
@@ -150,6 +159,17 @@ internal-apis/valadoc: $(valadoc_VALASOURCES) internal-apis/codegen
 	@touch $@
 
 internal-api-docs: internal-apis/gee internal-apis/vala internal-apis/ccode internal-apis/codegen internal-apis/valadoc
+
+if ENABLE_DEVHELP_DOCLET
+devhelpdocdir = $(datadir)/gtk-doc/html/
+devhelpdoc_DATA = \
+	internal-apis/gee \
+	internal-apis/vala \
+	internal-apis/ccode \
+	internal-apis/codegen \
+	internal-apis/valadoc \
+	$(NULL)
+endif
 endif
 
 clean-local:
