@@ -1260,6 +1260,9 @@ public class string {
 	public string reverse (ssize_t len = -1);
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (ssize_t max_len = -1, out char* end = null);
+	[Version (since = "2.60")]
+	[CCode (cname = "g_utf8_validate_len")]
+	public bool validate_len (size_t max_len, out char* end = null);
 	[Version (since = "2.52")]
 	[CCode (cname = "g_utf8_make_valid")]
 	public string make_valid (ssize_t len = -1);
