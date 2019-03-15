@@ -197,6 +197,13 @@ public class Vala.SourceFile {
 	}
 
 	public void remove_node (CodeNode node) {
+		// Also update the entry point of the current code context
+		var code_context = CodeContext.get ();
+		unowned Vala.Method? entry_point = code_context.entry_point;
+		if (entry_point != null && entry_point.source_reference == node.source_reference) {
+			code_context.entry_point = null;
+		}
+
 		nodes.remove (node);
 	}
 
