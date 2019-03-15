@@ -636,12 +636,11 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 						TokenType.str ("I.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_UPPER_CASE_ROMAN); })
 					}),
 					optional_invisible_spaces
-				})
-				.set_skip (() => { new_list_item (Content.List.Bullet.NONE); }),
+				}),
 				Rule.seq ({ run })
 				.set_start (() => {
 					var content = _factory.create_paragraph ();
-					((ListItem) peek ()).content.add (content);
+					((BlockContent) peek ()).content.add (content);
 					push (content);
 				})
 				.set_reduce (() => { pop (); }),
@@ -650,7 +649,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_name ("IndentedItem")
 			.set_start (() => { current_level = 0; })
 			.set_reduce (() => {
-				var content_list = ((ListItem) peek ()).content;
+				var content_list = ((BlockContent) peek ()).content;
 				if (content_list.size > 0 && content_list.last () is Text) {
 					((Text) content_list.last ()).content._chomp ();
 				}
