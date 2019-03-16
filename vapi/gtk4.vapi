@@ -9458,6 +9458,13 @@ namespace Gtk {
 	public class PasswordEntry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PasswordEntry ();
+		public bool get_show_peek_icon ();
+		public void set_show_peek_icon (bool show_peek_icon);
+		[NoAccessorMethod]
+		public bool activates_default { get; set; }
+		[NoAccessorMethod]
+		public string placeholder_text { owned get; set; }
+		public bool show_peek_icon { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
 	public class Picture : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -13307,7 +13314,11 @@ namespace Gtk {
 		SLIDE_RIGHT,
 		SLIDE_LEFT,
 		SLIDE_UP,
-		SLIDE_DOWN
+		SLIDE_DOWN,
+		SWING_RIGHT,
+		SWING_LEFT,
+		SWING_UP,
+		SWING_DOWN
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SCROLL_", type_id = "gtk_scroll_step_get_type ()")]
 	public enum ScrollStep {
