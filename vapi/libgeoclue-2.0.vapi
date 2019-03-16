@@ -7,6 +7,8 @@ namespace GClue {
 		[CCode (cname = "gclue_client_proxy_new", has_construct_function = false)]
 		public async ClientProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, string? name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
 		public static async GClue.ClientProxy create (string desktop_id, GClue.AccuracyLevel accuracy_level, GLib.Cancellable? cancellable) throws GLib.Error;
+		public static async GClue.ClientProxy create_full (string desktop_id, GClue.AccuracyLevel accuracy_level, GClue.ClientProxyCreateFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
+		public static GClue.ClientProxy create_full_sync (string desktop_id, GClue.AccuracyLevel accuracy_level, GClue.ClientProxyCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public static GClue.ClientProxy create_sync (string desktop_id, GClue.AccuracyLevel accuracy_level, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cname = "gclue_client_proxy_new_for_bus", has_construct_function = false)]
 		public async ClientProxy.for_bus (GLib.BusType bus_type, GLib.DBusProxyFlags flags, string name, string object_path, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -150,6 +152,12 @@ namespace GClue {
 		NEIGHBORHOOD,
 		STREET,
 		EXACT
+	}
+	[CCode (cheader_filename = "geoclue.h", cprefix = "GCLUE_CLIENT_PROXY_CREATE_", type_id = "gclue_client_proxy_create_flags_get_type ()")]
+	[Flags]
+	public enum ClientProxyCreateFlags {
+		NONE,
+		AUTO_DELETE
 	}
 	[CCode (cheader_filename = "geoclue.h")]
 	public static unowned GLib.DBusInterfaceInfo client_interface_info ();
