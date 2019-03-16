@@ -69,6 +69,8 @@ namespace Gst {
 			public void stop ();
 			[NoAccessorMethod]
 			public uint64 timeout { get; set construct; }
+			[NoAccessorMethod]
+			public bool use_cache { get; set construct; }
 			public virtual signal void discovered (Gst.PbUtils.DiscovererInfo info, GLib.Error? err);
 			public virtual signal void finished ();
 			public virtual signal void source_setup (Gst.Element source);

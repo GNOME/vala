@@ -1250,7 +1250,7 @@ namespace Gst {
 		public Gst.Context? get_context_unlocked (string context_type);
 		[Version (since = "1.8")]
 		public GLib.List<Gst.Context> get_contexts ();
-		public unowned Gst.ElementFactory get_factory ();
+		public unowned Gst.ElementFactory? get_factory ();
 		[Version (since = "1.14")]
 		public unowned string get_metadata (string key);
 		[Version (since = "1.14")]

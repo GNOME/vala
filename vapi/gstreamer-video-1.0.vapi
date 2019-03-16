@@ -909,7 +909,11 @@ namespace Gst {
 			SMPTE240M,
 			FILM,
 			BT2020,
-			ADOBERGB
+			ADOBERGB,
+			SMPTEST428,
+			SMPTERP431,
+			SMPTEEG432,
+			EBU3213
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_COLOR_RANGE_", type_id = "gst_video_color_range_get_type ()")]
 		[GIR (name = "VideoColorRange")]
