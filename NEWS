@@ -1,3 +1,24 @@
+Vala 0.44.1
+===========
+ * Various improvements and bug fixes:
+  - ccodegen:
+    + Use unsigned default value for flags-enum
+    + Use guint to represent flags-enum in custom GMarshalFunc
+  - Move disconnect error from signal-module to semantic-analyzer pass
+  - Mark defined constructors of abstract classes as protected
+  - parser: Implicit creation method of abstract classes must be protected
+  - vala: Allow assignment of 0U to enum types
+  - libvaladoc: Don't try to create a Content.ListItem when there is none
+
+ * Bindings:
+  - gio-2.0: SocketAddress.from_native() is a factory method not a constructor
+  - glib-2.0: Add string.validate_len() since 2.60
+  - gstreamer: Update from 1.15.2+ git master
+  - gtk4: Update to 3.94.0+f14d998c
+  - libgvc: Some additions and ownership/return-type fixes
+  - vte-2.90: Mark as deprecated, it was replaced by vte-2.91
+  - vapi: Update GIR-based bindings
+
 Vala 0.44.0
 ===========
  * Various improvements and bug fixes:
