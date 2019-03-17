@@ -327,10 +327,31 @@ public class Vala.CCodeFunction : CCodeNode {
 		add_statement (stmt);
 	}
 
-	public void close () {
+	public void prepend_statement (CCodeNode stmt) {
+		stmt.line = current_line;
+		current_block.prepend_statement (stmt);
+	}
+
+	public void prepend_expression (CCodeExpression expression) {
+		prepend_statement (new CCodeExpressionStatement (expression));
+	}
+
+	public void prepend_assignment (CCodeExpression left, CCodeExpression right) {
+		prepend_expression (new CCodeAssignment (left, right));
+	}
+
+	public void close (CCodeBlock? block = null) {
+		//FIXME Don't ignore this invalid close without further action
+		if (block != null && statement_stack.index_of (block) >= 0) {
+			return;
+		}
+
 		do {
 			var top = statement_stack.remove_at (statement_stack.size - 1);
 			current_block = top as CCodeBlock;
+			if (current_block == block) {
+				current_block = null;
+			}
 		} while (current_block == null);
 	}
 }

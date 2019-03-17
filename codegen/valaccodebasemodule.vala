@@ -46,6 +46,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
 		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
 		public bool is_in_method_precondition;
+		public CCodeBlock? current_co_state_block;
 
 		public EmitContext (Symbol? symbol = null) {
 			current_symbol = symbol;
@@ -5241,10 +5242,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// set state before calling async function to support immediate callbacks
 				int state = emit_context.next_coroutine_state++;
 
-				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
+				ccode.prepend_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
 				ccode.add_expression (async_call);
 				ccode.add_return (new CCodeConstant ("FALSE"));
+
+				if (state > 0) {
+					ccode.close (emit_context.current_co_state_block);
+					emit_context.current_co_state_block = null;
+				}
 				ccode.add_label ("_state_%d".printf (state));
+				ccode.open_block ();
+				emit_context.current_co_state_block = ccode.current_block;
 			}
 
 			creation_expr = creation_call;
