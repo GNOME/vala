@@ -163,6 +163,24 @@ namespace Vala {
 		}
 	}
 
+	public static bool is_ref_function_void (DataType type) {
+		unowned Class? cl = type.data_type as Class;
+		if (cl != null) {
+			return get_ccode_ref_function_void (cl);
+		} else {
+			return false;
+		}
+	}
+
+	public static bool is_free_function_address_of (DataType type) {
+		unowned Class? cl = type.data_type as Class;
+		if (cl != null) {
+			return get_ccode_free_function_address_of (cl);
+		} else {
+			return false;
+		}
+	}
+
 	public static bool get_ccode_ref_function_void (Class cl) {
 		return get_ccode_attribute(cl).ref_function_void;
 	}
@@ -411,6 +429,10 @@ namespace Vala {
 
 	public static bool get_ccode_concrete_accessor (Property p) {
 		return p.get_attribute ("ConcreteAccessor") != null;
+	}
+
+	public static bool get_ccode_has_emitter (Signal sig) {
+		return sig.get_attribute ("HasEmitter") != null;
 	}
 
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {

@@ -545,7 +545,7 @@ public class Vala.GSignalModule : GObjectModule {
 				ccall.add_argument (new CCodeConstant ("0"));
 
 				set_cvalue (expr, ccall);
-			} else if (get_signal_has_emitter (sig)) {
+			} else if (get_ccode_has_emitter (sig)) {
 				string emitter_func;
 				if (sig.emitter != null) {
 					if (!sig.external_package && expr.source_reference.file != sig.source_reference.file) {

@@ -4382,24 +4382,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return true;
 	}
 
-	bool is_ref_function_void (DataType type) {
-		var cl = type.data_type as Class;
-		if (cl != null) {
-			return get_ccode_ref_function_void (cl);
-		} else {
-			return false;
-		}
-	}
-
-	bool is_free_function_address_of (DataType type) {
-		var cl = type.data_type as Class;
-		if (cl != null) {
-			return get_ccode_free_function_address_of (cl);
-		} else {
-			return false;
-		}
-	}
-
 	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
@@ -6478,10 +6460,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeConstant get_signal_canonical_constant (Signal sig, string? detail = null) {
 		return new CCodeConstant ("\"%s%s\"".printf (get_ccode_name (sig), (detail != null ? "::%s".printf (detail) : "")));
-	}
-
-	public bool get_signal_has_emitter (Signal sig) {
-		return sig.get_attribute ("HasEmitter") != null;
 	}
 
 	public CCodeConstant get_property_canonical_cconstant (Property prop) {
