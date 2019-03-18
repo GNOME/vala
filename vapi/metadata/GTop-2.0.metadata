@@ -45,10 +45,8 @@ glibtop_union skip // name="Union" cheader_filename="glibtop/union.h"
 glibtop_uptime name="Uptime" cheader_filename="glibtop/uptime.h"
 
 glibtop_init* name="glibtop_(.+)"
-glibtop.get_*.buf out
-glibtop.get_* return_void
-glibtop_get_*.buf out
-glibtop_get_* return_void
+glibtop.get_*.buf out unowned nullable
+glibtop_get_*.buf out unowned nullable
 glibtop_get_* name="glibtop_(.+)"
 glibtop_close name="close"
 glibtop_internet_addr name="internet_addr"

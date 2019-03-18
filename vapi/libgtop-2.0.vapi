@@ -48,130 +48,130 @@ namespace GTop {
 		public void close_r ();
 		public void close_s ();
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_cpu (out GTop.Cpu buf);
-		public void get_cpu_l (out GTop.Cpu buf);
-		public void get_cpu_s (out GTop.Cpu buf);
+		public static void get_cpu (out unowned GTop.Cpu? buf);
+		public void get_cpu_l (out unowned GTop.Cpu? buf);
+		public void get_cpu_s (out unowned GTop.Cpu? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_fsusage (out GTop.FsUsage buf, string mount_dir);
-		public void get_fsusage_l (out GTop.FsUsage buf, string mount_dir);
-		public void get_fsusage_s (out GTop.FsUsage buf, string mount_dir);
+		public static void get_fsusage (out unowned GTop.FsUsage? buf, string mount_dir);
+		public void get_fsusage_l (out unowned GTop.FsUsage? buf, string mount_dir);
+		public void get_fsusage_s (out unowned GTop.FsUsage? buf, string mount_dir);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_loadavg (out GTop.LoadAvg buf);
-		public void get_loadavg_l (out GTop.LoadAvg buf);
-		public void get_loadavg_s (out GTop.LoadAvg buf);
+		public static void get_loadavg (out unowned GTop.LoadAvg? buf);
+		public void get_loadavg_l (out unowned GTop.LoadAvg? buf);
+		public void get_loadavg_s (out unowned GTop.LoadAvg? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_mem (out GTop.Mem buf);
-		public void get_mem_l (out GTop.Mem buf);
-		public void get_mem_s (out GTop.Mem buf);
+		public static void get_mem (out unowned GTop.Mem? buf);
+		public void get_mem_l (out unowned GTop.Mem? buf);
+		public void get_mem_s (out unowned GTop.Mem? buf);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static GTop.MountEntry[] get_mountlist (out GTop.MountList buf, int all_fs);
+		public static GTop.MountEntry[] get_mountlist (out unowned GTop.MountList? buf, int all_fs);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MountEntry[] get_mountlist_l (out GTop.MountList buf, int all_fs);
+		public GTop.MountEntry[] get_mountlist_l (out unowned GTop.MountList? buf, int all_fs);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MountEntry[] get_mountlist_s (out GTop.MountList buf, int all_fs);
+		public GTop.MountEntry[] get_mountlist_s (out unowned GTop.MountList? buf, int all_fs);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_msg_limits (out GTop.MsgLimits buf);
-		public void get_msg_limits_l (out GTop.MsgLimits buf);
-		public void get_msg_limits_s (out GTop.MsgLimits buf);
+		public static void get_msg_limits (out unowned GTop.MsgLimits? buf);
+		public void get_msg_limits_l (out unowned GTop.MsgLimits? buf);
+		public void get_msg_limits_s (out unowned GTop.MsgLimits? buf);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static string[] get_netlist (out GTop.NetList buf);
+		public static string[] get_netlist (out unowned GTop.NetList? buf);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_netlist_l (out GTop.NetList buf);
+		public string[] get_netlist_l (out unowned GTop.NetList? buf);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] get_netlist_s (out GTop.NetList buf);
+		public string[] get_netlist_s (out unowned GTop.NetList? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_netload (out GTop.NetLoad buf, string @interface);
-		public void get_netload_l (out GTop.NetLoad buf, string @interface);
-		public void get_netload_s (out GTop.NetLoad buf, string @interface);
+		public static void get_netload (out unowned GTop.NetLoad? buf, string @interface);
+		public void get_netload_l (out unowned GTop.NetLoad? buf, string @interface);
+		public void get_netload_s (out unowned GTop.NetLoad? buf, string @interface);
 		public size_t get_parameter_l (uint parameter, void* data_ptr, size_t data_size);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_ppp (out GTop.Ppp buf, ushort device);
-		public void get_ppp_l (out GTop.Ppp buf, ushort device);
-		public void get_ppp_s (out GTop.Ppp buf, ushort device);
+		public static void get_ppp (out unowned GTop.Ppp? buf, ushort device);
+		public void get_ppp_l (out unowned GTop.Ppp? buf, ushort device);
+		public void get_ppp_s (out unowned GTop.Ppp? buf, ushort device);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static uint16 get_proc_affinity (out GTop.ProcAffinity buf, int pid);
-		public uint16 get_proc_affinity_l (out GTop.ProcAffinity buf, int pid);
-		public uint16 get_proc_affinity_s (out GTop.ProcAffinity buf, int pid);
+		public static uint16 get_proc_affinity (out unowned GTop.ProcAffinity? buf, int pid);
+		public uint16 get_proc_affinity_l (out unowned GTop.ProcAffinity? buf, int pid);
+		public uint16 get_proc_affinity_s (out unowned GTop.ProcAffinity? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static string get_proc_args (out GTop.ProcArgs buf, int pid, uint max_len);
-		public string get_proc_args_l (out GTop.ProcArgs buf, int pid, uint max_len);
-		public string get_proc_args_s (out GTop.ProcArgs buf, int pid, uint max_len);
+		public static string get_proc_args (out unowned GTop.ProcArgs? buf, int pid, uint max_len);
+		public string get_proc_args_l (out unowned GTop.ProcArgs? buf, int pid, uint max_len);
+		public string get_proc_args_s (out unowned GTop.ProcArgs? buf, int pid, uint max_len);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static string[] get_proc_argv (out GTop.ProcArgs buf, int pid, uint max_len);
+		public static string[] get_proc_argv (out unowned GTop.ProcArgs? buf, int pid, uint max_len);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_io (out GTop.ProcIO buf, int pid);
-		public void get_proc_io_l (out GTop.ProcIO buf, int pid);
-		public void get_proc_io_s (out GTop.ProcIO buf, int pid);
+		public static void get_proc_io (out unowned GTop.ProcIO? buf, int pid);
+		public void get_proc_io_l (out unowned GTop.ProcIO? buf, int pid);
+		public void get_proc_io_s (out unowned GTop.ProcIO? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_kernel (out GTop.ProcKernel buf, int pid);
-		public void get_proc_kernel_l (out GTop.ProcKernel buf, int pid);
-		public void get_proc_kernel_s (out GTop.ProcKernel buf, int pid);
+		public static void get_proc_kernel (out unowned GTop.ProcKernel? buf, int pid);
+		public void get_proc_kernel_l (out unowned GTop.ProcKernel? buf, int pid);
+		public void get_proc_kernel_s (out unowned GTop.ProcKernel? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static GTop.MapEntry[] get_proc_map (out GTop.ProcMap buf, int pid);
+		public static GTop.MapEntry[] get_proc_map (out unowned GTop.ProcMap? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MapEntry[] get_proc_map_l (out GTop.ProcMap buf, int pid);
+		public GTop.MapEntry[] get_proc_map_l (out unowned GTop.ProcMap? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MapEntry[] get_proc_map_s (out GTop.ProcMap buf, int pid);
+		public GTop.MapEntry[] get_proc_map_s (out unowned GTop.ProcMap? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_mem (out GTop.ProcMem buf, int pid);
-		public void get_proc_mem_l (out GTop.ProcMem buf, int pid);
-		public void get_proc_mem_s (out GTop.ProcMem buf, int pid);
+		public static void get_proc_mem (out unowned GTop.ProcMem? buf, int pid);
+		public void get_proc_mem_l (out unowned GTop.ProcMem? buf, int pid);
+		public void get_proc_mem_s (out unowned GTop.ProcMem? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static GTop.OpenFileEntry[] get_proc_open_files (out GTop.ProcOpenFiles buf, int pid);
+		public static GTop.OpenFileEntry[] get_proc_open_files (out unowned GTop.ProcOpenFiles? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.OpenFileEntry[] get_proc_open_files_l (out GTop.ProcOpenFiles buf, int pid);
+		public GTop.OpenFileEntry[] get_proc_open_files_l (out unowned GTop.ProcOpenFiles? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.OpenFileEntry[] get_proc_open_files_s (out GTop.ProcOpenFiles buf, int pid);
+		public GTop.OpenFileEntry[] get_proc_open_files_s (out unowned GTop.ProcOpenFiles? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_segment (out GTop.Segment buf, int pid);
-		public void get_proc_segment_l (out GTop.Segment buf, int pid);
-		public void get_proc_segment_s (out GTop.Segment buf, int pid);
+		public static void get_proc_segment (out unowned GTop.Segment? buf, int pid);
+		public void get_proc_segment_l (out unowned GTop.Segment? buf, int pid);
+		public void get_proc_segment_s (out unowned GTop.Segment? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_signal (out GTop.Signal buf, int pid);
-		public void get_proc_signal_l (out GTop.Signal buf, int pid);
-		public void get_proc_signal_s (out GTop.Signal buf, int pid);
+		public static void get_proc_signal (out unowned GTop.Signal? buf, int pid);
+		public void get_proc_signal_l (out unowned GTop.Signal? buf, int pid);
+		public void get_proc_signal_s (out unowned GTop.Signal? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_state (out GTop.ProcState buf, int pid);
-		public void get_proc_state_l (out GTop.ProcState buf, int pid);
-		public void get_proc_state_s (out GTop.ProcState buf, int pid);
+		public static void get_proc_state (out unowned GTop.ProcState? buf, int pid);
+		public void get_proc_state_l (out unowned GTop.ProcState? buf, int pid);
+		public void get_proc_state_s (out unowned GTop.ProcState? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_time (out GTop.ProcTime buf, int pid);
-		public void get_proc_time_l (out GTop.ProcTime buf, int pid);
-		public void get_proc_time_s (out GTop.ProcTime buf, int pid);
+		public static void get_proc_time (out unowned GTop.ProcTime? buf, int pid);
+		public void get_proc_time_l (out unowned GTop.ProcTime? buf, int pid);
+		public void get_proc_time_s (out unowned GTop.ProcTime? buf, int pid);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_proc_uid (out GTop.ProcUid buf, int pid);
-		public void get_proc_uid_l (out GTop.ProcUid buf, int pid);
-		public void get_proc_uid_s (out GTop.ProcUid buf, int pid);
+		public static void get_proc_uid (out unowned GTop.ProcUid? buf, int pid);
+		public void get_proc_uid_l (out unowned GTop.ProcUid? buf, int pid);
+		public void get_proc_uid_s (out unowned GTop.ProcUid? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static string[] get_proc_wd (out GTop.ProcWd buf, int pid);
+		public static string[] get_proc_wd (out unowned GTop.ProcWd? buf, int pid);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static int[] get_proclist (out GTop.ProcList buf, int64 which, int64 arg);
+		public static int[] get_proclist (out unowned GTop.ProcList? buf, int64 which, int64 arg);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public int[] get_proclist_l (out GTop.ProcList buf, int64 which, int64 arg);
+		public int[] get_proclist_l (out unowned GTop.ProcList? buf, int64 which, int64 arg);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public int[] get_proclist_s (out GTop.ProcList buf, int64 which, int64 arg);
+		public int[] get_proclist_s (out unowned GTop.ProcList? buf, int64 which, int64 arg);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_sem_limits (out GTop.SemLimits buf);
-		public void get_sem_limits_l (out GTop.SemLimits buf);
-		public void get_sem_limits_s (out GTop.SemLimits buf);
+		public static void get_sem_limits (out unowned GTop.SemLimits? buf);
+		public void get_sem_limits_l (out unowned GTop.SemLimits? buf);
+		public void get_sem_limits_s (out unowned GTop.SemLimits? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_shm_limits (out GTop.ShmLimits buf);
-		public void get_shm_limits_l (out GTop.ShmLimits buf);
-		public void get_shm_limits_s (out GTop.ShmLimits buf);
+		public static void get_shm_limits (out unowned GTop.ShmLimits? buf);
+		public void get_shm_limits_l (out unowned GTop.ShmLimits? buf);
+		public void get_shm_limits_s (out unowned GTop.ShmLimits? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_swap (out GTop.Swap buf);
-		public void get_swap_l (out GTop.Swap buf);
-		public void get_swap_s (out GTop.Swap buf);
+		public static void get_swap (out unowned GTop.Swap? buf);
+		public void get_swap_l (out unowned GTop.Swap? buf);
+		public void get_swap_s (out unowned GTop.Swap? buf);
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_sysdeps (out GTop.SysDeps buf);
-		public void get_sysdeps_r (out GTop.SysDeps buf);
+		public static void get_sysdeps (out unowned GTop.SysDeps? buf);
+		public void get_sysdeps_r (out unowned GTop.SysDeps? buf);
 		[CCode (cheader_filename = "glibtop.h")]
 		public static unowned GTop.SysInfo? get_sysinfo ();
 		public unowned GTop.SysInfo? get_sysinfo_s ();
 		[CCode (cheader_filename = "glibtop.h")]
-		public static void get_uptime (out GTop.Uptime buf);
-		public void get_uptime_l (out GTop.Uptime buf);
-		public void get_uptime_s (out GTop.Uptime buf);
+		public static void get_uptime (out unowned GTop.Uptime? buf);
+		public void get_uptime_l (out unowned GTop.Uptime? buf);
+		public void get_uptime_s (out unowned GTop.Uptime? buf);
 		[CCode (cheader_filename = "glibtop.h")]
 		public static unowned GTop.Context? init ();
 		public void init_p (ulong features, uint flags);
