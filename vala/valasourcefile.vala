@@ -29,7 +29,7 @@ public class Vala.SourceFile {
 	/**
 	 * The name of this source file.
 	 */
-	public string filename { get; set; }
+	public string filename { get; private set; }
 
 	public string? relative_filename {
 		set {

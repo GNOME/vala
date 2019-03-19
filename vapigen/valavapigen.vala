@@ -184,10 +184,9 @@ class Vala.VAPIGen {
 					// mark relative metadata as source
 					string? metadata_filename = context.get_metadata_path (file.filename);
 					if (metadata_filename != null) {
-						foreach (SourceFile metadata_file in context.get_source_files ()) {
-							if (metadata_file.filename == metadata_filename) {
-								metadata_file.file_type = SourceFileType.SOURCE;
-							}
+						unowned SourceFile? metadata_file = context.get_source_file (metadata_filename);
+						if (metadata_file != null) {
+							metadata_file.file_type = SourceFileType.SOURCE;
 						}
 					}
 					if (file.from_commandline && file.package_name != null) {

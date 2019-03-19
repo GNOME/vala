@@ -203,6 +203,7 @@ public class Vala.CodeContext {
 	public string[] gresources_directories { get; set; default = {}; }
 
 	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
+	private Map<string,unowned SourceFile> source_files_map = new HashMap<string,unowned SourceFile> (str_hash, str_equal);
 	private List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
 
@@ -302,7 +303,23 @@ public class Vala.CodeContext {
 	 * @param file a source file
 	 */
 	public void add_source_file (SourceFile file) {
+		if (source_files_map.contains (file.filename)) {
+			Report.warning (null, "Ignoring source file `%s', which was already added to this context".printf (file.filename));
+			return;
+		}
+
 		source_files.add (file);
+		source_files_map.set (file.filename, file);
+	}
+
+	/**
+	 * Returns the source file for a given path.
+	 *
+	 * @param filename a path to a source file
+	 * @return the source file if found
+	 */
+	public unowned Vala.SourceFile? get_source_file (string filename) {
+		return source_files_map.get (filename);
 	}
 
 	/**
@@ -445,11 +462,17 @@ public class Vala.CodeContext {
 			}
 
 			add_source_file (source_file);
+			if (rpath != filename) {
+				source_files_map.set (filename, source_file);
+			}
 		} else if (filename.has_suffix (".vapi") || filename.has_suffix (".gir")) {
 			var source_file = new SourceFile (this, SourceFileType.PACKAGE, rpath, null, cmdline);
 			source_file.relative_filename = filename;
 
 			add_source_file (source_file);
+			if (rpath != filename) {
+				source_files_map.set (filename, source_file);
+			}
 		} else if (filename.has_suffix (".c")) {
 			add_c_source_file (rpath);
 		} else if (filename.has_suffix (".h")) {
