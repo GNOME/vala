@@ -1,0 +1,7 @@
+Invalid Code
+
+async void foo (string first, va_list vals) {
+}
+
+void main () {
+}

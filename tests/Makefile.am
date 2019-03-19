@@ -440,6 +440,8 @@ TESTS = \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
 	asynchronous/result-pos.vala \
+	asynchronous/variadic-invalid.test \
+	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
 	generics/constructor-chain-up.vala \
 	generics/inference-static-function.vala \
