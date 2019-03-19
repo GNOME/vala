@@ -356,6 +356,8 @@ TESTS = \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/result-pos.vala \
+	asynchronous/variadic-invalid.test \
+	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
 	generics/bug694765-1.vala \
 	generics/bug694765-2.vala \
