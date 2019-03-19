@@ -737,6 +737,11 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
 			}
+			if (!external_package && coroutine && (param.ellipsis || param.variable_type.data_type == context.analyzer.va_list_type.data_type)) {
+				error = true;
+				Report.error (param.source_reference, "Variadic parameters are not supported for async methods");
+				return false;
+			}
 			// TODO: begin and end parameters must be checked separately for coroutines
 			if (coroutine) {
 				continue;
