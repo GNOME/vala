@@ -2415,23 +2415,16 @@ namespace GLib {
 
 	[Assert]
 	public static void assert (bool expr);
-	[Assert]
 	[Version (since = "2.46")]
 	public static void assert_cmpmem (uint8[] m1, uint8[] m2);
-	[Assert]
 	public static void assert_error (Error? error, Quark error_domain, int error_code);
-	[Assert]
 	[Version (since = "2.38")]
 	public static void assert_false (bool expr);
-	[Assert]
 	[Version (since = "2.38")]
 	public static void assert_true (bool expr);
-	[Assert]
 	[Version (since = "2.38")]
 	public static void assert_null (void* expr);
-	[Assert]
 	public static void assert_no_error (Error? error);
-	[Assert]
 	[Version (since = "2.40")]
 	public static void assert_nonnull (void* expr);
 	[NoReturn]
