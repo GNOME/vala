@@ -59,6 +59,26 @@ public class Vala.SourceReference {
 	}
 
 	/**
+	 * Checks if given source location is part of this source reference.
+	 *
+	 * @param location     a source location
+	 * @return             whether this source location is part of this
+	 */
+	public bool contains (SourceLocation location) {
+		if (location.line > begin.line && location.line < end.line) {
+			return true;
+		} else if (location.line == begin.line && location.line == end.line) {
+			return location.column >= begin.column && location.column <= end.column;
+		} else if (location.line == begin.line) {
+			return location.column >= begin.column;
+		} else if (location.line == end.line) {
+			return location.column <= end.column;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Returns a string representation of this source reference.
 	 *
 	 * @return human-readable string
