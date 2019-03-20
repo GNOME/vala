@@ -1,0 +1,7 @@
+Invalid Code
+
+const int foo = 42;
+
+void main () {
+	int bar = foo[0:3];
+}
