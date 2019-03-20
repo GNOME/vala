@@ -1,0 +1,7 @@
+Invalid Code
+
+const string[] array = { "foo", "bar", "manam" };
+
+void main () {
+	unowned string[] slice = array[0:3.0];
+}
