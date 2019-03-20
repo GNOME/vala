@@ -63,6 +63,9 @@ TESTS = \
 	arrays/class-field-length-cname.vala \
 	arrays/field-global-length-cname.vala \
 	arrays/struct-field-length-cname.vala \
+	arrays/slice-invalid-start.test \
+	arrays/slice-invalid-stop.test \
+	arrays/slice-no-array.test \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \
 	chainup/base-invalid.test \
