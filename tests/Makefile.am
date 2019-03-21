@@ -271,6 +271,7 @@ TESTS = \
 	objects/dynamic.vala \
 	objects/generics.vala \
 	objects/initially-unowned.vala \
+	objects/field-leading-digit.test \
 	objects/fields.vala \
 	objects/gsource.vala \
 	objects/interfaces.vala \
