@@ -518,4 +518,74 @@ public abstract class Vala.DataType : CodeNode {
 
 		return true;
 	}
+
+	public string? get_type_signature (Symbol? symbol = null) {
+		if (symbol != null) {
+			string sig = symbol.get_attribute_string ("DBus", "signature");
+			if (sig != null) {
+				// allow overriding signature in attribute, used for raw GVariants
+				return sig;
+			}
+		}
+
+		unowned ArrayType? array_type = this as ArrayType;
+
+		if (array_type != null) {
+			string element_type_signature = array_type.element_type.get_type_signature ();
+
+			if (element_type_signature == null) {
+				return null;
+			}
+
+			return string.nfill (array_type.rank, 'a') + element_type_signature;
+		} else if (data_type != null && data_type is Enum && data_type.get_attribute_bool ("DBus", "use_string_marshalling")) {
+			return "s";
+		} else if (data_type != null) {
+			string sig = data_type.get_attribute_string ("CCode", "type_signature");
+
+			unowned Struct? st = data_type as Struct;
+			unowned Enum? en = data_type as Enum;
+			if (sig == null && st != null) {
+				var str = new StringBuilder ();
+				str.append_c ('(');
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding == MemberBinding.INSTANCE) {
+						str.append (f.variable_type.get_type_signature (f));
+					}
+				}
+				str.append_c (')');
+				sig = str.str;
+			} else if (sig == null && en != null) {
+				if (en.is_flags) {
+					return "u";
+				} else {
+					return "i";
+				}
+			}
+
+			var type_args = get_type_arguments ();
+			if (sig != null && "%s" in sig && type_args.size > 0) {
+				string element_sig = "";
+				foreach (DataType type_arg in type_args) {
+					var s = type_arg.get_type_signature ();
+					if (s != null) {
+						element_sig += s;
+					}
+				}
+
+				sig = sig.replace ("%s", element_sig);
+			}
+
+			if (sig == null &&
+			    (data_type.get_full_name () == "GLib.UnixInputStream" ||
+			     data_type.get_full_name () == "GLib.UnixOutputStream" ||
+			     data_type.get_full_name () == "GLib.Socket")) {
+				return "h";
+			}
+
+			return sig;
+		} else {
+			return null;
+		}
+	}
 }
