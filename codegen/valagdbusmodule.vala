@@ -286,7 +286,7 @@ public class Vala.GDBusModule : GVariantModule {
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
-				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (param.variable_type, param))));
+				info.append (new CCodeConstant ("\"%s\"".printf (param.variable_type.get_type_signature (param))));
 				info.append (new CCodeConstant ("NULL"));
 
 				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
@@ -305,7 +305,7 @@ public class Vala.GDBusModule : GVariantModule {
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (dbus_result_name (m))));
-				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (m.return_type, m))));
+				info.append (new CCodeConstant ("\"%s\"".printf (m.return_type.get_type_signature (m))));
 				info.append (new CCodeConstant ("NULL"));
 
 				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
@@ -371,7 +371,7 @@ public class Vala.GDBusModule : GVariantModule {
 				var info = new CCodeInitializerList ();
 				info.append (new CCodeConstant ("-1"));
 				info.append (new CCodeConstant ("\"%s\"".printf (param.name)));
-				info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (param.variable_type, param))));
+				info.append (new CCodeConstant ("\"%s\"".printf (param.variable_type.get_type_signature (param))));
 				info.append (new CCodeConstant ("NULL"));
 
 				var cdecl = new CCodeDeclaration ("const GDBusArgInfo");
@@ -428,7 +428,7 @@ public class Vala.GDBusModule : GVariantModule {
 			var info = new CCodeInitializerList ();
 			info.append (new CCodeConstant ("-1"));
 			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
-			info.append (new CCodeConstant ("\"%s\"".printf (get_type_signature (prop.property_type, prop))));
+			info.append (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature (prop))));
 			if (prop.get_accessor != null && prop.set_accessor != null) {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_READABLE | G_DBUS_PROPERTY_INFO_FLAGS_WRITABLE"));
 			} else if (prop.get_accessor != null) {
