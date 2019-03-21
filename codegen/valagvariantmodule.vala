@@ -164,7 +164,28 @@ public class Vala.GVariantModule : GAsyncModule {
 		if (target_type.is_real_non_null_struct_type ()) {
 			ccode.add_assignment (new CCodeIdentifier ("*result"), func_result);
 		} else {
-			ccode.add_return (func_result);
+			if (expr.is_silent_cast && SemanticAnalyzer.is_gvariant_basic_type (target_type)) {
+				var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_is_of_type"));
+				ccheck.add_argument (new CCodeIdentifier ("value"));
+				BasicTypeInfo basic_type;
+				get_basic_type_info (target_type.get_type_signature (), out basic_type);
+				ccheck.add_argument (new CCodeIdentifier ("G_VARIANT_TYPE_" + basic_type.type_name.ascii_up ()));
+				ccode.open_if (ccheck);
+				if (basic_type.is_string) {
+					ccode.add_return (func_result);
+				} else {
+					var temp_type = expr.target_type.copy ();
+					temp_type.nullable = false;
+					var temp_value = create_temp_value (temp_type, false, expr);
+					store_value (temp_value, new GLibValue (temp_type, func_result), expr.source_reference);
+					ccode.add_return (get_cvalue_ (transform_value (temp_value, expr.target_type, expr)));
+				}
+				ccode.add_else ();
+				ccode.add_return (new CCodeConstant ("NULL"));
+				ccode.close ();
+			} else {
+				ccode.add_return (func_result);
+			}
 		}
 
 		pop_function ();
