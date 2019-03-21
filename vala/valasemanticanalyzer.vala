@@ -747,6 +747,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
+	public static bool is_gvariant_basic_type (DataType type) {
+		const string[] GVARIANT_BASIC_TYPES = { "y", "b", "n", "q", "i", "u", "x", "t", "d", "s", "o", "g" };
+		return type.get_type_signature () in GVARIANT_BASIC_TYPES;
+	}
+
 	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
 		// construct a new type reference for the base type with correctly linked type arguments
 		DataType instance_base_type;

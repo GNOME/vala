@@ -184,6 +184,9 @@ public class Vala.CastExpression : Expression {
 		    && is_gvariant (context, inner.value_type) && !is_gvariant (context, value_type)) {
 			// GVariant unboxing returns owned value
 			value_type.value_owned = true;
+			if (is_silent_cast && !SemanticAnalyzer.is_gvariant_basic_type (value_type)) {
+				Report.error (source_reference, "Silent casts of `GLib.Variant' is only supported for basic types");
+			}
 		}
 
 		inner.target_type = inner.value_type.copy ();
