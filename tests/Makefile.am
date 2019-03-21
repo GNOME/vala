@@ -286,6 +286,7 @@ TESTS = \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
+	objects/digit-field.test \
 	objects/duplicating-instance-invalid.test \
 	objects/dynamic.vala \
 	objects/generics.vala \
