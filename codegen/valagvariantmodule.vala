@@ -160,8 +160,57 @@ public class Vala.GVariantModule : GAsyncModule {
 
 		push_function (cfunc);
 
+		CCodeExpression type_expr = null;
+		BasicTypeInfo basic_type = {};
+		bool is_basic_type = false;
+		if (expr.is_silent_cast) {
+			var signature = target_type.get_type_signature ();
+			is_basic_type = get_basic_type_info (signature, out basic_type);
+			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_is_of_type"));
+			ccheck.add_argument (new CCodeIdentifier ("value"));
+			if (is_basic_type) {
+				type_expr = new CCodeIdentifier ("G_VARIANT_TYPE_" + basic_type.type_name.ascii_up ());
+			} else {
+				var gvariant_type_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("VariantType"));
+				var type_temp = get_temp_variable (gvariant_type_type, true, expr, true);
+				emit_temp_var (type_temp);
+				type_expr = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_type_new"));
+				((CCodeFunctionCall) type_expr).add_argument (new CCodeIdentifier ("\"%s\"".printf (signature)));
+				store_value (get_local_cvalue (type_temp), new GLibValue (gvariant_type_type, type_expr), expr.source_reference);
+				type_expr = get_variable_cexpression (type_temp.name);
+			}
+			ccheck.add_argument (type_expr);
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("value"), ccheck));
+		}
+
 		CCodeExpression func_result = deserialize_expression (target_type, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
-		if (target_type.is_real_non_null_struct_type ()) {
+
+		if (expr.is_silent_cast) {
+			if (is_basic_type && basic_type.is_string) {
+				ccode.add_return (func_result);
+			} else {
+				if (!is_basic_type) {
+					var type_free = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_type_free"));
+					type_free.add_argument (type_expr);
+					ccode.add_expression (type_free);
+				}
+				var temp_type = expr.target_type.copy ();
+				if (!expr.target_type.is_real_struct_type ()) {
+					temp_type.nullable = false;
+				}
+				var temp_value = create_temp_value (temp_type, false, expr);
+				store_value (temp_value, new GLibValue (temp_type, func_result), expr.source_reference);
+				ccode.add_return (get_cvalue_ (transform_value (temp_value, expr.target_type, expr)));
+			}
+			ccode.add_else ();
+			if (!is_basic_type) {
+				var type_free = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_type_free"));
+				type_free.add_argument (type_expr);
+				ccode.add_expression (type_free);
+			}
+			ccode.add_return (new CCodeConstant ("NULL"));
+			ccode.close ();
+		} else if (target_type.is_real_non_null_struct_type ()) {
 			ccode.add_assignment (new CCodeIdentifier ("*result"), func_result);
 		} else {
 			ccode.add_return (func_result);
