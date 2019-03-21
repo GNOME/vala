@@ -34,6 +34,7 @@ TESTS = \
 	basic-types/glists.vala \
 	basic-types/gptrarray.vala \
 	basic-types/gvariants.vala \
+	basic-types/gvariants-unboxing-safe.vala \
 	basic-types/bug570846.test \
 	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
@@ -595,6 +596,7 @@ TESTS = \
 	semantic/assignment-same-variable.vala \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
+	semantic/cast-gvariant-unsupported.test \
 	semantic/chainup-gobject-incompatible-type-property.test \
 	semantic/chainup-gobject-unknown-property.test \
 	semantic/chainup-gobject-unsupported-type-property.test \
