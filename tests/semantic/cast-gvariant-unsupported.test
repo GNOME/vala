@@ -2,5 +2,5 @@ Invalid Code
 
 void main () {
 	Variant? v = null;
-	string[]? array = v as string[];
+	Object? array = v as Object;
 }
