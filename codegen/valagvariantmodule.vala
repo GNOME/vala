@@ -74,76 +74,6 @@ public class Vala.GVariantModule : GAsyncModule {
 		return false;
 	}
 
-	public static string? get_type_signature (DataType datatype, Symbol? symbol = null) {
-		if (symbol != null) {
-			string sig = get_dbus_signature (symbol);
-			if (sig != null) {
-				// allow overriding signature in attribute, used for raw GVariants
-				return sig;
-			}
-		}
-
-		var array_type = datatype as ArrayType;
-
-		if (array_type != null) {
-			string element_type_signature = get_type_signature (array_type.element_type);
-
-			if (element_type_signature == null) {
-				return null;
-			}
-
-			return string.nfill (array_type.rank, 'a') + element_type_signature;
-		} else if (is_string_marshalled_enum (datatype.data_type)) {
-			return "s";
-		} else if (datatype.data_type != null) {
-			string sig = datatype.data_type.get_attribute_string ("CCode", "type_signature");
-
-			var st = datatype.data_type as Struct;
-			var en = datatype.data_type as Enum;
-			if (sig == null && st != null) {
-				var str = new StringBuilder ();
-				str.append_c ('(');
-				foreach (Field f in st.get_fields ()) {
-					if (f.binding == MemberBinding.INSTANCE) {
-						str.append (get_type_signature (f.variable_type, f));
-					}
-				}
-				str.append_c (')');
-				sig = str.str;
-			} else if (sig == null && en != null) {
-				if (en.is_flags) {
-					return "u";
-				} else {
-					return "i";
-				}
-			}
-
-			var type_args = datatype.get_type_arguments ();
-			if (sig != null && "%s" in sig && type_args.size > 0) {
-				string element_sig = "";
-				foreach (DataType type_arg in type_args) {
-					var s = get_type_signature (type_arg);
-					if (s != null) {
-						element_sig += s;
-					}
-				}
-
-				sig = sig.replace ("%s", element_sig);
-			}
-
-			if (sig == null &&
-			    (datatype.data_type.get_full_name () == "GLib.UnixInputStream" ||
-			     datatype.data_type.get_full_name () == "GLib.UnixOutputStream" ||
-			     datatype.data_type.get_full_name () == "GLib.Socket")) {
-				return "h";
-			}
-
-			return sig;
-		} else {
-			return null;
-		}
-	}
-
 	public override void visit_enum (Enum en) {
 		base.visit_enum (en);
 
@@ -269,7 +199,7 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	CCodeExpression deserialize_array (ArrayType array_type, CCodeExpression variant_expr, CCodeExpression? expr) {
-		if (array_type.rank == 1 && get_type_signature (array_type) == "ay") {
+		if (array_type.rank == 1 && array_type.get_type_signature () == "ay") {
 			return deserialize_buffer_array (array_type, variant_expr, expr);
 		}
 
@@ -495,7 +425,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			result = deserialize_basic (basic_type, variant_expr, true);
 			result = generate_enum_value_from_string (type as EnumValueType, result, error_expr);
 			may_fail = true;
-		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		} else if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
 			result = deserialize_basic (basic_type, variant_expr);
 		} else if (type is ArrayType) {
 			result = deserialize_array ((ArrayType) type, variant_expr, expr);
@@ -611,7 +541,7 @@ public class Vala.GVariantModule : GAsyncModule {
 	}
 
 	CCodeExpression? serialize_array (ArrayType array_type, CCodeExpression array_expr) {
-		if (array_type.rank == 1 && get_type_signature (array_type) == "ay") {
+		if (array_type.rank == 1 && array_type.get_type_signature () == "ay") {
 			return serialize_buffer_array (array_type, array_expr);
 		}
 
@@ -633,7 +563,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
 		ArrayType array_type_copy = (ArrayType) array_type.copy ();
 		array_type_copy.rank -= dim - 1;
-		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type_copy))));
+		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (array_type_copy.get_type_signature ())));
 
 		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (builder_name)));
@@ -674,7 +604,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		string buffer_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
-		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (array_type))));
+		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (array_type.get_type_signature ())));
 
 		var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
 		dup_call.add_argument (array_expr);
@@ -745,7 +675,7 @@ public class Vala.GVariantModule : GAsyncModule {
 		ccode.add_expression (iter_init_call);
 
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
-		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (type))));
+		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (type.get_type_signature ())));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
@@ -792,7 +722,7 @@ public class Vala.GVariantModule : GAsyncModule {
 			get_basic_type_info ("s", out basic_type);
 			result = generate_enum_value_to_string (type as EnumValueType, expr);
 			result = serialize_basic (basic_type, result);
-		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		} else if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
 			result = serialize_basic (basic_type, expr);
 		} else if (type is ArrayType) {
 			result = serialize_array ((ArrayType) type, expr);
