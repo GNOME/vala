@@ -100,6 +100,81 @@ public class Vala.GVariantModule : GAsyncModule {
 		return false;
 	}
 
+	int next_variant_function_id = 0;
+
+	public override void visit_cast_expression (CastExpression expr) {
+		var value = expr.inner.target_value;
+		var target_type = expr.type_reference;
+
+		if (expr.is_non_null_cast || value.value_type == null || gvariant_type == null || value.value_type.data_type != gvariant_type) {
+			base.visit_cast_expression (expr);
+			return;
+		}
+
+		generate_type_declaration (expr.type_reference, cfile);
+
+		string variant_func = "_variant_get%d".printf (++next_variant_function_id);
+
+		var variant = value;
+		if (value.value_type.value_owned) {
+			// value leaked, destroy it
+			var temp_value = store_temp_value (value, expr);
+			temp_ref_values.insert (0, ((GLibValue) temp_value).copy ());
+			variant = temp_value;
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (variant_func));
+		ccall.add_argument (get_cvalue_ (variant));
+
+		var needs_init = (target_type is ArrayType);
+		var result = create_temp_value (target_type, needs_init, expr);
+
+		var cfunc = new CCodeFunction (variant_func);
+		cfunc.modifiers = CCodeModifiers.STATIC;
+		cfunc.add_parameter (new CCodeParameter ("value", "GVariant*"));
+
+		if (!target_type.is_real_non_null_struct_type ()) {
+			cfunc.return_type = get_ccode_name (target_type);
+		}
+
+		if (target_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			cfunc.add_parameter (new CCodeParameter ("result", "%s *".printf (get_ccode_name (target_type))));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (result)));
+		} else if (target_type is ArrayType) {
+			// return array length if appropriate
+			// tmp = _variant_get (variant, &tmp_length);
+			unowned ArrayType array_type = (ArrayType) target_type;
+			var length_ctype = get_ccode_array_length_type (array_type);
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (result, dim)));
+				cfunc.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype + "*"));
+			}
+		}
+
+		if (!target_type.is_real_non_null_struct_type ()) {
+			ccode.add_assignment (get_cvalue_ (result), ccall);
+		} else {
+			ccode.add_expression (ccall);
+		}
+
+		push_function (cfunc);
+
+		CCodeExpression func_result = deserialize_expression (target_type, new CCodeIdentifier ("value"), new CCodeIdentifier ("*result"));
+		if (target_type.is_real_non_null_struct_type ()) {
+			ccode.add_assignment (new CCodeIdentifier ("*result"), func_result);
+		} else {
+			ccode.add_return (func_result);
+		}
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
+		cfile.add_function (cfunc);
+
+		expr.target_value = load_temp_value (result);
+	}
+
 	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
 		var id = expr as CCodeIdentifier;
 		var ma = expr as CCodeMemberAccess;
