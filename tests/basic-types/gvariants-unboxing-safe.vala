@@ -28,4 +28,11 @@ void main () {
 		int32? i32 = v as int32;
 		assert (i32 == null);
 	}
+
+	v = new Variant.strv ({ "foo", "bar", "manam" });
+	{
+		string[]? sa = v as string[];
+		assert (sa != null);
+		assert (sa[2] == "manam");
+	}
 }
