@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+	public void do_bar () {
+		this = new Foo ();
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.do_bar ();
+}

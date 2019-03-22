@@ -1,0 +1,13 @@
+Invalid Code
+
+public int get_size () {
+	return 1;
+}
+
+public string[get_size ()] returns_array () {
+	return {"test"};
+}
+
+void main () {
+	returns_array ();
+}
