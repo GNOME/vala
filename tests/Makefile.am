@@ -68,7 +68,9 @@ TESTS = \
 	basic-types/bug787152.vala \
 	basic-types/bug788775.vala \
 	arrays/class-field-length-cname.vala \
+	arrays/expression-bracket.test \
 	arrays/field-global-length-cname.vala \
+	arrays/fixed-length-non-const.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/slice-invalid-start.test \
@@ -184,12 +186,14 @@ TESTS = \
 	control-semantic/argument-owned-ref.test \
 	control-semantic/argument-value-out.test \
 	control-semantic/argument-value-ref.test \
+	control-semantic/literal-immutable.test \
 	control-semantic/member-incompatible-type.test \
 	control-semantic/member-invalid.test \
 	control-semantic/member-private.test \
 	control-semantic/member-readonly.test \
 	control-semantic/printf-too-few.test \
 	control-semantic/printf-too-many.test \
+	control-semantic/this-assignment.test \
 	control-semantic/variadic-argument-invalid.test \
 	enums/default-gtype.vala \
 	enums/enum_only.vala \
@@ -282,6 +286,7 @@ TESTS = \
 	objects/classes-implicit-implementation.vala \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
+	objects/property-construct-only-write.test \
 	objects/constructor-abstract-public.test \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
@@ -301,7 +306,9 @@ TESTS = \
 	objects/plugin-module-init.vala \
 	objects/properties.vala \
 	objects/property-notify.vala \
+	objects/property-read-only.test \
 	objects/property-read-only-auto.vala \
+	objects/property-construct-only-write-foreign.test \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
