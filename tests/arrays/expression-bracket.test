@@ -1,0 +1,13 @@
+Invalid Code
+
+int bar () {
+	return 1;
+}
+
+string[bar ()]? foo () {
+	return null;
+}
+
+void main () {
+	foo ();
+}
