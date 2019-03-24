@@ -52,11 +52,27 @@ void double_array_2d_conversion () {
 	assert (da[1,1] == 23.42);
 }
 
+struct Foo {
+	public string s;
+	public uint64 u64;
+	public bool b;
+}
+
+void struct_conversion () {
+	Foo s = { "foo", uint64.MAX, true };
+	Variant v = s;
+	Foo st = (Foo) v;
+	assert (st.s == "foo");
+	assert (st.u64 == uint64.MAX);
+	assert (st.b == true);
+}
+
 void main () {
 	string_conversion ();
 	string_array_conversion ();
 	double_conversion ();
 	double_array_conversion ();
+	struct_conversion ();
 
 	string_array_2d_conversion ();
 	double_array_2d_conversion ();
