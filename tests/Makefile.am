@@ -287,6 +287,7 @@ TESTS = \
 	objects/classes-implicit-implementation.vala \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
+	objects/compact-class-refcount.vala \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
