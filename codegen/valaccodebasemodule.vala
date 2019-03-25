@@ -2767,23 +2767,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var left_type_as_struct = left_type.data_type as Struct;
 		var right_type_as_struct = right_type.data_type as Struct;
 
-		// GValue support
-		var valuecast = try_cast_value_to_type (cleft, left_type, right_type);
-		if (valuecast != null) {
-			cleft = valuecast;
-			left_type = right_type;
-			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
-			return;
-		}
-
-		valuecast = try_cast_value_to_type (cright, right_type, left_type);
-		if (valuecast != null) {
-			cright = valuecast;
-			right_type = left_type;
-			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
-			return;
-		}
-
 		if (left_type.data_type is Class && !((Class) left_type.data_type).is_compact &&
 		    right_type.data_type is Class && !((Class) right_type.data_type).is_compact) {
 			var left_cl = (Class) left_type.data_type;
