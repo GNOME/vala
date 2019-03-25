@@ -2392,4 +2392,40 @@ public class Vala.GTypeModule : GErrorModule {
 
 		ccode.add_expression (ccheck);
 	}
+
+	public override void visit_cast_expression (CastExpression expr) {
+		unowned ObjectTypeSymbol? type_symbol = expr.type_reference.type_symbol as ObjectTypeSymbol;
+
+		if (type_symbol == null || (type_symbol is Class && ((Class) type_symbol).is_compact)) {
+			base.visit_cast_expression (expr);
+			return;
+		}
+
+		generate_type_declaration (expr.type_reference, cfile);
+
+		// checked cast for strict subtypes of GTypeInstance
+		if (expr.is_silent_cast) {
+			TargetValue to_cast = expr.inner.target_value;
+			CCodeExpression cexpr;
+			if (!get_lvalue (to_cast)) {
+				to_cast = store_temp_value (to_cast, expr);
+			}
+			cexpr = get_cvalue_ (to_cast);
+			var ccheck = create_type_check (cexpr, expr.type_reference);
+			var ccast = new CCodeCastExpression (cexpr, get_ccode_name (expr.type_reference));
+			var cnull = new CCodeConstant ("NULL");
+			var cast_value = new GLibValue (expr.value_type, new CCodeConditionalExpression (ccheck, ccast, cnull));
+			if (requires_destroy (expr.inner.value_type)) {
+				var casted = store_temp_value (cast_value, expr);
+				ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_cvalue_ (casted), new CCodeConstant ("NULL")));
+				ccode.add_expression (destroy_value (to_cast));
+				ccode.close ();
+				expr.target_value = ((GLibValue) casted).copy ();
+			} else {
+				expr.target_value = cast_value;
+			}
+		} else {
+			set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.type_symbol));
+		}
+	}
 }
