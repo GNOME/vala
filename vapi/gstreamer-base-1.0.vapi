@@ -833,12 +833,6 @@ namespace Gst {
 			public uint get_remaining ();
 			[CCode (cname = "gst_bit_writer_get_size")]
 			public uint get_size ();
-			[CCode (cname = "gst_bit_writer_init")]
-			public void init ();
-			[CCode (cname = "gst_bit_writer_init_with_data")]
-			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, bool initialized);
-			[CCode (cname = "gst_bit_writer_init_with_size")]
-			public void init_with_size (uint32 size, bool fixed);
 			[CCode (cname = "gst_bit_writer_put_bits_uint16")]
 			public bool put_bits_uint16 (uint16 value, uint nbits);
 			[CCode (cname = "gst_bit_writer_put_bits_uint32")]
