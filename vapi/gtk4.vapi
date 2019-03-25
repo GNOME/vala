@@ -4886,7 +4886,6 @@ namespace Gdk {
 		public bool set_mode (Gdk.InputMode mode);
 		[Version (deprecated = true, deprecated_since = "3.20.")]
 		public void ungrab (uint32 time_);
-		public void warp (int x, int y);
 		public Gdk.Device? associated_device { get; }
 		public Gdk.AxisFlags axes { get; }
 		public Gdk.Display display { get; construct; }
@@ -6164,13 +6163,14 @@ namespace Gsk {
 		protected Renderer ();
 		[CCode (cname = "gsk_renderer_new_for_surface")]
 		public static Gsk.Renderer? for_surface (Gdk.Surface surface);
-		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Surface? get_surface ();
+		public bool is_realized ();
 		public bool realize (Gdk.Surface surface) throws GLib.Error;
 		public void render (Gsk.RenderNode root, Cairo.Region? region);
 		public Gdk.Texture render_texture (Gsk.RenderNode root, Graphene.Rect? viewport);
 		public void unrealize ();
-		public Gdk.Display display { get; construct; }
+		[NoAccessorMethod]
+		public Gdk.Display display { owned get; construct; }
 		public Gdk.Surface surface { get; }
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
@@ -7793,6 +7793,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerKey ();
 		public bool forward (Gtk.Widget widget);
+		public unowned Gtk.Widget get_focus_origin ();
+		public unowned Gtk.Widget get_focus_target ();
 		public uint get_group ();
 		public unowned Gtk.IMContext get_im_context ();
 		public void set_im_context (Gtk.IMContext im_context);
@@ -7813,6 +7815,8 @@ namespace Gtk {
 	public class EventControllerMotion : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerMotion ();
+		public unowned Gtk.Widget get_pointer_origin ();
+		public unowned Gtk.Widget get_pointer_target ();
 		public signal void enter (double x, double y);
 		public signal void leave ();
 		public signal void motion (double x, double y);
@@ -11830,7 +11834,6 @@ namespace Gtk {
 		public void remove_mnemonic_label (Gtk.Widget label);
 		public void remove_tick_callback (uint id);
 		public void reset_style ();
-		public bool send_focus_change ([CCode (type = "GdkEvent*")] Gdk.Event event);
 		public void set_accel_path (string? accel_path, Gtk.AccelGroup? accel_group);
 		[CCode (cname = "gtk_widget_class_set_accessible_role")]
 		public class void set_accessible_role (Atk.Role role);
@@ -12176,7 +12179,7 @@ namespace Gtk {
 		public virtual signal bool enable_debugging (bool toggle);
 		public virtual signal void keys_changed ();
 		[HasEmitter]
-		public virtual signal void set_focus (Gtk.Widget? focus);
+		public signal void set_focus (Gtk.Widget? focus);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_window_accessible_get_type ()")]
 	public class WindowAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Window {
@@ -12473,9 +12476,11 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkRootInterface", type_id = "gtk_root_get_type ()")]
 	public interface Root : Gtk.Widget {
+		public unowned Gtk.Widget? get_focus ();
 		public static unowned Gtk.Widget get_for_surface (Gdk.Surface surface);
 		[NoWrapper]
 		public abstract void get_surface_transform (int x, int y);
+		public void set_focus (Gtk.Widget? focus);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkScrollableInterface", type_id = "gtk_scrollable_get_type ()")]
 	public interface Scrollable : GLib.Object {

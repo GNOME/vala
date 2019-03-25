@@ -260,7 +260,7 @@ namespace Gdl {
 		[HasEmitter]
 		public virtual signal void detach (bool recursive);
 		[HasEmitter]
-		public virtual signal void dock (Gdl.DockObject requestor, Gdl.DockPlacement position, GLib.Value other_data);
+		public virtual signal void dock (Gdl.DockObject requestor, Gdl.DockPlacement position, GLib.Value? other_data);
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", type_id = "gdl_dock_paned_get_type ()")]
 	public class DockPaned : Gdl.DockItem, Atk.Implementor, Gtk.Buildable {
