@@ -206,6 +206,7 @@ TESTS = \
 	structs/struct-no-gtype.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
+	structs/gvalue-implicit-comparison.vala \
 	structs/bug530605.vala \
 	structs/bug572091.vala \
 	structs/bug583603.vala \

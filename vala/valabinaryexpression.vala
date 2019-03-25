@@ -463,6 +463,26 @@ public class Vala.BinaryExpression : Expression {
 			   || operator == BinaryOperator.INEQUALITY) {
 			/* relational operation */
 
+			// Implicit cast for comparsion expression of GValue with other type
+			var gvalue_type = context.analyzer.gvalue_type.data_type;
+			if ((left.target_type.data_type == gvalue_type && right.target_type.data_type != gvalue_type)
+			    || (left.target_type.data_type != gvalue_type && right.target_type.data_type == gvalue_type)) {
+				Expression gvalue_expr;
+				DataType target_type;
+				if (left.target_type.data_type == gvalue_type) {
+					gvalue_expr = left;
+					target_type = right.target_type;
+				} else {
+					gvalue_expr = right;
+					target_type = left.target_type;
+				}
+
+				var cast_expr = new CastExpression (gvalue_expr, target_type, gvalue_expr.source_reference);
+				replace_expression (gvalue_expr, cast_expr);
+				checked = false;
+				return check (context);
+			}
+
 			if (!right.value_type.compatible (left.value_type)
 			    && !left.value_type.compatible (right.value_type)) {
 				Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (right.value_type.to_string (), left.value_type.to_string ()));
