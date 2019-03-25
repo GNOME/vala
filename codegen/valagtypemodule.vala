@@ -196,10 +196,10 @@ public class Vala.GTypeModule : GErrorModule {
 			base_class = base_class.base_class;
 		}
 		string autoptr_cleanup_func;
-		if (!is_gtypeinstance && !is_gsource) {
-			autoptr_cleanup_func = get_ccode_free_function (base_class);
-		} else {
+		if (is_reference_counting (base_class)) {
 			autoptr_cleanup_func = get_ccode_unref_function (base_class);
+		} else {
+			autoptr_cleanup_func = get_ccode_free_function (base_class);
 		}
 		if (autoptr_cleanup_func == null || autoptr_cleanup_func == "") {
 			Report.error (cl.source_reference, "internal error: autoptr_cleanup_func not available");
