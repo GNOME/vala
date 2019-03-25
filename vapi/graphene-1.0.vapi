@@ -69,16 +69,26 @@ namespace Graphene {
 	public struct Matrix {
 		[Version (since = "1.0")]
 		public float determinant ();
+		[Version (since = "1.10")]
+		public bool equal (Graphene.Matrix b);
+		[Version (since = "1.10")]
+		public bool equal_fast (Graphene.Matrix b);
 		[Version (since = "1.0")]
 		public Graphene.Vec4 get_row (uint index_);
 		[Version (since = "1.0")]
 		public float get_value (uint row, uint col);
 		[Version (since = "1.0")]
 		public float get_x_scale ();
+		[Version (since = "1.10")]
+		public float get_x_translation ();
 		[Version (since = "1.0")]
 		public float get_y_scale ();
+		[Version (since = "1.10")]
+		public float get_y_translation ();
 		[Version (since = "1.0")]
 		public float get_z_scale ();
+		[Version (since = "1.10")]
+		public float get_z_translation ();
 		[Version (since = "1.0")]
 		public unowned Graphene.Matrix? init_from_2d (double xx, double yx, double xy, double yy, double x_0, double y_0);
 		[Version (since = "1.0")]
@@ -119,6 +129,8 @@ namespace Graphene {
 		public bool is_singular ();
 		[Version (since = "1.0")]
 		public Graphene.Matrix multiply (Graphene.Matrix b);
+		[Version (since = "1.10")]
+		public bool near (Graphene.Matrix b, float epsilon);
 		[Version (since = "1.0")]
 		public Graphene.Matrix normalize ();
 		[Version (since = "1.0")]
@@ -330,6 +342,8 @@ namespace Graphene {
 		public Graphene.Rect round ();
 		[Version (deprecated = true, deprecated_since = "1.4", since = "1.0")]
 		public unowned Graphene.Rect? round_to_pixel ();
+		[Version (since = "1.10")]
+		public Graphene.Rect scale (float s_h, float s_v);
 		public Graphene.Rect union (Graphene.Rect b);
 		[Version (since = "1.4")]
 		public static unowned Graphene.Rect? zero ();
