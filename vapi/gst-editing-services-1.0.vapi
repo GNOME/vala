@@ -456,6 +456,7 @@ namespace GES {
 		public GLib.Value get_child_property_by_pspec (GLib.ParamSpec pspec);
 		public Gst.ClockTime get_duration ();
 		public Gst.ClockTime get_inpoint ();
+		public virtual uint32 get_layer_priority ();
 		public Gst.ClockTime get_max_duration ();
 		public string get_name ();
 		public GES.TimelineElement? get_parent ();
@@ -819,7 +820,8 @@ namespace GES {
 		[CCode (cname = "GES_EDGE_END")]
 		EDGE_END,
 		[CCode (cname = "GES_EDGE_NONE")]
-		EDGE_NONE
+		EDGE_NONE;
+		public unowned string name ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_EDIT_MODE_", type_id = "ges_edit_mode_get_type ()")]
 	public enum EditMode {
@@ -1005,8 +1007,10 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
 	public delegate bool FormatterCanLoadURIMethod (GES.Formatter dummy_instance, string uri) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
+	[Version (deprecated = true, deprecated_since = "1.16")]
 	public delegate bool FormatterLoadFromURIMethod (GES.Formatter formatter, GES.Timeline timeline, string uri) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
+	[Version (deprecated = true, deprecated_since = "1.16")]
 	public delegate bool FormatterSaveToURIMethod (GES.Formatter formatter, GES.Timeline timeline, string uri, bool overwrite) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", instance_pos = 3.9)]
 	public delegate void MetaForeachFunc (GES.MetaContainer container, string key, GLib.Value value);
@@ -1034,6 +1038,8 @@ namespace GES {
 	public const int PADDING;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_PADDING_LARGE")]
 	public const int PADDING_LARGE;
+	[CCode (cheader_filename = "ges/ges.h", cname = "GES_TIMELINE_ELEMENT_NO_LAYER_PRIORITY")]
+	public const uint32 TIMELINE_ELEMENT_NO_LAYER_PRIORITY;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_MAJOR")]
 	public const int VERSION_MAJOR;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_MICRO")]
