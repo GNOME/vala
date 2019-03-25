@@ -696,42 +696,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_set_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_set_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_set_pointer");
-		}
-	}
-
-	public CCodeIdentifier get_value_taker_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_take_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_take_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_set_pointer");
-		}
-	}
-
-	CCodeIdentifier get_value_getter_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_get_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_get_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_get_pointer");
-		}
-	}
-
 	public virtual void append_vala_array_free () {
 	}
 
@@ -5226,49 +5190,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
 	}
 
-	public CCodeExpression? try_cast_value_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
-		if (from == null || gvalue_type == null || from.type_symbol != gvalue_type || to.type_symbol == gvalue_type || get_ccode_type_id (to) == "") {
-			return null;
-		}
-
-		// explicit conversion from GValue
-		var ccall = new CCodeFunctionCall (get_value_getter_function (to));
-		CCodeExpression gvalue;
-		if (from.nullable) {
-			gvalue = ccodeexpr;
-		} else {
-			gvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ccodeexpr);
-		}
-		ccall.add_argument (gvalue);
-
-		CCodeExpression rv = ccall;
-
-		if (expr != null && to is ArrayType) {
-			// null-terminated string array
-			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-			len_call.add_argument (rv);
-			append_array_length (expr, len_call);
-		} else if (to is StructValueType) {
-			CodeNode node = expr != null ? (CodeNode) expr : to;
-			var temp_value = create_temp_value (to, true, node, true);
-			var ctemp = get_cvalue_ (temp_value);
-
-			rv = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (rv, get_ccode_name (new PointerType (to))));
-			var holds = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_HOLDS"));
-			holds.add_argument (gvalue);
-			holds.add_argument (new CCodeIdentifier (get_ccode_type_id (to)));
-			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.AND, holds, ccall);
-			var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
-			warn.add_argument (new CCodeConstant ("\"Invalid GValue unboxing (wrong type or NULL)\""));
-			var fail = new CCodeCommaExpression ();
-			fail.append_expression (warn);
-			fail.append_expression (ctemp);
-			rv = new CCodeConditionalExpression (cond, rv,  fail);
-		}
-
-		return rv;
-	}
-
 	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		assert_not_reached ();
 	}
@@ -5279,14 +5200,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public override void visit_cast_expression (CastExpression expr) {
 		generate_type_declaration (expr.type_reference, cfile);
-
-		if (!expr.is_non_null_cast) {
-			var valuecast = try_cast_value_to_type (get_cvalue (expr.inner), expr.inner.value_type, expr.type_reference, expr);
-			if (valuecast != null) {
-				set_cvalue (expr, valuecast);
-				return;
-			}
-		}
 
 		unowned Class? cl = expr.type_reference.type_symbol as Class;
 		unowned Interface? iface = expr.type_reference.type_symbol as Interface;
@@ -6523,6 +6436,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public virtual CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
+	}
+
+	public virtual CCodeExpression get_value_getter_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
+	}
+
+	public virtual CCodeExpression get_value_setter_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
+	}
+
+	public virtual CCodeExpression get_value_taker_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
 	}
 
 	public virtual void register_dbus_info (CCodeBlock block, ObjectTypeSymbol bindable) {

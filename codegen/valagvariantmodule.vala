@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-public class Vala.GVariantModule : GAsyncModule {
+public class Vala.GVariantModule : GValueModule {
 	struct BasicTypeInfo {
 		public unowned string signature;
 		public unowned string type_name;
