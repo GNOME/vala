@@ -5471,6 +5471,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			op = CCodeBinaryOperator.DIV;
 			break;
 		case BinaryOperator.MOD:
+			// FIXME Code duplication with CCodeAssignmentModule.emit_simple_assignment()
 			if (expr.value_type.equals (double_type)) {
 				cfile.add_include ("math.h");
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmod"));

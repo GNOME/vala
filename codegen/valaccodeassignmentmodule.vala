@@ -49,7 +49,28 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			case AssignmentOperator.SUB: cop = CCodeAssignmentOperator.SUB; break;
 			case AssignmentOperator.MUL: cop = CCodeAssignmentOperator.MUL; break;
 			case AssignmentOperator.DIV: cop = CCodeAssignmentOperator.DIV; break;
-			case AssignmentOperator.PERCENT: cop = CCodeAssignmentOperator.PERCENT; break;
+			case AssignmentOperator.PERCENT:
+				// FIXME Code duplication with CCodeBaseModule.visit_binary_expression()
+				var cleft = get_cvalue (assignment.left);
+				var cright = get_cvalue (assignment.right);
+				if (assignment.value_type.equals (double_type)) {
+					cfile.add_include ("math.h");
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmod"));
+					ccall.add_argument (cleft);
+					ccall.add_argument (cright);
+					set_cvalue (assignment.right, ccall);
+					cop = CCodeAssignmentOperator.SIMPLE;
+				} else if (assignment.value_type.equals (float_type)) {
+					cfile.add_include ("math.h");
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("fmodf"));
+					ccall.add_argument (cleft);
+					ccall.add_argument (cright);
+					set_cvalue (assignment.right, ccall);
+					cop = CCodeAssignmentOperator.SIMPLE;
+				} else {
+					cop = CCodeAssignmentOperator.PERCENT;
+				}
+				break;
 			case AssignmentOperator.SHIFT_LEFT: cop = CCodeAssignmentOperator.SHIFT_LEFT; break;
 			case AssignmentOperator.SHIFT_RIGHT: cop = CCodeAssignmentOperator.SHIFT_RIGHT; break;
 			default: assert_not_reached ();
