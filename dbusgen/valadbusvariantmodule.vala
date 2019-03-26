@@ -56,6 +56,7 @@ public class Vala.DBusVariantModule {
 	public Struct gvalue_type;
 	public DataType vardict_type;
 	public DataType string_array_type;
+	public DataType object_path_array_type;
 
 	public DBusVariantModule (CodeContext context) {
 
@@ -107,6 +108,10 @@ public class Vala.DBusVariantModule {
 		vardict_type.add_type_argument (gvariant_type.copy ());
 
 		string_array_type = new ArrayType (string_type.copy (), 1, null);
+		string_array_type.value_owned = true;
+
+		object_path_array_type = new ArrayType (object_path_type.copy (), 1, null);
+		object_path_array_type.value_owned = true;
 	}
 
 	public DataType? get_dbus_type (string type) {
@@ -156,7 +161,15 @@ public class Vala.DBusVariantModule {
 	}
 
 	private DataType? get_complex_type (VariantType type) {
-		if (type.is_array ()) {
+		if (type.equal (VariantType.OBJECT_PATH_ARRAY)) {
+			return object_path_array_type.copy ();
+		} else if (type.equal (VariantType.BYTESTRING)) {
+			return string_type.copy ();
+		} else if (type.equal (VariantType.BYTESTRING_ARRAY)) {
+			return string_array_type.copy ();
+		}  else if (type.equal (VariantType.STRING_ARRAY)) {
+			return string_array_type.copy ();
+		} else if (type.is_array ()) {
 			var element = type.element ();
 			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
 				var res = dictionary_type.copy ();
@@ -175,14 +188,6 @@ public class Vala.DBusVariantModule {
 					return array;
 				}
 			}
-		} else if (type.equal (VariantType.BYTESTRING)) {
-			return string_type.copy (); //new ArrayType (uchar_type.copy (), 1, null);
-		} else if (type.equal (VariantType.BYTESTRING_ARRAY)) {
-			return string_array_type.copy (); //new ArrayType (uchar_type.copy (), 2, null);
-		}  else if (type.equal (VariantType.STRING_ARRAY)) {
-			return string_array_type.copy ();
-		} else if (type.equal (VariantType.OBJECT_PATH_ARRAY)) {
-			return string_array_type.copy ();
 		}
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
