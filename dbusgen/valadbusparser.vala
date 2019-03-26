@@ -299,15 +299,23 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		var needs_name = false;
 		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
 		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
 			name = vala_name;
+		} else {
+			needs_name = true;
 		}
+
 		current_node = current_method = new Method (name, dbus_module.void_type.copy (), get_current_src ());
 		((Method)current_method).is_abstract = true;
 		((Method)current_method).access = SymbolAccessibility.PUBLIC;
 		((Method)current_method).add_error_type (dbus_module.gio_error_type);
 		((Method)current_method).add_error_type (dbus_module.gdbus_error_type);
+
+		if (needs_name) {
+			current_node.set_attribute_string ("DBus", "name", name);
+		}
 
 		next ();
 
@@ -363,13 +371,21 @@ public class Vala.DBusParser : CodeVisitor {
 			needs_signature = true;
 		}
 
+		var needs_name = false;
 		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
 		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
 			name = vala_name;
+		} else {
+			needs_name = true;
 		}
+
 		current_node = current_property = new Property (name, data_type, null, null, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
+
+		if (needs_name) {
+			current_node.set_attribute_string ("DBus", "name", name);
+		}
 
 		next ();
 
@@ -509,12 +525,20 @@ public class Vala.DBusParser : CodeVisitor {
 			return;
 		}
 
+		var needs_name = false;
 		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
 		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
 			name = vala_name;
+		} else {
+			needs_name = true;
 		}
+
 		current_node = current_method = new Signal (name, dbus_module.void_type.copy ());
 		((Signal)current_node).access = SymbolAccessibility.PUBLIC;
+
+		if (needs_name) {
+			current_node.set_attribute_string ("DBus", "name", name);
+		}
 
 		next ();
 
