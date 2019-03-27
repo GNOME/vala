@@ -1,0 +1,26 @@
+GIR
+
+Input:
+
+<class name="TypeFoo" c:type="TestTypeFoo" glib:type-name="TestTypeFoo" glib:get-type="test_foo_get_type" glib:type-struct="TypeFooClass" parent="GObject.Object">
+  <constructor name="new" c:identifier="test_type_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Test.TypeFoo" c:type="TestTypeFoo*"/>
+    </return-value>
+  </constructor>
+  <method name="bar" c:identifier="test_type_foo_bar">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+  </method>
+</class>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class TypeFoo : GLib.Object {
+	[CCode (cname = "test_type_foo_new", has_construct_function = false)]
+	public TypeFoo ();
+	[CCode (cname = "test_type_foo_bar")]
+	public void bar ();
+}

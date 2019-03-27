@@ -392,6 +392,7 @@ TESTS = \
 	gir/delegate-array-length-type.test \
 	gir/method-array-length-type.test \
 	gir/parameter-array-length-type.test \
+	gir/symbol-type-csuffix.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
