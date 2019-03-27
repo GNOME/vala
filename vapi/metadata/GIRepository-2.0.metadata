@@ -17,5 +17,7 @@ Repository
 Typelib
   .symbol.symbol out
 
-*_info_* symbol_type="method" instance_idx=0
-*_info_invoke throws="GI.InvokeError"
+*_info_invoke symbol_type="method" instance_idx=0 throws="GI.InvokeError"
+TypeInfo lower_case_csuffix="type_info"
+type_info_* symbol_type="method" parent="GI.TypeInfo" instance_idx=0 name="type_info_(.+)"
+type_tag_to_string parent="GI.TypeTag" symbol_type="method" instance_idx=0 name="to_string"
