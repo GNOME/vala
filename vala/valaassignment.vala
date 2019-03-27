@@ -246,7 +246,10 @@ public class Vala.Assignment : Expression {
 			case AssignmentOperator.PERCENT: bop = BinaryOperator.MOD; break;
 			case AssignmentOperator.SHIFT_LEFT: bop = BinaryOperator.SHIFT_LEFT; break;
 			case AssignmentOperator.SHIFT_RIGHT: bop = BinaryOperator.SHIFT_RIGHT; break;
-			default: assert_not_reached ();
+			default:
+				error = true;
+				Report.error (source_reference, "internal error: unsupported assignment operator");
+				return false;
 			}
 
 			var bin = new BinaryExpression (bop, old_value, right, source_reference);

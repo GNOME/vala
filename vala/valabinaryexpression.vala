@@ -545,7 +545,9 @@ public class Vala.BinaryExpression : Expression {
 			value_type = context.analyzer.bool_type;
 
 		} else {
-			assert_not_reached ();
+			error = true;
+			Report.error (source_reference, "internal error: unsupported binary operator");
+			return false;
 		}
 
 		value_type.check (context);
