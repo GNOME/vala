@@ -825,6 +825,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym is ObjectTypeSymbol) {
 			var csuffix = Symbol.camel_case_to_lower_case (sym.name);
 
+			// FIXME Code duplication with GirParser.Node.get_default_lower_case_suffix()
 			// remove underscores in some cases to avoid conflicts of type macros
 			if (csuffix.has_prefix ("type_")) {
 				csuffix = "type" + csuffix.substring ("type_".length);

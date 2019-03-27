@@ -454,6 +454,7 @@ TESTS = \
 	gir/parameter-array-length-type.test \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
+	gir/symbol-type-csuffix.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
