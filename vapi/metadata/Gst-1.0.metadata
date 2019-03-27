@@ -237,6 +237,7 @@ ControlSource
   .get_value_array#field name="get_value_array_func"
   .control_source_get_value name="get_value"
   .control_source_get_value_array name="get_value_array"
+TypeFind lower_case_csuffix="type_find"
 
 // Backwards compatibility
 Structure.new_from_string skip

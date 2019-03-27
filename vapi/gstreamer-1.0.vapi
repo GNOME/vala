@@ -2468,7 +2468,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected TracerRecord ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_type_find_factory_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "type_find_factory", type_id = "gst_type_find_factory_get_type ()")]
 	public class TypeFindFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected TypeFindFactory ();
@@ -2823,7 +2823,7 @@ namespace Gst {
 		public Gst.ClockTime timestamp;
 		public double value;
 	}
-	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false, lower_case_csuffix = "type_find")]
 	public struct TypeFind {
 		public void* data;
 		public static GLib.Type get_type ();
