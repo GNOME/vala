@@ -244,6 +244,7 @@ ElementClass
   .get_metadata#method name="class_get_metadata"
   .get_pad_template#method name="class_get_pad_template"
   .get_pad_template_list#method name="class_get_pad_template_list"
+TypeFind lower_case_csuffix="type_find"
 
 // Backwards compatibility
 Structure.new_from_string skip
