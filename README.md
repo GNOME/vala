@@ -49,7 +49,7 @@ Install the following packages:
 
  * a C compiler, e.g. GCC
  * a C library, e.g. glibc
- * glib (>= 2.40)
+ * glib (>= 2.48)
  * flex
  * bison
  * Graphviz (libgvc) (>= 2.16) to build valadoc
