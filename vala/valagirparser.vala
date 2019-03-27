@@ -72,6 +72,7 @@ public class Vala.GirParser : CodeVisitor {
 		DESTROY,
 		CPREFIX,
 		LOWER_CASE_CPREFIX,
+		LOWER_CASE_CSUFFIX,
 		ERRORDOMAIN,
 		DESTROYS_INSTANCE,
 		BASE_TYPE,
@@ -698,6 +699,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		public string get_lower_case_csuffix () {
 			var suffix = symbol.get_attribute_string ("CCode", "lower_case_csuffix");
+			if (metadata.has_argument (ArgumentType.LOWER_CASE_CSUFFIX)) {
+				suffix = metadata.get_string (ArgumentType.LOWER_CASE_CSUFFIX);
+			}
 
 			// we can't rely on gir suffix if metadata changed the name
 			if (suffix == null && girdata != null && girdata["c:symbol-prefix"] != null && !metadata.has_argument (ArgumentType.NAME)) {
@@ -710,7 +714,19 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		public string get_default_lower_case_csuffix () {
-			return Symbol.camel_case_to_lower_case (name);
+			var csuffix = Symbol.camel_case_to_lower_case (name);
+
+			// FIXME Code duplication with CCodeAttribute.get_default_lower_case_suffix()
+			// remove underscores in some cases to avoid conflicts of type macros
+			if (csuffix.has_prefix ("type_")) {
+				csuffix = "type" + csuffix.substring ("type_".length);
+			} else if (csuffix.has_prefix ("is_")) {
+				csuffix = "is" + csuffix.substring ("is_".length);
+			}
+			if (csuffix.has_suffix ("_class")) {
+				csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
+			}
+			return csuffix;
 		}
 
 		public string get_cprefix () {
