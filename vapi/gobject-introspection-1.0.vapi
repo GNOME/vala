@@ -22,7 +22,7 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", lower_case_cprefix = "g_base_info_", lower_case_csuffix = "base_info_gtype", ref_function = "g_base_info_ref", type_id = "g_base_info_gtype_get_type ()", unref_function = "g_base_info_unref")]
 	[Compact]
 	public class BaseInfo {
-		[CCode (cname = "g_info_new")]
+		[CCode (cname = "g_info_new", has_construct_function = false)]
 		public BaseInfo (GI.InfoType type, GI.BaseInfo container, GI.Typelib typelib, uint32 offset);
 		public bool equal (GI.BaseInfo info2);
 		public unowned string get_attribute (string name);
@@ -225,7 +225,7 @@ namespace GI {
 		public bool is_foreign ();
 		public bool is_gtype_struct ();
 	}
-	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
+	[CCode (cheader_filename = "girepository.h", lower_case_csuffix = "type_info", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class TypeInfo : GI.BaseInfo {
 		public int get_array_fixed_size ();
@@ -401,6 +401,7 @@ namespace GI {
 		GHASH,
 		ERROR,
 		UNICHAR;
+		[CCode (cname = "g_type_tag_to_string")]
 		public static unowned string to_string (GI.TypeTag type);
 	}
 	[CCode (cheader_filename = "girepository.h", cprefix = "GI_VFUNC_", has_type_id = false)]
