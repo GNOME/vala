@@ -6590,113 +6590,102 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression? get_cvalue (Expression expr) {
+	public static unowned CCodeExpression? get_cvalue (Expression expr) {
 		if (expr.target_value == null) {
 			return null;
 		}
-		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.cvalue;
+		return ((GLibValue) expr.target_value).cvalue;
 	}
 
-	public CCodeExpression? get_cvalue_ (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.cvalue;
+	public static unowned CCodeExpression? get_cvalue_ (TargetValue value) {
+		return ((GLibValue) value).cvalue;
 	}
 
-	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
-		var glib_value = (GLibValue) expr.target_value;
+	public static void set_cvalue (Expression expr, CCodeExpression? cvalue) {
+		unowned GLibValue glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
+			expr.target_value = new GLibValue (expr.value_type);
+			glib_value = (GLibValue) expr.target_value;
 		}
 		glib_value.cvalue = cvalue;
 	}
 
-	public CCodeExpression? get_array_size_cvalue (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_size_cvalue;
+	public static unowned CCodeExpression? get_array_size_cvalue (TargetValue value) {
+		return ((GLibValue) value).array_size_cvalue;
 	}
 
-	public void set_array_size_cvalue (TargetValue value, CCodeExpression? cvalue) {
-		var glib_value = (GLibValue) value;
-		glib_value.array_size_cvalue = cvalue;
+	public static void set_array_size_cvalue (TargetValue value, CCodeExpression? cvalue) {
+		((GLibValue) value).array_size_cvalue = cvalue;
 	}
 
-	public CCodeExpression? get_delegate_target (Expression expr) {
+	public static unowned CCodeExpression? get_delegate_target (Expression expr) {
 		if (expr.target_value == null) {
 			return null;
 		}
-		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.delegate_target_cvalue;
+		return ((GLibValue) expr.target_value).delegate_target_cvalue;
 	}
 
-	public void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
-		var glib_value = (GLibValue) expr.target_value;
+	public static void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
+			expr.target_value = new GLibValue (expr.value_type);
+			glib_value = (GLibValue) expr.target_value;
 		}
 		glib_value.delegate_target_cvalue = delegate_target;
 	}
 
-	public CCodeExpression? get_delegate_target_destroy_notify (Expression expr) {
-		if (expr.target_value == null) {
+	public static unowned CCodeExpression? get_delegate_target_destroy_notify (Expression expr) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
 			return null;
 		}
-		var glib_value = (GLibValue) expr.target_value;
 		return glib_value.delegate_target_destroy_notify_cvalue;
 	}
 
-	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression? destroy_notify) {
-		var glib_value = (GLibValue) expr.target_value;
+	public static void set_delegate_target_destroy_notify (Expression expr, CCodeExpression? destroy_notify) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
+			expr.target_value = new GLibValue (expr.value_type);
+			glib_value = (GLibValue) expr.target_value;
 		}
 		glib_value.delegate_target_destroy_notify_cvalue = destroy_notify;
 	}
 
-	public void append_array_length (Expression expr, CCodeExpression size) {
-		var glib_value = (GLibValue) expr.target_value;
+	public static void append_array_length (Expression expr, CCodeExpression size) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
+			expr.target_value = new GLibValue (expr.value_type);
+			glib_value = (GLibValue) expr.target_value;
 		}
 		glib_value.append_array_length_cvalue (size);
 	}
 
-	public List<CCodeExpression>? get_array_lengths (Expression expr) {
-		var glib_value = (GLibValue) expr.target_value;
+	public static unowned List<CCodeExpression>? get_array_lengths (Expression expr) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
+			return null;
 		}
 		return glib_value.array_length_cvalues;
 	}
 
-	public bool get_lvalue (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.lvalue;
+	public static bool get_lvalue (TargetValue value) {
+		return ((GLibValue) value).lvalue;
 	}
 
-	public bool get_non_null (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.non_null;
+	public static bool get_non_null (TargetValue value) {
+		return ((GLibValue) value).non_null;
 	}
 
-	public string? get_ctype (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.ctype;
+	public static unowned string? get_ctype (TargetValue value) {
+		return ((GLibValue) value).ctype;
 	}
 
-	public bool get_array_null_terminated (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_null_terminated;
+	public static bool get_array_null_terminated (TargetValue value) {
+		return ((GLibValue) value).array_null_terminated;
 	}
 
-	public CCodeExpression get_array_length_cexpr (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_length_cexpr;
+	public static unowned CCodeExpression? get_array_length_cexpr (TargetValue value) {
+		return ((GLibValue) value).array_length_cexpr;
 	}
 }
 
