@@ -386,7 +386,6 @@ NativeDialog
   .set_transient_for.parent nullable
 Window
   .list_toplevels type="GLib.List<unowned Gtk.Window>"
-  .set_focus#signal.object nullable
 TreeModel
   .get_path nullable
   .iter_next.iter ref
