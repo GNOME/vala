@@ -182,7 +182,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			section.emit (this);
 		}
 
-		if (!has_default) {
+		if (!has_default && !(stmt.expression.value_type is EnumValueType)) {
 			// silence C compiler
 			ccode.add_default ();
 			ccode.add_break ();
