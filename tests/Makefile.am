@@ -207,6 +207,7 @@ TESTS = \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
 	control-flow/switch.vala \
+	control-flow/switch-enum.vala \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
 	control-flow/unassigned-local-block-variable.test \

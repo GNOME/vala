@@ -664,6 +664,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		handle_errors (stmt.expression);
 
 		bool has_default_label = false;
+		bool is_enum_typed = stmt.expression.value_type is EnumValueType;
+
+		unowned Enum? en = null;
+		HashSet<unowned EnumValue>? enum_values = null;
+		if (is_enum_typed) {
+			en = (Enum) ((EnumValueType) stmt.expression.value_type).type_symbol;
+			enum_values = new HashSet<unowned EnumValue> (direct_hash, direct_equal);
+		}
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			current_block = new BasicBlock ();
@@ -671,6 +679,17 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			condition_block.connect (current_block);
 			foreach (Statement section_stmt in section.get_statements ()) {
 				section_stmt.accept (this);
+			}
+
+			if (is_enum_typed) {
+				foreach (SwitchLabel label in section.get_labels ()) {
+					if (label.expression != null) {
+						unowned EnumValue? val = label.expression.symbol_reference as EnumValue;
+						if (val != null) {
+							enum_values.add (val);
+						}
+					}
+				}
 			}
 
 			if (section.has_default_label ()) {
@@ -685,6 +704,26 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				section.error = true;
 
 				current_block.connect (after_switch_block);
+			}
+		}
+
+		if (is_enum_typed) {
+			// Check if enum-based switching as fully covered, and if so,
+			// handle it like there was a default-label given
+
+			HashSet<EnumValue> remaining_values = new HashSet<EnumValue> ();
+			remaining_values.add_all (en.get_values ());
+			foreach (var val in enum_values) {
+				remaining_values.remove (val);
+			}
+			if (remaining_values.size == 0) {
+				has_default_label = true;
+			} else if (!has_default_label) {
+				string[] missing_vals = {};
+				foreach (var val in remaining_values) {
+					missing_vals += val.name;
+				}
+				Report.warning (stmt.source_reference, "switch does not handle `%s' of enum `%s'".printf (string.joinv ("', `", missing_vals), en.get_full_name ()));
 			}
 		}
 
