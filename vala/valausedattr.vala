@@ -76,6 +76,8 @@ public class Vala.UsedAttr : CodeVisitor {
 		"ScanfFormat", "",
 		"FormatArg", "",
 
+		"Source", "filename", "line", "column", "",
+
 		"GtkChild", "name", "internal", "",
 		"GtkTemplate", "ui", "",
 		"GtkCallback", "name", "",

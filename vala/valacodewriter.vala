@@ -1584,6 +1584,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				continue;
 			}
 
+			if (attr.name == "Source") {
+				continue;
+			}
+
 			if (sym != null && attr.args.size == 1 && attr.name == "Version") {
 				string since_val = attr.get_string ("since");
 				if (since_val != null && skip_since_tag_check (sym, since_val)) {
@@ -1618,6 +1622,15 @@ public class Vala.CodeWriter : CodeVisitor {
 			if (node is Parameter || node is PropertyAccessor) {
 				write_string (" ");
 			} else {
+				write_newline ();
+			}
+		}
+
+		if (type == CodeWriterType.FAST && !(node is Parameter || node is PropertyAccessor)) {
+			var source_reference = node.source_reference;
+			if (source_reference != null) {
+				write_indent ();
+				stream.puts ("[Source (filename = \"%s\", line = %i, column = %i)]".printf (source_reference.file.get_relative_filename (), source_reference.begin.line, source_reference.begin.column));
 				write_newline ();
 			}
 		}
