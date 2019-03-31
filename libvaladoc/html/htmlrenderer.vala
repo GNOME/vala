@@ -534,6 +534,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			tag = "span";
 			css_type = "xml_cdata";
 			break;
+
+		case Run.Style.NONE:
+			break;
 		}
 		if (tag != null) {
 			writer.start_tag (tag, {"class", css_type});
