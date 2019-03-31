@@ -1703,6 +1703,8 @@ public class Vala.Parser : CodeVisitor {
 				return true;
 			}
 			break;
+		default:
+			break;
 		}
 
 		rollback (begin);

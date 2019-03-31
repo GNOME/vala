@@ -219,6 +219,8 @@ public class Gtkdoc.CommentConverter : ContentVisitor {
 			current_builder.append ("<code>");
 			tag = "code";
 			break;
+		default:
+			break;
 		}
 		run.accept_children (this);
 
