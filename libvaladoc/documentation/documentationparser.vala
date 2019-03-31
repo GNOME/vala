@@ -262,6 +262,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			return ".";
 		case Content.List.Bullet.UNORDERED:
 			return "*";
+		case Content.List.Bullet.ORDERED:
+			return "#";
 		case Content.List.Bullet.ORDERED_NUMBER:
 			return "1.";
 		case Content.List.Bullet.ORDERED_LOWER_CASE_ALPHA:
