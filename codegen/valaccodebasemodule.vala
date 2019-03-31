@@ -1422,6 +1422,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				case CCodeUnaryOperator.POSTFIX_INCREMENT:
 				case CCodeUnaryOperator.POSTFIX_DECREMENT:
 					return false;
+				default:
+					break;
 			}
 			return is_constant_ccode_expression (cunary.inner);
 		} else if (cexpr is CCodeBinaryExpression) {
