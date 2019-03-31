@@ -300,6 +300,8 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			writer.start_tag ("blockquote");
 			tag = "blockquote";
 			break;
+		default:
+			break;
 		}
 
 		element.accept_children (this);
