@@ -1,3 +1,30 @@
+Vala 0.44.2
+===========
+ * Various improvements and bug fixes:
+  - ccodegen:
+    + Resolve generics in sizeof-expression of parameter initializer
+    + Move implicit GValue cast for comparison to BinaryExpression [#585063]
+    + Use available *_unref functions in G_DEFINE_AUTOPTR_CLEANUP_FUNC
+    + Move get_type_signature() to DataType
+    + Move try_cast_variant_to_type() to GVariantModule.visit_cast_expression()
+    + Don't create special GArray clear-func for non-null structs
+    + Implement silent-cast for GLib.Variant [#767]
+  - vala: Variadic parameters are not supported for async methods
+  - vala: Report error for unsupported operator instead of assertion
+  - girparser: Create correct output in get_default_lower_case_suffix() [#778]
+  - libvaladoc: Handle missing Content.List.Bullet.ORDERED in switch
+  - libvaladoc: Handle missing Run.Style.NONE in switch
+  - Add explicit "default: break;" statements for coverage of enum-typed switch
+
+ * Bindings:
+  - glib-2.0: Don't annotate dedicated GLib.assert_*() with [Assert] [#769]
+  - gio-2.0: Revert enum-typed flags parameters in Socket API [glib!728]
+  - gobject-introspection-1.0: Fix TypeInfo and TypeTag method references
+  - gstreamer: Update from 1.15.2+ git master
+  - gstreamer-1.0: Fix TypeFind and TypeFindFactory method references [#778]
+  - gtk4: Update to 3.94.0+f273eca7
+  - vapi: Update GIR-based bindings
+
 Vala 0.44.1
 ===========
  * Various improvements and bug fixes:
