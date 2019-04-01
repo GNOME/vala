@@ -232,8 +232,6 @@ public class ValaDoc : Object {
 		settings.alternative_resource_dirs = alternative_resource_dirs;
 
 
-		var driver = new Valadoc.Drivers.Driver ();
-
 		// load plugins:
 		Doclet? doclet = null;
 		ModuleLoader? modules = create_module_loader (reporter, out doclet);
@@ -242,11 +240,14 @@ public class ValaDoc : Object {
 		}
 
 		// Create tree:
-		Valadoc.Api.Tree doctree = driver.build (settings, reporter);
+		TreeBuilder builder = new TreeBuilder ();
+		Valadoc.Api.Tree doctree = builder.build (settings, reporter);
 		if (reporter.errors > 0) {
 			doclet = null;
 			return quit (reporter);
 		}
+		SymbolResolver resolver = new SymbolResolver (builder);
+		doctree.accept (resolver);
 
 		// register child symbols:
 		Valadoc.Api.ChildSymbolRegistrar registrar = new Valadoc.Api.ChildSymbolRegistrar ();
@@ -279,7 +280,13 @@ public class ValaDoc : Object {
 		}
 
 		if (ValaDoc.gir_name != null) {
-			driver.write_gir (settings, reporter);
+			var gir_writer = new GirWriter (resolver);
+			gir_writer.write_file (doctree.context,
+				settings.gir_directory,
+				"%s-%s.gir".printf (settings.gir_namespace, settings.gir_version),
+				settings.gir_namespace,
+				settings.gir_version,
+				settings.pkg_name);
 			if (reporter.errors > 0) {
 				return quit (reporter);
 			}

@@ -26,7 +26,7 @@ using Valadoc.Api;
 /**
  * Code visitor generating .gir file for the public interface.
  */
-public class Valadoc.Drivers.GirWriter : Vala.GIRWriter {
+public class Valadoc.GirWriter : Vala.GIRWriter {
 	private GtkdocRenderer renderer;
 	private SymbolResolver resolver;
 

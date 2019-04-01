@@ -43,7 +43,6 @@ check_PROGRAMS = driver
 driver_VALASOURCES = \
 	drivers/driver-test.vala \
 	drivers/generic-api-test.vala \
-	$(top_srcdir)/valadoc/driver.vala \
 	$(top_srcdir)/valadoc/girwriter.vala \
 	$(top_srcdir)/valadoc/initializerbuilder.vala \
 	$(top_srcdir)/valadoc/symbolresolver.vala \
@@ -54,7 +53,6 @@ driver_SOURCES = \
 	driver.vala.stamp \
 	drivers/driver-test.c \
 	drivers/generic-api-test.c \
-	driver.c \
 	girwriter.c \
 	initializerbuilder.c \
 	symbolresolver.c \

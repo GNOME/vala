@@ -26,7 +26,7 @@ using Valadoc.Api;
 /**
  * Creates an simpler, minimized, more abstract AST for valacs AST.
  */
-public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
+public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 	private Vala.ArrayList<PackageMetaData> packages = new Vala.ArrayList<PackageMetaData> ();
 	private PackageMetaData source_package;
 

@@ -2885,13 +2885,12 @@ public static void test_driver () {
 	settings.path = "out";
 
 
-	var driver = new Valadoc.Drivers.Driver ();
-	assert (driver != null);
-
-
-	Api.Tree? doctree = driver.build (settings, reporter);
+	TreeBuilder builder = new TreeBuilder ();
+	Api.Tree? doctree = builder.build (settings, reporter);
 	assert (reporter.errors == 0);
 	assert (doctree != null);
+	SymbolResolver resolver = new SymbolResolver (builder);
+	doctree.accept (resolver);
 
 
 	bool tmp = doctree.create_tree ();

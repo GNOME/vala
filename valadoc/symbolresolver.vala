@@ -23,7 +23,7 @@
 
 using Valadoc.Api;
 
-public class Valadoc.Drivers.SymbolResolver : Visitor {
+public class Valadoc.SymbolResolver : Visitor {
 	private Vala.HashMap<Vala.Symbol, Symbol> symbol_map;
 	private Valadoc.Api.Class glib_error;
 	private Api.Tree root;

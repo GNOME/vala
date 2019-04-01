@@ -27,7 +27,6 @@ BUILT_SOURCES = valadoc.vala.stamp
 bin_PROGRAMS = valadoc
 
 valadoc_VALASOURCES = \
-	driver.vala \
 	girwriter.vala \
 	initializerbuilder.vala \
 	symbolresolver.vala \
