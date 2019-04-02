@@ -156,6 +156,7 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
 
+AC_ARG_WITH(cgraph, AS_HELP_STRING([--with-cgraph], [Required flag for cross-compilation to define capability of graphviz]), [], with_cgraph=check)
 AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)
 if test x$enable_valadoc = xyes; then
 	PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
@@ -181,6 +182,17 @@ if test x$enable_valadoc = xyes; then
 		], [
 			AC_MSG_RESULT([no])
 			have_cgraph=no
+		], [
+			if test x$with_cgraph = xcheck; then
+				AC_MSG_ERROR([--with-cgraph=yes/no is required for cross-compilation])
+			elif test x$with_cgraph = xyes; then
+				AC_MSG_RESULT([yes])
+				VALAFLAGS="$VALAFLAGS -D WITH_CGRAPH"
+				have_cgraph=yes
+			else
+				AC_MSG_RESULT([no])
+				have_cgraph=no
+			fi
 		]
 	)
 	LIBADD="$cgraph_tmp_LIBADD"
