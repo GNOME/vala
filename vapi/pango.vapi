@@ -1239,7 +1239,7 @@ namespace Pango {
 	public static bool scan_string (ref string pos, GLib.StringBuilder @out);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (deprecated = true, deprecated_since = "1.38")]
-	public static bool scan_word (ref string pos, out unowned GLib.StringBuilder @out);
+	public static bool scan_word (ref string pos, GLib.StringBuilder @out);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (deprecated_since = "vala-0.18", replacement = "Pango.Script.for_unichar")]
 	public static Pango.Script script_for_unichar (unichar ch);
