@@ -1203,6 +1203,10 @@ public class Vala.Method : Subroutine, Callable {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
+		if (result_var != null) {
+			collection.add (result_var);
+		}
+
 		// capturing variables is only supported if they are initialized
 		// therefore assume that captured variables are initialized
 		if (closure) {
