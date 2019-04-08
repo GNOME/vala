@@ -906,6 +906,13 @@ public class Vala.MemberAccess : Expression {
 				ma.check_lvalue_access ();
 			}
 		}
+
+		if (symbol_reference is Method && ((Method) symbol_reference).get_attribute ("DestroysInstance") != null) {
+			if (ma != null) {
+				ma.lvalue = true;
+				ma.check_lvalue_access ();
+			}
+		}
 	}
 
 	public override void emit (CodeGenerator codegen) {
