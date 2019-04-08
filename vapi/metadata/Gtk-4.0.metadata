@@ -46,7 +46,6 @@ TextView
   .create_buffer unowned=false skip=false
 Widget
   .compute_expand#virtual_method.* out
-  .dispatch_child_properties_changed.pspecs array array_length_idx=0
 
 // Bug #657202: Floating references
 FileFilter
@@ -70,8 +69,6 @@ CellRenderer
 
 // G-I cannot handle returning non-boxed types
 binding_set_by_class skip=false
-ContainerClass
-  .find_child_property skip=false
 
 // G-I cannot handle variadic functions
 *.*_valist skip=false
@@ -83,10 +80,6 @@ CellArea
   .add_with_properties skip=false
   .cell_get skip=false
   .cell_set skip=false
-Container
-  .add_with_properties skip=false
-  .child_get* skip=false
-  .child_set* skip=false
 Dialog
   .add_buttons skip=false
   .new_with_buttons skip=false
@@ -155,8 +148,8 @@ Editable
 EntryBuffer
   .new.initial_chars default=null
 Gesture
-  .get_point.x nullable default=null
-  .get_point.y nullable default=null
+  .get_point.x default=null
+  .get_point.y default=null
 Grid
   .attach*.width default=1
   .attach*.height default=1
@@ -166,8 +159,6 @@ IconInfo
   .load_symbolic*.error_color default=null
   .load_symbolic*.was_symbolic default=null
   .*.cancellable default=null
-Layout
-  .new.* default=null
 Menu
   .popup_at_*.trigger_event default=null
 Notebook
@@ -267,9 +258,6 @@ TreeModel
 CellArea
   .cell_get_property.value ref
   .get_cell_property.value ref
-Container
-  .get_child_property.value ref
-  .child_get_property.value ref
 
 // Backwards compatibility
 AccelGroup
