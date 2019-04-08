@@ -4050,15 +4050,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (expr.value_type != null) {
 				// FIXME: temporary workaround until the refactoring is complete, not all target_value have a value_type
 				expr.target_value.value_type = expr.value_type;
-
-				if (is_compact_class_destructor_call (expr)) {
-					// transfer ownership here and consume given instance
-					var temp_value = store_temp_value (expr.target_value, expr);
-					ccode.add_assignment (get_cvalue (expr), new CCodeConstant ("NULL"));
-					expr.target_value = temp_value;
-				} else {
-					expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
-				}
+				expr.target_value = transform_value (expr.target_value, expr.target_type, expr);
 			}
 
 			if (expr.target_value == null) {
@@ -4076,6 +4068,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!(expr.value_type is ValueType && !expr.value_type.nullable)) {
 				((GLibValue) expr.target_value).non_null = expr.is_non_null ();
 			}
+		} else if (expr.value_type != null && is_compact_class_destructor_call (expr)) {
+			// transfer ownership here and consume given instance
+			var temp_value = store_temp_value (expr.target_value, expr);
+			ccode.add_assignment (get_cvalue (expr), new CCodeConstant ("NULL"));
+			expr.target_value = temp_value;
 		}
 	}
 
