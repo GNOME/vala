@@ -922,6 +922,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "3.24")]
 		public bool screensaver_active { get; }
+		[Version (since = "3.24.8")]
+		public signal void query_end ();
 		[Version (since = "3.2")]
 		public virtual signal void window_added (Gtk.Window window);
 		[Version (since = "3.2")]

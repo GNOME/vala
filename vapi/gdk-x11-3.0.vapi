@@ -65,6 +65,8 @@ namespace Gdk {
 			public void error_trap_pop_ignored ();
 			[Version (since = "3.0")]
 			public void error_trap_push ();
+			[Version (since = "3.16")]
+			public static bool get_glx_version (Gdk.Display display, out int major, out int minor);
 			[Version (since = "2.12")]
 			public unowned string get_startup_notification_id ();
 			[Version (since = "2.8")]
@@ -103,6 +105,12 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected DragContext ();
 		}
+		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_gl_context_get_type ()")]
+		[GIR (name = "X11GLContext")]
+		public class GLContext : Gdk.GLContext {
+			[CCode (has_construct_function = false)]
+			protected GLContext ();
+		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_keymap_get_type ()")]
 		[GIR (name = "X11Keymap")]
 		public class Keymap : Gdk.Keymap {
@@ -112,6 +120,13 @@ namespace Gdk {
 			public int get_group_for_state (uint state);
 			[Version (since = "3.6")]
 			public bool key_is_modifier (uint keycode);
+		}
+		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_monitor_get_type ()")]
+		[GIR (name = "X11Monitor")]
+		public class Monitor : Gdk.Monitor {
+			[CCode (has_construct_function = false)]
+			protected Monitor ();
+			public static X.ID get_output (Gdk.Monitor monitor);
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
 		[GIR (name = "X11Screen")]

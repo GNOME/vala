@@ -6642,8 +6642,14 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_STOP")]
 	[Version (since = "3.4")]
 	public const bool EVENT_STOP;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAJOR_VERSION")]
+	public const int MAJOR_VERSION;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAX_TIMECOORD_AXES")]
 	public const int MAX_TIMECOORD_AXES;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MICRO_VERSION")]
+	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MINOR_VERSION")]
+	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_PARENT_RELATIVE")]
 	public const int PARENT_RELATIVE;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_PRIORITY_REDRAW")]

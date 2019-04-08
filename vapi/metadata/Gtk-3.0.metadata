@@ -276,8 +276,8 @@ Editable
 EntryBuffer
   .new.initial_chars default=null
 Gesture
-  .get_point.x nullable default=null
-  .get_point.y nullable default=null
+  .get_point.x default=null
+  .get_point.y default=null
 Grid
   .attach*.width default=1
   .attach*.height default=1
