@@ -1,3 +1,16 @@
+Vala 0.44.3
+===========
+ * Regression and bug fixes:
+  - codegen: Always assign original variable when consuming instance to destroy
+    [#781]
+  - build: Require --with-cgraph configure flag when cross-compiling [#775]
+
+ * Bindings:
+  - gdk-3.0,gtk+-3.0: Update from 3.24.7+
+  - gtk4: Update to 3.94.0+2594593d
+  - gstreamer: Update from 1.15.2+ git master
+  - pango: Fix StringBuilder parameter of scan_word()
+
 Vala 0.44.2
 ===========
  * Various improvements and bug fixes:
