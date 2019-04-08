@@ -385,6 +385,8 @@ namespace Gst {
 			MEDIA_PROPERTIES,
 			SEEK_STYLE,
 			ACCEPT_RANGES,
+			FRAMES,
+			RATE_CONTROL,
 			LAST
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", cprefix = "GST_RTSP_LOWER_TRANS_", type_id = "gst_rtsp_lower_trans_get_type ()")]

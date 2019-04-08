@@ -1387,6 +1387,8 @@ namespace Gst {
 		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, out unowned string origin);
 		public void parse_qos (out Gst.QOSType type, out double proportion, out Gst.ClockTimeDiff diff, out Gst.ClockTime timestamp);
 		public void parse_seek (out double rate, out Gst.Format format, out Gst.SeekFlags flags, out Gst.SeekType start_type, out int64 start, out Gst.SeekType stop_type, out int64 stop);
+		[Version (since = "1.16")]
+		public void parse_seek_trickmode_interval (out Gst.ClockTime interval);
 		public void parse_segment (out unowned Gst.Segment segment);
 		public void parse_segment_done (out Gst.Format format, out int64 position);
 		[Version (since = "1.10")]
@@ -1425,6 +1427,8 @@ namespace Gst {
 		public void set_group_id (uint group_id);
 		[Version (since = "1.4")]
 		public void set_running_time_offset (int64 offset);
+		[Version (since = "1.16")]
+		public void set_seek_trickmode_interval (Gst.ClockTime interval);
 		public void set_seqnum (uint32 seqnum);
 		[Version (since = "1.10")]
 		public void set_stream (Gst.Stream stream);
