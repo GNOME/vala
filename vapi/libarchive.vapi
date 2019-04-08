@@ -363,6 +363,12 @@ namespace Archive {
 		);
 	}
 
+	[SimpleType]
+	[CCode (cheader_filename = "archive_entry.h", cname = "__LA_MODE_T", has_type_id = false)]
+	[IntegerType (rank = 9)]
+	public struct FileMode : Posix.mode_t {
+	}
+
 	[CCode (cheader_filename = "archive_entry.h", cprefix = "AE_", cname = "__LA_MODE_T", has_type_id = false)]
 	public enum FileType {
 		IFMT,
@@ -398,12 +404,13 @@ namespace Archive {
 		public unowned string gname ();
 		public unowned string hardlink ();
 		public int64_t ino ();
-		public FileType mode ();
+		public FileMode mode ();
 		public time_t mtime ();
 		public long mtime_nsec ();
 		public bool mtime_is_set ();
 		public uint nlink ();
 		public unowned string pathname ();
+		public FileMode perm ();
 		public int64_t rdev ();
 		public int64_t rdevmajor ();
 		public int64_t rdevminor ();
@@ -423,7 +430,7 @@ namespace Archive {
 		public void set_dev (int64_t dev);
 		public void set_devmajor (int64_t major);
 		public void set_devminor (int64_t major);
-		public void set_filetype (uint filetype);
+		public void set_filetype (FileType filetype);
 		public void set_fflags (ulong set, ulong clear);
 		public unowned string copy_fflags_text (string text);
 		public void set_gid (int64_t gid);
@@ -433,13 +440,13 @@ namespace Archive {
 		public void set_ino (ulong ino);
 		public void set_link (string link);
 		public Result update_link_utf8 (string link);
-		public void set_mode (FileType mode);
+		public void set_mode (FileMode mode);
 		public void set_mtime (time_t mtime, long blah);
 		public void unset_mtime ();
 		public void set_nlink (uint nlink);
 		public void set_pathname (string pathname);
 		public Result  update_pathname_utf8 (string pathname);
-		public void set_perm (FileType mode);
+		public void set_perm (FileMode mode);
 		public void set_rdev (int64_t dev);
 		public void set_rdevmajor (int64_t devmajor);
 		public void set_rdevminor (int64_t devminor);
