@@ -91,6 +91,9 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint mtu { get; set; }
 			[NoAccessorMethod]
+			[Version (since = "1.16")]
+			public bool onvif_no_rate_control { get; set; }
+			[NoAccessorMethod]
 			public bool perfect_rtptime { get; set; }
 			[NoAccessorMethod]
 			public uint pt { get; set; }
