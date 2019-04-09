@@ -1,3 +1,31 @@
+Vala 0.40.15
+============
+ * Various improvements and bug fixes:
+  - Mark defined constructors of abstract classes as protected
+  - codegen:
+    + Use guint to represent flags-enum in custom GMarshalFunc
+    + Move disconnect error from signal-module to semantic-analyzer pass
+    + Use unsigned default value for flags-enum
+    + Always assign original variable when consuming instance to destroy [#781]
+    + Resolve generics in sizeof-expression of parameter initializer
+    + Move implicit GValue cast for comparison to BinaryExpression [#585063]
+  - girparser: Create correct output in get_default_lower_case_suffix() [#778]
+  - parser: Improve source_reference of expressions and statements
+  - vala: Variadic parameters are not supported for async methods
+  - vala: Allow assignment of 0U to enum types
+  - vala: Use global CodeContext to retrieve root_symbol
+  - libvaladoc:
+    + Don't try to create a Content.ListItem when there is none
+    + Handle missing Content.List.Bullet.ORDERED in switch
+    + Handle missing Run.Style.NONE in switch
+
+ * Bindings:
+  - libgvc: Some additions and ownership/return-type fixes
+  - glib-2.0: Don't annotate dedicated GLib.assert_*() with [Assert] [#769]
+  - pango: Fix StringBuilder parameter of scan_word()
+  - gobject-introspection-1.0: Fix TypeInfo and TypeTag method references [#778]
+  - gstreamer-1.0: Fix TypeFind and TypeFindFactory method references [#778]
+
 Vala 0.40.14
 ============
  * Various improvements and bug fixes:
