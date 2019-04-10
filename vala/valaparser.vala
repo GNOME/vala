@@ -2008,8 +2008,10 @@ public class Vala.Parser : CodeVisitor {
 				expect (TokenType.SEMICOLON);
 			} else {
 				// variable declaration in initializer
-				block = new Block (get_src (begin));
+				var decl_begin = get_location ();
+				block = new Block (get_src (decl_begin));
 				parse_local_variable_declarations (block);
+				block.source_reference.end = get_last_src ().end;
 			}
 		}
 		Expression condition = null;
