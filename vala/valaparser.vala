@@ -1755,7 +1755,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 
-		block.source_reference.end = get_current_src ().end;
+		block.source_reference.end = get_last_src ().end;
 
 		return block;
 	}
