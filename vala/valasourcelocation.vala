@@ -35,5 +35,14 @@ public struct Vala.SourceLocation {
 		line = _line;
 		column = _column;
 	}
+
+	/**
+	 * Returns a string representation of this source location.
+	 *
+	 * @return human-readable string
+	 */
+	public string to_string () {
+		return ("%d.%d".printf (line, column));
+	}
 }
 
