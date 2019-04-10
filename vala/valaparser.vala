@@ -1892,8 +1892,9 @@ public class Vala.Parser : CodeVisitor {
 	Statement parse_expression_statement () throws ParseError {
 		var begin = get_location ();
 		var expr = parse_statement_expression ();
+		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
-		return new ExpressionStatement (expr, get_src (begin));
+		return new ExpressionStatement (expr, src);
 	}
 
 	Expression parse_statement_expression () throws ParseError {
