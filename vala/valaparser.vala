@@ -1767,16 +1767,18 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void parse_local_variable_declarations (Block block) throws ParseError {
+		var begin = get_location ();
 		DataType variable_type;
 		if (accept (TokenType.VAR)) {
 			variable_type = null;
 		} else {
 			variable_type = parse_type (true, true);
 		}
+		bool is_first = true;
 		do {
 			if (variable_type == null && accept (TokenType.OPEN_PARENS)) {
 				// tuple
-				var begin = get_location ();
+				begin = get_location ();
 
 				string[] identifiers = {};
 				do {
@@ -1800,12 +1802,18 @@ public class Vala.Parser : CodeVisitor {
 				continue;
 			}
 
+			if (!is_first) {
+				begin = get_location ();
+			} else {
+				is_first = false;
+			}
+
 			DataType type_copy = null;
 			if (variable_type != null) {
 				type_copy = variable_type.copy ();
 			}
 			var local = parse_local_variable (type_copy);
-			block.add_statement (new DeclarationStatement (local, local.source_reference));
+			block.add_statement (new DeclarationStatement (local, get_src (begin)));
 		} while (accept (TokenType.COMMA));
 		expect (TokenType.SEMICOLON);
 	}
@@ -1813,14 +1821,14 @@ public class Vala.Parser : CodeVisitor {
 	LocalVariable parse_local_variable (DataType? variable_type) throws ParseError {
 		var begin = get_location ();
 		string id = parse_identifier ();
-
 		var type = parse_inline_array_type (variable_type);
+		var src = get_src (begin);
 
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_expression ();
 		}
-		return new LocalVariable (type, id, initializer, get_src (begin));
+		return new LocalVariable (type, id, initializer, src);
 	}
 
 	void parse_local_constant_declarations (Block block) throws ParseError {
