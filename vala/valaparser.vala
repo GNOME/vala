@@ -1723,6 +1723,7 @@ public class Vala.Parser : CodeVisitor {
 
 		var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
 		block.add_statement (stmt);
+		block.source_reference.end = get_last_src ().end;
 
 		return block;
 
