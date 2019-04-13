@@ -441,16 +441,18 @@ public class Vala.BinaryExpression : Expression {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
-		//FIXME Handled special in FlowAnalyzer
-		if (operator != BinaryOperator.AND && operator != BinaryOperator.OR) {
+		if (operator == BinaryOperator.OR) {
+			left.get_defined_variables (collection);
+		} else {
 			left.get_defined_variables (collection);
 			right.get_defined_variables (collection);
 		}
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
-		//FIXME Handled special in FlowAnalyzer
-		if (operator != BinaryOperator.AND && operator != BinaryOperator.OR) {
+		if (operator == BinaryOperator.OR) {
+			left.get_used_variables (collection);
+		} else {
 			left.get_used_variables (collection);
 			right.get_used_variables (collection);
 		}
