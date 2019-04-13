@@ -291,8 +291,14 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (postconditions != null) {
+			if (postconditions.size > 0 && result_var != null) {
+				scope.add ("result", result_var);
+			}
 			foreach (Expression postcondition in postconditions) {
 				postcondition.accept (visitor);
+			}
+			if (postconditions.size > 0 && result_var != null) {
+				scope.remove ("result");
 			}
 		}
 
@@ -850,8 +856,14 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (postconditions != null) {
+			if (postconditions.size > 0 && result_var != null) {
+				scope.add ("result", result_var);
+			}
 			foreach (Expression postcondition in postconditions) {
 				postcondition.check (context);
+			}
+			if (postconditions.size > 0 && result_var != null) {
+				scope.remove ("result");
 			}
 		}
 
