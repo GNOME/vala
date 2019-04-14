@@ -99,6 +99,7 @@ TESTS = \
 	methods/closures.vala \
 	methods/contains.vala \
 	methods/iterator.vala \
+	methods/postcondition-local-result.vala \
 	methods/prepostconditions.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
