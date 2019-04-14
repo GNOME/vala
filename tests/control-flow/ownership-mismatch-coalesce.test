@@ -1,0 +1,11 @@
+Invalid Code
+
+string? foo () {
+	return "foo";
+}
+
+void main () {
+	unowned string bar = "bar";
+
+	unowned string manam = foo () ?? bar;
+}

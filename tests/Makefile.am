@@ -160,6 +160,8 @@ TESTS = \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
+	control-flow/ownership-mismatch-coalesce.test \
+	control-flow/ownership-mismatch-conditional.test \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
