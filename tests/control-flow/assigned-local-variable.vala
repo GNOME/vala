@@ -20,6 +20,12 @@ void main () {
 			assert_not_reached ();
 		}
 	}
+	{
+		int i;
+		if ((i = bar ()) > 42 && i < 23) {
+			assert_not_reached ();
+		}
+	}
 
 	{
 		string? s;
@@ -33,13 +39,27 @@ void main () {
 			assert_not_reached ();
 		}
 	}
+	{
+		int i;
+		while ((i = bar ()) > 42 && i < 23) {
+			assert_not_reached ();
+		}
+	}
 
 	{
 		string? s;
 		assert (!foo (out s) || s == null ? false : true);
 	}
 	{
+		string? s;
+		assert (!foo (out s) && s == null ? false : true);
+	}
+	{
 		int i;
 		assert ((i = bar ()) > 42 || i < 23 ? false : true);
+	}
+	{
+		int i;
+		assert ((i = bar ()) > 42 && i < 23 ? false : true);
 	}
 }
