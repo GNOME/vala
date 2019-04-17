@@ -453,7 +453,8 @@ namespace Gst {
 		public enum MIKEYEncAlg {
 			NULL,
 			AES_CM_128,
-			AES_KW_128
+			AES_KW_128,
+			AES_GCM_128
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYKVType", cprefix = "GST_MIKEY_KV_", has_type_id = false)]
 		[GIR (name = "MIKEYKVType")]
@@ -526,7 +527,8 @@ namespace Gst {
 			FEC_ORDER,
 			SRTP_AUTH,
 			AUTH_TAG_LEN,
-			SRTP_PREFIX_LEN
+			SRTP_PREFIX_LEN,
+			AEAD_AUTH_TAG_LEN
 		}
 		[CCode (cheader_filename = "gst/sdp/sdp.h", cname = "GstMIKEYTSType", cprefix = "GST_MIKEY_TS_TYPE_", has_type_id = false)]
 		[GIR (name = "MIKEYTSType")]
