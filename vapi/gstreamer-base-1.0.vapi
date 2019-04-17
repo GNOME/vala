@@ -125,6 +125,10 @@ namespace Gst {
 			public Gst.Buffer pop_buffer ();
 			[NoWrapper]
 			public virtual bool skip_buffer (Gst.Base.Aggregator aggregator, Gst.Buffer buffer);
+			[NoAccessorMethod]
+			[Version (since = "1.16")]
+			public bool emit_signals { get; set; }
+			public signal void buffer_consumed (Gst.Buffer object);
 		}
 		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader", has_type_id = false)]
 		[Compact]

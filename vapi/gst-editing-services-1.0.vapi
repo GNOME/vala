@@ -562,9 +562,11 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected TitleSource ();
 		public uint32 get_background_color ();
-		public unowned string get_font_desc ();
+		[Version (deprecated = true, deprecated_since = "1.16")]
+		public string get_font_desc ();
 		public GES.TextHAlign get_halignment ();
-		public unowned string get_text ();
+		[Version (deprecated = true, deprecated_since = "1.16")]
+		public string get_text ();
 		public uint32 get_text_color ();
 		public GES.TextVAlign get_valignment ();
 		public double get_xpos ();
