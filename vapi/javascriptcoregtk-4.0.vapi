@@ -300,7 +300,7 @@ namespace JSC {
 		[CCode (has_construct_function = false)]
 		public Value.number (JSC.Context context, double number);
 		[CCode (has_construct_function = false)]
-		public Value.object (JSC.Context context, void* instance, JSC.Class? jsc_class);
+		public Value.object (JSC.Context context, owned void* instance, JSC.Class? jsc_class);
 		public void object_define_property_accessor (global::string property_name, JSC.ValuePropertyFlags flags, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
 		public void object_define_property_data (global::string property_name, JSC.ValuePropertyFlags flags, JSC.Value? property_value);
 		public bool object_delete_property (global::string name);
