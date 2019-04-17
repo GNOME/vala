@@ -6216,6 +6216,7 @@ namespace Gsk {
 		public Gsk.TransformCategory get_category ();
 		public Gsk.Transform invert ();
 		public Gsk.Transform matrix (Graphene.Matrix matrix);
+		public static bool parse (string string, out Gsk.Transform out_transform);
 		public Gsk.Transform perspective (float depth);
 		public void print (GLib.StringBuilder string);
 		public unowned Gsk.Transform @ref ();
@@ -7500,20 +7501,6 @@ namespace Gtk {
 		public void load_from_path (string path);
 		public void load_from_resource (string resource_path);
 		public string to_string ();
-		public virtual signal void parsing_error (Gtk.CssSection section, GLib.Error error);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_css_section_ref", type_id = "gtk_css_section_get_type ()", unref_function = "gtk_css_section_unref")]
-	[Compact]
-	public class CssSection {
-		public uint get_end_line ();
-		public uint get_end_position ();
-		public unowned GLib.File get_file ();
-		public unowned Gtk.CssSection? get_parent ();
-		public Gtk.CssSectionType get_section_type ();
-		public uint get_start_line ();
-		public uint get_start_position ();
-		public unowned Gtk.CssSection @ref ();
-		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_layout_get_type ()")]
 	public class CustomLayout : Gtk.LayoutManager {
@@ -8807,6 +8794,7 @@ namespace Gtk {
 		public unowned Gtk.ListBoxRow get_selected_row ();
 		public GLib.List<weak Gtk.ListBoxRow> get_selected_rows ();
 		public Gtk.SelectionMode get_selection_mode ();
+		public bool get_show_separators ();
 		public void insert (Gtk.Widget child, int position);
 		public void invalidate_filter ();
 		public void invalidate_headers ();
@@ -8820,12 +8808,14 @@ namespace Gtk {
 		public void set_header_func (owned Gtk.ListBoxUpdateHeaderFunc? update_header);
 		public void set_placeholder (Gtk.Widget? placeholder);
 		public void set_selection_mode (Gtk.SelectionMode mode);
+		public void set_show_separators (bool show_separators);
 		public void set_sort_func (owned Gtk.ListBoxSortFunc? sort_func);
 		public void unselect_row (Gtk.ListBoxRow row);
 		[NoAccessorMethod]
 		public bool accept_unpaired_release { get; set; }
 		public bool activate_on_single_click { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
+		public bool show_separators { get; set; }
 		public virtual signal void activate_cursor_row ();
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
 		public virtual signal void row_activated (Gtk.ListBoxRow row);
@@ -9072,12 +9062,6 @@ namespace Gtk {
 		public MenuBar ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public MenuBar.from_model (GLib.MenuModel model);
-		public Gtk.PackDirection get_child_pack_direction ();
-		public Gtk.PackDirection get_pack_direction ();
-		public void set_child_pack_direction (Gtk.PackDirection child_pack_dir);
-		public void set_pack_direction (Gtk.PackDirection pack_dir);
-		public Gtk.PackDirection child_pack_direction { get; set; }
-		public Gtk.PackDirection pack_direction { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_button_get_type ()")]
 	public class MenuButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
@@ -10664,7 +10648,6 @@ namespace Gtk {
 		public unowned Gtk.WidgetPath get_path ();
 		public GLib.Value get_property (string property);
 		public int get_scale ();
-		public unowned Gtk.CssSection? get_section (string property);
 		public Gtk.StateFlags get_state ();
 		public void get_valist (string first_property_name, [CCode (type = "va_list")] va_list args);
 		public bool has_class (string class_name);
@@ -12940,17 +12923,6 @@ namespace Gtk {
 		TOP_RIGHT,
 		BOTTOM_RIGHT
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_SECTION_", type_id = "gtk_css_section_type_get_type ()")]
-	public enum CssSectionType {
-		DOCUMENT,
-		IMPORT,
-		COLOR_DEFINITION,
-		RULESET,
-		SELECTOR,
-		DECLARATION,
-		VALUE,
-		KEYFRAMES
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flag_get_type ()")]
 	[Flags]
 	public enum DebugFlag {
@@ -13233,13 +13205,6 @@ namespace Gtk {
 	public enum Overflow {
 		VISIBLE,
 		HIDDEN
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PACK_DIRECTION_", type_id = "gtk_pack_direction_get_type ()")]
-	public enum PackDirection {
-		LTR,
-		RTL,
-		TTB,
-		BTT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PACK_", type_id = "gtk_pack_type_get_type ()")]
 	public enum PackType {
@@ -13657,17 +13622,6 @@ namespace Gtk {
 		INVALID_PROPERTY,
 		INVALID_SIGNAL,
 		INVALID_ID;
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		public static GLib.Quark quark ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
-	public errordomain CssProviderError {
-		FAILED,
-		SYNTAX,
-		IMPORT,
-		NAME,
-		DEPRECATED,
-		UNKNOWN_VALUE;
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
