@@ -1,0 +1,44 @@
+using GLib;
+
+[Source (filename = "./fastvapitest.vala", line = 1, column = 1)]
+namespace FastVapi {
+	[Source (filename = "./fastvapitest.vala", line = 23, column = 2)]
+	public class Test : Object {
+		[Source (filename = "./fastvapitest.vala", line = 26, column = 3)]
+		public int field;
+		[Source (filename = "./fastvapitest.vala", line = 30, column = 3)]
+		public Test ();
+		[Source (filename = "./fastvapitest.vala", line = 33, column = 3)]
+		public void method ();
+		[Source (filename = "./fastvapitest.vala", line = 28, column = 3)]
+		public string property { get; set construct; }
+		[Source (filename = "./fastvapitest.vala", line = 24, column = 3)]
+		public signal void some_signal (int param);
+	}
+	[Source (filename = "./fastvapitest.vala", line = 16, column = 2)]
+	public interface InterfaceTest : Object {
+		[Source (filename = "./fastvapitest.vala", line = 18, column = 3)]
+		public abstract void method (int param);
+		[Source (filename = "./fastvapitest.vala", line = 17, column = 3)]
+		public abstract int property { get; set construct; }
+	}
+	[Source (filename = "./fastvapitest.vala", line = 12, column = 2)]
+	public struct TestStruct {
+		[Source (filename = "./fastvapitest.vala", line = 13, column = 3)]
+		public int field_name;
+	}
+	[Source (filename = "./fastvapitest.vala", line = 4, column = 2)]
+	public enum EnumTest {
+		[Source (filename = "./fastvapitest.vala", line = 5, column = 3)]
+		VALUE
+	}
+	[Source (filename = "./fastvapitest.vala", line = 8, column = 2)]
+	public errordomain ErrorTest {
+		[Source (filename = "./fastvapitest.vala", line = 9, column = 3)]
+		FAILED
+	}
+	[Source (filename = "./fastvapitest.vala", line = 21, column = 2)]
+	public delegate bool DelegateTest (int param);
+	[Source (filename = "./fastvapitest.vala", line = 2, column = 2)]
+	public const int CONSTANT = 42;
+}
