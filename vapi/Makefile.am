@@ -80,6 +80,8 @@ dist_vapi_DATA = \
 	goocanvas.vapi \
 	goocanvas-2.0.deps \
 	goocanvas-2.0.vapi \
+	graphene-1.0.deps \
+	graphene-1.0.vapi \
 	graphene-gobject-1.0.deps \
 	graphene-gobject-1.0.vapi \
 	gsl.vapi \
