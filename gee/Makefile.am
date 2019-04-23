@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"vala\" \
 	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(NULL)

@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CFLAGS = \
+	-DG_LOG_DOMAIN=\"valadoc\" \
 	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	$(COVERAGE_CFLAGS) \

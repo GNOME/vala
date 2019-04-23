@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CFLAGS = \
+	-DG_LOG_DOMAIN=\"valadoc-devhelp\" \
 	-DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I$(top_srcdir)/gee/ \
 	-I$(top_srcdir)/vala/ \

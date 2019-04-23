@@ -9,6 +9,7 @@ SUBDIRS = \
 	$(NULL)
 
 AM_CFLAGS = \
+	-DG_LOG_DOMAIN=\"valadoc\" \
 	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-I$(top_srcdir)/libvaladoc/ \
