@@ -7,6 +7,7 @@ SUBDIRS = \
 	$(NULL)
 
 AM_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"vapigen\" \
 	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir)/gee \

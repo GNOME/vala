@@ -3,6 +3,7 @@ include $(top_srcdir)/Makefile.common
 NULL =
 
 AM_CPPFLAGS = \
+	-DG_LOG_DOMAIN=\"vala-ccodegen\" \
 	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
