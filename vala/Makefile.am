@@ -25,6 +25,7 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libvala_la_VALASOURCES = \
+	namespace-info.vala \
 	valaaddressofexpression.vala \
 	valaarraycopymethod.vala \
 	valaarraycreationexpression.vala \
@@ -224,6 +225,7 @@ libvala@PACKAGE_SUFFIX@.vapi: $(top_srcdir)/gee/gee.vapi $(top_srcdir)/vala/vala
 EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vapi vala.vala.stamp vala.h valaversion.vala.in
 
 MAINTAINERCLEANFILES = \
+	namespace-info.vala \s
 	vala.vapi \
 	vala.h \
 	$(libvala_la_VALASOURCES:.vala=.c) \
