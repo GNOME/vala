@@ -81,6 +81,10 @@ namespace GirTest {
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
 
+	public class TypeTest {
+		public string some_property { get; set; }
+	}
+
 	public class ObjectTest : Object {
 		private static ObjectTest global_instance = new ObjectTest ();
 

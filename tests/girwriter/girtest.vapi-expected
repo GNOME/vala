@@ -81,6 +81,11 @@ namespace GirTest {
 		public SkippedStruct ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	public class TypeTest {
+		public TypeTest ();
+		public string some_property { get; set; }
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public interface InterfaceTest : GLib.Object {
 		public virtual async void coroutine_async ();
 		public virtual void int8_in (int8 param);
