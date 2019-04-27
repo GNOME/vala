@@ -201,6 +201,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 		foreach (var ns in our_namespaces) {
+			if (ns.parent_symbol == context.root) {
+				ns.set_attribute_string ("CCode", "gir_namespace", gir_namespace);
+				ns.set_attribute_string ("CCode", "gir_version", gir_version);
+			}
 			ns.source_reference.file.gir_namespace = gir_namespace;
 			ns.source_reference.file.gir_version = gir_version;
 		}
