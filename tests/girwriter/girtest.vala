@@ -1,4 +1,4 @@
-[GIR (gir_namespace = "GirTest", gir_version = "1.0")]
+[CCode (gir_namespace = "GirTest", gir_version = "1.0")]
 namespace GirTest {
 	public struct BoxedStruct {
 		public int field_name;
