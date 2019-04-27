@@ -1145,32 +1145,34 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
-		write_indent ();
-		buffer.append_printf ("<property name=\"%s\"", prop.name.replace ("_", "-"));
-		if (prop.get_accessor == null) {
-			buffer.append_printf (" readable=\"0\"");
-		}
-		if (prop.set_accessor != null) {
-			buffer.append_printf (" writable=\"1\"");
-			if (prop.set_accessor.construction) {
-				if (!prop.set_accessor.writable) {
-					buffer.append_printf (" construct-only=\"1\"");
-				} else {
-					buffer.append_printf (" construct=\"1\"");
+		if (((CCodeBaseModule) context.codegen).is_gobject_property (prop)) {
+			write_indent ();
+			buffer.append_printf ("<property name=\"%s\"", prop.name.replace ("_", "-"));
+			if (prop.get_accessor == null) {
+				buffer.append_printf (" readable=\"0\"");
+			}
+			if (prop.set_accessor != null) {
+				buffer.append_printf (" writable=\"1\"");
+				if (prop.set_accessor.construction) {
+					if (!prop.set_accessor.writable) {
+						buffer.append_printf (" construct-only=\"1\"");
+					} else {
+						buffer.append_printf (" construct=\"1\"");
+					}
 				}
 			}
+			write_symbol_attributes (prop);
+			buffer.append_printf (">\n");
+			indent++;
+
+			write_doc (get_property_comment (prop));
+
+			write_type (prop.property_type);
+
+			indent--;
+			write_indent ();
+			buffer.append_printf ("</property>\n");
 		}
-		write_symbol_attributes (prop);
-		buffer.append_printf (">\n");
-		indent++;
-
-		write_doc (get_property_comment (prop));
-
-		write_type (prop.property_type);
-
-		indent--;
-		write_indent ();
-		buffer.append_printf ("</property>\n");
 
 		if (prop.get_accessor != null) {
 			var m = prop.get_accessor.get_method ();
