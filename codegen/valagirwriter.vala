@@ -111,6 +111,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private TypeSymbol gobject_type;
 	private TypeSymbol ginitiallyunowned_type;
+	private TypeSymbol gtypeinterface_type;
 
 	private struct GIRNamespace {
 		public GIRNamespace (string ns, string version) {
@@ -153,6 +154,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		ginitiallyunowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
+		gtypeinterface_type = (TypeSymbol) glib_ns.scope.lookup ("TypeInterface");
 
 		write_package (package);
 
@@ -554,7 +556,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("<field name=\"parent_iface\">\n");
 		indent++;
 		write_indent ();
-		buffer.append_printf ("<type name=\"GObject.TypeInterface\" c:type=\"GTypeInterface\"/>\n");
+		buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (gtypeinterface_type), get_ccode_name (gtypeinterface_type));
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</field>\n");
