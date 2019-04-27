@@ -1644,7 +1644,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			Report.error (acc.source_reference, "construct properties require GLib.Object");
 			acc.error = true;
 			return;
-		} else if (acc.construction && !is_gobject_property (prop)) {
+		} else if (acc.construction && !context.analyzer.is_gobject_property (prop)) {
 			Report.error (acc.source_reference, "construct properties not supported for specified property type");
 			acc.error = true;
 			return;
@@ -1868,7 +1868,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			// notify on property changes
-			if (is_gobject_property (prop) &&
+			if (context.analyzer.is_gobject_property (prop) &&
 			    prop.notify &&
 			    (acc.writable || acc.construction)) {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify_by_pspec"));
@@ -6416,10 +6416,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_assert = true;
 
 		ccode.add_expression (cassert);
-	}
-
-	public virtual bool is_gobject_property (Property prop) {
-		return false;
 	}
 
 	public DataType? get_this_type () {

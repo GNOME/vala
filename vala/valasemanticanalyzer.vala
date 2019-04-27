@@ -406,6 +406,66 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return sym;
 	}
 
+	public bool is_gobject_property (Property prop) {
+		var type_sym = prop.parent_symbol as ObjectTypeSymbol;
+		if (type_sym == null || !type_sym.is_subtype_of (object_type)) {
+			return false;
+		}
+
+		if (prop.binding != MemberBinding.INSTANCE) {
+			return false;
+		}
+
+		if (prop.access == SymbolAccessibility.PRIVATE) {
+			return false;
+		}
+
+		if (!is_gobject_property_type (prop.property_type)) {
+			return false;
+		}
+
+		if (type_sym is Class && prop.base_interface_property != null &&
+		    !is_gobject_property (prop.base_interface_property)) {
+			return false;
+		}
+
+		if (!prop.name[0].isalpha ()) {
+			// GObject requires properties to start with a letter
+			return false;
+		}
+
+		if (type_sym is Interface && !prop.is_abstract && !prop.external && !prop.external_package) {
+			// GObject does not support non-abstract interface properties,
+			// however we assume external properties always are GObject properties
+			return false;
+		}
+
+		if (type_sym is Interface && type_sym.get_attribute ("DBus") != null) {
+			// GObject properties not currently supported in D-Bus interfaces
+			return false;
+		}
+
+		return true;
+	}
+
+	public bool is_gobject_property_type (DataType property_type) {
+		var st = property_type.data_type as Struct;
+		if (st != null && (!st.get_attribute_bool ("CCode", "has_type_id", true) || property_type.nullable)) {
+			return false;
+		}
+
+		if (property_type is ArrayType && ((ArrayType) property_type).element_type.data_type != string_type.data_type) {
+			return false;
+		}
+
+		var d = property_type as DelegateType;
+		if (d != null && d.delegate_symbol.has_target) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public bool check_arguments (Expression expr, DataType mtype, List<Parameter> params, List<Expression> args) {
 		bool error = false;
 

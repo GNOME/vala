@@ -134,8 +134,8 @@ public class Vala.GObjectModule : GTypeModule {
 		/* create properties */
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (!is_gobject_property (prop)) {
-				if (!has_valid_gobject_property_type (prop)) {
+			if (!context.analyzer.is_gobject_property (prop)) {
+				if (!context.analyzer.is_gobject_property_type (prop.property_type)) {
 					Report.warning (prop.source_reference, "Type `%s' can not be used for a GLib.Object property".printf (prop.property_type.to_qualified_string ()));
 				}
 				continue;
@@ -202,7 +202,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (prop.get_accessor == null || prop.is_abstract) {
 				continue;
 			}
-			if (!is_gobject_property (prop)) {
+			if (!context.analyzer.is_gobject_property (prop)) {
 				// don't register private properties
 				continue;
 			}
@@ -310,7 +310,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (prop.set_accessor == null || prop.is_abstract) {
 				continue;
 			}
-			if (!is_gobject_property (prop)) {
+			if (!context.analyzer.is_gobject_property (prop)) {
 				continue;
 			}
 
@@ -759,69 +759,9 @@ public class Vala.GObjectModule : GTypeModule {
 	public override void visit_property (Property prop) {
 		base.visit_property (prop);
 
-		if (is_gobject_property (prop) && prop.parent_symbol is Class) {
+		if (context.analyzer.is_gobject_property (prop) && prop.parent_symbol is Class) {
 			prop_enum.add_value (new CCodeEnumValue ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 		}
-	}
-
-	public override bool is_gobject_property (Property prop) {
-		var type_sym = prop.parent_symbol as ObjectTypeSymbol;
-		if (type_sym == null || !type_sym.is_subtype_of (gobject_type)) {
-			return false;
-		}
-
-		if (prop.binding != MemberBinding.INSTANCE) {
-			return false;
-		}
-
-		if (prop.access == SymbolAccessibility.PRIVATE) {
-			return false;
-		}
-
-		if (!has_valid_gobject_property_type (prop)) {
-			return false;
-		}
-
-		if (type_sym is Class && prop.base_interface_property != null &&
-		    !is_gobject_property (prop.base_interface_property)) {
-			return false;
-		}
-
-		if (!prop.name[0].isalpha ()) {
-			// GObject requires properties to start with a letter
-			return false;
-		}
-
-		if (type_sym is Interface && !prop.is_abstract && !prop.external && !prop.external_package) {
-			// GObject does not support non-abstract interface properties,
-			// however we assume external properties always are GObject properties
-			return false;
-		}
-
-		if (type_sym is Interface && type_sym.get_attribute ("DBus") != null) {
-			// GObject properties not currently supported in D-Bus interfaces
-			return false;
-		}
-
-		return true;
-	}
-
-	bool has_valid_gobject_property_type (Property prop) {
-		var st = prop.property_type.data_type as Struct;
-		if (st != null && (!get_ccode_has_type_id (st) || prop.property_type.nullable)) {
-			return false;
-		}
-
-		if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.data_type != string_type.data_type) {
-			return false;
-		}
-
-		var d = prop.property_type as DelegateType;
-		if (d != null && d.delegate_symbol.has_target) {
-			return false;
-		}
-
-		return true;
 	}
 
 	public override void visit_method_call (MethodCall expr) {
@@ -858,7 +798,7 @@ public class Vala.GObjectModule : GTypeModule {
 						Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
 						break;
 					}
-					if (!is_gobject_property (prop)) {
+					if (!context.analyzer.is_gobject_property (prop)) {
 						Report.error (arg.source_reference, "Property `%s' not supported in Object (property: value) constructor chain up".printf (named_argument.name));
 						break;
 					}
