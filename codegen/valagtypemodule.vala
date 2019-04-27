@@ -2268,7 +2268,7 @@ public class Vala.GTypeModule : GErrorModule {
 			var props = iface.get_properties ();
 			foreach (Property prop in props) {
 				if (prop.is_abstract) {
-					if (!is_gobject_property (prop)) {
+					if (!context.analyzer.is_gobject_property (prop)) {
 						continue;
 					}
 
