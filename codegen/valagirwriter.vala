@@ -162,6 +162,11 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_package (package);
 
+		// Make sure to initialize external files with their gir_namespace/version
+		foreach (var file in context.get_source_files ()) {
+			file.accept (this);
+		}
+
 		context.accept (this);
 
 		indent--;
@@ -250,6 +255,26 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_c_include (string name) {
 		write_indent ();
 		buffer.append_printf ("<c:include name=\"%s\"/>\n", name);
+	}
+
+	public override void visit_source_file (SourceFile source_file) {
+		if (source_file.file_type != SourceFileType.PACKAGE) {
+			return;
+		}
+
+		// Populate gir_namespace/version of source-file like in Namespace.check()
+		foreach (var node in source_file.get_nodes ()) {
+			if (node is Namespace && ((Namespace) node).parent_symbol == context.root) {
+				var a = node.get_attribute ("CCode");
+				if (a != null && a.has_argument ("gir_namespace")) {
+					source_file.gir_namespace = a.get_string ("gir_namespace");
+				}
+				if (a != null && a.has_argument ("gir_version")) {
+					source_file.gir_version = a.get_string ("gir_version");
+				}
+				break;
+			}
+		}
 	}
 
 	public override void visit_namespace (Namespace ns) {
