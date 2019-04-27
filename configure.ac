@@ -217,7 +217,6 @@ AC_CONFIG_FILES([Makefile
            gee/Makefile
            ccode/Makefile
            vala/Makefile
-           vala/namespace-info.vala
            codegen/Makefile
            compiler/Makefile
            vapi/Makefile
