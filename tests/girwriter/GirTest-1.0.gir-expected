@@ -38,6 +38,28 @@
 			</return-value>
 		</constructor>
 	</record>
+	<record name="TypeTest">
+		<constructor name="new" c:identifier="gir_test_typetest_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.TypeTest" c:type="GirTestTypeTest*"/>
+			</return-value>
+		</constructor>
+		<method name="get_some_property" c:identifier="gir_test_typetest_get_some_property">
+			<return-value transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</return-value>
+		</method>
+		<method name="set_some_property" c:identifier="gir_test_typetest_set_some_property">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+		</method>
+	</record>
 	<class name="ObjectTest" c:type="GirTestObjectTest" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
