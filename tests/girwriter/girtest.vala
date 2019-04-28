@@ -22,7 +22,8 @@ namespace GirTest {
 	}
 
 	[GIR (visible = false)]
-	public class SkippedStruct {
+	public struct SkippedStruct {
+		public int field_name;
 	}
 
 	public const int CONSTANT_NUMBER = 42;
