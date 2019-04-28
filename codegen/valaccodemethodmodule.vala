@@ -1240,6 +1240,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ellipses_to_valist = false;
 
 		if (m.source_type == SourceFileType.FAST) {
+			pop_line ();
 			return;
 		}
 
