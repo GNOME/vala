@@ -641,7 +641,7 @@ public static void test_class_global (Api.Class? cl, Api.Package pkg, Api.Namesp
 
 
 			assert (property.setter.get_cname () == "test_class_global_set_property_3");
-			assert (property.setter.is_construct == true);
+			assert (property.setter.is_construct == false);
 			assert (property.setter.is_get == false);
 			assert (property.setter.is_set == true);
 			assert (property.setter.is_owned == false);
@@ -1053,7 +1053,7 @@ public static void test_interface_global (Api.Interface? iface, Api.Package pkg,
 
 
 			assert (property.setter.get_cname () == "test_interface_global_set_property_3");
-			assert (property.setter.is_construct == true);
+			assert (property.setter.is_construct == false);
 			assert (property.setter.is_get == false);
 			assert (property.setter.is_set == true);
 			assert (property.setter.is_owned == false);
