@@ -1892,6 +1892,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
 			}
 
+			pop_function ();
+
 			cfile.add_function (function);
 		}
 
