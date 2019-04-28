@@ -184,6 +184,16 @@ public class Vala.PropertyAccessor : Subroutine {
 			return false;
 		}
 
+		if (construction && !((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
+			error = true;
+			Report.error (source_reference, "construct properties require `GLib.Object'");
+			return false;
+		} else if (construction && !context.analyzer.is_gobject_property (prop)) {
+			error = true;
+			Report.error (source_reference, "construct properties not supported for specified property type");
+			return false;
+		}
+
 		if (body != null && prop.is_abstract) {
 			error = true;
 			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body".printf (prop.get_full_name ()));

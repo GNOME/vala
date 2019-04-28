@@ -1640,16 +1640,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var t = (TypeSymbol) prop.parent_symbol;
 
-		if (acc.construction && !t.is_subtype_of (gobject_type)) {
-			Report.error (acc.source_reference, "construct properties require GLib.Object");
-			acc.error = true;
-			return;
-		} else if (acc.construction && !context.analyzer.is_gobject_property (prop)) {
-			Report.error (acc.source_reference, "construct properties not supported for specified property type");
-			acc.error = true;
-			return;
-		}
-
 		// do not declare overriding properties and interface implementations
 		if (prop.is_abstract || prop.is_virtual
 		    || (prop.base_property == null && prop.base_interface_property == null)) {
