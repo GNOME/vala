@@ -1641,6 +1641,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (acc.source_type == SourceFileType.FAST) {
 			pop_line ();
+			pop_context ();
 			return;
 		}
 
