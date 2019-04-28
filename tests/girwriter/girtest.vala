@@ -86,6 +86,9 @@ namespace GirTest {
 		public string some_property { get; set; }
 	}
 
+	public class SubTypeTest : TypeTest {
+	}
+
 	public class ObjectTest : Object {
 		private static ObjectTest global_instance = new ObjectTest ();
 

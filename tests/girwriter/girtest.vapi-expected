@@ -76,6 +76,10 @@ namespace GirTest {
 		public SkippedClass ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	public class SubTypeTest : GirTest.TypeTest {
+		public SubTypeTest ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public class TypeTest {
 		public TypeTest ();
 		public string some_property { get; set; }
