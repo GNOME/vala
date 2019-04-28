@@ -11,7 +11,7 @@ check-girwriter: $(top_builddir)/compiler/valac
 		--shared-library girtest \
 		$(srcdir)/girtest.vala; \
 	tail -n +3 girtest.vapi | diff -wu $(srcdir)/girtest.vapi-expected - || exit 1; \
-	diff -wu $(srcdir)/GirTest-1.0.gir-expected GirTest-1.0.gir || exit 1; \
+	tail -n +3 GirTest-1.0.gir | diff -wu $(srcdir)/GirTest-1.0.gir-expected - || exit 1; \
 	rm -f GirTest-1.0.gir girtest.vapi girtest.c
 
 check: check-girwriter
