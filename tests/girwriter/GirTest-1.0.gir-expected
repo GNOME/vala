@@ -31,13 +31,6 @@
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
 		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
 	</enumeration>
-	<record name="SkippedStruct" introspectable="0">
-		<constructor name="new" c:identifier="gir_test_skipped_struct_new">
-			<return-value transfer-ownership="full">
-				<type name="GirTest.SkippedStruct" c:type="GirTestSkippedStruct*"/>
-			</return-value>
-		</constructor>
-	</record>
 	<record name="TypeTest">
 		<constructor name="new" c:identifier="gir_test_typetest_new">
 			<return-value transfer-ownership="full">
@@ -1139,6 +1132,11 @@
 				<type name="none"/>
 			</return-value>
 		</method>
+	</record>
+	<record name="SkippedStruct" c:type="GirTestSkippedStruct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
 	</record>
 	<callback name="DelegateTest" c:type="GirTestDelegateTest">
 		<return-value transfer-ownership="full">
