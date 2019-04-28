@@ -112,6 +112,8 @@ public class Vala.GIRWriter : CodeVisitor {
 	private TypeSymbol gobject_type;
 	private TypeSymbol ginitiallyunowned_type;
 	private TypeSymbol gtypeinterface_type;
+	private TypeSymbol gtypeinstance_type;
+	private TypeSymbol gtype_type;
 
 	private struct GIRNamespace {
 		public GIRNamespace (string ns, string version) {
@@ -155,6 +157,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 		ginitiallyunowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 		gtypeinterface_type = (TypeSymbol) glib_ns.scope.lookup ("TypeInterface");
+		gtypeinstance_type = (TypeSymbol) glib_ns.scope.lookup ("TypeInstance");
+		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
 
 		write_package (package);
 
@@ -322,14 +326,22 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
-		if (cl.is_subtype_of (gobject_type)) {
+		if (!cl.is_compact) {
 			string gtype_struct_name = get_gir_name (cl) + "Class";
 
 			write_indent ();
 			buffer.append_printf ("<class name=\"%s\"", get_gir_name (cl));
 			write_gtype_attributes (cl);
 			buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
-			buffer.append_printf (" parent=\"%s\"", gi_type_name (cl.base_class));
+			if (cl.base_class == null) {
+				buffer.append_printf (" glib:fundamental=\"1\"");
+				buffer.append_printf (" glib:ref-func=\"%s\"", get_ccode_ref_function (cl));
+				buffer.append_printf (" glib:unref-func=\"%s\"", get_ccode_unref_function (cl));
+				buffer.append_printf (" glib:set-value-func=\"%s\"", get_ccode_set_value_function (cl));
+				buffer.append_printf (" glib:get-value-func=\"%s\"", get_ccode_get_value_function (cl));
+			} else {
+				buffer.append_printf (" parent=\"%s\"", gi_type_name (cl.base_class));
+			}
 			if (cl.is_abstract) {
 				buffer.append_printf (" abstract=\"1\"");
 			}
@@ -352,7 +364,11 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"parent_instance\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (cl.base_class), get_ccode_name (cl.base_class));
+			if (cl.is_subtype_of (gobject_type)) {
+				buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (cl.base_class), get_ccode_name (cl.base_class));
+			} else {
+				buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (gtypeinstance_type), get_ccode_name (gtypeinstance_type));
+			}
 			indent--;
 			write_indent ();
 			buffer.append_printf("</field>\n");
@@ -385,7 +401,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("<field name=\"parent_class\">\n");
 			indent++;
 			write_indent ();
-			buffer.append_printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", gi_type_name (cl.base_class), get_ccode_name (cl.base_class));
+			if (cl.is_subtype_of (gobject_type)) {
+				buffer.append_printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", gi_type_name (cl.base_class), get_ccode_name (cl.base_class));
+			} else {
+				//FIXME GObject.TypeClass vs GType
+				buffer.append_printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", "GObject.Type", get_ccode_name (gtype_type));
+			}
 			indent--;
 			write_indent ();
 			buffer.append_printf ("</field>\n");

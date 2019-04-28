@@ -31,7 +31,13 @@
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
 		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
 	</enumeration>
-	<record name="TypeTest">
+	<class name="TypeTest" c:type="GirTestTypeTest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
+		<field name="parent_instance">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="priv">
+			<type name="TypeTestPrivate" c:type="GirTestTypeTestPrivate*"/>
+		</field>
 		<constructor name="new" c:identifier="gir_test_typetest_new">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.TypeTest" c:type="GirTestTypeTest*"/>
@@ -52,7 +58,13 @@
 				</parameter>
 			</parameters>
 		</method>
+	</class>
+	<record name="TypeTestClass" c:type="GirTestTypeTestClass" glib:is-gtype-struct-for="TypeTest">
+		<field name="parent_class">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
 	</record>
+	<record name="TypeTestPrivate" c:type="GirTestTypeTestPrivate" disguised="1"/>
 	<class name="ObjectTest" c:type="GirTestObjectTest" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
 		<field name="parent_instance">
 			<type name="GObject.Object" c:type="GObject"/>
@@ -882,20 +894,44 @@
 		</field>
 	</record>
 	<record name="ImplementionTestPrivate" c:type="GirTestImplementionTestPrivate" disguised="1"/>
-	<record name="SkippedClass" introspectable="0">
+	<class name="SkippedClass" c:type="GirTestSkippedClass" glib:type-name="GirTestSkippedClass" glib:get-type="gir_test_skippedclass_get_type" glib:type-struct="SkippedClassClass" glib:fundamental="1" glib:ref-func="gir_test_skippedclass_ref" glib:unref-func="gir_test_skippedclass_unref" glib:set-value-func="gir_test_value_set_skippedclass" glib:get-value-func="gir_test_value_get_skippedclass" introspectable="0">
+		<field name="parent_instance">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="priv">
+			<type name="SkippedClassPrivate" c:type="GirTestSkippedClassPrivate*"/>
+		</field>
 		<constructor name="new" c:identifier="gir_test_skippedclass_new">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.SkippedClass" c:type="GirTestSkippedClass*"/>
 			</return-value>
 		</constructor>
+	</class>
+	<record name="SkippedClassClass" c:type="GirTestSkippedClassClass" glib:is-gtype-struct-for="SkippedClass">
+		<field name="parent_class">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
 	</record>
-	<record name="DeprecatedClassTest" deprecated="1" deprecated-version="0.1.2" version="0.1.0">
+	<record name="SkippedClassPrivate" c:type="GirTestSkippedClassPrivate" disguised="1"/>
+	<class name="DeprecatedClassTest" c:type="GirTestDeprecatedClassTest" glib:type-name="GirTestDeprecatedClassTest" glib:get-type="gir_test_deprecated_class_test_get_type" glib:type-struct="DeprecatedClassTestClass" glib:fundamental="1" glib:ref-func="gir_test_deprecated_class_test_ref" glib:unref-func="gir_test_deprecated_class_test_unref" glib:set-value-func="gir_test_value_set_deprecated_class_test" glib:get-value-func="gir_test_value_get_deprecated_class_test" deprecated="1" deprecated-version="0.1.2" version="0.1.0">
+		<field name="parent_instance">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="priv">
+			<type name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate*"/>
+		</field>
 		<constructor name="new" c:identifier="gir_test_deprecated_class_test_new">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.DeprecatedClassTest" c:type="GirTestDeprecatedClassTest*"/>
 			</return-value>
 		</constructor>
+	</class>
+	<record name="DeprecatedClassTestClass" c:type="GirTestDeprecatedClassTestClass" glib:is-gtype-struct-for="DeprecatedClassTest">
+		<field name="parent_class">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
 	</record>
+	<record name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate" disguised="1"/>
 	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
 		<prerequisite name="GObject.Object"/>
 		<method name="int8_in" c:identifier="gir_test_interface_test_int8_in">
