@@ -230,6 +230,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			header_filenames.add (c_header_filename);
 		}
 		foreach (Symbol symbol in ns.scope.get_symbol_table ().get_values ()) {
+			if (symbol.external_package) {
+				continue;
+			}
 			foreach (unowned string c_header_filename in CCodeBaseModule.get_ccode_header_filenames (symbol).split (",")) {
 				header_filenames.add (c_header_filename);
 			}
