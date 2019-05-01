@@ -4670,7 +4670,11 @@ namespace Gdk {
 			public void move_to_current_desktop ();
 			public void move_to_desktop (uint32 desktop);
 			public void set_frame_sync_enabled (bool frame_sync_enabled);
+			public void set_group (Gdk.Surface leader);
+			public void set_skip_pager_hint (bool skips_pager);
+			public void set_skip_taskbar_hint (bool skips_taskbar);
 			public void set_theme_variant (string variant);
+			public void set_urgency_hint (bool urgent);
 			public void set_user_time (uint32 timestamp);
 			public void set_utf8_property (string name, string? value);
 		}
@@ -5281,7 +5285,6 @@ namespace Gdk {
 		public void get_frame_extents (out Gdk.Rectangle rect);
 		public Gdk.FullscreenMode get_fullscreen_mode ();
 		public void get_geometry (out int x, out int y, out int width, out int height);
-		public unowned Gdk.Surface get_group ();
 		public int get_height ();
 		public bool get_modal_hint ();
 		public int get_origin (out int x, out int y);
@@ -5301,8 +5304,6 @@ namespace Gdk {
 		public void hide ();
 		public void iconify ();
 		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
-		public void invalidate_rect (Gdk.Rectangle? rect);
-		public void invalidate_region (Cairo.Region region);
 		public bool is_destroyed ();
 		public bool is_input_only ();
 		public bool is_viewable ();
@@ -5330,7 +5331,6 @@ namespace Gdk {
 		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
 		public void set_functions (Gdk.WMFunction functions);
 		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.SurfaceHints geom_mask);
-		public void set_group (Gdk.Surface? leader);
 		public void set_icon_list (GLib.List<Gdk.Texture> surfaces);
 		public void set_icon_name (string? name);
 		public void set_keep_above (bool setting);
@@ -5340,14 +5340,11 @@ namespace Gdk {
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_pass_through (bool pass_through);
 		public void set_shadow_width (int left, int right, int top, int bottom);
-		public void set_skip_pager_hint (bool skips_pager);
-		public void set_skip_taskbar_hint (bool skips_taskbar);
 		public void set_startup_id (string startup_id);
 		public void set_support_multidevice (bool support_multidevice);
 		public void set_title (string title);
 		public void set_transient_for (Gdk.Surface parent);
 		public void set_type_hint (Gdk.SurfaceTypeHint hint);
-		public void set_urgency_hint (bool urgent);
 		public void show ();
 		public void show_unraised ();
 		public bool show_window_menu (Gdk.Event event);
@@ -5362,6 +5359,7 @@ namespace Gdk {
 		public void unstick ();
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
+		public Gdk.FrameClock frame_clock { get; construct; }
 		[NoAccessorMethod]
 		public bool mapped { get; }
 		public Gdk.SurfaceState state { get; }
@@ -6794,14 +6792,14 @@ namespace Gtk {
 		public void add_callback_symbols (string first_callback_name, ...);
 		public bool add_from_file (string filename) throws GLib.Error;
 		public bool add_from_resource (string resource_path) throws GLib.Error;
-		public bool add_from_string (string buffer, size_t length) throws GLib.Error;
+		public bool add_from_string (string buffer, ssize_t length) throws GLib.Error;
 		public bool add_objects_from_file (string filename, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public bool add_objects_from_resource (string resource_path, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
-		public bool add_objects_from_string (string buffer, size_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
+		public bool add_objects_from_string (string buffer, ssize_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public void expose_object (string name, GLib.Object object);
-		public bool extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, size_t length) throws GLib.Error;
+		public bool extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, ssize_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Builder.from_file (string filename);
 		[CCode (has_construct_function = false)]
@@ -7494,12 +7492,12 @@ namespace Gtk {
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
 		[CCode (has_construct_function = false)]
 		public CssProvider ();
-		public static unowned Gtk.CssProvider get_named (string name, string? variant);
 		[CCode (cname = "gtk_css_provider_load_from_data")]
 		public void load_from_buffer ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] data);
 		public void load_from_file (GLib.File file);
 		public void load_from_path (string path);
 		public void load_from_resource (string resource_path);
+		public void load_named (string name, string? variant);
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_layout_get_type ()")]
@@ -7799,8 +7797,8 @@ namespace Gtk {
 		public bool contains_pointer_focus { get; }
 		[NoAccessorMethod]
 		public bool is_pointer_focus { get; }
-		public signal void enter (double object, double p0, Gdk.CrossingMode p1, Gdk.NotifyType p2);
-		public signal void leave (Gdk.CrossingMode object, Gdk.NotifyType p0);
+		public signal void enter (double x, double y, Gdk.CrossingMode crossing_mode, Gdk.NotifyType notify_type);
+		public signal void leave (Gdk.CrossingMode crossing_mode, Gdk.NotifyType notify_type);
 		public signal void motion (double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
@@ -9574,6 +9572,7 @@ namespace Gtk {
 		public void set_position (Gtk.PositionType position);
 		public void set_relative_to (Gtk.Widget? relative_to);
 		public Gtk.PopoverConstraint constrain_to { get; set; }
+		public Gtk.Widget default_widget { get; set; }
 		public bool modal { get; set; }
 		[NoAccessorMethod]
 		public Gdk.Rectangle pointing_to { get; set; }
@@ -11754,6 +11753,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Widget (GLib.Type type, ...);
 		public bool activate ();
+		public void activate_action (string name, GLib.Variant parameter);
+		public void activate_default ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
@@ -11787,7 +11788,6 @@ namespace Gtk {
 		public int get_allocated_width ();
 		public void get_allocation (out Gtk.Allocation allocation);
 		public unowned Gtk.Widget? get_ancestor (GLib.Type widget_type);
-		public bool get_can_default ();
 		public bool get_can_focus ();
 		public bool get_can_target ();
 		public bool get_child_visible ();
@@ -11823,7 +11823,6 @@ namespace Gtk {
 		public Gtk.Overflow get_overflow ();
 		public unowned Pango.Context get_pango_context ();
 		public unowned Gtk.Widget? get_parent ();
-		public unowned Gdk.Surface? get_parent_surface ();
 		public unowned Gtk.WidgetPath get_path ();
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		public unowned Gtk.Widget? get_prev_sibling ();
@@ -11850,7 +11849,6 @@ namespace Gtk {
 		public bool get_vexpand_set ();
 		public bool get_visible ();
 		public int get_width ();
-		public void grab_default ();
 		public virtual void grab_focus ();
 		public bool has_grab ();
 		public bool has_visible_focus ();
@@ -11889,7 +11887,6 @@ namespace Gtk {
 		public class void set_accessible_role (Atk.Role role);
 		[CCode (cname = "gtk_widget_class_set_accessible_type")]
 		public class void set_accessible_type (GLib.Type type);
-		public void set_can_default (bool can_default);
 		public void set_can_focus (bool can_focus);
 		public void set_can_target (bool can_target);
 		public void set_child_visible (bool child_visible);
@@ -11918,7 +11915,6 @@ namespace Gtk {
 		public void set_opacity (double opacity);
 		public void set_overflow (Gtk.Overflow overflow);
 		public void set_parent (Gtk.Widget parent);
-		public void set_parent_surface (Gdk.Surface parent_surface);
 		public void set_receives_default (bool receives_default);
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);
@@ -11948,7 +11944,6 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void unroot ();
 		public void unset_state_flags (Gtk.StateFlags flags);
-		public bool can_default { get; set; }
 		public bool can_focus { get; set; }
 		public bool can_target { get; set; }
 		[NoAccessorMethod]
@@ -11959,7 +11954,7 @@ namespace Gtk {
 		public bool focus_on_click { get; set; }
 		public Gtk.Align halign { get; set; }
 		[NoAccessorMethod]
-		public bool has_default { get; set; }
+		public bool has_default { get; }
 		[NoAccessorMethod]
 		public bool has_focus { get; set; }
 		public bool has_tooltip { get; set; }
@@ -12119,14 +12114,11 @@ namespace Gtk {
 		public bool get_modal ();
 		public bool get_resizable ();
 		public void get_size (out int width, out int height);
-		public bool get_skip_pager_hint ();
-		public bool get_skip_taskbar_hint ();
 		public unowned string? get_title ();
 		public unowned Gtk.Widget? get_titlebar ();
 		public static unowned GLib.ListModel get_toplevels ();
 		public unowned Gtk.Window? get_transient_for ();
 		public Gdk.SurfaceTypeHint get_type_hint ();
-		public bool get_urgency_hint ();
 		public Gtk.WindowType get_window_type ();
 		public bool has_group ();
 		public void iconify ();
@@ -12144,9 +12136,9 @@ namespace Gtk {
 		public void set_attached_to (Gtk.Widget? attach_widget);
 		public static void set_auto_startup_notification (bool setting);
 		public void set_decorated (bool setting);
-		public void set_default (Gtk.Widget? default_widget);
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
+		public void set_default_widget (Gtk.Widget? default_widget);
 		public void set_deletable (bool setting);
 		public void set_destroy_with_parent (bool setting);
 		public void set_display (Gdk.Display display);
@@ -12164,19 +12156,12 @@ namespace Gtk {
 		public void set_modal (bool modal);
 		public void set_position (Gtk.WindowPosition position);
 		public void set_resizable (bool resizable);
-		public void set_skip_pager_hint (bool setting);
-		public void set_skip_taskbar_hint (bool setting);
 		public void set_startup_id (string startup_id);
 		public void set_title (string title);
 		public void set_titlebar (Gtk.Widget? titlebar);
 		public void set_transient_for (Gtk.Window? parent);
 		public void set_type_hint (Gdk.SurfaceTypeHint hint);
-		public void set_urgency_hint (bool setting);
 		public void stick ();
-		[CCode (cname = "gtk_window_activate_default")]
-		public bool try_activate_default ();
-		[CCode (cname = "gtk_window_activate_focus")]
-		public bool try_activate_focus ();
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unstick ();
@@ -12186,6 +12171,7 @@ namespace Gtk {
 		public bool decorated { get; set; }
 		[NoAccessorMethod]
 		public int default_height { get; set; }
+		public Gtk.Widget default_widget { get; set; }
 		[NoAccessorMethod]
 		public int default_width { get; set; }
 		public bool deletable { get; set; }
@@ -12203,15 +12189,12 @@ namespace Gtk {
 		public bool mnemonics_visible { get; set; }
 		public bool modal { get; set; }
 		public bool resizable { get; set; }
-		public bool skip_pager_hint { get; set; }
-		public bool skip_taskbar_hint { get; set; }
 		public string startup_id { set; }
 		public string title { get; set; }
 		public Gtk.Window transient_for { get; set construct; }
 		[NoAccessorMethod]
 		public Gtk.WindowType type { get; construct; }
 		public Gdk.SurfaceTypeHint type_hint { get; set; }
-		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
 		public virtual signal void activate_default ();
