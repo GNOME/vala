@@ -70,6 +70,8 @@ namespace Atk {
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		[Version (deprecated = true)]
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
+		[Version (since = "2.34")]
+		public unowned string get_accessible_id ();
 		[Version (since = "1.12")]
 		public virtual Atk.AttributeSet get_attributes ();
 		public virtual unowned string get_description ();
@@ -95,6 +97,8 @@ namespace Atk {
 		[Version (deprecated = true)]
 		public virtual void remove_property_change_handler (uint handler_id);
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
+		[Version (since = "2.34")]
+		public void set_accessible_id (string name);
 		public virtual void set_description (string description);
 		public virtual void set_name (string name);
 		public virtual void set_parent (Atk.Object parent);

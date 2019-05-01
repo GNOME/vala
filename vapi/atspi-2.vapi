@@ -16,6 +16,8 @@ namespace Atspi {
 		[CCode (has_construct_function = false)]
 		protected Accessible ();
 		public void clear_cache ();
+		[Version (since = "2.34")]
+		public string get_accessible_id () throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.10")]
 		public Atspi.Action get_action ();
 		public Atspi.Action get_action_iface ();
