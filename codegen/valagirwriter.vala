@@ -173,7 +173,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("</repository>\n");
 
 		string filename = "%s%c%s".printf (directory, Path.DIR_SEPARATOR, gir_filename);
-		stream = FileStream.open (filename, "w");
+		var file_exists = FileUtils.test (filename, FileTest.EXISTS);
+		var temp_filename = "%s.valatmp".printf (filename);
+
+		if (file_exists) {
+			stream = FileStream.open (temp_filename, "w");
+		} else {
+			stream = FileStream.open (filename, "w");
+		}
+
 		if (stream == null) {
 			Report.error (null, "unable to open `%s' for writing".printf (filename));
 			return;
@@ -198,6 +206,31 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		stream.puts (buffer.str);
 		stream = null;
+
+		if (file_exists) {
+			var changed = true;
+
+			try {
+				var old_file = new MappedFile (filename, false);
+				var new_file = new MappedFile (temp_filename, false);
+				var len = old_file.get_length ();
+				if (len == new_file.get_length ()) {
+					if (Memory.cmp (old_file.get_contents (), new_file.get_contents (), len) == 0) {
+						changed = false;
+					}
+				}
+				old_file = null;
+				new_file = null;
+			} catch (FileError e) {
+				// assume changed if mmap comparison doesn't work
+			}
+
+			if (changed) {
+				FileUtils.rename (temp_filename, filename);
+			} else {
+				FileUtils.unlink (temp_filename);
+			}
+		}
 
 		foreach (var ns in unannotated_namespaces) {
 			if (!our_namespaces.contains(ns)) {
