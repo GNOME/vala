@@ -135,5 +135,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_remove")]
 		[Version (since = "1.6")]
 		public static void ptp_statistics_callback_remove (ulong id);
+		[CCode (cheader_filename = "gst/net/net.h")]
+		[Version (since = "1.18")]
+		public static bool utils_set_socket_tos (GLib.Socket socket, int qos_dscp);
 	}
 }

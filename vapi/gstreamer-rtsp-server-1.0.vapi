@@ -80,6 +80,7 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public void set_tls_authentication_mode (GLib.TlsAuthenticationMode mode);
 			public void set_tls_certificate (GLib.TlsCertificate? cert);
+			[Version (since = "1.6")]
 			public void set_tls_database (GLib.TlsDatabase? database);
 			[Version (since = "1.6")]
 			public virtual signal bool accept_certificate (GLib.TlsConnection connection, GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
@@ -100,6 +101,8 @@ namespace Gst {
 			public virtual Gst.SDP.Message create_sdp (Gst.RTSPServer.Media media);
 			public Gst.RTSPServer.Auth? get_auth ();
 			public unowned Gst.RTSP.Connection? get_connection ();
+			[Version (since = "1.18")]
+			public uint get_content_length_limit ();
 			public Gst.RTSPServer.MountPoints? get_mount_points ();
 			public Gst.RTSPServer.SessionPool? get_session_pool ();
 			public Gst.RTSPServer.ThreadPool? get_thread_pool ();
@@ -115,6 +118,8 @@ namespace Gst {
 			public GLib.List<Gst.RTSPServer.Session> session_filter (Gst.RTSPServer.ClientSessionFilterFunc? func);
 			public void set_auth (Gst.RTSPServer.Auth? auth);
 			public bool set_connection (owned Gst.RTSP.Connection conn);
+			[Version (since = "1.18")]
+			public void set_content_length_limit (uint limit);
 			public void set_mount_points (Gst.RTSPServer.MountPoints? mounts);
 			public void set_send_func (owned Gst.RTSPServer.ClientSendFunc func);
 			[Version (since = "1.16")]
@@ -171,6 +176,7 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public Media (owned Gst.Element element);
 			public void collect_streams ();
+			[Version (since = "1.14")]
 			public bool complete_pipeline (GLib.GenericArray<Gst.RTSP.Transport?> transports);
 			[NoWrapper]
 			public virtual bool convert_range (Gst.RTSP.TimeRange range, Gst.RTSP.RangeUnit unit);
@@ -187,6 +193,7 @@ namespace Gst {
 			public bool get_do_retransmission ();
 			public Gst.Element get_element ();
 			public uint get_latency ();
+			[Version (since = "1.16")]
 			public uint get_max_mcast_ttl ();
 			public string? get_multicast_iface ();
 			public Gst.RTSPServer.Permissions? get_permissions ();
@@ -204,6 +211,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool handle_message (Gst.Message message);
 			public virtual bool handle_sdp (Gst.SDP.Message sdp);
+			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
 			public bool is_reusable ();
@@ -217,9 +225,12 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool query_stop (int64 stop);
 			public bool seek (Gst.RTSP.TimeRange range);
+			[Version (since = "1.14")]
 			public bool seek_full (Gst.RTSP.TimeRange range, Gst.SeekFlags flags);
+			[Version (since = "1.14")]
 			public Gst.ClockTimeDiff seekable ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			[Version (since = "1.16")]
 			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public void set_buffer_size (uint size);
 			public void set_clock (Gst.Clock? clock);
@@ -227,6 +238,7 @@ namespace Gst {
 			public void set_do_retransmission (bool do_retransmission);
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
+			[Version (since = "1.16")]
 			public bool set_max_mcast_ttl (uint ttl);
 			public void set_multicast_iface (string? multicast_iface);
 			public void set_permissions (Gst.RTSPServer.Permissions? permissions);
@@ -304,6 +316,7 @@ namespace Gst {
 			public bool get_do_retransmission ();
 			public uint get_latency ();
 			public string? get_launch ();
+			[Version (since = "1.16")]
 			public uint get_max_mcast_ttl ();
 			[Version (since = "1.6")]
 			public GLib.Type get_media_gtype ();
@@ -316,11 +329,13 @@ namespace Gst {
 			public Gst.ClockTime get_retransmission_time ();
 			public Gst.RTSPServer.SuspendMode get_suspend_mode ();
 			public Gst.RTSPServer.TransportMode get_transport_mode ();
+			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
 			public bool is_shared ();
 			public bool is_stop_on_disonnect ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			[Version (since = "1.16")]
 			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public void set_buffer_size (uint size);
 			[Version (since = "1.8")]
@@ -330,6 +345,7 @@ namespace Gst {
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
 			public void set_launch (string launch);
+			[Version (since = "1.16")]
 			public bool set_max_mcast_ttl (uint ttl);
 			[Version (since = "1.6")]
 			public void set_media_gtype (GLib.Type media_gtype);
@@ -459,6 +475,8 @@ namespace Gst {
 			public Gst.RTSPServer.Auth? get_auth ();
 			public int get_backlog ();
 			public int get_bound_port ();
+			[Version (since = "1.18")]
+			public uint get_content_length_limit ();
 			public Gst.RTSPServer.MountPoints? get_mount_points ();
 			public string? get_service ();
 			public Gst.RTSPServer.SessionPool? get_session_pool ();
@@ -467,6 +485,8 @@ namespace Gst {
 			public void set_address (string address);
 			public void set_auth (Gst.RTSPServer.Auth? auth);
 			public void set_backlog (int backlog);
+			[Version (since = "1.18")]
+			public void set_content_length_limit (uint limit);
 			public void set_mount_points (Gst.RTSPServer.MountPoints? mounts);
 			public void set_service (string service);
 			public void set_session_pool (Gst.RTSPServer.SessionPool? pool);
@@ -475,6 +495,7 @@ namespace Gst {
 			public string address { owned get; set; }
 			public int backlog { get; set; }
 			public int bound_port { get; }
+			public uint content_length_limit { get; set; }
 			public Gst.RTSPServer.MountPoints mount_points { owned get; set; }
 			public string service { owned get; set; }
 			public Gst.RTSPServer.SessionPool session_pool { owned get; set; }
@@ -518,6 +539,7 @@ namespace Gst {
 			public string? get_rtpinfo ();
 			public Gst.RTSP.State get_rtsp_state ();
 			public unowned Gst.RTSPServer.StreamTransport? get_transport (uint idx);
+			[Version (since = "1.14")]
 			public GLib.GenericArray<Gst.RTSPServer.StreamTransport> get_transports ();
 			public bool matches (string path, out int matched);
 			public void set_rtsp_state (Gst.RTSP.State state);
@@ -550,9 +572,11 @@ namespace Gst {
 		public class Stream : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Stream (uint idx, Gst.Element payloader, Gst.Pad pad);
+			[Version (since = "1.16")]
 			public bool add_multicast_client_address (string destination, uint rtp_port, uint rtcp_port, GLib.SocketFamily family);
 			public bool add_transport (Gst.RTSPServer.StreamTransport trans);
 			public bool allocate_udp_sockets (GLib.SocketFamily family, Gst.RTSP.Transport transport, bool use_client_settings);
+			[Version (since = "1.14")]
 			public bool complete_stream (Gst.RTSP.Transport transport);
 			public Gst.RTSPServer.AddressPool? get_address_pool ();
 			[Version (since = "1.6")]
@@ -563,9 +587,11 @@ namespace Gst {
 			public int get_dscp_qos ();
 			public uint get_index ();
 			public Gst.Bin? get_joined_bin ();
+			[Version (since = "1.16")]
 			public uint get_max_mcast_ttl ();
 			public uint get_mtu ();
 			public Gst.RTSPServer.Address? get_multicast_address (GLib.SocketFamily family);
+			[Version (since = "1.16")]
 			public string get_multicast_client_addresses ();
 			public string? get_multicast_iface ();
 			public Gst.RTSP.Profile get_profiles ();
@@ -575,6 +601,7 @@ namespace Gst {
 			public Gst.RTSPServer.PublishClockMode get_publish_clock_mode ();
 			public uint get_retransmission_pt ();
 			public Gst.ClockTime get_retransmission_time ();
+			[Version (since = "1.14")]
 			public GLib.Socket? get_rtcp_multicast_socket (GLib.SocketFamily family);
 			public GLib.Socket? get_rtcp_socket (GLib.SocketFamily family);
 			public GLib.Socket? get_rtp_multicast_socket (GLib.SocketFamily family);
@@ -594,11 +621,15 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public bool handle_keymgmt (string keymgmt);
 			public bool has_control (string? control);
+			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
 			public bool is_blocking ();
 			public bool is_client_side ();
+			[Version (since = "1.14")]
 			public bool is_complete ();
+			[Version (since = "1.14")]
 			public bool is_receiver ();
+			[Version (since = "1.14")]
 			public bool is_sender ();
 			public bool is_transport_supported (Gst.RTSP.Transport transport);
 			public bool join_bin (Gst.Bin bin, Gst.Element rtpbin, Gst.State state);
@@ -617,8 +648,10 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public Gst.Element? request_ulpfec_encoder (uint sessid);
 			public Gst.RTSPServer.Address? reserve_address (string address, uint port, uint n_ports, uint ttl);
+			[Version (since = "1.14")]
 			public bool seekable ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
+			[Version (since = "1.16")]
 			public void set_bind_mcast_address (bool bind_mcast_addr);
 			public bool set_blocked (bool blocked);
 			[Version (since = "1.6")]
@@ -626,6 +659,7 @@ namespace Gst {
 			public void set_client_side (bool client_side);
 			public void set_control (string? control);
 			public void set_dscp_qos (int dscp_qos);
+			[Version (since = "1.16")]
 			public bool set_max_mcast_ttl (uint ttl);
 			public void set_mtu (uint mtu);
 			public void set_multicast_iface (string? multicast_iface);
@@ -644,6 +678,7 @@ namespace Gst {
 			public GLib.List<Gst.RTSPServer.StreamTransport> transport_filter (Gst.RTSPServer.StreamTransportFilterFunc? func);
 			public bool unblock_linked ();
 			public bool update_crypto (uint ssrc, Gst.Caps? crypto);
+			[Version (since = "1.16")]
 			public bool verify_mcast_ttl (uint ttl);
 			public string control { owned get; set; }
 			public Gst.RTSP.Profile profiles { get; set; }
@@ -663,6 +698,7 @@ namespace Gst {
 			public unowned Gst.RTSP.Url? get_url ();
 			public bool is_timed_out ();
 			public void keep_alive ();
+			[Version (since = "1.16")]
 			public void message_sent ();
 			public Gst.FlowReturn recv_data (uint channel, owned Gst.Buffer buffer);
 			public bool send_rtcp (Gst.Buffer buffer);
@@ -865,6 +901,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_sdp_from_stream")]
 		public static bool sdp_from_stream (Gst.SDP.Message sdp, Gst.RTSPServer.SDPInfo info, Gst.RTSPServer.Stream stream);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_sdp_make_media")]
+		[Version (since = "1.14")]
 		public static bool sdp_make_media (Gst.SDP.Message sdp, Gst.RTSPServer.SDPInfo info, Gst.RTSPServer.Stream stream, Gst.Caps caps, Gst.RTSP.Profile profile);
 	}
 }
