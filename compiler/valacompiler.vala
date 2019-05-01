@@ -125,7 +125,7 @@ class Vala.Compiler {
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
-		{ "thread", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_deprecated, "Enable multithreading support (DEPRECATED AND IGNORED)", null },
+		{ "thread", 0, OptionFlags.OPTIONAL_ARG | OptionFlags.NO_ARG, OptionArg.CALLBACK, (void*) option_deprecated, "Enable multithreading support (DEPRECATED AND IGNORED)", null },
 		{ "enable-mem-profiler", 0, 0, OptionArg.NONE, ref mem_profiler, "Enable GLib memory profiler", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
