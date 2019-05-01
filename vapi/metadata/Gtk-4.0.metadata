@@ -233,9 +233,6 @@ TreeView
   .row_expanded#method name="is_row_expanded"
 Widget
   .compute_expand#virtual_method name="compute_expand_internal"
-Window
-  .activate_default#method name="try_activate_default"
-  .activate_focus#method name="try_activate_focus"
 Editable
   .delete_text#method skip
   .insert_text#method skip
