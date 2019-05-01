@@ -842,6 +842,7 @@ namespace Gst {
 		public void append_structure_full (owned Gst.Structure structure, owned Gst.CapsFeatures? features = null);
 		public bool can_intersect (Gst.Caps caps2);
 		public Gst.Caps copy ();
+		[Version (since = "1.16")]
 		public Gst.Caps copy_nth (uint nth);
 		[CCode (has_construct_function = false)]
 		public Caps.empty ();
@@ -2358,6 +2359,7 @@ namespace Gst {
 		public bool get_int (string fieldname, out int value);
 		[Version (since = "1.4")]
 		public bool get_int64 (string fieldname, out int64 value);
+		[Version (since = "1.12")]
 		public bool get_list (string fieldname, out GLib.ValueArray array);
 		public unowned string get_name ();
 		public GLib.Quark get_name_id ();
@@ -2392,7 +2394,9 @@ namespace Gst {
 		public void remove_fields (params string[] field_names);
 		public void remove_fields_valist (string fieldname, va_list varargs);
 		public void @set (string fieldname, ...);
+		[Version (since = "1.12")]
 		public void set_array (string fieldname, GLib.ValueArray array);
+		[Version (since = "1.12")]
 		public void set_list (string fieldname, GLib.ValueArray array);
 		public void set_name (string name);
 		public bool set_parent_refcount (int refcount);

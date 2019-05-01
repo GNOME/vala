@@ -5,6 +5,7 @@ namespace Gst {
 	namespace Audio {
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_get_type ()")]
 		[GIR (name = "AudioAggregator")]
+		[Version (since = "1.14")]
 		public abstract class Aggregator : Gst.Base.Aggregator {
 			public weak Gst.Caps current_caps;
 			[CCode (has_construct_function = false)]
@@ -23,6 +24,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_convert_pad_get_type ()")]
 		[GIR (name = "AudioAggregatorConvertPad")]
+		[Version (since = "1.14")]
 		public class AggregatorConvertPad : Gst.Audio.AggregatorPad {
 			[CCode (has_construct_function = false)]
 			protected AggregatorConvertPad ();
@@ -31,6 +33,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_pad_get_type ()")]
 		[GIR (name = "AudioAggregatorPad")]
+		[Version (since = "1.14")]
 		public class AggregatorPad : Gst.Base.AggregatorPad {
 			public weak Gst.Audio.Info info;
 			[CCode (has_construct_function = false)]
@@ -934,6 +937,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_mask")]
 		public static bool audio_channel_positions_to_mask ([CCode (array_length_cname = "channels", array_length_pos = 1.5)] Gst.Audio.ChannelPosition[] position, bool force_order, out uint64 channel_mask);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_string")]
+		[Version (since = "1.10")]
 		public static string audio_channel_positions_to_string ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_channel_positions_to_valid_order")]
 		public static bool audio_channel_positions_to_valid_order ([CCode (array_length_cname = "channels", array_length_pos = 1.1)] Gst.Audio.ChannelPosition[] position);

@@ -5,6 +5,7 @@ namespace Gst {
 	namespace Video {
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_get_type ()")]
 		[GIR (name = "VideoAggregator")]
+		[Version (since = "1.16")]
 		public abstract class Aggregator : Gst.Base.Aggregator {
 			public weak Gst.Video.Info info;
 			[CCode (has_construct_function = false)]
@@ -20,6 +21,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_convert_pad_get_type ()")]
 		[GIR (name = "VideoAggregatorConvertPad")]
+		[Version (since = "1.16")]
 		public class AggregatorConvertPad : Gst.Video.AggregatorPad {
 			[CCode (has_construct_function = false)]
 			protected AggregatorConvertPad ();
@@ -31,6 +33,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_pad_get_type ()")]
 		[GIR (name = "VideoAggregatorPad")]
+		[Version (since = "1.16")]
 		public class AggregatorPad : Gst.Base.AggregatorPad {
 			public weak Gst.Video.Info info;
 			[CCode (has_construct_function = false)]
@@ -256,6 +259,7 @@ namespace Gst {
 			public virtual bool set_format (Gst.Video.CodecState state);
 			public void set_headers (owned GLib.List<Gst.Buffer> headers);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
+			[Version (since = "1.6")]
 			public void set_min_pts (Gst.ClockTime min_pts);
 			public Gst.Video.CodecState set_output_state (owned Gst.Caps caps, Gst.Video.CodecState? reference);
 			[Version (since = "1.14")]
@@ -552,8 +556,10 @@ namespace Gst {
 			public abstract void expose ();
 			public void got_window_handle ([CCode (type = "guintptr")] uint* handle);
 			public abstract void handle_events (bool handle_events);
+			[Version (since = "1.14")]
 			public static void install_properties (GLib.ObjectClass oclass, int last_prop_id);
 			public void prepare_window_handle ();
+			[Version (since = "1.14")]
 			public static bool set_property (GLib.Object object, int last_prop_id, uint property_id, GLib.Value value);
 			[NoWrapper]
 			public virtual void set_render_rectangle (int x, int y, int width, int height);
@@ -791,6 +797,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ANCILLARY_DID_", type_id = "gst_video_ancillary_did_get_type ()")]
 		[GIR (name = "VideoAncillaryDID")]
+		[Version (since = "1.16")]
 		public enum AncillaryDID {
 			UNDEFINED,
 			DELETION,
@@ -1703,8 +1710,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? overlay_composition_meta_get_info ();
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.14")]
 		public static void overlay_install_properties (GLib.ObjectClass oclass, int last_prop_id);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.14")]
 		public static bool overlay_set_property (GLib.Object object, int last_prop_id, uint property_id, GLib.Value value);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type region_of_interest_meta_api_get_type ();

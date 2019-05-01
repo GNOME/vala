@@ -6,16 +6,23 @@ namespace Gst {
 	public class Player : Gst.Object {
 		[CCode (has_construct_function = false)]
 		public Player (owned Gst.PlayerVideoRenderer? video_renderer, owned Gst.PlayerSignalDispatcher? signal_dispatcher);
+		[Version (since = "1.10")]
 		public static uint config_get_position_update_interval (Gst.Structure config);
+		[Version (since = "1.12")]
 		public static bool config_get_seek_accurate (Gst.Structure config);
+		[Version (since = "1.10")]
 		public static string config_get_user_agent (Gst.Structure config);
+		[Version (since = "1.10")]
 		public static void config_set_position_update_interval (Gst.Structure config, uint interval);
 		[Version (since = "1.12")]
 		public static void config_set_seek_accurate (Gst.Structure config, bool accurate);
+		[Version (since = "1.10")]
 		public static void config_set_user_agent (Gst.Structure config, string agent);
 		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
+		[Version (since = "1.10")]
 		public int64 get_audio_video_offset ();
 		public double get_color_balance (Gst.PlayerColorBalanceType type);
+		[Version (since = "1.10")]
 		public Gst.Structure get_config ();
 		public Gst.PlayerAudioInfo get_current_audio_track ();
 		public unowned Gst.PlayerSubtitleInfo get_current_subtitle_track ();
@@ -33,8 +40,10 @@ namespace Gst {
 		public double get_rate ();
 		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
 		public string get_subtitle_uri ();
+		[Version (since = "1.16")]
 		public int64 get_subtitle_video_offset ();
 		public string get_uri ();
+		[Version (since = "1.12")]
 		public Gst.Sample get_video_snapshot (Gst.PlayerSnapshotFormat format, Gst.Structure? config);
 		public static unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams (Gst.PlayerMediaInfo info);
 		public double get_volume ();
@@ -44,8 +53,10 @@ namespace Gst {
 		public void seek (Gst.ClockTime position);
 		public bool set_audio_track (int stream_index);
 		public void set_audio_track_enabled (bool enabled);
+		[Version (since = "1.10")]
 		public void set_audio_video_offset (int64 offset);
 		public void set_color_balance (Gst.PlayerColorBalanceType type, double value);
+		[Version (since = "1.10")]
 		public bool set_config (owned Gst.Structure config);
 		[Version (since = "1.10")]
 		public void set_multiview_flags (Gst.Video.MultiviewFlags flags);
@@ -56,6 +67,7 @@ namespace Gst {
 		public bool set_subtitle_track (int stream_index);
 		public void set_subtitle_track_enabled (bool enabled);
 		public void set_subtitle_uri (string uri);
+		[Version (since = "1.16")]
 		public void set_subtitle_video_offset (int64 offset);
 		public void set_uri (string uri);
 		public bool set_video_track (int stream_index);
@@ -180,6 +192,7 @@ namespace Gst {
 		public void expose ();
 		public void get_render_rectangle (out int x, out int y, out int width, out int height);
 		public void* get_window_handle ();
+		[Version (since = "1.12")]
 		public static Gst.PlayerVideoRenderer new_with_sink (void* window_handle, Gst.Element video_sink);
 		public void set_render_rectangle (int x, int y, int width, int height);
 		public void set_window_handle (void* window_handle);

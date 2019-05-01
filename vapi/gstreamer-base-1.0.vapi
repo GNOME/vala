@@ -820,6 +820,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstBitWriter", has_type_id = false)]
 		[GIR (name = "BitWriter")]
+		[Version (since = "1.16")]
 		public struct BitWriter {
 			public uint8 data;
 			public uint bit_size;
