@@ -142,7 +142,7 @@ done
 
 AC_SUBST(TEST_CFLAGS)
 
-GOBJECT_INTROSPECTION_REQUIRE([1.48])
+GOBJECT_INTROSPECTION_CHECK([1.48.0])
 
 if test x$enable_introspection = xyes; then
 	AC_MSG_CHECKING([for sufficient GIR support])
