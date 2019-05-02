@@ -129,6 +129,7 @@ glib_dep = dependency('glib-2.0', version: '>= @0@'.format(glib_version_required
 gobject_dep = dependency('gobject-2.0', version: '>= @0@'.format(glib_version_required))
 gmodule_dep = dependency('gmodule-2.0', version: '>= @0@'.format(glib_version_required))
 libgvc_dep = dependency('libgvc', version: '>= @0@'.format(libgvc_version_required), required: valadoc_enabled)
+gio_dep = dependency('gio-2.0', version: '>= @0@'.format(glib_version_required))
 
 # Check for CGraph support of libgvc
 if valadoc_enabled and cc.run('''#include <gvc.h>

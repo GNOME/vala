@@ -60,7 +60,15 @@ driver_exe = executable('driver',
 		join_paths(meson.source_root(), 'valadoc/treebuilder.vala'),
 	),
 	c_args: '-DTOP_SRC_DIR="@0@"'.format(meson.source_root()),
-	dependencies: [gobject_dep, valacore_dep, libvaladoc_dep],
+	dependencies: [
+		gobject_dep,
+		valacore_lib_deps,
+		libvaladoc_dep,
+		inc_libvalarooth_dep,
+		inc_libvalah_dep,
+		inc_libvalacodegenh_dep,
+		inc_libvalaccodeh_dep,
+		inc_libvalageeh_dep],
 	install: false,
 	link_with: [ libvaladoc_lib, valacore_lib]
 )

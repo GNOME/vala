@@ -10,6 +10,8 @@ foreach f : valac_sources
 		af = f.split('.vala')
 		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
 		valac_sources_c += nf
+	else
+		valac_sources_c += join_paths (meson.current_source_dir (), f)
 	endif
 endforeach
 
@@ -20,6 +22,7 @@ valac_exe = executable(
 	valac_sources_c,
 	dependencies: [
 		valacore_lib_deps,
+		gio_dep,
 		inc_libvalarooth_dep,
 		inc_libvalah_dep,
 		inc_libvalacodegenh_dep,

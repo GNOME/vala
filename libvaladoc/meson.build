@@ -1,4 +1,4 @@
-libvaladoc_sources = files(
+libvaladoc_sources = files([
 	'ctyperesolver.vala',
 	'devhelp-markupwriter.vala',
 	'doclet.vala',
@@ -10,129 +10,37 @@ libvaladoc_sources = files(
 	'markupwriter.vala',
 	'moduleloader.vala',
 	'settings.vala',
-	'api/array.vala',
-	'api/attribute.vala',
-	'api/callable.vala',
-	'api/childsymbolregistrar.vala',
-	'api/class.vala',
-	'api/constant.vala',
-	'api/delegate.vala',
-	'api/enum.vala',
-	'api/enumvalue.vala',
-	'api/errorcode.vala',
-	'api/errordomain.vala',
-	'api/field.vala',
-	'api/formalparameter.vala',
-	'api/girsourcecomment.vala',
-	'api/interface.vala',
-	'api/item.vala',
-	'api/method.vala',
-	'api/namespace.vala',
-	'api/node.vala',
-	'api/nodetype.vala',
-	'api/ownership.vala',
-	'api/package.vala',
-	'api/pointer.vala',
-	'api/property.vala',
-	'api/propertyaccessor.vala',
-	'api/signal.vala',
-	'api/signaturebuilder.vala',
-	'api/sourcecomment.vala',
-	'api/sourcefile.vala',
-	'api/struct.vala',
-	'api/symbol.vala',
-	'api/tree.vala',
-	'api/typeparameter.vala',
-	'api/typereference.vala',
-	'api/typesymbol.vala',
-	'api/visitor.vala',
-	'charts/chart.vala',
-	'charts/chartfactory.vala',
-	'charts/hierarchychart.vala',
-	'charts/simplechartfactory.vala',
-	'content/block.vala',
-	'content/blockcontent.vala',
-	'content/comment.vala',
-	'content/contentelement.vala',
-	'content/contentfactory.vala',
-	'content/contentrenderer.vala',
-	'content/contentvisitor.vala',
-	'content/embedded.vala',
-	'content/headline.vala',
-	'content/inline.vala',
-	'content/inlinecontent.vala',
-	'content/inlinetaglet.vala',
-	'content/link.vala',
-	'content/list.vala',
-	'content/listitem.vala',
-	'content/note.vala',
-	'content/page.vala',
-	'content/paragraph.vala',
-	'content/resourcelocator.vala',
-	'content/run.vala',
-	'content/sourcecode.vala',
-	'content/styleattributes.vala',
-	'content/symbollink.vala',
-	'content/table.vala',
-	'content/tablecell.vala',
-	'content/tablerow.vala',
-	'content/taglet.vala',
-	'content/text.vala',
-	'content/warning.vala',
-	'content/wikilink.vala',
-	'documentation/commentscanner.vala',
-	'documentation/documentationparser.vala',
-	'documentation/documentation.vala',
-	'documentation/girmetadata.vala',
-	'documentation/gtkdoccommentparser.vala',
-	'documentation/gtkdoccommentscanner.vala',
-	'documentation/gtkdocmarkdownparser.vala',
-	'documentation/gtkdocmarkdownscanner.vala',
-	'documentation/importerhelper.vala',
-	'documentation/wikiscanner.vala',
-	'documentation/wiki.vala',
-	'highlighter/codescanner.vala',
-	'highlighter/codetoken.vala',
-	'highlighter/highlighter.vala',
-	'highlighter/scanner.vala',
-	'highlighter/xmlscanner.vala',
-	'html/basicdoclet.vala',
-	'html/cssclassresolver.vala',
-	'html/htmlchartfactory.vala',
-	'html/htmlmarkupwriter.vala',
-	'html/htmlrenderer.vala',
-	'html/linkhelper.vala',
-	'importer/documentationimporter.vala',
-	'importer/girdocumentationimporter.vala',
-	'importer/internalidregistrar.vala',
-	'importer/valadocdocumentationimporterscanner.vala',
-	'importer/valadocdocumentationimporter.vala',
-	'parser/manyrule.vala',
-	'parser/oneofrule.vala',
-	'parser/optionalrule.vala',
-	'parser/parser.vala',
-	'parser/parsercallback.vala',
-	'parser/rule.vala',
-	'parser/scanner.vala',
-	'parser/sequencerule.vala',
-	'parser/stubrule.vala',
-	'parser/token.vala',
-	'parser/tokentype.vala',
-	'taglets/tagletdeprecated.vala',
-	'taglets/tagletinheritdoc.vala',
-	'taglets/tagletinit.vala',
-	'taglets/tagletlink.vala',
-	'taglets/tagletparam.vala',
-	'taglets/tagletreturn.vala',
-	'taglets/tagletsee.vala',
-	'taglets/tagletsince.vala',
-	'taglets/tagletthrows.vala',
-)
+])
+
+subdir('api')
+subdir('charts')
+subdir('content')
+subdir('documentation')
+subdir('highlighter')
+subdir('html')
+subdir('importer')
+subdir('parser')
+subdir('taglets')
+
+libvaladoc_sources += api_sources
+libvaladoc_sources += charts_sources
+libvaladoc_sources += content_sources
+libvaladoc_sources += documentation_sources
+libvaladoc_sources += highlighter_sources
+libvaladoc_sources += html_sources
+libvaladoc_sources += importer_sources
+libvaladoc_sources += parser_sources
+libvaladoc_sources += taglets_sources
 
 libvaladoc_lib = shared_library(
 	'valadoc@0@'.format(vala_version_suffix),
 	libvaladoc_sources,
-	dependencies: [gmodule_dep, valacore_dep, libgvc_dep],
+	dependencies: [gmodule_dep, valacore_lib_deps, libgvc_dep,
+		inc_libvalarooth_dep,
+		inc_libvalah_dep,
+		inc_libvalacodegenh_dep,
+		inc_libvalaccodeh_dep,
+		inc_libvalageeh_dep],
 	version: '0.0.0',
 	install: true,
 	install_dir: [
@@ -147,7 +55,10 @@ libvaladoc_lib = shared_library(
 	link_with: valacore_lib
 )
 
-libvaladoc_dep = declare_dependency(link_with: [libvaladoc_lib], dependencies: [gmodule_dep, valacore_dep, libgvc_dep], include_directories: include_directories('.'))
+libvaladoc_dep = declare_dependency(
+	link_with: [libvaladoc_lib],
+	dependencies: [gmodule_dep, valacore_lib_deps, libgvc_dep],
+	include_directories: include_directories('.'))
 
 configure_file(input: 'valadoc.deps.in', output: 'valadoc@0@.deps'.format(vala_version_suffix), configuration: pkgconf)
 

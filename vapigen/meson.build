@@ -11,6 +11,8 @@ foreach f : vapigen_sources
 		af = f.split('.vala')
 		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
 		vapigen_sources_c += nf
+	else
+		vapigen_sources_c += f
 	endif
 endforeach
 
@@ -44,6 +46,8 @@ foreach f : vapicheck_sources
 		af = f.split('.vala')
 		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
 		vapicheck_sources_c += nf
+	else
+		vapicheck_sources_c += f
 	endif
 endforeach
 

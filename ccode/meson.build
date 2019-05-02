@@ -65,6 +65,8 @@ foreach f : valaccode_sources
 		af = f.split('.vala')
 		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
 		valaccode_sources_c += nf
+	else
+		valaccode_sources_c += join_paths (meson.current_source_dir (), f)
 	endif
 endforeach
 

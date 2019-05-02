@@ -163,11 +163,14 @@ foreach f : valacore_sources
 		nf = af[0] + '.c'
 		message ('Setting up: '+nf)
 		valacore_sources_c += nf
+	else
+		valacore_sources_c += f
 	endif
 endforeach
 
 valacore_sources_c += valaccode_sources_c
 valacore_sources_c += valacodegen_sources_c
+valacore_sources_c += valagee_sources_c
 
 if not get_option ('bootstrap')
 # https://github.com/mesonbuild/meson/issues/688
@@ -197,11 +200,10 @@ endif
 valacore_lib_deps = [
 	glib_dep,
 	gobject_dep,
-	gmodule_dep,
-	valagee_dep
+	gmodule_dep
 ]
 
-valacore_lib = shared_library(
+valacore_lib = library(
 	'vala@0@'.format(vala_version_suffix),
 	valacore_sources_c,
 	valaversion_source,
@@ -216,7 +218,7 @@ valacore_lib = shared_library(
 	install: true,
 	vala_args: ['--use-header'],
 	vala_header: 'vala.h',
-	vala_vapi: 'vala.vapi',
+	vala_vapi: 'vala'+vala_version_suffix+'.vapi',
 	install_dir: install_dirs,
 )
 
@@ -226,20 +228,3 @@ valacore_lib_dep = declare_dependency(
 	include_directories: inc_libvalah,
 )
 
-if not get_option('bootstrap')
-libvala_vapi = custom_target(
-	'libvala@0@.vapi'.format(vala_version_suffix),
-	command: [
-		find_program('cat'),
-		join_paths(meson.build_root(), 'gee', 'gee.vapi'),
-		join_paths(meson.current_build_dir(), 'vala.vapi'),
-	],
-	depends: [valagee_lib, valacore_lib],
-	capture: true,
-	output: 'libvala@0@.vapi'.format(vala_version_suffix),
-)
-else
-libvala_vapi = join_paths(meson.current_source_dir(), 'libvala'+vala_version_suffix+'.vapi')
-endif
-
-install_data(libvala_vapi, install_dir: join_paths('share', 'vala', 'vapi'))
