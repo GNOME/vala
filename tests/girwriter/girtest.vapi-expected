@@ -14,6 +14,16 @@ namespace GirTest {
 		public DeprecatedClassTest ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	public class GenericsObjectTest<G,T> : GLib.Object {
+		public GenericsObjectTest ();
+		public void method<K> (K param);
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	public class GenericsTest<G,T> {
+		public GenericsTest ();
+		public void method (T param);
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public class ImplementionTest : GLib.Object, GirTest.InterfaceTest {
 		public ImplementionTest ();
 	}
