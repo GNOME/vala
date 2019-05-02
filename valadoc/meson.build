@@ -11,8 +11,9 @@ valadoc_name = 'valadoc@0@'.format(vala_version_suffix)
 valadoc_exe = executable(
 	valadoc_name,
 	valadoc_sources,
-	dependencies: [gobject_dep, valacodegen_dep, libvaladoc_dep],
+	dependencies: [gobject_dep, valacore_dep, libvaladoc_dep],
 	install: true,
+	link_with: valacore_lib
 )
 
 # https://github.com/mesonbuild/meson/issues/1602

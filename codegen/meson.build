@@ -1,4 +1,7 @@
-valacodegen_sources = files(
+inc_libvalacodegenh = include_directories ('.')
+inc_libvalacodegenh_dep = declare_dependency (include_directories : inc_libvalacodegenh)
+
+valacodegen_sources = [
 	'valaccode.vala',
 	'valaccodearraymodule.vala',
 	'valaccodeassignmentmodule.vala',
@@ -28,22 +31,15 @@ valacodegen_sources = files(
 	'valainterfaceregisterfunction.vala',
 	'valastructregisterfunction.vala',
 	'valatyperegisterfunction.vala',
-)
+]
 
-valacodegen_lib = shared_library(
-	'valacodegen',
-	valacodegen_sources,
-	dependencies: [gobject_dep, valacore_dep, valaccode_dep],
-	install_rpath: pkglibdir,
-	install_dir: pkglibdir,
-	install: [ true, false, false ],
-	vala_args: ['--use-header'],
-	vala_header: 'valacodegen.h',
-	vala_vapi: 'valacodegen.vapi',
-)
+valacodegen_sources_c = []
 
-valacodegen_dep = declare_dependency(
-	link_with: [valacodegen_lib],
-	dependencies: [valacore_dep, valaccode_dep],
-	include_directories: include_directories('.'),
-)
+foreach f : valacodegen_sources
+	if get_option ('bootstrap')
+		af = f.split('.vala')
+		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
+		valacodegen_sources_c += nf
+	endif
+endforeach
+

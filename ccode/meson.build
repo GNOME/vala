@@ -1,4 +1,7 @@
-valaccode_sources = files(
+inc_libvalaccodeh = include_directories ('.')
+inc_libvalaccodeh_dep = declare_dependency (include_directories : inc_libvalaccodeh)
+
+valaccode_sources = [
 	'valaccodeassignment.vala',
 	'valaccodebinaryexpression.vala',
 	'valaccodeblock.vala',
@@ -53,20 +56,15 @@ valaccode_sources = files(
 	'valaccodevariabledeclarator.vala',
 	'valaccodewhilestatement.vala',
 	'valaccodewriter.vala'
-)
+]
 
-valaccode_lib = static_library(
-	'valaccode',
-	valaccode_sources,
-	dependencies: [gobject_dep, valagee_dep, valacore_dep],
-	install: false,
-	vala_args: ['--use-header'],
-	vala_header: 'valaccode.h',
-	vala_vapi: 'valaccode.vapi',
-)
+valaccode_sources_c = []
 
-valaccode_dep = declare_dependency(
-	link_with: [valaccode_lib],
-	dependencies: [valagee_dep],
-	include_directories: include_directories('.'),
-)
+foreach f : valaccode_sources
+	if get_option ('bootstrap')
+		af = f.split('.vala')
+		nf = join_paths (meson.current_source_dir (), af[0] + '.c')
+		valaccode_sources_c += nf
+	endif
+endforeach
+

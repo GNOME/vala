@@ -154,21 +154,27 @@ if (vg.found())
 	)
 endif
 
+inc_libvalarooth = include_directories ('.')
+inc_libvalarooth_dep = declare_dependency (include_directories : inc_libvalarooth)
+
 subdir('gobject-introspection')
 subdir('gee')
-subdir('vala')
 subdir('ccode')
 subdir('codegen')
+subdir('vala')
 subdir('compiler')
 subdir('vapigen')
 subdir('vapi')
 
-if valadoc_enabled
+if valadoc_enabled and not get_option('bootstrap')
 	subdir('libvaladoc')
 	subdir('valadoc')
 endif
 
+if not get_option('bootstrap')
 subdir('doc')
+endif
+
 subdir('tests')
 
 install_data('vala.m4', install_dir: join_paths('share', 'aclocal'))

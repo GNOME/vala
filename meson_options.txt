@@ -11,3 +11,7 @@ option('man-pages', type: 'boolean', value: 'false',
 # Resource directories
 option('girdir', type: 'string', value: '',
 	description : 'Directory to use GIRs from')
+
+# Enable bootstrap
+option ('bootstrap', type: 'boolean', value: 'false',
+	description: 'Build Vala using existing C files')
