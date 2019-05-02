@@ -272,4 +272,17 @@ namespace GirTest {
 	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
 	public class DeprecatedClassTest {
 	}
+
+	public class GenericsTest<G,T> {
+		public GenericsTest (owned DelegateTest cb) {
+		}
+
+		public void method (T param) {
+		}
+	}
+
+	public class GenericsObjectTest<G,T> : Object {
+		public void method<K> (K[] param) {
+		}
+	}
 }

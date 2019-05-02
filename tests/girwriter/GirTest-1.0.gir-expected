@@ -960,6 +960,148 @@
 		</field>
 	</record>
 	<record name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate" disguised="1"/>
+	<class name="GenericsTest" c:type="GirTestGenericsTest" glib:type-name="GirTestGenericsTest" glib:get-type="gir_test_generics_test_get_type" glib:type-struct="GenericsTestClass" glib:fundamental="1" glib:ref-func="gir_test_generics_test_ref" glib:unref-func="gir_test_generics_test_unref" glib:set-value-func="gir_test_value_set_generics_test" glib:get-value-func="gir_test_value_get_generics_test">
+		<field name="parent_instance">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv">
+			<type name="GenericsTestPrivate" c:type="GirTestGenericsTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_generics_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="cb" transfer-ownership="none" closure="7" scope="notified" destroy="8">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="cb_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="cb_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<method name="method" c:identifier="gir_test_generics_test_method">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</parameter>
+			</parameters>
+		</method>
+	</class>
+	<record name="GenericsTestClass" c:type="GirTestGenericsTestClass" glib:is-gtype-struct-for="GenericsTest">
+		<field name="parent_class">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="GenericsTestPrivate" c:type="GirTestGenericsTestPrivate" disguised="1"/>
+	<class name="GenericsObjectTest" c:type="GirTestGenericsObjectTest" glib:type-name="GirTestGenericsObjectTest" glib:get-type="gir_test_generics_object_test_get_type" glib:type-struct="GenericsObjectTestClass" parent="GObject.Object">
+		<field name="parent_instance">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv">
+			<type name="GenericsObjectTestPrivate" c:type="GirTestGenericsObjectTestPrivate*"/>
+		</field>
+		<property name="g-type" writable="1" construct-only="1">
+			<type name="GType" c:type="GType"/>
+		</property>
+		<property name="g-dup-func" writable="1" construct-only="1">
+			<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+		</property>
+		<property name="g-destroy-func" writable="1" construct-only="1">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</property>
+		<property name="t-type" writable="1" construct-only="1">
+			<type name="GType" c:type="GType"/>
+		</property>
+		<property name="t-dup-func" writable="1" construct-only="1">
+			<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+		</property>
+		<property name="t-destroy-func" writable="1" construct-only="1">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</property>
+		<method name="method" c:identifier="gir_test_generics_object_test_method">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="k_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="k_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="k_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="param" transfer-ownership="none">
+					<array length="4" c:type="gpointer*">
+						<type name="gpointer" c:type="gpointer"/>
+					</array>
+				</parameter>
+				<parameter name="param_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<constructor name="new" c:identifier="gir_test_generics_object_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsObjectTest" c:type="GirTestGenericsObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
+	</class>
+	<record name="GenericsObjectTestClass" c:type="GirTestGenericsObjectTestClass" glib:is-gtype-struct-for="GenericsObjectTest">
+		<field name="parent_class">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="GenericsObjectTestPrivate" c:type="GirTestGenericsObjectTestPrivate" disguised="1"/>
 	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
 		<prerequisite name="GObject.Object"/>
 		<method name="int8_in" c:identifier="gir_test_interface_test_int8_in">
