@@ -78,19 +78,6 @@ valadoc_flags = [
 	'--basedir', join_paths(meson.current_build_dir(), 'internal-apis')
 ]
 
-gee_doc = custom_target('gee_doc',
-	command: [
-		valadoc_exe,
-		valadoc_flags + [
-			'--package-name', 'gee', '--package-version', meson.project_version(),
-		],
-		'@INPUT@'
-	],
-	build_by_default: false,
-	input: valagee_sources,
-	output: 'gee-apis',
-)
-
 vala_doc = custom_target('vala_doc',
 	command: [
 		valadoc_exe,
@@ -98,45 +85,11 @@ vala_doc = custom_target('vala_doc',
 			'--package-name', 'vala', '--package-version', meson.project_version(),
 			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
 		],
-		'@INPUT@'
+		valacore_sources_c, valaversion_source
 	],
 	build_by_default: false,
-	depends: gee_doc,
-	input: [valacore_sources, valaversion_source],
+	depends: valacore_lib,
 	output: 'vala-apis',
-)
-
-ccode_doc = custom_target('ccode_doc',
-	command: [
-		valadoc_exe,
-		valadoc_flags + [
-			'--package-name', 'ccode', '--package-version', meson.project_version(),
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
-			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
-		],
-		'@INPUT@'
-	],
-	build_by_default: false,
-	depends: [gee_doc, vala_doc],
-	input: valaccode_sources,
-	output: 'ccode-apis',
-)
-
-codegen_doc = custom_target('codegen_doc',
-	command: [
-		valadoc_exe,
-		valadoc_flags + [
-			'--package-name', 'codegen', '--package-version', meson.project_version(),
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
-			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
-			'--vapidir', join_paths(meson.build_root(), 'ccode'), '--pkg', 'valaccode',
-		],
-		'@INPUT@'
-	],
-	build_by_default: false,
-	depends: [gee_doc, vala_doc, ccode_doc],
-	input: valacodegen_sources,
-	output: 'codegen-apis',
 )
 
 valadoc_doc = custom_target('valadoc_doc',
@@ -153,7 +106,7 @@ valadoc_doc = custom_target('valadoc_doc',
 		'@INPUT@'
 	],
 	build_by_default: false,
-	depends: [gee_doc, vala_doc, ccode_doc, codegen_doc],
+	depends: [vala_doc],
 	input: libvaladoc_sources,
 	output: 'valadoc-apis',
 )
