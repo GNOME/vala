@@ -87,6 +87,8 @@ namespace GirTest {
 	}
 
 	public class SubTypeTest : TypeTest {
+		public string[] array_field;
+		public DelegateTest delegate_field;
 	}
 
 	public class ObjectTest : Object {

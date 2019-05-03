@@ -75,6 +75,23 @@
 		<field name="priv">
 			<type name="SubTypeTestPrivate" c:type="GirTestSubTypeTestPrivate*"/>
 		</field>
+		<field name="array_field">
+			<array c:type="gchar**">
+				<type name="utf8" c:type="gchar*"/>
+			</array>
+		</field>
+		<field name="array_field_length1">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<field name="delegate_field">
+			<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+		</field>
+		<field name="delegate_field_target">
+			<type name="gpointer" c:type="gpointer"/>
+		</field>
+		<field name="delegate_field_target_destroy_notify">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</field>
 		<constructor name="new" c:identifier="gir_test_sub_type_test_new">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.SubTypeTest" c:type="GirTestSubTypeTest*"/>
