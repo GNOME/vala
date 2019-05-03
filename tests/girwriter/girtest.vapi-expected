@@ -87,6 +87,8 @@ namespace GirTest {
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public class SubTypeTest : GirTest.TypeTest {
+		public string[] array_field;
+		public GirTest.DelegateTest delegate_field;
 		public SubTypeTest ();
 	}
 	[CCode (cheader_filename = "girtest.h")]

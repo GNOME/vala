@@ -946,6 +946,49 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		buffer.append_printf ("</field>\n");
+
+		if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+			var array_type = (ArrayType) f.variable_type;
+			if (!array_type.fixed_length) {
+				for (var i = 0; i < array_type.rank; i++) {
+					write_indent ();
+					buffer.append_printf ("<field name=\"%s_length%i\"", get_ccode_name (f), i + 1);
+					write_symbol_attributes (f);
+					buffer.append_printf (">\n");
+					indent++;
+					write_type (array_type.length_type);
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				}
+			}
+		} else if (f.variable_type is DelegateType) {
+			var deleg_type = (DelegateType) f.variable_type;
+			if (deleg_type.delegate_symbol.has_target) {
+				write_indent ();
+				buffer.append_printf ("<field name=\"%s\"", get_ccode_delegate_target_name (f));
+				write_symbol_attributes (f);
+				buffer.append_printf (">\n");
+				indent++;
+				write_indent ();
+				buffer.append_printf ("<type name=\"gpointer\" c:type=\"gpointer\"/>\n");
+				indent--;
+				write_indent ();
+				buffer.append_printf ("</field>\n");
+				if (deleg_type.is_disposable ()) {
+					write_indent ();
+					buffer.append_printf ("<field name=\"%s\"", get_ccode_delegate_target_destroy_notify_name (f));
+					write_symbol_attributes (f);
+					buffer.append_printf (">\n");
+					indent++;
+					write_indent ();
+					buffer.append_printf ("<type name=\"GLib.DestroyNotify\" c:type=\"GDestroyNotify\"/>\n");
+					indent--;
+					write_indent ();
+					buffer.append_printf ("</field>\n");
+				}
+			}
+		}
 	}
 
 	private void write_implicit_params (DataType? type, ref int index, bool has_array_length, string? name, ParameterDirection direction) {
