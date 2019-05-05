@@ -85,6 +85,23 @@ fedora-gcc-x86_64:
       - "doc/internal-apis"
     expire_in: 2 days
 
+fedora-clang-x86_64:
+  stage: build
+  image: fedora:rawhide
+  except:
+    - tags
+  variables:
+    CC: clang
+  before_script:
+    - dnf update -y
+    - dnf install -y autoconf autoconf-archive automake bash bison dbus-x11 diffutils flex clang git glib2-devel graphviz-devel lcov libxslt make vala
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check VERBOSE=1
+
 ubuntu-clang-x86_64:
   stage: build
   image: ubuntu:devel
