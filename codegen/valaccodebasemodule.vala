@@ -1883,16 +1883,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("0")));
 					} else if (property_type is StructValueType) {
 						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
-						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
-
-						var get_expr = new CCodeCommaExpression ();
-						get_expr.append_expression (get_call);
-						get_expr.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
-
+						if (property_type.nullable) {
+							ccode.add_assignment (new CCodeIdentifier ("old_value"), get_call);
+						} else {
+							get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
+							ccode.add_expression (get_call);
+						}
 						var equalfunc = generate_struct_equal_function ((Struct) property_type.data_type);
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 						ccall.add_argument (new CCodeIdentifier ("value"));
-						ccall.add_argument (get_expr);
+						if (property_type.nullable) {
+							ccall.add_argument (new CCodeIdentifier ("old_value"));
+						} else {
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value")));
+						}
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("TRUE")));
 					} else {
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));

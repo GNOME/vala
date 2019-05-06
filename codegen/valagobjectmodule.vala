@@ -233,21 +233,26 @@ public class Vala.GObjectModule : GTypeModule {
 
 			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
 			if (prop.property_type.is_real_struct_type ()) {
-				var st = prop.property_type.data_type as Struct;
-
 				ccode.open_block ();
-				ccode.add_declaration (get_ccode_name (st), new CCodeVariableDeclarator ("boxed"));
+				ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("boxed"));
 
 				ccall = new CCodeFunctionCall (cfunc);
 				ccall.add_argument (cself);
-				var boxed_addr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed"));
-				ccall.add_argument (boxed_addr);
-				ccode.add_expression (ccall);
+				if (prop.property_type.nullable) {
+					ccode.add_assignment (new CCodeIdentifier ("boxed"), ccall);
+				} else {
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
+					ccode.add_expression (ccall);
+				}
 
 				var csetcall = new CCodeFunctionCall ();
 				csetcall.call = get_value_setter_function (prop.property_type);
 				csetcall.add_argument (new CCodeIdentifier ("value"));
-				csetcall.add_argument (boxed_addr);
+				if (prop.property_type.nullable) {
+					csetcall.add_argument (new CCodeIdentifier ("boxed"));
+				} else {
+					csetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
+				}
 				add_guarded_expression (prop, csetcall);
 
 				if (requires_destroy (prop.get_accessor.value_type)) {

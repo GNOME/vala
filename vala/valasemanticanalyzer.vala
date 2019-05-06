@@ -450,8 +450,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public bool is_gobject_property_type (DataType property_type) {
 		var st = property_type.data_type as Struct;
-		if (st != null && (!st.get_attribute_bool ("CCode", "has_type_id", true) || property_type.nullable)) {
-			return false;
+		if (st != null) {
+			if (st.get_attribute_bool ("CCode", "has_type_id", true)) {
+				// Allow GType-based struct types
+			} else if (property_type.nullable) {
+				return false;
+			}
 		}
 
 		if (property_type is ArrayType && ((ArrayType) property_type).element_type.data_type != string_type.data_type) {
