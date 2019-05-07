@@ -88,7 +88,8 @@ public class Vala.GirParser : CodeVisitor {
 		FINISH_VFUNC_NAME,
 		NO_ACCESSOR_METHOD,
 		DELEGATE_TARGET,
-		LOWER_CASE_CSUFFIX;
+		LOWER_CASE_CSUFFIX,
+		CTYPE;
 
 		public static ArgumentType? from_string (string name) {
 			var enum_class = (EnumClass) typeof(ArgumentType).class_ref ();
@@ -2606,7 +2607,11 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("type");
 		}
 
-		ctype = reader.get_attribute("c:type");
+		if (metadata.has_argument (ArgumentType.CTYPE)) {
+			ctype = metadata.get_string (ArgumentType.CTYPE);
+		} else {
+			ctype = reader.get_attribute("c:type");
+		}
 
 		next ();
 
