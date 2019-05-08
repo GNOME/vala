@@ -704,13 +704,13 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static bool get_backface_culling_enabled ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void get_bitmasks (int red, int green, int blue, int alpha);
+	public static void get_bitmasks (out int red, out int green, out int blue, out int alpha);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static bool get_depth_test_enabled ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static Cogl.FeatureFlags get_features ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void get_modelview_matrix (Cogl.Matrix matrix);
+	public static void get_modelview_matrix (out Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static GLib.OptionGroup get_option_group ();
 	[CCode (cheader_filename = "cogl/cogl.h")]
@@ -718,7 +718,7 @@ namespace Cogl {
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static unowned Cogl.FuncPtr get_proc_address (string name);
 	[CCode (cheader_filename = "cogl/cogl.h")]
-	public static void get_projection_matrix (Cogl.Matrix matrix);
+	public static void get_projection_matrix (out Cogl.Matrix matrix);
 	[CCode (cheader_filename = "cogl/cogl.h")]
 	public static void get_viewport ([CCode (array_length = false)] float[] v);
 	[CCode (cheader_filename = "cogl/cogl.h")]
