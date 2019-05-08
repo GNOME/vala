@@ -48,6 +48,10 @@ cogl_matrix_init_from_array hidden="1"
 cogl_matrix_init_identity hidden="1"
 cogl_matrix_transform_point.* is_ref="1"
 
+cogl_get_modelview_matrix.matrix is_out="1"
+cogl_get_projection_matrix.matrix is_out="1"
+cogl_get_bitmasks.* is_out="1"
+
 CoglPango* cheader_filename="cogl-pango/cogl-pango.h"
 cogl_pango_ensure_glyph_cache_for_layout cheader_filename="cogl-pango/cogl-pango.h"
 cogl_pango_render_* cheader_filename="cogl-pango/cogl-pango.h"
