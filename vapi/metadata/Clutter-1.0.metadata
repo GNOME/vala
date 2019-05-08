@@ -5,8 +5,13 @@ Fog struct
 Geometry struct
 Knot struct
 Matrix struct
+Margin struct
+PaintVolume struct
 PathNode struct
 Perspective struct
+Point struct
+Rect struct
+Size struct
 Units struct
 Vertex struct
 
@@ -42,7 +47,8 @@ value_get_fixed nullable
 // method/virtual-method/signal don't match
 Actor
 	.event#method name="emit_event"
-	.get_paint_volume#method skip
+	.get_paint_volume#virtual_method name="get_paint_volume_vfunc"
+	.get_paint_volume#virtual_method.volume out
 	.queue_redraw#signal skip
 	.queue_redraw#virtual_method skip
 Container
@@ -148,6 +154,10 @@ Units.from_* skip
 Color
 	.new skip
 	.from_* skip
+Margin
+	.new skip
+Size
+	.init skip
 Vertex.new skip
 
 // Class methods
@@ -160,25 +170,16 @@ get_input_device_for_id parent="Clutter.InputDevice" name="get_for_id"
 color_from_* skip
 units_from_* skip
 
-// Classes marked as out but not double ptr
-Actor
-	.get_margin.margin out=false
-DragAction
-	.get_drag_area.drag_area out=false
-InputDevice
-	.get_coords.point out=false
-Rect
-	.get_center.center out=false
-	.intersection.res out=false
-	.union.res out=false
-Timeline
-	.get_cubic_bezier_progress.c_* out=false
-ZoomAction
-	.get_focal_point.point out=false
-	.get_transformed_focal_point.point out=false
-
 // Struct return values
 color_get_static nullable
+
+// Upstream
+Effect
+	.get_paint_volume.volume out
+Event
+	.get_position.position out
+Text
+	.cursor_event.geometry out
 
 // Remove for clutter-2.0
 /////////////////////////
