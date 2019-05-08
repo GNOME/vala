@@ -1,8 +1,8 @@
 namespace Clutter {
-	[CCode (type_id = "CLUTTER_TYPE_ACTOR_BOX", cheader_filename = "clutter/clutter.h")]
+	[CCode (type_id = "clutter_actor_box_get_type ()", cheader_filename = "clutter/clutter.h")]
 	public struct ActorBox {
 		[CCode (cname = "clutter_actor_box_from_vertices")]
-		public ActorBox.from_vertices (Clutter.Vertex[] verts);
+		public ActorBox.from_vertices ([CCode (array_length = false)] Clutter.Vertex verts[4]);
 	}
 
 	public struct Matrix : Cogl.Matrix {
@@ -85,7 +85,7 @@ namespace Clutter {
 		[NoWrapper]
 		public abstract void add_redraw_clip (Clutter.Geometry stage_rectangle);
 		[NoWrapper]
-		public abstract void get_geometry (Clutter.Geometry geometry);
+		public abstract void get_geometry (out Clutter.Geometry geometry);
 		[NoWrapper]
 		public abstract int get_pending_swaps ();
 		[NoWrapper]
