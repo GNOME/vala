@@ -150,7 +150,7 @@ namespace Goo {
 		public string border_color { set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.1")]
-		public Gdk.RGBA border_color_gdk_rgba { get; set; }
+		public Gdk.RGBA border_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint border_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -165,7 +165,7 @@ namespace Goo {
 		public string horz_grid_line_color { set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.1")]
-		public Gdk.RGBA horz_grid_line_color_gdk_rgba { get; set; }
+		public Gdk.RGBA horz_grid_line_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint horz_grid_line_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -182,7 +182,7 @@ namespace Goo {
 		public string vert_grid_line_color { set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.1")]
-		public Gdk.RGBA vert_grid_line_color_gdk_rgba { get; set; }
+		public Gdk.RGBA vert_grid_line_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint vert_grid_line_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -216,7 +216,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public string border_color { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA border_color_gdk_rgba { get; set; }
+		public Gdk.RGBA border_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint border_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -230,7 +230,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public string horz_grid_line_color { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA horz_grid_line_color_gdk_rgba { get; set; }
+		public Gdk.RGBA horz_grid_line_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint horz_grid_line_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -246,7 +246,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public string vert_grid_line_color { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA vert_grid_line_color_gdk_rgba { get; set; }
+		public Gdk.RGBA vert_grid_line_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint vert_grid_line_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -366,7 +366,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public string fill_color { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA fill_color_gdk_rgba { get; set; }
+		public Gdk.RGBA fill_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint fill_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -396,7 +396,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public string stroke_color { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA stroke_color_gdk_rgba { get; set; }
+		public Gdk.RGBA stroke_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint stroke_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -441,7 +441,7 @@ namespace Goo {
 		public string fill_color { set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.1")]
-		public Gdk.RGBA fill_color_gdk_rgba { get; set; }
+		public Gdk.RGBA fill_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint fill_color_rgba { get; set; }
 		[NoAccessorMethod]
@@ -472,7 +472,7 @@ namespace Goo {
 		public string stroke_color { set; }
 		[NoAccessorMethod]
 		[Version (since = "2.0.1")]
-		public Gdk.RGBA stroke_color_gdk_rgba { get; set; }
+		public Gdk.RGBA stroke_color_gdk_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public uint stroke_color_rgba { get; set; }
 		[NoAccessorMethod]

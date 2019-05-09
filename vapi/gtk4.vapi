@@ -7012,7 +7012,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string cell_background { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA cell_background_rgba { get; set; }
+		public Gdk.RGBA cell_background_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool cell_background_set { get; set; }
 		[NoAccessorMethod]
@@ -7137,7 +7137,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string background { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA background_rgba { get; set; }
+		public Gdk.RGBA background_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
@@ -7159,7 +7159,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA foreground_rgba { get; set; }
+		public Gdk.RGBA foreground_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
@@ -9655,7 +9655,7 @@ namespace Gtk {
 		public Gtk.Widget default_widget { owned get; set; }
 		public bool has_arrow { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Rectangle pointing_to { get; set; }
+		public Gdk.Rectangle pointing_to { owned get; set; }
 		public Gtk.PositionType position { get; set; }
 		public Gtk.Widget relative_to { get; set; }
 		public virtual signal void activate_default ();
@@ -11017,7 +11017,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool background_full_height_set { get; set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA background_rgba { get; set; }
+		public Gdk.RGBA background_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
@@ -11045,7 +11045,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA foreground_rgba { get; set; }
+		public Gdk.RGBA foreground_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
@@ -11077,7 +11077,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string paragraph_background { set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA paragraph_background_rgba { get; set; }
+		public Gdk.RGBA paragraph_background_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool paragraph_background_set { get; set; }
 		[NoAccessorMethod]
@@ -11117,7 +11117,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool strikethrough { get; set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA strikethrough_rgba { get; set; }
+		public Gdk.RGBA strikethrough_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool strikethrough_rgba_set { get; set; }
 		[NoAccessorMethod]
@@ -11133,7 +11133,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Pango.Underline underline { get; set; }
 		[NoAccessorMethod]
-		public Gdk.RGBA underline_rgba { get; set; }
+		public Gdk.RGBA underline_rgba { owned get; set; }
 		[NoAccessorMethod]
 		public bool underline_rgba_set { get; set; }
 		[NoAccessorMethod]

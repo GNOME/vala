@@ -5140,7 +5140,7 @@ namespace Clutter {
 		public Clutter.Action actions { set; }
 		[NoAccessorMethod]
 		[Version (since = "0.8")]
-		public Clutter.ActorBox allocation { get; }
+		public Clutter.ActorBox allocation { owned get; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
 		public Clutter.Gravity anchor_gravity { get; set; }
@@ -5162,7 +5162,7 @@ namespace Clutter {
 		public bool child_transform_set { get; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12")]
-		public Clutter.Geometry clip { get; set; }
+		public Clutter.Geometry clip { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "1.12")]
 		public Clutter.Rect clip_rect { owned get; set; }
@@ -5274,13 +5274,13 @@ namespace Clutter {
 		public double rotation_angle_z { get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.6")]
-		public Clutter.Vertex rotation_center_x { get; set; }
+		public Clutter.Vertex rotation_center_x { owned get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.6")]
-		public Clutter.Vertex rotation_center_y { get; set; }
+		public Clutter.Vertex rotation_center_y { owned get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "0.6")]
-		public Clutter.Vertex rotation_center_z { get; set; }
+		public Clutter.Vertex rotation_center_z { owned get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
 		public Clutter.Gravity rotation_center_z_gravity { get; set; }
@@ -5664,7 +5664,7 @@ namespace Clutter {
 		[NoAccessorMethod]
 		public double angle_tilt_z { get; set; }
 		[NoAccessorMethod]
-		public Clutter.Knot center { get; set; }
+		public Clutter.Knot center { owned get; set; }
 		public Clutter.RotateDirection direction { get; set; }
 		public int height { get; set; }
 		public int width { get; set; }
@@ -5912,9 +5912,9 @@ namespace Clutter {
 		public void set_contrast (float contrast);
 		public void set_contrast_full (float red, float green, float blue);
 		[NoAccessorMethod]
-		public Clutter.Color brightness { get; set; }
+		public Clutter.Color brightness { owned get; set; }
 		[NoAccessorMethod]
-		public Clutter.Color contrast { get; set; }
+		public Clutter.Color contrast { owned get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
 	[Compact]
