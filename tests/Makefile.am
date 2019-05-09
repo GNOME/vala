@@ -315,6 +315,7 @@ TESTS = \
 	objects/property-read-only-write.test \
 	objects/property-construct-only-write.test \
 	objects/property-construct-only-write-foreign.test \
+	objects/property-real-struct-no-accessor.test \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
