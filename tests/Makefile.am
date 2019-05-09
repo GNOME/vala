@@ -317,6 +317,7 @@ TESTS = \
 	objects/property-construct-only-write.test \
 	objects/property-construct-only-write-foreign.test \
 	objects/property-gboxed-nullable.vala \
+	objects/property-real-struct-no-accessor.test \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \

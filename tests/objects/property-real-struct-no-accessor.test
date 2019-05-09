@@ -1,0 +1,13 @@
+Invalid Code
+
+struct Foo {
+	public int i;
+}
+
+class Bar : Object {
+	[NoAccessorMethod]
+	public Foo foo { get; set; }
+}
+
+void main () {
+}
