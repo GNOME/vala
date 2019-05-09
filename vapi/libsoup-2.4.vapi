@@ -204,11 +204,11 @@ namespace Soup {
 		public void set_generic_auth_callback (owned Soup.AuthDomainGenericAuthCallback auth_callback);
 		public bool try_generic_auth_callback (Soup.Message msg, string username);
 		[NoAccessorMethod]
-		public Soup.AuthDomainFilter filter { owned get; set; }
+		public Soup.AuthDomainFilter filter { get; set; }
 		[NoAccessorMethod]
 		public void* filter_data { get; set; }
 		[NoAccessorMethod]
-		public Soup.AuthDomainGenericAuthCallback generic_auth_callback { owned get; set; }
+		public Soup.AuthDomainGenericAuthCallback generic_auth_callback { get; set; }
 		[NoAccessorMethod]
 		public void* generic_auth_data { get; set; }
 		[NoAccessorMethod]
@@ -221,7 +221,7 @@ namespace Soup {
 		public AuthDomainBasic (string optname1, ...);
 		public void set_auth_callback (owned Soup.AuthDomainBasicAuthCallback callback);
 		[NoAccessorMethod]
-		public Soup.AuthDomainBasicAuthCallback auth_callback { owned get; set; }
+		public Soup.AuthDomainBasicAuthCallback auth_callback { get; set; }
 		[NoAccessorMethod]
 		public void* auth_data { get; set; }
 	}
@@ -232,7 +232,7 @@ namespace Soup {
 		public static string encode_password (string username, string realm, string password);
 		public void set_auth_callback (owned Soup.AuthDomainDigestAuthCallback callback);
 		[NoAccessorMethod]
-		public Soup.AuthDomainDigestAuthCallback auth_callback { owned get; set; }
+		public Soup.AuthDomainDigestAuthCallback auth_callback { get; set; }
 		[NoAccessorMethod]
 		public void* auth_data { get; set; }
 	}
