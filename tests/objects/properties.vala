@@ -9,7 +9,7 @@ public struct RealStruct {
 
 public class NonPrivAccess : Object {
 	[NoAccessorMethod]
-	public RealStruct real_struct { get; set; }
+	public RealStruct real_struct { owned get; set; }
 }
 
 public class Sample : Object {
