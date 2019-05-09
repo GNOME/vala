@@ -158,6 +158,24 @@ public class Vala.PropertyAccessor : Subroutine {
 			value_parameter = new Parameter ("value", value_type, source_reference);
 		}
 
+		if (readable && ((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
+			//FIXME Code duplication with CCodeMemberAccessModule.visit_member_access()
+			if (prop.get_attribute ("NoAccessorMethod") != null) {
+				if (value_type.is_real_struct_type ()) {
+					if (source_reference == null || source_reference.file == null) {
+						// Hopefully good as is
+					} else if (!value_type.value_owned && source_reference.file.file_type == SourceFileType.SOURCE) {
+						Report.warning (source_reference, "unowned return value for getter of property `%s' not supported without accessor".printf (prop.get_full_name ()));
+						value_type.value_owned = true;
+					}
+				} else if (value_type.value_owned && (source_reference == null || source_reference.file == null)) {
+					if (value_type is DelegateType || value_type is PointerType || (value_type is ValueType && !value_type.nullable)) {
+						value_type.value_owned = false;
+					}
+				}
+			}
+		}
+
 		if (prop.source_type == SourceFileType.SOURCE) {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
 				/* no accessor body specified, insert default body */
