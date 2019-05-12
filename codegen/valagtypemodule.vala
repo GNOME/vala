@@ -2267,8 +2267,19 @@ public class Vala.GTypeModule : GErrorModule {
 		if (!context.assert) {
 			return;
 		} else if (context.checking && ((t is Class && !((Class) t).is_compact) || t is Interface)) {
-			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (t)));
-			ctype_check.add_argument (new CCodeIdentifier (var_name));
+			if (!get_ccode_has_type_id (t)) {
+				return;
+			}
+
+			CCodeFunctionCall ctype_check;
+			if (t.external_package) {
+				ctype_check = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
+				ctype_check.add_argument (new CCodeIdentifier (var_name));
+				ctype_check.add_argument (new CCodeIdentifier (get_ccode_type_id (t)));
+			} else {
+				ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (t)));
+				ctype_check.add_argument (new CCodeIdentifier (var_name));
+			}
 
 			CCodeExpression cexpr = ctype_check;
 			if (!non_null) {
