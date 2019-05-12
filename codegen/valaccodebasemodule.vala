@@ -5690,13 +5690,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var type_domain = new CCodeIdentifier (get_ccode_upper_case_name (et.error_domain));
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
-			var type_id = get_type_id_expression (type);
-			if (type_id == null) {
-				return new CCodeInvalidExpression ();
+			CCodeFunctionCall ccheck;
+			if (type.data_type == null || type.data_type.external_package) {
+				var type_id = get_type_id_expression (type);
+				if (type_id == null) {
+					return new CCodeInvalidExpression ();
+				}
+				ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
+				ccheck.add_argument ((CCodeExpression) ccodenode);
+				ccheck.add_argument (type_id);
+			} else {
+				ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (type.data_type)));
+				ccheck.add_argument ((CCodeExpression) ccodenode);
 			}
-			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
-			ccheck.add_argument ((CCodeExpression) ccodenode);
-			ccheck.add_argument (type_id);
+
 			return ccheck;
 		}
 	}
