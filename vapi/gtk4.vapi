@@ -4551,27 +4551,13 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected AppLaunchContext ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_core_get_type ()")]
-		[GIR (name = "X11DeviceCore")]
-		public class DeviceCore : Gdk.Device {
-			[CCode (has_construct_function = false)]
-			protected DeviceCore ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
-			public static unowned Gdk.X11.DeviceCore? lookup_for_device_manager (Gdk.X11.DeviceManagerCore device_manager, int device_id);
-		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_core_get_type ()")]
-		[GIR (name = "X11DeviceManagerCore")]
-		public class DeviceManagerCore : GLib.Object {
-			[CCode (has_construct_function = false)]
-			protected DeviceManagerCore ();
-			[NoAccessorMethod]
-			public Gdk.Display display { owned get; construct; }
-		}
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_xi2_get_type ()")]
 		[GIR (name = "X11DeviceManagerXI2")]
-		public class DeviceManagerXI2 : Gdk.X11.DeviceManagerCore {
+		public class DeviceManagerXI2 : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DeviceManagerXI2 ();
+			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
+			public unowned Gdk.X11.DeviceXI2? lookup_for_device_manager (int device_id);
 			[NoAccessorMethod]
 			public int major { get; construct; }
 			[NoAccessorMethod]
@@ -4584,6 +4570,8 @@ namespace Gdk {
 		public class DeviceXI2 : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected DeviceXI2 ();
+			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_get_id")]
+			public int get_id ();
 			[NoAccessorMethod]
 			public int device_id { get; construct; }
 		}
@@ -4680,8 +4668,6 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static X.Atom atom_to_xatom_for_display (Gdk.X11.Display display, Gdk.Atom atom);
-		[CCode (cheader_filename = "gdk/gdkx.h")]
-		public static int device_get_id (Gdk.X11.DeviceCore device);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] uint8[] ctext);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -5976,8 +5962,6 @@ namespace Gdk {
 	public static void content_register_serializer (GLib.Type type, string mime_type, owned Gdk.ContentSerializeFunc serialize);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_serialize_async (GLib.OutputStream stream, string mime_type, GLib.Value value, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
-	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void disable_multidevice ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6044,12 +6028,22 @@ namespace Gsk {
 		public unowned Gsk.RoundedRect? peek_outline ();
 		public float peek_widths ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_broadway_renderer_get_type ()")]
+	public class BroadwayRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		public BroadwayRenderer ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class CairoNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public CairoNode (Graphene.Rect bounds);
 		public Cairo.Context get_draw_context ();
 		public unowned Cairo.Surface peek_surface ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cairo_renderer_get_type ()")]
+	public class CairoRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		public CairoRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class ClipNode : Gsk.RenderNode {
@@ -6094,6 +6088,11 @@ namespace Gsk {
 		public unowned Gsk.RenderNode get_child ();
 		public unowned string get_message ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_renderer_get_type ()")]
+	public class GLRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		public GLRenderer ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class InsetShadowNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
@@ -6136,7 +6135,6 @@ namespace Gsk {
 	public class RenderNode {
 		[CCode (has_construct_function = false)]
 		protected RenderNode ();
-		public static Gsk.RenderNode? deserialize (GLib.Bytes bytes) throws GLib.Error;
 		public void draw (Cairo.Context cr);
 		public Graphene.Rect get_bounds ();
 		public Gsk.RenderNodeType get_node_type ();
@@ -6239,6 +6237,11 @@ namespace Gsk {
 		public TransformNode (Gsk.RenderNode child, Gsk.Transform transform);
 		public unowned Gsk.RenderNode get_child ();
 		public Gsk.Transform get_transform ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_vulkan_renderer_get_type ()")]
+	public class VulkanRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		public VulkanRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
 	public struct ColorStop {
@@ -9028,7 +9031,6 @@ namespace Gtk {
 		public void set_accel_group (Gtk.AccelGroup? accel_group);
 		public void set_accel_path (string? accel_path);
 		public void set_active (uint index);
-		public void set_display (Gdk.Display? display);
 		public void set_monitor (int monitor_num);
 		public void set_reserve_toggle_size (bool reserve_toggle_size);
 		public Gtk.AccelGroup accel_group { get; set; }
@@ -11812,6 +11814,8 @@ namespace Gtk {
 		public bool get_hexpand_set ();
 		public unowned Gtk.Widget? get_last_child ();
 		public unowned Gtk.LayoutManager? get_layout_manager ();
+		[CCode (cname = "gtk_widget_class_get_layout_manager_type")]
+		public class GLib.Type get_layout_manager_type ();
 		public bool get_mapped ();
 		public int get_margin_bottom ();
 		public int get_margin_end ();
@@ -11908,6 +11912,8 @@ namespace Gtk {
 		public void set_hexpand (bool expand);
 		public void set_hexpand_set (bool @set);
 		public void set_layout_manager (owned Gtk.LayoutManager? layout_manager);
+		[CCode (cname = "gtk_widget_class_set_layout_manager_type")]
+		public class void set_layout_manager_type (GLib.Type type);
 		public void set_margin_bottom (int margin);
 		public void set_margin_end (int margin);
 		public void set_margin_start (int margin);
@@ -11994,7 +12000,6 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void destroy ();
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
-		public virtual signal void display_changed (Gdk.Display? previous_display);
 		public virtual signal void drag_begin (Gdk.Drag drag);
 		public virtual signal void drag_data_delete (Gdk.Drag drag);
 		public virtual signal void drag_data_get (Gdk.Drag drag, Gtk.SelectionData selection_data);
