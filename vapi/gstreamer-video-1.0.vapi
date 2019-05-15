@@ -438,7 +438,7 @@ namespace Gst {
 			[Version (since = "1.12")]
 			public TimeCode.from_string (string tc_str);
 			public void increment_frame ();
-			public void init (uint fps_n, uint fps_d, GLib.DateTime latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
+			public void init (uint fps_n, uint fps_d, GLib.DateTime? latest_daily_jam, Gst.Video.TimeCodeFlags flags, uint hours, uint minutes, uint seconds, uint frames, uint field_count);
 			[Version (since = "1.12")]
 			public void init_from_date_time (uint fps_n, uint fps_d, GLib.DateTime dt, Gst.Video.TimeCodeFlags flags, uint field_count);
 			[Version (since = "1.16")]
@@ -568,6 +568,15 @@ namespace Gst {
 			public bool try_set_render_rectangle (int x, int y, int width, int height);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoAFDMeta")]
+		[Version (since = "1.18")]
+		public struct AFDMeta {
+			public Gst.Meta meta;
+			public uint8 field;
+			public Gst.Video.AFDSpec spec;
+			public Gst.Video.AFDValue afd;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoAffineTransformationMeta")]
 		[Version (since = "1.8")]
 		public struct AffineTransformationMeta {
@@ -596,6 +605,16 @@ namespace Gst {
 			public uint8 data_count;
 			[CCode (array_length_cname = "data_count", array_length_type = "guint8")]
 			public weak uint8[] data;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoBarMeta")]
+		[Version (since = "1.18")]
+		public struct BarMeta {
+			public Gst.Meta meta;
+			public uint8 field;
+			public bool is_letterbox;
+			public uint bar_data1;
+			public uint bar_data2;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoCaptionMeta")]
@@ -835,6 +854,29 @@ namespace Gst {
 		public struct TimeCodeMeta {
 			public Gst.Meta meta;
 			public weak Gst.Video.TimeCode tc;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_AFD_SPEC_", type_id = "gst_video_afd_spec_get_type ()")]
+		[GIR (name = "VideoAFDSpec")]
+		public enum AFDSpec {
+			DVB_ETSI,
+			ATSC_A53,
+			SMPTE_ST2016_1
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_AFD_", type_id = "gst_video_afd_value_get_type ()")]
+		[GIR (name = "VideoAFDValue")]
+		[Version (since = "1.18")]
+		public enum AFDValue {
+			UNAVAILABLE,
+			@16_9_TOP_ALIGNED,
+			@14_9_TOP_ALIGNED,
+			GREATER_THAN_16_9,
+			@4_3_FULL_16_9_FULL,
+			@4_3_FULL_4_3_PILLAR,
+			@16_9_LETTER_16_9_FULL,
+			@14_9_LETTER_14_9_PILLAR,
+			@4_3_FULL_14_9_CENTER,
+			@16_9_LETTER_14_9_CENTER,
+			@16_9_LETTER_4_3_CENTER
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_ALPHA_MODE_", type_id = "gst_video_alpha_mode_get_type ()")]
 		[GIR (name = "VideoAlphaMode")]
@@ -1108,7 +1150,8 @@ namespace Gst {
 			Y210,
 			Y410,
 			VUYA,
-			BGR10A2_LE
+			BGR10A2_LE,
+			RGB10A2_LE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1355,7 +1398,7 @@ namespace Gst {
 		public enum TileType {
 			INDEXED
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TIME_CODE_FLAGS_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TIME_CODE_FLAGS_", type_id = "gst_video_time_code_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoTimeCodeFlags")]
 		[Version (since = "1.10")]
@@ -1549,16 +1592,30 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_TILE_Y_TILES_SHIFT")]
 		public const int TILE_Y_TILES_SHIFT;
 		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type afd_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? afd_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type affine_transformation_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? affine_transformation_meta_get_info ();
 		[CCode (cheader_filename = "gst/video/video.h")]
+		public static GLib.Type bar_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static unowned Gst.MetaInfo? bar_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool blend (Gst.Video.Frame dest, Gst.Video.Frame src, int x, int y, float global_alpha);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void blend_scale_linear_RGBA (Gst.Video.Info src, Gst.Buffer src_buffer, int dest_height, int dest_width, out unowned Gst.Video.Info dest, out Gst.Buffer dest_buffer);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_afd_meta")]
+		[Version (since = "1.18")]
+		public static unowned Gst.Video.AFDMeta? buffer_add_video_afd_meta (Gst.Buffer buffer, uint8 field, Gst.Video.AFDSpec spec, Gst.Video.AFDValue afd);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_affine_transformation_meta")]
 		[Version (since = "1.8")]
 		public static unowned Gst.Video.AffineTransformationMeta? buffer_add_video_affine_transformation_meta (Gst.Buffer buffer);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_bar_meta")]
+		[Version (since = "1.18")]
+		public static unowned Gst.Video.BarMeta? buffer_add_video_bar_meta (Gst.Buffer buffer, uint8 field, bool is_letterbox, uint bar_data1, uint bar_data2);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_caption_meta")]
 		[Version (since = "1.16")]
 		public static unowned Gst.Video.CaptionMeta? buffer_add_video_caption_meta (Gst.Buffer buffer, Gst.Video.CaptionType caption_type, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] data);

@@ -2343,7 +2343,8 @@ namespace Gst {
 		public bool fixate_field_string (string field_name, string target);
 		public bool @foreach (Gst.StructureForeachFunc func);
 		public void free ();
-		public static Gst.Structure? from_string (string string, out unowned string end);
+		[CCode (cname = "gst_structure_from_string", has_construct_function = false)]
+		public Structure.from_string (string string, out unowned string end);
 		public bool @get (...);
 		public bool get_array (string fieldname, out GLib.ValueArray array);
 		public bool get_boolean (string fieldname, out bool value);
@@ -2545,6 +2546,7 @@ namespace Gst {
 	public abstract class Tracer : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Tracer ();
+		public static bool register (Gst.Plugin? plugin, string name, GLib.Type type);
 		[NoAccessorMethod]
 		public string @params { owned get; set construct; }
 	}
@@ -3529,7 +3531,8 @@ namespace Gst {
 		SNAP_AFTER,
 		SNAP_NEAREST,
 		TRICKMODE_KEY_UNITS,
-		TRICKMODE_NO_AUDIO
+		TRICKMODE_NO_AUDIO,
+		TRICKMODE_FORWARD_PREDICTED
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_SEEK_TYPE_", type_id = "gst_seek_type_get_type ()")]
 	public enum SeekType {
@@ -3546,6 +3549,7 @@ namespace Gst {
 		SKIP,
 		SEGMENT,
 		TRICKMODE_KEY_UNITS,
+		TRICKMODE_FORWARD_PREDICTED,
 		TRICKMODE_NO_AUDIO
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STACK_TRACE_SHOW_", type_id = "gst_stack_trace_flags_get_type ()")]
@@ -3988,6 +3992,8 @@ namespace Gst {
 	public const Gst.ClockTimeDiff NSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONTROLLABLE")]
 	public const int PARAM_CONTROLLABLE;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_DOC_SHOW_DEFAULT")]
+	public const int PARAM_DOC_SHOW_DEFAULT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PAUSED")]
 	public const int PARAM_MUTABLE_PAUSED;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PLAYING")]
@@ -4086,6 +4092,8 @@ namespace Gst {
 	public static bool segtrap_is_enabled ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void segtrap_set_enabled (bool enabled);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void tracing_register_hook (Gst.Tracer tracer, string detail, [CCode (scope = "async")] GLib.Callback func);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool update_registry ();
 	[CCode (cheader_filename = "gst/gst.h")]
