@@ -366,6 +366,7 @@ namespace Atspi {
 		public string? get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		public GLib.HashTable<string,string> get_text_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public Atspi.TextRange get_text_before_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
+		public void notify_reading_position (int offset);
 		public bool remove_selection (int selection_num) throws GLib.Error;
 		public bool scroll_substring_to (int start_offset, int end_offset, Atspi.ScrollType type) throws GLib.Error;
 		public bool scroll_substring_to_point (int start_offset, int end_offset, Atspi.CoordType coords, int x, int y) throws GLib.Error;
@@ -832,6 +833,8 @@ namespace Atspi {
 	public const string DBUS_INTERFACE_IMAGE;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_REGISTRY")]
 	public const string DBUS_INTERFACE_REGISTRY;
+	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SCREEN_READER")]
+	public const string DBUS_INTERFACE_SCREEN_READER;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SELECTION")]
 	public const string DBUS_INTERFACE_SELECTION;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SOCKET")]
@@ -854,6 +857,8 @@ namespace Atspi {
 	public const string DBUS_PATH_REGISTRY;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_PATH_ROOT")]
 	public const string DBUS_PATH_ROOT;
+	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_PATH_SCREEN_READER")]
+	public const string DBUS_PATH_SCREEN_READER;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_EVENTTYPE_COUNT")]
 	public const int EVENTTYPE_COUNT;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_KEYEVENTTYPE_COUNT")]
