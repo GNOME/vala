@@ -659,7 +659,7 @@ namespace Gst {
 		[CCode (cname = "gst_index_set_resolver_full")]
 		public void set_resolver (owned Gst.IndexResolver resolver);
 		[NoAccessorMethod]
-		public Gst.IndexResolver resolver { owned get; set; }
+		public Gst.IndexResolver resolver { get; set; }
 		public virtual signal void entry_added (Gst.IndexEntry entry);
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "gst_index_entry_copy")]

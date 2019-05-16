@@ -393,7 +393,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool bold_set { get; set construct; }
 		[NoAccessorMethod]
-		public Gdk.Color color { get; set; }
+		public Gdk.Color color { owned get; set; }
 		[NoAccessorMethod]
 		public bool color_set { get; set construct; }
 		[NoAccessorMethod]

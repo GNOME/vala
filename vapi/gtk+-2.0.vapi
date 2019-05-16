@@ -865,7 +865,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string cell_background { set; }
 		[NoAccessorMethod]
-		public Gdk.Color cell_background_gdk { get; set; }
+		public Gdk.Color cell_background_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool cell_background_set { get; set; }
 		[NoAccessorMethod]
@@ -1006,7 +1006,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string background { set; }
 		[NoAccessorMethod]
-		public Gdk.Color background_gdk { get; set; }
+		public Gdk.Color background_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
@@ -1028,7 +1028,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
-		public Gdk.Color foreground_gdk { get; set; }
+		public Gdk.Color foreground_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
@@ -1125,7 +1125,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string background { set; }
 		[NoAccessorMethod]
-		public Gdk.Color background_gdk { get; set; }
+		public Gdk.Color background_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		public Gtk.TreeModel model { get; set; }
@@ -4543,7 +4543,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool background_full_height_set { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Color background_gdk { get; set; }
+		public Gdk.Color background_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
@@ -4567,7 +4567,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
-		public Gdk.Color foreground_gdk { get; set; }
+		public Gdk.Color foreground_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
@@ -4599,7 +4599,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string paragraph_background { set; }
 		[NoAccessorMethod]
-		public Gdk.Color paragraph_background_gdk { get; set; }
+		public Gdk.Color paragraph_background_gdk { owned get; set; }
 		[NoAccessorMethod]
 		public bool paragraph_background_set { get; set; }
 		[NoAccessorMethod]
