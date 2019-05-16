@@ -167,7 +167,7 @@ namespace Vte {
 		[NoAccessorMethod]
 		public double background_saturation { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Color background_tint_color { get; set; }
+		public Gdk.Color background_tint_color { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_transparent { get; set; }
 		[NoAccessorMethod]

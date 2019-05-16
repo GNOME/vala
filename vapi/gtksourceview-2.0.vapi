@@ -103,7 +103,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.SourceCompletion completion { owned get; construct; }
 		[NoAccessorMethod]
-		public Gtk.TextIter iter { get; set; }
+		public Gtk.TextIter iter { owned get; set; }
 		public virtual signal void cancelled ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
