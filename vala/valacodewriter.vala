@@ -851,7 +851,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			write_property_accessor_accessibility (prop.get_accessor);
 
-			if (prop.get_accessor.value_type.is_disposable ()) {
+			if (prop.get_accessor.value_type.value_owned) {
 				write_string (" owned");
 			}
 
