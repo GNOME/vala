@@ -800,7 +800,7 @@ public class Vala.GAsyncModule : GtkModule {
 		set_error.add_argument (error_expr);
 		ccode.add_expression (set_error);
 
-		append_local_free (current_symbol, false);
+		append_local_free (current_symbol);
 
 		// We already returned the error above, we must not return anything else here.
 		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));

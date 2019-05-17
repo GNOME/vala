@@ -3737,15 +3737,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public void append_local_free (Symbol sym, bool stop_at_loop = false, CodeNode? stop_at = null) {
+	public void append_local_free (Symbol sym, Statement? jump_stmt = null, CodeNode? stop_at = null) {
 		var b = (Block) sym;
 
 		append_scope_free (sym, stop_at);
 
-		if (stop_at_loop) {
+		if (jump_stmt is BreakStatement) {
 			if (b.parent_node is Loop ||
 			    b.parent_node is ForeachStatement ||
 			    b.parent_node is SwitchStatement) {
+				return;
+			}
+		} else if (jump_stmt is ContinueStatement) {
+			if (b.parent_node is Loop ||
+			    b.parent_node is ForeachStatement) {
 				return;
 			}
 		}
@@ -3755,7 +3760,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (sym.parent_symbol is Block) {
-			append_local_free (sym.parent_symbol, stop_at_loop, stop_at);
+			append_local_free (sym.parent_symbol, jump_stmt, stop_at);
 		} else if (sym.parent_symbol is Method) {
 			append_param_free ((Method) sym.parent_symbol);
 		} else if (sym.parent_symbol is PropertyAccessor) {

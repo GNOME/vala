@@ -102,7 +102,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.add_expression (cpropagate);
 
 		// free local variables
-		append_local_free (current_symbol, false);
+		append_local_free (current_symbol);
 
 		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
 			var cl = (Class) current_method.parent_symbol;
@@ -117,7 +117,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 	void uncaught_error_statement (CCodeExpression inner_error, bool unexpected = false) {
 		// free local variables
-		append_local_free (current_symbol, false);
+		append_local_free (current_symbol);
 
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant (unexpected ? "\"file %s: line %d: unexpected error: %s (%s, %d)\"" : "\"file %s: line %d: uncaught error: %s (%s, %d)\""));
@@ -185,9 +185,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 			// free local variables
 			if (is_in_catch) {
-				append_local_free (current_symbol, false, current_catch);
+				append_local_free (current_symbol, null, current_catch);
 			} else {
-				append_local_free (current_symbol, false, current_try);
+				append_local_free (current_symbol, null, current_try);
 			}
 
 			var error_types = new ArrayList<DataType> ();
