@@ -133,6 +133,7 @@ TESTS = \
 	control-flow/expressions-conditional.vala \
 	control-flow/finally-return.test \
 	control-flow/for.vala \
+	control-flow/for-switch-continue.vala \
 	control-flow/foreach.vala \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
