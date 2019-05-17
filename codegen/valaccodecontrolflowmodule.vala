@@ -345,13 +345,13 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_break_statement (BreakStatement stmt) {
-		append_local_free (current_symbol, true);
+		append_local_free (current_symbol, stmt);
 
 		ccode.add_break ();
 	}
 
 	public override void visit_continue_statement (ContinueStatement stmt) {
-		append_local_free (current_symbol, true);
+		append_local_free (current_symbol, stmt);
 
 		ccode.add_continue ();
 	}
