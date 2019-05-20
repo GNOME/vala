@@ -1630,7 +1630,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			var source_reference = node.source_reference;
 			if (source_reference != null) {
 				write_indent ();
-				stream.puts ("[Source (filename = \"%s\", line = %i, column = %i)]".printf (source_reference.file.get_relative_filename (), source_reference.begin.line, source_reference.begin.column));
+				string filename = source_reference.file.filename;
+				if (filename.has_prefix (context.basedir)) {
+					filename = filename.substring (context.basedir.length + 1);
+				}
+				stream.puts ("[Source (filename = \"%s\", line = %i, column = %i)]".printf (filename, source_reference.begin.line, source_reference.begin.column));
 				write_newline ();
 			}
 		}
