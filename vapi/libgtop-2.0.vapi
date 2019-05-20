@@ -64,11 +64,11 @@ namespace GTop {
 		public void get_mem_l (out unowned GTop.Mem? buf);
 		public void get_mem_s (out unowned GTop.Mem? buf);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "glibtop.h")]
-		public static GTop.MountEntry[] get_mountlist (out unowned GTop.MountList? buf, int all_fs);
+		public static GTop.MountEntry[] get_mountlist (out unowned GTop.MountList? buf, [CCode (type = "int")] bool all_fs);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MountEntry[] get_mountlist_l (out unowned GTop.MountList? buf, int all_fs);
+		public GTop.MountEntry[] get_mountlist_l (out unowned GTop.MountList? buf, [CCode (type = "int")] bool all_fs);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public GTop.MountEntry[] get_mountlist_s (out unowned GTop.MountList? buf, int all_fs);
+		public GTop.MountEntry[] get_mountlist_s (out unowned GTop.MountList? buf, [CCode (type = "int")] bool all_fs);
 		[CCode (cheader_filename = "glibtop.h")]
 		public static void get_msg_limits (out unowned GTop.MsgLimits? buf);
 		public void get_msg_limits_l (out unowned GTop.MsgLimits? buf);

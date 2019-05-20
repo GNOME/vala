@@ -61,5 +61,8 @@ glibtop_entry
 	.values type="GLib.HashTable<string,string>"
 	.descriptions unowned
 
+glibtop_get_mountlist*.all_fs type="bool"
+
 glibtop
+	.get_mountlist_*.all_fs type="bool"
 	.get_proc_open_files_s array array_null_terminated unowned=false
