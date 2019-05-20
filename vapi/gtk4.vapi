@@ -4559,6 +4559,8 @@ namespace Gdk {
 			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
 			public unowned Gdk.X11.DeviceXI2? lookup_for_device_manager (int device_id);
 			[NoAccessorMethod]
+			public Gdk.Display display { owned get; construct; }
+			[NoAccessorMethod]
 			public int major { get; construct; }
 			[NoAccessorMethod]
 			public int minor { get; construct; }
@@ -6844,7 +6846,6 @@ namespace Gtk {
 		public Gtk.ReliefStyle relief { get; set; }
 		public bool use_underline { get; set; }
 		public virtual signal void activate ();
-		[HasEmitter]
 		public virtual signal void clicked ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_button_accessible_get_type ()")]
@@ -8774,7 +8775,7 @@ namespace Gtk {
 		public LinkButton.with_label (string uri, string? label);
 		public string uri { get; set; }
 		public bool visited { get; set; }
-		public virtual signal bool activate_link ();
+		public signal bool activate_link ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_link_button_accessible_get_type ()")]
 	public class LinkButtonAccessible : Gtk.ButtonAccessible, Atk.Action, Atk.Component, Atk.HyperlinkImpl, Atk.Image {
@@ -9069,12 +9070,16 @@ namespace Gtk {
 		public MenuButton ();
 		public unowned Gtk.Widget? get_align_widget ();
 		public Gtk.ArrowType get_direction ();
+		public unowned string get_icon_name ();
+		public unowned string get_label ();
 		public unowned GLib.MenuModel? get_menu_model ();
 		public unowned Gtk.Popover? get_popover ();
 		public unowned Gtk.Menu? get_popup ();
 		public bool get_use_popover ();
 		public void set_align_widget (Gtk.Widget? align_widget);
 		public void set_direction (Gtk.ArrowType direction);
+		public void set_icon_name (string icon_name);
+		public void set_label (string label);
 		public void set_menu_model (GLib.MenuModel? menu_model);
 		public void set_popover (Gtk.Widget? popover);
 		public void set_popup (Gtk.Widget? menu);
@@ -10362,8 +10367,8 @@ namespace Gtk {
 		public string section_name { owned get; set; }
 		[NoAccessorMethod]
 		public string view_name { owned get; set; }
-		public virtual signal void close ();
-		public virtual signal void search ();
+		public signal void close ();
+		public signal void search ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_single_selection_get_type ()")]
 	public class SingleSelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
