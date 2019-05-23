@@ -38,6 +38,12 @@ namespace Graphene {
 	[Version (since = "1.2")]
 	public struct Euler {
 		public bool equal (Graphene.Euler b);
+		[Version (since = "1.10")]
+		public float get_alpha ();
+		[Version (since = "1.10")]
+		public float get_beta ();
+		[Version (since = "1.10")]
+		public float get_gamma ();
 		public Graphene.EulerOrder get_order ();
 		public float get_x ();
 		public float get_y ();
@@ -50,6 +56,8 @@ namespace Graphene {
 		public unowned Graphene.Euler? init_with_order (float x, float y, float z, Graphene.EulerOrder order);
 		public Graphene.Euler reorder (Graphene.EulerOrder order);
 		public Graphene.Matrix to_matrix ();
+		[Version (since = "1.10")]
+		public Graphene.Quaternion to_quaternion ();
 		public Graphene.Vec3 to_vec3 ();
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_frustum_t", type_id = "graphene_frustum_get_type ()")]
@@ -585,7 +593,31 @@ namespace Graphene {
 		ZXY,
 		XZY,
 		YXZ,
-		ZYX
+		ZYX,
+		SXYZ,
+		SXYX,
+		SXZY,
+		SXZX,
+		SYZX,
+		SYZY,
+		SYXZ,
+		SYXY,
+		SZXY,
+		SZXZ,
+		SZYX,
+		SZYZ,
+		RZYX,
+		RXYX,
+		RYZX,
+		RXZX,
+		RXZY,
+		RYZY,
+		RZXY,
+		RYXY,
+		RYXZ,
+		RZXZ,
+		RXYZ,
+		RZYZ
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_GCC")]
 	public const int HAS_GCC;

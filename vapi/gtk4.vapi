@@ -6191,12 +6191,10 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class TextNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public TextNode (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, float x, float y);
+		public TextNode (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, Graphene.Point offset);
 		public uint get_num_glyphs ();
-		public float get_x ();
-		public float get_y ();
+		public unowned Graphene.Point? get_offset ();
 		public unowned Gdk.RGBA? peek_color ();
-		public unowned Pango.Font peek_font ();
 		public unowned Pango.GlyphInfo? peek_glyphs ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
@@ -9065,7 +9063,7 @@ namespace Gtk {
 		public MenuBar.from_model (GLib.MenuModel model);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_menu_button_get_type ()")]
-	public class MenuButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable {
+	public class MenuButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public MenuButton ();
 		public unowned Gtk.Widget? get_align_widget ();
@@ -9075,6 +9073,7 @@ namespace Gtk {
 		public unowned GLib.MenuModel? get_menu_model ();
 		public unowned Gtk.Popover? get_popover ();
 		public unowned Gtk.Menu? get_popup ();
+		public Gtk.ReliefStyle get_relief ();
 		public bool get_use_popover ();
 		public void set_align_widget (Gtk.Widget? align_widget);
 		public void set_direction (Gtk.ArrowType direction);
@@ -9083,16 +9082,19 @@ namespace Gtk {
 		public void set_menu_model (GLib.MenuModel? menu_model);
 		public void set_popover (Gtk.Widget? popover);
 		public void set_popup (Gtk.Widget? menu);
+		public void set_relief (Gtk.ReliefStyle relief);
 		public void set_use_popover (bool use_popover);
 		public Gtk.Container align_widget { get; set; }
 		public Gtk.ArrowType direction { get; set; }
+		public string icon_name { get; set; }
+		public string label { get; set; }
 		public GLib.MenuModel menu_model { get; set; }
 		public Gtk.Popover popover { get; set; }
 		public Gtk.Menu popup { get; set; }
 		public bool use_popover { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_button_accessible_get_type ()")]
-	public class MenuButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Action, Atk.Component, Atk.Image {
+	public class MenuButtonAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected MenuButtonAccessible ();
 	}

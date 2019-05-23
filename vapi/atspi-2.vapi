@@ -366,7 +366,7 @@ namespace Atspi {
 		public string? get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		public GLib.HashTable<string,string> get_text_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public Atspi.TextRange get_text_before_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
-		public void notify_reading_position (int offset);
+		public void notify_reading_position (int startOffset, int endOffset);
 		public bool remove_selection (int selection_num) throws GLib.Error;
 		public bool scroll_substring_to (int start_offset, int end_offset, Atspi.ScrollType type) throws GLib.Error;
 		public bool scroll_substring_to_point (int start_offset, int end_offset, Atspi.CoordType coords, int x, int y) throws GLib.Error;
