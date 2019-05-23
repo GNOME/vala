@@ -21,6 +21,8 @@ namespace Gst {
 			public uint64 discont_wait { get; set; }
 			[NoAccessorMethod]
 			public uint64 output_buffer_duration { get; set; }
+			[NoAccessorMethod]
+			public Gst.Fraction output_buffer_duration_fraction { owned get; set; }
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_aggregator_convert_pad_get_type ()")]
 		[GIR (name = "AudioAggregatorConvertPad")]

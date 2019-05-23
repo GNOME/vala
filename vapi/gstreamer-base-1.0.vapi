@@ -593,6 +593,7 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public Gst.ClockTime get_processing_deadline ();
 			public Gst.ClockTime get_render_delay ();
+			[Version (since = "1.18")]
 			public Gst.Structure get_stats ();
 			public bool get_sync ();
 			public uint64 get_throttle_time ();
@@ -661,6 +662,8 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool qos { get; set; }
 			public uint64 render_delay { get; set; }
+			[Version (since = "1.18")]
+			public Gst.Structure stats { owned get; }
 			public bool sync { get; set; }
 			public uint64 throttle_time { get; set; }
 			public int64 ts_offset { get; set; }
