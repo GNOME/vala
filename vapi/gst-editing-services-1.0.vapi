@@ -132,6 +132,7 @@ namespace GES {
 		public bool add (GES.TimelineElement child);
 		[NoWrapper]
 		public virtual bool add_child (GES.TimelineElement element);
+		[Version (deprecated = true, deprecated_since = "1.18")]
 		public virtual bool edit (GLib.List<GES.Layer> layers, int new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public GLib.List<GES.TimelineElement> get_children (bool recursive);
 		public static unowned GES.Container group (GLib.List<GES.Container>? containers);
@@ -313,6 +314,8 @@ namespace GES {
 		public virtual signal void asset_removed (GES.Asset asset);
 		public signal void error_loading_asset (GLib.Error error, string id, GLib.Type extractable_type);
 		public virtual signal void loaded (GES.Timeline timeline);
+		[Version (since = "1.18")]
+		public virtual signal void loading (GES.Timeline timeline);
 		public virtual signal string? missing_uri (GLib.Error error, GES.Asset wrong_asset);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_source_get_type ()")]
@@ -420,6 +423,7 @@ namespace GES {
 		public GLib.List<GES.Track> get_tracks ();
 		public bool is_empty ();
 		public bool load_from_uri (string uri) throws GLib.Error;
+		[Version (since = "1.16")]
 		public bool move_layer (GES.Layer layer, uint new_layer_priority);
 		public unowned GES.TimelineElement paste_element (GES.TimelineElement element, Gst.ClockTime position, int layer_priority);
 		public bool remove_layer (GES.Layer layer);
@@ -452,10 +456,13 @@ namespace GES {
 		public unowned GES.TimelineElement copy (bool deep);
 		[NoWrapper]
 		public virtual void deep_copy (GES.TimelineElement copy);
+		[Version (since = "1.18")]
+		public bool edit (GLib.List<GES.Layer> layers, int64 new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public bool get_child_property (string property_name, out GLib.Value value);
 		public GLib.Value get_child_property_by_pspec (GLib.ParamSpec pspec);
 		public Gst.ClockTime get_duration ();
 		public Gst.ClockTime get_inpoint ();
+		[Version (since = "1.16")]
 		public virtual uint32 get_layer_priority ();
 		public Gst.ClockTime get_max_duration ();
 		public string get_name ();
@@ -506,55 +513,55 @@ namespace GES {
 	public class TitleClip : GES.SourceClip, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		public TitleClip ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public uint32 get_background_color ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public unowned string get_font_desc ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public GES.TextHAlign get_halignment ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public unowned string get_text ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public uint32 get_text_color ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public GES.TextVAlign get_valignment ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public double get_xpos ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public double get_ypos ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_background (uint32 background);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_color (uint32 color);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_font_desc (string font_desc);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_halignment (GES.TextHAlign halign);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_text (string text);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_valignment (GES.TextVAlign valign);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_xpos (double position);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public void set_ypos (double position);
 		[NoAccessorMethod]
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public uint background { get; set construct; }
 		[NoAccessorMethod]
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public uint color { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public string font_desc { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public GES.TextHAlign halignment { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public string text { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public GES.TextVAlign valignment { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public double xpos { get; set construct; }
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.6")]
 		public double ypos { get; set construct; }
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_title_source_get_type ()")]
@@ -618,6 +625,7 @@ namespace GES {
 		public void add_children_props (Gst.Element element, [CCode (array_length = false, array_null_terminated = true)] string[]? wanted_categories, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist);
 		[NoWrapper]
 		public virtual void changed ();
+		[Version (deprecated = true, deprecated_since = "1.18")]
 		public bool edit (GLib.List<GES.Layer> layers, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public unowned GLib.HashTable<string,Gst.ControlBinding> get_all_control_bindings ();
 		public unowned Gst.ControlBinding? get_control_binding (string property_name);
@@ -687,6 +695,7 @@ namespace GES {
 	public class UriClipAsset : GES.ClipAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (finish_name = "ges_asset_request_finish", has_construct_function = false, type = "void")]
 		public async UriClipAsset (string uri, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "1.16")]
 		public static GES.UriClipAsset finish (GLib.AsyncResult res) throws GLib.Error;
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.PbUtils.DiscovererInfo get_info ();
@@ -1059,8 +1068,10 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool init_check ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref string[]? argv) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (since = "1.16")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (deprecated = true, deprecated_since = "1.18")]
 	public static Gst.Sample play_sink_convert_frame (Gst.Element playsink, Gst.Caps caps);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool pspec_equal ([CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_1, [CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_2);

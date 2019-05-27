@@ -1422,7 +1422,10 @@ namespace Gst {
 			LOG100,
 			LOG316,
 			BT2020_12,
-			ADOBERGB
+			ADOBERGB,
+			BT2020_10,
+			SMPTE2084,
+			ARIB_STD_B67
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_VBI_PARSER_RESULT_", type_id = "gst_video_vbi_parser_result_get_type ()")]
 		[GIR (name = "VideoVBIParserResult")]
@@ -1464,6 +1467,12 @@ namespace Gst {
 		public const string CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT2020")]
 		public const string COLORIMETRY_BT2020;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT2020_10")]
+		public const string COLORIMETRY_BT2020_10;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT2100_HLG")]
+		public const string COLORIMETRY_BT2100_HLG;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT2100_PQ")]
+		public const string COLORIMETRY_BT2100_PQ;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT601")]
 		public const string COLORIMETRY_BT601;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_COLORIMETRY_BT709")]
