@@ -6040,7 +6040,7 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		public CairoNode (Graphene.Rect bounds);
 		public Cairo.Context get_draw_context ();
-		public unowned Cairo.Surface peek_surface ();
+		public Cairo.Surface peek_surface ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cairo_renderer_get_type ()")]
 	public class CairoRenderer : Gsk.Renderer {
@@ -6407,7 +6407,7 @@ namespace Gtk {
 		public string website { get; set; }
 		public string website_label { get; set; }
 		public bool wrap_license { get; set; }
-		public virtual signal bool activate_link (string uri);
+		public signal bool activate_link (string uri);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accel_group_get_type ()")]
 	public class AccelGroup : GLib.Object {
@@ -6673,11 +6673,11 @@ namespace Gtk {
 		public GLib.ListModel pages { owned get; }
 		[NoAccessorMethod]
 		public int use_header_bar { get; construct; }
-		public virtual signal void apply ();
-		public virtual signal void cancel ();
-		public virtual signal void close ();
+		public signal void apply ();
+		public signal void cancel ();
+		public signal void close ();
 		public signal void escape ();
-		public virtual signal void prepare (Gtk.Widget page);
+		public signal void prepare (Gtk.Widget page);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_assistant_page_get_type ()")]
 	public class AssistantPage : GLib.Object {
@@ -6887,13 +6887,13 @@ namespace Gtk {
 		public bool show_week_numbers { get; set; }
 		[NoAccessorMethod]
 		public int year { get; set; }
-		public virtual signal void day_selected ();
-		public virtual signal void day_selected_double_click ();
-		public virtual signal void month_changed ();
-		public virtual signal void next_month ();
-		public virtual signal void next_year ();
-		public virtual signal void prev_month ();
-		public virtual signal void prev_year ();
+		public signal void day_selected ();
+		public signal void day_selected_double_click ();
+		public signal void month_changed ();
+		public signal void next_month ();
+		public signal void next_year ();
+		public signal void prev_month ();
+		public signal void prev_year ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_cell_accessible_get_type ()")]
 	public class CellAccessible : Gtk.Accessible, Atk.Action, Atk.Component, Atk.TableCell {
@@ -7079,8 +7079,8 @@ namespace Gtk {
 		public Gdk.ModifierType accel_mods { get; set; }
 		[NoAccessorMethod]
 		public uint keycode { get; set; }
-		public virtual signal void accel_cleared (string path_string);
-		public virtual signal void accel_edited (string path_string, uint accel_key, Gdk.ModifierType accel_mods, uint hardware_keycode);
+		public signal void accel_cleared (string path_string);
+		public signal void accel_edited (string path_string, uint accel_key, Gdk.ModifierType accel_mods, uint hardware_keycode);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cell_renderer_combo_get_type ()")]
 	public class CellRendererCombo : Gtk.CellRendererText {
@@ -7266,7 +7266,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool inconsistent { get; set; }
 		public bool radio { get; set; }
-		public virtual signal void toggled (string path);
+		public signal void toggled (string path);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cell_view_get_type ()")]
 	public class CellView : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout, Gtk.Orientable {
@@ -7839,7 +7839,7 @@ namespace Gtk {
 		public bool resize_toplevel { get; set; }
 		public bool use_markup { get; set construct; }
 		public bool use_underline { get; set construct; }
-		public virtual signal void activate ();
+		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_expander_accessible_get_type ()")]
 	public class ExpanderAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component {
@@ -8432,7 +8432,7 @@ namespace Gtk {
 		public void set_custom_theme (string? theme_name);
 		public void set_display (Gdk.Display display);
 		public void set_search_path ([CCode (array_length_cname = "n_elements", array_length_pos = 1.1)] string[] path);
-		public virtual signal void changed ();
+		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_view_get_type ()")]
 	public class IconView : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout, Gtk.Scrollable {
@@ -8613,9 +8613,9 @@ namespace Gtk {
 		public Gtk.MessageType message_type { get; set construct; }
 		public bool revealed { get; set; }
 		public bool show_close_button { get; set construct; }
-		public virtual signal void close ();
+		public signal void close ();
 		[HasEmitter]
-		public virtual signal void response (int response_id);
+		public signal void response (int response_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_label_get_type ()")]
 	public class Label : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -8754,7 +8754,7 @@ namespace Gtk {
 		public double min_value { get; set; }
 		public Gtk.LevelBarMode mode { get; set; }
 		public double value { get; set; }
-		public virtual signal void offset_changed (string name);
+		public signal void offset_changed (string name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_level_bar_accessible_get_type ()")]
 	public class LevelBarAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Value {
@@ -9075,6 +9075,7 @@ namespace Gtk {
 		public unowned Gtk.Menu? get_popup ();
 		public Gtk.ReliefStyle get_relief ();
 		public bool get_use_popover ();
+		public void popdown ();
 		public void set_align_widget (Gtk.Widget? align_widget);
 		public void set_direction (Gtk.ArrowType direction);
 		public void set_icon_name (string icon_name);
@@ -9091,6 +9092,7 @@ namespace Gtk {
 		public GLib.MenuModel menu_model { get; set; }
 		public Gtk.Popover popover { get; set; }
 		public Gtk.Menu popup { get; set; }
+		public Gtk.ReliefStyle relief { get; set; }
 		public bool use_popover { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_menu_button_accessible_get_type ()")]
@@ -9463,12 +9465,12 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool shrink_child2 { get; set; }
 		public bool wide_handle { get; set; }
-		public virtual signal bool accept_position ();
-		public virtual signal bool cancel_position ();
-		public virtual signal bool cycle_child_focus (bool reverse);
-		public virtual signal bool cycle_handle_focus (bool reverse);
-		public virtual signal bool move_handle (Gtk.ScrollType scroll);
-		public virtual signal bool toggle_handle_focus ();
+		public signal bool accept_position ();
+		public signal bool cancel_position ();
+		public signal bool cycle_child_focus (bool reversed);
+		public signal bool cycle_handle_focus (bool reversed);
+		public signal bool move_handle (Gtk.ScrollType scroll_type);
+		public signal bool toggle_handle_focus ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_paned_accessible_get_type ()")]
 	public class PanedAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Value {
@@ -9825,7 +9827,7 @@ namespace Gtk {
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton? radio_group_member, string label);
 		[NoAccessorMethod]
 		public Gtk.RadioButton group { set; }
-		public virtual signal void group_changed ();
+		public signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_radio_button_accessible_get_type ()")]
 	public class RadioButtonAccessible : Gtk.ToggleButtonAccessible, Atk.Action, Atk.Component, Atk.Image {
@@ -9851,7 +9853,7 @@ namespace Gtk {
 		public RadioMenuItem.with_mnemonic_from_widget (Gtk.RadioMenuItem? group, string? label);
 		[NoAccessorMethod]
 		public Gtk.RadioMenuItem group { set; }
-		public virtual signal void group_changed ();
+		public signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_radio_menu_item_accessible_get_type ()")]
 	public class RadioMenuItemAccessible : Gtk.CheckMenuItemAccessible, Atk.Action, Atk.Component, Atk.Selection {
@@ -10137,12 +10139,12 @@ namespace Gtk {
 		public bool activates_default { get; set; }
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
-		public virtual signal void activate ();
-		public virtual signal void next_match ();
-		public virtual signal void previous_match ();
-		public virtual signal void search_changed ();
+		public signal void activate ();
+		public signal void next_match ();
+		public signal void previous_match ();
+		public signal void search_changed ();
 		public signal void search_started ();
-		public virtual signal void stop_search ();
+		public signal void stop_search ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_selection_data_get_type ()")]
 	[Compact]
@@ -10520,11 +10522,11 @@ namespace Gtk {
 		public Gtk.SpinButtonUpdatePolicy update_policy { get; set; }
 		public double value { get; set; }
 		public bool wrap { get; set; }
-		public virtual signal void change_value (Gtk.ScrollType scroll);
-		public virtual signal int input (out double new_value);
-		public virtual signal bool output ();
-		public virtual signal void value_changed ();
-		public virtual signal void wrapped ();
+		public signal void change_value (Gtk.ScrollType scroll);
+		public signal int input (out double new_value);
+		public signal bool output ();
+		public signal void value_changed ();
+		public signal void wrapped ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_spin_button_accessible_get_type ()")]
 	public class SpinButtonAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Value {
@@ -10631,8 +10633,8 @@ namespace Gtk {
 		public uint push (uint context_id, string text);
 		public void remove (uint context_id, uint message_id);
 		public void remove_all (uint context_id);
-		public virtual signal void text_popped (uint context_id, string text);
-		public virtual signal void text_pushed (uint context_id, string text);
+		public signal void text_popped (uint context_id, string text);
+		public signal void text_pushed (uint context_id, string text);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_statusbar_accessible_get_type ()")]
 	public class StatusbarAccessible : Gtk.WidgetAccessible, Atk.Component {
@@ -10717,8 +10719,8 @@ namespace Gtk {
 		public void set_state (bool state);
 		public bool active { get; set; }
 		public bool state { get; set; }
-		public virtual signal void activate ();
-		public virtual signal bool state_set (bool state);
+		public signal void activate ();
+		public signal bool state_set (bool state);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_switch_accessible_get_type ()")]
 	public class SwitchAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component {
