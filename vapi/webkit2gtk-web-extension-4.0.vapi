@@ -4009,6 +4009,8 @@ namespace WebKit {
 	public class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
+		[Version (since = "2.26")]
+		public uint64 get_id ();
 		[Version (deprecated = true, deprecated_since = "2.22", since = "2.2")]
 		public unowned JS.GlobalContext get_javascript_context_for_script_world (WebKit.ScriptWorld world);
 		[Version (deprecated = true, deprecated_since = "2.22", since = "2.2")]
@@ -4136,8 +4138,10 @@ namespace WebKit {
 		[Version (since = "2.8")]
 		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
-		[Version (since = "2.16")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.16")]
 		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
+		[Version (since = "2.26")]
+		public signal void form_controls_associated_for_frame (GLib.GenericArray<WebKit.DOM.Element> elements, WebKit.Frame frame);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
 		[Version (since = "2.20")]
 		public signal void will_submit_form (WebKit.DOM.Element form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
@@ -4206,6 +4210,7 @@ namespace WebKit {
 		MEDIA_MUTE,
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
+		INSERT_EMOJI,
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_FORM_SUBMISSION_WILL_", type_id = "webkit_form_submission_step_get_type ()")]
