@@ -225,9 +225,6 @@ TreeSelection
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 Notebook
-  .insert_page#virtual_method name="insert_page_menu"
-  .insert_page#virtual_method.tab_label nullable
-  .insert_page#virtual_method.menu_label nullable
   .insert_page_menu skip
 TreeView
   .row_expanded#method name="is_row_expanded"
