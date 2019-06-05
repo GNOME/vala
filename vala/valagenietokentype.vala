@@ -169,7 +169,6 @@ public enum Vala.Genie.TokenType {
 	WEAK,
 	WHEN,
 	WHILE,
-	WRITEONLY,
 	YIELD;
 
 	public unowned string to_string () {
@@ -318,7 +317,6 @@ public enum Vala.Genie.TokenType {
 		case WEAK: return "`weak'";
 		case WHEN: return "`when'";
 		case WHILE: return "`while'";
-		case WRITEONLY: return "`writeonly'";
 		case YIELD: return "`yield'";
 		default: return "unknown token";
 		}

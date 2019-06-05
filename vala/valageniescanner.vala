@@ -673,9 +673,6 @@ public class Vala.Genie.Scanner {
 			case 'p':
 				if (matches (begin, "protected")) return TokenType.PROTECTED;
 				break;
-			case 'w':
-				if (matches (begin, "writeonly")) return TokenType.WRITEONLY;
-				break;
 			}
 			break;
 		case 10:
