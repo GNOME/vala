@@ -1,3 +1,27 @@
+Vala 0.44.4
+===========
+ * Various improvements and bug fixes:
+  - vala: No-accessor struct properties in GLib.Object class must be owned
+  - codegen: Always use G_TYPE_CHECK_INSTANCE_TYPE for external symbols
+  - parser: Multiple corrections for source-location of code-nodes
+  - build: Pass some useful G_LOG_DOMAIN definitions
+  - girwriter: Mention that this file is generated and not meant to be modified
+  - girwriter: Properly resolve GLib.TypeInterface instead of hardcoding it
+  - girwriter: Multiple improvements and fixes for e.g. GType classes
+  - girparser: Add support for string "ctype" metadata [#793]
+  - codegen: Move GObject property validity checks to SemanticAnalyzer
+  - When freeing local variables don't stop at "switch" on "continue" [#799]
+  - compiler: Add OptionFlags.NO_ARG to deprecated "--thread" option
+
+ * Bindings:
+  - glib-2.0: Don't annotate dedicated GLib.assert_*() functions with [Assert]
+    [#769]
+  - clutter-1.0: Bind Margin, PaintVolume, Point, Rect and Size as struct [#795]
+  - cogl-1.0: Fix out-params in Cogl.get_modelview_matrix/projection_matrix/
+    bitmasks [#794]
+  - gstreamer: Cherry-pick some fixes from 0.46
+  - gtk4: Update to 3.96.0+69016825
+
 Vala 0.44.3
 ===========
  * Regression and bug fixes:
