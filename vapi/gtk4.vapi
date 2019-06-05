@@ -4655,6 +4655,7 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
 			public uint32 get_desktop ();
+			public static unowned Gdk.Surface get_group (Gdk.Surface surface);
 			public X.Window get_xid ();
 			public static unowned Gdk.X11.Surface lookup_for_display (Gdk.X11.Display display, X.Window window);
 			public void move_to_current_desktop ();
@@ -4859,7 +4860,6 @@ namespace Gdk {
 		public int get_n_axes ();
 		public int get_n_keys ();
 		public unowned string get_name ();
-		public void get_position (out double x, out double y);
 		public unowned string? get_product_id ();
 		public unowned Gdk.Seat get_seat ();
 		public Gdk.InputSource get_source ();
@@ -4923,7 +4923,6 @@ namespace Gdk {
 		public Gdk.Event? get_event ();
 		public unowned Gdk.Keymap get_keymap ();
 		public unowned Gdk.Monitor? get_monitor (int monitor_num);
-		public unowned Gdk.Monitor get_monitor_at_point (int x, int y);
 		public unowned Gdk.Monitor get_monitor_at_surface (Gdk.Surface surface);
 		public int get_n_monitors ();
 		public unowned string get_name ();
@@ -5059,7 +5058,6 @@ namespace Gdk {
 		public bool get_pad_button (out uint button);
 		public bool get_pad_group_mode (out uint group, out uint mode);
 		public bool get_pointer_emulated ();
-		public bool get_root_coords (out double x_root, out double y_root);
 		public int get_scancode ();
 		public bool get_scroll_deltas (out double delta_x, out double delta_y);
 		public bool get_scroll_direction (out Gdk.ScrollDirection direction);
@@ -5245,11 +5243,7 @@ namespace Gdk {
 		public void begin_move_drag_for_device (Gdk.Device device, int button, int x, int y, uint32 timestamp);
 		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int x, int y, uint32 timestamp);
 		public void begin_resize_drag_for_device (Gdk.SurfaceEdge edge, Gdk.Device device, int button, int x, int y, uint32 timestamp);
-		[CCode (has_construct_function = false)]
-		public Surface.child (Gdk.Surface parent, Gdk.Rectangle position);
 		public static void constrain_size (Gdk.Geometry geometry, Gdk.SurfaceHints flags, int width, int height, out int new_width, out int new_height);
-		public void coords_from_parent (double parent_x, double parent_y, out double x, out double y);
-		public void coords_to_parent (double x, double y, out double parent_x, out double parent_y);
 		public Gdk.CairoContext create_cairo_context ();
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
@@ -5262,56 +5256,41 @@ namespace Gdk {
 		public void fullscreen ();
 		public void fullscreen_on_monitor (Gdk.Monitor monitor);
 		public bool get_accept_focus ();
-		public GLib.List<weak Gdk.Surface> get_children ();
 		public unowned Gdk.Cursor? get_cursor ();
 		public bool get_decorations (out Gdk.WMDecoration decorations);
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
-		public unowned Gdk.Surface? get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
+		public void get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
 		public bool get_focus_on_map ();
 		public unowned Gdk.FrameClock get_frame_clock ();
-		public void get_frame_extents (out Gdk.Rectangle rect);
 		public Gdk.FullscreenMode get_fullscreen_mode ();
-		public void get_geometry (out int x, out int y, out int width, out int height);
 		public int get_height ();
 		public bool get_modal_hint ();
-		public int get_origin (out int x, out int y);
-		public unowned Gdk.Surface get_parent ();
-		public bool get_pass_through ();
+		public unowned Gdk.Surface? get_parent ();
 		public void get_position (out int x, out int y);
-		public void get_root_coords (int x, int y, out int root_x, out int root_y);
-		public void get_root_origin (out int x, out int y);
 		public int get_scale_factor ();
 		public Gdk.SurfaceState get_state ();
 		public bool get_support_multidevice ();
 		public Gdk.SurfaceType get_surface_type ();
-		public unowned Gdk.Surface get_toplevel ();
 		public Gdk.SurfaceTypeHint get_type_hint ();
 		public int get_width ();
-		public bool has_native ();
 		public void hide ();
 		public void iconify ();
 		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
 		public bool is_destroyed ();
-		public bool is_input_only ();
 		public bool is_viewable ();
 		public bool is_visible ();
 		public void lower ();
 		public void maximize ();
-		public void merge_child_input_shapes ();
-		public void move (int x, int y);
-		public void move_resize (int x, int y, int width, int height);
 		public void move_to_rect (Gdk.Rectangle rect, Gdk.Gravity rect_anchor, Gdk.Gravity surface_anchor, Gdk.AnchorHints anchor_hints, int rect_anchor_dx, int rect_anchor_dy);
-		public unowned GLib.List<Gdk.Surface> peek_children ();
 		[CCode (has_construct_function = false)]
-		public Surface.popup (Gdk.Display display, Gdk.Rectangle position);
+		public Surface.popup (Gdk.Display display, Gdk.Surface parent, bool autohide);
 		public void queue_expose ();
 		public void raise ();
 		public void register_dnd ();
 		public void resize (int width, int height);
 		public void restack (Gdk.Surface? sibling, bool above);
 		public void set_accept_focus (bool accept_focus);
-		public void set_child_input_shapes ();
 		public void set_cursor (Gdk.Cursor? cursor);
 		public void set_decorations (Gdk.WMDecoration decorations);
 		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
@@ -5326,7 +5305,6 @@ namespace Gdk {
 		public void set_modal_hint (bool modal);
 		public void set_opacity (double opacity);
 		public void set_opaque_region (Cairo.Region? region);
-		public void set_pass_through (bool pass_through);
 		public void set_shadow_width (int left, int right, int top, int bottom);
 		public void set_startup_id (string startup_id);
 		public void set_support_multidevice (bool support_multidevice);
@@ -5338,19 +5316,24 @@ namespace Gdk {
 		public bool show_window_menu (Gdk.Event event);
 		public void stick ();
 		[CCode (has_construct_function = false)]
-		public Surface.temp (Gdk.Display display);
+		public Surface.temp (Gdk.Display display, Gdk.Rectangle position);
 		public void thaw_updates ();
 		[CCode (has_construct_function = false)]
 		public Surface.toplevel (Gdk.Display display, int width, int height);
+		public bool translate_coordinates (Gdk.Surface to, double x, double y);
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unstick ();
+		[NoAccessorMethod]
+		public bool autohide { get; construct; }
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
 		public Gdk.FrameClock frame_clock { get; construct; }
 		[NoAccessorMethod]
 		public bool mapped { get; }
+		public Gdk.Surface parent { get; construct; }
 		public Gdk.SurfaceState state { get; }
+		public Gdk.SurfaceType surface_type { get; construct; }
 		public signal bool event (Gdk.Event event);
 		public signal void moved_to_rect ([CCode (type = "gpointer")] Gdk.Rectangle flipped_rect, [CCode (type = "gpointer")] Gdk.Rectangle final_rect, bool flipped_x, bool flipped_y);
 		public signal bool render (Cairo.Region region);
@@ -5817,8 +5800,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_", type_id = "gdk_surface_type_get_type ()")]
 	public enum SurfaceType {
 		TOPLEVEL,
-		CHILD,
-		TEMP
+		TEMP,
+		POPUP
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_TYPE_HINT_", type_id = "gdk_surface_type_hint_get_type ()")]
 	public enum SurfaceTypeHint {
@@ -6195,6 +6178,7 @@ namespace Gsk {
 		public uint get_num_glyphs ();
 		public unowned Graphene.Point? get_offset ();
 		public unowned Gdk.RGBA? peek_color ();
+		public unowned Pango.Font peek_font ();
 		public unowned Pango.GlyphInfo? peek_glyphs ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
@@ -6349,7 +6333,7 @@ namespace Gsk {
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
-	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class AboutDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AboutDialog ();
 		public void add_credit_section (string section_name, [CCode (array_length = false, array_null_terminated = true)] string[] people);
@@ -6540,11 +6524,11 @@ namespace Gtk {
 		public string heading { get; set; }
 		public bool show_default_item { get; set construct; }
 		public bool show_dialog_item { get; set construct; }
-		public virtual signal void changed ();
-		public virtual signal void custom_item_activated (string item_name);
+		public signal void changed ();
+		public signal void custom_item_activated (string item_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_dialog_get_type ()")]
-	public class AppChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable, Gtk.Root {
+	public class AppChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.AppChooser, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AppChooserDialog (Gtk.Window? parent, Gtk.DialogFlags flags, GLib.File file);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -6578,9 +6562,9 @@ namespace Gtk {
 		public bool show_fallback { get; set construct; }
 		public bool show_other { get; set construct; }
 		public bool show_recommended { get; set construct; }
-		public virtual signal void application_activated (GLib.AppInfo app_info);
-		public virtual signal void application_selected (GLib.AppInfo app_info);
-		public virtual signal void populate_popup (Gtk.Menu menu, GLib.AppInfo app_info);
+		public signal void application_activated (GLib.AppInfo application);
+		public signal void application_selected (GLib.AppInfo application);
+		public signal void populate_popup (Gtk.Menu menu, GLib.AppInfo application);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_application_get_type ()")]
 	public class Application : GLib.Application, GLib.ActionGroup, GLib.ActionMap {
@@ -6619,7 +6603,7 @@ namespace Gtk {
 		public virtual signal void window_removed (Gtk.Window window);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_application_window_get_type ()")]
-	public class ApplicationWindow : Gtk.Window, Atk.Implementor, GLib.ActionGroup, GLib.ActionMap, Gtk.Buildable, Gtk.Root {
+	public class ApplicationWindow : Gtk.Window, Atk.Implementor, GLib.ActionGroup, GLib.ActionMap, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ApplicationWindow (Gtk.Application application);
 		public unowned Gtk.ShortcutsWindow? get_help_overlay ();
@@ -6644,7 +6628,7 @@ namespace Gtk {
 		public float yalign { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_assistant_get_type ()")]
-	public class Assistant : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class Assistant : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Assistant ();
 		public void add_action_widget (Gtk.Widget child);
@@ -7365,10 +7349,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool show_editor { get; set; }
 		public string title { get; set; }
-		public virtual signal void color_set ();
+		public signal void color_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_chooser_dialog_get_type ()")]
-	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser, Gtk.Root {
+	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorChooserDialog (string? title, Gtk.Window? parent);
 		[NoAccessorMethod]
@@ -7508,7 +7492,7 @@ namespace Gtk {
 		protected CustomLayout ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_dialog_get_type ()")]
-	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Dialog ();
 		public void add_action_widget (Gtk.Widget child, int response_id);
@@ -7739,11 +7723,11 @@ namespace Gtk {
 		public bool popup_set_width { get; set; }
 		public bool popup_single_match { get; set; }
 		public int text_column { get; set; }
-		public virtual signal void action_activated (int index_);
-		public virtual signal bool cursor_on_match (Gtk.TreeModel model, Gtk.TreeIter iter);
-		public virtual signal bool insert_prefix (string prefix);
-		public virtual signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
-		public virtual signal void no_matches ();
+		public signal void action_activated (int index);
+		public signal bool cursor_on_match (Gtk.TreeModel model, Gtk.TreeIter iter);
+		public signal bool insert_prefix (string prefix);
+		public signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
+		public signal void no_matches ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_icon_accessible_get_type ()")]
 	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
@@ -7754,11 +7738,14 @@ namespace Gtk {
 	public abstract class EventController : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected EventController ();
+		public Gtk.PropagationLimit get_propagation_limit ();
 		public Gtk.PropagationPhase get_propagation_phase ();
 		public unowned Gtk.Widget get_widget ();
 		public bool handle_event ([CCode (type = "const GdkEvent*")] Gdk.Event event);
 		public void reset ();
+		public void set_propagation_limit (Gtk.PropagationLimit limit);
 		public void set_propagation_phase (Gtk.PropagationPhase phase);
+		public Gtk.PropagationLimit propagation_limit { get; set; }
 		public Gtk.PropagationPhase propagation_phase { get; set; }
 		public Gtk.Widget widget { get; }
 	}
@@ -7860,10 +7847,10 @@ namespace Gtk {
 		public Gtk.FileChooser dialog { construct; }
 		public string title { get; set; }
 		public int width_chars { get; set; }
-		public virtual signal void file_set ();
+		public signal void file_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_dialog_get_type ()")]
-	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser, Gtk.Root {
+	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FileChooserDialog (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, ...);
 	}
@@ -8017,15 +8004,15 @@ namespace Gtk {
 		public uint min_children_per_line { get; set; }
 		public uint row_spacing { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
-		public virtual signal void activate_cursor_child ();
-		public virtual signal void child_activated (Gtk.FlowBoxChild child);
-		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
+		public signal void activate_cursor_child ();
+		public signal void child_activated (Gtk.FlowBoxChild child);
+		public signal bool move_cursor (Gtk.MovementStep step, int count);
 		[HasEmitter]
-		public virtual signal void select_all ();
-		public virtual signal void selected_children_changed ();
-		public virtual signal void toggle_cursor_child ();
+		public signal void select_all ();
+		public signal void selected_children_changed ();
+		public signal void toggle_cursor_child ();
 		[HasEmitter]
-		public virtual signal void unselect_all ();
+		public signal void unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_flow_box_accessible_get_type ()")]
 	public class FlowBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
@@ -8061,10 +8048,10 @@ namespace Gtk {
 		public string title { get; set; }
 		public bool use_font { get; set; }
 		public bool use_size { get; set; }
-		public virtual signal void font_set ();
+		public signal void font_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_chooser_dialog_get_type ()")]
-	public class FontChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser, Gtk.Root {
+	public class FontChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FontChooser, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FontChooserDialog (string? title, Gtk.Window? parent);
 	}
@@ -8158,6 +8145,17 @@ namespace Gtk {
 		public signal void sequence_state_changed (Gdk.EventSequence sequence, Gtk.EventSequenceState state);
 		public signal void update (Gdk.EventSequence sequence);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_click_get_type ()")]
+	public class GestureClick : Gtk.GestureSingle {
+		[CCode (has_construct_function = false, type = "GtkGesture*")]
+		public GestureClick ();
+		public bool get_area (out Gdk.Rectangle rect);
+		public void set_area (Gdk.Rectangle? rect);
+		public signal void pressed (int n_press, double x, double y);
+		public signal void released (int n_press, double x, double y);
+		public signal void stopped ();
+		public signal void unpaired_release (double x, double y, uint button, Gdk.EventSequence sequence);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_drag_get_type ()")]
 	public class GestureDrag : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
@@ -8176,17 +8174,6 @@ namespace Gtk {
 		public double delay_factor { get; set; }
 		public signal void cancelled ();
 		public signal void pressed (double x, double y);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_multi_press_get_type ()")]
-	public class GestureMultiPress : Gtk.GestureSingle {
-		[CCode (has_construct_function = false, type = "GtkGesture*")]
-		public GestureMultiPress ();
-		public bool get_area (out Gdk.Rectangle rect);
-		public void set_area (Gdk.Rectangle? rect);
-		public signal void pressed (int n_press, double x, double y);
-		public signal void released (int n_press, double x, double y);
-		public signal void stopped ();
-		public signal void unpaired_release (double x, double y, uint button, Gdk.EventSequence sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_pan_get_type ()")]
 	public class GesturePan : Gtk.GestureDrag {
@@ -8517,17 +8504,17 @@ namespace Gtk {
 		public int spacing { get; set; }
 		public int text_column { get; set; }
 		public int tooltip_column { get; set; }
-		public virtual signal bool activate_cursor_item ();
+		public signal bool activate_cursor_item ();
 		[HasEmitter]
-		public virtual signal void item_activated (Gtk.TreePath path);
-		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
+		public signal void item_activated (Gtk.TreePath path);
+		public signal bool move_cursor (Gtk.MovementStep step, int count);
 		[HasEmitter]
-		public virtual signal void select_all ();
-		public virtual signal void select_cursor_item ();
-		public virtual signal void selection_changed ();
-		public virtual signal void toggle_cursor_item ();
+		public signal void select_all ();
+		public signal void select_cursor_item ();
+		public signal void selection_changed ();
+		public signal void toggle_cursor_item ();
 		[HasEmitter]
-		public virtual signal void unselect_all ();
+		public signal void unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_icon_view_accessible_get_type ()")]
 	public class IconViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
@@ -8695,19 +8682,15 @@ namespace Gtk {
 		public float xalign { get; set; }
 		public float yalign { get; set; }
 		public signal void activate_current_link ();
-		public virtual signal bool activate_link (string uri);
-		public virtual signal void copy_clipboard ();
-		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public virtual signal void populate_popup (Gtk.Menu menu);
+		public signal bool activate_link (string uri);
+		public signal void copy_clipboard ();
+		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
+		public signal void populate_popup (Gtk.Menu menu);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_label_accessible_get_type ()")]
 	public class LabelAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Hypertext, Atk.Text {
 		[CCode (has_construct_function = false)]
 		protected LabelAccessible ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class LabelSelectionInfo {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_layout_child_get_type ()")]
 	public abstract class LayoutChild : GLib.Object {
@@ -8816,16 +8799,16 @@ namespace Gtk {
 		public bool activate_on_single_click { get; set; }
 		public Gtk.SelectionMode selection_mode { get; set; }
 		public bool show_separators { get; set; }
-		public virtual signal void activate_cursor_row ();
-		public virtual signal void move_cursor (Gtk.MovementStep step, int count);
-		public virtual signal void row_activated (Gtk.ListBoxRow row);
-		public virtual signal void row_selected (Gtk.ListBoxRow? row);
+		public signal void activate_cursor_row ();
+		public signal void move_cursor (Gtk.MovementStep object, int p0);
+		public signal void row_activated (Gtk.ListBoxRow row);
+		public signal void row_selected (Gtk.ListBoxRow? row);
 		[HasEmitter]
-		public virtual signal void select_all ();
-		public virtual signal void selected_rows_changed ();
-		public virtual signal void toggle_cursor_row ();
+		public signal void select_all ();
+		public signal void selected_rows_changed ();
+		public signal void toggle_cursor_row ();
 		[HasEmitter]
-		public virtual signal void unselect_all ();
+		public signal void unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_list_box_accessible_get_type ()")]
 	public class ListBoxAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
@@ -9183,10 +9166,10 @@ namespace Gtk {
 		public void set_arrow_tooltip_text (string text);
 		public void set_menu (Gtk.Widget menu);
 		public Gtk.Menu menu { get; set; }
-		public virtual signal void show_menu ();
+		public signal void show_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_message_dialog_get_type ()")]
-	public class MessageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class MessageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[PrintfFormat]
 		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string? message_format, ...);
@@ -9296,9 +9279,6 @@ namespace Gtk {
 		public Gtk.PositionType get_tab_pos ();
 		public bool get_tab_reorderable (Gtk.Widget child);
 		public int insert_page (Gtk.Widget child, Gtk.Widget? tab_label, int position);
-		[CCode (vfunc_name = "insert_page")]
-		[NoWrapper]
-		public virtual int insert_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label, int position);
 		public void next_page ();
 		public int page_num (Gtk.Widget child);
 		public void popup_disable ();
@@ -9331,16 +9311,16 @@ namespace Gtk {
 		public bool show_border { get; set; }
 		public bool show_tabs { get; set; }
 		public Gtk.PositionType tab_pos { get; set; }
-		public virtual signal bool change_current_page (int offset);
-		public virtual signal unowned Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
-		public virtual signal bool focus_tab (Gtk.NotebookTab type);
-		public virtual signal void move_focus_out (Gtk.DirectionType direction);
-		public virtual signal void page_added (Gtk.Widget child, uint page_num);
-		public virtual signal void page_removed (Gtk.Widget child, uint page_num);
-		public virtual signal void page_reordered (Gtk.Widget child, uint page_num);
-		public virtual signal bool reorder_tab (Gtk.DirectionType direction, bool move_to_last);
-		public virtual signal bool select_page (bool move_focus);
-		public virtual signal void switch_page (Gtk.Widget page, uint page_num);
+		public signal bool change_current_page (int object);
+		public signal unowned Gtk.Notebook create_window (Gtk.Widget page);
+		public signal bool focus_tab (Gtk.NotebookTab object);
+		public signal void move_focus_out (Gtk.DirectionType object);
+		public signal void page_added (Gtk.Widget child, uint page_num);
+		public signal void page_removed (Gtk.Widget child, uint page_num);
+		public signal void page_reordered (Gtk.Widget child, uint page_num);
+		public signal bool reorder_tab (Gtk.DirectionType object, bool p0);
+		public signal bool select_page (bool object);
+		public signal void switch_page (Gtk.Widget page, uint page_num);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_notebook_accessible_get_type ()")]
 	public class NotebookAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection {
@@ -9387,7 +9367,7 @@ namespace Gtk {
 		public bool get_measure_overlay (Gtk.Widget widget);
 		public void set_clip_overlay (Gtk.Widget widget, bool clip_overlay);
 		public void set_measure_overlay (Gtk.Widget widget, bool measure);
-		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
+		public signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_pad_controller_get_type ()")]
 	public class PadController : Gtk.EventController {
@@ -9562,29 +9542,30 @@ namespace Gtk {
 		public Gdk.Paintable paintable { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
-	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
+	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Native {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Popover (Gtk.Widget? relative_to);
+		public Popover (Gtk.Widget relative_to);
 		public void bind_model (GLib.MenuModel? model, string? action_namespace);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover.from_model (Gtk.Widget? relative_to, GLib.MenuModel model);
-		public Gtk.PopoverConstraint get_constrain_to ();
-		public unowned Gtk.Widget? get_default_widget ();
-		public bool get_modal ();
+		public bool get_autohide ();
+		public bool get_has_arrow ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
+		public static unowned GLib.ListModel get_popovers ();
 		public Gtk.PositionType get_position ();
 		public unowned Gtk.Widget get_relative_to ();
 		public void popdown ();
 		public void popup ();
-		public void set_constrain_to (Gtk.PopoverConstraint constraint);
-		public void set_default_widget (Gtk.Widget? widget);
-		public void set_modal (bool modal);
+		public void set_autohide (bool autohide);
+		public void set_default_widget (Gtk.Widget widget);
+		public void set_has_arrow (bool has_arrow);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public void set_relative_to (Gtk.Widget? relative_to);
-		public Gtk.PopoverConstraint constrain_to { get; set; }
-		public Gtk.Widget default_widget { get; set; }
-		public bool modal { get; set; }
+		public bool autohide { get; set; }
+		[NoAccessorMethod]
+		public Gtk.Widget default_widget { owned get; set; }
+		public bool has_arrow { get; set; }
 		[NoAccessorMethod]
 		public Gdk.Rectangle pointing_to { owned get; set; }
 		public Gtk.PositionType position { get; set; }
@@ -9597,7 +9578,7 @@ namespace Gtk {
 		protected PopoverAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_menu_get_type ()")]
-	public class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable {
+	public class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable, Gtk.Native {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenu ();
 		public void add_submenu (Gtk.Widget submenu, string name);
@@ -10106,8 +10087,8 @@ namespace Gtk {
 		public Gtk.CornerType window_placement { get; set; }
 		public signal void edge_overshot (Gtk.PositionType pos);
 		public signal void edge_reached (Gtk.PositionType pos);
-		public virtual signal void move_focus_out (Gtk.DirectionType direction);
-		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
+		public signal void move_focus_out (Gtk.DirectionType direction_type);
+		public signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_scrolled_window_accessible_get_type ()")]
 	public class ScrolledWindowAccessible : Gtk.ContainerAccessible, Atk.Component {
@@ -10258,6 +10239,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public uint gtk_long_press_time { get; set; }
 		[NoAccessorMethod]
+		public bool gtk_overlay_scrolling { get; set; }
+		[NoAccessorMethod]
 		public bool gtk_primary_button_warps_slider { get; set; }
 		[NoAccessorMethod]
 		public string gtk_print_backends { owned get; set; }
@@ -10364,7 +10347,7 @@ namespace Gtk {
 		public Gtk.SizeGroup title_size_group { set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcuts_window_get_type ()")]
-	public class ShortcutsWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class ShortcutsWindow : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsWindow ();
 		[NoAccessorMethod]
@@ -11076,9 +11059,9 @@ namespace Gtk {
 		public int get_size ();
 		public unowned Gtk.TextTag? lookup (string name);
 		public void remove (Gtk.TextTag tag);
-		public virtual signal void tag_added (Gtk.TextTag tag);
-		public virtual signal void tag_changed (Gtk.TextTag tag, bool size_changed);
-		public virtual signal void tag_removed (Gtk.TextTag tag);
+		public signal void tag_added (Gtk.TextTag tag);
+		public signal void tag_changed (Gtk.TextTag tag, bool size_changed);
+		public signal void tag_removed (Gtk.TextTag tag);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_view_get_type ()")]
 	public class TextView : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.Scrollable {
@@ -11304,9 +11287,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.ToolbarStyle toolbar_style { get; set; }
 		public signal bool focus_home_or_end (bool focus_home);
-		public virtual signal void orientation_changed (Gtk.Orientation orientation);
-		public virtual signal bool popup_context_menu (int x, int y, int button_number);
-		public virtual signal void style_changed (Gtk.ToolbarStyle style);
+		public signal void orientation_changed (Gtk.Orientation orientation);
+		public signal bool popup_context_menu (int x, int y, int button);
+		public signal void style_changed (Gtk.ToolbarStyle style);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tooltip_get_type ()")]
 	public class Tooltip : GLib.Object {
@@ -11474,7 +11457,7 @@ namespace Gtk {
 		public void unselect_path (Gtk.TreePath path);
 		public void unselect_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public Gtk.SelectionMode mode { get; set; }
-		public virtual signal void changed ();
+		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_store_get_type ()")]
 	public class TreeStore : GLib.Object, Gtk.Buildable, Gtk.TreeDragDest, Gtk.TreeDragSource, Gtk.TreeModel, Gtk.TreeSortable {
@@ -11621,22 +11604,22 @@ namespace Gtk {
 		public int search_column { get; set; }
 		public bool show_expanders { get; set; }
 		public int tooltip_column { get; set; }
-		public virtual signal void columns_changed ();
-		public virtual signal void cursor_changed ();
-		public virtual signal bool expand_collapse_cursor_row (bool logical, bool expand, bool open_all);
-		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
+		public signal void columns_changed ();
+		public signal void cursor_changed ();
+		public signal bool expand_collapse_cursor_row (bool object, bool p0, bool p1);
+		public signal bool move_cursor (Gtk.MovementStep step, int direction);
 		[HasEmitter]
-		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
-		public virtual signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
-		public virtual signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
-		public virtual signal bool select_all ();
-		public virtual signal bool select_cursor_parent ();
-		public virtual signal bool select_cursor_row (bool start_editing);
-		public virtual signal bool start_interactive_search ();
-		public virtual signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public virtual signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public virtual signal bool toggle_cursor_row ();
-		public virtual signal bool unselect_all ();
+		public signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
+		public signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
+		public signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
+		public signal bool select_all ();
+		public signal bool select_cursor_parent ();
+		public signal bool select_cursor_row (bool object);
+		public signal bool start_interactive_search ();
+		public signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public signal bool toggle_cursor_row ();
+		public signal bool unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_tree_view_accessible_get_type ()")]
 	public class TreeViewAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Selection, Atk.Table, Gtk.CellAccessibleParent {
@@ -11715,7 +11698,7 @@ namespace Gtk {
 		public int width { get; }
 		public int x_offset { get; }
 		[HasEmitter]
-		public virtual signal void clicked ();
+		public signal void clicked ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_video_get_type ()")]
 	public class Video : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -11770,7 +11753,7 @@ namespace Gtk {
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
-		public void allocate (int width, int height, int baseline, Gsk.Transform? transform);
+		public void allocate (int width, int height, int baseline, owned Gsk.Transform? transform);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
@@ -11816,7 +11799,6 @@ namespace Gtk {
 		public unowned Cairo.FontOptions? get_font_options ();
 		public unowned Gdk.FrameClock? get_frame_clock ();
 		public Gtk.Align get_halign ();
-		public bool get_has_surface ();
 		public bool get_has_tooltip ();
 		public int get_height ();
 		public bool get_hexpand ();
@@ -11831,6 +11813,7 @@ namespace Gtk {
 		public int get_margin_start ();
 		public int get_margin_top ();
 		public Gdk.ModifierType get_modifier_mask (Gdk.ModifierIntent intent);
+		public unowned Gtk.Native? get_native ();
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
 		public Gtk.Overflow get_overflow ();
@@ -11851,12 +11834,10 @@ namespace Gtk {
 		public Gtk.StateFlags get_state_flags ();
 		public unowned Gtk.StyleContext get_style_context ();
 		public bool get_support_multidevice ();
-		public unowned Gdk.Surface? get_surface ();
 		public unowned GLib.Object get_template_child (GLib.Type widget_type, string name);
 		public string? get_tooltip_markup ();
 		public string? get_tooltip_text ();
 		public unowned Gtk.Window get_tooltip_window ();
-		public unowned Gtk.Widget get_toplevel ();
 		public Gtk.Align get_valign ();
 		public bool get_vexpand ();
 		public bool get_vexpand_set ();
@@ -11874,7 +11855,6 @@ namespace Gtk {
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_drawable ();
 		public bool is_sensitive ();
-		public bool is_toplevel ();
 		public bool is_visible ();
 		public GLib.List<weak GLib.Closure> list_accel_closures ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -11889,7 +11869,6 @@ namespace Gtk {
 		public void queue_draw ();
 		public void queue_resize ();
 		public void queue_resize_no_redraw ();
-		public void register_surface (Gdk.Surface surface);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_controller (Gtk.EventController controller);
 		public void remove_mnemonic_label (Gtk.Widget label);
@@ -11916,7 +11895,6 @@ namespace Gtk {
 		public void set_font_map (Pango.FontMap? font_map);
 		public void set_font_options (Cairo.FontOptions? options);
 		public void set_halign (Gtk.Align align);
-		public void set_has_surface (bool has_surface);
 		public void set_has_tooltip (bool has_tooltip);
 		public void set_hexpand (bool expand);
 		public void set_hexpand_set (bool @set);
@@ -11935,7 +11913,6 @@ namespace Gtk {
 		public void set_size_request (int width, int height);
 		public void set_state_flags (Gtk.StateFlags flags, bool clear);
 		public void set_support_multidevice (bool support_multidevice);
-		public void set_surface (owned Gdk.Surface surface);
 		[CCode (cname = "gtk_widget_class_set_template")]
 		public class void set_template (GLib.Bytes template_bytes);
 		[CCode (cname = "gtk_widget_class_set_template_from_resource")]
@@ -11955,7 +11932,6 @@ namespace Gtk {
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		public void trigger_tooltip_query ();
 		public void unparent ();
-		public void unregister_surface (Gdk.Surface surface);
 		[NoWrapper]
 		public virtual void unroot ();
 		public void unset_state_flags (Gtk.StateFlags flags);
@@ -11994,7 +11970,6 @@ namespace Gtk {
 		public virtual Gtk.Root root { get; }
 		public int scale_factor { get; }
 		public bool sensitive { get; set; }
-		public Gdk.Surface surface { get; }
 		public string tooltip_markup { owned get; set; }
 		public string tooltip_text { owned get; set; }
 		public Gtk.Align valign { get; set; }
@@ -12096,7 +12071,7 @@ namespace Gtk {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_get_type ()")]
-	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Root {
+	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Window (Gtk.WindowType type = Gtk.WindowType.TOPLEVEL);
 		public bool activate_key ([CCode (type = "GdkEventKey*")] Gdk.Event event);
@@ -12168,7 +12143,6 @@ namespace Gtk {
 		public void set_mnemonic_modifier (Gdk.ModifierType modifier);
 		public void set_mnemonics_visible (bool setting);
 		public void set_modal (bool modal);
-		public void set_position (Gtk.WindowPosition position);
 		public void set_resizable (bool resizable);
 		public void set_startup_id (string startup_id);
 		public void set_title (string title);
@@ -12209,8 +12183,6 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.WindowType type { get; construct; }
 		public Gdk.SurfaceTypeHint type_hint { get; set; }
-		[NoAccessorMethod]
-		public Gtk.WindowPosition window_position { get; set; }
 		public virtual signal void activate_default ();
 		public virtual signal void activate_focus ();
 		public virtual signal bool close_request ();
@@ -12495,6 +12467,15 @@ namespace Gtk {
 		public abstract bool show_preview_entry { get; set; }
 		public virtual signal void font_activated (string fontname);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkNativeInterface", type_id = "gtk_native_get_type ()")]
+	public interface Native : Gtk.Widget {
+		public abstract void check_resize ();
+		public static unowned Gtk.Widget get_for_surface (Gdk.Surface surface);
+		public abstract unowned Gsk.Renderer get_renderer ();
+		public abstract unowned Gdk.Surface get_surface ();
+		[NoWrapper]
+		public abstract void get_surface_transform (int x, int y);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_orientable_get_type ()")]
 	public interface Orientable : GLib.Object {
 		public Gtk.Orientation get_orientation ();
@@ -12511,11 +12492,9 @@ namespace Gtk {
 		public virtual signal void ready (Gtk.PrintContext context);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkRootInterface", type_id = "gtk_root_get_type ()")]
-	public interface Root : Gtk.Widget {
+	public interface Root : Gtk.Native, Gtk.Widget {
+		public abstract unowned Gdk.Display get_display ();
 		public unowned Gtk.Widget? get_focus ();
-		public static unowned Gtk.Widget get_for_surface (Gdk.Surface surface);
-		[NoWrapper]
-		public abstract void get_surface_transform (int x, int y);
 		public void set_focus (Gtk.Widget? focus);
 		[NoAccessorMethod]
 		public abstract Gtk.Widget focus_widget { owned get; set; }
@@ -12824,12 +12803,6 @@ namespace Gtk {
 		SWITCH,
 		SUSPEND,
 		IDLE
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ARROWS_", type_id = "gtk_arrow_placement_get_type ()")]
-	public enum ArrowPlacement {
-		BOTH,
-		START,
-		END
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ARROW_", type_id = "gtk_arrow_type_get_type ()")]
 	public enum ArrowType {
@@ -13313,6 +13286,11 @@ namespace Gtk {
 		FINISHED,
 		FINISHED_ABORTED
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_LIMIT_", type_id = "gtk_propagation_limit_get_type ()")]
+	public enum PropagationLimit {
+		NONE,
+		SAME_NATIVE
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PHASE_", type_id = "gtk_propagation_phase_get_type ()")]
 	public enum PropagationPhase {
 		NONE,
@@ -13582,14 +13560,6 @@ namespace Gtk {
 		POINTS,
 		INCH,
 		MM
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_WIN_POS_", type_id = "gtk_window_position_get_type ()")]
-	public enum WindowPosition {
-		NONE,
-		CENTER,
-		MOUSE,
-		CENTER_ALWAYS,
-		CENTER_ON_PARENT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_WINDOW_", type_id = "gtk_window_type_get_type ()")]
 	public enum WindowType {
@@ -14230,6 +14200,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main_quit ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static unowned Gtk.Widget native_get_for_surface (Gdk.Surface surface);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void print_run_page_setup_dialog_async (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings, [CCode (scope = "async")] Gtk.PageSetupDoneFunc done_cb);
@@ -14237,8 +14209,6 @@ namespace Gtk {
 	public static void propagate_event (Gtk.Widget widget, [CCode (type = "GdkEvent*")] Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Widget root_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void set_debug_flags (uint flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
