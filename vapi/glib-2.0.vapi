@@ -6071,7 +6071,13 @@ namespace GLib {
 		MAKASAR,                /* Maka */
 		MEDEFAIDRIN,            /* Medf */
 		OLD_SOGDIAN,            /* Sogo */
-		SOGDIAN;                /* Sogd */
+		SOGDIAN,                /* Sogd */
+
+		/* Unicode 12.0 additions */
+		ELYMAIC,                /* Elym */
+		NANDINAGARI,            /* Nand */
+		NYIAKENG_PUACHUE_HMONG, /* Rohg */
+		WANCHO;                 /* Wcho */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
