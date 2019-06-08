@@ -1,0 +1,3 @@
+GModule name="GLib"
+
+Module.close destroys_instance

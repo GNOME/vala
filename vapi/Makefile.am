@@ -347,6 +347,7 @@ GIR_BINDINGS = \
 	gdl-3.0 \
 	geocode-glib-1.0 \
 	gio-2.0 \
+	gmodule-2.0 \
 	gnome-desktop-3.0 \
 	gobject-introspection-1.0 \
 	goocanvas-2.0 \
@@ -469,6 +470,9 @@ gio-2.0:
 
 gio-unix-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-unix-2.0 $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0-custom.vala $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0.gi
+
+gmodule-2.0:
+	$(GENVAPI) --library $(srcdir)/gmodule-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/GModule-2.0-custom.vala $(GIRDIR)/GModule-2.0.gir
 
 gnome-desktop-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-desktop-2.0 $(PACKAGESDIR)/gnome-desktop-2.0/gnome-desktop-2.0.gi
