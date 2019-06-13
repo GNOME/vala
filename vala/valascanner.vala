@@ -28,6 +28,7 @@ using GLib;
  */
 public class Vala.Scanner {
 	public SourceFile source_file { get; private set; }
+	public bool enable_single_quote_string_literal { get; set; }
 
 	TokenType previous;
 	char* current;
@@ -67,6 +68,7 @@ public class Vala.Scanner {
 
 		line = 1;
 		column = 1;
+		enable_single_quote_string_literal = false;
 	}
 
 	public void seek (SourceLocation location) {
@@ -1207,7 +1209,7 @@ public class Vala.Scanner {
 							Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
-					if (current < end && begin[0] == '\'' && current[0] != '\'') {
+					if (!enable_single_quote_string_literal && current < end && begin[0] == '\'' && current[0] != '\'') {
 						// multiple characters in single character literal
 						Report.error (get_source_reference (token_length_in_chars), "invalid character literal");
 					}
