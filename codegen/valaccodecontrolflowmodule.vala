@@ -242,10 +242,10 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		if (stmt.collection.value_type is ArrayType) {
 			array_type = (ArrayType) stmt.collection.value_type;
 
-			var array_len = get_array_length_cexpression (stmt.collection);
+			var array_len = get_variable_cexpression (get_array_length_cname (get_local_cname (collection_backup), 1));
 
 			// store array length for use by _vala_array_free
-			ccode.add_assignment (get_variable_cexpression (get_array_length_cname (get_local_cname (collection_backup), 1)), array_len);
+			ccode.add_assignment (array_len, get_array_length_cexpression (stmt.collection));
 
 			var iterator_variable = new LocalVariable (array_type.length_type.copy (), stmt.variable_name + "_it");
 			visit_local_variable (iterator_variable);
