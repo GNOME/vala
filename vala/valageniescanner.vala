@@ -433,7 +433,7 @@ public class Vala.Genie.Scanner {
 				}
 				break;
 			case 's':
-				if (matches (begin, "self")) return TokenType.THIS;
+				if (matches (begin, "self")) return TokenType.SELF;
 				break;
 			case 't':
 				if (matches (begin, "true")) return TokenType.TRUE;

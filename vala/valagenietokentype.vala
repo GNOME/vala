@@ -144,6 +144,7 @@ public enum Vala.Genie.TokenType {
 	REQUIRES,
 	RETURN,
 	SEALED,
+	SELF,
 	SEMICOLON,
 	SET,
 	SIZEOF,
@@ -153,7 +154,6 @@ public enum Vala.Genie.TokenType {
 	STRUCT,
 	SUPER,
 	TEMPLATE_STRING_LITERAL,
-	THIS,
 	TILDE,
 	TO,
 	TRUE,
@@ -292,6 +292,7 @@ public enum Vala.Genie.TokenType {
 		case REQUIRES: return "`requires'";
 		case RETURN: return "`return'";
 		case SEALED: return "`sealed'";
+		case SELF: return "`self'";
 		case SEMICOLON: return "`;'";
 		case SET: return "`set'";
 		case SIZEOF: return "`sizeof'";
@@ -301,7 +302,6 @@ public enum Vala.Genie.TokenType {
 		case STRUCT: return "`struct'";
 		case SUPER: return "`super'";
 		case TEMPLATE_STRING_LITERAL: return "template string literal";
-		case THIS: return "`self'";
 		case TILDE: return "`~'";
 		case TO: return "`to'";
 		case TRUE: return "`true'";

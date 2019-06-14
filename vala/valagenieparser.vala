@@ -305,12 +305,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.REQUIRES:
 		case TokenType.RETURN:
 		case TokenType.SEALED:
+		case TokenType.SELF:
 		case TokenType.SET:
 		case TokenType.SIZEOF:
 		case TokenType.STATIC:
 		case TokenType.STRUCT:
 		case TokenType.SUPER:
-		case TokenType.THIS:
 		case TokenType.TO:
 		case TokenType.TRUE:
 		case TokenType.TRY:
@@ -714,7 +714,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.OPEN_TEMPLATE:
 			expr = parse_template ();
 			break;
-		case TokenType.THIS:
+		case TokenType.SELF:
 			expr = parse_this_access ();
 			break;
 		case TokenType.SUPER:
@@ -993,7 +993,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Expression parse_this_access () throws ParseError {
 		var begin = get_location ();
-		expect (TokenType.THIS);
+		expect (TokenType.SELF);
 		return new MemberAccess (null, "this", get_src (begin));
 	}
 
@@ -1267,7 +1267,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:
 					case TokenType.NULL:
-					case TokenType.THIS:
+					case TokenType.SELF:
 					case TokenType.SUPER:
 					case TokenType.NEW:
 					case TokenType.SIZEOF:
@@ -1790,7 +1790,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				case TokenType.OP_INC:
 				case TokenType.OP_DEC:
 				case TokenType.SUPER:
-				case TokenType.THIS:
+				case TokenType.SELF:
 				case TokenType.OPEN_PARENS:
 				case TokenType.STAR:
 				case TokenType.NEW:
@@ -1894,7 +1894,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.OP_INC:
 		case TokenType.OP_DEC:
 		case TokenType.SUPER:
-		case TokenType.THIS:
+		case TokenType.SELF:
 		case TokenType.OPEN_PARENS:
 		case TokenType.STAR:
 		case TokenType.NEW:
