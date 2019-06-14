@@ -332,6 +332,11 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (our_namespaces.size > 0) {
+			Report.error (ns.source_reference, "Secondary top-level namespace `%s' is not supported by GIR format".printf (ns.name));
+			return;
+		}
+
 		write_c_includes (ns);
 
 		write_indent ();
