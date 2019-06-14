@@ -98,7 +98,7 @@ public class Valadoc.ModuleLoader : Object {
 		if (data == null) {
 			void* function;
 
-			Module? module = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY | ModuleFlags.BIND_LOCAL);
+			Module? module = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.LAZY | ModuleFlags.LOCAL);
 			if (module == null) {
 				return null;
 			}

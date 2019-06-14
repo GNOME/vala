@@ -232,7 +232,7 @@ public class Valadoc.ErrorReporter : Object {
 	private delegate int AttyFunc (int fd);
 
 	private bool is_atty (int fd) {
-		Module module = Module.open (null, ModuleFlags.BIND_LAZY);
+		Module module = Module.open (null, ModuleFlags.LAZY);
 		if (module == null) {
 			return false;
 		}
