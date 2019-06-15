@@ -376,8 +376,6 @@ TreeView
   .insert_column_with_attributes.title nullable
 TreeViewColumn
   .new_with_attributes.title nullable
-TextView
-  .populate_popup.popup type="Gtk.Menu"
 TreeView
   .get_*_func skip=false
 
