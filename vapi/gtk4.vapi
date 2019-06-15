@@ -7535,6 +7535,7 @@ namespace Gtk {
 		public unowned Gtk.EntryBuffer get_buffer ();
 		public unowned Gtk.EntryCompletion get_completion ();
 		public int get_current_icon_drag_source ();
+		public unowned GLib.MenuModel get_extra_menu ();
 		public bool get_has_frame ();
 		public bool get_icon_activatable (Gtk.EntryIconPosition icon_pos);
 		public Gdk.Rectangle get_icon_area (Gtk.EntryIconPosition icon_pos);
@@ -7565,6 +7566,7 @@ namespace Gtk {
 		public void set_attributes (Pango.AttrList attrs);
 		public void set_buffer (Gtk.EntryBuffer buffer);
 		public void set_completion (Gtk.EntryCompletion? completion);
+		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_has_frame (bool setting);
 		public void set_icon_activatable (Gtk.EntryIconPosition icon_pos, bool activatable);
 		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gdk.ContentFormats formats, Gdk.DragAction actions);
@@ -7593,6 +7595,7 @@ namespace Gtk {
 		public Gtk.EntryCompletion completion { get; set; }
 		[NoAccessorMethod]
 		public bool enable_emoji_completion { get; set; }
+		public GLib.MenuModel extra_menu { get; set; }
 		public bool has_frame { get; set; }
 		[NoAccessorMethod]
 		public string im_module { owned get; set; }
@@ -7604,8 +7607,6 @@ namespace Gtk {
 		public int max_length { get; set; }
 		public bool overwrite_mode { get; set; }
 		public string placeholder_text { get; set; }
-		[NoAccessorMethod]
-		public bool populate_all { get; set; }
 		[NoAccessorMethod]
 		public bool primary_icon_activatable { get; set; }
 		[NoAccessorMethod]
@@ -8611,6 +8612,7 @@ namespace Gtk {
 		public unowned Pango.AttrList? get_attributes ();
 		public unowned string? get_current_uri ();
 		public Pango.EllipsizeMode get_ellipsize ();
+		public unowned GLib.MenuModel get_extra_menu ();
 		public Gtk.Justification get_justify ();
 		public unowned string get_label ();
 		public unowned Pango.Layout get_layout ();
@@ -8634,6 +8636,7 @@ namespace Gtk {
 		public void select_region (int start_offset, int end_offset);
 		public void set_attributes (Pango.AttrList? attrs);
 		public void set_ellipsize (Pango.EllipsizeMode mode);
+		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_justify (Gtk.Justification jtype);
 		public void set_label (string str);
 		public void set_line_wrap (bool wrap);
@@ -8660,6 +8663,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int cursor_position { get; }
 		public Pango.EllipsizeMode ellipsize { get; set; }
+		public GLib.MenuModel extra_menu { get; set; }
 		public Gtk.Justification justify { get; set; }
 		public string label { get; set; }
 		public int lines { get; set; }
@@ -8685,7 +8689,6 @@ namespace Gtk {
 		public signal bool activate_link (string uri);
 		public signal void copy_clipboard ();
 		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public signal void populate_popup (Gtk.Menu menu);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_label_accessible_get_type ()")]
 	public class LabelAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Hypertext, Atk.Text {
@@ -9201,15 +9204,15 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ModelButton ();
 		[NoAccessorMethod]
-		public bool active { get; set; }
+		public string accel { owned get; set; }
 		[NoAccessorMethod]
-		public bool centered { get; set; }
+		public bool active { get; set; }
 		[NoAccessorMethod]
 		public GLib.Icon icon { owned get; set; }
 		[NoAccessorMethod]
 		public bool iconic { get; set; }
 		[NoAccessorMethod]
-		public bool inverted { get; set; }
+		public Gtk.SizeGroup indicator_size_group { owned get; set; }
 		[NoAccessorMethod]
 		public string menu_name { owned get; set; }
 		[NoAccessorMethod]
@@ -9500,10 +9503,13 @@ namespace Gtk {
 	public class PasswordEntry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PasswordEntry ();
+		public unowned GLib.MenuModel get_extra_menu ();
 		public bool get_show_peek_icon ();
+		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_show_peek_icon (bool show_peek_icon);
 		[NoAccessorMethod]
 		public bool activates_default { get; set; }
+		public GLib.MenuModel extra_menu { get; set; }
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
 		public bool show_peek_icon { get; set; }
@@ -9545,9 +9551,6 @@ namespace Gtk {
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.Native {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover (Gtk.Widget relative_to);
-		public void bind_model (GLib.MenuModel? model, string? action_namespace);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public Popover.from_model (Gtk.Widget? relative_to, GLib.MenuModel model);
 		public bool get_autohide ();
 		public bool get_has_arrow ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
@@ -9570,6 +9573,7 @@ namespace Gtk {
 		public Gdk.Rectangle pointing_to { owned get; set; }
 		public Gtk.PositionType position { get; set; }
 		public Gtk.Widget relative_to { get; set; }
+		public virtual signal void activate_default ();
 		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_popover_accessible_get_type ()")]
@@ -9580,11 +9584,23 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_menu_get_type ()")]
 	public class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable, Gtk.Native {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public PopoverMenu ();
+		public PopoverMenu (Gtk.Widget? relative_to);
 		public void add_submenu (Gtk.Widget submenu, string name);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public PopoverMenu.from_model (Gtk.Widget? relative_to, GLib.MenuModel model);
 		public void open_submenu (string name);
 		[NoAccessorMethod]
 		public string visible_submenu { owned get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_menu_bar_get_type ()")]
+	public class PopoverMenuBar : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		protected PopoverMenuBar ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public PopoverMenuBar.from_model (GLib.MenuModel model);
+		public unowned GLib.MenuModel get_menu_model ();
+		public void set_menu_model (GLib.MenuModel model);
+		public GLib.MenuModel menu_model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_print_context_get_type ()")]
 	public class PrintContext : GLib.Object {
@@ -10054,7 +10070,7 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
 		public void set_capture_button_press (bool capture_button_press);
-		public void set_hadjustment (Gtk.Adjustment hadjustment);
+		public void set_hadjustment (Gtk.Adjustment? hadjustment);
 		public void set_kinetic_scrolling (bool kinetic_scrolling);
 		public void set_max_content_height (int height);
 		public void set_max_content_width (int width);
@@ -10066,7 +10082,7 @@ namespace Gtk {
 		public void set_propagate_natural_height (bool propagate);
 		public void set_propagate_natural_width (bool propagate);
 		public void set_shadow_type (Gtk.ShadowType type);
-		public void set_vadjustment (Gtk.Adjustment vadjustment);
+		public void set_vadjustment (Gtk.Adjustment? vadjustment);
 		public void unset_placement ();
 		public Gtk.Adjustment hadjustment { get; set construct; }
 		[NoAccessorMethod]
@@ -10717,6 +10733,7 @@ namespace Gtk {
 		public bool get_activates_default ();
 		public unowned Pango.AttrList? get_attributes ();
 		public unowned Gtk.EntryBuffer get_buffer ();
+		public unowned GLib.MenuModel get_extra_menu ();
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
 		public unichar get_invisible_char ();
@@ -10730,6 +10747,7 @@ namespace Gtk {
 		public void set_activates_default (bool activates);
 		public void set_attributes (Pango.AttrList attrs);
 		public void set_buffer (Gtk.EntryBuffer buffer);
+		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_input_hints (Gtk.InputHints hints);
 		public void set_input_purpose (Gtk.InputPurpose purpose);
 		public void set_invisible_char (unichar ch);
@@ -10746,6 +10764,7 @@ namespace Gtk {
 		public Gtk.EntryBuffer buffer { get; set construct; }
 		[NoAccessorMethod]
 		public bool enable_emoji_completion { get; set; }
+		public GLib.MenuModel extra_menu { get; set; }
 		[NoAccessorMethod]
 		public string im_module { owned get; set; }
 		public Gtk.InputHints input_hints { get; set; }
@@ -10756,8 +10775,6 @@ namespace Gtk {
 		public int max_length { get; set; }
 		public bool overwrite_mode { get; set; }
 		public string placeholder_text { get; set; }
-		[NoAccessorMethod]
-		public bool populate_all { get; set; }
 		[NoAccessorMethod]
 		public bool propagate_text_width { get; set; }
 		[NoAccessorMethod]
@@ -10775,7 +10792,6 @@ namespace Gtk {
 		public signal void insert_emoji ();
 		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend);
 		public signal void paste_clipboard ();
-		public signal void populate_popup (Gtk.Widget widget);
 		public signal void preedit_changed (string preedit);
 		public signal void toggle_overwrite ();
 	}
@@ -11083,6 +11099,7 @@ namespace Gtk {
 		public void get_cursor_locations (Gtk.TextIter? iter, out Gdk.Rectangle strong, out Gdk.Rectangle @weak);
 		public bool get_cursor_visible ();
 		public bool get_editable ();
+		public unowned GLib.MenuModel get_extra_menu ();
 		public int get_indent ();
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
@@ -11119,6 +11136,7 @@ namespace Gtk {
 		public void set_buffer (Gtk.TextBuffer? buffer);
 		public void set_cursor_visible (bool setting);
 		public void set_editable (bool setting);
+		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_indent (int indent);
 		public void set_input_hints (Gtk.InputHints hints);
 		public void set_input_purpose (Gtk.InputPurpose purpose);
@@ -11144,6 +11162,7 @@ namespace Gtk {
 		public Gtk.TextBuffer buffer { get; set; }
 		public bool cursor_visible { get; set; }
 		public bool editable { get; set; }
+		public GLib.MenuModel extra_menu { get; set; }
 		[NoAccessorMethod]
 		public string im_module { owned get; set; }
 		public int indent { get; set; }
@@ -11156,8 +11175,6 @@ namespace Gtk {
 		public int pixels_above_lines { get; set; }
 		public int pixels_below_lines { get; set; }
 		public int pixels_inside_wrap { get; set; }
-		[NoAccessorMethod]
-		public bool populate_all { get; set; }
 		public int right_margin { get; set; }
 		public Pango.TabArray tabs { owned get; set; }
 		public int top_margin { get; set; }
@@ -11172,7 +11189,6 @@ namespace Gtk {
 		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
 		public signal void move_viewport (Gtk.ScrollStep step, int count);
 		public virtual signal void paste_clipboard ();
-		public virtual signal void populate_popup (Gtk.Menu popup);
 		public signal void preedit_changed (string preedit);
 		public signal void select_all (bool select);
 		public virtual signal void set_anchor ();
@@ -11924,6 +11940,7 @@ namespace Gtk {
 		public void set_vexpand (bool expand);
 		public void set_vexpand_set (bool @set);
 		public void set_visible (bool visible);
+		public bool should_layout ();
 		[CCode (cname = "gtk_widget_size_allocate")]
 		public void size_allocate_emit (Gtk.Allocation allocation, int baseline);
 		[NoWrapper]
@@ -12844,7 +12861,8 @@ namespace Gtk {
 	public enum ButtonRole {
 		NORMAL,
 		CHECK,
-		RADIO
+		RADIO,
+		TITLE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_BUTTONS_", type_id = "gtk_buttons_type_get_type ()")]
 	public enum ButtonsType {
