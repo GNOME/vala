@@ -86,6 +86,7 @@ namespace Gst {
 		public bool stopped;
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPTransceiver ();
+		public virtual void set_direction (Gst.WebRTCRTPTransceiverDirection direction);
 		[NoAccessorMethod]
 		public uint mlineindex { get; construct; }
 		[NoAccessorMethod]

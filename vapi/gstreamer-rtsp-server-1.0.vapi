@@ -90,6 +90,10 @@ namespace Gst {
 		public class Client : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Client ();
+			[NoWrapper]
+			public virtual Gst.RTSP.StatusCode adjust_play_mode (Gst.RTSPServer.Context context, Gst.RTSP.TimeRange range, Gst.SeekFlags flags, double rate, Gst.ClockTime trickmode_interval, bool enable_rate_control);
+			[NoWrapper]
+			public virtual Gst.RTSP.StatusCode adjust_play_response (Gst.RTSPServer.Context context);
 			public uint attach (GLib.MainContext? context);
 			[Version (since = "1.4")]
 			public void close ();
@@ -105,6 +109,8 @@ namespace Gst {
 			public uint get_content_length_limit ();
 			public Gst.RTSPServer.MountPoints? get_mount_points ();
 			public Gst.RTSPServer.SessionPool? get_session_pool ();
+			[Version (since = "1.18")]
+			public unowned Gst.RTSPServer.StreamTransport? get_stream_transport (uint8 channel);
 			public Gst.RTSPServer.ThreadPool? get_thread_pool ();
 			public Gst.RTSP.Result handle_message (Gst.RTSP.Message message);
 			[NoWrapper]
@@ -202,6 +208,10 @@ namespace Gst {
 			[Version (since = "1.8")]
 			public Gst.RTSPServer.PublishClockMode get_publish_clock_mode ();
 			public string? get_range_string (bool play, Gst.RTSP.RangeUnit unit);
+			[Version (since = "1.18")]
+			public bool get_rate_control ();
+			[Version (since = "1.18")]
+			public bool get_rates (double rate, double applied_rate);
 			public Gst.ClockTime get_retransmission_time ();
 			public Gst.RTSPServer.MediaStatus get_status ();
 			public unowned Gst.RTSPServer.Stream? get_stream (uint idx);
@@ -214,6 +224,8 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
+			[Version (since = "1.18")]
+			public bool is_receive_only ();
 			public bool is_reusable ();
 			public bool is_shared ();
 			public bool is_stop_on_disconnect ();
@@ -225,8 +237,9 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool query_stop (int64 stop);
 			public bool seek (Gst.RTSP.TimeRange range);
-			[Version (since = "1.14")]
 			public bool seek_full (Gst.RTSP.TimeRange range, Gst.SeekFlags flags);
+			[Version (since = "1.18")]
+			public bool seek_trickmode (Gst.RTSP.TimeRange range, Gst.SeekFlags flags, double rate, Gst.ClockTime trickmode_interval);
 			[Version (since = "1.14")]
 			public Gst.ClockTimeDiff seekable ();
 			public void set_address_pool (Gst.RTSPServer.AddressPool? pool);
@@ -247,6 +260,8 @@ namespace Gst {
 			public void set_protocols (Gst.RTSP.LowerTrans protocols);
 			[Version (since = "1.8")]
 			public void set_publish_clock_mode (Gst.RTSPServer.PublishClockMode mode);
+			[Version (since = "1.18")]
+			public void set_rate_control (bool enabled);
 			public void set_retransmission_time (Gst.ClockTime time);
 			public void set_reusable (bool reusable);
 			public void set_shared (bool shared);
@@ -405,8 +420,9 @@ namespace Gst {
 		[GIR (name = "RTSPOnvifClient")]
 		[Version (since = "1.14")]
 		public class OnvifClient : Gst.RTSPServer.Client {
-			[CCode (has_construct_function = false)]
-			protected OnvifClient ();
+			[CCode (has_construct_function = false, type = "GstRTSPClient*")]
+			[Version (since = "1.18")]
+			public OnvifClient ();
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPOnvifMedia", lower_case_cprefix = "gst_rtsp_onvif_media_", type_id = "gst_rtsp_onvif_media_get_type ()")]
 		[GIR (name = "RTSPOnvifMedia")]
@@ -427,9 +443,13 @@ namespace Gst {
 			public uint get_backchannel_bandwidth ();
 			public string get_backchannel_launch ();
 			public virtual bool has_backchannel_support ();
+			[Version (since = "1.18")]
+			public bool has_replay_support ();
 			public static bool requires_backchannel (Gst.RTSPServer.MediaFactory factory, Gst.RTSPServer.Context ctx);
 			public void set_backchannel_bandwidth (uint bandwidth);
 			public void set_backchannel_launch (string launch);
+			[Version (since = "1.18")]
+			public void set_replay_support (bool has_replay_support);
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPOnvifServer", lower_case_cprefix = "gst_rtsp_onvif_server_", type_id = "gst_rtsp_onvif_server_get_type ()")]
 		[GIR (name = "RTSPOnvifServer")]
@@ -599,6 +619,10 @@ namespace Gst {
 			public uint get_pt ();
 			[Version (since = "1.8")]
 			public Gst.RTSPServer.PublishClockMode get_publish_clock_mode ();
+			[Version (since = "1.18")]
+			public bool get_rate_control ();
+			[Version (since = "1.18")]
+			public bool get_rates (double? rate, double? applied_rate);
 			public uint get_retransmission_pt ();
 			public Gst.ClockTime get_retransmission_time ();
 			[Version (since = "1.14")]
@@ -668,6 +692,8 @@ namespace Gst {
 			public void set_pt_map (uint pt, Gst.Caps caps);
 			[Version (since = "1.8")]
 			public void set_publish_clock_mode (Gst.RTSPServer.PublishClockMode mode);
+			[Version (since = "1.18")]
+			public void set_rate_control (bool enabled);
 			public void set_retransmission_pt (uint rtx_pt);
 			public void set_retransmission_time (Gst.ClockTime time);
 			public void set_seqnum_offset (uint16 seqnum);
@@ -890,6 +916,8 @@ namespace Gst {
 		public delegate Gst.RTSPServer.FilterResult StreamTransportFilterFunc (Gst.RTSPServer.Stream stream, Gst.RTSPServer.StreamTransport trans);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GST_RTSP_ONVIF_BACKCHANNEL_REQUIREMENT")]
 		public const string _ONVIF_BACKCHANNEL_REQUIREMENT;
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GST_RTSP_ONVIF_REPLAY_REQUIREMENT")]
+		public const string _ONVIF_REPLAY_REQUIREMENT;
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_context_get_type")]
 		public static GLib.Type context_get_type ();
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "gst_rtsp_params_get")]

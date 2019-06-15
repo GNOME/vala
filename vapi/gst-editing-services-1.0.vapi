@@ -477,7 +477,7 @@ namespace GES {
 		public GLib.ParamSpec[] list_children_properties ();
 		public virtual bool lookup_child (string prop_name, out GLib.Object child, out GLib.ParamSpec pspec);
 		[Version (since = "1.6.0")]
-		public unowned GES.TimelineElement paste (Gst.ClockTime paste_position);
+		public GES.TimelineElement paste (Gst.ClockTime paste_position);
 		public bool remove_child_property (GLib.ParamSpec pspec);
 		public virtual bool ripple (uint64 start);
 		public virtual bool ripple_end (uint64 end);
@@ -1051,14 +1051,6 @@ namespace GES {
 	public const int PADDING_LARGE;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_TIMELINE_ELEMENT_NO_LAYER_PRIORITY")]
 	public const uint32 TIMELINE_ELEMENT_NO_LAYER_PRIORITY;
-	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_MAJOR")]
-	public const int VERSION_MAJOR;
-	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_MICRO")]
-	public const int VERSION_MICRO;
-	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_MINOR")]
-	public const int VERSION_MINOR;
-	[CCode (cheader_filename = "ges/ges.h", cname = "GES_VERSION_NANO")]
-	public const int VERSION_NANO;
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool add_missing_uri_relocation_uri (string uri, bool recurse);
 	[CCode (cheader_filename = "ges/ges.h")]

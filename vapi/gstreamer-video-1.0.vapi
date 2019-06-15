@@ -583,7 +583,7 @@ namespace Gst {
 			public Gst.Meta meta;
 			[CCode (array_length = false)]
 			public weak float matrix[16];
-			public void apply_matrix (float matrix);
+			public void apply_matrix ([CCode (array_length = false)] float matrix[16]);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoAlignment")]
