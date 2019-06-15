@@ -987,7 +987,7 @@ namespace Pango {
 		MULTANI,
 		OLD_HUNGARIAN,
 		SIGNWRITING;
-		[Version (since = "1.4")]
+		[Version (deprecated = true, deprecated_since = "1.44.", since = "1.4")]
 		public static Pango.Script for_unichar (unichar ch);
 		[Version (since = "1.4")]
 		public Pango.Language? get_sample_language ();

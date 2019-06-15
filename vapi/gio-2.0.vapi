@@ -1260,7 +1260,7 @@ namespace GLib {
 		public void clear_status ();
 		public void copy_into (GLib.FileInfo dest_info);
 		public GLib.FileInfo dup ();
-		public string get_attribute_as_string (string attribute);
+		public string? get_attribute_as_string (string attribute);
 		public bool get_attribute_boolean (string attribute);
 		public unowned string get_attribute_byte_string (string attribute);
 		public bool get_attribute_data (string attribute, out GLib.FileAttributeType type, out void* value_pp, out GLib.FileAttributeStatus status);
@@ -1416,6 +1416,7 @@ namespace GLib {
 	[Compact]
 	public class IOExtensionPoint {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME")]
+		[Version (deprecated = true, deprecated_since = "2.28")]
 		public const string DESKTOP_APP_INFO_LOOKUP;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME")]
 		public const string NATIVE_VOLUME_MONITOR;
@@ -2176,6 +2177,7 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] list_children ();
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (deprecated = true, deprecated_since = "2.46")]
 		public string[] list_keys ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (deprecated = true, deprecated_since = "2.40", since = "2.28")]
@@ -2753,7 +2755,7 @@ namespace GLib {
 		public async bool communicate_utf8_async (string? stdin_buf, GLib.Cancellable? cancellable, out string? stdout_buf, out string? stderr_buf) throws GLib.Error;
 		public void force_exit ();
 		public int get_exit_status ();
-		public unowned string get_identifier ();
+		public unowned string? get_identifier ();
 		public bool get_if_exited ();
 		public bool get_if_signaled ();
 		public int get_status ();

@@ -505,6 +505,7 @@ namespace Soup {
 		[Version (since = "2.68")]
 		public void set_session_policy (string domain, bool include_subdomains);
 		public virtual signal void changed (Soup.HSTSPolicy old_policy, Soup.HSTSPolicy new_policy);
+		public virtual signal void hsts_enforced (Soup.Message message);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_hsts_enforcer_db_get_type ()")]
 	public class HSTSEnforcerDB : Soup.HSTSEnforcer, Soup.SessionFeature {

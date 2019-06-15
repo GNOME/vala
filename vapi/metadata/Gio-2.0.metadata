@@ -141,9 +141,13 @@ InputStream
   .close abstract vfunc_name="close_fn" throws="GLib.IOError"
   .close_finish throws="GLib.IOError"
   .read abstract vfunc_name="read_fn" throws="GLib.IOError"
+  .read.buffer out=false
   .read_all throws="GLib.IOError"
+  .read_all.buffer out=false
+  .read_all_async.buffer out=false
   .read_all_async.io_priority default=()
   .read_all_async.cancellable default=()
+  .read_async.buffer out=false
   .read_finish throws="GLib.IOError"
   .skip throws="GLib.IOError"
   .skip_finish throws="GLib.IOError"

@@ -322,6 +322,8 @@ namespace Graphene {
 		public bool equal (Graphene.Rect b);
 		[Version (since = "1.4")]
 		public Graphene.Rect expand (Graphene.Point p);
+		[Version (since = "1.10")]
+		public float get_area ();
 		public Graphene.Point get_bottom_left ();
 		public Graphene.Point get_bottom_right ();
 		public Graphene.Point get_center ();
@@ -346,8 +348,10 @@ namespace Graphene {
 		public unowned Graphene.Rect? offset (float d_x, float d_y);
 		[Version (since = "1.4")]
 		public Graphene.Rect offset_r (float d_x, float d_y);
-		[Version (since = "1.4")]
+		[Version (deprecated = true, deprecated_since = "1.10", since = "1.4")]
 		public Graphene.Rect round ();
+		[Version (since = "1.10")]
+		public Graphene.Rect round_extents ();
 		[Version (deprecated = true, deprecated_since = "1.4", since = "1.0")]
 		public unowned Graphene.Rect? round_to_pixel ();
 		[Version (since = "1.10")]
