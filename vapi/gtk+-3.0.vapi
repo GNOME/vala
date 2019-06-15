@@ -6568,7 +6568,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_vscrollbar ();
 		[Version (since = "3.4")]
 		public void set_capture_button_press (bool capture_button_press);
-		public void set_hadjustment (Gtk.Adjustment hadjustment);
+		public void set_hadjustment (Gtk.Adjustment? hadjustment);
 		[Version (since = "3.4")]
 		public void set_kinetic_scrolling (bool kinetic_scrolling);
 		[Version (since = "3.22")]
@@ -6588,7 +6588,7 @@ namespace Gtk {
 		[Version (since = "3.22")]
 		public void set_propagate_natural_width (bool propagate);
 		public void set_shadow_type (Gtk.ShadowType type);
-		public void set_vadjustment (Gtk.Adjustment vadjustment);
+		public void set_vadjustment (Gtk.Adjustment? vadjustment);
 		[Version (since = "2.10")]
 		public void unset_placement ();
 		public Gtk.Adjustment hadjustment { get; set construct; }
@@ -6883,6 +6883,9 @@ namespace Gtk {
 		public int gtk_menu_popup_delay { get; set; }
 		[NoAccessorMethod]
 		public string gtk_modules { owned get; set; }
+		[NoAccessorMethod]
+		[Version (since = "3.24.9")]
+		public bool gtk_overlay_scrolling { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "3.6")]
 		public bool gtk_primary_button_warps_slider { get; set; }
