@@ -2262,6 +2262,8 @@ public class Vala.GirParser : CodeVisitor {
 				skip_element ();
 			} else if (reader_name == "source-position") {
 				skip_element ();
+			} else if (reader_name == "attribute") {
+				skip_element ();
 			} else {
 				break;
 			}
@@ -2290,6 +2292,8 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader_name == "doc-version" || reader_name == "doc-deprecated" || reader_name == "doc-stability") {
 				skip_element ();
 			} else if (reader_name == "source-position") {
+				skip_element ();
+			} else if (reader_name == "attribute") {
 				skip_element ();
 			} else {
 				break;
