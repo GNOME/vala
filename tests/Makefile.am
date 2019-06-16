@@ -371,6 +371,9 @@ TESTS = \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
 	objects/regex.vala \
+	objects/sealed-abstract-class.test \
+	objects/sealed-class.test \
+	objects/sealed-compact-class.test \
 	objects/signals.vala \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
@@ -659,6 +662,7 @@ TESTS = \
 	parser/property-set-redefined.test \
 	parser/qualified-member-access.vala \
 	parser/qualified-symbol-access.vala \
+	parser/sealed-class.vala \
 	parser/signal-no-class.test \
 	parser/signal-no-static.test \
 	parser/statement-outside-root.test \
