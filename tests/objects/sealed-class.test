@@ -1,0 +1,10 @@
+Invalid Code
+
+sealed class Foo {
+}
+
+class Bar : Foo {
+}
+
+void main () {
+}

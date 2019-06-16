@@ -321,6 +321,9 @@ TESTS = \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-static.vala \
 	objects/regex.vala \
+	objects/sealed-abstract-class.test \
+	objects/sealed-class.test \
+	objects/sealed-compact-class.test \
 	objects/signals.vala \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
@@ -572,6 +575,7 @@ TESTS = \
 	parser/property-no-virtual-override.test \
 	parser/property-set-must-have-body.test \
 	parser/property-set-redefined.test \
+	parser/sealed-class.vala \
 	parser/signal-no-class.test \
 	parser/signal-no-static.test \
 	parser/statement-outside-root.test \

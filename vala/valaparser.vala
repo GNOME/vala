@@ -2576,6 +2576,9 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
 		}
+		if (ModifierFlags.SEALED in flags) {
+			cl.is_sealed = true;
+		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.file_type == SourceFileType.PACKAGE) {
 			cl.external = true;
 		}
