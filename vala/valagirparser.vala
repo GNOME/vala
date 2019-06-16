@@ -62,6 +62,7 @@ public class Vala.GirParser : CodeVisitor {
 		VFUNC_NAME,
 		VIRTUAL,
 		ABSTRACT,
+		SEALED,
 		SCOPE,
 		STRUCT,
 		THROWS,
@@ -2884,6 +2885,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
+			cl.is_sealed = metadata.get_bool (ArgumentType.SEALED, false);
 
 			if (parent != null) {
 				cl.add_base_type (parse_type_from_gir_name (parent));

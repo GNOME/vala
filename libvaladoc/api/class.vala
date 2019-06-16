@@ -78,6 +78,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 		this.is_fundamental = data.is_fundamental ();
 		this.is_abstract = data.is_abstract;
+		this.is_sealed = data.is_sealed;
 	}
 
 	string? _get_private_cname (Vala.Class element) {
@@ -258,6 +259,15 @@ public class Valadoc.Api.Class : TypeSymbol {
 	}
 
 	/**
+	 * Specifies whether this class is sealed. Sealed classes may not be
+	 * sub-classed.
+	 */
+	public bool is_sealed {
+		private set;
+		get;
+	}
+
+	/**
 	 * Specifies whether this class is fundamental.
 	 */
 	public bool is_fundamental {
@@ -321,6 +331,9 @@ public class Valadoc.Api.Class : TypeSymbol {
 		signature.append_keyword (accessibility.to_string ());
 		if (is_abstract) {
 			signature.append_keyword ("abstract");
+		}
+		if (is_sealed) {
+			signature.append_keyword ("sealed");
 		}
 		signature.append_keyword ("class");
 		signature.append_symbol (this);
