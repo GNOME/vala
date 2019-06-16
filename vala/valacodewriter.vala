@@ -246,6 +246,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (cl.is_abstract) {
 			write_string ("abstract ");
 		}
+		if (cl.is_sealed) {
+			write_string ("sealed ");
+		}
 		write_string ("class ");
 		write_identifier (cl.name);
 
