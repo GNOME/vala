@@ -1,0 +1,7 @@
+Invalid Code
+
+sealed abstract class Foo {
+}
+
+void main () {
+}
