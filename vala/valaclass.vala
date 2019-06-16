@@ -38,6 +38,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_abstract { get; set; }
 
 	/**
+	 * Specifies whether this class is sealed. Sealed classes may not be
+	 * sub-classed.
+	 */
+	public bool is_sealed { get; set; }
+
+	/**
 	 * Instances of compact classes are fast to create and have a
 	 * compact memory layout. Compact classes don't support runtime
 	 * type information or virtual methods.
@@ -580,6 +586,24 @@ public class Vala.Class : ObjectTypeSymbol {
 			var c = new Constructor (source_reference);
 			c.body = new Block (source_reference);
 			add_constructor (c);
+		}
+
+		if (base_class != null && base_class.is_sealed) {
+			error = true;
+			Report.error (source_reference, "`%s' cannot inherit from sealed class `%s'".printf (get_full_name (), base_class.get_full_name ()));
+		}
+
+		if (is_sealed) {
+			if (is_compact) {
+				error = true;
+				Report.error (source_reference, "Sealed class `%s' cannot be compact".printf (get_full_name ()));
+				return false;
+			}
+			if (is_abstract) {
+				error = true;
+				Report.error (source_reference, "Sealed class `%s' cannot be abstract".printf (get_full_name ()));
+				return false;
+			}
 		}
 
 		/* process enums first to avoid order problems in C code */
