@@ -27,8 +27,8 @@ void change_buffer2 ([CCode (array_length = false)] uchar[] data) {
 
 void main () {
 	{
-		data = { 'f', 'o', 'o', '\n' };
-		data2 = { 102, 111, 111, 10 };
+		data = { 'f', 'o', 'o', '\n', '\0' };
+		data2 = { 102, 111, 111, 10, 0 };
 		assert ("foo\n" == (string) data);
 		change_buffer (get_buffer ());
 		assert ("bar\n" == (string) data);
@@ -38,8 +38,8 @@ void main () {
 	}
 
 	{
-		data = { 'f', 'o', 'o', '\n' };
-		data2 = { 102, 111, 111, 10 };
+		data = { 'f', 'o', 'o', '\n', '\0' };
+		data2 = { 102, 111, 111, 10, 0 };
 		assert ("foo\n" == (string) data2);
 		change_buffer2 (get_buffer2 ());
 		assert ("baz\n" == (string) data2);
