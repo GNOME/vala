@@ -663,6 +663,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
+		// sealed classes are special
+		if (sym is Class && ((Class) sym).is_sealed) {
+			return false;
+		}
 		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
 		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
