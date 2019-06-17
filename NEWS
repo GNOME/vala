@@ -1,3 +1,23 @@
+Vala 0.45.2
+===========
+ * Various improvements and bug fixes:
+  - Only warn about imcompatible type of external construct property [#803]
+  - codegen: Use array_length of collection variable instead of expression
+  - girparser: Skip 'attribute' elements
+  - girwriter: Report error on secondary top-level namespace [#805]
+  - genie: Drop unused "writeonly" token
+  - genie: Make 'self' match its TokenType name
+  - tests: Null-terminate arrays for compatibility test of uint8 / uchar [#809]
+
+ * Bindings:
+  - gmodule-2.0: Build from GIR
+  - glib-2.0: Add Unicode 12.0 symbols
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk+-3.0: Update to 3.24.9~18177388
+  - gtk4: Update to 3.96.0+8cfdd6c5
+  - webkit2gtk-4.0: Update to 2.25.1
+  - vapi: Update GIR-based bindings
+
 Vala 0.45.1
 ===========
  * Highlights:
