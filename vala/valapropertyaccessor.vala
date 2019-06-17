@@ -206,9 +206,14 @@ public class Vala.PropertyAccessor : Subroutine {
 			Report.error (source_reference, "construct properties require `GLib.Object'");
 			return false;
 		} else if (construction && !context.analyzer.is_gobject_property (prop)) {
-			error = true;
-			Report.error (source_reference, "construct properties not supported for specified property type");
-			return false;
+			//TODO Report an error for external property too
+			if (external_package) {
+				Report.warning (source_reference, "construct properties not supported for specified property type");
+			} else {
+				error = true;
+				Report.error (source_reference, "construct properties not supported for specified property type");
+				return false;
+			}
 		}
 
 		if (body != null && prop.is_abstract) {
