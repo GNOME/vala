@@ -1,3 +1,15 @@
+Vala 0.44.5
+===========
+ * Various improvements and bug fixes:
+  - Only warn about imcompatible type of external construct property [#803]
+  - codegen: Use array_length of collection variable instead of expression
+  - girparser: Skip 'attribute' elements
+  - girwriter: Report error on secondary top-level namespace [#805]
+
+ * Bindings:
+  - gtk+-3.0: Update to 3.24.9~18177388
+  - gtk4: Update to 3.96.0+8cfdd6c5
+
 Vala 0.44.4
 ===========
  * Various improvements and bug fixes:
