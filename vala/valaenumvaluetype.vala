@@ -47,7 +47,7 @@ public class Vala.EnumValueType : ValueType {
 			string_type.value_owned = false;
 			to_string_method = new Method ("to_string", string_type);
 			to_string_method.access = SymbolAccessibility.PUBLIC;
-			to_string_method.external = true;
+			to_string_method.is_extern = true;
 			to_string_method.owner = type_symbol.scope;
 			to_string_method.this_parameter = new Parameter ("this", this);
 			to_string_method.scope.add (to_string_method.this_parameter.name, to_string_method.this_parameter);

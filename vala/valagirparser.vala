@@ -2345,7 +2345,6 @@ public class Vala.GirParser : CodeVisitor {
 		if (!error_domain)
 			set_type_id_ccode (sym);
 
-		sym.external = true;
 		sym.access = SymbolAccessibility.PUBLIC;
 
 		string common_prefix = null;
@@ -2786,7 +2785,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		set_type_id_ccode (st);
 
-		st.external = true;
 		st.access = SymbolAccessibility.PUBLIC;
 
 		var gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
@@ -2858,7 +2856,6 @@ public class Vala.GirParser : CodeVisitor {
 		set_type_id_ccode (cl);
 
 		cl.access = SymbolAccessibility.PUBLIC;
-		cl.external = true;
 
 		next ();
 
@@ -2935,8 +2932,6 @@ public class Vala.GirParser : CodeVisitor {
 		set_type_id_ccode (iface);
 
 		iface.access = SymbolAccessibility.PUBLIC;
-		iface.external = true;
-
 
 		next ();
 
@@ -3040,7 +3035,6 @@ public class Vala.GirParser : CodeVisitor {
 		var prop = new Property (current.name, type, null, null, current.source_reference);
 		prop.comment = comment;
 		prop.access = SymbolAccessibility.PUBLIC;
-		prop.external = true;
 		prop.is_abstract = is_abstract;
 		if (no_array_length || array_null_terminated) {
 			prop.set_attribute_bool ("CCode", "array_length", !no_array_length);
@@ -3155,7 +3149,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		s.access = SymbolAccessibility.PUBLIC;
 		s.comment = comment;
-		s.external = true;
 
 		// Transform fixed-array properties of return-type into ccode-attribute
 		var array_type = return_type as ArrayType;
@@ -3411,7 +3404,6 @@ public class Vala.GirParser : CodeVisitor {
 		require_copy_free = cl.has_attribute_argument ("CCode", "type_id");
 
 		cl.access = SymbolAccessibility.PUBLIC;
-		cl.external = true;
 
 		if (metadata.has_argument (ArgumentType.BASE_TYPE)) {
 			cl.add_base_type (parse_type_from_string (metadata.get_string (ArgumentType.BASE_TYPE), true, metadata.get_source_reference (ArgumentType.BASE_TYPE)));
@@ -3512,7 +3504,6 @@ public class Vala.GirParser : CodeVisitor {
 			st = (Struct) current.symbol;
 		}
 		st.access = SymbolAccessibility.PUBLIC;
-		st.external = true;
 
 		next ();
 
@@ -3564,7 +3555,6 @@ public class Vala.GirParser : CodeVisitor {
 		current.symbol = c;
 		c.access = SymbolAccessibility.PUBLIC;
 		c.comment = comment;
-		c.external = true;
 		if (no_array_length || array_null_terminated) {
 			c.set_attribute_bool ("CCode", "array_length", !no_array_length);
 		}
@@ -3719,7 +3709,6 @@ public class Vala.GirParser : CodeVisitor {
 				st.base_type = base_type;
 			}
 			st.comment = alias.comment;
-			st.external = true;
 			st.set_simple_type (simple_type);
 			alias.symbol = st;
 		} else if (type_sym is Class) {
@@ -3729,7 +3718,6 @@ public class Vala.GirParser : CodeVisitor {
 				cl.add_base_type (base_type);
 			}
 			cl.comment = alias.comment;
-			cl.external = true;
 			cl.is_compact = ((Class) type_sym).is_compact;
 			alias.symbol = cl;
 		} else if (type_sym is Interface) {
@@ -3740,7 +3728,6 @@ public class Vala.GirParser : CodeVisitor {
 				iface.add_prerequisite (base_type);
 			}
 			iface.comment = alias.comment;
-			iface.external = true;
 			alias.symbol = iface;
 		} else if (type_sym is Delegate) {
 			var orig = (Delegate) type_sym;
@@ -3765,8 +3752,6 @@ public class Vala.GirParser : CodeVisitor {
 			foreach (var attribute in orig.attributes) {
 				deleg.attributes.append (attribute);
 			}
-
-			deleg.external = true;
 
 			alias.symbol = deleg;
 		} else if (type_sym != null) {
@@ -4154,7 +4139,6 @@ public class Vala.GirParser : CodeVisitor {
 				method = new CreationMethod (((CreationMethod) finish_method).class_name, null, m.source_reference);
 				method.access = m.access;
 				method.binding = m.binding;
-				method.external = true;
 				method.coroutine = true;
 				method.has_construct_function = finish_method.has_construct_function;
 
