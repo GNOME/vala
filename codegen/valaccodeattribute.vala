@@ -837,13 +837,13 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym is DynamicProperty || sym is DynamicMethod) {
 			return "";
 		}
-		if (sym.parent_symbol != null) {
+		if (sym.parent_symbol != null && !sym.is_extern) {
 			var parent_headers = get_ccode_header_filenames (sym.parent_symbol);
 			if (parent_headers.length > 0) {
 				return parent_headers;
 			}
 		}
-		if (sym.source_reference != null && !sym.external_package) {
+		if (sym.source_reference != null && !sym.external_package && !sym.is_extern) {
 			// don't add default include directives for VAPI files
 			return sym.source_reference.file.get_cinclude_filename ();
 		}

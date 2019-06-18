@@ -98,6 +98,7 @@ TESTS = \
 	methods/lambda.vala \
 	methods/closures.vala \
 	methods/contains.vala \
+	methods/extern.vala \
 	methods/iterator.vala \
 	methods/prepostconditions.vala \
 	methods/same-name.vala \
