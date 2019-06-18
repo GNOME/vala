@@ -152,11 +152,23 @@ public abstract class Vala.Symbol : CodeNode {
 		get { return _scope; }
 	}
 
+	public bool is_extern { get; set; }
+
 	/**
 	 * Specifies whether the implementation is external, for example in
 	 * a separate C source file or in an external library.
 	 */
-	public bool external { get; set; }
+	public bool external {
+		get {
+			if (_external != null) {
+				return _external;
+			}
+			return is_extern || external_package;
+		}
+		set {
+			_external = value;
+		}
+	}
 
 	/**
 	 * Specifies whether the implementation is in an external library.
@@ -196,6 +208,7 @@ public abstract class Vala.Symbol : CodeNode {
 
 	private weak Scope _owner;
 	private Scope _scope;
+	private bool? _external;
 
 	protected Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
 		this.name = name;
