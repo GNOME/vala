@@ -657,16 +657,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
-		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
+		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
+		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
 				decl_space.add_feature_test_macro (feature_test_macro);
 			}
 			// add appropriate include file
 			foreach (unowned string header_filename in get_ccode_header_filenames (sym).split (",")) {
-				decl_space.add_include (header_filename, !sym.external_package ||
-				                                         (sym.external_package &&
-				                                          sym.from_commandline));
+				decl_space.add_include (header_filename,
+					!sym.is_extern && (!sym.external_package || (sym.external_package && sym.from_commandline)));
 			}
 			// declaration complete
 			return true;
