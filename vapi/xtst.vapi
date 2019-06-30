@@ -40,7 +40,7 @@ namespace XTest {
 	public static int fake_motion_event (X.Display display, int screen_number, int x, int y, ulong delay);
 
 	[CCode (cheader_filename = "X11/extensions/XTest.h", cname = "XTestFakeRelativeMotionEvent")]
-	public static int fake_relative_motion_event (X.Display display, int screen_number, int x, int y, ulong delay);
+	public static int fake_relative_motion_event (X.Display display, int x, int y, ulong delay);
 
 	[CCode (cheader_filename = "X11/extensions/XTest.h", cname = "XTestGrabControl")]
 	public static int grab_control (X.Display display, bool impervious);
