@@ -4626,7 +4626,7 @@ namespace GLib {
 
 	[Version (since = "2.16")]
 	[CCode (cname = "((GCompareFunc) g_strcmp0)")]
-	public static GLib.CompareFunc<string> strcmp;
+	public static GLib.CompareFunc<string?> strcmp;
 
 	public delegate G CopyFunc<G> (G src);
 
