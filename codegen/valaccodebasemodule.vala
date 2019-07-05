@@ -4306,6 +4306,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
 
+			// use temp-var for upcoming address-of operator
+			var temp_cvalue = create_temp_value (type, false, node);
+			store_value (temp_cvalue, value);
+			cexpr = get_cvalue_ (temp_cvalue);
+
 			var temp_value = create_temp_value (type, true, node, true);
 			var ctemp = get_cvalue_ (temp_value);
 
@@ -4338,7 +4343,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_else ();
 
 				// g_value_init/copy must not be called for uninitialized values
-				store_value (temp_value, value);
+				store_value (temp_value, temp_cvalue);
 				ccode.close ();
 			} else {
 				ccode.add_expression (copy_call);
