@@ -20,6 +20,7 @@ libvalaccodegen_la_LTLIBRARIES = \
 libvalaccodegen_ladir = $(pkglibdir)
 
 libvalaccodegen_la_LDFLAGS = \
+	-no-undefined \
 	-avoid-version \
 	$(NULL)
 
