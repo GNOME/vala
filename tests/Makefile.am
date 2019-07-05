@@ -146,6 +146,7 @@ TESTS = \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
+	methods/varargs-gvalue.vala \
 	methods/varargs-out.vala \
 	control-flow/assigned-local-variable.vala \
 	control-flow/break.vala \
