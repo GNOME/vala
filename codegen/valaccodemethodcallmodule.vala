@@ -268,6 +268,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// generic method
 				int type_param_index = 0;
 				foreach (var type_arg in ma.get_type_arguments ()) {
+					// real structs are passed by reference for simple generics
+					if (get_ccode_simple_generics (m) && type_arg.is_real_struct_type () && !type_arg.nullable && !(type_arg is PointerType)) {
+					    type_arg = new PointerType (type_arg);
+					}
 					in_arg_map.set (get_param_pos (get_ccode_generic_type_pos (m) + 0.01 * type_param_index), new CCodeIdentifier (get_ccode_name (type_arg)));
 					type_param_index++;
 				}
@@ -761,6 +765,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			} else {
 				ccall_expr = new CCodeAssignment (instance, ccall_expr);
 			}
+		}
+
+		// real structs are passed by reference for simple generics
+		if (m != null && get_ccode_simple_generics (m) && m.return_type is GenericType
+		    && expr.value_type.is_real_struct_type () && !expr.value_type.nullable && !(expr.value_type is PointerType)) {
+		    ccall_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeParenthesizedExpression (ccall_expr));
 		}
 
 		if (m != null && get_ccode_type (m) != null && get_ccode_type (m) != get_ccode_name (m.return_type)) {
