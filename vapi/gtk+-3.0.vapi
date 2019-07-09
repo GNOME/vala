@@ -5348,7 +5348,7 @@ namespace Gtk {
 		[Version (since = "3.18")]
 		public bool get_overlay_pass_through (Gtk.Widget widget);
 		[Version (since = "3.18")]
-		public void reorder_overlay (Gtk.Widget child, int position);
+		public void reorder_overlay (Gtk.Widget child, int index_);
 		[Version (since = "3.18")]
 		public void set_overlay_pass_through (Gtk.Widget widget, bool pass_through);
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);

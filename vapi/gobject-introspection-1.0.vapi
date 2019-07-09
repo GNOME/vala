@@ -192,7 +192,7 @@ namespace GI {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_loaded_namespaces ();
 		public int get_n_infos (string namespace_);
-		[Version (since = "1.60")]
+		[Version (since = "1.62")]
 		public void get_object_gtype_interfaces (GLib.Type gtype, [CCode (array_length_cname = "n_interfaces_out", array_length_pos = 1.5, array_length_type = "guint")] out unowned GI.InterfaceInfo[] interfaces_out);
 		public static GLib.OptionGroup get_option_group ();
 		public static unowned GLib.SList<string> get_search_path ();

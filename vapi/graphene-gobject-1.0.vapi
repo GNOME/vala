@@ -52,6 +52,8 @@ namespace Graphene {
 		public unowned Graphene.Euler? init_from_euler (Graphene.Euler? src);
 		public unowned Graphene.Euler? init_from_matrix (Graphene.Matrix? m, Graphene.EulerOrder order);
 		public unowned Graphene.Euler? init_from_quaternion (Graphene.Quaternion? q, Graphene.EulerOrder order);
+		[Version (since = "1.10")]
+		public unowned Graphene.Euler? init_from_radians (float x, float y, float z, Graphene.EulerOrder order);
 		public unowned Graphene.Euler? init_from_vec3 (Graphene.Vec3? v, Graphene.EulerOrder order);
 		public unowned Graphene.Euler? init_with_order (float x, float y, float z, Graphene.EulerOrder order);
 		public Graphene.Euler reorder (Graphene.EulerOrder order);

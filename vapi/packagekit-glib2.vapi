@@ -56,6 +56,7 @@ namespace Pk {
 		public async Pk.Results adopt_async (string transaction_id, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[NoWrapper]
 		public virtual void changed ();
+		public static bool create_helper_argv_envp (string argv, string envp_out);
 		[Version (since = "0.5.3")]
 		public Pk.Results depends_on (Pk.Bitfield filters, [CCode (array_length = false, array_null_terminated = true)] string[] package_ids, bool recursive, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (finish_name = "pk_client_generic_finish")]
@@ -248,8 +249,12 @@ namespace Pk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "0.6.10")]
 		public ClientHelper ();
+		[Version (since = "1.1.13")]
+		public bool is_active ();
 		[Version (since = "0.6.10")]
 		public bool start (string socket_filename, string argv, string envp) throws GLib.Error;
+		[Version (since = "1.1.13")]
+		public bool start_with_socket (GLib.Socket socket, string argv, string envp) throws GLib.Error;
 		[Version (since = "0.6.10")]
 		public bool stop () throws GLib.Error;
 	}

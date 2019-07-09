@@ -1172,7 +1172,9 @@ namespace Soup {
 		public unowned string? get_protocol ();
 		public Soup.WebsocketState get_state ();
 		public unowned Soup.URI get_uri ();
-		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
+		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? data);
+		[Version (since = "2.68")]
+		public void send_message (Soup.WebsocketDataType type, GLib.Bytes message);
 		public void send_text (string text);
 		[Version (since = "2.58")]
 		public void set_keepalive_interval (uint interval);

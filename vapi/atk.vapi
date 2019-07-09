@@ -68,7 +68,7 @@ namespace Atk {
 		[CCode (has_construct_function = false)]
 		protected Object ();
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "2.12")]
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
 		[Version (since = "2.34")]
 		public unowned string get_accessible_id ();
@@ -94,7 +94,7 @@ namespace Atk {
 		public Atk.Object ref_accessible_child (int i);
 		public virtual Atk.RelationSet ref_relation_set ();
 		public virtual Atk.StateSet ref_state_set ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "2.12")]
 		public virtual void remove_property_change_handler (uint handler_id);
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		[Version (since = "2.34")]
@@ -158,6 +158,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_plug_get_type ()")]
 	public class Plug : Atk.Object, Atk.Component {
 		[CCode (has_construct_function = false, type = "AtkObject*")]
+		[Version (since = "1.30")]
 		public Plug ();
 		[Version (since = "1.30")]
 		public string get_id ();
@@ -789,6 +790,8 @@ namespace Atk {
 		SUBSCRIPT,
 		SUPERSCRIPT,
 		FOOTNOTE,
+		CONTENT_DELETION,
+		CONTENT_INSERTION,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);
