@@ -2086,8 +2086,9 @@ namespace GLib {
 	}
 
 	[Version (since = "2.60")]
+	[Compact]
 	[CCode (destroy_function = "g_rec_mutex_locker_free")]
-	public struct RecMutexLocker {
+	public class RecMutexLocker {
 		public RecMutexLocker (RecMutex rec_mutex);
 		public void free ();
 	}
