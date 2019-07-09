@@ -4941,6 +4941,9 @@ namespace GLib {
 	public static GLib.HashFunc<string> str_hash;
 	[CCode (cname = "g_str_equal")]
 	public static GLib.EqualFunc<string> str_equal;
+	[Version (since = "2.60")]
+	[CCode (cname = "((GEqualFunc) g_strv_equal)")]
+	public static GLib.EqualFunc<string[]> strv_equal;
 	[CCode (cname = "g_free")]
 	public static GLib.DestroyNotify g_free;
 	[CCode (cname = "g_list_free")]
@@ -5502,6 +5505,7 @@ namespace GLib {
 		public const uint @2_54;
 		public const uint @2_56;
 		public const uint @2_58;
+		public const uint @2_60;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
