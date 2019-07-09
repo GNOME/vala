@@ -712,7 +712,7 @@ namespace Gst {
 			public bool is_async ();
 			[NoWrapper]
 			public virtual bool is_seekable ();
-			[NoWrapper]
+			[Version (since = "1.18")]
 			public virtual bool negotiate ();
 			public bool new_seamless_segment (int64 start, int64 stop, int64 time);
 			[NoWrapper]

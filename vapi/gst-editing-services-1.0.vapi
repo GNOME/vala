@@ -607,6 +607,8 @@ namespace GES {
 		public Gst.Caps caps { get; construct; }
 		[NoAccessorMethod]
 		public uint64 duration { get; }
+		[NoAccessorMethod]
+		public string id { owned get; set; }
 		public bool mixing { get; set construct; }
 		[NoAccessorMethod]
 		public Gst.Caps restriction_caps { owned get; set; }

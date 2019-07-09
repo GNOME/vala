@@ -3556,6 +3556,7 @@ namespace Gst {
 	[Flags]
 	[Version (since = "1.12")]
 	public enum StackTraceFlags {
+		NONE,
 		FULL
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STATE_", type_id = "gst_state_get_type ()")]
@@ -4092,6 +4093,9 @@ namespace Gst {
 	public static bool segtrap_is_enabled ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void segtrap_set_enabled (bool enabled);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.18")]
+	public static GLib.List<Gst.Tracer> tracing_get_active_tracers ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void tracing_register_hook (Gst.Tracer tracer, string detail, [CCode (scope = "async")] GLib.Callback func);
 	[CCode (cheader_filename = "gst/gst.h")]

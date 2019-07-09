@@ -101,6 +101,12 @@ namespace Gst {
 			public const string ALBUMID;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_ARTISTID")]
 			public const string ARTISTID;
+			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_RELEASEGROUPID")]
+			[Version (since = "1.18")]
+			public const string RELEASEGROUPID;
+			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_RELEASETRACKID")]
+			[Version (since = "1.18")]
+			public const string RELEASETRACKID;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_TRACKID")]
 			public const string TRACKID;
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_TRMID")]
@@ -188,6 +194,12 @@ namespace Gst {
 			CREATIVE_COMMONS_LICENSE,
 			FREE_SOFTWARE_FOUNDATION_LICENSE
 		}
+		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_ACOUSTID_FINGERPRINT")]
+		[Version (since = "1.18")]
+		public const string ACOUSTID_FINGERPRINT;
+		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_ACOUSTID_ID")]
+		[Version (since = "1.18")]
+		public const string ACOUSTID_ID;
 		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_ID3V2_HEADER_SIZE")]
 		public const int ID3V2_HEADER_SIZE;
 		[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICAL_KEY")]
