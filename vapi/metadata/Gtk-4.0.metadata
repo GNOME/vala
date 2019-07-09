@@ -14,8 +14,6 @@ IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
 
 // G-I doesn't support structs
 BindingSet struct=false
-BindingEntry struct=false
-BindingSignal struct=false
 Border struct
 FileFilterInfo struct=false
 Requisition struct
@@ -185,9 +183,6 @@ CellRenderer
 ComboBox
   .get_active_iter.iter unowned=false
 
-// Structs as generic type arguments
-binding_entry_add_signall.binding_args type="GLib.SList<Gtk.BindingArg?>"
-
 // Subclasses conflicting with virtual methods with different signatures
 CellAreaBox
   .pack_end name="pack_end_full"
@@ -222,6 +217,8 @@ TreeSelection
   .get_user_data skip=false
 
 // Symbol name conflicts
+Constraint
+  .new_constant name="const"
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 Notebook
@@ -325,8 +322,6 @@ WidgetPath
 TreeModel
   .get_value return_void
   .rows_reordered skip
-BindingArg
-  .d.* skip
 rc_property_parse_* skip
 show_about_dialog skip=false
 test_init skip=false

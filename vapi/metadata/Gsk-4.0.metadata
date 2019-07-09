@@ -1,3 +1,5 @@
+*.ref unowned
+
 Renderer
 	// Factory method
 	.new_for_surface symbol_type="function" name="for_surface"
