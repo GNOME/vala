@@ -2104,6 +2104,22 @@ namespace GLib {
 		public void reader_unlock ();
 	}
 
+	[Version (since = "2.62")]
+	[Compact]
+	[CCode (destroy_function = "g_rw_lock_reader_locker_free")]
+	public class RWLockReaderLocker {
+		public RWLockReaderLocker (RWLock rw_lock);
+		public void free ();
+	}
+
+	[Version (since = "2.62")]
+	[Compact]
+	[CCode (destroy_function = "g_rw_lock_writer_locker_free")]
+	public class RWLockWriterLocker {
+		public RWLockWriterLocker (RWLock rw_lock);
+		public void free ();
+	}
+
 	[Version (deprecated_since = "2.32", replacement = "Mutex")]
 	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT")]
 	public struct StaticMutex {
@@ -3436,6 +3452,8 @@ namespace GLib {
 		[Version (since = "2.4")]
 		public void @continue ();
 		public double elapsed (out ulong microseconds = null);
+		[Version (since = "2.62")]
+		public bool is_active ();
 		public void reset ();
 	}
 
@@ -4532,6 +4550,9 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert_before (List<G> sibling, owned G data);
 		[ReturnsModifiedPointer ()]
+		[Version (since = "2.62")]
+		public void insert_before_link (List<G> sibling, owned List<G> link_);
+		[ReturnsModifiedPointer ()]
 		public void insert_sorted (owned G data, CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
@@ -4704,8 +4725,12 @@ namespace GLib {
 		public void unlink (List<G> link);
 		[Version (since = "2.4")]
 		public void insert_before (List<G> sibling, owned G data);
+		[Version (since = "2.62")]
+		public void insert_before_link (List<G> sibling, owned List<G> link_);
 		[Version (since = "2.4")]
 		public void insert_after (List<G> sibling, owned G data);
+		[Version (since = "2.62")]
+		public void insert_after_link (List<G> sibling, owned List<G> link_);
 		[Version (since = "2.4")]
 		public void insert_sorted (owned G data, CompareDataFunc<G> func);
 	}
@@ -5053,6 +5078,12 @@ namespace GLib {
 		[CCode (cname = "g_ptr_array_new_full", simple_generics = true)]
 		public GenericArray (uint reserved_size = 0);
 		public void add (owned G data);
+		[Version (since = "2.62")]
+		public GenericArray<G> copy (CopyFunc<G> func);
+		[Version (since = "2.62")]
+		public void extend (GenericArray<G> array, CopyFunc<G> func);
+		[Version (since = "2.62")]
+		public void extend_and_steal (owned GenericArray<G> array);
 		[Version (since = "2.54")]
 		public bool find (G needle, out uint index = null);
 		[Version (since = "2.54")]
@@ -5297,6 +5328,8 @@ namespace GLib {
 		public Array.sized (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G), uint reserved_size = 0);
 		public void append_val (owned G value);
 		public void append_vals (void* data, uint len);
+		[Version (since = "2.62")]
+		public Array<unowned G> copy ();
 		public void prepend_val (owned G value);
 		public void prepend_vals (void* data, uint len);
 		public void insert_val (uint index, owned G value);
@@ -5501,6 +5534,7 @@ namespace GLib {
 		public const uint @2_56;
 		public const uint @2_58;
 		public const uint @2_60;
+		public const uint @2_62;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
