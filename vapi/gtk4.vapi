@@ -8992,19 +8992,21 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_media_file_get_type ()")]
 	public abstract class MediaFile : Gtk.MediaStream, Gdk.Paintable {
-		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile ();
+		[CCode (has_construct_function = false)]
+		protected MediaFile ();
 		public void clear ();
 		[NoWrapper]
 		public virtual void close ();
-		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_file (GLib.File file);
-		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_filename (string filename);
-		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_input_stream (GLib.InputStream stream);
-		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_resource (string resource_path);
+		[CCode (cname = "gtk_media_file_new")]
+		public static Gtk.MediaFile empty ();
+		[CCode (cname = "gtk_media_file_new_for_file")]
+		public static Gtk.MediaFile for_file (GLib.File file);
+		[CCode (cname = "gtk_media_file_new_for_filename")]
+		public static Gtk.MediaFile for_filename (string filename);
+		[CCode (cname = "gtk_media_file_new_for_input_stream")]
+		public static Gtk.MediaFile for_input_stream (GLib.InputStream stream);
+		[CCode (cname = "gtk_media_file_new_for_resource")]
+		public static Gtk.MediaFile for_resource (string resource_path);
 		public unowned GLib.File? get_file ();
 		public unowned GLib.InputStream? get_input_stream ();
 		[NoWrapper]
