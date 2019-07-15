@@ -671,13 +671,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			sym.source_reference.file.used = true;
 		}
 		if (sym.anonymous) {
-			return !decl_space.is_header && CodeContext.get ().use_header;
+			return !decl_space.is_header;
 		}
 		// constants with initializer-list are special
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
-		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
+		if (sym.external_package || (!decl_space.is_header && !sym.is_internal_symbol ())
 		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
