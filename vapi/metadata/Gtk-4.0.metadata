@@ -61,6 +61,11 @@ TreeStore
 CellRenderer
   .get_size replacement="get_preferred_size"
 
+// Factory method of abstract type
+MediaFile
+  .new* symbol_type="function" name="new_(.+)" ctype="GtkMediaStream*"
+  .new name="empty"
+
 // G-I cannot deprecate whole types
 
 // G-I cannot handle returning non-boxed types
