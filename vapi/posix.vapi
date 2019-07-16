@@ -527,6 +527,8 @@ namespace Posix {
 	public const int EXDEV;
 
 	[CCode (cheader_filename = "fcntl.h")]
+	public const int AT_FDCWD;
+	[CCode (cheader_filename = "fcntl.h")]
 	public const int F_DUPFD;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int F_GETFD;
@@ -581,6 +583,14 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_WRONLY;
 	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_DIRECTORY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_PATH;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_CLOEXEC;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_NOFOLLOW;
+	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_NORMAL;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_SEQUENTIAL;
@@ -598,6 +608,8 @@ namespace Posix {
 	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int open (string path, int oflag, mode_t mode=0);
+	[CCode (cheader_filename = "fcntl.h")]
+	public int openat (int dirfd, string path, int oflag, mode_t mode=0);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fadvise (int fd, long offset, long len, int advice);
 	[CCode (cheader_filename = "fcntl.h")]
