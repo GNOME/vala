@@ -580,7 +580,23 @@ namespace Posix {
 	public const int O_RDWR;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_WRONLY;
-	[CCode (cheader_filename = "fcntl.h")]
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_DIRECTORY;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_CLOEXEC;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_NOFOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_FDCWD;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_EACCESS;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_SYMLINK_FOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_SYMLINK_NOFOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_REMOVEDIR;
+	[CCode (cheader_filename = "fcntl.h"]
 	public const int POSIX_FADV_NORMAL;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_SEQUENTIAL;
@@ -598,6 +614,8 @@ namespace Posix {
 	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int open (string path, int oflag, mode_t mode=0);
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public int openat (int dirfd, string path, int oflag, mode_t mode=0);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fadvise (int fd, long offset, long len, int advice);
 	[CCode (cheader_filename = "fcntl.h")]
@@ -2164,6 +2182,8 @@ namespace Posix {
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mkfifoat (int dirfd, string pathname, mode_t mode);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public const mode_t S_IFMT;
@@ -2253,17 +2273,25 @@ namespace Posix {
 	int stat (string filename, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h")]
 	int lstat (string filename, out Stat buf);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	int fstatat (int dirfd, string pathname, out Stat buf, int flags);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int chmod (string filename, mode_t mode);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int fchmod (int fd, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int fchmodat (int dirfd, string pathname, mode_t mode, int flags);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public mode_t umask (mode_t mask);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkdir (string path, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mkdirat (int dirfd, string pathname, mode_t mode);
 	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
 	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mknodat (int dirfd, string pathname, mode_t mode, dev_t dev);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int utimensat (int dirfd, string pathname, [CCode (array_length = false)] timespec[] times, int flags = 0);
@@ -2467,6 +2495,8 @@ namespace Posix {
 	public ssize_t pread (int fd, void* buf, size_t count, off_t offset);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t readlink (string path, char[] buf);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public ssize_t readlinkat (int dirfd, string pathname, char[] buf);
 	[CCode (cheader_filename = "sys/uio.h")]
 	public ssize_t readv (int fd, iovector vector, int iovcnt = 1);
 	[CCode (cname = "readv", cheader_filename = "sys/uio.h")]
@@ -2481,6 +2511,8 @@ namespace Posix {
 	public int setuid (uid_t uid);
 	[CCode (cheader_filename = "unistd.h")]
 	public int unlink (string filename);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int unlinkat (int dirfd, string pathname, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t write (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]
@@ -2511,12 +2543,18 @@ namespace Posix {
 	public bool isatty (int fd);
 	[CCode (cheader_filename = "unistd.h")]
 	public int link (string from, string to);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int linkat (int from_dirfd, string from, int to_dirfd, string to, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public int symlink (string from, string to);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int symlinkat (string from, int to_dirfd, string to);
 	[CCode (cheader_filename = "unistd.h")]
 	public long sysconf (int name);
 	[CCode (cheader_filename = "unistd.h")]
 	public int rmdir (string path);
+	[CCode (cheader_filename = "stdio.h", feature_test_macro = "_GNU_SOURCE")]
+	public int renameat (int from_fd, string from, int to_dirfd, string to);
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t tcgetpgrp (int fd);
 	[CCode (cheader_filename = "unistd.h")]
@@ -2621,6 +2659,8 @@ namespace Posix {
 	public int euidaccess (string patchname, int mode);
 	[CCode (cheader_filename = "unistd.h")]
 	public int eaccess (string patchname, int mode);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int faccessat (int dirfd, string pathname, int mode, int flags);
 
 	[CCode (cheader_filename = "unistd.h")]
 	public uint alarm (uint seconds);
@@ -2638,6 +2678,8 @@ namespace Posix {
 	public int fchown (int fd, uid_t owner, gid_t group);
 	[CCode (cheader_filename = "unistd.h")]
 	public int lchown (string filename, uid_t owner, gid_t group);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int fchownat (int dirfd, string pathname, uid_t owner, gid_t group, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public int chdir (string filepath);
 	[CCode (cheader_filename = "unistd.h")]
