@@ -1,3 +1,19 @@
+Vala 0.44.6
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Real structs are allowed by simple generics and passed as reference (#819)
+    + Assign GValue result of function calls to temp-var on copy_value (#819)
+  - build: Pass -no-undefined when linking libvalaccodegen (#820)
+  - tests: Null-terminate arrays for compatibility test of uint8 / uchar [#809]
+
+ * Bindings:
+  - glib-2.0: Add binding for g_strv_equal() (since 2.60)
+  - glib-2.0: Bind strcmp0 as GLib.CompareFunc<string?> (#810)
+  - glib-2.0: Fix RecMutexLocker binding
+  - gtk4: Update to 3.96.0+b05d1676
+  - xtst: Fix signature of XTest.fake_relative_motion_event()
+
 Vala 0.44.5
 ===========
  * Various improvements and bug fixes:
