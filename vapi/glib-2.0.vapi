@@ -3784,6 +3784,8 @@ namespace GLib {
 	[CCode (ref_function = "g_mapped_file_ref", unref_function = "g_mapped_file_unref")]
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
+		[Version (since = "2.32")]
+		public MappedFile.from_fd (int fd, bool writable) throws FileError;
 		public size_t get_length ();
 		public unowned char* get_contents ();
 		[Version (since = "2.34")]
