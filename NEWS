@@ -1,3 +1,23 @@
+Vala 0.45.3
+===========
+ * Various improvements and bug fixes:
+  - vala: Add Symbol.is_extern and use/set is accordingly (#745)
+  - codegen:
+    + Don't write declaration of extern symbols with given header (#745)
+    + Real structs are allowed by simple generics and passed as reference (#819)
+    + Assign GValue result of function calls to temp-var on copy_value (#819)
+  - build: Pass -no-undefined when linking libvalaccodegen (#820)
+
+ * Bindings:
+  - glib-2.0: Add binding for g_strv_equal() (since 2.60)
+  - glib-2.0: Bind strcmp0 as GLib.CompareFunc<string?> (#810)
+  - glib-2.0: Fix RecMutexLocker binding
+  - glib-2.0: Add new symbols from 2.62
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk4: Update to 3.96.0+b05d1676
+  - xtst: Fix signature of XTest.fake_relative_motion_event()
+  - vapi: Update GIR-based bindings
+
 Vala 0.45.2
 ===========
  * Various improvements and bug fixes:
