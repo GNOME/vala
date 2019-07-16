@@ -580,7 +580,15 @@ namespace Posix {
 	public const int O_RDWR;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_WRONLY;
-	[CCode (cheader_filename = "fcntl.h")]
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_DIRECTORY;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_CLOEXEC;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int O_NOFOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_FDCWD;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int POSIX_FADV_NORMAL;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_SEQUENTIAL;
@@ -598,6 +606,8 @@ namespace Posix {
 	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int open (string path, int oflag, mode_t mode=0);
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public int openat (int dirfd, string path, int oflag, mode_t mode=0);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fadvise (int fd, long offset, long len, int advice);
 	[CCode (cheader_filename = "fcntl.h")]
