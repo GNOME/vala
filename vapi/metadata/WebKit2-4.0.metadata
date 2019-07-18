@@ -10,6 +10,8 @@ Download
   .failed#signal.error type="WebKit.DownloadError"
 PrintOperation
   .failed#signal.error type="WebKit.PrintError"
+WebContext
+  .initialize_notification_permissions#method name="init_notification_permissions"
 WebResource
   .failed#signal.error type="GLib.Error"
 WebView
