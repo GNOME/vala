@@ -10,6 +10,8 @@ JavascriptResult
   .get_js_value type="unowned JSC.Value"
 PrintOperation
   .failed#signal.error type="WebKit.PrintError"
+WebContext
+  .initialize_notification_permissions#method name="init_notification_permissions"
 WebResource
   .failed#signal.error type="GLib.Error"
 WebView
