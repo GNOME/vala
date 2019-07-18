@@ -916,6 +916,9 @@ namespace WebKit {
 		public uint get_web_process_count_limit ();
 		[Version (since = "2.10")]
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
+		[CCode (cname = "webkit_web_context_initialize_notification_permissions")]
+		[Version (since = "2.16")]
+		public void init_notification_permissions (GLib.List<WebKit.SecurityOrigin> allowed_origins, GLib.List<WebKit.SecurityOrigin> disallowed_origins);
 		[Version (since = "2.18")]
 		public bool is_automation_allowed ();
 		[Version (since = "2.16")]
@@ -953,7 +956,6 @@ namespace WebKit {
 		[Version (since = "2.18")]
 		public virtual signal void automation_started (WebKit.AutomationSession session);
 		public virtual signal void download_started (WebKit.Download download);
-		[HasEmitter]
 		[Version (since = "2.16")]
 		public virtual signal void initialize_notification_permissions ();
 		[Version (since = "2.4")]
