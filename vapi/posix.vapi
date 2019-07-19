@@ -589,6 +589,10 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int AT_FDCWD;
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_EACCESS;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_SYMLINK_NOFOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int POSIX_FADV_NORMAL;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_SEQUENTIAL;
@@ -2631,6 +2635,8 @@ namespace Posix {
 	public int euidaccess (string patchname, int mode);
 	[CCode (cheader_filename = "unistd.h")]
 	public int eaccess (string patchname, int mode);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int faccessat(int dirfd, string pathname, int mode, int flags);
 
 	[CCode (cheader_filename = "unistd.h")]
 	public uint alarm (uint seconds);
