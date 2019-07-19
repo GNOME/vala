@@ -158,7 +158,8 @@ public class Vala.PropertyAccessor : Subroutine {
 			value_parameter = new Parameter ("value", value_type, source_reference);
 		}
 
-		if (readable && ((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
+		if (context.profile == Profile.GOBJECT
+		    && readable && ((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
 			//FIXME Code duplication with CCodeMemberAccessModule.visit_member_access()
 			if (prop.get_attribute ("NoAccessorMethod") != null) {
 				if (value_type.is_real_struct_type ()) {
