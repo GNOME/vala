@@ -595,6 +595,8 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int AT_SYMLINK_NOFOLLOW;
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_REMOVEDIR;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int POSIX_FADV_NORMAL;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_SEQUENTIAL;
@@ -2509,6 +2511,8 @@ namespace Posix {
 	public int setuid (uid_t uid);
 	[CCode (cheader_filename = "unistd.h")]
 	public int unlink (string filename);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int unlinkat (int dirfd, string pathname, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t write (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]
