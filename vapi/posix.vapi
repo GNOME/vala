@@ -2288,6 +2288,8 @@ namespace Posix {
 	public int mkdirat (int dirfd, string pathname, mode_t mode);
 	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
 	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mknodat (int dirfd, string pathname, mode_t mode, dev_t dev);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int utimensat (int dirfd, string pathname, [CCode (array_length = false)] timespec[] times, int flags = 0);
