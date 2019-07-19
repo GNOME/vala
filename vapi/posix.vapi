@@ -2676,6 +2676,8 @@ namespace Posix {
 	public int fchown (int fd, uid_t owner, gid_t group);
 	[CCode (cheader_filename = "unistd.h")]
 	public int lchown (string filename, uid_t owner, gid_t group);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int fchownat (int dirfd, string pathname, uid_t owner, gid_t group, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public int chdir (string filepath);
 	[CCode (cheader_filename = "unistd.h")]
