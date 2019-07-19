@@ -201,7 +201,11 @@ public class Vala.PropertyAccessor : Subroutine {
 			return false;
 		}
 
-		if (construction && !((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
+		if (context.profile == Profile.POSIX && construction) {
+			error = true;
+			Report.error (source_reference, "`construct' is not supported in POSIX profile");
+			return false;
+		} else if (construction && !((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
 			error = true;
 			Report.error (source_reference, "construct properties require `GLib.Object'");
 			return false;
