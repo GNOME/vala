@@ -2180,6 +2180,8 @@ namespace Posix {
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mkfifoat(int dirfd, string pathname, mode_t mode);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public const mode_t S_IFMT;
