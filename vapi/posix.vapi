@@ -2553,6 +2553,8 @@ namespace Posix {
 	public long sysconf (int name);
 	[CCode (cheader_filename = "unistd.h")]
 	public int rmdir (string path);
+	[CCode (cheader_filename = "stdio.h", feature_test_macro = "_GNU_SOURCE")]
+	public int renameat (int from_fd, string from, int to_dirfd, string to);
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t tcgetpgrp (int fd);
 	[CCode (cheader_filename = "unistd.h")]
