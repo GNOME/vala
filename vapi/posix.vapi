@@ -591,6 +591,8 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int AT_EACCESS;
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int AT_SYMLINK_FOLLOW;
+	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int AT_SYMLINK_NOFOLLOW;
 	[CCode (cheader_filename = "fcntl.h", feature_test_macro = "_GNU_SOURCE")]
 	public const int POSIX_FADV_NORMAL;
@@ -2267,6 +2269,8 @@ namespace Posix {
 	int stat (string filename, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h")]
 	int lstat (string filename, out Stat buf);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	int fstatat(int dirfd, string pathname, out Stat buf, int flags);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int chmod (string filename, mode_t mode);
