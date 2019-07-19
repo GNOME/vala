@@ -2547,6 +2547,8 @@ namespace Posix {
 	public int linkat (int from_dirfd, string from, int to_dirfd, string to, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public int symlink (string from, string to);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int symlinkat (string from, int to_dirfd, string to);
 	[CCode (cheader_filename = "unistd.h")]
 	public long sysconf (int name);
 	[CCode (cheader_filename = "unistd.h")]
