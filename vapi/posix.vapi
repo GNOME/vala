@@ -2543,6 +2543,8 @@ namespace Posix {
 	public bool isatty (int fd);
 	[CCode (cheader_filename = "unistd.h")]
 	public int link (string from, string to);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public int linkat (int from_dirfd, string from, int to_dirfd, string to, int flags);
 	[CCode (cheader_filename = "unistd.h")]
 	public int symlink (string from, string to);
 	[CCode (cheader_filename = "unistd.h")]
