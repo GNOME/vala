@@ -2284,6 +2284,8 @@ namespace Posix {
 	public mode_t umask (mode_t mask);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkdir (string path, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
+	public int mkdirat (int dirfd, string pathname, mode_t mode);
 	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
 	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
 
