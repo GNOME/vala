@@ -2289,7 +2289,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
 	public int mkdirat (int dirfd, string pathname, mode_t mode);
 	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
-	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
+	public int mknod (string pathname, mode_t mode, dev_t dev);
 	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
 	public int mknodat (int dirfd, string pathname, mode_t mode, dev_t dev);
 
@@ -2716,7 +2716,7 @@ namespace Posix {
 	public int group_member (gid_t gid);
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t setsid ();
-	[CCode (cheader_filename = "unistd.h")]
+	[CCode (cheader_filename = "termios.h", feature_test_macro = "_GNU_SOURCE")]
 	public pid_t tcgetsid (int fd);
 
 	[CCode (cheader_filename = "unistd.h")]
