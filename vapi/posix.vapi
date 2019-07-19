@@ -2493,6 +2493,8 @@ namespace Posix {
 	public ssize_t pread (int fd, void* buf, size_t count, off_t offset);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t readlink (string path, char[] buf);
+	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
+	public ssize_t readlinkat(int dirfd, string pathname, char[] buf);
 	[CCode (cheader_filename = "sys/uio.h")]
 	public ssize_t readv (int fd, iovector vector, int iovcnt = 1);
 	[CCode (cname = "readv", cheader_filename = "sys/uio.h")]
