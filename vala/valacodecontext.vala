@@ -608,8 +608,8 @@ public class Vala.CodeContext {
 			defines.add ("GLIB_2_%d".printf (i));
 		}
 
-		target_glib_major = glib_minor;
-		target_glib_minor = glib_major;
+		target_glib_major = glib_major;
+		target_glib_minor = glib_minor;
 	}
 
 	public string? get_vapi_path (string pkg) {
