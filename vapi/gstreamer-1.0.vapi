@@ -2777,6 +2777,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct DebugCategory {
+		[Version (deprecated = true)]
 		public void free ();
 		public uint get_color ();
 		public unowned string get_description ();

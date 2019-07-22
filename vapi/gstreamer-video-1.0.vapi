@@ -651,7 +651,7 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public bool is_equal (Gst.Video.Colorimetry other);
 			public bool matches (string color);
-			public string to_string ();
+			public string? to_string ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoContentLightLevel")]
@@ -711,6 +711,8 @@ namespace Gst {
 			public Gst.Video.TileMode tile_mode;
 			public uint tile_ws;
 			public uint tile_hs;
+			[Version (since = "1.18")]
+			public void component (uint plane, out int components);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
@@ -1673,11 +1675,23 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned string chroma_to_string (Gst.Video.ChromaSite site);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Video.ColorMatrix color_matrix_from_iso (uint value);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static bool color_matrix_get_Kr_Kb (Gst.Video.ColorMatrix matrix, out double Kr, out double Kb);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static uint color_matrix_to_iso (Gst.Video.ColorMatrix matrix);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Video.ColorPrimaries color_primaries_from_iso (uint value);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static unowned Gst.Video.ColorPrimariesInfo? color_primaries_get_info (Gst.Video.ColorPrimaries primaries);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static uint color_primaries_to_iso (Gst.Video.ColorPrimaries primaries);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -1686,6 +1700,12 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static double color_transfer_encode (Gst.Video.TransferFunction func, double val);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Video.TransferFunction color_transfer_from_iso (uint value);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static uint color_transfer_to_iso (Gst.Video.TransferFunction func);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
 		[CCode (cheader_filename = "gst/video/video.h")]
