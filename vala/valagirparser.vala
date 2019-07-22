@@ -2151,6 +2151,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_bitfield ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "callback") {
 				parse_callback ();
 			} else if (reader.name == "record") {
@@ -2352,6 +2354,8 @@ public class Vala.GirParser : CodeVisitor {
 					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				}
 			} else if (reader.name == "function") {
+				skip_element ();
+			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else {
 				// error
@@ -2810,6 +2814,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_method ("method");
 			} else if (reader.name == "function") {
 				skip_element ();
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
 			} else {
@@ -2887,6 +2893,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else if (reader.name == "virtual-method") {
@@ -2949,6 +2957,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_method ("virtual-method");
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else if (reader.name == "glib:signal") {
@@ -3405,6 +3415,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "function") {
 				skip_element ();
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
 			} else {
@@ -3492,6 +3504,8 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else if (reader.name == "function") {
+				skip_element ();
+			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "record") {
 				parse_record ();
