@@ -275,6 +275,7 @@ TESTS = \
 	objects/field-leading-digit.test \
 	objects/fields.vala \
 	objects/gsource.vala \
+	objects/instance-comparison.vala \
 	objects/interfaces.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
