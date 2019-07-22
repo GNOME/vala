@@ -123,6 +123,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=uninitialized \
 -Werror=int-to-pointer-cast \
 -Werror=pointer-to-int-cast \
+-Werror=compare-distinct-pointer-types \
 -Wformat=2 \
 -Werror=format-security \
 -Werror=format-nonliteral \

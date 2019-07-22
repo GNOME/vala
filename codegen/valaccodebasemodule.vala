@@ -2808,19 +2808,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	void make_comparable_cexpression (ref DataType left_type, ref CCodeExpression cleft, ref DataType right_type, ref CCodeExpression cright) {
-		var left_type_as_struct = left_type.data_type as Struct;
-		var right_type_as_struct = right_type.data_type as Struct;
+		unowned Struct? left_type_as_struct = left_type.data_type as Struct;
+		unowned Struct? right_type_as_struct = right_type.data_type as Struct;
+		unowned ObjectTypeSymbol? left_type_as_object_type = left_type.data_type as ObjectTypeSymbol;
+		unowned ObjectTypeSymbol? right_type_as_object_type = right_type.data_type as ObjectTypeSymbol;
 
-		if (left_type.data_type is Class && !((Class) left_type.data_type).is_compact &&
-		    right_type.data_type is Class && !((Class) right_type.data_type).is_compact) {
-			var left_cl = (Class) left_type.data_type;
-			var right_cl = (Class) right_type.data_type;
-
-			if (left_cl != right_cl) {
-				if (left_cl.is_subtype_of (right_cl)) {
-					cleft = generate_instance_cast (cleft, right_cl);
-				} else if (right_cl.is_subtype_of (left_cl)) {
-					cright = generate_instance_cast (cright, left_cl);
+		if (left_type_as_object_type != null && (!(left_type_as_object_type is Class) || !((Class) left_type_as_object_type).is_compact)
+		    && right_type_as_object_type != null && (!(right_type_as_object_type is Class) || !((Class) right_type_as_object_type).is_compact)) {
+			if (left_type_as_object_type != right_type_as_object_type) {
+				if (left_type_as_object_type.is_subtype_of (right_type_as_object_type)) {
+					cleft = generate_instance_cast (cleft, right_type_as_object_type);
+				} else if (right_type_as_object_type.is_subtype_of (left_type_as_object_type)) {
+					cright = generate_instance_cast (cright, left_type_as_object_type);
 				}
 			}
 		} else if (left_type_as_struct != null && right_type_as_struct != null) {
