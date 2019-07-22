@@ -3,6 +3,7 @@ BGCrossfade cheader_filename="libgnome-desktop/gnome-bg-crossfade.h"
 BGSlideShow cheader_filename="libgnome-desktop/gnome-bg-slide-show.h"
 BGSlideShow
 	.load_async skip
+	.file since="3.34"
 
 DesktopThumbnail* cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
 desktop_thumbnail_* parent="Gnome.DesktopThumbnail" name="desktop_thumbnail_(.+)" cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
@@ -16,6 +17,7 @@ language_has_translations parent="Gnome.Languages" cheader_filename="libgnome-de
 get_language_from_code parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
 get_country_from_code parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
 get_input_source_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_translated_modifier parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
 
 IdleMonitor* cheader_filename="libgnome-desktop/gnome-idle-monitor.h"
 

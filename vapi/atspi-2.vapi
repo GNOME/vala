@@ -75,6 +75,7 @@ namespace Atspi {
 		public Atspi.Value get_value ();
 		public Atspi.Value get_value_iface ();
 		public void set_cache_mask (Atspi.Cache mask);
+		public virtual signal void region_changed (int current_offset, int last_offset);
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_listener_get_type ()")]
 	public class DeviceListener : GLib.Object {
@@ -95,6 +96,7 @@ namespace Atspi {
 		public GLib.Value any_data;
 		public int detail1;
 		public int detail2;
+		public weak Atspi.Accessible sender;
 		public weak Atspi.Accessible source;
 		public weak string type;
 		public static void main ();
@@ -366,7 +368,6 @@ namespace Atspi {
 		public string? get_text_attribute_value (int offset, string attribute_name) throws GLib.Error;
 		public GLib.HashTable<string,string> get_text_attributes (int offset, out int start_offset, out int end_offset) throws GLib.Error;
 		public Atspi.TextRange get_text_before_offset (int offset, Atspi.TextBoundaryType type) throws GLib.Error;
-		public void notify_reading_position (int startOffset, int endOffset);
 		public bool remove_selection (int selection_num) throws GLib.Error;
 		public bool scroll_substring_to (int start_offset, int end_offset, Atspi.ScrollType type) throws GLib.Error;
 		public bool scroll_substring_to_point (int start_offset, int end_offset, Atspi.CoordType coords, int x, int y) throws GLib.Error;
@@ -827,6 +828,8 @@ namespace Atspi {
 	public const string DBUS_INTERFACE_EVENT_MOUSE;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_EVENT_OBJECT")]
 	public const string DBUS_INTERFACE_EVENT_OBJECT;
+	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_EVENT_SCREEN_READER")]
+	public const string DBUS_INTERFACE_EVENT_SCREEN_READER;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_HYPERLINK")]
 	public const string DBUS_INTERFACE_HYPERLINK;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_HYPERTEXT")]
@@ -835,8 +838,6 @@ namespace Atspi {
 	public const string DBUS_INTERFACE_IMAGE;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_REGISTRY")]
 	public const string DBUS_INTERFACE_REGISTRY;
-	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SCREEN_READER")]
-	public const string DBUS_INTERFACE_SCREEN_READER;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SELECTION")]
 	public const string DBUS_INTERFACE_SELECTION;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_DBUS_INTERFACE_SOCKET")]

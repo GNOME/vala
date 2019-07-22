@@ -29,6 +29,9 @@ namespace Gnome {
 		[CCode (cheader_filename = "libgnome-desktop/gnome-languages.h", cname = "gnome_get_language_from_locale")]
 		[Version (since = "3.8")]
 		public static string get_language_from_locale (string locale, string? translation);
+		[CCode (cheader_filename = "libgnome-desktop/gnome-languages.h", cname = "gnome_get_translated_modifier")]
+		[Version (since = "3.34")]
+		public static string get_translated_modifier (string modifier, string? translation);
 		[CCode (cheader_filename = "libgnome-desktop/gnome-languages.h", cname = "gnome_language_has_translations")]
 		[Version (since = "3.8")]
 		public static bool language_has_translations (string code);
@@ -93,6 +96,10 @@ namespace Gnome {
 		public bool load () throws GLib.Error;
 		public void load_async (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		[NoAccessorMethod]
+		[Version (since = "3.34")]
+		public GLib.File file { owned get; construct; }
+		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "3.34")]
 		public string filename { owned get; construct; }
 		public bool has_multiple_sizes { get; }
 		public double start_time { get; }

@@ -11925,10 +11925,8 @@ namespace Gtk {
 		[CCode (cname = "gtk_widget_class_query_action")]
 		public class bool query_action (uint index_, GLib.Type owner, string action_name, GLib.VariantType parameter_type, string property_name);
 		public void queue_allocate ();
-		public void queue_compute_expand ();
 		public void queue_draw ();
 		public void queue_resize ();
-		public void queue_resize_no_redraw ();
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_controller (Gtk.EventController controller);
 		public void remove_mnemonic_label (Gtk.Widget label);
