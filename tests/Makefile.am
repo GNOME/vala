@@ -305,6 +305,7 @@ TESTS = \
 	objects/field-leading-digit.test \
 	objects/fields.vala \
 	objects/gsource.vala \
+	objects/instance-comparison.vala \
 	objects/interface_only.vala \
 	objects/interfaces.vala \
 	objects/interface-generics.vala \
