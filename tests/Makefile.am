@@ -223,6 +223,7 @@ TESTS = \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
 	structs/default-gtype.vala \
+	structs/gmutex.vala \
 	structs/gvalue.vala \
 	structs/gvalue-implicit-comparison.vala \
 	structs/bug530605.vala \
