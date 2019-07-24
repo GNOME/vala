@@ -601,7 +601,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			if (cl.has_class_private_fields || has_class_locks) {
-				decl_space.add_type_member_declaration (type_priv_struct);
+				decl_space.add_type_definition (type_priv_struct);
 
 				string macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_get_private_function (cl)), macro));
