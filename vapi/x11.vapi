@@ -129,13 +129,13 @@ namespace X {
 		public Atom intern_atom (string atom_name, bool only_if_exists);
 
 		[CCode (cname = "XInternAtoms")]
-		public void intern_atoms (string[] names, bool only_if_exists, [CCode (array_length = false)] Atom[] atoms_return);
+		public Status intern_atoms (string[] names, bool only_if_exists, [CCode (array_length = false)] Atom[] atoms_return);
 
 		[CCode (cname = "XGetAtomName")]
 		public string get_atom_name (X.Atom atom);
 
 		[CCode (cname = "XGetAtomNames")]
-		public string get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
+		public Status get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
 
 		[CCode (cname = "XDeleteProperty")]
 		public int delete_property (Window w, X.Atom property);
