@@ -205,6 +205,7 @@ public class Vala.GTypeModule : GErrorModule {
 			Report.error (cl.source_reference, "internal error: autoptr_cleanup_func not available");
 		}
 		decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), autoptr_cleanup_func)));
+		decl_space.add_type_member_declaration (new CCodeNewline ());
 	}
 
 	public override void generate_class_struct_declaration (Class cl, CCodeFile decl_space) {
