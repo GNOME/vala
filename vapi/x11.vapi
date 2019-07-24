@@ -135,7 +135,7 @@ namespace X {
 		public string get_atom_name (X.Atom atom);
 
 		[CCode (cname = "XGetAtomNames")]
-		public string get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
+		public int get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
 
 		[CCode (cname = "XDeleteProperty")]
 		public int delete_property (Window w, X.Atom property);
