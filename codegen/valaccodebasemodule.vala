@@ -5783,6 +5783,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression convert_from_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
 		if (is_reference_type_argument (actual_type) || is_nullable_value_type_argument (actual_type)) {
+			generate_type_declaration (actual_type, cfile);
 			result = new CCodeCastExpression (cexpr, get_ccode_name (actual_type));
 		} else if (is_signed_integer_type_argument (actual_type)) {
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (actual_type));
