@@ -1,6 +1,6 @@
 NULL =
 
-iconsdir = $(datadir)/valadoc/icons
+iconsdir = $(datadir)/valadoc@PACKAGE_SUFFIX@/icons
 
 dist_icons_DATA = \
 	abstractclass.png \

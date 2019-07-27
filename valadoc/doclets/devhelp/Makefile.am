@@ -4,7 +4,7 @@ NULL =
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc-devhelp\" \
-	-DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc/icons/\" \
+	-DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc@PACKAGE_SUFFIX@/icons/\" \
 	-I$(top_srcdir)/gee/ \
 	-I$(top_srcdir)/vala/ \
 	-I$(top_srcdir)/libvaladoc/ \
@@ -17,7 +17,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 doclet_LTLIBRARIES = libdoclet.la
 
-docletdir = $(libdir)/valadoc/doclets/devhelp
+docletdir = $(libdir)/valadoc@PACKAGE_SUFFIX@/doclets/devhelp
 
 libdoclet_la_LDFLAGS = -module -avoid-version -no-undefined
 

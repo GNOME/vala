@@ -4,7 +4,7 @@ NULL =
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc\" \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
+	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc@PACKAGE_SUFFIX@\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	$(COVERAGE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \

@@ -4,6 +4,8 @@ libdir=@libdir@
 includedir=@includedir@
 datarootdir=@datarootdir@
 datadir=@datadir@
+pkgdatadir=@pkgdocdatadir@
+pkglibdir=@pkgdoclibdir@
 vapidir=@datadir@/vala/vapi
 
 Name: Valadoc

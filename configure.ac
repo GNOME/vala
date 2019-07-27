@@ -33,6 +33,8 @@ program_transform_name="s,\$\$,${PACKAGE_SUFFIX},"
 
 AC_SUBST(pkgdatadir, [${datadir}/vala${PACKAGE_SUFFIX}])
 AC_SUBST(pkglibdir, [${libdir}/vala${PACKAGE_SUFFIX}])
+AC_SUBST(pkgdocdatadir, [${datadir}/valadoc${PACKAGE_SUFFIX}])
+AC_SUBST(pkgdoclibdir, [${libdir}/valadoc${PACKAGE_SUFFIX}])
 
 # Checks for programs.
 AC_PROG_CC

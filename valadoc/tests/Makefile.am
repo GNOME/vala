@@ -22,7 +22,7 @@ check-TESTS: $(TESTS)
 	G_DEBUG=fatal_warnings $(builddir)/driver
 
 AM_CFLAGS = \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
+	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc@PACKAGE_SUFFIX@\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-DTOP_SRC_DIR=\"$(abs_top_srcdir)\" \
 	-I$(top_srcdir)/libvaladoc/ \

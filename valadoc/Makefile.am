@@ -10,7 +10,7 @@ SUBDIRS = \
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc\" \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
+	-DPACKAGE_VALADOC_LIBDIR=\"$(pkgdoclibdir)\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-I$(top_srcdir)/libvaladoc/ \
 	-I$(top_srcdir)/gee \
