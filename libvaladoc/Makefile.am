@@ -4,7 +4,6 @@ NULL =
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc\" \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	$(COVERAGE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
@@ -15,6 +14,12 @@ AM_CFLAGS = \
 	-I$(top_srcdir)/vala \
 	-I$(top_srcdir)/codegen \
 	$(NULL)
+
+if ENABLE_UNVERSIONED
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\"
+else
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc@PACKAGE_SUFFIX@\"
+endif
 
 AM_VALAFLAGS = \
 	$(NULL)

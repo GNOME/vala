@@ -1,6 +1,10 @@
 NULL =
 
+if ENABLE_UNVERSIONED
 iconsdir = $(datadir)/valadoc/icons
+else
+iconsdir = $(datadir)/valadoc@PACKAGE_SUFFIX@/icons
+endif
 
 dist_icons_DATA = \
 	abstractclass.png \
