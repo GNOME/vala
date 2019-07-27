@@ -4,7 +4,6 @@ NULL =
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc-html\" \
-	-DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I$(top_srcdir)/gee/ \
 	-I$(top_srcdir)/vala/ \
 	-I$(top_srcdir)/libvaladoc/ \
@@ -13,11 +12,17 @@ AM_CFLAGS = \
 	$(LIBGVC_CFLAGS) \
 	$(NULL)
 
+if ENABLE_UNVERSIONED
+AM_CFLAGS += -DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc/icons/\"
+docletdir = $(libdir)/valadoc/doclets/html
+else
+AM_CFLAGS += -DPACKAGE_VALADOC_ICONDIR=\"$(datadir)/valadoc@PACKAGE_SUFFIX@/icons/\"
+docletdir = $(libdir)/valadoc@PACKAGE_SUFFIX@/doclets/html
+endif
+
 BUILT_SOURCES = libdoclet.vala.stamp
 
 doclet_LTLIBRARIES = libdoclet.la
-
-docletdir = $(libdir)/valadoc/doclets/html
 
 libdoclet_la_LDFLAGS = -module -avoid-version -no-undefined
 
