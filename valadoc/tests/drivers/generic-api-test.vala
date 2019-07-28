@@ -257,42 +257,10 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 	assert (errc2 == true);
 
 
-
-	Vala.List<Api.Node> methods = err.get_children_by_type (Api.NodeType.METHOD, false);
+	Vala.List<Api.Node> methods = err.get_children_by_type (Api.NodeType.STATIC_METHOD, false);
 	assert (methods.size == 1);
 
 	Api.Method method = methods.get (0) as Api.Method;
-	assert (method != null);
-
-	// (.Method check)
-	assert (method.get_cname () == "test_err_dom_global_method");
-	//assert (method.get_dbus_name () == null);
-	//assert (method.get_dbus_result_name () == null);
-	//assert (method.is_dbus_visible == false);
-	assert (method.base_method == null);
-	assert (method.is_yields == false);
-	assert (method.is_abstract == false);
-	assert (method.is_virtual == false);
-	assert (method.is_override == false);
-	assert (method.is_static == false);
-	assert (method.is_constructor == false);
-	assert (method.is_inline == false);
-	// (.Symbol check)
-	assert (method.is_deprecated == false);
-	assert (method.accessibility == Vala.SymbolAccessibility.PUBLIC);
-	// (.Node)
-	assert (method.get_full_name () == "TestErrDomGlobal.method");
-	assert (method.get_filename () == "api-test.data.vapi");
-	assert (method.name == "method");
-	assert (method.nspace == global_ns);
-	assert (method.package == pkg);
-
-
-
-	methods = err.get_children_by_type (Api.NodeType.STATIC_METHOD, false);
-	assert (methods.size == 1);
-
-	method = methods.get (0) as Api.Method;
 	assert (method != null);
 
 	// (.Method check)

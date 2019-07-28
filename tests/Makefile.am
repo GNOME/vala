@@ -410,6 +410,8 @@ TESTS = \
 	errors/errors.vala \
 	errors/errorcode.vala \
 	errors/errordomain.vala \
+	errors/errordomain-instance-method.test \
+	errors/errordomain-static-method.vala \
 	errors/invalid-type-check.test \
 	errors/method-throws.vala \
 	errors/bug567181.vala \
