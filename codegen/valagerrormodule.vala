@@ -57,6 +57,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
+		edomain.accept_children (this);
+
 		if (edomain.comment != null) {
 			cfile.add_type_definition (new CCodeComment (edomain.comment.content));
 		}
