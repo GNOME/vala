@@ -22,7 +22,6 @@ check-TESTS: $(TESTS)
 	G_DEBUG=fatal_warnings $(builddir)/driver
 
 AM_CFLAGS = \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-DTOP_SRC_DIR=\"$(abs_top_srcdir)\" \
 	-I$(top_srcdir)/libvaladoc/ \
@@ -35,6 +34,12 @@ AM_CFLAGS = \
 	$(GMODULE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
 	$(NULL)
+
+if ENABLE_UNVERSIONED
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\"
+else
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc@PACKAGE_SUFFIX@\"
+endif
 
 BUILT_SOURCES = driver.vala.stamp
 

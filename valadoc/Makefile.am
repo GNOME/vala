@@ -10,7 +10,6 @@ SUBDIRS = \
 
 AM_CFLAGS = \
 	-DG_LOG_DOMAIN=\"valadoc\" \
-	-DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\" \
 	-I$(top_srcdir)/libvaladoc/ \
 	-I$(top_srcdir)/gee \
@@ -22,6 +21,12 @@ AM_CFLAGS = \
 	$(GMODULE_CFLAGS) \
 	$(LIBGVC_CFLAGS) \
 	$(NULL)
+
+if ENABLE_UNVERSIONED
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc\"
+else
+AM_CFLAGS += -DPACKAGE_VALADOC_LIBDIR=\"$(libdir)/valadoc@PACKAGE_SUFFIX@\"
+endif
 
 BUILT_SOURCES = valadoc.vala.stamp
 
