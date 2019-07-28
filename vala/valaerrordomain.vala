@@ -125,6 +125,14 @@ public class Vala.ErrorDomain : TypeSymbol {
 		}
 
 		foreach (Method m in methods) {
+			if (m.binding == MemberBinding.INSTANCE) {
+				if (external_package) {
+					Report.warning (m.source_reference, "Instance methods are not supported in error domains yet");
+				} else {
+					Report.error (m.source_reference, "Instance methods are not supported in error domains yet");
+				}
+				error = true;
+			}
 			m.check (context);
 		}
 
