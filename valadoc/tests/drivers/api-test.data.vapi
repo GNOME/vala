@@ -26,6 +26,7 @@ public errordomain TestErrDomGlobal {
 	ERROR2;
 
 	public static void static_method ();
+	public static void static_method_error () throws TestErrDomGlobal;
 }
 
 
