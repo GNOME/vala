@@ -258,7 +258,7 @@ public static void test_erroromain_global (Api.ErrorDomain? err, Api.Package pkg
 
 
 	Vala.List<Api.Node> methods = err.get_children_by_type (Api.NodeType.STATIC_METHOD, false);
-	assert (methods.size == 1);
+	assert (methods.size == 2);
 
 	Api.Method method = methods.get (0) as Api.Method;
 	assert (method != null);

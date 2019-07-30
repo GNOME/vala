@@ -118,6 +118,9 @@ public abstract class Valadoc.Api.Node : Item, Documentation {
 		do_document = true;
 
 		foreach (Node node in per_name_children.get_values ()) {
+			if (this.parent == node) {
+				continue;
+			}
 			if (node.is_browsable (settings)) {
 				node.parse_comments (settings, parser);
 			}
@@ -130,6 +133,9 @@ public abstract class Valadoc.Api.Node : Item, Documentation {
 	internal override void check_comments (Settings settings, DocumentationParser parser) {
 
 		foreach (Node node in per_name_children.get_values ()) {
+			if (this.parent == node) {
+				continue;
+			}
 			if (node.is_browsable (settings)) {
 				node.check_comments (settings, parser);
 			}
@@ -277,6 +283,9 @@ public abstract class Valadoc.Api.Node : Item, Documentation {
 	 */
 	public void accept_all_children (Visitor visitor, bool filtered = true) {
 		foreach (Vala.List<Node> children in per_type_children.get_values ()) {
+			if (this.parent == children[0]) {
+				continue;
+			}
 			foreach (Node node in children) {
 				if (node.do_document || !filtered) {
 					node.accept (visitor);
