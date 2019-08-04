@@ -1286,6 +1286,9 @@ namespace GLib {
 		public bool get_is_backup ();
 		public bool get_is_hidden ();
 		public bool get_is_symlink ();
+		[Version (since = "2.62")]
+		public GLib.DateTime? get_modification_date_time ();
+		[Version (deprecated = true, deprecated_since = "2.62")]
 		public GLib.TimeVal get_modification_time ();
 		public unowned string get_name ();
 		public int64 get_size ();
@@ -1319,6 +1322,9 @@ namespace GLib {
 		public void set_icon (GLib.Icon icon);
 		public void set_is_hidden (bool is_hidden);
 		public void set_is_symlink (bool is_symlink);
+		[Version (since = "2.62")]
+		public void set_modification_date_time (GLib.DateTime mtime);
+		[Version (deprecated = true, deprecated_since = "2.62")]
 		public void set_modification_time (GLib.TimeVal mtime);
 		public void set_name (string name);
 		public void set_size (int64 size);

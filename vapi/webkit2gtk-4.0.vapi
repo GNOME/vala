@@ -1335,7 +1335,7 @@ namespace WebKit {
 		public unowned string? get_local_storage_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_offline_application_cache_directory ();
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.24.", since = "2.10")]
 		public unowned string? get_websql_directory ();
 		[Version (since = "2.16")]
 		public async bool remove (WebKit.WebsiteDataTypes types, GLib.List<WebKit.WebsiteData> website_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1354,7 +1354,7 @@ namespace WebKit {
 		public string local_storage_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string offline_application_cache_directory { get; construct; }
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.24.", since = "2.10")]
 		public string websql_directory { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_window_properties_get_type ()")]

@@ -178,7 +178,7 @@ namespace GES {
 		public static unowned GES.Asset get_default ();
 		public virtual bool load_from_uri (GES.Timeline timeline, string uri) throws GLib.Error;
 		[CCode (cname = "ges_formatter_class_register_metas")]
-		public class void register_metas (string name, string description, string extension, string mimetype, double version, Gst.Rank rank);
+		public class void register_metas (string name, string description, string extensions, string caps, double version, Gst.Rank rank);
 		public virtual bool save_to_uri (GES.Timeline timeline, string uri, bool overwrite) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_group_get_type ()")]
@@ -295,6 +295,8 @@ namespace GES {
 		public Project (string? uri);
 		public bool add_asset (GES.Asset asset);
 		public bool add_encoding_profile (Gst.PbUtils.EncodingProfile profile);
+		[Version (since = "1.18")]
+		public void add_formatter (GES.Formatter formatter);
 		public bool create_asset (string? id, GLib.Type extractable_type);
 		public GES.Asset? create_asset_sync (string? id, GLib.Type extractable_type) throws GLib.Error;
 		public GES.Asset? get_asset (string id, GLib.Type extractable_type);
@@ -312,6 +314,8 @@ namespace GES {
 		[Version (since = "1.8")]
 		public virtual signal void asset_loading (GES.Asset asset);
 		public virtual signal void asset_removed (GES.Asset asset);
+		[Version (since = "1.18")]
+		public signal void error_loading (GES.Timeline timeline, GLib.Error error);
 		public signal void error_loading_asset (GLib.Error error, string id, GLib.Type extractable_type);
 		public virtual signal void loaded (GES.Timeline timeline);
 		[Version (since = "1.18")]
@@ -598,6 +602,8 @@ namespace GES {
 		public unowned Gst.Caps get_caps ();
 		public GLib.List<GES.TrackElement> get_elements ();
 		public bool get_mixing ();
+		[Version (since = "1.18")]
+		public Gst.Caps get_restriction_caps ();
 		public unowned GES.Timeline? get_timeline ();
 		public bool remove_element (GES.TrackElement object);
 		public void set_mixing (bool mixing);
@@ -610,7 +616,6 @@ namespace GES {
 		[NoAccessorMethod]
 		public string id { owned get; set; }
 		public bool mixing { get; set construct; }
-		[NoAccessorMethod]
 		public Gst.Caps restriction_caps { owned get; set; }
 		[NoAccessorMethod]
 		public GES.TrackType track_type { get; construct; }
@@ -701,6 +706,8 @@ namespace GES {
 		public static GES.UriClipAsset finish (GLib.AsyncResult res) throws GLib.Error;
 		public Gst.ClockTime get_duration ();
 		public unowned Gst.PbUtils.DiscovererInfo get_info ();
+		[Version (since = "1.18")]
+		public Gst.ClockTime get_max_duration ();
 		public unowned GLib.List<GES.UriSourceAsset> get_stream_assets ();
 		public bool is_image ();
 		[CCode (cname = "ges_uri_clip_asset_request_sync", has_construct_function = false)]
@@ -709,6 +716,8 @@ namespace GES {
 		public class void set_timeout (Gst.ClockTime timeout);
 		[NoAccessorMethod]
 		public uint64 duration { get; set; }
+		[NoAccessorMethod]
+		public bool is_nested_timeline { get; }
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_uri_source_asset_get_type ()")]
 	public class UriSourceAsset : GES.TrackElementAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
@@ -1057,6 +1066,9 @@ namespace GES {
 	public static bool add_missing_uri_relocation_uri (string uri, bool recurse);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static void deinit ();
+	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (since = "1.18")]
+	public static unowned GES.Asset find_formatter_for_uri (string uri);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool init ();
 	[CCode (cheader_filename = "ges/ges.h")]

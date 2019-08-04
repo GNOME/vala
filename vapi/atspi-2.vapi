@@ -77,6 +77,19 @@ namespace Atspi {
 		public void set_cache_mask (Atspi.Cache mask);
 		public virtual signal void region_changed (int current_offset, int last_offset);
 	}
+	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_application_get_type ()")]
+	public class Application : GLib.Object {
+		public weak string atspi_version;
+		public weak string bus_name;
+		public Atspi.Cache cache;
+		public weak GLib.HashTable<void*,void*> hash;
+		public void* root;
+		public void* time_added;
+		public weak string toolkit_name;
+		public weak string toolkit_version;
+		[CCode (has_construct_function = false)]
+		protected Application ();
+	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_listener_get_type ()")]
 	public class DeviceListener : GLib.Object {
 		public weak GLib.List<void*> callbacks;
@@ -157,7 +170,7 @@ namespace Atspi {
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_object_get_type ()")]
 	public class Object : GLib.Object {
-		public Atspi.Application app;
+		public weak Atspi.Application app;
 		public weak string path;
 		[CCode (has_construct_function = false)]
 		protected Object ();
@@ -381,22 +394,6 @@ namespace Atspi {
 		public double get_minimum_increment () throws GLib.Error;
 		public double get_minimum_value () throws GLib.Error;
 		public bool set_current_value (double new_value) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "atspi/atspi.h", has_type_id = false)]
-	public struct Application {
-		public weak GLib.Object parent;
-		public weak GLib.HashTable<void*,void*> hash;
-		public weak string bus_name;
-		public void* root;
-		public Atspi.Cache cache;
-		public weak string toolkit_name;
-		public weak string toolkit_version;
-		public weak string atspi_version;
-		public void* time_added;
-	}
-	[CCode (cheader_filename = "atspi/atspi.h", has_type_id = false)]
-	public struct ApplicationClass {
-		public weak GLib.ObjectClass parent_class;
 	}
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	[SimpleType]

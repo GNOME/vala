@@ -7322,7 +7322,7 @@ namespace Gtk {
 		public bool show_editor { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_chooser_widget_get_type ()")]
-	public class ColorChooserWidget : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser, Gtk.ConstraintTarget, Gtk.Orientable {
+	public class ColorChooserWidget : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ColorChooser, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ColorChooserWidget ();
 		[NoAccessorMethod]
@@ -7390,7 +7390,7 @@ namespace Gtk {
 		public ComboBoxText ();
 		public void append (string? id, string text);
 		public void append_text (string text);
-		public string get_active_text ();
+		public string? get_active_text ();
 		public void insert (int position, string? id, string text);
 		public void insert_text (int position, string text);
 		public void prepend (string? id, string text);

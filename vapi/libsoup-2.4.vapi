@@ -825,6 +825,8 @@ namespace Soup {
 		[Version (since = "2.50")]
 		public void add_early_handler (string? path, owned Soup.ServerCallback callback);
 		public void add_handler (string? path, owned Soup.ServerCallback callback);
+		[Version (since = "2.68")]
+		public void add_websocket_extension (GLib.Type extension_type);
 		public void add_websocket_handler (string? path, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols, owned Soup.ServerWebsocketCallback callback);
 		public void disconnect ();
 		[Version (deprecated = true)]
@@ -852,6 +854,8 @@ namespace Soup {
 		public void quit ();
 		public void remove_auth_domain (Soup.AuthDomain auth_domain);
 		public void remove_handler (string path);
+		[Version (since = "2.68")]
+		public void remove_websocket_extension (GLib.Type extension_type);
 		[Version (deprecated = true)]
 		public void run ();
 		[Version (deprecated = true)]
@@ -1163,6 +1167,8 @@ namespace Soup {
 		public ushort get_close_code ();
 		public unowned string get_close_data ();
 		public Soup.WebsocketConnectionType get_connection_type ();
+		[Version (since = "2.68")]
+		public unowned GLib.List<Soup.WebsocketExtension> get_extensions ();
 		public unowned GLib.IOStream get_io_stream ();
 		[Version (since = "2.58")]
 		public uint get_keepalive_interval ();
@@ -1180,7 +1186,12 @@ namespace Soup {
 		public void set_keepalive_interval (uint interval);
 		[Version (since = "2.56")]
 		public void set_max_incoming_payload_size (uint64 max_incoming_payload_size);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.68")]
+		public WebsocketConnection.with_extensions (GLib.IOStream stream, Soup.URI uri, Soup.WebsocketConnectionType type, string? origin, string? protocol, owned GLib.List<Soup.WebsocketExtension> extensions);
 		public Soup.WebsocketConnectionType connection_type { get; construct; }
+		[Version (since = "2.68")]
+		public void* extensions { get; construct; }
 		public GLib.IOStream io_stream { get; construct; }
 		[Version (since = "2.58")]
 		public uint keepalive_interval { get; set construct; }
@@ -1196,6 +1207,30 @@ namespace Soup {
 		public virtual signal void message (int type, GLib.Bytes message);
 		[Version (since = "2.60")]
 		public virtual signal void pong (GLib.Bytes message);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_get_type ()")]
+	public abstract class WebsocketExtension : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebsocketExtension ();
+		public virtual bool configure (Soup.WebsocketConnectionType connection_type, GLib.HashTable<void*,void*>? @params) throws GLib.Error;
+		[Version (since = "2.68")]
+		public virtual string? get_request_params ();
+		[Version (since = "2.68")]
+		public virtual string? get_response_params ();
+		[Version (since = "2.68")]
+		public virtual GLib.Bytes process_incoming_message (ref uint8 header, owned GLib.Bytes payload) throws GLib.Error;
+		[Version (since = "2.68")]
+		public virtual GLib.Bytes process_outgoing_message (ref uint8 header, owned GLib.Bytes payload) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_deflate_get_type ()")]
+	public class WebsocketExtensionDeflate : Soup.WebsocketExtension {
+		[CCode (has_construct_function = false)]
+		protected WebsocketExtensionDeflate ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_manager_get_type ()")]
+	public class WebsocketExtensionManager : GLib.Object, Soup.SessionFeature {
+		[CCode (has_construct_function = false)]
+		protected WebsocketExtensionManager ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Compact]
@@ -2014,12 +2049,24 @@ namespace Soup {
 	[Version (since = "2.50")]
 	public static void websocket_client_prepare_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.68")]
+	public static void websocket_client_prepare_handshake_with_extensions (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols, GLib.GenericArray<GLib.TypeClass>? supported_extensions);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.50")]
 	public static bool websocket_client_verify_handshake (Soup.Message msg) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.68")]
+	public static bool websocket_client_verify_handshake_with_extensions (Soup.Message msg, GLib.GenericArray<GLib.TypeClass>? supported_extensions, out GLib.List<Soup.WebsocketExtension> accepted_extensions) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.50")]
 	public static bool websocket_server_check_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.68")]
+	public static bool websocket_server_check_handshake_with_extensions (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols, GLib.GenericArray<GLib.TypeClass>? supported_extensions) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.50")]
 	public static bool websocket_server_process_handshake (Soup.Message msg, string? expected_origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (since = "2.68")]
+	public static bool websocket_server_process_handshake_with_extensions (Soup.Message msg, string? expected_origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols, GLib.GenericArray<GLib.TypeClass>? supported_extensions, out GLib.List<Soup.WebsocketExtension> accepted_extensions);
 }
