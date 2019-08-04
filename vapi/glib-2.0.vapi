@@ -2781,6 +2781,7 @@ namespace GLib {
 
 	/* Date and Time Functions */
 
+	[Version (deprecated_since = "2.62")]
 	[CCode (has_type_id = false)]
 	public struct TimeVal {
 		public long tv_sec;
@@ -2788,6 +2789,7 @@ namespace GLib {
 
 		[CCode (cname = "g_get_current_time")]
 		public TimeVal ();
+		[Version (deprecated_since = "2.62", replacement = "get_real_time")]
 		[CCode (cname = "g_get_current_time")]
 		public void get_current_time ();
 		public void add (long microseconds);
@@ -2881,7 +2883,7 @@ namespace GLib {
 		public void set_julian (uint julian_day);
 		[Version (since = "2.10")]
 		public void set_time_t (time_t timet);
-		[Version (since = "2.10")]
+		[Version (deprecated_since = "2.62", since = "2.10")]
 		public void set_time_val (TimeVal timeval);
 		public void set_parse (string str);
 		public void add_days (uint n_days);
@@ -2997,7 +2999,9 @@ namespace GLib {
 		public DateTime.from_iso8601 (string text, TimeZone default_tz);
 		public DateTime.from_unix_local (int64 t);
 		public DateTime.from_unix_utc (int64 t);
+		[Version (deprecated_since = "2.62")]
 		public DateTime.from_timeval_local (TimeVal tv);
+		[Version (deprecated_since = "2.62")]
 		public DateTime.from_timeval_utc (TimeVal tv);
 		public DateTime (TimeZone tz, int year, int month, int day, int hour, int minute, double seconds);
 		public DateTime.local (int year, int month, int day, int hour, int minute, double seconds);
@@ -3031,6 +3035,7 @@ namespace GLib {
 		[Version (since = "2.58")]
 		public unowned TimeZone get_timezone ();
 		public int64 to_unix ();
+		[Version (deprecated_since = "2.62")]
 		public bool to_timeval (out TimeVal tv);
 		public TimeSpan get_utc_offset ();
 		public unowned string get_timezone_abbreviation ();
@@ -3039,6 +3044,8 @@ namespace GLib {
 		public DateTime to_local ();
 		public DateTime to_utc ();
 		public string format (string format);
+		[Version (since = "2.62")]
+		public string format_iso8601 ();
 		public string to_string () {
 			return this.format ("%FT%H:%M:%S%z");
 		}
@@ -4446,6 +4453,8 @@ namespace GLib {
 		public static void bug_base (string uri_pattern);
 		[Version (since = "2.16")]
 		public static void bug (string bug_uri_snippet);
+		[Version (since = "2.62")]
+		public static void summary (string summary);
 		[Version (since = "2.16")]
 		public static void timer_start ();
 		[Version (since = "2.16")]
