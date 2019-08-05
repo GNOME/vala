@@ -1,3 +1,23 @@
+Vala 0.44.7
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Fix mixup of target_glib_major/minor in set_target_glib_version() [#825]
+    + Implicit GValue cast requires GOBJECT profile
+    + NoAccessorMethod checks require GOBJECT profile
+    + 'construct' is not supported in POSIX profile
+  - codegen:
+    + Use G_TYPE_CHECK_INSTANCE_CAST for comparisons with interfaces
+    + Append line-break after G_DEFINE_AUTOPTR_CLEANUP_FUNC
+    + Include required type-definition when casting from generic pointer [#828]
+  - girparser: Handle "function-macro" by skipping them [gi#159]
+
+ * Bindings:
+  - glib-2.0: Add MappedFile.from_fd constructor [#824]
+  - posix: Fix return-value of mknod() and c-include for tcgetsid()
+  - webkit2gtk-4.0: Fix WebContext.initialize_notification_permissions()
+  - x11: Fix return type of XInternAtoms and XGetAtomNames bindings
+
 Vala 0.44.6
 ===========
  * Various improvements and bug fixes:
