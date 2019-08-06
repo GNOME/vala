@@ -24,6 +24,10 @@
 namespace Cairo {
 	[CCode (lower_case_cprefix = "CAIRO_MIME_TYPE_")]
 	namespace MimeType {
+		public const string CCITT_FAX;
+		public const string CCITT_FAX_PARAMS;
+		public const string EPS;
+		public const string EPS_PARAMS;
 		public const string JBIG2;
 		public const string JBIG2_GLOBAL;
 		public const string JBIG2_GLOBAL_ID;
@@ -137,6 +141,10 @@ namespace Cairo {
 		public void stroke ();
 		public void stroke_extents (out double x1, out double y1, out double x2, out double y2);
 		public void stroke_preserve ();
+		[Version (since = "1.16")]
+		public void tag_begin (string tag_name, string attributes);
+		[Version (since = "1.16")]
+		public void tag_end (string tag_name);
 		public void text_extents (string utf8, out Cairo.TextExtents extents);
 		public void text_path (string utf8);
 		public void transform (Cairo.Matrix matrix);
@@ -192,12 +200,16 @@ namespace Cairo {
 		public Cairo.HintMetrics get_hint_metrics ();
 		public Cairo.HintStyle get_hint_style ();
 		public Cairo.SubpixelOrder get_subpixel_order ();
+		[Version (since = "1.16")]
+		public unowned string? get_variations ();
 		public ulong hash ();
 		public void merge (Cairo.FontOptions other);
 		public void set_antialias (Cairo.Antialias antialias);
 		public void set_hint_metrics (Cairo.HintMetrics hint_metrics);
 		public void set_hint_style (Cairo.HintStyle hint_style);
 		public void set_subpixel_order (Cairo.SubpixelOrder subpixel_order);
+		[Version (since = "1.16")]
+		public void set_variations (string? variations);
 		public Cairo.Status status ();
 	}
 	[CCode (cname = "cairo_surface_t")]
@@ -281,10 +293,18 @@ namespace Cairo {
 	public class PdfSurface : Cairo.Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
 		public PdfSurface (string? filename, double width_in_points, double height_in_points);
+		[Version (since = "1.16")]
+		public int add_outline (int parent_id, string utf8, string link_attribs, Cairo.PdfOutlineFlags flags);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (Cairo.WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (Cairo.PdfVersion version);
+		[Version (since = "1.16")]
+		public void set_metadata (Cairo.PdfMetadata metadata, string utf8);
+		[Version (since = "1.16")]
+		public void set_page_label (string utf8);
 		public void set_size (double width_in_points, double height_in_points);
+		[Version (since = "1.16")]
+		public void set_thumbnail_size (int width, int height);
 	}
 	[CCode (cheader_filename = "cairo-ps.h", cname = "cairo_surface_t")]
 	[Compact]
@@ -470,7 +490,11 @@ namespace Cairo {
 		public SvgSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public SvgSurface.for_stream (Cairo.WriteFunc write_func, double width_in_points, double height_in_points);
+		[Version (since = "1.16")]
+		public Cairo.SvgUnit get_document_unit ();
 		public void restrict_to_version (Cairo.SvgVersion version);
+		[Version (since = "1.16")]
+		public void set_document_unit (Cairo.SvgUnit unit);
 	}
 	[CCode (cname = "cairo_font_face_t", ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy")]
 	[Compact]
@@ -747,6 +771,24 @@ namespace Cairo {
 		MESH,
 		RASTER_SOURCE
 	}
+	[CCode (cname = "cairo_pdf_metadata_t", cprefix = "CAIRO_PDF_METADATA_", has_type_id = false)]
+	[Version (since = "1.16")]
+	public enum PdfMetadata {
+		TITLE,
+		AUTHOR,
+		SUBJECT,
+		KEYWORDS,
+		CREATOR,
+		CREATE_DATE,
+		MOD_DATE
+	}
+	[CCode (cname = "cairo_pdf_outline_flags_t", cprefix = "CAIRO_PDF_OUTLINE_FLAG_", has_type_id = false)]
+	[Version (since = "1.16")]
+	public enum PdfOutlineFlags {
+		OPEN,
+		BOLD,
+		ITALIC
+	}
 	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_", has_type_id = false)]
 	public enum PdfVersion {
 		VERSION_1_4,
@@ -819,7 +861,9 @@ namespace Cairo {
 		JBIG2_GLOBAL_MISSING,
 		PNG_ERROR,
 		FREETYPE_ERROR,
-		WIN32_GDI_ERROR;
+		WIN32_GDI_ERROR,
+		TAG_ERROR,
+		LAST_STATUS;
 		[CCode (cname = "cairo_status_to_string")]
 		public unowned string to_string ();
 	}
@@ -864,6 +908,20 @@ namespace Cairo {
 		SUBSURFACE,
 		COGL
 	}
+	[CCode (cname = "cairo_svg_unit_t", cprefix = "CAIRO_SVG_UNIT_", has_type_id = false)]
+	[Version (since = "1.16")]
+	public enum SvgUnit {
+		USER,
+		EM,
+		EX,
+		PX,
+		IN,
+		CM,
+		MM,
+		PT,
+		PC,
+		PERCENT
+	}
 	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_", has_type_id = false)]
 	public enum SvgVersion {
 		VERSION_1_1,
@@ -901,6 +959,12 @@ namespace Cairo {
 	public delegate Cairo.Status UserScaledFontUnicodeToGlyphFunc (Cairo.UserScaledFont scaled_font, ulong unicode, out ulong glyph_index);
 	[CCode (cname = "cairo_write_func_t", instance_pos = 0)]
 	public delegate Cairo.Status WriteFunc (uchar[] data);
+	[CCode (cname = "CAIRO_PDF_OUTLINE_ROOT")]
+	public const int PDF_OUTLINE_ROOT;
+	[CCode (cname = "CAIRO_TAG_DEST")]
+	public const string TAG_DEST;
+	[CCode (cname = "CAIRO_TAG_LINK")]
+	public const string TAG_LINK;
 	public static int version ();
 	public static unowned string version_string ();
 }
