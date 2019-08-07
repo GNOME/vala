@@ -4140,6 +4140,20 @@ namespace Linux {
 
         [CCode (cheader_filename = "linux/uinput.h")]
         public const int UI_DEV_SETUP;
+
+        [CCode (cname = "struct uinput_abs_setup", cheader_filename = "linux/uinput.h")]
+        public struct AbsSetup {
+            public uint16 code;
+            public Input.AbsInfo absinfo;
+        }
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_ABS_SETUP;
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public static int UI_GET_SYSNAME (int len);
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_GET_VERSION;
     }
 
     /*
