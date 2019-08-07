@@ -1652,6 +1652,22 @@ namespace Linux {
             public int32 flat;
         }
 
+        [CCode (cname = "struct input_keymap_entry", has_type_id = false, cheader_filename = "linux/input.h")]
+        public struct KeymapEntry {
+            public uint8 flags;
+            public uint8 len;
+            public uint16 index;
+            public uint32 keycode;
+            public uint8 scancode[32];
+        }
+
+        [CCode (cname = "struct input_mask", has_type_id = false, cheader_filename = "linux/input.h")]
+        public struct Mask {
+            public uint32 type;
+            public uint32 codes_size;
+            public uint32 codes_ptr;
+        }
+
         /*
          * ioctls
          */
@@ -1664,10 +1680,15 @@ namespace Linux {
         public const int EVIOCGREP;
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public const int EVIOCSREP;
+
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public const int EVIOCGKEYCODE;
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCGKEYCODE_V2;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public const int EVIOCSKEYCODE;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCSKEYCODE_V2;
 
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public int EVIOCGNAME( uint len );
@@ -1675,6 +1696,10 @@ namespace Linux {
         public int EVIOCGPHYS( uint len );
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public int EVIOCGUNIQ( uint len );
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public int EVIOCGPROP( uint len );
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public int EVIOCGMTSLOTS( uint len );
 
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public int EVIOCGKEY( uint len );
@@ -1700,6 +1725,35 @@ namespace Linux {
         public const int EVIOCGEFFECTS;
         [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
         public const int EVIOCGRAB;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCREVOKE;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCGMASK;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCSMASK;
+        [CCode (cheader_filename = "linux/input.h,sys/ioctl.h")]
+        public const int EVIOCSCLOCKID;
+
+        /*
+         * device properties and quirks
+         */
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_POINTER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_DIRECT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_BUTTONPAD;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_SEMI_MT;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_TOPBUTTONPAD;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_POINTING_STICK;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_ACCELEROMETER;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const uint16 INPUT_PROP_MAX;
 
         /*
          * event types
@@ -2816,6 +2870,8 @@ namespace Linux {
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int KEY_DATA;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int KEY_ONSCREEN_KEYBOARD;
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int BTN_TRIGGER_HAPPY;
@@ -2930,6 +2986,12 @@ namespace Linux {
         [CCode (cheader_filename = "linux/input.h")]
         public const int REL_MISC;
         [CCode (cheader_filename = "linux/input.h")]
+        public const int REL_RESERVED;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int REL_WHEEL_HI_RES;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int REL_HWHEEL_HI_RES;
+        [CCode (cheader_filename = "linux/input.h")]
         public const int REL_MAX;
 
         /*
@@ -2990,6 +3052,9 @@ namespace Linux {
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_MISC;
+
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int ABS_RESERVED;
 
         [CCode (cheader_filename = "linux/input.h")]
         public const int ABS_MT_SLOT;
@@ -3188,6 +3253,14 @@ namespace Linux {
         public const int BUS_GSC;
         [CCode (cheader_filename = "linux/input.h")]
         public const int BUS_ATARI;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BUS_SPI;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BUS_RMI;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BUS_CEC;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int BUS_INTEL_ISHTP;
 
         /* MT_TOOL types */
         [CCode (cheader_filename = "linux/input.h")]
@@ -3196,6 +3269,8 @@ namespace Linux {
         public const int MT_TOOL_PEN;
         [CCode (cheader_filename = "linux/input.h")]
         public const int MT_TOOL_PALM;
+        [CCode (cheader_filename = "linux/input.h")]
+        public const int MT_TOOL_DIAL;
         [CCode (cheader_filename = "linux/input.h")]
         public const int MT_TOOL_MAX;
 
@@ -4083,8 +4158,10 @@ namespace Linux {
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace UserspaceInput {
-        [CCode (cheader_filename = "linux/uinput.h")]
+        [CCode (cheader_filename = "linux/uinput.h", cname = "UINPUT_VERSION")]
         public const int VERSION;
+        [CCode (cheader_filename = "linux/uinput.h", cname = "UINPUT_MAX_NAME_SIZE")]
+        public const int MAX_NAME_SIZE;
 
         [CCode (cheader_filename = "linux/uinput.h")]
         public const int EV_UINPUT;
@@ -4119,16 +4196,39 @@ namespace Linux {
         public const int UI_SET_SWBIT;
 
         [CCode (cname = "struct uinput_user_dev", cheader_filename = "linux/uinput.h")]
-        struct UserDevice
-        {
-            char name[80];
-            Input.Id id;
-            int ff_effects_max;
-            int absmax[64];
-            int absmin[64];
-            int absfuzz[64];
-            int absflat[64];
+        public struct UserDevice {
+            public char name[80];
+            public Input.Id id;
+            public uint32 ff_effects_max;
+            public int32 absmax[64];
+            public int32 absmin[64];
+            public int32 absfuzz[64];
+            public int32 absflat[64];
         }
+
+        [CCode (cname = "struct uinput_setup", cheader_filename = "linux/uinput.h")]
+        public struct UserSetup {
+            public Input.Id id;
+            public char name[80];
+            public uint32 ff_effects_max;
+        }
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_DEV_SETUP;
+
+        [CCode (cname = "struct uinput_abs_setup", cheader_filename = "linux/uinput.h")]
+        public struct AbsSetup {
+            public uint16 code;
+            public Input.AbsInfo absinfo;
+        }
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_ABS_SETUP;
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public static int UI_GET_SYSNAME (int len);
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_GET_VERSION;
     }
 
     /*
