@@ -4083,8 +4083,10 @@ namespace Linux {
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace UserspaceInput {
-        [CCode (cheader_filename = "linux/uinput.h")]
+        [CCode (cheader_filename = "linux/uinput.h", cname = "UINPUT_VERSION")]
         public const int VERSION;
+        [CCode (cheader_filename = "linux/uinput.h", cname = "UINPUT_MAX_NAME_SIZE")]
+        public const int MAX_NAME_SIZE;
 
         [CCode (cheader_filename = "linux/uinput.h")]
         public const int EV_UINPUT;
@@ -4119,16 +4121,25 @@ namespace Linux {
         public const int UI_SET_SWBIT;
 
         [CCode (cname = "struct uinput_user_dev", cheader_filename = "linux/uinput.h")]
-        struct UserDevice
-        {
-            char name[80];
-            Input.Id id;
-            int ff_effects_max;
-            int absmax[64];
-            int absmin[64];
-            int absfuzz[64];
-            int absflat[64];
+        public struct UserDevice {
+            public char name[80];
+            public Input.Id id;
+            public uint32 ff_effects_max;
+            public int32 absmax[64];
+            public int32 absmin[64];
+            public int32 absfuzz[64];
+            public int32 absflat[64];
         }
+
+        [CCode (cname = "struct uinput_setup", cheader_filename = "linux/uinput.h")]
+        public struct UserSetup {
+            public Input.Id id;
+            public char name[80];
+            public uint32 ff_effects_max;
+        }
+
+        [CCode (cheader_filename = "linux/uinput.h")]
+        public const int UI_DEV_SETUP;
     }
 
     /*
