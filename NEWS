@@ -1,3 +1,38 @@
+Vala 0.36.20
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Always use G_TYPE_CHECK_INSTANCE_TYPE for external symbols
+    + When freeing local variables don't stop at "switch" on "continue" [#799]
+      !!! Introduces an API/ABI Break of CCodeBaseModule.append_local_free() !!!
+    + Use array_length of collection variable instead of expression
+    + Assign GValue result of function calls to temp-var on copy_value [#819]
+    + Real structs are allowed by simple generics and passed as reference [#819]
+    + Use G_TYPE_CHECK_INSTANCE_CAST for comparisons with interfaces
+    + Include required type-definition when casting from generic pointer [#828]
+  - girwriter:
+    + Mention that this file is generated and not meant to be modified
+    + Properly resolve GLib.TypeInterface instead of hardcoding it
+    + Multiple improvements and fixes for e.g. GType classes
+  - girparser:
+    + Add support for string "ctype" metadata [#793]
+    + Skip 'attribute' elements
+    + Handle "function-macro" by skipping them [gi#159]
+  - parser: Multiple corrections for source-location of code-nodes
+  - compiler: Add OptionFlags.NO_ARG to deprecated "--thread" option
+  - tests: Null-terminate arrays for compatibility test of uint8 / uchar [#809]
+
+ * Bindings:
+  - clutter-1.0: Bind Margin, PaintVolume, Point, Rect and Size as struct [#795]
+  - cogl-1.0: Fix out-params in Cogl.get_modelview_matrix/projection_matrix/
+    bitmasks [#794]
+  - glib-2.0: Bind strcmp0 as GLib.CompareFunc<string?> [#810]
+  - glib-2.0: Add MappedFile.from_fd constructor [#824]
+  - posix: Fix return-value of mknod() and c-include for tcgetsid()
+  - webkit2gtk-4.0: Fix WebContext.initialize_notification_permissions()
+  - x11: Fix return type of XInternAtoms and XGetAtomNames bindings
+  - xtst: Fix signature of XTest.fake_relative_motion_event()
+
 Vala 0.36.19
 ============
  * Various improvements and bug fixes:
