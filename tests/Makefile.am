@@ -142,6 +142,7 @@ TESTS = \
 	methods/bug784691.vala \
 	methods/bug791215.vala \
 	methods/bug791283.vala \
+	methods/argument-array-initilizer.vala \
 	methods/generics.vala \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
