@@ -165,6 +165,7 @@ public class Vala.InitializerList : Expression {
 
 				var array_creation = new ArrayCreationExpression (array_type.element_type.copy (), array_type.rank, this, source_reference);
 				array_creation.target_type = target_type;
+				array_creation.formal_target_type = formal_target_type;
 				old_parent_node.replace_expression (this, array_creation);
 
 				checked = false;
