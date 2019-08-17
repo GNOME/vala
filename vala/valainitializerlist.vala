@@ -117,6 +117,7 @@ public class Vala.InitializerList : Expression {
 				builder.append_printf (", %s", initializer.to_string ());
 			}
 		}
+		builder.append_c ('}');
 		return builder.str;
 	}
 

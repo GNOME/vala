@@ -139,6 +139,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				builder.append_printf (", %s", size.to_string ());
 			}
 		}
+		builder.append_c (']');
 		if (initializer_list != null) {
 			builder.append (initializer_list.to_string ());
 		}
