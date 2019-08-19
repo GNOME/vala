@@ -1,3 +1,16 @@
+Vala 0.45.91
+============
+ * Various improvements and bug fixes:
+  - vala: Init formal_target_type of built ArrayCreationExpression from
+    InitializerList [#835]
+  - vala: Add missing closing brace/bracket in to_string() of
+    ArrayCreationExpression and InitializerList
+
+ * Bindings:
+  - cairo: Add 1.16 symbols
+  - linux: Add more Input and update UserspaceInput bindings [#830]
+  - sqlite3: Bind sqlite3_expanded_sql() and sqlite3_normalised_sql()
+
 Vala 0.45.90
 ============
  * Various improvements and bug fixes:
