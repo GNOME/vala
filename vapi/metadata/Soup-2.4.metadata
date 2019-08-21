@@ -18,6 +18,9 @@ ProxyResolver deprecated_since="2.28" replacement="ProxyURIResolver"
 
 // Report upstream
 add_* skip=false type="unowned GLib.TimeoutSource"
+Auth
+	// Factory method
+	.new symbol_type="function"
 AuthDomain
 	.accepts#method name="accepts_authorization"
 AuthDomainBasic.new skip=false

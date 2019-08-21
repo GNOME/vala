@@ -148,7 +148,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_get_type ()")]
 	public abstract class Auth : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
+		protected Auth ();
 		public virtual void authenticate (string username, string password);
 		[Version (since = "2.54")]
 		public virtual bool can_authenticate ();
@@ -163,6 +163,7 @@ namespace Soup {
 		public void has_saved_password (string username, string password);
 		[Version (since = "2.42")]
 		public virtual bool is_ready (Soup.Message msg);
+		public static Soup.Auth? @new (GLib.Type type, Soup.Message msg, string auth_header);
 		public void save_password (string username, string password);
 		public virtual bool update (Soup.Message msg, GLib.HashTable<void*,void*> auth_header);
 		[NoAccessorMethod]
