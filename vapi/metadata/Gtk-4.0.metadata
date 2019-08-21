@@ -38,8 +38,6 @@ EntryBuffer
   .get_text#virtual_method.n_bytes out default=null
 Range
   .get_range_border.* out
-  .get_range_size_request.minimum out
-  .get_range_size_request.natural out
 TextView
   .create_buffer unowned=false skip=false
 Widget

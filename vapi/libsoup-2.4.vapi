@@ -497,6 +497,10 @@ namespace Soup {
 		[Version (since = "2.68")]
 		public HSTSEnforcer ();
 		[Version (since = "2.68")]
+		public GLib.List<string> get_domains (bool session_policies);
+		[Version (since = "2.68")]
+		public GLib.List<Soup.HSTSPolicy> get_policies (bool session_policies);
+		[Version (since = "2.68")]
 		public virtual bool has_valid_policy (string domain);
 		[Version (since = "2.68")]
 		public virtual bool is_persistent ();

@@ -136,4 +136,6 @@ namespace Peas {
 	public delegate void ExtensionSetForeachFunc (Peas.ExtensionSet @set, Peas.PluginInfo info, Peas.Extension exten);
 	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 1.9)]
 	public delegate GLib.Object FactoryFunc ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] GLib.Parameter[] parameters);
+	[CCode (cheader_filename = "libpeas/peas.h")]
+	public static void cclosure_marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 }

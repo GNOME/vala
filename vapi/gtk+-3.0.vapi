@@ -3793,6 +3793,11 @@ namespace Gtk {
 		public string subtitle { get; set; }
 		public string title { get; set; }
 	}
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_header_bar_accessible_get_type ()")]
+	public class HeaderBarAccessible : Gtk.ContainerAccessible, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected HeaderBarAccessible ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h", type_id = "gtk_im_context_get_type ()")]
 	public abstract class IMContext : GLib.Object {
 		[CCode (has_construct_function = false)]

@@ -220,6 +220,8 @@ namespace Graphene {
 		public unowned Graphene.Plane? init_from_vec4 (Graphene.Vec4 src);
 		public Graphene.Plane negate ();
 		public Graphene.Plane normalize ();
+		[Version (since = "1.10")]
+		public Graphene.Plane transform (Graphene.Matrix matrix, Graphene.Matrix? normal_matrix);
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_point_t", type_id = "graphene_point_get_type ()")]
 	[Version (since = "1.0")]
@@ -276,6 +278,8 @@ namespace Graphene {
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_quaternion_t", type_id = "graphene_quaternion_get_type ()")]
 	[Version (since = "1.0")]
 	public struct Quaternion {
+		[Version (since = "1.10")]
+		public Graphene.Quaternion add (Graphene.Quaternion b);
 		public float dot (Graphene.Quaternion b);
 		public bool equal (Graphene.Quaternion b);
 		public unowned Graphene.Quaternion? init (float x, float y, float z, float w);
@@ -289,7 +293,11 @@ namespace Graphene {
 		public unowned Graphene.Quaternion? init_from_vec4 (Graphene.Vec4 src);
 		public unowned Graphene.Quaternion? init_identity ();
 		public Graphene.Quaternion invert ();
+		[Version (since = "1.10")]
+		public Graphene.Quaternion multiply (Graphene.Quaternion b);
 		public Graphene.Quaternion normalize ();
+		[Version (since = "1.10")]
+		public Graphene.Quaternion scale (float factor);
 		public Graphene.Quaternion slerp (Graphene.Quaternion b, float factor);
 		public void to_angle_vec3 (out float angle, out Graphene.Vec3 axis);
 		[Version (since = "1.2")]
@@ -431,6 +439,8 @@ namespace Graphene {
 		public unowned Graphene.Vec2? init_from_float ([CCode (array_length = false)] float src[2]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec2? init_from_vec2 (Graphene.Vec2 src);
+		[Version (since = "1.10")]
+		public Graphene.Vec2 interpolate (Graphene.Vec2 v2, double factor);
 		[Version (since = "1.0")]
 		public float length ();
 		[Version (since = "1.0")]
@@ -494,6 +504,8 @@ namespace Graphene {
 		public unowned Graphene.Vec3? init_from_float ([CCode (array_length = false)] float src[3]);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec3? init_from_vec3 (Graphene.Vec3 src);
+		[Version (since = "1.10")]
+		public Graphene.Vec3 interpolate (Graphene.Vec3 v2, double factor);
 		[Version (since = "1.0")]
 		public float length ();
 		[Version (since = "1.0")]
@@ -557,6 +569,8 @@ namespace Graphene {
 		public unowned Graphene.Vec4? init_from_vec3 (Graphene.Vec3 src, float w);
 		[Version (since = "1.0")]
 		public unowned Graphene.Vec4? init_from_vec4 (Graphene.Vec4 src);
+		[Version (since = "1.10")]
+		public Graphene.Vec4 interpolate (Graphene.Vec4 v2, double factor);
 		[Version (since = "1.0")]
 		public float length ();
 		[Version (since = "1.0")]

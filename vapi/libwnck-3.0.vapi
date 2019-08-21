@@ -162,6 +162,8 @@ namespace Wnck {
 		[Version (since = "3.24.0")]
 		public void set_scroll_enabled (bool scroll_enabled);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
+		public signal void task_enter_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
+		public signal void task_leave_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_window_get_type ()")]
 	public class Window : GLib.Object {

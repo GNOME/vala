@@ -910,5 +910,7 @@ namespace Atspi {
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static void set_main_context (GLib.MainContext cnx);
 	[CCode (cheader_filename = "atspi/atspi.h")]
+	public static void set_reference_window (Atspi.Accessible accessible);
+	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static void set_timeout (int val, int startup_time);
 }
