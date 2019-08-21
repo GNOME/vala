@@ -1251,6 +1251,10 @@ namespace Gst {
 		public Gst.Context? get_context_unlocked (string context_type);
 		[Version (since = "1.8")]
 		public GLib.List<Gst.Context> get_contexts ();
+		[Version (since = "1.18")]
+		public Gst.ClockTime get_current_clock_time ();
+		[Version (since = "1.18")]
+		public Gst.ClockTime get_current_running_time ();
 		public unowned Gst.ElementFactory? get_factory ();
 		[Version (since = "1.14")]
 		public unowned string get_metadata (string key);

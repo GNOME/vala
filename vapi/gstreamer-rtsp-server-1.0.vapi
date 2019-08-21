@@ -237,6 +237,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool query_stop (int64 stop);
 			public bool seek (Gst.RTSP.TimeRange range);
+			[Version (since = "1.18")]
 			public bool seek_full (Gst.RTSP.TimeRange range, Gst.SeekFlags flags);
 			[Version (since = "1.18")]
 			public bool seek_trickmode (Gst.RTSP.TimeRange range, Gst.SeekFlags flags, double rate, Gst.ClockTime trickmode_interval);

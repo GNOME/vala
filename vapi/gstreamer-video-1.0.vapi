@@ -655,20 +655,16 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoContentLightLevel")]
+		[Version (since = "1.18")]
 		public struct ContentLightLevel {
 			public uint maxCLL_n;
 			public uint maxCLL_d;
 			public uint maxFALL_n;
 			public uint maxFALL_d;
-			[Version (since = "1.18")]
 			public bool add_to_caps (Gst.Caps caps);
-			[Version (since = "1.18")]
 			public bool from_caps (Gst.Caps caps);
-			[Version (since = "1.18")]
 			public bool from_string (string level);
-			[Version (since = "1.18")]
 			public void init ();
-			[Version (since = "1.18")]
 			public string to_string ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
@@ -1153,7 +1149,11 @@ namespace Gst {
 			Y410,
 			VUYA,
 			BGR10A2_LE,
-			RGB10A2_LE
+			RGB10A2_LE,
+			Y444_16BE,
+			Y444_16LE,
+			P016_BE,
+			P016_LE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]

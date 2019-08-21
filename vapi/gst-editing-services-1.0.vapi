@@ -717,6 +717,7 @@ namespace GES {
 		[NoAccessorMethod]
 		public uint64 duration { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "1.18")]
 		public bool is_nested_timeline { get; }
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_uri_source_asset_get_type ()")]

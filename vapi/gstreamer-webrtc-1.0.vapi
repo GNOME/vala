@@ -80,13 +80,14 @@ namespace Gst {
 		public weak void* _padding[4];
 		public weak Gst.Caps codec_preferences;
 		public Gst.WebRTCRTPTransceiverDirection current_direction;
-		public Gst.WebRTCRTPTransceiverDirection direction;
 		public weak string mid;
 		public uint mline;
 		public bool stopped;
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPTransceiver ();
-		public virtual void set_direction (Gst.WebRTCRTPTransceiverDirection direction);
+		[NoAccessorMethod]
+		[Version (since = "1.18")]
+		public Gst.WebRTCRTPTransceiverDirection direction { get; set; }
 		[NoAccessorMethod]
 		public uint mlineindex { get; construct; }
 		[NoAccessorMethod]

@@ -76,6 +76,8 @@ namespace Gst {
 			public Gst.ClockTime get_latency ();
 			[NoWrapper]
 			public virtual Gst.ClockTime get_next_time ();
+			[Version (since = "1.18")]
+			public virtual bool negotiate ();
 			[NoWrapper]
 			public virtual bool negotiated_src_caps (Gst.Caps caps);
 			[NoWrapper]
@@ -87,7 +89,11 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
 			[NoWrapper]
+			public virtual bool sink_event_pre_queue (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
+			[NoWrapper]
 			public virtual bool sink_query (Gst.Base.AggregatorPad aggregator_pad, Gst.Query query);
+			[NoWrapper]
+			public virtual bool sink_query_pre_queue (Gst.Base.AggregatorPad aggregator_pad, Gst.Query query);
 			[NoWrapper]
 			public virtual bool src_activate (Gst.PadMode mode, bool active);
 			[NoWrapper]
