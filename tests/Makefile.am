@@ -464,6 +464,7 @@ TESTS = \
 	asynchronous/bug792660.vala \
 	asynchronous/bug792942.vala \
 	asynchronous/bug793158.vala \
+	asynchronous/begin-end-as-delegates.vala \
 	asynchronous/catch-error-scope.vala \
 	asynchronous/catch-in-finally.vala \
 	asynchronous/closures.vala \

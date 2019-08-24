@@ -64,9 +64,9 @@ public class Vala.MethodType : CallableType {
 
 	public override Symbol? get_member (string member_name) {
 		if (method_symbol.coroutine && member_name == "begin") {
-			return method_symbol;
+			return method_symbol.get_begin_method ();
 		} else if (method_symbol.coroutine && member_name == "end") {
-			return method_symbol;
+			return method_symbol.get_end_method ();
 		} else if (method_symbol.coroutine && member_name == "callback") {
 			return method_symbol.get_callback_method ();
 		}

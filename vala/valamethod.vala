@@ -181,7 +181,11 @@ public class Vala.Method : Subroutine, Callable {
 
 	public bool coroutine { get; set; }
 
+	public bool is_async_begin { get; set; }
+
 	public bool is_async_callback { get; set; }
+
+	public bool is_async_end { get; set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
 	private List<Expression> preconditions;
@@ -195,6 +199,7 @@ public class Vala.Method : Subroutine, Callable {
 	private DataType _base_interface_type;
 	private bool base_methods_valid;
 
+	Method? begin_method;
 	Method? callback_method;
 	Method? end_method;
 
@@ -1094,14 +1099,36 @@ public class Vala.Method : Subroutine, Callable {
 		return n;
 	}
 
+	public Method get_begin_method () {
+		assert (this.coroutine);
+
+		if (begin_method == null) {
+			begin_method = new Method ("begin", new VoidType (), source_reference);
+			begin_method.access = access;
+			begin_method.external = true;
+			begin_method.binding = ((this is CreationMethod) ? MemberBinding.STATIC : binding);
+			begin_method.owner = scope;
+			begin_method.is_async_begin = true;
+			foreach (var param in get_async_begin_parameters ()) {
+				begin_method.add_parameter (param.copy ());
+			}
+			foreach (var param in get_type_parameters ()) {
+				begin_method.add_type_parameter (param);
+			}
+		}
+		return begin_method;
+	}
+
 	public Method get_end_method () {
 		assert (this.coroutine);
 
 		if (end_method == null) {
-			end_method = new Method ("end", return_type, source_reference);
-			end_method.access = SymbolAccessibility.PUBLIC;
+			end_method = new Method ("end", ((this is CreationMethod) ? SemanticAnalyzer.get_this_type (this) : return_type), source_reference);
+			end_method.access = access;
 			end_method.external = true;
+			end_method.binding = ((this is CreationMethod) ? MemberBinding.STATIC : binding);
 			end_method.owner = scope;
+			end_method.is_async_end = true;
 			foreach (var param in get_async_end_parameters ()) {
 				end_method.add_parameter (param.copy ());
 			}

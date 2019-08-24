@@ -717,6 +717,18 @@ public class Vala.CCodeAttribute : AttributeCache {
 				unowned Method m = (Method) sym;
 				if (m.is_async_callback) {
 					return "%s_co".printf (get_ccode_real_name ((Method) m.parent_symbol));
+				} else if (m.is_async_begin) {
+					if (m.parent_symbol is CreationMethod) {
+						return get_ccode_real_name ((Method) m.parent_symbol);
+					} else {
+						return get_ccode_name ((Method) m.parent_symbol);
+					}
+				} else if (m.is_async_end) {
+					if (m.parent_symbol is CreationMethod) {
+						return get_ccode_finish_real_name ((Method) m.parent_symbol);
+					} else {
+						return get_ccode_finish_name ((Method) m.parent_symbol);
+					}
 				}
 				if (m.signal_reference != null) {
 					return "%s%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), get_ccode_lower_case_name (m.signal_reference));
