@@ -606,12 +606,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-					var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
-					vardecl.init0 = true;
-					ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
-				}
-
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
 						if (!m.coroutine) {
@@ -772,13 +766,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					complete_async ();
 				}
 
-				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-					// add dummy return if exit block is known to be unreachable to silence C compiler
-					if (m.return_block != null && m.return_block.get_predecessors ().size == 0) {
-						ccode.add_return (new CCodeIdentifier ("result"));
-					}
-				}
-
 				if (m is CreationMethod) {
 					if (current_type_symbol is Class) {
 						creturn_type = new ObjectType (current_class);
@@ -843,6 +830,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			return_default_value (creturn_type);
 
 			cfile.add_function (ccode);
+		}
+
+		if (current_method_return && !(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
+			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+			vardecl.init0 = true;
+			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
 		}
 
 		pop_context ();
@@ -1219,6 +1212,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		ccode.add_expression (ccheck);
+
+		current_method_return = true;
 	}
 
 	private TypeSymbol? find_parent_type (Symbol sym) {
