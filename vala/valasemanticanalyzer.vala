@@ -1116,6 +1116,56 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
+	public static unowned TypeSymbol? find_parent_type_symbol (Symbol sym) {
+		while (sym != null) {
+			if (sym is TypeSymbol) {
+				return (TypeSymbol) sym;
+			}
+			sym = sym.parent_symbol;
+		}
+		return null;
+	}
+
+	public static DataType? get_this_type (Method m) {
+		unowned TypeSymbol? parent_type = find_parent_type_symbol (m);
+		if (parent_type == null) {
+			Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
+			return new InvalidType ();
+		}
+
+		DataType? this_type = null;
+		switch (m.binding) {
+		case MemberBinding.INSTANCE:
+			if (parent_type is Class) {
+				this_type = new ObjectType ((Class) parent_type);
+			} else if (parent_type is Interface) {
+				this_type = new ObjectType ((Interface) parent_type);
+			} else if (parent_type is Struct) {
+				this_type = new StructValueType ((Struct) parent_type);
+			} else if (parent_type is Enum) {
+				this_type = new EnumValueType ((Enum) parent_type);
+			} else {
+				Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
+				this_type = new InvalidType ();
+			}
+			break;
+		case MemberBinding.CLASS:
+			if (parent_type is Class) {
+				this_type = new ClassType ((Class) parent_type);
+			} else {
+				Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
+				this_type = new InvalidType ();
+			}
+			break;
+		case MemberBinding.STATIC:
+		default:
+			Report.error (m.source_reference, "internal: Does not support a parent instance");
+			this_type = new InvalidType ();
+			break;
+		}
+		return this_type;
+	}
+
 	public bool is_in_constructor () {
 		var sym = current_symbol;
 		while (sym != null) {

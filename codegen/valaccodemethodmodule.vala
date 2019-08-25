@@ -946,20 +946,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		} else if ((m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod))
 		    && (direction != 2 || get_ccode_finish_instance (m))) {
-			TypeSymbol parent_type = find_parent_type (m);
-			DataType this_type;
-			if (parent_type is Class) {
-				this_type = new ObjectType ((Class) parent_type);
-			} else if (parent_type is Interface) {
-				this_type = new ObjectType ((Interface) parent_type);
-			} else if (parent_type is Struct) {
-				this_type = new StructValueType ((Struct) parent_type);
-			} else if (parent_type is Enum) {
-				this_type = new EnumValueType ((Enum) parent_type);
-			} else {
-				Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
-				this_type = new InvalidType ();
-			}
+			var this_type = SemanticAnalyzer.get_this_type (m);
 
 			generate_type_declaration (this_type, decl_space);
 
@@ -979,9 +966,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), instance_param);
 		} else if (m.binding == MemberBinding.CLASS) {
-			TypeSymbol parent_type = find_parent_type (m);
-			DataType this_type;
-			this_type = new ClassType ((Class) parent_type);
+			var this_type = SemanticAnalyzer.get_this_type (m);
 			var class_param = new CCodeParameter ("klass", get_ccode_name (this_type));
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), class_param);
 		}
@@ -1214,16 +1199,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		ccode.add_expression (ccheck);
-	}
-
-	private TypeSymbol? find_parent_type (Symbol sym) {
-		while (sym != null) {
-			if (sym is TypeSymbol) {
-				return (TypeSymbol) sym;
-			}
-			sym = sym.parent_symbol;
-		}
-		return null;
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
