@@ -37,11 +37,11 @@ EntryBuffer
   .get_text#virtual_method name="get_text_internal"
   .get_text#virtual_method.n_bytes out default=null
 Range
-  .get_range_border.* out
+  .get_range_border.border_ out
 TextView
   .create_buffer unowned=false skip=false
 Widget
-  .compute_expand#virtual_method.* out
+  .compute_expand#virtual_method.*expand_p out
 
 // Bug #657202: Floating references
 FileFilter
@@ -379,6 +379,7 @@ editable_install_properties skip
 // Sure
 binding_set_by_class.object_class type="GLib.ObjectClass"
 *.ref unowned
+*.unref destroys_instance=false
 
 // These delegate types don't have targets in the typedefs, but they
 // get called with a target.

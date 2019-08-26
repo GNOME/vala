@@ -1,4 +1,5 @@
 *.ref unowned
+*.unref destroys_instance=false
 
 Renderer
 	// Factory method
