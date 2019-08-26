@@ -1,0 +1,50 @@
+GIR
+
+Input:
+
+<record name="Foo"
+        c:type="TestFoo"
+        glib:type-name="TestFoo"
+        glib:get-type="test_foo_get_type"
+        c:symbol-prefix="foo">
+  <constructor name="new" c:identifier="test_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Transform" c:type="TestFoo*"/>
+    </return-value>
+  </constructor>
+  <method name="bar" c:identifier="test_foo_bar">
+    <return-value transfer-ownership="full">
+      <type name="Foo" c:type="TestFoo*"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self"
+                          transfer-ownership="full">
+        <type name="Foo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+  <method name="baz" c:identifier="test_foo_baz">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self"
+                          transfer-ownership="full">
+        <type name="Foo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+</record>
+
+Output:
+
+[CCode (cheader_filename = "test.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "test_foo_get_type ()")]
+[Compact]
+public class Foo {
+	[CCode (has_construct_function = false)]
+	public Foo ();
+	[DestroysInstance]
+	public Test.Foo bar ();
+	[DestroysInstance]
+	public void baz ();
+}

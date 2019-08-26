@@ -3289,11 +3289,8 @@ public class Vala.GirParser : CodeVisitor {
 			while (current_token == MarkupTokenType.START_ELEMENT) {
 				current_parameter_idx++;
 
-				if (reader.name == "instance-parameter" &&
-				    !(symbol_type == "function" || symbol_type == "constructor")) {
-					skip_element ();
-					continue;
-				}
+				var is_instance_parameter = (reader.name == "instance-parameter"
+					&& !(symbol_type == "function" || symbol_type == "constructor"));
 
 				if (instance_idx > -2 && instance_idx == current_parameter_idx) {
 					skip_element ();
@@ -3311,6 +3308,23 @@ public class Vala.GirParser : CodeVisitor {
 				Comment? param_comment;
 				default_param_name = "arg%d".printf (parameters.size);
 				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx, out scope, out param_comment, default_param_name);
+
+				if (is_instance_parameter) {
+					unowned Method? m = s as Method;
+					if (m != null) {
+						if (param.direction == ParameterDirection.IN) {
+							if (param.variable_type.value_owned) {
+								m.set_attribute ("DestroysInstance", true);
+							}
+							pop_metadata ();
+							continue;
+						} else {
+							//TODO can more be done here?
+							m.binding = MemberBinding.STATIC;
+						}
+					}
+				}
+
 				if (array_length_idx != -1) {
 					if (instance_idx > -2 && instance_idx < array_length_idx) {
 						array_length_idx--;
