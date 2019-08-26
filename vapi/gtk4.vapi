@@ -4764,6 +4764,7 @@ namespace Gdk {
 		public void print (GLib.StringBuilder string);
 		public unowned Gdk.ContentFormats @ref ();
 		public string to_string ();
+		[DestroysInstance]
 		public Gdk.ContentFormats union (Gdk.ContentFormats second);
 		public Gdk.ContentFormats union_deserialize_gtypes ();
 		public Gdk.ContentFormats union_deserialize_mime_types ();
@@ -6196,24 +6197,34 @@ namespace Gsk {
 		public Transform ();
 		public bool equal (Gsk.Transform second);
 		public Gsk.TransformCategory get_category ();
+		[DestroysInstance]
 		public Gsk.Transform invert ();
+		[DestroysInstance]
 		public Gsk.Transform matrix (Graphene.Matrix matrix);
 		public static bool parse (string string, out Gsk.Transform out_transform);
+		[DestroysInstance]
 		public Gsk.Transform perspective (float depth);
 		public void print (GLib.StringBuilder string);
 		public unowned Gsk.Transform @ref ();
+		[DestroysInstance]
 		public Gsk.Transform rotate (float angle);
+		[DestroysInstance]
 		public Gsk.Transform rotate_3d (float angle, Graphene.Vec3 axis);
+		[DestroysInstance]
 		public Gsk.Transform scale (float factor_x, float factor_y);
+		[DestroysInstance]
 		public Gsk.Transform scale_3d (float factor_x, float factor_y, float factor_z);
 		public void to_2d (out float out_xx, out float out_yx, out float out_xy, out float out_yy, out float out_dx, out float out_dy);
 		public void to_affine (out float out_scale_x, out float out_scale_y, out float out_dx, out float out_dy);
 		public Graphene.Matrix to_matrix ();
 		public string to_string ();
 		public void to_translate (out float out_dx, out float out_dy);
+		[DestroysInstance]
 		public Gsk.Transform transform (Gsk.Transform? other);
 		public Graphene.Rect transform_bounds (Graphene.Rect rect);
+		[DestroysInstance]
 		public Gsk.Transform translate (Graphene.Point point);
+		[DestroysInstance]
 		public Gsk.Transform translate_3d (Graphene.Point3D point);
 		public void unref ();
 	}

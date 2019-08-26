@@ -1,6 +1,7 @@
 KEY_* name="KEY_(.+)" type="uint" parent="Gdk.Key"
 
 *.ref unowned
+*.unref destroys_instance=false
 
 Cursor	abstract=false
 Device
