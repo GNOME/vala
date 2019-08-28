@@ -123,6 +123,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=return-type \
 -Werror=sequence-point \
 -Werror=uninitialized \
+-Werror=unreachable-code \
 -Werror=int-to-pointer-cast \
 -Werror=pointer-to-int-cast \
 -Werror=compare-distinct-pointer-types \
