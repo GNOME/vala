@@ -2678,6 +2678,8 @@ namespace GLib {
 	public static string convert_with_fallback (string str, ssize_t len, string to_codeset, string from_codeset, string? fallback = null, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static string convert_with_iconv (string str, ssize_t len, IConv converter, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
+	[Version (since = "2.62")]
+	public static bool get_console_charset ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 
 	[SimpleType]
@@ -5340,6 +5342,8 @@ namespace GLib {
 		public Array.sized (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G), uint reserved_size = 0);
 		public void append_val (owned G value);
 		public void append_vals (void* data, uint len);
+		[Version (since = "2.62")]
+		public bool binary_search (G target, CompareFunc<G> compare_func, out uint match_index);
 		[Version (since = "2.62")]
 		public Array<unowned G> copy ();
 		public void prepend_val (owned G value);
