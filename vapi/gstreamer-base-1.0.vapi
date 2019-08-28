@@ -141,6 +141,7 @@ namespace Gst {
 			public uint size;
 			public BitReader ([CCode (array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_bit_reader_free")]
+			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_bit_reader_get_bits_uint16")]
 			public bool get_bits_uint16 (out uint16 val, uint nbits);
@@ -191,6 +192,7 @@ namespace Gst {
 			[CCode (cname = "gst_byte_reader_dup_string_utf8")]
 			public bool dup_string_utf8 ([CCode (array_length = false, array_null_terminated = true)] out string[] str);
 			[CCode (cname = "gst_byte_reader_free")]
+			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_byte_reader_get_data")]
 			public bool get_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
@@ -326,10 +328,13 @@ namespace Gst {
 			[CCode (cname = "gst_byte_writer_fill")]
 			public bool fill (uint8 value, uint size);
 			[CCode (cname = "gst_byte_writer_free")]
+			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_byte_writer_free_and_get_buffer")]
+			[DestroysInstance]
 			public Gst.Buffer free_and_get_buffer ();
 			[CCode (cname = "gst_byte_writer_free_and_get_data")]
+			[DestroysInstance]
 			public uint8 free_and_get_data ();
 			[CCode (cname = "gst_byte_writer_get_remaining")]
 			public uint get_remaining ();
@@ -827,10 +832,13 @@ namespace Gst {
 			[CCode (cname = "gst_bit_writer_align_bytes")]
 			public bool align_bytes (uint8 trailing_bit);
 			[CCode (cname = "gst_bit_writer_free")]
+			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_bit_writer_free_and_get_buffer")]
+			[DestroysInstance]
 			public Gst.Buffer free_and_get_buffer ();
 			[CCode (array_length = false, cname = "gst_bit_writer_free_and_get_data")]
+			[DestroysInstance]
 			public uint8[] free_and_get_data ();
 			[CCode (cname = "gst_bit_writer_get_data")]
 			public uint8 get_data ();

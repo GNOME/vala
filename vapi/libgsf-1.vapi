@@ -139,6 +139,7 @@ namespace Gsf {
 		[CCode (vfunc_name = "OpenSibling")]
 		public virtual Gsf.Input sibling (string name) throws GLib.Error;
 		public Gsf.off_t tell ();
+		[DestroysInstance]
 		public Gsf.Input uncompress ();
 		[NoAccessorMethod]
 		public Gsf.Infile container { owned get; }

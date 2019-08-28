@@ -30,6 +30,7 @@ CanvasItemSimple
 	.get_path_bounds.bounds out unowned=false
 CanvasItemModel
 	.get_simple_transform.* out
+	.get_simple_transform.model out=false
 	.get_transform.transform out
 CanvasLineDash
 	.dashes array array_length_field="num_dashes" unowned=false

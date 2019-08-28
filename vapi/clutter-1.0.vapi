@@ -8106,7 +8106,7 @@ namespace Clutter {
 		[Version (since = "1.12")]
 		public static Clutter.ActorBox? alloc ();
 		[Version (since = "1.2")]
-		public void clamp_to_pixel ();
+		public static void clamp_to_pixel (ref Clutter.ActorBox box);
 		[Version (since = "1.0")]
 		public bool contains (float x, float y);
 		[Version (since = "1.0")]

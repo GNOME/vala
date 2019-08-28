@@ -101,6 +101,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public WebRTCSessionDescription (Gst.WebRTCSDPType type, owned Gst.SDP.Message sdp);
 		public Gst.WebRTCSessionDescription copy ();
+		[DestroysInstance]
 		public void free ();
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_BUNDLE_POLICY_", type_id = "gst_webrtc_bundle_policy_get_type ()")]

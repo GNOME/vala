@@ -877,14 +877,22 @@ namespace GLib {
 		public unowned GLib.DBusPropertyInfo get_property_info ();
 		public unowned string get_sender ();
 		public void* get_user_data ();
+		[DestroysInstance]
 		public void return_dbus_error (string error_name, string error_message);
+		[DestroysInstance]
 		public void return_error (GLib.Quark domain, int code, string format, ...);
+		[DestroysInstance]
 		public void return_error_literal (GLib.Quark domain, int code, string message);
+		[DestroysInstance]
 		public void return_error_valist (GLib.Quark domain, int code, string format, [CCode (type = "va_list")] va_list var_args);
+		[DestroysInstance]
 		public void return_gerror (GLib.Error error);
+		[DestroysInstance]
 		public void return_value (GLib.Variant? parameters);
+		[DestroysInstance]
 		[Version (since = "2.30")]
 		public void return_value_with_unix_fd_list (GLib.Variant? parameters, GLib.UnixFDList? fd_list);
+		[DestroysInstance]
 		[Version (since = "2.30")]
 		public void take_error (owned GLib.Error error);
 	}
