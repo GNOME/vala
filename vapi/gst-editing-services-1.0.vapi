@@ -235,6 +235,27 @@ namespace GES {
 		public signal void clip_added (GES.Clip clip);
 		public signal void clip_removed (GES.Clip clip);
 	}
+	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_marker_get_type ()")]
+	public class Marker : GLib.Object, GES.MetaContainer {
+		[CCode (has_construct_function = false)]
+		protected Marker ();
+		[NoAccessorMethod]
+		public uint64 position { get; }
+	}
+	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_marker_list_get_type ()")]
+	[Version (since = "1.18")]
+	public class MarkerList : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public MarkerList ();
+		public unowned GES.Marker add (Gst.ClockTime position);
+		public GLib.List<GES.Marker> get_markers ();
+		public bool move (GES.Marker marker, Gst.ClockTime position);
+		public bool remove (GES.Marker marker);
+		public uint size ();
+		public signal void marker_added (uint64 object, GES.Marker p0);
+		public signal void marker_moved (uint64 object, GES.Marker p0);
+		public signal void marker_removed (GES.Marker marker);
+	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_multi_file_source_get_type ()")]
 	public class MultiFileSource : GES.VideoSource, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
@@ -794,6 +815,8 @@ namespace GES {
 		public bool get_float (string meta_item, out float dest);
 		public bool get_int (string meta_item, out int dest);
 		public bool get_int64 (string meta_item, out int64 dest);
+		[Version (since = "1.18")]
+		public GES.MarkerList get_marker_list (string key);
 		public unowned GLib.Value? get_meta (string key);
 		public unowned string get_string (string meta_item);
 		public bool get_uint (string meta_item, out uint dest);
@@ -817,6 +840,8 @@ namespace GES {
 		public bool set_float (string meta_item, float value);
 		public bool set_int (string meta_item, int value);
 		public bool set_int64 (string meta_item, int64 value);
+		[Version (since = "1.18")]
+		public bool set_marker_list (string meta_item, GES.MarkerList? list);
 		public bool set_meta (string meta_item, GLib.Value? value);
 		public bool set_string (string meta_item, string value);
 		public bool set_uint (string meta_item, uint value);
