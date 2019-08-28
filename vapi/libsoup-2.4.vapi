@@ -532,6 +532,7 @@ namespace Soup {
 		public HSTSPolicy (string domain, ulong max_age, bool include_subdomains);
 		public Soup.HSTSPolicy copy ();
 		public bool equal (Soup.HSTSPolicy policy2);
+		[DestroysInstance]
 		public void free ();
 		[CCode (has_construct_function = false)]
 		public HSTSPolicy.from_response (Soup.Message msg);
@@ -1283,7 +1284,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	public struct MessageHeadersIter {
 		public static void init (out Soup.MessageHeadersIter iter, Soup.MessageHeaders hdrs);
-		public bool next (out unowned string name, out unowned string value);
+		public static bool next (ref Soup.MessageHeadersIter iter, out unowned string name, out unowned string value);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	[Version (since = "2.26")]

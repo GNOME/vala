@@ -40,12 +40,14 @@ AccelLabel
 // Bug #: Virtual methods without invokers
 Entry
   .get_frame_size.* out
+  .get_frame_size.entry out=false
   .get_text_area_size.* out
+  .get_text_area_size.entry out=false
 EntryBuffer
   .get_text#virtual_method name="get_text_internal"
   .get_text#virtual_method.n_bytes out default=null
 Range
-  .get_range_border.* out
+  .get_range_border.border_ out
   .get_range_size_request.minimum out
   .get_range_size_request.natural out
 RcStyle
@@ -57,7 +59,7 @@ Widget
   .adjust_size_allocation.*_size ref
   .adjust_size_allocation.allocated_pos ref
   .adjust_size_request.*_size ref
-  .compute_expand#virtual_method.* out
+  .compute_expand#virtual_method.*expand_p out
   .dispatch_child_properties_changed.pspecs array array_length_idx=0
 RecentChooser
   .get_recent_manager skip=false

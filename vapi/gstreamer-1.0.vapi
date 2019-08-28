@@ -562,6 +562,7 @@ namespace Gst {
 		public size_t padding;
 		public size_t prefix;
 		public Gst.AllocationParams? copy ();
+		[DestroysInstance]
 		public void free ();
 		public void init ();
 	}
@@ -581,6 +582,7 @@ namespace Gst {
 		public static Gst.Allocator? find (string? name);
 		public virtual void free (owned Gst.Memory memory);
 		public static void register (string name, owned Gst.Allocator allocator);
+		[DestroysInstance]
 		public void set_default ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_atomic_queue_ref", type_id = "gst_atomic_queue_get_type ()", unref_function = "gst_atomic_queue_unref")]
@@ -673,8 +675,10 @@ namespace Gst {
 		public unowned Gst.ReferenceTimestampMeta? add_reference_timestamp_meta (Gst.Caps reference, Gst.ClockTime timestamp, Gst.ClockTime duration);
 		[CCode (has_construct_function = false)]
 		public Buffer.allocate (Gst.Allocator? allocator, size_t size, Gst.AllocationParams? @params);
+		[DestroysInstance]
 		public Gst.Buffer append (owned Gst.Buffer buf2);
 		public void append_memory (owned Gst.Memory mem);
+		[DestroysInstance]
 		public Gst.Buffer append_region (owned Gst.Buffer buf2, ssize_t offset, ssize_t size);
 		[Version (since = "1.6")]
 		public Gst.Buffer copy_deep ();
@@ -850,6 +854,7 @@ namespace Gst {
 		public Caps.empty_simple (string media_type);
 		[Version (since = "1.6")]
 		public void filter_and_map_in_place (Gst.CapsFilterMapFunc func);
+		[DestroysInstance]
 		public Gst.Caps fixate ();
 		[Version (since = "1.6")]
 		public bool @foreach (Gst.CapsForeachFunc func);
@@ -877,10 +882,14 @@ namespace Gst {
 		public bool is_subset_structure_full (Gst.Structure structure, Gst.CapsFeatures? features);
 		[Version (since = "1.6")]
 		public bool map_in_place (Gst.CapsMapFunc func);
+		[DestroysInstance]
 		public Gst.Caps merge (owned Gst.Caps caps2);
+		[DestroysInstance]
 		public Gst.Caps merge_structure (owned Gst.Structure structure);
+		[DestroysInstance]
 		[Version (since = "1.2")]
 		public Gst.Caps merge_structure_full (owned Gst.Structure structure, owned Gst.CapsFeatures? features);
+		[DestroysInstance]
 		public Gst.Caps normalize ();
 		public void remove_structure (uint idx);
 		[Version (since = "1.2")]
@@ -892,10 +901,12 @@ namespace Gst {
 		public void set_value (string field, GLib.Value value);
 		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
+		[DestroysInstance]
 		public Gst.Caps simplify ();
 		public Gst.Structure? steal_structure (uint index);
 		public Gst.Caps subtract (Gst.Caps subtrahend);
 		public string to_string ();
+		[DestroysInstance]
 		public Gst.Caps truncate ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_caps_features_get_type ()")]
@@ -913,6 +924,7 @@ namespace Gst {
 		public Gst.CapsFeatures copy ();
 		[CCode (has_construct_function = false)]
 		public CapsFeatures.empty ();
+		[DestroysInstance]
 		public void free ();
 		public static Gst.CapsFeatures? from_string (string features);
 		public unowned string? get_nth (uint i);
@@ -1065,6 +1077,7 @@ namespace Gst {
 		public unowned Gst.DateTime @ref ();
 		public GLib.DateTime? to_g_date_time ();
 		public string? to_iso8601_string ();
+		[DestroysInstance]
 		public void unref ();
 		[CCode (has_construct_function = false)]
 		public DateTime.y (int year);
@@ -1539,6 +1552,7 @@ namespace Gst {
 		public bool is_span (Gst.Memory mem2, out size_t offset);
 		[Version (since = "1.2")]
 		public bool is_type (string mem_type);
+		[DestroysInstance]
 		public Gst.Memory? make_mapped (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		[CCode (has_construct_function = false, simple_generics = true)]
@@ -1739,6 +1753,7 @@ namespace Gst {
 		public T get_qdata<T> (GLib.Quark quark);
 		public bool is_writable ();
 		public bool @lock (Gst.LockFlags flags);
+		[DestroysInstance]
 		[ReturnsModifiedPointer]
 		public Gst.MiniObject make_writable ();
 		public unowned Gst.MiniObject @ref ();
@@ -1955,6 +1970,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public ParseContext ();
 		public Gst.ParseContext? copy ();
+		[DestroysInstance]
 		public void free ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_missing_elements ();
@@ -2043,6 +2059,7 @@ namespace Gst {
 		[Version (since = "1.16")]
 		public bool fd_has_pri (Gst.PollFD fd);
 		public void fd_ignored (Gst.PollFD fd);
+		[DestroysInstance]
 		public void free ();
 		public void get_read_gpollfd (GLib.PollFD fd);
 		public bool read_control ();
@@ -2268,6 +2285,7 @@ namespace Gst {
 		public Gst.Segment copy ();
 		public void copy_into (Gst.Segment dest);
 		public bool do_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, uint64 start, Gst.SeekType stop_type, uint64 stop, out bool update);
+		[DestroysInstance]
 		public void free ();
 		public void init (Gst.Format format);
 		[Version (since = "1.6")]
@@ -2346,6 +2364,7 @@ namespace Gst {
 		public bool fixate_field_nearest_int (string field_name, int target);
 		public bool fixate_field_string (string field_name, string target);
 		public bool @foreach (Gst.StructureForeachFunc func);
+		[DestroysInstance]
 		public void free ();
 		[CCode (cname = "gst_structure_from_string", has_construct_function = false)]
 		public Structure.from_string (string string, out unowned string end);
@@ -2624,6 +2643,7 @@ namespace Gst {
 		public bool is_writable ();
 		[Version (since = "1.6")]
 		public Gst.Uri? join (Gst.Uri? ref_uri);
+		[DestroysInstance]
 		[ReturnsModifiedPointer]
 		[Version (since = "1.6")]
 		public Gst.Uri make_writable ();

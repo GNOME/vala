@@ -754,6 +754,7 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public Thread (Gst.RTSPServer.ThreadType type);
 			public bool reuse ();
+			[DestroysInstance]
 			public void stop ();
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPThreadPool", lower_case_cprefix = "gst_rtsp_thread_pool_", type_id = "gst_rtsp_thread_pool_get_type ()")]

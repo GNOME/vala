@@ -139,6 +139,7 @@ namespace GES {
 		public bool remove (GES.TimelineElement child);
 		[NoWrapper]
 		public virtual bool remove_child (GES.TimelineElement element);
+		[DestroysInstance]
 		public virtual GLib.List<GES.Container> ungroup (bool recursive);
 		[NoAccessorMethod]
 		public uint height { get; }
