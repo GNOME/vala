@@ -77,6 +77,7 @@ namespace Graphene {
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_matrix_t", type_id = "graphene_matrix_get_type ()")]
 	public struct Matrix {
+		public bool decompose (out Graphene.Vec3 translate, out Graphene.Vec3 scale, out Graphene.Quaternion rotate, out Graphene.Vec3 shear, out Graphene.Vec4 perspective);
 		[Version (since = "1.0")]
 		public float determinant ();
 		[Version (since = "1.10")]
