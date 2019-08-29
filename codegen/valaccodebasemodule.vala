@@ -2313,7 +2313,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (b.parent_symbol is Method) {
+		bool unreachable_exit_block = false;
+		if (b.parent_symbol is Subroutine) {
+			unowned BasicBlock? exit_block = ((Subroutine) b.parent_symbol).exit_block;
+			unreachable_exit_block = (exit_block == null || exit_block.get_predecessors ().size <= 0);
+		}
+
+		if (!unreachable_exit_block && b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (Parameter param in m.get_parameters ()) {
 				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
@@ -2326,14 +2332,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			foreach (var postcondition in m.get_postconditions ()) {
 				create_postcondition_statement (postcondition);
 			}
-		} else if (b.parent_symbol is PropertyAccessor) {
+		} else if (!unreachable_exit_block && b.parent_symbol is PropertyAccessor) {
 			var acc = (PropertyAccessor) b.parent_symbol;
 			if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
 				ccode.add_expression (destroy_parameter (acc.value_parameter));
 			}
 		}
 
-		if (b.captured) {
+		if (!unreachable_exit_block && b.captured) {
 			int block_id = get_block_id (b);
 
 			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
