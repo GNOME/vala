@@ -210,7 +210,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				if (requires_copy (param_type) && !capturing_parameter_in_coroutine) {
 					// do not copy value when capturing parameter in coroutine
 					// as the value was already copied on coroutine initialization
-					value = copy_value (value, param);
+					value = copy_value (value, param_type, param);
 				}
 
 				if (old_coroutine) {

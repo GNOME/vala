@@ -200,7 +200,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (m is ArrayMoveMethod) {
 			requires_array_move = true;
 		} else if (m is ArrayCopyMethod) {
-			expr.target_value = copy_value (ma.inner.target_value, expr);
+			expr.target_value = copy_value (ma.inner.target_value, ma.inner.value_type, expr);
 			return;
 		}
 
