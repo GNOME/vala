@@ -115,9 +115,13 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 	}
 
-	void uncaught_error_statement (CCodeExpression inner_error, bool unexpected = false) {
+	void uncaught_error_statement (CCodeExpression inner_error, bool unexpected = false, CodeNode? start_at = null) {
 		// free local variables
-		append_local_free (current_symbol);
+		if (start_at is TryStatement) {
+			append_local_free (start_at.parent_node as Block);
+		} else {
+			append_local_free (current_symbol);
+		}
 
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant (unexpected ? "\"file %s: line %d: unexpected error: %s (%s, %d)\"" : "\"file %s: line %d: uncaught error: %s (%s, %d)\""));
@@ -256,7 +260,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				// as jump out of finally block is not supported
 			} else {
 				// should never happen with correct bindings
-				uncaught_error_statement (get_inner_error_cexpression (), true);
+				uncaught_error_statement (get_inner_error_cexpression (), true, current_try);
 			}
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
