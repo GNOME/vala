@@ -259,7 +259,7 @@ public class Vala.GAsyncModule : GtkModule {
 				cself = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cself);
 			}
 			if (requires_copy (this_type))  {
-				cself = get_cvalue_ (copy_value (new GLibValue (m.this_parameter.variable_type, cself, true), m.this_parameter));
+				cself = get_cvalue_ (copy_value (new GLibValue (m.this_parameter.variable_type, cself, true), this_type, m.this_parameter));
 			}
 
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "self"), cself);
@@ -592,7 +592,7 @@ public class Vala.GAsyncModule : GtkModule {
 			// structs are returned via out parameter
 			CCodeExpression cexpr = new CCodeMemberAccess.pointer (data_var, "result");
 			if (requires_copy (return_type)) {
-				cexpr = get_cvalue_ (copy_value (new GLibValue (return_type, cexpr, true), return_type));
+				cexpr = get_cvalue_ (copy_value (new GLibValue (return_type, cexpr, true), return_type, return_type));
 			}
 			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result")), cexpr);
 		} else if (!(return_type is VoidType)) {

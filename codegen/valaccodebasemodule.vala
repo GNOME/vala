@@ -4365,7 +4365,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return true;
 	}
 
-	public virtual TargetValue? copy_value (TargetValue value, CodeNode node) {
+	public virtual TargetValue? copy_value (TargetValue value, DataType? src_type, CodeNode node) {
 		var type = value.value_type;
 		var cexpr = get_cvalue_ (value);
 		var result = ((GLibValue) value).copy ();
@@ -4531,6 +4531,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.open_if (cnotnull);
 				ccode.add_expression (ccall);
 				ccode.close ();
+			} else if (src_type is ArrayType && ((ArrayType) src_type).inline_allocated) {
+				// inline allocated arrays can't be null
+				result.cvalue = ccall;
+				result = (GLibValue) store_temp_value (result, node, true);
 			} else {
 				var ccond = new CCodeConditionalExpression (cnotnull, ccall, cifnull);
 				result.cvalue = ccond;
@@ -6087,11 +6091,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (target_array.element_type.value_owned && !array.element_type.value_owned) {
 				array_needs_copy = requires_copy (target_array.element_type);
 			}
+			if (node is CastExpression && ((CastExpression) node).inner.target_type is ArrayType) {
+				type = ((CastExpression) node).inner.target_type;
+			}
 		}
 
 		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
-			var copy = (GLibValue) copy_value (result, node);
+			var copy = (GLibValue) copy_value (result, type, node);
 			if (target_type.data_type is Interface && copy == null) {
 				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.data_type.get_full_name ()));
 				return result;
@@ -6473,7 +6480,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if ((!(f.variable_type is DelegateType) || get_ccode_delegate_target (f)) && requires_copy (f.variable_type))  {
-					value = copy_value (value, f);
+					value = copy_value (value, f.variable_type, f);
 					if (value == null) {
 						// error case, continue to avoid critical
 						continue;

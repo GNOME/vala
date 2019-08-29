@@ -307,7 +307,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if ((!(f.variable_type is DelegateType) || get_ccode_delegate_target (f)) && requires_copy (f.variable_type))  {
-					value = copy_value (value, f);
+					value = copy_value (value, f.variable_type, f);
 					if (value == null) {
 						// error case, continue to avoid critical
 						continue;
