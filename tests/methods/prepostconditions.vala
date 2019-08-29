@@ -20,6 +20,24 @@ class Foo {
 		assert (i == 4711);
 		return i;
 	}
+
+	public int faz (int i) ensures (result > 23) {
+		switch (i) {
+		case 42:
+			return i;
+		default:
+			assert_not_reached ();
+		}
+	}
+
+	public int faz_pre (int i) requires (i > 23) {
+		switch (i) {
+		case 4711:
+			return i;
+		default:
+			assert_not_reached ();
+		}
+	}
 }
 
 void main () {
@@ -30,4 +48,6 @@ void main () {
 	assert(foo.bar () == "bar");
 	foo.foo_pre (42);
 	assert(foo.bar_pre (4711) == 4711);
+	assert (foo.faz (42) == 42);
+	assert (foo.faz_pre (4711) == 4711);
 }
