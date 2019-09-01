@@ -3722,7 +3722,7 @@ namespace GLib {
 		public static bool close_checked (int fd) throws FileError;
 	}
 
-	[CCode (cname = "struct stat", cheader_filename = "sys/stat.h,glib/gstdio.h")]
+	[CCode (cname = "GStatBuf", cheader_filename = "glib/gstdio.h")]
 	public struct Stat {
 		public time_t st_atime;
 		public time_t st_mtime;
