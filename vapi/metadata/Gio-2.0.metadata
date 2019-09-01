@@ -385,7 +385,6 @@ DataInputStream
 
 // Forward upstream
 *.ref unowned
-NativeSocketAddress skip
 content_type_from_mime_type nullable
 content_type_get_mime_type nullable
 ActionGroup
