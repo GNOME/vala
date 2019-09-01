@@ -221,6 +221,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool handle_message (Gst.Message message);
 			public virtual bool handle_sdp (Gst.SDP.Message sdp);
+			[Version (since = "1.18")]
+			public bool has_completed_sender ();
 			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
 			public bool is_eos_shutdown ();
