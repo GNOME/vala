@@ -1890,7 +1890,9 @@ namespace GLib {
 		public virtual signal void show_unmount_progress (string message, int64 time_left, int64 bytes_left);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_native_socket_address_get_type ()")]
-	public class NativeSocketAddress : GLib.SocketAddress {
+	public class NativeSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
+		[CCode (has_construct_function = false, type = "GSocketAddress*")]
+		[Version (since = "2.46")]
 		public NativeSocketAddress (void* native, size_t len);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_native_volume_monitor_get_type ()")]
