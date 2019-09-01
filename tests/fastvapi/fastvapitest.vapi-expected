@@ -6,12 +6,14 @@ namespace FastVapi {
 	public class Test : Object {
 		[Source (filename = "fastvapitest.vala", line = 26, column = 3)]
 		public int field;
-		[Source (filename = "fastvapitest.vala", line = 30, column = 3)]
+		[Source (filename = "fastvapitest.vala", line = 32, column = 3)]
 		public Test ();
-		[Source (filename = "fastvapitest.vala", line = 33, column = 3)]
+		[Source (filename = "fastvapitest.vala", line = 35, column = 3)]
 		public void method ();
 		[Source (filename = "fastvapitest.vala", line = 28, column = 3)]
 		public string property { get; set construct; }
+		[Source (filename = "fastvapitest.vala", line = 30, column = 3)]
+		public weak Test weak_property { get; set construct; }
 		[Source (filename = "fastvapitest.vala", line = 24, column = 3)]
 		public signal void some_signal (int param);
 	}

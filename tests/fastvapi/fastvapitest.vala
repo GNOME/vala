@@ -27,6 +27,8 @@ namespace FastVapi {
 
 		public string property { get; construct set; }
 
+		public weak Test weak_property { get; construct set; }
+
 		public Test () {
 		}
 
