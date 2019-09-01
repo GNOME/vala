@@ -850,6 +850,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("override ");
 		}
 
+		if (prop.property_type.is_weak ()) {
+			write_string ("weak ");
+		}
+
 		write_type (prop.property_type);
 
 		write_string (" ");
