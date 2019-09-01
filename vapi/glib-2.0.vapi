@@ -2082,16 +2082,17 @@ namespace GLib {
 	[CCode (destroy_function = "g_rec_mutex_clear")]
 	public struct RecMutex {
 		public RecMutex ();
-		public void lock ();
+		public void @lock ();
 		public bool trylock ();
 		public void unlock ();
 	}
 
 	[Version (since = "2.60")]
 	[Compact]
-	[CCode (destroy_function = "g_rec_mutex_locker_free")]
+	[CCode (free_function = "g_rec_mutex_locker_free")]
 	public class RecMutexLocker {
 		public RecMutexLocker (RecMutex rec_mutex);
+		[DestroysInstance]
 		public void free ();
 	}
 
@@ -2109,17 +2110,19 @@ namespace GLib {
 
 	[Version (since = "2.62")]
 	[Compact]
-	[CCode (destroy_function = "g_rw_lock_reader_locker_free")]
+	[CCode (free_function = "g_rw_lock_reader_locker_free")]
 	public class RWLockReaderLocker {
 		public RWLockReaderLocker (RWLock rw_lock);
+		[DestroysInstance]
 		public void free ();
 	}
 
 	[Version (since = "2.62")]
 	[Compact]
-	[CCode (destroy_function = "g_rw_lock_writer_locker_free")]
+	[CCode (free_function = "g_rw_lock_writer_locker_free")]
 	public class RWLockWriterLocker {
 		public RWLockWriterLocker (RWLock rw_lock);
+		[DestroysInstance]
 		public void free ();
 	}
 
