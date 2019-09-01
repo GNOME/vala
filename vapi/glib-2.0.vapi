@@ -2067,9 +2067,11 @@ namespace GLib {
 	}
 
 	[Version (since = "2.44")]
-	[CCode (destroy_function = "g_mutex_locker_free")]
-	public struct MutexLocker {
+	[Compact]
+	[CCode (free_function = "g_mutex_locker_free")]
+	public class MutexLocker {
 		public MutexLocker (Mutex mutex);
+		[DestroysInstance]
 		public void free ();
 	}
 
