@@ -357,7 +357,6 @@ DataInputStream
 
 // Forward upstream
 *.ref unowned
-NativeSocketAddress skip
 ActionGroup
   .get_action* nullable
   .get_action_enabled nullable=false
