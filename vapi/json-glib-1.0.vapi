@@ -316,23 +316,23 @@ namespace Json {
 		[NoAccessorMethod]
 		public Json.Node root { owned get; set construct; }
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h", type_id = "json_serializable_get_type ()")]
+	[CCode (cheader_filename = "json-glib/json-glib.h", type_id = "json_serializable_get_type ()")]
 	public interface Serializable : GLib.Object {
 		[Version (since = "0.10")]
 		public bool default_deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		[Version (since = "0.10")]
 		public Json.Node default_serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
-		public abstract bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
+		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		[Version (since = "0.14")]
-		public abstract unowned GLib.ParamSpec? find_property (string name);
+		public virtual unowned GLib.ParamSpec? find_property (string name);
 		[Version (since = "0.14")]
-		public abstract GLib.Value get_property (GLib.ParamSpec pspec);
+		public virtual GLib.Value get_property (GLib.ParamSpec pspec);
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
 		[Version (since = "0.14")]
-		public (unowned GLib.ParamSpec)[] list_properties ();
-		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
+		public virtual (unowned GLib.ParamSpec)[] list_properties ();
+		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		[Version (since = "0.14")]
-		public abstract void set_property (GLib.ParamSpec pspec, GLib.Value value);
+		public virtual void set_property (GLib.ParamSpec pspec, GLib.Value value);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", has_type_id = false)]
 	[Version (since = "1.2")]
@@ -417,7 +417,7 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.10")]
 	public static Json.Node? boxed_serialize (GLib.Type gboxed_type, void* boxed);
-	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_from_data", since = "0.4")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
@@ -447,7 +447,7 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.14")]
 	public static string gvariant_serialize_data (GLib.Variant variant, out size_t length);
-	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_to_data")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
