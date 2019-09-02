@@ -319,6 +319,7 @@ TESTS = \
 	objects/plugin-module-init.vala \
 	objects/properties.vala \
 	objects/property-notify.vala \
+	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
 	objects/property-read-only-write.test \
 	objects/property-construct-only-write.test \
