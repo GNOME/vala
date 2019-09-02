@@ -996,6 +996,9 @@ public class Vala.GirParser : CodeVisitor {
 						prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
 					}
 
+					// there is no information about the internal ownership so assume `owned` as default
+					prop.property_type.value_owned = true;
+
 					// find virtual/abstract accessors to handle abstract properties properly
 
 					Node getter = null;
