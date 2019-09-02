@@ -13,10 +13,6 @@ Node
 	.unref skip
 
 // Forward Upstream
-Json cheader_filename="json-glib/json-glib.h"
-Node
-	.get_value.value out
-BoxedDeserializeFunc skip=false
 boxed_register_serialize_func skip=false
 boxed_register_deserialize_func skip=false
 
@@ -25,9 +21,9 @@ gvariant_deserialize unowned=false nullable floating
 gvariant_deserialize_data unowned=false nullable floating
 
 Object.add_member replacement="Json.Object.set_member"
-Serializable cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h"
+Serializable
+	.*#virtual_method virtual
 	.default_deserialize_property.value out
-	.deserialize_property.value out
-	.find_property nullable
-construct_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_from_data"
-serialize_gobject cheader_filename="json-glib/json-glib.h,json-glib/json-gobject.h" replacement="Json.gobject_to_data"
+	.list_properties virtual
+construct_gobject replacement="Json.gobject_from_data"
+serialize_gobject replacement="Json.gobject_to_data"
