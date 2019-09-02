@@ -174,6 +174,11 @@ public class Vala.CodeContext {
 	public bool use_fast_vapi { get; set; }
 
 	/**
+	 * Continue as much as possible after an error.
+	 */
+	public bool keep_going { get; set; }
+
+	/**
 	 * Include comments in generated vapi.
 	 */
 	public bool vapi_comments { get; set; }
@@ -509,13 +514,13 @@ public class Vala.CodeContext {
 	public void check () {
 		resolver.resolve (this);
 
-		if (report.get_errors () > 0) {
+		if (!keep_going && report.get_errors () > 0) {
 			return;
 		}
 
 		analyzer.analyze (this);
 
-		if (report.get_errors () > 0) {
+		if (!keep_going && report.get_errors () > 0) {
 			return;
 		}
 

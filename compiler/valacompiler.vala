@@ -75,6 +75,7 @@ class Vala.Compiler {
 	static bool gobject_tracing;
 	static bool disable_since_check;
 	static bool disable_warnings;
+	static bool keep_going;
 	static string cc_command;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] cc_options;
@@ -141,6 +142,7 @@ class Vala.Compiler {
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
 		{ "fatal-warnings", 0, 0, OptionArg.NONE, ref fatal_warnings, "Treat warnings as fatal", null },
 		{ "disable-since-check", 0, 0, OptionArg.NONE, ref disable_since_check, "Do not check whether used symbols exist in local packages", null },
+		{ "keep-going", 'k', 0, OptionArg.NONE, ref keep_going, "Continue as much as possible after an error", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "enable-gobject-tracing", 0, 0, OptionArg.NONE, ref gobject_tracing, "Enable GObject creation tracing", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
@@ -233,6 +235,7 @@ class Vala.Compiler {
 		context.experimental = experimental;
 		context.experimental_non_null = experimental_non_null;
 		context.gobject_tracing = gobject_tracing;
+		context.keep_going = keep_going;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		context.verbose_mode = verbose_mode;
