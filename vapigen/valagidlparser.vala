@@ -2737,6 +2737,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
+		// there is no information about the internal ownership so assume `owned` as default
+		prop.property_type.value_owned = true;
+
 		var attributes = get_attributes ("%s:%s".printf (get_cname (current_data_type), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
