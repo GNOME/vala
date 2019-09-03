@@ -3700,7 +3700,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		method.access = SymbolAccessibility.PUBLIC;
 		set_attributes (method, attrs);
-		method.binding = MemberBinding.STATIC;
 
 		if (accept_block ()) {
 			method.body = parse_block ();
