@@ -824,6 +824,7 @@ GENIE_TESTS = \
 	genie/preparser.gs \
 	genie/preparser-not.gs \
 	genie/preparser-or-expression.gs \
+	genie/struct.gs \
 	$(NULL)
 
 check-TESTS: $(TESTS) $(NON_NULL_TESTS)
