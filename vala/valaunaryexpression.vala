@@ -125,7 +125,7 @@ public class Vala.UnaryExpression : Expression {
 	}
 
 	bool is_numeric_type (DataType type) {
-		if (!(type.data_type is Struct)) {
+		if (type.nullable || !(type.data_type is Struct)) {
 			return false;
 		}
 
@@ -134,7 +134,7 @@ public class Vala.UnaryExpression : Expression {
 	}
 
 	bool is_integer_type (DataType type) {
-		if (!(type.data_type is Struct)) {
+		if (type.nullable || !(type.data_type is Struct)) {
 			return false;
 		}
 
@@ -187,7 +187,7 @@ public class Vala.UnaryExpression : Expression {
 			value_type = inner.value_type;
 		} else if (operator == UnaryOperator.LOGICAL_NEGATION) {
 			// boolean type
-			if (!inner.value_type.compatible (context.analyzer.bool_type)) {
+			if (inner.value_type.nullable || !inner.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
 				return false;
