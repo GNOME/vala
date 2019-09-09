@@ -56,10 +56,10 @@ valadoc.vala.stamp: $(valadoc_VALASOURCES) $(top_srcdir)/vala/libvala@PACKAGE_SU
 		$(COVERAGE_VALAFLAGS) \
 		$(VALAFLAGS) \
 		-C \
-		--vapidir $(top_srcdir)/vala \
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gmodule-2.0 \
 		--pkg gobject-2.0 \
+		--vapidir $(top_srcdir)/vala --pkg libvala@PACKAGE_SUFFIX@ \
 		--vapidir $(top_srcdir)/ccode --pkg ccode \
 		--vapidir $(top_srcdir)/codegen --pkg codegen \
 		--vapidir $(top_srcdir)/libvaladoc --pkg valadoc@PACKAGE_SUFFIX@ \
