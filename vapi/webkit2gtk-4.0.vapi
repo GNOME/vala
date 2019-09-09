@@ -965,6 +965,8 @@ namespace WebKit {
 		[Version (since = "2.6")]
 		public void remove_all_style_sheets ();
 		public void remove_filter (WebKit.UserContentFilter filter);
+		[Version (since = "2.26")]
+		public void remove_filter_by_id (string filter_id);
 		[Version (since = "2.8")]
 		public void unregister_script_message_handler (string name);
 		[Version (since = "2.22")]
@@ -1040,7 +1042,7 @@ namespace WebKit {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.10")]
 		public uint get_web_process_count_limit ();
 		[Version (since = "2.10")]
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
@@ -1073,7 +1075,7 @@ namespace WebKit {
 		public void set_web_extensions_directory (string directory);
 		[Version (since = "2.4")]
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.10")]
 		public void set_web_process_count_limit (uint limit);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
@@ -1329,6 +1331,8 @@ namespace WebKit {
 		public unowned WebKit.CookieManager get_cookie_manager ();
 		[Version (since = "2.10")]
 		public unowned string? get_disk_cache_directory ();
+		[Version (since = "2.26")]
+		public unowned string? get_hsts_cache_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_indexeddb_directory ();
 		[Version (since = "2.10")]
@@ -1345,6 +1349,8 @@ namespace WebKit {
 		public string base_data_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string disk_cache_directory { get; construct; }
+		[Version (since = "2.26")]
+		public string hsts_cache_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string indexeddb_directory { get; construct; }
 		[NoAccessorMethod]
@@ -1618,6 +1624,7 @@ namespace WebKit {
 		PLUGIN_DATA,
 		COOKIES,
 		DEVICE_ID_HASH_SALT,
+		HSTS_CACHE,
 		ALL
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]

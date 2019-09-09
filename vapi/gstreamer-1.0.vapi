@@ -1842,6 +1842,8 @@ namespace Gst {
 		public Gst.Element? get_parent_element ();
 		public Gst.Pad? get_peer ();
 		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
+		[Version (since = "1.18")]
+		public Gst.Pad? get_single_internal_link ();
 		public Gst.Event? get_sticky_event (Gst.EventType event_type, uint idx);
 		[Version (since = "1.10")]
 		public Gst.Stream? get_stream ();

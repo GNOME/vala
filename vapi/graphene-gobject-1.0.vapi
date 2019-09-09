@@ -321,6 +321,18 @@ namespace Graphene {
 		public unowned Graphene.Ray? init (Graphene.Point3D? origin, Graphene.Vec3? direction);
 		public unowned Graphene.Ray? init_from_ray (Graphene.Ray src);
 		public unowned Graphene.Ray? init_from_vec3 (Graphene.Vec3? origin, Graphene.Vec3? direction);
+		[Version (since = "1.10")]
+		public Graphene.RayIntersectionKind intersect_box (Graphene.Box b, out float t_out);
+		[Version (since = "1.10")]
+		public Graphene.RayIntersectionKind intersect_sphere (Graphene.Sphere s, out float t_out);
+		[Version (since = "1.10")]
+		public Graphene.RayIntersectionKind intersect_triangle (Graphene.Triangle t, out float t_out);
+		[Version (since = "1.10")]
+		public bool intersects_box (Graphene.Box b);
+		[Version (since = "1.10")]
+		public bool intersects_sphere (Graphene.Sphere s);
+		[Version (since = "1.10")]
+		public bool intersects_triangle (Graphene.Triangle t);
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_rect_t", type_id = "graphene_rect_get_type ()")]
 	[Version (since = "1.0")]
@@ -416,7 +428,11 @@ namespace Graphene {
 		public Graphene.Vec3 get_normal ();
 		public Graphene.Plane get_plane ();
 		public void get_points (out Graphene.Point3D a, out Graphene.Point3D b, out Graphene.Point3D c);
+		[Version (since = "1.10")]
+		public bool get_uv (Graphene.Point3D? p, Graphene.Vec2 uv_a, Graphene.Vec2 uv_b, Graphene.Vec2 uv_c, out Graphene.Vec2 res);
 		public void get_vertices (out Graphene.Vec3 a, out Graphene.Vec3 b, out Graphene.Vec3 c);
+		[Version (since = "1.10")]
+		public unowned Graphene.Triangle? init_from_float ([CCode (array_length = false)] float a[3], [CCode (array_length = false)] float b[3], [CCode (array_length = false)] float c[3]);
 		public unowned Graphene.Triangle? init_from_point3d (Graphene.Point3D? a, Graphene.Point3D? b, Graphene.Point3D? c);
 		public unowned Graphene.Triangle? init_from_vec3 (Graphene.Vec3? a, Graphene.Vec3? b, Graphene.Vec3? c);
 	}
@@ -639,6 +655,13 @@ namespace Graphene {
 		RZXZ,
 		RXYZ,
 		RZYZ
+	}
+	[CCode (cheader_filename = "graphene-gobject.h", cname = "graphene_ray_intersection_kind_t", cprefix = "GRAPHENE_RAY_INTERSECTION_KIND_", has_type_id = false)]
+	[Version (since = "1.10")]
+	public enum RayIntersectionKind {
+		NONE,
+		ENTER,
+		LEAVE
 	}
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_GCC")]
 	public const int HAS_GCC;
