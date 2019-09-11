@@ -780,7 +780,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
-		if (!(param.variable_type is ArrayType)) {
+		if (param.params_array || !(param.variable_type is ArrayType)) {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
@@ -821,5 +821,57 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		return main_cparam;
+	}
+
+	public override void append_params_array (LocalVariable local) {
+		var type = (ArrayType) local.variable_type;
+
+		var local_length = new LocalVariable (type.length_type.copy (), get_array_length_cname (local.name, 1), null, local.source_reference);
+		var local_size = new LocalVariable (type.length_type.copy (), get_array_size_cname (get_local_cname (local)));
+
+		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+		gnew.add_argument (new CCodeIdentifier (get_ccode_name (type.element_type)));
+
+		CCodeExpression length_expr = get_local_cexpression (local_length);
+		// add extra item to have array NULL-terminated for all reference types
+		if (type.element_type.type_symbol != null && type.element_type.type_symbol.is_reference_type ()) {
+			length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, length_expr, new CCodeConstant ("1"));
+		}
+		gnew.add_argument (length_expr);
+		ccode.add_assignment (get_local_cexpression (local), gnew);
+
+		//FIXME handle struct elements correcly
+		var element = new LocalVariable (type.element_type.copy (), "_%s_element".printf (get_ccode_name (local)), null, local.source_reference);
+		emit_temp_var (element);
+
+		ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_va_list_%s".printf (get_ccode_name (local))));
+		var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+		va_start.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		va_start.add_argument (new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
+		ccode.add_expression (va_start);
+
+		ccode.add_assignment (get_local_cexpression (element), new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
+		ccode.open_while (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_local_cexpression (element), new CCodeConstant ("NULL")));
+
+		var va_arg = new CCodeFunctionCall (new CCodeIdentifier ("va_arg"));
+		va_arg.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		va_arg.add_argument (new CCodeIdentifier (get_ccode_name (type.element_type)));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (type)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_local_cexpression (local)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_local_cexpression (local_length)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_local_cexpression (local_size)));
+		//FIXME handle struct elements correcly
+		ccall.add_argument (get_local_cexpression (element));
+		//ccall.add_argument (handle_struct_argument (value_param, element, get_cvalue (element)));
+
+		ccode.add_expression (ccall);
+		ccode.add_assignment (get_local_cexpression (element), va_arg);
+
+		ccode.close ();
+
+		var va_end = new CCodeFunctionCall (new CCodeIdentifier ("va_end"));
+		va_end.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		ccode.add_expression (va_end);
 	}
 }

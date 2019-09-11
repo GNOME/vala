@@ -556,7 +556,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				foreach (Parameter param in m.get_parameters ()) {
-					if (param.ellipsis) {
+					if (param.ellipsis || param.params_array) {
+						if (param.params_array) {
+							append_params_array (m.params_array_var);
+						}
 						break;
 					}
 
@@ -868,7 +871,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 	public virtual CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		CCodeParameter cparam;
-		if (!param.ellipsis) {
+		if (!param.ellipsis && !param.params_array) {
 			string ctypename = get_ccode_name (param.variable_type);
 
 			generate_type_declaration (param.variable_type, decl_space);
@@ -895,15 +898,42 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (param.format_arg) {
 				cparam.modifiers = CCodeModifiers.FORMAT_ARG;
 			}
-		} else if (ellipses_to_valist) {
-			cparam = new CCodeParameter ("_vala_va_list", "va_list");
 		} else {
-			cparam = new CCodeParameter.with_ellipsis ();
+			// Add _first_* parameter for the params array parameter
+			if (param.params_array) {
+				var param_type = ((ArrayType) param.variable_type).element_type;
+				string ctypename = get_ccode_name (param_type);
+
+				generate_type_declaration (param_type, decl_space);
+
+				// pass non-simple structs always by reference
+				if (param_type.type_symbol is Struct) {
+					var st = (Struct) param_type.type_symbol;
+					if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
+						if (st.is_immutable && !param.variable_type.value_owned) {
+							ctypename = "const " + ctypename;
+						}
+
+						if (!param_type.nullable) {
+							ctypename += "*";
+						}
+					}
+				}
+
+				cparam = new CCodeParameter ("_first_%s".printf (get_ccode_name (param)), ctypename);
+				cparam_map.set (get_param_pos (get_ccode_pos (param), false), cparam);
+			}
+
+			if (ellipses_to_valist) {
+				cparam = new CCodeParameter ("_vala_va_list", "va_list");
+			} else {
+				cparam = new CCodeParameter.with_ellipsis ();
+			}
 		}
 
-		cparam_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis), cparam);
-		if (carg_map != null && !param.ellipsis) {
-			carg_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis), get_parameter_cexpression (param));
+		cparam_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis || param.params_array), cparam);
+		if (carg_map != null && !param.ellipsis && !param.params_array) {
+			carg_map.set (get_param_pos (get_ccode_pos (param), param.ellipsis || param.params_array), get_parameter_cexpression (param));
 		}
 
 		return cparam;

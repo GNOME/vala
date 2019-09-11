@@ -1114,7 +1114,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			foreach (Parameter param in params) {
-				write_param_or_return (param.variable_type, true, ref index, get_ccode_array_length (param), param.name, get_parameter_comment (param), param.direction, false, false, param.ellipsis);
+				write_param_or_return (param.variable_type, true, ref index, get_ccode_array_length (param), param.name, get_parameter_comment (param), param.direction, false, false, param.ellipsis || param.params_array);
 
 				write_implicit_params (param.variable_type, ref index, get_ccode_array_length (param), param.name, param.direction);
 			}
@@ -1213,7 +1213,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			return false;
 		}
 		foreach (var param in m.get_parameters ()) {
-			if (param.ellipsis || !is_type_introspectable (param.variable_type)) {
+			if (param.ellipsis || param.params_array || !is_type_introspectable (param.variable_type)) {
 				return false;
 			}
 		}
