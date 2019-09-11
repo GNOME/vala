@@ -56,6 +56,10 @@ public class Vala.Scope {
 	 * @param sym  a symbol
 	 */
 	public void add (string? name, Symbol sym) {
+		// Ignore params-array parameters which can not be conflicted with
+		if (sym is Parameter && ((Parameter) sym).params_array) {
+			name = null;
+		}
 		if (name != null) {
 			if (symbol_table == null) {
 				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);

@@ -727,6 +727,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void append_vala_array_length () {
 	}
 
+	public virtual void append_params_array (LocalVariable local) {
+	}
+
 	public void append_vala_clear_mutex (string typename, string funcprefix) {
 		// memset
 		cfile.add_include ("string.h");
@@ -2342,7 +2345,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!unreachable_exit_block && b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (Parameter param in m.get_parameters ()) {
-				if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && !param.ellipsis && !param.params_array && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 					ccode.add_expression (destroy_parameter (param));
 				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
 					return_out_parameter (param);
@@ -3839,7 +3842,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	private void append_param_free (Method m) {
 		foreach (Parameter param in m.get_parameters ()) {
-			if (!param.captured && !param.ellipsis && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
+			if (!param.captured && !param.ellipsis && !param.params_array && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
 				ccode.add_expression (destroy_parameter (param));
 			}
 		}
@@ -4728,7 +4731,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						Parameter last_param = null;
 						// FIXME: this doesn't take into account exception handling parameters
 						foreach (var param in current_method.get_parameters ()) {
-							if (param.ellipsis) {
+							if (param.ellipsis || param.params_array) {
 								break;
 							}
 							last_param = param;
@@ -4791,7 +4794,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				Parameter param = null;
 				if (params_it.next ()) {
 					param = params_it.get ();
-					ellipsis = param.ellipsis;
+					ellipsis = param.ellipsis || param.params_array;
 					if (!ellipsis) {
 						if (param.direction == ParameterDirection.OUT) {
 							carg_map = out_arg_map;

@@ -152,6 +152,7 @@ TESTS = \
 	methods/bug791283.vala \
 	methods/argument-array-initilizer.vala \
 	methods/generics.vala \
+	methods/params-array.vala \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
@@ -502,6 +503,7 @@ TESTS = \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
+	asynchronous/params-array-invalid.test \
 	asynchronous/result-pos.vala \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
