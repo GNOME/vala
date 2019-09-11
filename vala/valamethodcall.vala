@@ -452,7 +452,7 @@ public class Vala.MethodCall : Expression {
 					// recreate iterator and skip to right position
 					arg_it = argument_list.iterator ();
 					foreach (Parameter param in params) {
-						if (param.ellipsis) {
+						if (param.ellipsis || param.params_array) {
 							break;
 						}
 						arg_it.next ();

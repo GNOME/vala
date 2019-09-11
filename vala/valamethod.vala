@@ -175,6 +175,8 @@ public class Vala.Method : Subroutine, Callable {
 		}
 	}
 
+	public LocalVariable? params_array_var { get; private set; }
+
 	public weak Signal signal_reference { get; set; }
 
 	public bool closure { get; set; }
@@ -811,7 +813,7 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
 			}
-			if (!external_package && coroutine && (param.ellipsis || param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol)) {
+			if (!external_package && coroutine && (param.ellipsis || param.params_array || param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol)) {
 				error = true;
 				Report.error (param.source_reference, "Variadic parameters are not supported for async methods");
 				return false;
@@ -824,6 +826,15 @@ public class Vala.Method : Subroutine, Callable {
 				Report.warning (param.source_reference, "parameter without default follows parameter with default");
 			} else if (param.initializer != null) {
 				optional_param = true;
+			}
+
+			// Add local variable to provide access to params arrays which will be constructed out of the given va-args
+			if (param.params_array && body != null) {
+				var type = (ArrayType) param.variable_type.copy ();
+				type.value_owned = true;
+				type.element_type.value_owned = false;
+				params_array_var = new LocalVariable (type, param.name, null, source_reference);
+				body.insert_statement (0, new DeclarationStatement (params_array_var, source_reference));
 			}
 		}
 
@@ -1212,6 +1223,9 @@ public class Vala.Method : Subroutine, Callable {
 	public override void get_defined_variables (Collection<Variable> collection) {
 		if (result_var != null) {
 			collection.add (result_var);
+		}
+		if (params_array_var != null) {
+			collection.add (params_array_var);
 		}
 
 		// capturing variables is only supported if they are initialized
