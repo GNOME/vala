@@ -745,7 +745,16 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.DOT);
-		string id = parse_identifier ();
+		string id = "";
+		try {
+			id = parse_identifier ();
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				report_parse_error (e);
+			} else {
+				throw e;
+			}
+		}
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (inner, id, get_src (begin));
 		if (type_arg_list != null) {
@@ -758,7 +767,16 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_pointer_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OP_PTR);
-		string id = parse_identifier ();
+		string id = "";
+		try {
+			id = parse_identifier ();
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				report_parse_error (e);
+			} else {
+				throw e;
+			}
+		}
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess.pointer (inner, id, get_src (begin));
 		if (type_arg_list != null) {
@@ -1621,7 +1639,16 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		// decide between declaration and expression statement
-		skip_type ();
+		try {
+			skip_type ();
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				rollback (begin);
+				return true;
+			} else {
+				throw e;        // rethrow
+			}
+		}
 		switch (current ()) {
 		// invocation expression
 		case TokenType.OPEN_PARENS:
@@ -1899,7 +1926,13 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var expr = parse_statement_expression ();
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())));
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new ExpressionStatement (expr, src);
 	}
 
