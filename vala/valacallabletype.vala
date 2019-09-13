@@ -63,6 +63,10 @@ public abstract class Vala.CallableType : DataType {
 				continue;
 			}
 
+			if (param.params_array) {
+				builder.append ("params ");
+			}
+
 			if (param.direction == ParameterDirection.IN) {
 				if (param.variable_type.value_owned) {
 					builder.append ("owned ");
