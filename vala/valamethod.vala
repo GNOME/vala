@@ -365,6 +365,10 @@ public class Vala.Method : Subroutine, Callable {
 				invalid_match = "ellipsis parameter mismatch";
 				return false;
 			}
+			if (base_param.params_array != param.params_array) {
+				invalid_match = "params array parameter mismatch";
+				return false;
+			}
 			if (!base_param.ellipsis) {
 				if (base_param.direction != param.direction) {
 					invalid_match = "incompatible direction of parameter %d".printf (param_index);
