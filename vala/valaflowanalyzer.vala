@@ -108,12 +108,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		this.context = context;
 		all_basic_blocks = new HashSet<BasicBlock> ();
 
-		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (file.file_type == SourceFileType.SOURCE) {
-				file.accept (this);
-			}
+			file.accept (this);
 		}
 
 		all_basic_blocks = null;
@@ -145,7 +142,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_field (Field f) {
-		if (f.is_internal_symbol () && !f.used) {
+		if (f.is_internal_symbol () && !f.used && !f.external_package) {
 			if (!f.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
 			} else {
@@ -169,7 +166,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_method (Method m) {
-		if (m.is_internal_symbol () && !m.used && !m.entry_point
+		if (m.is_internal_symbol () && !m.used && !m.entry_point && !m.external_package
 		    && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
 		    && !(m is CreationMethod)) {
 			if (!m.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
