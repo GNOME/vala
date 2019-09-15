@@ -444,6 +444,10 @@ Widget
 // Keep properties non-abstract as before
 *#interface.*#property abstract=false
 
+// Property getter mismatch
+ColorChooser
+  .rgba#property abstract
+
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"
