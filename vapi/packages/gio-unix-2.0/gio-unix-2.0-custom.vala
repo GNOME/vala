@@ -32,6 +32,8 @@ namespace GLib {
 		public unowned string get_mount_path ();
 		[Version (since = "2.58")]
 		public unowned string get_options ();
+		[Version (since = "2.60")]
+		public unowned string get_root_path ();
 		public bool guess_can_eject ();
 		public GLib.Icon guess_icon ();
 		public string guess_name ();

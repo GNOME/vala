@@ -70,6 +70,12 @@
 				<parameter name="mount_entry" type="GUnixMountEntry*"/>
 			</parameters>
 		</function>
+		<function name="g_unix_mount_get_root_path" symbol="g_unix_mount_get_root_path">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="mount_entry" type="GUnixMountEntry*"/>
+			</parameters>
+		</function>
 		<function name="g_unix_mount_guess_can_eject" symbol="g_unix_mount_guess_can_eject">
 			<return-type type="gboolean"/>
 			<parameters>
