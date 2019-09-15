@@ -1096,7 +1096,7 @@ namespace Gst {
 	public abstract class Device : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Device ();
-		public virtual Gst.Element? create_element (string? name);
+		public virtual unowned Gst.Element? create_element (string? name);
 		public Gst.Caps? get_caps ();
 		public string get_device_class ();
 		public string get_display_name ();
