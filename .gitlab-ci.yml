@@ -96,6 +96,19 @@ ubuntu-lts-16-gcc-x86_64:
     - make -j4 check
   allow_failure: true
 
+archlinux-gcc-x86_64:
+  stage: build
+  image: archlinux/base:latest
+  before_script:
+    - pacman -Syu --noconfirm automake autoconf-archive libtool bison dbus flex git glib2 graphviz gobject-introspection gcc make vala
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check
+  allow_failure: true
+
 pages:
   stage: deploy
   only:
