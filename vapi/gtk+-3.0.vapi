@@ -2070,9 +2070,6 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.4", replacement = "rgba", since = "2.4")]
 		public Gdk.Color color { owned get; set; }
 		[NoAccessorMethod]
-		[Version (since = "3.0")]
-		public Gdk.RGBA rgba { owned get; set; }
-		[NoAccessorMethod]
 		[Version (since = "3.20")]
 		public bool show_editor { get; set; }
 		[Version (since = "2.4")]
@@ -10387,7 +10384,8 @@ namespace Gtk {
 		public bool get_use_alpha ();
 		public abstract void set_rgba (Gdk.RGBA color);
 		public void set_use_alpha (bool use_alpha);
-		public Gdk.RGBA rgba { get; set; }
+		[ConcreteAccessor]
+		public abstract Gdk.RGBA rgba { get; set; }
 		public bool use_alpha { get; set; }
 		public virtual signal void color_activated (Gdk.RGBA color);
 	}
