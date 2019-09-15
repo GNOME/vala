@@ -248,6 +248,9 @@ CellArea
   .cell_get_property.value ref
   .get_cell_property.value ref
 
+// Implementation in -custom.vala
+BuildableParser skip
+
 // Backwards compatibility
 AccelGroup
   .find type="Gtk.AccelKey*"

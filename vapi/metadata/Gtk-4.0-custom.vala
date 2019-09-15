@@ -53,4 +53,25 @@ namespace Gtk {
 		[CCode (cname = "d.string_data")]
 		public weak string string_data;
 	}
+
+	[CCode (has_typedef = false)]
+	public delegate void BuildableParserStartElementFunc (BuildableParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws GLib.Error;
+	[CCode (has_typedef = false)]
+	public delegate void BuildableParserEndElementFunc (BuildableParseContext context, string element_name) throws GLib.Error;
+	[CCode (has_typedef = false)]
+	public delegate void BuildableParserTextFunc (BuildableParseContext context, string text, size_t text_len) throws GLib.Error;
+	[CCode (has_typedef = false)]
+	public delegate void BuildableParserErrorFunc (BuildableParseContext context, GLib.Error error);
+
+	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
+	public struct BuildableParser {
+		[CCode (delegate_target = false)]
+		public unowned Gtk.BuildableParserStartElementFunc start_element;
+		[CCode (delegate_target = false)]
+		public unowned Gtk.BuildableParserEndElementFunc end_element;
+		[CCode (delegate_target = false)]
+		public unowned Gtk.BuildableParserTextFunc text;
+		[CCode (delegate_target = false)]
+		public unowned Gtk.BuildableParserErrorFunc error;
+	}
 }
