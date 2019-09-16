@@ -36,6 +36,8 @@ namespace Sqlite {
 			var ec = this._exec (sql, callback, out sqlite_errmsg);
 			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
+			} else {
+				errmsg = null;
 			}
 			Sqlite.Memory.free ((void*) sqlite_errmsg);
 			return ec;
@@ -65,6 +67,8 @@ namespace Sqlite {
 
 			if (&errmsg != null) {
 				errmsg = sqlite_errmsg;
+			} else {
+				errmsg = null;
 			}
 			Sqlite.Memory.free ((void*) sqlite_errmsg);
 			return ec;
