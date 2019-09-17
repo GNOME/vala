@@ -209,8 +209,7 @@ valadoc@PACKAGE_SUFFIX@.pc: valadoc.pc
 	cp $< $@
 
 vapidir = $(datadir)/vala/vapi
-dist_vapi_DATA = valadoc@PACKAGE_SUFFIX@.vapi
-nodist_vapi_DATA = valadoc@PACKAGE_SUFFIX@.deps
+dist_vapi_DATA = valadoc@PACKAGE_SUFFIX@.vapi valadoc@PACKAGE_SUFFIX@.deps
 
 valadoc@PACKAGE_SUFFIX@.deps: valadoc.deps
 	cp $< $@
@@ -223,7 +222,6 @@ EXTRA_DIST = \
 	$(NULL)
 
 CLEANFILES = \
-	valadoc@PACKAGE_SUFFIX@.deps \
 	valadoc@PACKAGE_SUFFIX@.pc \
 	$(NULL)
 
