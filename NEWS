@@ -1,3 +1,41 @@
+Vala 0.44.8
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Support static methods in error-domains [#829]
+    + vala: Init formal_target_type of built ArrayCreationExpression from
+      InitializerList [#835]
+    + Add missing closing brace/bracket in to_string() of
+      ArrayCreationExpression and InitializerList
+    + Reject unary operations on nullable integer/floating/boolean type [#772]
+    + Run FlowAnalyzer on all given source-files [#843]
+  - codegen:
+    + Don't append unreachable clean-up section of Block [#838]
+    + Don't cause double-free due append_local_free() in uncaught-errors [#838]
+    + Don't unconditionally add/return internal "result" variable [#838]
+  - codewriter: Write "weak" modifier for properties
+  - girparser/gidlparser: "value_owned = true" by default for property types
+  - libvaladoc: Don't traverse into close circles with parent [#829]
+  - genie: Creation methods should not be static
+  - valadoc: Explicitly pass --pkg libvala@PACKAGE_SUFFIX@ as for doclets/tests
+
+ * Bindings:
+  - cairo: Add 1.16 symbols
+  - glib-2.0: Fix MutexLocker binding
+  - glib-2.0: Add missing "DestroysInstance" attributes to Mutex/Locker API
+  - glib-2.0: Use 'GStatBuf' as ctype for 'Stat'
+  - glib-2.0: DateTime.from_iso8601() can take a null TimeZone
+  - gio-2.0: Drop metadata for NativeSocketAddress
+  - gio-unix-2.0: Add UnixMountEntry.get_root_path() since 2.60
+  - gtk4: Sync from 0.46 branch
+  - json-glib-1.0: Change abstract methods of Serializable to virtual [#840]
+  - libsoup-2.4: soup_auth_new is not a constructor but a factory method [#791]
+  - linux: Add more Input and update UserspaceInput bindings [#830]
+  - posix: Add *at() calls and related constants [#823]
+  - sqlite3: Bind sqlite3_expanded_sql() and sqlite3_normalised_sql()
+  - sqlite3: Fix use of possibly unassigned parameter `errmsg'
+  - webkit2gtk-4.0: Update to 2.26.0
+
 Vala 0.44.7
 ===========
  * Various improvements and bug fixes:
