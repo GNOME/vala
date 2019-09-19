@@ -305,10 +305,41 @@ namespace WebKit {
 		public bool list_text_fields (out unowned GLib.GenericArray<string> field_names, out unowned GLib.GenericArray<string> field_values);
 		public void submit ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_geolocation_manager_get_type ()")]
+	public class GeolocationManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected GeolocationManager ();
+		[Version (since = "2.26")]
+		public void failed (string error_message);
+		[Version (since = "2.26")]
+		public bool get_enable_high_accuracy ();
+		[Version (since = "2.26")]
+		public void update_position (WebKit.GeolocationPosition position);
+		[Version (since = "2.26")]
+		public bool enable_high_accuracy { get; }
+		[Version (since = "2.26")]
+		public signal bool start ();
+		[Version (since = "2.26")]
+		public signal void stop ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_geolocation_permission_request_get_type ()")]
 	public class GeolocationPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected GeolocationPermissionRequest ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_geolocation_position_get_type ()")]
+	[Compact]
+	[Version (since = "2.26")]
+	public class GeolocationPosition {
+		[CCode (has_construct_function = false)]
+		public GeolocationPosition (double latitude, double longitude, double accuracy);
+		public WebKit.GeolocationPosition copy ();
+		public void free ();
+		public void set_altitude (double altitude);
+		public void set_altitude_accuracy (double altitude_accuracy);
+		public void set_heading (double heading);
+		public void set_speed (double speed);
+		public void set_timestamp (uint64 timestamp);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_hit_test_result_get_type ()")]
 	public class HitTestResult : GLib.Object {
@@ -651,6 +682,8 @@ namespace WebKit {
 		public bool get_enable_javascript ();
 		[Version (since = "2.24")]
 		public bool get_enable_javascript_markup ();
+		[Version (since = "2.26")]
+		public bool get_enable_media ();
 		[Version (since = "2.22")]
 		public bool get_enable_media_capabilities ();
 		[Version (since = "2.4")]
@@ -721,6 +754,8 @@ namespace WebKit {
 		public void set_enable_javascript (bool enabled);
 		[Version (since = "2.24")]
 		public void set_enable_javascript_markup (bool enabled);
+		[Version (since = "2.26")]
+		public void set_enable_media (bool enabled);
 		[Version (since = "2.22")]
 		public void set_enable_media_capabilities (bool enabled);
 		[Version (since = "2.4")]
@@ -792,6 +827,8 @@ namespace WebKit {
 		public bool enable_javascript { get; set construct; }
 		[Version (since = "2.24")]
 		public bool enable_javascript_markup { get; set construct; }
+		[Version (since = "2.26")]
+		public bool enable_media { get; set construct; }
 		[Version (since = "2.22")]
 		public bool enable_media_capabilities { get; set construct; }
 		[Version (since = "2.4")]
@@ -928,6 +965,8 @@ namespace WebKit {
 		[Version (since = "2.6")]
 		public void remove_all_style_sheets ();
 		public void remove_filter (WebKit.UserContentFilter filter);
+		[Version (since = "2.26")]
+		public void remove_filter_by_id (string filter_id);
 		[Version (since = "2.8")]
 		public void unregister_script_message_handler (string name);
 		[Version (since = "2.22")]
@@ -977,6 +1016,8 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.8")]
 		public WebContext ();
+		[Version (since = "2.26")]
+		public void add_path_to_sandbox (string path, bool read_only);
 		[Version (since = "2.6")]
 		public void allow_tls_certificate_for_host (GLib.TlsCertificate certificate, string host);
 		public void clear_cache ();
@@ -989,15 +1030,19 @@ namespace WebKit {
 		public static unowned WebKit.WebContext get_default ();
 		public unowned WebKit.FaviconDatabase get_favicon_database ();
 		public unowned string get_favicon_database_directory ();
+		[Version (since = "2.26")]
+		public unowned WebKit.GeolocationManager get_geolocation_manager ();
 		public async GLib.List<WebKit.Plugin> get_plugins (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.4")]
 		public WebKit.ProcessModel get_process_model ();
+		[Version (since = "2.26")]
+		public bool get_sandbox_enabled ();
 		public unowned WebKit.SecurityManager get_security_manager ();
 		public bool get_spell_checking_enabled ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.10")]
 		public uint get_web_process_count_limit ();
 		[Version (since = "2.10")]
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
@@ -1022,13 +1067,15 @@ namespace WebKit {
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
 		[Version (since = "2.4")]
 		public void set_process_model (WebKit.ProcessModel process_model);
+		[Version (since = "2.26")]
+		public void set_sandbox_enabled (bool enabled);
 		public void set_spell_checking_enabled (bool enabled);
 		public void set_spell_checking_languages ([CCode (array_length = false, array_null_terminated = true)] string[] languages);
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
 		public void set_web_extensions_directory (string directory);
 		[Version (since = "2.4")]
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.10")]
 		public void set_web_process_count_limit (uint limit);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
@@ -1284,13 +1331,15 @@ namespace WebKit {
 		public unowned WebKit.CookieManager get_cookie_manager ();
 		[Version (since = "2.10")]
 		public unowned string? get_disk_cache_directory ();
+		[Version (since = "2.26")]
+		public unowned string? get_hsts_cache_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_indexeddb_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_local_storage_directory ();
 		[Version (since = "2.10")]
 		public unowned string? get_offline_application_cache_directory ();
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.24.", since = "2.10")]
 		public unowned string? get_websql_directory ();
 		[Version (since = "2.16")]
 		public async bool remove (WebKit.WebsiteDataTypes types, GLib.List<WebKit.WebsiteData> website_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -1300,6 +1349,8 @@ namespace WebKit {
 		public string base_data_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string disk_cache_directory { get; construct; }
+		[Version (since = "2.26")]
+		public string hsts_cache_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string indexeddb_directory { get; construct; }
 		[NoAccessorMethod]
@@ -1309,7 +1360,7 @@ namespace WebKit {
 		public string local_storage_directory { get; construct; }
 		[Version (since = "2.10")]
 		public string offline_application_cache_directory { get; construct; }
-		[Version (since = "2.10")]
+		[Version (deprecated = true, deprecated_since = "2.24.", since = "2.10")]
 		public string websql_directory { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_window_properties_get_type ()")]
@@ -1403,6 +1454,7 @@ namespace WebKit {
 		MEDIA_MUTE,
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
+		INSERT_EMOJI,
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_COOKIE_POLICY_ACCEPT_", type_id = "webkit_cookie_accept_policy_get_type ()")]
@@ -1572,6 +1624,7 @@ namespace WebKit {
 		PLUGIN_DATA,
 		COOKIES,
 		DEVICE_ID_HASH_SALT,
+		HSTS_CACHE,
 		ALL
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]

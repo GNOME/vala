@@ -225,7 +225,7 @@ namespace JSC {
 		public unowned string get_name ();
 		public unowned JSC.Class get_parent ();
 		[NoAccessorMethod]
-		public JSC.Context context { owned get; construct; }
+		public JSC.Context context { construct; }
 		public string name { get; construct; }
 		public JSC.Class parent { get; construct; }
 	}
