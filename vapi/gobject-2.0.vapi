@@ -121,7 +121,7 @@ namespace GLib {
 		protected InitiallyUnowned ();
 	}
 	[CCode (cheader_filename = "glib-object.h", get_value_function = "g_value_get_object", marshaller_type_name = "OBJECT", param_spec_function = "g_param_spec_object", ref_function = "g_object_ref", set_value_function = "g_value_set_object", take_value_function = "g_value_take_object", type_id = "g_object_get_type ()", unref_function = "g_object_unref")]
-	public class Object {
+	public class Object : GLib.TypeInstance {
 		public GLib.TypeInstance g_type_instance;
 		public GLib.Datalist qdata;
 		public uint ref_count;
@@ -453,9 +453,10 @@ namespace GLib {
 		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, owned GLib.Variant? default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
-	[Compact]
-	public class TypeClass {
+	public abstract class TypeClass {
 		public GLib.Type g_type;
+		[CCode (has_construct_function = false)]
+		protected TypeClass ();
 		[CCode (cname = "g_type_class_add_private")]
 		[Version (deprecated = true, deprecated_since = "2.58", since = "2.4")]
 		public void add_private (size_t private_size);
@@ -470,6 +471,14 @@ namespace GLib {
 		public void unref ();
 		[CCode (cname = "g_type_class_unref_uncached")]
 		public void unref_uncached ();
+	}
+	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
+	public abstract class TypeInstance {
+		public GLib.TypeClass g_class;
+		[CCode (has_construct_function = false)]
+		protected TypeInstance ();
+		[CCode (cname = "g_type_instance_get_private")]
+		public void* get_private (GLib.Type private_type);
 	}
 	[CCode (cheader_filename = "glib-object.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "g_value_array_get_type ()")]
 	[Compact]
@@ -629,7 +638,7 @@ namespace GLib {
 		public static unowned GLib.TypeClass check_class_cast (GLib.TypeClass g_class, GLib.Type is_a_type);
 		public static bool check_class_is_a (GLib.TypeClass g_class, GLib.Type is_a_type);
 		public static bool check_instance (GLib.TypeInstance instance);
-		public static unowned GLib.TypeInstance? check_instance_cast (GLib.TypeInstance instance, GLib.Type iface_type);
+		public static unowned GLib.TypeInstance check_instance_cast (GLib.TypeInstance instance, GLib.Type iface_type);
 		public static bool check_instance_is_a (GLib.TypeInstance instance, GLib.Type iface_type);
 		public static bool check_instance_is_fundamentally_a (GLib.TypeInstance instance, GLib.Type fundamental_type);
 		public static bool check_is_value_type (GLib.Type type);
@@ -642,7 +651,7 @@ namespace GLib {
 		[Version (since = "2.4")]
 		public static unowned GLib.TypeClass class_peek_static (GLib.Type type);
 		public static unowned GLib.TypeClass class_ref (GLib.Type type);
-		public static unowned GLib.TypeInstance? create_instance (GLib.Type type);
+		public static unowned GLib.TypeInstance create_instance (GLib.Type type);
 		[Version (since = "2.4")]
 		public static unowned GLib.TypeInterface? default_interface_peek (GLib.Type g_type);
 		[Version (since = "2.4")]
@@ -715,12 +724,6 @@ namespace GLib {
 		public uint16 n_preallocs;
 		public weak GLib.InstanceInitFunc instance_init;
 		public GLib.TypeValueTable value_table;
-	}
-	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
-	public struct TypeInstance {
-		public weak GLib.TypeClass g_class;
-		[CCode (cname = "g_type_instance_get_private")]
-		public void* get_private (GLib.Type private_type);
 	}
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
 	public struct TypeInterface {

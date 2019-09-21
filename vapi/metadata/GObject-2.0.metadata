@@ -8,6 +8,11 @@ cclosure_* skip
 signal_type_cclosure_new skip
 VaClosureMarshal skip=false
 
+*.g_class unowned=false
+*.g_type_instance unowned=false
+
+TypeInstance struct=false
+
 Object.get_property#virtual_method skip
 Object.set_property#virtual_method skip
 Object.dispatch_properties_changed skip
