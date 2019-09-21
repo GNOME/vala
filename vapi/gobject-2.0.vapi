@@ -643,8 +643,8 @@ namespace GLib {
 		public unowned GLib.TypeClass? class_peek ();
 		public unowned GLib.TypeClass? class_peek_static ();
 		public unowned GLib.TypeClass? default_interface_peek ();
-		public GLib.TypeInterface default_interface_ref ();
-		public GLib.TypeClass class_ref ();
+		public unowned GLib.TypeInterface? default_interface_ref ();
+		public unowned GLib.TypeClass? class_ref ();
 		public uint depth ();
 		[Version (since = "2.34")]
 		public void ensure ();
