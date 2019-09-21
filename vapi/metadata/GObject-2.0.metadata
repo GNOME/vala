@@ -59,7 +59,7 @@ ParamSpecUInt type_id="G_TYPE_PARAM_UINT"
 ParamSpecUInt64 type_id="G_TYPE_PARAM_UINT64"
 ParamSpecULong type_id="G_TYPE_PARAM_ULONG"
 ParamSpecUnichar type_id="G_TYPE_PARAM_UNICHAR"
-ParamSpecValueArray type_id="G_TYPE_PARAM_VALUE_ARRAY"
+ParamSpecValueArray type_id="G_TYPE_PARAM_VALUE_ARRAY" deprecated_since="2.32"
 ParamSpecVariant type_id="G_TYPE_PARAM_VARIANT"
 
 param_spec_boolean parent="GLib.ParamSpecBoolean" symbol_type="constructor" name="new"
@@ -92,6 +92,13 @@ TypeModuleClass skip
 TypeClass struct=false
 EnumClass struct=false base_type="GLib.TypeClass"
 FlagsClass struct=false base_type="GLib.TypeClass"
+
+// scattered constants
+PARAM_MASK parent="GLib.ParamFlags" name="MASK" type="uint"
+PARAM_STATIC_STRINGS parent="GLib.ParamFlags" name="STATIC_STRINGS" type="uint"
+PARAM_USER_SHIFT parent="GLib.ParamFlags" name="USER_SHIFT" type="uint"
+SIGNAL_FLAGS_MASK parent="GLib.SignalFlags" name="MASK" type="uint"
+SIGNAL_MATCH_MASK parent="GLib.SignalMatchType" name="MASK" type="uint"
 
 // GValue
 Value struct

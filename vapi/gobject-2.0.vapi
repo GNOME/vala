@@ -435,6 +435,7 @@ namespace GLib {
 		public ParamSpecUnichar (string name, string nick, string blurb, unichar default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_VALUE_ARRAY")]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public class ParamSpecValueArray : GLib.ParamSpec {
 		public weak GLib.ParamSpec element_spec;
 		public uint fixed_n_elements;
@@ -905,7 +906,10 @@ namespace GLib {
 		STATIC_NICK,
 		STATIC_BLURB,
 		EXPLICIT_NOTIFY,
-		DEPRECATED
+		DEPRECATED;
+		public const uint MASK;
+		public const uint STATIC_STRINGS;
+		public const uint USER_SHIFT;
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_SIGNAL_", has_type_id = false)]
 	[Flags]
@@ -919,7 +923,9 @@ namespace GLib {
 		NO_HOOKS,
 		MUST_COLLECT,
 		DEPRECATED,
-		ACCUMULATOR_FIRST_RUN
+		ACCUMULATOR_FIRST_RUN;
+		[CCode (cname = "G_SIGNAL_FLAGS_MASK")]
+		public const uint MASK;
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]
 	[Flags]
@@ -929,7 +935,8 @@ namespace GLib {
 		CLOSURE,
 		FUNC,
 		DATA,
-		UNBLOCKED
+		UNBLOCKED;
+		public const uint MASK;
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
 	[Flags]
@@ -1043,16 +1050,6 @@ namespace GLib {
 	public delegate void ValueTransform (GLib.Value src_value, GLib.Value dest_value);
 	[CCode (cheader_filename = "glib-object.h", has_target = false)]
 	public delegate void WeakNotify (void* data, GLib.Object where_the_object_was);
-	[CCode (cheader_filename = "glib-object.h", cname = "G_PARAM_MASK")]
-	public const int PARAM_MASK;
-	[CCode (cheader_filename = "glib-object.h", cname = "G_PARAM_STATIC_STRINGS")]
-	public const int PARAM_STATIC_STRINGS;
-	[CCode (cheader_filename = "glib-object.h", cname = "G_PARAM_USER_SHIFT")]
-	public const int PARAM_USER_SHIFT;
-	[CCode (cheader_filename = "glib-object.h", cname = "G_SIGNAL_FLAGS_MASK")]
-	public const int SIGNAL_FLAGS_MASK;
-	[CCode (cheader_filename = "glib-object.h", cname = "G_SIGNAL_MATCH_MASK")]
-	public const int SIGNAL_MATCH_MASK;
 	[CCode (cheader_filename = "glib-object.h", cname = "G_TYPE_FLAG_RESERVED_ID_BIT")]
 	public const GLib.Type TYPE_FLAG_RESERVED_ID_BIT;
 	[CCode (cheader_filename = "glib-object.h", cname = "G_TYPE_FUNDAMENTAL_MAX")]
