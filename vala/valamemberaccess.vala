@@ -468,13 +468,24 @@ public class Vala.MemberAccess : Expression {
 			error = true;
 
 			string base_type_name = "(null)";
+			unowned Symbol? base_type = null;
 			if (inner != null && inner.value_type != null) {
 				base_type_name = inner.value_type.to_string ();
+				base_type = inner.value_type.data_type;
 			} else if (base_symbol != null) {
 				base_type_name = base_symbol.get_full_name ();
+				base_type = base_symbol;
 			}
 
-			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'".printf (member_name, base_type_name));
+			string? base_type_package = "";
+			if (base_type != null && base_type.external_package) {
+				base_type_package = base_symbol.source_reference.file.package_name;
+				if (base_type_package != null) {
+					base_type_package = " (%s)".printf (base_type_package);
+				}
+			}
+
+			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s".printf (member_name, base_type_name, base_type_package));
 			return false;
 		}
 
