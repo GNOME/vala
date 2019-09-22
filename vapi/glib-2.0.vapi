@@ -2324,7 +2324,7 @@ namespace GLib {
 		public static void* copy (void* dest, void* src, size_t n);
 		[CCode (cname = "memset")]
 		public static void* set (void* dest, int src, size_t n);
-		[CCode (cname = "g_memmove")]
+		[CCode (cname = "memmove")]
 		public static void* move (void* dest, void* src, size_t n);
 		[CCode (cname = "g_memdup")]
 		public static void* dup (void* mem, uint n);
