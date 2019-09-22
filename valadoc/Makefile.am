@@ -60,6 +60,7 @@ valadoc.vala.stamp: $(valadoc_VALASOURCES) $(top_srcdir)/vala/libvala@PACKAGE_SU
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gmodule-2.0 \
 		--pkg gobject-2.0 \
+		--pkg libgvc \
 		--vapidir $(top_srcdir)/vala --pkg libvala@PACKAGE_SUFFIX@ \
 		--vapidir $(top_srcdir)/ccode --pkg ccode \
 		--vapidir $(top_srcdir)/codegen --pkg codegen \
