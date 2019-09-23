@@ -343,6 +343,10 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
+			if (inner is CastExpression && ((CastExpression) inner).is_silent_cast) {
+				Report.warning (source_reference, "Access to possible `null'. Perform a check or use an unsafe cast.");
+			}
+
 			if (inner is MemberAccess || inner is BaseAccess) {
 				base_symbol = inner.symbol_reference;
 
