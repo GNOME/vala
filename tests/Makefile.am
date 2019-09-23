@@ -535,8 +535,10 @@ TESTS = \
 	parser/constructor-static-exists.test \
 	parser/continue-statement.vala \
 	parser/creation-no-abstract.test \
+	parser/creation-no-new.test \
 	parser/creation-no-override.test \
 	parser/creation-no-virtual.test \
+	parser/delegate-anonymous.test \
 	parser/delegate-no-new.test \
 	parser/destructor-class-exists.test \
 	parser/destructor-exists.test \
