@@ -578,6 +578,8 @@ TESTS = \
 	parser/property-no-virtual-override.test \
 	parser/property-set-must-have-body.test \
 	parser/property-set-redefined.test \
+	parser/qualified-member-access.vala \
+	parser/qualified-symbol-access.vala \
 	parser/signal-no-class.test \
 	parser/signal-no-static.test \
 	parser/statement-outside-root.test \
