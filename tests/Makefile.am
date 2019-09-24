@@ -658,6 +658,8 @@ TESTS = \
 	semantic/parameter-params.test \
 	semantic/parameter-ref-default.test \
 	semantic/parameter-void.test \
+	semantic/pointer-indirection-type-not-supported.test \
+	semantic/pointer-indirection-void-not-supported.test \
 	semantic/property-abstract.test \
 	semantic/property-abstract-derived-compact.test \
 	semantic/property-accessibility.test \
@@ -672,6 +674,8 @@ TESTS = \
 	semantic/property-struct-protected.test \
 	semantic/property-struct-virtual.test \
 	semantic/property-void.test \
+	semantic/reference-transfer-not-supported.test \
+	semantic/reference-transfer-unavailable.test \
 	semantic/signal-clash-inherited.test \
 	semantic/signal-compact-class.test \
 	semantic/signal-detail-invalid.test \
@@ -685,6 +689,11 @@ TESTS = \
 	semantic/switch-label-not-compatible.test \
 	semantic/switch-label-not-constant.test \
 	semantic/switch-type-unsupported.test \
+	semantic/throw-no-error-type.test \
+	semantic/unary-unsupported-complement.test \
+	semantic/unary-unsupported-increment.test \
+	semantic/unary-unsupported-minus.test \
+	semantic/unary-unsupported-negation.test \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
