@@ -5335,7 +5335,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.22")]
-	[CCode (ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
+	[CCode (direct_generics = true, ref_function = "g_array_ref", unref_function = "g_array_unref", type_id = "G_TYPE_ARRAY")]
 	public class Array<G> {
 		[CCode (cname = "len")]
 		public uint length;
