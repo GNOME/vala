@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	void* foo = null;
+	*foo = null;
+}
