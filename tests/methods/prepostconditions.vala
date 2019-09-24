@@ -5,6 +5,9 @@ class Foo {
 	public Foo () requires (required = true) {
 	}
 
+	public Foo.post () ensures (ensured = true) {
+	}
+
 	public void foo () ensures (ensured = true) {
 	}
 
@@ -50,4 +53,7 @@ void main () {
 	assert(foo.bar_pre (4711) == 4711);
 	assert (foo.faz (42) == 42);
 	assert (foo.faz_pre (4711) == 4711);
+
+	var foo2 = new Foo.post ();
+	assert (foo2.ensured);
 }
