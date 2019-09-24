@@ -1,0 +1,9 @@
+Invalid Code
+
+string foo () {
+	return "foo";
+}
+
+void main () {
+	string s = (owned) foo ();
+}

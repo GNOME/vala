@@ -1,0 +1,8 @@
+Invalid Code
+
+struct Foo {
+	public Foo foo;
+}
+
+void main () {
+}

@@ -1,0 +1,7 @@
+Invalid Code
+
+unowned string foo = "foo";
+
+void main () {
+	string s = (owned) foo;
+}
