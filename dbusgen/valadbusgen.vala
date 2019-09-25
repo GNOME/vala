@@ -175,7 +175,7 @@ public class Vala.DBusGen {
 			return quit ();
 		}
 
-		var interface_writer = new CodeWriter (CodeWriterType.FAST);
+		var interface_writer = new CodeWriter (CodeWriterType.DUMP);
 
 		foreach (SourceFile source in context.get_source_files ()) {
 			string filename = Path.get_basename (source.filename);
