@@ -204,7 +204,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	private string get_cheaders (Symbol sym) {
 		string cheaders = "";
-		if (type != CodeWriterType.FAST && !sym.external_package) {
+		if (type != CodeWriterType.FAST && type != CodeWriterType.DUMP && !sym.external_package) {
 			cheaders = sym.get_attribute_string ("CCode", "cheader_filename") ?? "";
 			if (cheaders == "" && sym.parent_symbol != null && sym.parent_symbol != context.root) {
 				cheaders = get_cheaders (sym.parent_symbol);
@@ -470,7 +470,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_identifier (ev.name);
 
-			if (type == CodeWriterType.FAST && ev.value != null && ev.value.is_constant ()) {
+			if ((type == CodeWriterType.FAST || type == CodeWriterType.DUMP) && ev.value != null && ev.value.is_constant ()) {
 				write_string(" = ");
 				ev.value.accept (this);
 			}
@@ -582,7 +582,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string (" ");
 		write_identifier (c.name);
 		write_type_suffix (c.type_reference);
-		if (type == CodeWriterType.FAST && c.value != null && c.value.is_constant ()) {
+		if ((type == CodeWriterType.FAST || type == CodeWriterType.DUMP) && c.value != null && c.value.is_constant ()) {
 			write_string(" = ");
 			c.value.accept (this);
 		}
@@ -1651,7 +1651,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_attributes (CodeNode node) {
 		unowned Symbol? sym = node as Symbol;
 
-		var need_cheaders = type != CodeWriterType.FAST && sym != null && !(sym is Namespace) && sym.parent_symbol is Namespace;
+		var need_cheaders = type != CodeWriterType.FAST && type != CodeWriterType.DUMP && sym != null && !(sym is Namespace) && sym.parent_symbol is Namespace;
 
 		var attributes = new GLib.Sequence<Attribute> ();
 		foreach (var attr in node.attributes) {
