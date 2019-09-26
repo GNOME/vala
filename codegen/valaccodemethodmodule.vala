@@ -536,7 +536,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 						Method base_method;
 						ReferenceType base_expression_type;
-						if (m.overrides) {
+						if (m.overrides && m.base_method != null) {
 							base_method = m.base_method;
 							base_expression_type = new ObjectType ((Class) base_method.parent_symbol);
 						} else {

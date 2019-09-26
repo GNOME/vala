@@ -314,6 +314,7 @@ TESTS = \
 	objects/interface_only.vala \
 	objects/interfaces.vala \
 	objects/interface-generics.vala \
+	objects/interface-virtual-override.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/plugin-module-init.vala \
