@@ -26,8 +26,26 @@ using GLib;
  * A callable type, i.e. a delegate, method, or signal type.
  */
 public abstract class Vala.CallableType : DataType {
+	public weak Callable callable_symbol {
+		get {
+			return (Callable) symbol;
+		}
+	}
+
 	protected CallableType (Symbol symbol) {
 		base.with_symbol (symbol);
+	}
+
+	public override bool is_invokable () {
+		return true;
+	}
+
+	public override unowned DataType? get_return_type () {
+		return callable_symbol.return_type;
+	}
+
+	public override unowned List<Parameter>? get_parameters () {
+		return callable_symbol.get_parameters ();
 	}
 
 	public override string to_prototype_string (string? override_name = null) {
