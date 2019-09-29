@@ -39,52 +39,6 @@ public class Vala.DelegateType : CallableType {
 		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
 	}
 
-	public override string to_qualified_string (Scope? scope) {
-		// logic temporarily duplicated from DataType class
-
-		Symbol global_symbol = delegate_symbol;
-		while (global_symbol.parent_symbol != null && global_symbol.parent_symbol.name != null) {
-			global_symbol = global_symbol.parent_symbol;
-		}
-
-		Symbol sym = null;
-		Scope parent_scope = scope;
-		while (sym == null && parent_scope != null) {
-			sym = parent_scope.lookup (global_symbol.name);
-			parent_scope = parent_scope.parent_scope;
-		}
-
-		string s;
-
-		if (sym != null && global_symbol != sym) {
-			s = "global::" + delegate_symbol.get_full_name ();;
-		} else {
-			s = delegate_symbol.get_full_name ();
-		}
-
-		var type_args = get_type_arguments ();
-		if (type_args.size > 0) {
-			s += "<";
-			bool first = true;
-			foreach (DataType type_arg in type_args) {
-				if (!first) {
-					s += ",";
-				} else {
-					first = false;
-				}
-				if (type_arg.is_weak ()) {
-					s += "weak ";
-				}
-				s += type_arg.to_qualified_string (scope);
-			}
-			s += ">";
-		}
-		if (nullable) {
-			s += "?";
-		}
-		return s;
-	}
-
 	public override DataType copy () {
 		var result = new DelegateType (delegate_symbol);
 		result.source_reference = source_reference;
