@@ -1,0 +1,17 @@
+Invalid Code
+
+delegate void Func ();
+[CCode (has_target = false)]
+delegate void IncompatibleFunc ();
+
+interface Foo : Object {
+	public abstract void foo (Func? func);
+}
+
+class Bar : Object, Foo {
+	public void foo (IncompatibleFunc? func) {
+	}
+}
+
+void main () {
+}

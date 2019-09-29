@@ -270,6 +270,8 @@ TESTS = \
 	delegates/error-pos.vala \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
+	delegates/incompatible.test \
+	delegates/incompatible-target.test \
 	delegates/instance-method-to-no-target.test \
 	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
