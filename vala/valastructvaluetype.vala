@@ -39,7 +39,7 @@ public class Vala.StructValueType : ValueType {
 		}
 	}
 
-	public override DataType? get_return_type () {
+	public override unowned DataType? get_return_type () {
 		var st = type_symbol as Struct;
 		if (st != null && st.default_construction_method != null) {
 			return st.default_construction_method.return_type;

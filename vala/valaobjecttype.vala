@@ -77,7 +77,7 @@ public class Vala.ObjectType : ReferenceType {
 		}
 	}
 
-	public override DataType? get_return_type () {
+	public override unowned DataType? get_return_type () {
 		var cl = type_symbol as Class;
 		if (cl != null && cl.default_construction_method != null) {
 			return cl.default_construction_method.return_type;

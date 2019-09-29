@@ -36,7 +36,7 @@ public class Vala.MethodType : CallableType {
 		return true;
 	}
 
-	public override DataType? get_return_type () {
+	public override unowned DataType? get_return_type () {
 		return method_symbol.return_type;
 	}
 

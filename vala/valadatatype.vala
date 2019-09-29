@@ -373,7 +373,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return return type
 	 */
-	public virtual DataType? get_return_type () {
+	public virtual unowned DataType? get_return_type () {
 		return null;
 	}
 
