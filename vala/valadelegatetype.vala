@@ -108,6 +108,10 @@ public class Vala.DelegateType : CallableType {
 		return result;
 	}
 
+	public override bool equals (DataType type2) {
+		return compatible (type2);
+	}
+
 	public override bool is_accessible (Symbol sym) {
 		return delegate_symbol.is_accessible (sym);
 	}
@@ -151,6 +155,10 @@ public class Vala.DelegateType : CallableType {
 			return true;
 		}
 
+		if (delegate_symbol.has_target != dt_target.delegate_symbol.has_target) {
+			return false;
+		}
+
 		// target-delegate is allowed to ensure stricter return type (stronger postcondition)
 		if (!get_return_type ().stricter (dt_target.get_return_type ().get_actual_type (dt_target, null, this))) {
 			return false;
@@ -171,9 +179,8 @@ public class Vala.DelegateType : CallableType {
 		}
 
 		foreach (Parameter param in dt_target.get_parameters ()) {
-			/* target-delegate is allowed to accept less arguments */
 			if (!params_it.next ()) {
-				break;
+				return false;
 			}
 
 			// target-delegate is allowed to accept arguments of looser types (weaker precondition)
