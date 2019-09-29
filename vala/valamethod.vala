@@ -1101,7 +1101,7 @@ public class Vala.Method : Subroutine, Callable {
 		return n;
 	}
 
-	public Method get_end_method () {
+	public unowned Method get_end_method () {
 		assert (this.coroutine);
 
 		if (end_method == null) {
@@ -1120,7 +1120,7 @@ public class Vala.Method : Subroutine, Callable {
 		return end_method;
 	}
 
-	public Method get_callback_method () {
+	public unowned Method get_callback_method () {
 		assert (this.coroutine);
 
 		if (callback_method == null) {
