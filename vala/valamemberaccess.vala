@@ -502,7 +502,7 @@ public class Vala.MemberAccess : Expression {
 		if (member is LocalVariable) {
 			var local = (LocalVariable) member;
 			var block = local.parent_symbol as Block;
-			if (block != null && context.analyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
+			if (block != null && SemanticAnalyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
 				// mark all methods between current method and the captured
 				// block as closures (to support nested closures)
 				Symbol sym = context.analyzer.current_method_or_property_accessor;
@@ -576,7 +576,7 @@ public class Vala.MemberAccess : Expression {
 			access = c.access;
 
 			var block = c.parent_symbol as Block;
-			if (block != null && context.analyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
+			if (block != null && SemanticAnalyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
 				error = true;
 				Report.error (source_reference, "internal error: accessing local constants of outer methods is not supported yet");
 				return false;

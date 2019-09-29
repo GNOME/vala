@@ -30,12 +30,12 @@ using GLib;
 public class Vala.SemanticAnalyzer : CodeVisitor {
 	CodeContext context;
 
-	public Symbol current_symbol { get; set; }
+	public Symbol? current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
 
 	public TypeSymbol? current_type_symbol {
 		get {
-			var sym = current_symbol;
+			unowned Symbol? sym = current_symbol;
 			while (sym != null) {
 				if (sym is TypeSymbol) {
 					return (TypeSymbol) sym;
@@ -57,7 +57,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public Method? current_method {
 		get {
-			unowned Symbol sym = current_symbol;
+			unowned Symbol? sym = current_symbol;
 			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
@@ -67,9 +67,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public Method? current_async_method {
 		get {
-			unowned Symbol sym = current_symbol;
+			unowned Symbol? sym = current_symbol;
 			while (sym is Block || sym is Method) {
-				var m = sym as Method;
+				unowned Method? m = sym as Method;
 				if (m != null && m.coroutine) {
 					break;
 				}
@@ -82,7 +82,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public PropertyAccessor? current_property_accessor {
 		get {
-			unowned Symbol sym = current_symbol;
+			unowned Symbol? sym = current_symbol;
 			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
@@ -92,7 +92,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public Symbol? current_method_or_property_accessor {
 		get {
-			unowned Symbol sym = current_symbol;
+			unowned Symbol? sym = current_symbol;
 			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
@@ -108,12 +108,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public DataType? current_return_type {
 		get {
-			var m = current_method;
+			unowned Method? m = current_method;
 			if (m != null) {
 				return m.return_type;
 			}
 
-			var acc = current_property_accessor;
+			unowned PropertyAccessor? acc = current_property_accessor;
 			if (acc != null) {
 				if (acc.readable) {
 					return acc.value_type;
@@ -250,7 +250,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
 		if (sym is Field) {
-			var f = (Field) sym;
+			unowned Field f = (Field) sym;
 			var type = f.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
@@ -259,10 +259,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is EnumValue) {
 			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Constant) {
-			var c = (Constant) sym;
+			unowned Constant c = (Constant) sym;
 			return c.type_reference;
 		} else if (sym is Property) {
-			var prop = (Property) sym;
+			unowned Property prop = (Property) sym;
 			if (lvalue) {
 				if (prop.set_accessor != null && prop.set_accessor.value_type != null) {
 					return prop.set_accessor.value_type.copy ();
@@ -273,14 +273,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		} else if (sym is Parameter) {
-			var p = (Parameter) sym;
+			unowned Parameter p = (Parameter) sym;
 			var type = p.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
 			}
 			return type;
 		} else if (sym is LocalVariable) {
-			var local = (LocalVariable) sym;
+			unowned LocalVariable local = (LocalVariable) sym;
 			var type = local.variable_type.copy ();
 			if (!lvalue) {
 				type.value_owned = false;
@@ -301,7 +301,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (sym is Class) {
-			var cl = (Class) sym;
+			unowned Class cl = (Class) sym;
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
 			foreach (DataType base_type in cl.get_base_types ()) {
@@ -317,7 +317,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return symbol_lookup_inherited (cl.base_class, name);
 			}
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
+			unowned Struct st = (Struct) sym;
 			if (st.base_type != null) {
 				result = symbol_lookup_inherited (st.base_type.type_symbol, name);
 				if (result != null) {
@@ -325,7 +325,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		} else if (sym is Interface) {
-			var iface = (Interface) sym;
+			unowned Interface iface = (Interface) sym;
 			// first check interface prerequisites recursively
 			foreach (DataType prerequisite in iface.get_prerequisites ()) {
 				if (prerequisite.type_symbol is Interface) {
@@ -350,11 +350,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public static DataType get_data_type_for_symbol (Symbol sym) {
-		DataType type = null;
+		DataType type;
 
 		List<TypeParameter> type_parameters = null;
 		if (sym is ObjectTypeSymbol) {
-			var cl = sym as Class;
+			unowned Class cl = sym as Class;
 			if (cl != null && cl.is_error_base) {
 				type = new ErrorType (null, null);
 			} else {
@@ -362,7 +362,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				type_parameters = ((ObjectTypeSymbol) sym).get_type_parameters ();
 			}
 		} else if (sym is Struct) {
-			var st = (Struct) sym;
+			unowned Struct st = (Struct) sym;
 			if (st.is_boolean_type ()) {
 				type = new BooleanType (st);
 			} else if (st.is_integer_type ()) {
@@ -395,8 +395,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return type;
 	}
 
-	public static Symbol? get_symbol_for_data_type (DataType type) {
-		Symbol? sym = null;
+	public static unowned Symbol? get_symbol_for_data_type (DataType type) {
+		unowned Symbol? sym = null;
 
 		if (type is ObjectType) {
 			sym = ((ObjectType) type).type_symbol;
@@ -418,7 +418,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_gobject_property (Property prop) {
-		var type_sym = prop.parent_symbol as ObjectTypeSymbol;
+		unowned ObjectTypeSymbol? type_sym = prop.parent_symbol as ObjectTypeSymbol;
 		if (type_sym == null || !type_sym.is_subtype_of (object_type)) {
 			return false;
 		}
@@ -460,7 +460,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_gobject_property_type (DataType property_type) {
-		var st = property_type.type_symbol as Struct;
+		unowned Struct? st = property_type.type_symbol as Struct;
 		if (st != null) {
 			if (!st.is_simple_type () && st.get_attribute_bool ("CCode", "has_type_id", true)) {
 				// Allow GType-based struct types
@@ -473,7 +473,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 
-		var d = property_type as DelegateType;
+		unowned DelegateType? d = property_type as DelegateType;
 		if (d != null && d.delegate_symbol.has_target) {
 			return false;
 		}
@@ -514,7 +514,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (arg_it == null || !arg_it.next ()) {
 				if (param.initializer == null) {
 					expr.error = true;
-					var m = mtype as MethodType;
+					unowned MethodType? m = mtype as MethodType;
 					if (m != null) {
 						Report.error (expr.source_reference, "%d missing arguments for `%s'".printf (m.get_parameters ().size - args.size, m.to_prototype_string ()));
 					} else {
@@ -522,8 +522,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 					error = true;
 				} else {
-					var invocation_expr = expr as MethodCall;
-					var object_creation_expr = expr as ObjectCreationExpression;
+					unowned MethodCall? invocation_expr = expr as MethodCall;
+					unowned ObjectCreationExpression? object_creation_expr = expr as ObjectCreationExpression;
 					if (invocation_expr != null) {
 						invocation_expr.add_argument (param.initializer);
 					} else if (object_creation_expr != null) {
@@ -551,7 +551,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			error = true;
 		} else if (!ellipsis && arg_it != null && arg_it.next ()) {
 			expr.error = true;
-			var m = mtype as MethodType;
+			unowned MethodType? m = mtype as MethodType;
 			if (m != null) {
 				Report.error (expr.source_reference, "%d extra arguments for `%s'".printf (args.size - m.get_parameters ().size, m.to_prototype_string ()));
 			} else {
@@ -561,7 +561,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (diag && prev_arg != null) {
-			var format_arg = prev_arg as StringLiteral;
+			unowned StringLiteral? format_arg = prev_arg as StringLiteral;
 			if (format_arg != null) {
 				format_arg.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.begin.line, format_arg.value.substring (1));
 			}
@@ -662,10 +662,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		var ma = arg as MemberAccess;
+		unowned MemberAccess? ma = arg as MemberAccess;
 		if (ma != null && ma.prototype_access) {
 			// allow prototype access if target type is delegate without target
-			var deleg_type = arg.target_type as DelegateType;
+			unowned DelegateType? deleg_type = arg.target_type as DelegateType;
 			if (deleg_type == null || deleg_type.delegate_symbol.has_target) {
 				Report.error (arg.source_reference, "Access to instance member `%s' denied".printf (arg.symbol_reference.get_full_name ()));
 				return false;
@@ -844,7 +844,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		DataType instance_type = derived_instance_type;
 
 		while (instance_type is PointerType) {
-			var instance_pointer_type = (PointerType) instance_type;
+			unowned PointerType instance_pointer_type = (PointerType) instance_type;
 			instance_type = instance_pointer_type.base_type;
 		}
 
@@ -854,7 +854,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return instance_type;
 		}
 
-		DataType instance_base_type = null;
+		DataType? instance_base_type = null;
 
 		// use same algorithm as symbol_lookup_inherited
 		if (instance_type.type_symbol is Class) {
@@ -951,7 +951,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else {
 			// generic method
-			var m = (Method) generic_type.type_parameter.parent_symbol;
+			unowned Method m = (Method) generic_type.type_parameter.parent_symbol;
 
 			int param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
 			if (param_index == -1) {
@@ -979,21 +979,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_in_instance_method () {
-		var sym = current_symbol;
+		unowned Symbol? sym = current_symbol;
 		while (sym != null) {
 			if (sym is CreationMethod) {
 				return true;
 			} else if (sym is Method) {
-				var m = (Method) sym;
+				unowned Method m = (Method) sym;
 				return m.binding == MemberBinding.INSTANCE;
 			} else if (sym is Constructor) {
-				var c = (Constructor) sym;
+				unowned Constructor c = (Constructor) sym;
 				return c.binding == MemberBinding.INSTANCE;
 			} else if (sym is Destructor) {
-				var d = (Destructor) sym;
+				unowned Destructor d = (Destructor) sym;
 				return d.binding == MemberBinding.INSTANCE;
 			} else if (sym is Property) {
-				var p = (Property) sym;
+				unowned Property p = (Property) sym;
 				return p.binding == MemberBinding.INSTANCE;
 			}
 			sym = sym.parent_symbol;
@@ -1032,10 +1032,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		DataType member_type = null;
 		if (init.symbol_reference is Field) {
-			var f = (Field) init.symbol_reference;
+			unowned Field f = (Field) init.symbol_reference;
 			member_type = f.variable_type;
 		} else if (init.symbol_reference is Property) {
-			var prop = (Property) init.symbol_reference;
+			unowned Property prop = (Property) init.symbol_reference;
 			member_type = prop.property_type;
 			if (prop.set_accessor == null || !prop.set_accessor.writable) {
 				init.error = true;
@@ -1056,7 +1056,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	Struct? get_arithmetic_struct (DataType type) {
+	unowned Struct? get_arithmetic_struct (DataType type) {
 		unowned Struct? result = type.type_symbol as Struct;
 		if (result == null && type is EnumValueType) {
 			return (Struct) int_type.type_symbol;
@@ -1064,9 +1064,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return result;
 	}
 
-	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
-		var left = get_arithmetic_struct (left_type);
-		var right = get_arithmetic_struct (right_type);
+	public unowned DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
+		unowned Struct? left = get_arithmetic_struct (left_type);
+		unowned Struct? right = get_arithmetic_struct (right_type);
 
 		if (left == null || right == null) {
 			// at least one operand not struct
@@ -1096,8 +1096,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public Method? find_current_method () {
-		var sym = current_symbol;
+	public unowned Method? find_current_method () {
+		unowned Symbol? sym = current_symbol;
 		while (sym != null) {
 			if (sym is Method) {
 				return (Method) sym;
@@ -1107,14 +1107,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public Method? find_parent_method (Symbol sym) {
+	public static unowned Method? find_parent_method (Symbol sym) {
 		while (sym is Block) {
 			sym = sym.parent_symbol;
 		}
 		return sym as Method;
 	}
 
-	public Symbol? find_parent_method_or_property_accessor (Symbol sym) {
+	public static unowned Symbol? find_parent_method_or_property_accessor (Symbol sym) {
 		while (sym is Block) {
 			sym = sym.parent_symbol;
 		}
@@ -1178,7 +1178,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_in_constructor () {
-		var sym = current_symbol;
+		unowned Symbol? sym = current_symbol;
 		while (sym != null) {
 			if (sym is Constructor) {
 				return true;
@@ -1189,7 +1189,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public bool is_in_destructor () {
-		var sym = current_symbol;
+		unowned Symbol? sym = current_symbol;
 		while (sym != null) {
 			if (sym is Destructor) {
 				return true;
