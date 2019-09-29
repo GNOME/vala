@@ -220,7 +220,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				symbol_reference = constructor;
 
 				// inner expression can also be base access when chaining constructors
-				var ma = member_name.inner as MemberAccess;
+				unowned MemberAccess? ma = member_name.inner as MemberAccess;
 				if (ma != null) {
 					type_args = ma.get_type_arguments ();
 				}

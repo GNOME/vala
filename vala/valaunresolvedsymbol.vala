@@ -40,7 +40,7 @@ public class Vala.UnresolvedSymbol : Symbol {
 	}
 
 	public static UnresolvedSymbol? new_from_expression (Expression expr) {
-		var ma = expr as MemberAccess;
+		unowned MemberAccess? ma = expr as MemberAccess;
 		if (ma != null) {
 			if (ma.inner != null) {
 				return new UnresolvedSymbol (new_from_expression (ma.inner), ma.member_name, ma.source_reference);

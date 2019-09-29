@@ -223,7 +223,7 @@ public class Vala.ArrayType : ReferenceType {
 			return true;
 		}
 
-		var target_array_type = target_type as ArrayType;
+		unowned ArrayType? target_array_type = target_type as ArrayType;
 		if (target_array_type == null) {
 			return false;
 		}
@@ -332,7 +332,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
-		var array_type = value_type as ArrayType;
+		unowned ArrayType? array_type = value_type as ArrayType;
 		if (array_type != null) {
 			return element_type.infer_type_argument (type_param, array_type.element_type);
 		}

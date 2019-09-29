@@ -98,12 +98,12 @@ public class Vala.StringLiteral : Literal {
 	}
 
 	public static StringLiteral? get_format_literal (Expression expr) {
-		var format_literal = expr as StringLiteral;
+		unowned StringLiteral? format_literal = expr as StringLiteral;
 		if (format_literal != null) {
 			return format_literal;
 		}
 
-		var call = expr as MethodCall;
+		unowned MethodCall? call = expr as MethodCall;
 		if (call != null) {
 			return call.get_format_literal ();
 		}

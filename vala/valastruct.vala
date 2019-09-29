@@ -332,7 +332,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a boolean type, false otherwise
 	 */
 	public bool is_boolean_type () {
-		var st = base_struct;
+		unowned Struct? st = base_struct;
 		if (st != null && st.is_boolean_type ()) {
 			return true;
 		}
@@ -348,7 +348,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is an integer type, false otherwise
 	 */
 	public bool is_integer_type () {
-		var st = base_struct;
+		unowned Struct? st = base_struct;
 		if (st != null && st.is_integer_type ()) {
 			return true;
 		}
@@ -364,7 +364,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a floating point type, false otherwise
 	 */
 	public bool is_floating_type () {
-		var st = base_struct;
+		unowned Struct? st = base_struct;
 		if (st != null && st.is_floating_type ()) {
 			return true;
 		}
@@ -375,7 +375,7 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public bool is_decimal_floating_type () {
-		var st = base_struct;
+		unowned Struct? st = base_struct;
 		if (st != null && st.is_decimal_floating_type ()) {
 			return true;
 		}
@@ -403,7 +403,7 @@ public class Vala.Struct : TypeSymbol {
 	 * instances are passed by value.
 	 */
 	public bool is_simple_type () {
-		var st = base_struct;
+		unowned Struct? st = base_struct;
 		if (st != null && st.is_simple_type ()) {
 			return true;
 		}
@@ -459,9 +459,9 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	bool is_recursive_value_type (DataType type) {
-		var struct_type = type as StructValueType;
+		unowned StructValueType? struct_type = type as StructValueType;
 		if (struct_type != null && !struct_type.nullable) {
-			var st = (Struct) struct_type.type_symbol;
+			unowned Struct st = (Struct) struct_type.type_symbol;
 			if (st == this) {
 				return true;
 			}

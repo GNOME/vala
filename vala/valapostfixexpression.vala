@@ -78,8 +78,8 @@ public class Vala.PostfixExpression : Expression {
 
 	public override void get_defined_variables (Collection<Variable> collection) {
 		inner.get_defined_variables (collection);
-		var local = inner.symbol_reference as LocalVariable;
-		var param = inner.symbol_reference as Parameter;
+		unowned LocalVariable? local = inner.symbol_reference as LocalVariable;
+		unowned Parameter? param = inner.symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
 		} else if (param != null && param.direction == ParameterDirection.OUT) {
@@ -117,7 +117,7 @@ public class Vala.PostfixExpression : Expression {
 		}
 
 		if (inner is MemberAccess) {
-			var ma = (MemberAccess) inner;
+			unowned MemberAccess ma = (MemberAccess) inner;
 
 			if (ma.prototype_access) {
 				error = true;
@@ -131,7 +131,7 @@ public class Vala.PostfixExpression : Expression {
 				return false;
 			}
 		} else if (inner is ElementAccess) {
-			var ea = (ElementAccess) inner;
+			unowned ElementAccess ea = (ElementAccess) inner;
 			if (!(ea.container.value_type is ArrayType)) {
 				error = true;
 				Report.error (source_reference, "unsupported lvalue in postfix expression");
@@ -144,10 +144,10 @@ public class Vala.PostfixExpression : Expression {
 		}
 
 		if (inner is MemberAccess) {
-			var ma = (MemberAccess) inner;
+			unowned MemberAccess ma = (MemberAccess) inner;
 
 			if (ma.symbol_reference is Property) {
-				var prop = (Property) ma.symbol_reference;
+				unowned Property prop = (Property) ma.symbol_reference;
 
 				if (prop.set_accessor == null || !prop.set_accessor.writable) {
 					ma.error = true;

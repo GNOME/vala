@@ -55,7 +55,7 @@ public class Vala.ErrorType : ReferenceType {
 			return true;
 		}
 
-		var et = target_type as ErrorType;
+		unowned ErrorType? et = target_type as ErrorType;
 
 		/* error types are only compatible to error types */
 		if (et == null) {
@@ -105,7 +105,7 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override bool equals (DataType type2) {
-		var et = type2 as ErrorType;
+		unowned ErrorType? et = type2 as ErrorType;
 
 		if (et == null) {
 			return false;

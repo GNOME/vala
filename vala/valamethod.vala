@@ -609,11 +609,11 @@ public class Vala.Method : Subroutine, Callable {
 	private void find_base_class_method (Class cl) {
 		var sym = cl.scope.lookup (name);
 		if (sym is Signal) {
-			var sig = (Signal) sym;
+			unowned Signal sig = (Signal) sym;
 			sym = sig.default_handler;
 		}
 		if (sym is Method) {
-			var base_method = (Method) sym;
+			unowned Method base_method = (Method) sym;
 			if (base_method.is_abstract || base_method.is_virtual) {
 				string invalid_match;
 				if (!compatible (base_method, out invalid_match)) {
@@ -648,11 +648,11 @@ public class Vala.Method : Subroutine, Callable {
 
 				var sym = type.type_symbol.scope.lookup (name);
 				if (sym is Signal) {
-					var sig = (Signal) sym;
+					unowned Signal sig = (Signal) sym;
 					sym = sig.default_handler;
 				}
 				if (sym is Method) {
-					var base_method = (Method) sym;
+					unowned Method base_method = (Method) sym;
 					if (base_method.is_abstract || base_method.is_virtual) {
 						if (base_interface_type == null) {
 							// check for existing explicit implementation
@@ -712,7 +712,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (parent_symbol is Class && (is_abstract || is_virtual)) {
-			var cl = (Class) parent_symbol;
+			unowned Class cl = (Class) parent_symbol;
 			if (cl.is_compact && cl.base_class != null) {
 				error = true;
 				Report.error (source_reference, "Abstract and virtual methods may not be declared in derived compact classes");
@@ -728,7 +728,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (is_abstract) {
 			if (parent_symbol is Class) {
-				var cl = (Class) parent_symbol;
+				unowned Class cl = (Class) parent_symbol;
 				if (!cl.is_abstract) {
 					error = true;
 					Report.error (source_reference, "Abstract methods may not be declared in non-abstract classes");
@@ -843,15 +843,15 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (error_types != null) {
 			foreach (DataType error_type in error_types) {
-			error_type.check (context);
+				error_type.check (context);
 
-			// check whether error type is at least as accessible as the method
-			if (!context.analyzer.is_type_accessible (this, error_type)) {
-				error = true;
-				Report.error (source_reference, "error type `%s' is less accessible than method `%s'".printf (error_type.to_string (), get_full_name ()));
-				return false;
+				// check whether error type is at least as accessible as the method
+				if (!context.analyzer.is_type_accessible (this, error_type)) {
+					error = true;
+					Report.error (source_reference, "error type `%s' is less accessible than method `%s'".printf (error_type.to_string (), get_full_name ()));
+					return false;
+				}
 			}
-		}
 		}
 
 		if (result_var != null) {
@@ -889,7 +889,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (base_interface_type != null && base_interface_method != null && parent_symbol is Class) {
-			var cl = (Class) parent_symbol;
+			unowned Class cl = (Class) parent_symbol;
 			foreach (var m in cl.get_methods ()) {
 				if (m != this && m.base_interface_method == base_interface_method) {
 					m.checked = true;
@@ -1080,7 +1080,7 @@ public class Vala.Method : Subroutine, Callable {
 			return false;
 		}
 
-		var array_type = (ArrayType) param.variable_type;
+		unowned ArrayType array_type = (ArrayType) param.variable_type;
 		if (array_type.element_type.type_symbol != context.analyzer.string_type.type_symbol) {
 			// parameter must be an array of strings
 			return false;

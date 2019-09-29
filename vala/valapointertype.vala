@@ -55,7 +55,7 @@ public class Vala.PointerType : DataType {
 
 	public override bool compatible (DataType target_type) {
 		if (target_type is PointerType) {
-			var tt = target_type as PointerType;
+			unowned PointerType? tt = target_type as PointerType;
 
 			if (tt.base_type is VoidType || base_type is VoidType) {
 				return true;
@@ -96,7 +96,7 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override Symbol? get_pointer_member (string member_name) {
-		Symbol base_symbol = base_type.type_symbol;
+		unowned Symbol? base_symbol = base_type.type_symbol;
 
 		if (base_symbol == null) {
 			return null;
@@ -138,7 +138,7 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override DataType? infer_type_argument (TypeParameter type_param, DataType value_type) {
-		var pointer_type = value_type as PointerType;
+		unowned PointerType? pointer_type = value_type as PointerType;
 		if (pointer_type != null) {
 			return base_type.infer_type_argument (type_param, pointer_type.base_type);
 		}

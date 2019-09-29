@@ -91,7 +91,7 @@ public class Vala.DelegateType : CallableType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		var dt_target = target_type as DelegateType;
+		unowned DelegateType? dt_target = target_type as DelegateType;
 		if (dt_target == null) {
 			return false;
 		}

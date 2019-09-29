@@ -31,7 +31,7 @@ public class Vala.StructValueType : ValueType {
 	}
 
 	public override bool is_invokable () {
-		var st = type_symbol as Struct;
+		unowned Struct? st = type_symbol as Struct;
 		if (st != null && st.default_construction_method != null) {
 			return true;
 		} else {
@@ -40,7 +40,7 @@ public class Vala.StructValueType : ValueType {
 	}
 
 	public override unowned DataType? get_return_type () {
-		var st = type_symbol as Struct;
+		unowned Struct? st = type_symbol as Struct;
 		if (st != null && st.default_construction_method != null) {
 			return st.default_construction_method.return_type;
 		} else {
@@ -49,7 +49,7 @@ public class Vala.StructValueType : ValueType {
 	}
 
 	public override unowned List<Parameter>? get_parameters () {
-		var st = type_symbol as Struct;
+		unowned Struct? st = type_symbol as Struct;
 		if (st != null && st.default_construction_method != null) {
 			return st.default_construction_method.get_parameters ();
 		} else {

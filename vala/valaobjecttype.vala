@@ -55,7 +55,7 @@ public class Vala.ObjectType : ReferenceType {
 	}
 
 	public override bool stricter (DataType target_type) {
-		var obj_target_type = target_type as ObjectType;
+		unowned ObjectType? obj_target_type = target_type as ObjectType;
 		if (obj_target_type == null) {
 			return false;
 		}
@@ -72,7 +72,7 @@ public class Vala.ObjectType : ReferenceType {
 	}
 
 	public override bool is_invokable () {
-		var cl = type_symbol as Class;
+		unowned Class? cl = type_symbol as Class;
 		if (cl != null && cl.default_construction_method != null) {
 			return true;
 		} else {
@@ -81,7 +81,7 @@ public class Vala.ObjectType : ReferenceType {
 	}
 
 	public override unowned DataType? get_return_type () {
-		var cl = type_symbol as Class;
+		unowned Class? cl = type_symbol as Class;
 		if (cl != null && cl.default_construction_method != null) {
 			return cl.default_construction_method.return_type;
 		} else {
@@ -90,7 +90,7 @@ public class Vala.ObjectType : ReferenceType {
 	}
 
 	public override unowned List<Parameter>? get_parameters () {
-		var cl = type_symbol as Class;
+		unowned Class? cl = type_symbol as Class;
 		if (cl != null && cl.default_construction_method != null) {
 			return cl.default_construction_method.get_parameters ();
 		} else {

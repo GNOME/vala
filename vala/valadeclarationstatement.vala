@@ -66,7 +66,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		if (source_reference == null) {
 			source_reference = this.source_reference;
 		}
-		var local = declaration as LocalVariable;
+		unowned LocalVariable? local = declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
 			local.initializer.get_error_types (collection, source_reference);
 		}
@@ -89,9 +89,9 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
-		var local = declaration as LocalVariable;
+		unowned LocalVariable? local = declaration as LocalVariable;
 		if (local != null) {
-			var array_type = local.variable_type as ArrayType;
+			unowned ArrayType? array_type = local.variable_type as ArrayType;
 			if (local.initializer != null) {
 				local.initializer.get_defined_variables (collection);
 				collection.add (local);
@@ -102,7 +102,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
-		var local = declaration as LocalVariable;
+		unowned LocalVariable? local = declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
 			local.initializer.get_used_variables (collection);
 		}

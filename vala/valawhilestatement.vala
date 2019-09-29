@@ -82,12 +82,12 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	}
 
 	bool always_true (Expression condition) {
-		var literal = condition as BooleanLiteral;
+		unowned BooleanLiteral? literal = condition as BooleanLiteral;
 		return (literal != null && literal.value);
 	}
 
 	bool always_false (Expression condition) {
-		var literal = condition as BooleanLiteral;
+		unowned BooleanLiteral? literal = condition as BooleanLiteral;
 		return (literal != null && !literal.value);
 	}
 
@@ -121,7 +121,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 
 		var loop = new Loop (body, source_reference);
 
-		var parent_block = (Block) parent_node;
+		unowned Block parent_block = (Block) parent_node;
 		parent_block.replace_statement (this, loop);
 
 		if (!loop.check (context)) {

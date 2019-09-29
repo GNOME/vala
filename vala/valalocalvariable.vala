@@ -83,7 +83,7 @@ public class Vala.LocalVariable : Variable {
 			// local reference variables are considered nullable
 			// except when using experimental non-null enhancements
 			if (variable_type is ReferenceType) {
-				var array_type = variable_type as ArrayType;
+				unowned ArrayType? array_type = variable_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					// local fixed length arrays are not nullable
 				} else {
@@ -218,7 +218,7 @@ public class Vala.LocalVariable : Variable {
 
 		// current_symbol is a Method if this is the `result'
 		// variable used for postconditions
-		var block = context.analyzer.current_symbol as Block;
+		unowned Block? block = context.analyzer.current_symbol as Block;
 		if (block != null) {
 			block.add_local_variable (this);
 		}

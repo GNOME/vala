@@ -779,7 +779,7 @@ public class Vala.Parser : CodeVisitor {
 
 		if (init_list.size > 0 && inner is MemberAccess) {
 			// struct creation expression
-			var member = (MemberAccess) inner;
+			unowned MemberAccess member = (MemberAccess) inner;
 			member.creation_member = true;
 
 			var expr = new ObjectCreationExpression (member, src);
@@ -1000,8 +1000,8 @@ public class Vala.Parser : CodeVisitor {
 
 		var expr = parse_expression ();
 
-		var call = expr as MethodCall;
-		var object_creation = expr as ObjectCreationExpression;
+		unowned MethodCall? call = expr as MethodCall;
+		unowned ObjectCreationExpression? object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
 			Report.error (expr.source_reference, "syntax error, expected method call");
 			throw new ParseError.SYNTAX ("expected method call");
@@ -1054,7 +1054,7 @@ public class Vala.Parser : CodeVisitor {
 		if (operator != UnaryOperator.NONE) {
 			next ();
 			var op = parse_unary_expression ();
-			var lit = op as IntegerLiteral;
+			unowned IntegerLiteral? lit = op as IntegerLiteral;
 			if (lit != null) {
 				if (operator == UnaryOperator.PLUS) {
 					return lit;
@@ -1852,7 +1852,7 @@ public class Vala.Parser : CodeVisitor {
 		var constant_type = parse_type (false, false);
 
 		// constant arrays don't own their element
-		var array_type = constant_type as ArrayType;
+		unowned ArrayType? array_type = constant_type as ArrayType;
 		if (array_type != null) {
 			array_type.element_type.value_owned = false;
 		}
@@ -2623,7 +2623,7 @@ public class Vala.Parser : CodeVisitor {
 		type = parse_inline_array_type (type);
 
 		// constant arrays don't own their element
-		var array_type = type as ArrayType;
+		unowned ArrayType? array_type = type as ArrayType;
 		if (array_type != null) {
 			array_type.element_type.value_owned = false;
 		}

@@ -141,9 +141,9 @@ public class Vala.Constant : Symbol {
 
 				// support translated string constants for efficiency / convenience
 				// even though the expression is not a compile-time constant
-				var call = value as MethodCall;
+				unowned MethodCall? call = value as MethodCall;
 				if (call != null) {
-					var method_type = call.call.value_type as MethodType;
+					unowned MethodType? method_type = call.call.value_type as MethodType;
 					if (method_type != null && method_type.method_symbol.get_full_name () == "GLib._") {
 						// first argument is string
 						var literal = call.get_argument_list ().get (0) as StringLiteral;
@@ -183,7 +183,7 @@ public class Vala.Constant : Symbol {
 		if (type is ValueType) {
 			return true;
 		} else if (type is ArrayType) {
-			var array_type = type as ArrayType;
+			unowned ArrayType array_type = (ArrayType) type;
 			return check_const_type (array_type.element_type, context);
 		} else if (type.type_symbol.is_subtype_of (context.analyzer.string_type.type_symbol)) {
 			return true;

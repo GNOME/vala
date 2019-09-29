@@ -41,7 +41,7 @@ public class Vala.MethodType : CallableType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		var dt = target_type as DelegateType;
+		unowned DelegateType? dt = target_type as DelegateType;
 		if (dt == null) {
 			// method types incompatible to anything but delegates
 			return false;
