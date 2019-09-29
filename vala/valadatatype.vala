@@ -351,8 +351,8 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if (type_symbol is Struct && target_type.type_symbol is Struct) {
-			var expr_struct = (Struct) type_symbol;
-			var expect_struct = (Struct) target_type.type_symbol;
+			unowned Struct expr_struct = (Struct) type_symbol;
+			unowned Struct expect_struct = (Struct) target_type.type_symbol;
 
 			/* integer types may be implicitly cast to floating point types */
 			if (expr_struct.is_integer_type () && expect_struct.is_floating_type ()) {
@@ -549,7 +549,7 @@ public abstract class Vala.DataType : CodeNode {
 			}
 
 			return string.nfill (array_type.rank, 'a') + element_type_signature;
-		} else if (type_symbol != null && type_symbol is Enum && type_symbol.get_attribute_bool ("DBus", "use_string_marshalling")) {
+		} else if (type_symbol is Enum && type_symbol.get_attribute_bool ("DBus", "use_string_marshalling")) {
 			return "s";
 		} else if (type_symbol != null) {
 			string sig = type_symbol.get_attribute_string ("CCode", "type_signature");

@@ -143,7 +143,7 @@ public class Vala.InitializerList : Expression {
 			return false;
 		} else if (target_type is ArrayType) {
 			/* initializer is used as array initializer */
-			var array_type = (ArrayType) target_type;
+			unowned ArrayType array_type = (ArrayType) target_type;
 
 			bool requires_constants_only = false;
 			unowned CodeNode? node = parent_node;
@@ -189,7 +189,7 @@ public class Vala.InitializerList : Expression {
 			}
 		} else if (target_type.type_symbol is Struct) {
 			/* initializer is used as struct initializer */
-			var st = (Struct) target_type.type_symbol;
+			unowned Struct st = (Struct) target_type.type_symbol;
 			while (st.base_struct != null) {
 				st = st.base_struct;
 			}
@@ -233,7 +233,7 @@ public class Vala.InitializerList : Expression {
 				continue;
 			}
 
-			var unary = e as UnaryExpression;
+			unowned UnaryExpression? unary = e as UnaryExpression;
 			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
 				// TODO check type for ref and out expressions
 			} else if (!e.value_type.compatible (e.target_type)) {

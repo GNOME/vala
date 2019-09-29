@@ -341,7 +341,7 @@ public class Vala.BinaryExpression : Expression {
 		} else if (left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
 			// array concatenation
 
-			var array_type = (ArrayType) left.value_type;
+			unowned ArrayType array_type = (ArrayType) left.value_type;
 
 			if (right.value_type == null || !right.value_type.compatible (array_type.element_type)) {
 				error = true;
@@ -359,14 +359,14 @@ public class Vala.BinaryExpression : Expression {
 			   || operator == BinaryOperator.DIV) {
 			// check for pointer arithmetic
 			if (left.value_type is PointerType) {
-				var pointer_type = (PointerType) left.value_type;
+				unowned PointerType pointer_type = (PointerType) left.value_type;
 				if (pointer_type.base_type is VoidType) {
 					error = true;
 					Report.error (source_reference, "Pointer arithmetic not supported for `void*'");
 					return false;
 				}
 
-				var offset_type = right.value_type.type_symbol as Struct;
+				unowned Struct? offset_type = right.value_type.type_symbol as Struct;
 				if (offset_type != null && offset_type.is_integer_type ()) {
 					if (operator == BinaryOperator.PLUS
 					    || operator == BinaryOperator.MINUS) {

@@ -566,7 +566,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		current_block.add_node (stmt);
 
-		var local = stmt.declaration as LocalVariable;
+		unowned LocalVariable? local = stmt.declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
 			handle_errors (local.initializer);
 		}
@@ -590,8 +590,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		handle_errors (stmt);
 
 		if (stmt.expression is MethodCall) {
-			var expr = (MethodCall) stmt.expression;
-			var ma = expr.call as MemberAccess;
+			unowned MethodCall expr = (MethodCall) stmt.expression;
+			unowned MemberAccess? ma = expr.call as MemberAccess;
 			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
 				mark_unreachable ();
 				return;
@@ -600,12 +600,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	bool always_true (Expression condition) {
-		var literal = condition as BooleanLiteral;
+		unowned BooleanLiteral? literal = condition as BooleanLiteral;
 		return (literal != null && literal.value);
 	}
 
 	bool always_false (Expression condition) {
-		var literal = condition as BooleanLiteral;
+		unowned BooleanLiteral? literal = condition as BooleanLiteral;
 		return (literal != null && !literal.value);
 	}
 
@@ -870,8 +870,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var error_types = new ArrayList<DataType> ();
 			node.get_error_types (error_types);
 			foreach (DataType error_data_type in error_types) {
-				var error_type = error_data_type as ErrorType;
-				var error_class = error_data_type.type_symbol as Class;
+				unowned ErrorType? error_type = error_data_type as ErrorType;
+				unowned Class? error_class = error_data_type.type_symbol as Class;
 				current_block = last_block;
 				unreachable_reported = true;
 
@@ -989,10 +989,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			if (catch_clause.error_type != null) {
 				if (context.profile == Profile.GOBJECT) {
-					var error_type = (ErrorType) catch_clause.error_type;
+					unowned ErrorType error_type = (ErrorType) catch_clause.error_type;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.type_symbol as ErrorDomain, error_type.error_code, null));
 				} else {
-					var error_class = catch_clause.error_type.type_symbol as Class;
+					unowned Class? error_class = catch_clause.error_type.type_symbol as Class;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, null, null, error_class));
 				}
 			} else {

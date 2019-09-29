@@ -131,7 +131,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return false;
 		}
 
-		var local = return_expression.symbol_reference as LocalVariable;
+		unowned LocalVariable? local = return_expression.symbol_reference as LocalVariable;
 		if (local != null && local.variable_type.is_disposable () &&
 		    !context.analyzer.current_return_type.value_owned) {
 			error = true;

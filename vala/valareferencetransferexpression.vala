@@ -124,8 +124,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 	public override void get_defined_variables (Collection<Variable> collection) {
 		inner.get_defined_variables (collection);
-		var local = inner.symbol_reference as LocalVariable;
-		var param = inner.symbol_reference as Parameter;
+		unowned LocalVariable? local = inner.symbol_reference as LocalVariable;
+		unowned Parameter? param = inner.symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
 		} else if (param != null && param.direction == ParameterDirection.OUT) {
@@ -135,8 +135,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 	public override void get_used_variables (Collection<Variable> collection) {
 		inner.get_used_variables (collection);
-		var local = inner.symbol_reference as LocalVariable;
-		var param = inner.symbol_reference as Parameter;
+		unowned LocalVariable? local = inner.symbol_reference as LocalVariable;
+		unowned Parameter? param = inner.symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
 		} else if (param != null && param.direction == ParameterDirection.OUT) {

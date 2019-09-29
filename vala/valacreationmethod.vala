@@ -128,7 +128,7 @@ public class Vala.CreationMethod : Method {
 		if (body != null) {
 			body.check (context);
 
-			var cl = parent_symbol as Class;
+			unowned Class? cl = parent_symbol as Class;
 
 			// ensure we chain up to base constructor
 			if (!chain_up && cl != null && cl.base_class != null) {

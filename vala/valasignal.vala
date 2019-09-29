@@ -128,7 +128,7 @@ public class Vala.Signal : Symbol, Callable {
 		}
 
 		if (is_generic) {
-			var cl = (ObjectTypeSymbol) parent_symbol;
+			unowned ObjectTypeSymbol cl = (ObjectTypeSymbol) parent_symbol;
 			foreach (var type_param in cl.get_type_parameters ()) {
 				generated_delegate.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
 			}
@@ -136,7 +136,7 @@ public class Vala.Signal : Symbol, Callable {
 			// parameter types must refer to the delegate type parameters
 			// instead of to the class type parameters
 			foreach (var param in generated_delegate.get_parameters ()) {
-				var generic_type = param.variable_type as GenericType;
+				unowned GenericType? generic_type = param.variable_type as GenericType;
 				if (generic_type != null) {
 					generic_type.type_parameter = generated_delegate.get_type_parameters ().get (generated_delegate.get_type_parameter_index (generic_type.type_parameter.name));
 				}
@@ -182,7 +182,7 @@ public class Vala.Signal : Symbol, Callable {
 		checked = true;
 
 		// parent_symbol may be null for dynamic signals
-		var parent_cl = parent_symbol as Class;
+		unowned Class? parent_cl = parent_symbol as Class;
 		if (parent_cl != null && parent_cl.is_compact) {
 			error = true;
 			Report.error (source_reference, "Signals are not supported in compact classes");
@@ -235,7 +235,7 @@ public class Vala.Signal : Symbol, Callable {
 				default_handler.add_parameter (param);
 			}
 
-			var cl = parent_symbol as ObjectTypeSymbol;
+			unowned ObjectTypeSymbol? cl = parent_symbol as ObjectTypeSymbol;
 
 			cl.add_hidden_method (default_handler);
 			default_handler.check (context);
@@ -262,7 +262,7 @@ public class Vala.Signal : Symbol, Callable {
 			}
 			emitter.body = body;
 
-			var cl = parent_symbol as ObjectTypeSymbol;
+			unowned ObjectTypeSymbol? cl = parent_symbol as ObjectTypeSymbol;
 
 			cl.add_hidden_method (emitter);
 			emitter.check (context);

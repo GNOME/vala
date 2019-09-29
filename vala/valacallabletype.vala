@@ -52,7 +52,7 @@ public abstract class Vala.CallableType : DataType {
 		StringBuilder builder = new StringBuilder ();
 
 		// Append return-type
-		var return_type = get_return_type ();
+		unowned DataType return_type = get_return_type ();
 		if (return_type.is_weak ()) {
 			builder.append ("unowned ");
 		}
@@ -67,9 +67,9 @@ public abstract class Vala.CallableType : DataType {
 		builder.append_c ('(');
 		int i = 1;
 		// add sender parameter for internal signal-delegates
-		var delegate_type = this as DelegateType;
+		unowned DelegateType? delegate_type = this as DelegateType;
 		if (delegate_type != null) {
-			var delegate_symbol = delegate_type.delegate_symbol;
+			unowned Delegate delegate_symbol = delegate_type.delegate_symbol;
 			if (delegate_symbol.parent_symbol is Signal && delegate_symbol.sender_type != null) {
 				builder.append (delegate_symbol.sender_type.to_qualified_string ());
 				i++;

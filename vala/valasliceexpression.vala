@@ -115,7 +115,7 @@ public class Vala.SliceExpression : Expression {
 		}
 
 		if (container.value_type is ArrayType) {
-			var array_type = (ArrayType) container.value_type;
+			unowned ArrayType array_type = (ArrayType) container.value_type;
 			start.target_type = array_type.length_type.copy ();
 			stop.target_type = array_type.length_type.copy ();
 		}

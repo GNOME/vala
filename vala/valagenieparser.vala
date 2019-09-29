@@ -1176,8 +1176,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		var expr = parse_expression ();
 
-		var call = expr as MethodCall;
-		var object_creation = expr as ObjectCreationExpression;
+		unowned MethodCall? call = expr as MethodCall;
+		unowned ObjectCreationExpression? object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
 			Report.error (expr.source_reference, "syntax error, expected method call");
 			throw new ParseError.SYNTAX ("expected method call");
@@ -2757,7 +2757,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		expect_terminator ();
 
 		// constant arrays don't own their element
-		var array_type = type as ArrayType;
+		unowned ArrayType? array_type = type as ArrayType;
 		if (array_type != null) {
 			array_type.element_type.value_owned = false;
 		}

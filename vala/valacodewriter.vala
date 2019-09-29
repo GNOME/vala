@@ -1476,7 +1476,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_type_suffix (DataType type) {
-		var array_type = type as ArrayType;
+		unowned ArrayType? array_type = type as ArrayType;
 		if (array_type != null && array_type.fixed_length) {
 			write_string ("[");
 			array_type.length.accept (this);
@@ -1555,7 +1555,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_attributes (CodeNode node) {
-		var sym = node as Symbol;
+		unowned Symbol? sym = node as Symbol;
 
 		var need_cheaders = type != CodeWriterType.FAST && sym != null && !(sym is Namespace) && sym.parent_symbol is Namespace;
 

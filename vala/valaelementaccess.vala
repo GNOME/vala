@@ -171,16 +171,16 @@ public class Vala.ElementAccess : Expression {
 
 		bool index_int_type_check = true;
 
-		var pointer_type = container.value_type as PointerType;
+		unowned PointerType? pointer_type = container.value_type as PointerType;
 
 		/* assign a value_type when possible */
 		if (container.value_type is ArrayType) {
-			var array_type = (ArrayType) container.value_type;
+			unowned ArrayType array_type = (ArrayType) container.value_type;
 			value_type = array_type.element_type.copy ();
 			if (!lvalue) {
 				value_type.value_owned = false;
 			} else {
-				var ma = container as MemberAccess;
+				unowned MemberAccess? ma = container as MemberAccess;
 				if (context.profile == Profile.GOBJECT && ma != null && ma.symbol_reference is ArrayLengthField) {
 					// propagate lvalue for gobject length access
 					ma.inner.lvalue = true;
@@ -209,7 +209,7 @@ public class Vala.ElementAccess : Expression {
 		} else {
 			if (lvalue) {
 				var set_method = container.value_type.get_member ("set") as Method;
-				var assignment = parent_node as Assignment;
+				unowned Assignment? assignment = parent_node as Assignment;
 				if (set_method != null && set_method.return_type is VoidType && assignment != null) {
 					return !error;
 				}

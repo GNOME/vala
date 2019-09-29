@@ -402,7 +402,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (sym is Delegate) {
 				type = new DelegateType ((Delegate) sym);
 			} else if (sym is Class) {
-				var cl = (Class) sym;
+				unowned Class cl = (Class) sym;
 				if (cl.is_error_base) {
 					type = new ErrorType (null, null, unresolved_type.source_reference);
 				} else {

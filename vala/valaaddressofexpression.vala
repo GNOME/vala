@@ -93,7 +93,8 @@ public class Vala.AddressofExpression : Expression {
 			error = true;
 			return false;
 		}
-		var ea = inner as ElementAccess;
+
+		unowned ElementAccess? ea = inner as ElementAccess;
 		if (inner is MemberAccess && inner.symbol_reference is Variable) {
 			// address of variable is always possible
 		} else if (ea != null &&
