@@ -39,18 +39,6 @@ public class Vala.DelegateType : CallableType {
 		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
 	}
 
-	public override bool is_invokable () {
-		return true;
-	}
-
-	public override unowned DataType? get_return_type () {
-		return delegate_symbol.return_type;
-	}
-
-	public override unowned List<Parameter>? get_parameters () {
-		return delegate_symbol.get_parameters ();
-	}
-
 	public override string to_qualified_string (Scope? scope) {
 		// logic temporarily duplicated from DataType class
 

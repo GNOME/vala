@@ -36,18 +36,6 @@ public class Vala.MethodType : CallableType {
 		base (method_symbol);
 	}
 
-	public override bool is_invokable () {
-		return true;
-	}
-
-	public override unowned DataType? get_return_type () {
-		return method_symbol.return_type;
-	}
-
-	public override unowned List<Parameter>? get_parameters () {
-		return method_symbol.get_parameters ();
-	}
-
 	public override DataType copy () {
 		return new MethodType (method_symbol);
 	}

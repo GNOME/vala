@@ -40,18 +40,6 @@ public class Vala.SignalType : CallableType {
 		base (signal_symbol);
 	}
 
-	public override bool is_invokable () {
-		return true;
-	}
-
-	public override unowned DataType? get_return_type () {
-		return signal_symbol.return_type;
-	}
-
-	public override unowned List<Parameter>? get_parameters () {
-		return signal_symbol.get_parameters ();
-	}
-
 	public override DataType copy () {
 		return new SignalType (signal_symbol);
 	}
