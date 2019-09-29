@@ -39,7 +39,7 @@ public class Vala.DelegateType : CallableType {
 		return true;
 	}
 
-	public override DataType? get_return_type () {
+	public override unowned DataType? get_return_type () {
 		return delegate_symbol.return_type;
 	}
 
