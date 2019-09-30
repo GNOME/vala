@@ -77,7 +77,7 @@ public class Vala.SignalType : CallableType {
 		return result;
 	}
 
-	Method get_connect_method () {
+	unowned Method get_connect_method () {
 		if (connect_method == null) {
 			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
 			connect_method = new Method ("connect", ulong_type);
@@ -89,7 +89,7 @@ public class Vala.SignalType : CallableType {
 		return connect_method;
 	}
 
-	Method get_connect_after_method () {
+	unowned Method get_connect_after_method () {
 		if (connect_after_method == null) {
 			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
 			connect_after_method = new Method ("connect_after", ulong_type);
@@ -101,7 +101,7 @@ public class Vala.SignalType : CallableType {
 		return connect_after_method;
 	}
 
-	Method get_disconnect_method () {
+	unowned Method get_disconnect_method () {
 		if (disconnect_method == null) {
 			disconnect_method = new Method ("disconnect", new VoidType ());
 			disconnect_method.access = SymbolAccessibility.PUBLIC;

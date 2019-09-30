@@ -105,7 +105,7 @@ public class Vala.ArrayType : ReferenceType {
 		return null;
 	}
 
-	private ArrayLengthField get_length_field () {
+	unowned ArrayLengthField get_length_field () {
 		if (length_field == null) {
 			length_field = new ArrayLengthField (source_reference);
 
@@ -122,7 +122,7 @@ public class Vala.ArrayType : ReferenceType {
 		return length_field;
 	}
 
-	private ArrayResizeMethod get_resize_method () {
+	unowned ArrayResizeMethod get_resize_method () {
 		if (resize_method == null) {
 			resize_method = new ArrayResizeMethod (source_reference);
 
@@ -138,7 +138,7 @@ public class Vala.ArrayType : ReferenceType {
 		return resize_method;
 	}
 
-	private ArrayMoveMethod get_move_method () {
+	unowned ArrayMoveMethod get_move_method () {
 		if (move_method == null) {
 			move_method = new ArrayMoveMethod (source_reference);
 
@@ -154,7 +154,7 @@ public class Vala.ArrayType : ReferenceType {
 		return move_method;
 	}
 
-	private ArrayCopyMethod get_copy_method () {
+	unowned ArrayCopyMethod get_copy_method () {
 		if (copy_method == null) {
 			copy_method = new ArrayCopyMethod (source_reference);
 
