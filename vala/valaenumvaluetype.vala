@@ -41,7 +41,7 @@ public class Vala.EnumValueType : ValueType {
 		return result;
 	}
 
-	public Method get_to_string_method () {
+	public unowned Method get_to_string_method () {
 		if (to_string_method == null) {
 			var string_type = new ObjectType ((Class) CodeContext.get ().root.scope.lookup ("string"));
 			string_type.value_owned = false;
