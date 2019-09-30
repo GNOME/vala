@@ -20,4 +20,9 @@ public class Foo {
 
 void main () {
 	var foo = new Foo ();
+	assert(foo.ref_count == 1);
+	foo.ref ();
+	assert(foo.ref_count == 2);
+	foo.unref ();
+	assert(foo.ref_count == 1);
 }

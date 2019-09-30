@@ -179,9 +179,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 				function.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (cl))));
 
-				// Prevents duplicate declarations when referring to
-				// the free-function in vala code via "extern".
-				decl_space.add_declaration (function.name);
 				decl_space.add_function_declaration (function);
 			}
 		}
@@ -449,14 +446,18 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
-		base.generate_method_declaration (m, decl_space);
+	public override bool generate_method_declaration (Method m, CCodeFile decl_space) {
+		if (base.generate_method_declaration (m, decl_space)) {
+			var cl = m.parent_symbol as Class;
+			if (cl != null && cl.is_compact && get_ccode_unref_function (cl) == get_ccode_name (m)) {
+				decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), get_ccode_name (m))));
+				decl_space.add_type_member_declaration (new CCodeNewline ());
+			}
 
-		var cl = m.parent_symbol as Class;
-		if (cl != null && cl.is_compact && get_ccode_unref_function (cl) == get_ccode_name (m)) {
-			decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), get_ccode_name (m))));
-			decl_space.add_type_member_declaration (new CCodeNewline ());
+			return true;
 		}
+
+		return false;
 	}
 
 	public virtual void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {

@@ -164,12 +164,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ccode.add_return (new CCodeConstant ("FALSE"));
 	}
 
-	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
+	public override bool generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.is_async_callback) {
-			return;
+			return false;
 		}
 		if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
-			return;
+			return false;
 		}
 
 		generate_type_declaration (new MethodType (m), decl_space);
@@ -232,6 +232,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				decl_space.add_function_declaration (function);
 			}
 		}
+
+		return true;
 	}
 
 	void register_plugin_types (Symbol sym, Set<Symbol> registered_types) {
