@@ -301,6 +301,7 @@ TESTS = \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
 	objects/compact-class-refcount.vala \
+	objects/compact-class-custom-ref.vala \
 	objects/constructor-abstract-public.test \
 	objects/constructor-variadic.test \
 	objects/constructors.vala \
