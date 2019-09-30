@@ -444,15 +444,23 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Sink ();
 			[NoWrapper]
+			public virtual void clear_all ();
+			[NoWrapper]
 			public virtual bool close ();
 			[NoWrapper]
 			public virtual uint delay ();
 			[NoWrapper]
 			public virtual bool open ();
 			[NoWrapper]
+			public virtual void pause ();
+			[NoWrapper]
 			public virtual bool prepare (Gst.Audio.RingBufferSpec spec);
 			[NoWrapper]
 			public virtual void reset ();
+			[NoWrapper]
+			public virtual void resume ();
+			[NoWrapper]
+			public virtual void stop ();
 			[NoWrapper]
 			public virtual bool unprepare ();
 			[NoWrapper]
