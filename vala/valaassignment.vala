@@ -118,7 +118,7 @@ public class Vala.Assignment : Expression {
 		checked = true;
 
 		if (left is Tuple && operator == AssignmentOperator.SIMPLE && parent_node is ExpressionStatement) {
-			var tuple = (Tuple) left;
+			unowned Tuple tuple = (Tuple) left;
 
 			var local = new LocalVariable (null, get_temp_name (), right, right.source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
@@ -156,7 +156,7 @@ public class Vala.Assignment : Expression {
 		}
 
 		if (left is MemberAccess) {
-			var ma = (MemberAccess) left;
+			unowned MemberAccess ma = (MemberAccess) left;
 
 			if (ma.symbol_reference is Constant) {
 				error = true;
@@ -189,7 +189,7 @@ public class Vala.Assignment : Expression {
 				right.target_type = ma.value_type.copy ();
 			}
 		} else if (left is ElementAccess) {
-			var ea = (ElementAccess) left;
+			unowned ElementAccess ea = (ElementAccess) left;
 
 			if (ea.container.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
 				error = true;
@@ -265,9 +265,9 @@ public class Vala.Assignment : Expression {
 
 		if (ma != null) {
 			if (ma.symbol_reference is Property) {
-				var prop = (Property) ma.symbol_reference;
+				unowned Property prop = (Property) ma.symbol_reference;
 
-				var dynamic_prop = prop as DynamicProperty;
+				unowned DynamicProperty? dynamic_prop = prop as DynamicProperty;
 				if (dynamic_prop != null) {
 					dynamic_prop.property_type = right.value_type.copy ();
 					left.value_type = dynamic_prop.property_type.copy ();
@@ -291,13 +291,13 @@ public class Vala.Assignment : Expression {
 					}
 				}
 			} else if (ma.symbol_reference is Variable && right.value_type == null) {
-				var variable = (Variable) ma.symbol_reference;
+				unowned Variable variable = (Variable) ma.symbol_reference;
 
 				if (right.symbol_reference is Method &&
 				    variable.variable_type is DelegateType) {
-					var m = (Method) right.symbol_reference;
-					var dt = (DelegateType) variable.variable_type;
-					var cb = dt.delegate_symbol;
+					unowned Method m = (Method) right.symbol_reference;
+					unowned DelegateType dt = (DelegateType) variable.variable_type;
+					unowned Delegate cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m, dt)) {
@@ -350,17 +350,17 @@ public class Vala.Assignment : Expression {
 				}
 			}
 
-			var right_ma = right as MemberAccess;
+			unowned MemberAccess? right_ma = right as MemberAccess;
 			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference) {
 				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is Parameter) {
 					Report.warning (source_reference, "Assignment to same variable");
 				} else if (ma.symbol_reference is Field) {
-					var f = (Field) ma.symbol_reference;
+					unowned Field f = (Field) ma.symbol_reference;
 					if (f.binding == MemberBinding.STATIC) {
 						Report.warning (source_reference, "Assignment to same variable");
 					} else {
-						var ma_inner = ma.inner as MemberAccess;
-						var right_ma_inner = right_ma.inner as MemberAccess;
+						unowned MemberAccess? ma_inner = ma.inner as MemberAccess;
+						unowned MemberAccess? right_ma_inner = right_ma.inner as MemberAccess;
 						if (ma_inner != null && ma_inner.member_name == "this" && ma_inner.inner == null &&
 						    right_ma_inner != null && right_ma_inner.member_name == "this" && right_ma_inner.inner == null) {
 							Report.warning (source_reference, "Assignment to same variable");
@@ -369,7 +369,7 @@ public class Vala.Assignment : Expression {
 				}
 			}
 		} else if (left is ElementAccess) {
-			var ea = (ElementAccess) left;
+			unowned ElementAccess ea = (ElementAccess) left;
 
 			if (!right.value_type.compatible (left.value_type)) {
 				error = true;
@@ -383,7 +383,7 @@ public class Vala.Assignment : Expression {
 				DataType element_type;
 
 				if (ea.container.value_type is ArrayType) {
-					var array_type = (ArrayType) ea.container.value_type;
+					unowned ArrayType array_type = (ArrayType) ea.container.value_type;
 					element_type = array_type.element_type;
 				} else {
 					var args = ea.container.value_type.get_type_arguments ();
@@ -422,7 +422,7 @@ public class Vala.Assignment : Expression {
 	}
 
 	bool is_array_add () {
-		var binary = right as BinaryExpression;
+		unowned BinaryExpression? binary = right as BinaryExpression;
 		if (binary != null && binary.left.value_type is ArrayType) {
 			if (binary.operator == BinaryOperator.PLUS) {
 				if (left.symbol_reference == binary.left.symbol_reference) {
@@ -435,14 +435,14 @@ public class Vala.Assignment : Expression {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		var ma = left as MemberAccess;
-		var ea = left as ElementAccess;
-		var pi = left as PointerIndirection;
+		unowned MemberAccess? ma = left as MemberAccess;
+		unowned ElementAccess? ea = left as ElementAccess;
+		unowned PointerIndirection? pi = left as PointerIndirection;
 		if (ma != null) {
-			var local = ma.symbol_reference as LocalVariable;
-			var param = ma.symbol_reference as Parameter;
-			var field = ma.symbol_reference as Field;
-			var property = ma.symbol_reference as Property;
+			unowned LocalVariable? local = ma.symbol_reference as LocalVariable;
+			unowned Parameter? param = ma.symbol_reference as Parameter;
+			unowned Field? field = ma.symbol_reference as Field;
+			unowned Property? property = ma.symbol_reference as Property;
 
 			bool instance = (field != null && field.binding != MemberBinding.STATIC)
 				|| (property != null && property.binding != MemberBinding.STATIC);
@@ -518,8 +518,8 @@ public class Vala.Assignment : Expression {
 	public override void get_defined_variables (Collection<Variable> collection) {
 		right.get_defined_variables (collection);
 		left.get_defined_variables (collection);
-		var local = left.symbol_reference as LocalVariable;
-		var param = left.symbol_reference as Parameter;
+		unowned LocalVariable? local = left.symbol_reference as LocalVariable;
+		unowned Parameter? param = left.symbol_reference as Parameter;
 		if (local != null) {
 			collection.add (local);
 		} else if (param != null && param.direction == ParameterDirection.OUT) {
@@ -528,8 +528,8 @@ public class Vala.Assignment : Expression {
 	}
 
 	public override void get_used_variables (Collection<Variable> collection) {
-		var ma = left as MemberAccess;
-		var ea = left as ElementAccess;
+		unowned MemberAccess? ma = left as MemberAccess;
+		unowned ElementAccess? ea = left as ElementAccess;
 		if (ma != null && ma.inner != null) {
 			ma.inner.get_used_variables (collection);
 		} else if (ea != null) {
