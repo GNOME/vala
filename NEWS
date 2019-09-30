@@ -1,3 +1,24 @@
+Vala 0.46.2
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Report dedicated error message for params-array parameter mismatch
+    + Output "params" qualifier of parameters
+    + Allow to override virtual interface implementations [#852]
+    + Perform stricter compatibility check for delegates
+  - codegen: Directly use "memmove()" while g_memmove() is deprecated
+  - valadoc: Explicitly pass --pkg libgvc
+  - tests: Add more tests to increase coverage
+
+ * Bindings:
+  - gio-unix-2.0: Fix DesktopAppInfo.get_string(), UnixFDMessage.steal_fds()
+  - glib-2.0: DateTime.from_iso8601() can take a null TimeZone
+  - gobject-2.0: Some cherry-picking from GIR generated binding
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk4: Update to 3.96.0+bcea9652
+  - gtk4: Constructors of Gtk.MediaFile needs to be static functions
+  - sqlite3: Fix use of possibly unassigned parameter `errmsg'
+
 Vala 0.46.1
 ===========
  * Regression and bug fixes:
