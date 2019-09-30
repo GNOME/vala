@@ -8998,11 +8998,11 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void close ();
 		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_file (GLib.File? file);
+		public MediaFile.for_file (GLib.File file);
 		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
 		public MediaFile.for_filename (string filename);
 		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
-		public MediaFile.for_input_stream (GLib.InputStream? stream);
+		public MediaFile.for_input_stream (GLib.InputStream stream);
 		[CCode (has_construct_function = false, type = "GtkMediaStream*")]
 		public MediaFile.for_resource (string resource_path);
 		public unowned GLib.File? get_file ();
@@ -9247,7 +9247,10 @@ namespace Gtk {
 		public void set_arrow_tooltip_markup (string markup);
 		public void set_arrow_tooltip_text (string text);
 		public void set_menu (Gtk.Widget menu);
+		public void set_popover (Gtk.Widget popover);
 		public Gtk.Menu menu { get; set; }
+		[NoAccessorMethod]
+		public Gtk.Popover popover { owned get; set; }
 		public signal void show_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_message_dialog_get_type ()")]
