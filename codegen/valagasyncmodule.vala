@@ -316,10 +316,10 @@ public class Vala.GAsyncModule : GtkModule {
 		cfile.add_type_definition (structure);
 	}
 
-	public override void generate_method_declaration (Method m, CCodeFile decl_space) {
+	public override bool generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.coroutine) {
 			if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
-				return;
+				return false;
 			}
 
 			generate_type_declaration (new MethodType (m), decl_space);
@@ -388,8 +388,10 @@ public class Vala.GAsyncModule : GtkModule {
 
 				decl_space.add_function_declaration (function);
 			}
+
+			return true;
 		} else {
-			base.generate_method_declaration (m, decl_space);
+			return base.generate_method_declaration (m, decl_space);
 		}
 	}
 

@@ -195,17 +195,22 @@ public class Vala.GTypeModule : GErrorModule {
 		while (base_class.base_class != null) {
 			base_class = base_class.base_class;
 		}
-		string autoptr_cleanup_func;
-		if (is_reference_counting (base_class)) {
-			autoptr_cleanup_func = get_ccode_unref_function (base_class);
-		} else {
-			autoptr_cleanup_func = get_ccode_free_function (base_class);
+		// Custom unref-methods need to be emitted before
+		// G_DEFINE_AUTOPTR_CLEANUP_FUNC, so we guard against that special case
+		// and handle it in generate_method_declaration.
+		if (!(base_class.is_compact && is_reference_counting (base_class))) {
+			string autoptr_cleanup_func;
+			if (is_reference_counting (base_class)) {
+				autoptr_cleanup_func = get_ccode_unref_function (base_class);
+			} else {
+				autoptr_cleanup_func = get_ccode_free_function (base_class);
+			}
+			if (autoptr_cleanup_func == null || autoptr_cleanup_func == "") {
+				Report.error (cl.source_reference, "internal error: autoptr_cleanup_func not available");
+			}
+			decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), autoptr_cleanup_func)));
+			decl_space.add_type_member_declaration (new CCodeNewline ());
 		}
-		if (autoptr_cleanup_func == null || autoptr_cleanup_func == "") {
-			Report.error (cl.source_reference, "internal error: autoptr_cleanup_func not available");
-		}
-		decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), autoptr_cleanup_func)));
-		decl_space.add_type_member_declaration (new CCodeNewline ());
 	}
 
 	public override void generate_class_struct_declaration (Class cl, CCodeFile decl_space) {
@@ -439,6 +444,20 @@ public class Vala.GTypeModule : GErrorModule {
 		} else if (f.binding == MemberBinding.CLASS) {
 			type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 		}
+	}
+
+	public override bool generate_method_declaration (Method m, CCodeFile decl_space) {
+		if (base.generate_method_declaration (m, decl_space)) {
+			var cl = m.parent_symbol as Class;
+			if (cl != null && cl.is_compact && get_ccode_unref_function (cl) == get_ccode_name (m)) {
+				decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), get_ccode_name (m))));
+				decl_space.add_type_member_declaration (new CCodeNewline ());
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public virtual void generate_virtual_method_declaration (Method m, CCodeFile decl_space, CCodeStruct type_struct) {

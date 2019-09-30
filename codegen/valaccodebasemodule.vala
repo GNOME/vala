@@ -4545,7 +4545,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void generate_interface_declaration (Interface iface, CCodeFile decl_space) {
 	}
 
-	public virtual void generate_method_declaration (Method m, CCodeFile decl_space) {
+	public virtual bool generate_method_declaration (Method m, CCodeFile decl_space) {
+		return !add_symbol_declaration (decl_space, m, get_ccode_name (m));
 	}
 
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
