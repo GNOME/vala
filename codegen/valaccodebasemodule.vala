@@ -869,8 +869,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_enum (Enum en) {
 		push_line (en.source_reference);
 
-		en.accept_children (this);
-
 		if (en.comment != null) {
 			cfile.add_type_member_definition (new CCodeComment (en.comment.content));
 		}
@@ -883,6 +881,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!en.is_private_symbol ()) {
 			generate_enum_declaration (en, internal_header_file);
 		}
+
+		en.accept_children (this);
 
 		pop_line ();
 	}

@@ -57,8 +57,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
-		edomain.accept_children (this);
-
 		if (edomain.comment != null) {
 			cfile.add_type_definition (new CCodeComment (edomain.comment.content));
 		}
@@ -71,6 +69,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		if (!edomain.is_private_symbol ()) {
 			generate_error_domain_declaration (edomain, internal_header_file);
 		}
+
+		edomain.accept_children (this);
 
 		string quark_fun_name = get_ccode_lower_case_prefix (edomain) + "quark";
 

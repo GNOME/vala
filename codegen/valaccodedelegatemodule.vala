@@ -119,8 +119,6 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 	}
 
 	public override void visit_delegate (Delegate d) {
-		d.accept_children (this);
-
 		generate_delegate_declaration (d, cfile);
 
 		if (!d.is_internal_symbol ()) {
@@ -129,6 +127,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (!d.is_private_symbol ()) {
 			generate_delegate_declaration (d, internal_header_file);
 		}
+
+		d.accept_children (this);
 	}
 
 	public override string get_delegate_target_cname (string delegate_cname) {
