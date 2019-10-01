@@ -28,6 +28,7 @@ public class Vala.CCodeFile {
 
 	Set<string> features = new HashSet<string> (str_hash, str_equal);
 	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
+	Set<string> definitions = new HashSet<string> (str_hash, str_equal);
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
 	CCodeFragment comments = new CCodeFragment ();
 	CCodeFragment feature_test_macros = new CCodeFragment ();
@@ -89,12 +90,19 @@ public class Vala.CCodeFile {
 	}
 
 	public void add_function_declaration (CCodeFunction func) {
+		declarations.add (func.name);
+
 		var decl = func.copy ();
 		decl.is_declaration = true;
 		type_member_declaration.append (decl);
 	}
 
 	public void add_function (CCodeFunction func) {
+		if (!definitions.add (func.name)) {
+			Report.error (null, "internal: Redefinition of `%s'".printf (func.name));
+			return;
+		}
+
 		type_member_definition.append (func);
 	}
 
