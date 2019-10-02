@@ -432,7 +432,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (!is_gobject_property_type (prop.property_type)) {
-			return false;
+			if (prop.property_type is ArrayType && (!prop.get_attribute_bool ("CCode", "array_length", true)
+			    && prop.get_attribute_bool ("CCode", "array_null_terminated", false))) {
+				// null-terminated arrays without length are allowed
+			} else {
+				return false;
+			}
 		}
 
 		if (type_sym is Class && prop.base_interface_property != null &&

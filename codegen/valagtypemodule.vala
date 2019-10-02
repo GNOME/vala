@@ -356,7 +356,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			var array_type = prop.property_type as ArrayType;
-			if (array_type != null) {
+			if (array_type != null && get_ccode_array_length (prop)) {
 				var length_ctype = get_ccode_array_length_type (array_type) + "*";
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype));
@@ -387,7 +387,7 @@ public class Vala.GTypeModule : GErrorModule {
 			vdeclarator.add_parameter (cvalueparam);
 
 			var array_type = prop.property_type as ArrayType;
-			if (array_type != null) {
+			if (array_type != null && get_ccode_array_length (prop)) {
 				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));
@@ -2174,7 +2174,7 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 
 					var array_type = prop.property_type as ArrayType;
-					if (array_type != null) {
+					if (array_type != null && get_ccode_array_length (prop)) {
 						var length_ctype = get_ccode_array_length_type (array_type) + "*";
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype));
@@ -2197,7 +2197,7 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 
 					var array_type = prop.property_type as ArrayType;
-					if (array_type != null) {
+					if (array_type != null && get_ccode_array_length (prop)) {
 						var length_ctype = get_ccode_array_length_type (array_type);
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));

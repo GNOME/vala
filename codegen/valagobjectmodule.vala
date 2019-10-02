@@ -263,7 +263,7 @@ public class Vala.GObjectModule : GTypeModule {
 				ccall = new CCodeFunctionCall (cfunc);
 				ccall.add_argument (cself);
 				var array_type = prop.property_type as ArrayType;
-				if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
+				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
 					// G_TYPE_STRV
 					ccode.open_block ();
 					ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
@@ -278,7 +278,7 @@ public class Vala.GObjectModule : GTypeModule {
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (ccall);
 				add_guarded_expression (prop, csetcall);
-				if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
+				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
 					ccode.close ();
 				}
 			}
@@ -355,12 +355,14 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_assignment (new CCodeIdentifier ("boxed"), cgetcall);
 				ccall.add_argument (new CCodeIdentifier ("boxed"));
 
-				var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("boxed"), new CCodeConstant ("NULL"));
-				var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-				cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
-				var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cstrvlen);
+				if (get_ccode_array_length (prop)) {
+					var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("boxed"), new CCodeConstant ("NULL"));
+					var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
+					var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cstrvlen);
 
-				ccall.add_argument (ccond);
+					ccall.add_argument (ccond);
+				}
 				add_guarded_expression (prop, ccall);
 				ccode.close ();
 			} else {

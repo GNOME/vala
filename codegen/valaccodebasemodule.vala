@@ -1586,7 +1586,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			function.add_parameter (cvalueparam);
 		}
 
-		if (acc.value_type is ArrayType) {
+		if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 			var array_type = (ArrayType) acc.value_type;
 			var length_ctype = get_ccode_array_length_type (array_type);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1680,7 +1680,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				function.add_parameter (cvalueparam);
 			}
 
-			if (acc.value_type is ArrayType) {
+			if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 				var array_type = (ArrayType) acc.value_type;
 				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1734,7 +1734,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					vcall.add_argument (new CCodeIdentifier ("result"));
 					ccode.add_expression (vcall);
 				} else {
-					if (acc.value_type is ArrayType) {
+					if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 						var array_type = (ArrayType) acc.value_type;
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1752,7 +1752,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
 
-				if (acc.value_type is ArrayType) {
+				if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 					var array_type = (ArrayType) acc.value_type;
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1804,7 +1804,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				function.add_parameter (cvalueparam);
 			}
 
-			if (acc.value_type is ArrayType) {
+			if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 				var array_type = (ArrayType) acc.value_type;
 				var length_ctype = get_ccode_array_length_type (array_type);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -1862,7 +1862,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var get_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_real_name (get_accessor)));
 					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
 
-					if (property_type is ArrayType) {
+					if (property_type is ArrayType && get_ccode_array_length (prop)) {
 						ccode.add_declaration (get_ccode_array_length_type (property_type), new CCodeVariableDeclarator ("old_value_length"));
 						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
@@ -3852,7 +3852,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		// return array length if appropriate
-		if (((current_method != null && get_ccode_array_length (current_method)) || current_property_accessor != null) && current_return_type is ArrayType) {
+		if (((current_method != null && get_ccode_array_length (current_method)) || (current_property_accessor != null && get_ccode_array_length (current_property_accessor.prop))) && current_return_type is ArrayType) {
 			var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
 
 			var array_type = (ArrayType) current_return_type;
