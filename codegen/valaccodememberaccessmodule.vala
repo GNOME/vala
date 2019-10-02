@@ -746,9 +746,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else if (delegate_type != null) {
 			if (!delegate_type.delegate_symbol.has_target || !get_ccode_delegate_target (variable)) {
 				result.delegate_target_cvalue = new CCodeConstant ("NULL");
+				result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 			}
 
-			result.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
 			result.lvalue = false;
 		}
 		result.value_type.value_owned = false;
