@@ -1484,6 +1484,16 @@ public class Vala.CCodeAttribute : AttributeCache {
 		} else if (node is Callable) {
 			unowned DelegateType? delegate_type = ((Callable) node).return_type as DelegateType;
 			return delegate_type != null && delegate_type.delegate_symbol.has_target;
+		} else if (node is Property) {
+			unowned DelegateType? delegate_type = ((Property) node).property_type as DelegateType;
+			return delegate_type != null && delegate_type.delegate_symbol.has_target;
+		} else if (node is PropertyAccessor) {
+			return get_ccode_delegate_target (((PropertyAccessor) node).prop);
+		} else if (node is Expression) {
+			unowned Symbol? symbol = ((Expression) node).symbol_reference;
+			if (symbol != null) {
+				return get_ccode_delegate_target (symbol);
+			}
 		}
 		return false;
 	}
