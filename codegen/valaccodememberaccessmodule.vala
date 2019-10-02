@@ -254,7 +254,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 
 				bool prop_is_real_non_null_struct_type = prop.property_type.is_real_non_null_struct_type ();
-				var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, prop_is_real_non_null_struct_type, expr);
+				bool requires_init = prop.property_type is DelegateType || prop_is_real_non_null_struct_type;
+				var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, requires_init, expr);
 				expr.target_value = load_temp_value (temp_value);
 				var ctemp = get_cvalue_ (temp_value);
 
