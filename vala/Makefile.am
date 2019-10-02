@@ -64,6 +64,8 @@ libvala_la_VALASOURCES = \
 	valadatatype.vala \
 	valadeclarationstatement.vala \
 	valadelegate.vala \
+	valadelegatedestroyfield.vala \
+	valadelegatetargetfield.vala \
 	valadelegatetype.vala \
 	valadeletestatement.vala \
 	valadestructor.vala \
