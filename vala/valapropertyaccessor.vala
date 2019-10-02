@@ -159,6 +159,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			// Inherit important atttributes
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_length");
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_null_terminated");
+			value_parameter.copy_attribute_bool (prop, "CCode", "delegate_target");
 		}
 
 		if (context.profile == Profile.GOBJECT

@@ -1592,7 +1592,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 			}
-		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+		} else if ((acc.value_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 			function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 			if (!acc.readable && acc.value_type.value_owned) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
@@ -1686,7 +1686,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*": length_ctype));
 				}
-			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+			} else if ((acc.value_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 				if (!acc.readable && acc.value_type.value_owned) {
 					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
@@ -1741,7 +1741,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							var len_expr = new CCodeIdentifier (get_array_length_cname ("result", dim));
 							vcall.add_argument (len_expr);
 						}
-					} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+					} else if ((acc.value_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 						vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("result")));
 					}
 
@@ -1759,7 +1759,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						var len_expr = new CCodeIdentifier (get_array_length_cname ("value", dim));
 						vcall.add_argument (len_expr);
 					}
-				} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+				} else if ((acc.value_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 					vcall.add_argument (new CCodeIdentifier (get_delegate_target_cname ("value")));
 					if (!acc.readable && acc.value_type.value_owned) {
 						vcall.add_argument (new CCodeIdentifier (get_delegate_target_destroy_notify_cname ("value")));
@@ -1810,7 +1810,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 				}
-			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+			} else if ((acc.value_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
 				function.add_parameter (new CCodeParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? get_ccode_name (delegate_target_type) + "*" : get_ccode_name (delegate_target_type)));
 				if (!acc.readable && acc.value_type.value_owned) {
 					function.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
@@ -3870,7 +3870,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			stmt.return_expression.target_value = temp_value;
-		} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
+		} else if ((current_method != null || (current_property_accessor != null && get_ccode_delegate_target (current_property_accessor.prop))) && current_return_type is DelegateType) {
 			var delegate_type = (DelegateType) current_return_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
@@ -6116,7 +6116,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if (prop.property_type is DelegateType) {
 			var delegate_type = (DelegateType) prop.property_type;
-			if (delegate_type.delegate_symbol.has_target) {
+			if (get_ccode_delegate_target (prop) && delegate_type.delegate_symbol.has_target) {
 				ccall.add_argument (get_delegate_target_cvalue (value));
 				if (base_property.set_accessor.value_type.value_owned) {
 					ccall.add_argument (get_delegate_target_destroy_notify_cvalue (value));

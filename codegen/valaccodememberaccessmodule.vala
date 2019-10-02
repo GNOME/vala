@@ -282,8 +282,15 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						}
 					} else {
 						delegate_type = prop.property_type as DelegateType;
-						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+						if (delegate_type != null && get_ccode_delegate_target (prop) && delegate_type.delegate_symbol.has_target) {
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cvalue (temp_value)));
+						} else {
+							if (temp_value.delegate_target_cvalue != null) {
+								ccode.add_assignment (temp_value.delegate_target_cvalue, new CCodeConstant ("NULL"));
+							}
+							if (temp_value.delegate_target_destroy_notify_cvalue != null) {
+								ccode.add_assignment (temp_value.delegate_target_destroy_notify_cvalue, new CCodeConstant ("NULL"));
+							}
 						}
 					}
 				}

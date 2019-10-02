@@ -435,6 +435,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (prop.property_type is ArrayType && (!prop.get_attribute_bool ("CCode", "array_length", true)
 			    && prop.get_attribute_bool ("CCode", "array_null_terminated", false))) {
 				// null-terminated arrays without length are allowed
+			} else if (prop.property_type is DelegateType && !prop.get_attribute_bool ("CCode", "delegate_target", true)) {
+				// delegates omitting their target are allowed
 			} else {
 				return false;
 			}
