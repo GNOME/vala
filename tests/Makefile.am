@@ -277,6 +277,7 @@ TESTS = \
 	delegates/instance-method-to-no-target.test \
 	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
+	delegates/member-target-destroy.vala \
 	delegates/reference_transfer.vala \
 	delegates/return-array-null-terminated.vala \
 	delegates/wrapper.vala \

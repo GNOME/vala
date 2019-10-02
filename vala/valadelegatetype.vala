@@ -34,9 +34,37 @@ public class Vala.DelegateType : CallableType {
 
 	public bool is_called_once { get; set; }
 
+	DelegateTargetField? target_field;
+	DelegateDestroyField? destroy_field;
+
 	public DelegateType (Delegate delegate_symbol) {
 		base (delegate_symbol);
 		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
+	}
+
+	public override Symbol? get_member (string member_name) {
+		if (member_name == "target") {
+			return get_target_field ();
+		} else if (member_name == "destroy") {
+			return get_destroy_field ();
+		}
+		return null;
+	}
+
+	unowned DelegateTargetField get_target_field () {
+		if (target_field == null) {
+			target_field = new DelegateTargetField (source_reference);
+			target_field.access = SymbolAccessibility.PUBLIC;
+		}
+		return target_field;
+	}
+
+	unowned DelegateDestroyField get_destroy_field () {
+		if (destroy_field == null) {
+			destroy_field = new DelegateDestroyField (source_reference);
+			destroy_field.access = SymbolAccessibility.PUBLIC;
+		}
+		return destroy_field;
 	}
 
 	public override DataType copy () {
