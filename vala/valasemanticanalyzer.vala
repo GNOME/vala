@@ -167,6 +167,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType list_type;
 	public DataType tuple_type;
 	public Class gsource_type;
+	public DataType delegate_target_type;
+	public DelegateType delegate_target_destroy_type;
+
+	Delegate destroy_notify;
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
@@ -228,6 +232,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
 
 			gsource_type = (Class) glib_ns.scope.lookup ("Source");
+
+			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
+			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
+			delegate_target_destroy_type = new DelegateType (destroy_notify);
+		} else {
+			delegate_target_type = new PointerType (new VoidType ());
+			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());
+			destroy_notify.add_parameter (new Parameter ("data", new PointerType (new VoidType ())));
+			destroy_notify.has_target = false;
+			destroy_notify.owner = context.root.scope;
+			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		}
 
 		current_symbol = root_symbol;
