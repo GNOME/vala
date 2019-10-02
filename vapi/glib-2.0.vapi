@@ -1565,7 +1565,7 @@ public class string16 {
 namespace GLib {
 	[PointerType]
 	[GIR (fullname = "gpointer")]
-	[CCode (cname = "gpointer", const_cname = "gconstpointer", cheader_filename = "glib.h")]
+	[CCode (cname = "gpointer", const_cname = "gconstpointer", cheader_filename = "glib.h", default_value = "NULL")]
 	public struct pointer {
 	}
 
