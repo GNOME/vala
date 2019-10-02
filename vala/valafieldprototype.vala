@@ -26,10 +26,14 @@ using GLib;
  * A reference to an instance field without a specific instance.
  */
 public class Vala.FieldPrototype : DataType {
-	public weak Field field_symbol { get; set; }
+	public weak Field field_symbol {
+		get {
+			return (Field) symbol;
+		}
+	}
 
 	public FieldPrototype (Field field_symbol) {
-		this.field_symbol = field_symbol;
+		base.with_symbol (field_symbol);
 	}
 
 	public override DataType copy () {

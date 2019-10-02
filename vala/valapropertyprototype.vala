@@ -24,10 +24,14 @@
  * A reference to an instance property without a specific instance.
  */
 public class Vala.PropertyPrototype : DataType {
-	public weak Property property_symbol { get; set; }
+	public weak Property property_symbol {
+		get {
+			return (Property) symbol;
+		}
+	}
 
 	public PropertyPrototype (Property property_symbol) {
-		this.property_symbol = property_symbol;
+		base.with_symbol (property_symbol);
 	}
 
 	public override DataType copy () {
