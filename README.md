@@ -55,6 +55,7 @@ Install the following packages:
  * Graphviz (libgvc) (>= 2.16) to build valadoc
  * make
  * autoconf
+ * autoconf-archive
  * automake
  * libtool
 
