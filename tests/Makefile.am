@@ -149,6 +149,7 @@ TESTS = \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
+	methods/varargs-delegate-without-target.vala \
 	methods/varargs-gvalue.vala \
 	methods/varargs-out.vala \
 	methods/varargs-struct.vala \
