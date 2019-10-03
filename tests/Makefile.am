@@ -586,6 +586,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/local-variable.vala \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
 	parser/method-no-abstract-override.test \

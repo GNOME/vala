@@ -1784,14 +1784,19 @@ public class Vala.Parser : CodeVisitor {
 	void parse_local_variable_declarations (Block block) throws ParseError {
 		var begin = get_location ();
 		DataType variable_type;
-		if (accept (TokenType.VAR)) {
-			variable_type = null;
+		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
+			variable_type = new VarType (false);
 		} else {
-			variable_type = parse_type (true, true);
+			rollback (begin);
+			if (accept (TokenType.VAR)) {
+				variable_type = new VarType ();
+			} else {
+				variable_type = parse_type (true, true);
+			}
 		}
 		bool is_first = true;
 		do {
-			if (variable_type == null && accept (TokenType.OPEN_PARENS)) {
+			if (variable_type is VarType && variable_type.value_owned && accept (TokenType.OPEN_PARENS)) {
 				// tuple
 				begin = get_location ();
 

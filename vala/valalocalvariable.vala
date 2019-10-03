@@ -79,6 +79,10 @@ public class Vala.LocalVariable : Variable {
 
 		checked = true;
 
+		if (variable_type == null) {
+			variable_type = new VarType ();
+		}
+
 		if (!context.experimental_non_null) {
 			// local reference variables are considered nullable
 			// except when using experimental non-null enhancements
@@ -92,7 +96,7 @@ public class Vala.LocalVariable : Variable {
 			}
 		}
 
-		if (variable_type != null) {
+		if (!(variable_type is VarType)) {
 			if (variable_type is VoidType) {
 				error = true;
 				Report.error (source_reference, "'void' not supported as variable type");
@@ -122,7 +126,7 @@ public class Vala.LocalVariable : Variable {
 			}
 		}
 
-		if (variable_type == null) {
+		if (variable_type is VarType) {
 			/* var type */
 
 			if (initializer == null) {
@@ -141,8 +145,9 @@ public class Vala.LocalVariable : Variable {
 				return false;
 			}
 
+			bool value_owned = variable_type.value_owned;
 			variable_type = initializer.value_type.copy ();
-			variable_type.value_owned = true;
+			variable_type.value_owned = value_owned;
 			variable_type.floating_reference = false;
 
 			initializer.target_type = variable_type;

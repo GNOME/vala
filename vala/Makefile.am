@@ -177,6 +177,7 @@ libvala_la_VALASOURCES = \
 	valausingdirective.vala \
 	valavaluetype.vala \
 	valavariable.vala \
+	valavartype.vala \
 	valaversion.vala \
 	valaversionattribute.vala \
 	valavoidtype.vala \
