@@ -445,7 +445,11 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {
-		return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		if (sym is ErrorDomain && sym.external_package) {
+			return sym.get_attribute_bool ("CCode", "has_type_id", false);
+		} else {
+			return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		}
 	}
 
 	public static bool get_ccode_has_new_function (Method m) {
