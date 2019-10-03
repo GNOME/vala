@@ -475,6 +475,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					set_cvalue (arg, get_variable_cexpression (temp_var.name));
 					arg.target_value.value_type = arg.value_type;
 
+					if (arg.value_type is DelegateType && ((DelegateType) arg.value_type).delegate_symbol.has_target) {
+						// Initialize target/destroy cvalues to allow assignment of delegates from varargs
+						unowned GLibValue arg_value = (GLibValue) arg.target_value;
+						if (arg_value.delegate_target_cvalue == null) {
+							arg_value.delegate_target_cvalue = new CCodeConstant ("NULL");
+						}
+						if (arg_value.delegate_target_destroy_notify_cvalue == null) {
+							arg_value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+						}
+					}
+
 					cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
 				} else {
 					cexpr = handle_struct_argument (null, arg, cexpr);
@@ -830,6 +841,19 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// above logic copied from visit_expression ()
 					// TODO avoid code duplication
 					result_type = expr.value_type;
+				}
+				if (st != null && get_ccode_name (st) == "va_list" && ma.member_name == "arg") {
+					if (result_type is DelegateType && ((DelegateType) result_type).delegate_symbol.has_target) {
+						set_cvalue (expr, null);
+						// Initialize target/destroy cvalues to allow assignment of delegates from varargs
+						unowned GLibValue arg_value = (GLibValue) expr.target_value;
+						if (arg_value.delegate_target_cvalue == null) {
+							arg_value.delegate_target_cvalue = new CCodeConstant ("NULL");
+						}
+						if (arg_value.delegate_target_destroy_notify_cvalue == null) {
+							arg_value.delegate_target_destroy_notify_cvalue = new CCodeConstant ("NULL");
+						}
+					}
 				}
 			}
 
