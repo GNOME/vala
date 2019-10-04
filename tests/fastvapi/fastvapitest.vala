@@ -37,4 +37,8 @@ namespace FastVapi {
 		public void method () {
 		}
 	}
+
+	public struct TestSubStruct : TestStruct {
+		public static int static_field_name;
+	}
 }
