@@ -365,6 +365,11 @@ public abstract class Vala.DataType : CodeNode {
 					return true;
 				}
 			}
+
+			// Allow compatiblity of struct subtypes in both ways
+			if (expect_struct.is_subtype_of (expr_struct)) {
+				return true;
+			}
 		}
 
 		return false;
