@@ -447,6 +447,10 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 
+		if (base_struct != null) {
+			return base_struct.is_disposable ();
+		}
+
 		foreach (Field f in fields) {
 			if (f.binding == MemberBinding.INSTANCE
 			    && f.get_attribute_bool ("CCode", "delegate_target", true)
