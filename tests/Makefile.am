@@ -204,6 +204,7 @@ TESTS = \
 	enums/bug763831.vala \
 	enums/bug780050.vala \
 	structs/struct_only.vala \
+	structs/struct-base-types.vala \
 	structs/structs.vala \
 	structs/gmutex.vala \
 	structs/gvalue.vala \

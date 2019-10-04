@@ -285,7 +285,11 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		push_function (function);
 
 		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
-		foreach (var f in st.get_fields ()) {
+		unowned Struct sym = st;
+		while (sym.base_struct != null) {
+			sym = sym.base_struct;
+		}
+		foreach (var f in sym.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));
 				if (get_ccode_delegate_target (f) && requires_copy (f.variable_type))  {
