@@ -221,6 +221,7 @@ TESTS = \
 	enums/bug763831.vala \
 	enums/bug780050.vala \
 	structs/struct_only.vala \
+	structs/struct-base-types.vala \
 	structs/struct-empty-still.test \
 	structs/struct-no-gtype.vala \
 	structs/struct-static-field-initializer.vala \
