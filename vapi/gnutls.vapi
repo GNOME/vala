@@ -402,8 +402,11 @@ namespace GnuTLS
 		{
 			Priority result;
 			var ret = init (out result, priority, out err_pos);
-			if (&err != null)
+			if (&err != null) {
 				err = (ErrorCode) ret;
+			} else {
+				err = 0;
+			}
 			return result;
 		}
 	}
