@@ -371,13 +371,13 @@ namespace Xcb {
 		private VoidCookie vala_image_text_8_checked (uint8 string_len, Drawable drawable, GContext gc, int16 x, int16 y, string text);
 		[CCode (cname = "vala_xcb_image_text8_checked")]
 		public VoidCookie image_text_8_checked (Drawable drawable, GContext gc, int16 x, int16 y, string text) {
-			this.vala_image_text_8_checked ((uint8) text.length, drawable, gc, x, y, text);
+			return this.vala_image_text_8_checked ((uint8) text.length, drawable, gc, x, y, text);
 		}
 		[CCode (cname = "xcb_image_text_8")]
 		private VoidCookie vala_image_text_8 (uint8 string_len, Drawable drawable, GContext gc, int16 x, int16 y, string text);
 		[CCode (cname = "vala_xcb_image_text8")]
 		public VoidCookie image_text_8 (Drawable drawable, GContext gc, int16 x, int16 y, string text) {
-			this.vala_image_text_8 ((uint8) text.length, drawable, gc, x, y, text);
+			return this.vala_image_text_8 ((uint8) text.length, drawable, gc, x, y, text);
 		}
 
 		//image_text_16
@@ -409,13 +409,13 @@ namespace Xcb {
 		private AllocNamedColorCookie vala_alloc_named_color (Colormap cmap, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_alloc_named_color")]
 		public AllocNamedColorCookie alloc_named_color (Colormap cmap, string name) {
-			this.vala_alloc_named_color (cmap, (uint16) name.length, name);
+			return this.vala_alloc_named_color (cmap, (uint16) name.length, name);
 		}
 		[CCode (cname = "xcb_alloc_named_color_unchecked")]
 		private AllocNamedColorCookie vala_alloc_named_color_unchecked (Colormap cmap, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_alloc_named_color_unchecked")]
 		public AllocNamedColorCookie alloc_named_color_unchecked (Colormap cmap, string name) {
-			this.vala_alloc_named_color_unchecked (cmap, (uint16) name.length, name);
+			return this.vala_alloc_named_color_unchecked (cmap, (uint16) name.length, name);
 		}
 		public AllocNamedColorReply? alloc_named_color_reply (AllocNamedColorCookie cookie, out GenericError? e = null);
 
@@ -437,13 +437,13 @@ namespace Xcb {
 		private VoidCookie vala_store_named_color_checked (ColorFlag flags, Colormap cmap, uint32 pixel, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_store_named_color_checked")]
 		public VoidCookie store_named_color_checked (ColorFlag flags, Colormap cmap, uint32 pixel, string name) {
-			this.vala_store_named_color_checked (flags, cmap, pixel, (uint16) name.length, name);
+			return this.vala_store_named_color_checked (flags, cmap, pixel, (uint16) name.length, name);
 		}
 		[CCode (cname = "xcb_store_named_color")]
 		private VoidCookie vala_store_named_color (ColorFlag flags, Colormap cmap, uint32 pixel, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_store_named_color")]
 		public VoidCookie store_named_color (ColorFlag flags, Colormap cmap, uint32 pixel, string name) {
-			this.vala_store_named_color (flags, cmap, pixel, (uint16) name.length, name);
+			return this.vala_store_named_color (flags, cmap, pixel, (uint16) name.length, name);
 		}
 
 		public QueryColorsCookie query_colors (Colormap cmap, [CCode (array_length_pos = 1.9, array_length_type = "uint32_t")] uint32[] pixels);
@@ -454,13 +454,13 @@ namespace Xcb {
 		private LookupColorCookie vala_lookup_color (Colormap cmap, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_lookup_color")]
 		public LookupColorCookie lookup_color (Colormap cmap, string name) {
-			this.vala_lookup_color (cmap, (uint16) name.length, name);
+			return this.vala_lookup_color (cmap, (uint16) name.length, name);
 		}
 		[CCode (cname = "xcb_lookup_color_unchecked")]
 		private LookupColorCookie vala_lookup_color_unchecked (Colormap cmap, uint16 name_len, string name);
 		[CCode (cname = "vala_xcb_lookup_color_unchecked")]
 		public LookupColorCookie lookup_color_unchecked (Colormap cmap, string name) {
-			this.vala_lookup_color_unchecked (cmap, (uint16) name.length, name);
+			return this.vala_lookup_color_unchecked (cmap, (uint16) name.length, name);
 		}
 		public LookupColorReply? lookup_color_reply (LookupColorCookie cookie, out GenericError? e = null);
 
