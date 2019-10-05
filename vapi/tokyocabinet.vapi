@@ -439,7 +439,7 @@ namespace TokyoCabinet {
 		}
 		public string? get_string (string key) {
 			unowned uint8[] kbuf = (uint8[]) key;
-			kbuf.length = (int) key.size ();
+			kbuf.length = key.length;
 			return (string) this.get (kbuf);
 		}
 		[CCode (cname = "tcndbvsiz")]
@@ -585,7 +585,7 @@ namespace TokyoCabinet {
 		[CCode (cname = "_vala_tchdbget2")]
 		public string? get_string (string key) {
 			unowned uint8[] kbuf = (uint8[]) key;
-			kbuf.length = (int) key.size ();
+			kbuf.length = key.length;
 			return (string) this.get (kbuf);
 		}
 		[CCode (cname = "tchdbvsiz")]
@@ -730,7 +730,7 @@ namespace TokyoCabinet {
 		}
 		public string? get_string (string key) {
 			unowned uint8[] k = (uint8[]) key;
-			k.length = (int) key.size ();
+			k.length = key.length;
 			return (string) this._get (k);
 		}
 		[CCode (cname = "tcbdbget4")]
