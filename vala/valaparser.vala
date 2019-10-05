@@ -2670,7 +2670,8 @@ public class Vala.Parser : CodeVisitor {
 			f.binding = MemberBinding.CLASS;
 		}
 
-		if (parent is Struct && f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
+		if (!parent.external_package && parent is Struct
+		    && f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
 			Report.warning (f.source_reference, "accessibility of struct fields can only be `public`");
 		}
 
