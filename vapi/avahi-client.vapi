@@ -177,6 +177,10 @@ namespace Avahi {
 				name = (string) name_data;
 				type = (string) type_data;
 				domain = (string) domain_data;
+			} else {
+				name = null;
+				type = null;
+				domain = null;
 			}
 
 			return errno;
