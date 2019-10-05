@@ -117,46 +117,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 			type.accept (visitor);
 		}
 
-		foreach (TypeParameter p in get_type_parameters ()) {
-			p.accept (visitor);
-		}
-
-		/* process enums first to avoid order problems in C code */
-		foreach (Enum en in get_enums ()) {
-			en.accept (visitor);
-		}
-
-		foreach (Method m in get_methods ()) {
-			m.accept (visitor);
-		}
-
-		foreach (Field f in get_fields ()) {
-			f.accept (visitor);
-		}
-
-		foreach (Constant c in get_constants ()) {
-			c.accept (visitor);
-		}
-
-		foreach (Property prop in get_properties ()) {
-			prop.accept (visitor);
-		}
-
-		foreach (Signal sig in get_signals ()) {
-			sig.accept (visitor);
-		}
-
-		foreach (Class cl in get_classes ()) {
-			cl.accept (visitor);
-		}
-
-		foreach (Struct st in get_structs ()) {
-			st.accept (visitor);
-		}
-
-		foreach (Delegate d in get_delegates ()) {
-			d.accept (visitor);
-		}
+		// Invoke common implementation in ObjectTypeSymbol
+		base.accept_children (visitor);
 	}
 
 	public override bool is_reference_type () {
