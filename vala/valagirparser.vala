@@ -2783,6 +2783,7 @@ public class Vala.GirParser : CodeVisitor {
 		push_node (element_get_name (), true);
 
 		Struct st;
+		bool require_copy_free = false;
 		if (current.new_symbol) {
 			st = new Struct (element_get_name (), current.source_reference);
 			current.symbol = st;
@@ -2791,6 +2792,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		set_type_id_ccode (st);
+		require_copy_free = st.has_attribute_argument ("CCode", "type_id");
 
 		st.access = SymbolAccessibility.PUBLIC;
 
@@ -2838,6 +2840,12 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			pop_metadata ();
+		}
+
+		// Add default g_boxed_copy/free ccode-attributes
+		if (require_copy_free) {
+			st.set_attribute_string ("CCode", "copy_function", "g_boxed_copy");
+			st.set_attribute_string ("CCode", "free_function", "g_boxed_free");
 		}
 
 		pop_node ();
