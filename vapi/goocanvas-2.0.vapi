@@ -934,7 +934,7 @@ namespace Goo {
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
 		public virtual signal void child_removed (int child_num);
 	}
-	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_bounds_get_type ()")]
+	[CCode (cheader_filename = "goocanvas.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "goo_canvas_bounds_get_type ()")]
 	public struct CanvasBounds {
 		public double x1;
 		public double y1;

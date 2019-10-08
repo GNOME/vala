@@ -8097,7 +8097,7 @@ namespace Clutter {
 		[NoWrapper]
 		public abstract void unrealize ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_actor_box_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_actor_box_get_type ()")]
 	public struct ActorBox {
 		public float x1;
 		public float y1;
@@ -8155,7 +8155,7 @@ namespace Clutter {
 		public bool prev (out unowned Clutter.Actor child);
 		public void remove ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_COLOR")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "CLUTTER_TYPE_COLOR")]
 	public struct Color {
 		public uint8 red;
 		public uint8 green;
@@ -8195,13 +8195,13 @@ namespace Clutter {
 		[Version (since = "0.2")]
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_fog_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_fog_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.10", since = "0.6")]
 	public struct Fog {
 		public float z_near;
 		public float z_far;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_geometry_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_geometry_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.16")]
 	public struct Geometry {
 		public int x;
@@ -8213,7 +8213,7 @@ namespace Clutter {
 		[Version (since = "1.4")]
 		public Clutter.Geometry union (Clutter.Geometry geometry_b);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_knot_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_knot_get_type ()")]
 	[Version (since = "0.2")]
 	public struct Knot {
 		public int x;
@@ -8222,7 +8222,7 @@ namespace Clutter {
 		public bool equal (Clutter.Knot knot_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_margin_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_margin_get_type ()")]
 	[Version (since = "1.10")]
 	public struct Margin {
 		public float left;
@@ -8232,7 +8232,7 @@ namespace Clutter {
 		public Clutter.Margin? copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_matrix_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_matrix_get_type ()")]
 	[Version (since = "1.12")]
 	public struct Matrix : Cogl.Matrix {
 		public static Clutter.Matrix? alloc ();
@@ -8241,7 +8241,7 @@ namespace Clutter {
 		public unowned Clutter.Matrix? init_from_matrix (Clutter.Matrix b);
 		public unowned Clutter.Matrix? init_identity ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_paint_volume_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_paint_volume_get_type ()")]
 	[Version (since = "1.4")]
 	public struct PaintVolume {
 		[Version (since = "1.6")]
@@ -8271,7 +8271,7 @@ namespace Clutter {
 		[Version (since = "1.10")]
 		public void union_box (Clutter.ActorBox box);
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_node_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_path_node_get_type ()")]
 	[Version (since = "1.0")]
 	public struct PathNode {
 		public Clutter.PathNodeType type;
@@ -8281,7 +8281,7 @@ namespace Clutter {
 		public bool equal (Clutter.PathNode node_b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_perspective_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_perspective_get_type ()")]
 	[Version (since = "0.4")]
 	public struct Perspective {
 		public float fovy;
@@ -8289,7 +8289,7 @@ namespace Clutter {
 		public float z_near;
 		public float z_far;
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_point_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_point_get_type ()")]
 	[Version (since = "1.12")]
 	public struct Point {
 		public float x;
@@ -8302,7 +8302,7 @@ namespace Clutter {
 		public unowned Clutter.Point? init (float x, float y);
 		public static unowned Clutter.Point? zero ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_rect_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_rect_get_type ()")]
 	[Version (since = "1.12")]
 	public struct Rect {
 		public Clutter.Point origin;
@@ -8327,7 +8327,7 @@ namespace Clutter {
 		public Clutter.Rect union (Clutter.Rect b);
 		public static unowned Clutter.Rect? zero ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_size_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_size_get_type ()")]
 	[Version (since = "1.12")]
 	public struct Size {
 		public float width;
@@ -8337,7 +8337,7 @@ namespace Clutter {
 		public bool equals (Clutter.Size b);
 		public void free ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "CLUTTER_TYPE_UNITS")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "CLUTTER_TYPE_UNITS")]
 	[Version (since = "1.0")]
 	public struct Units {
 		public Clutter.Units? copy ();
@@ -8361,7 +8361,7 @@ namespace Clutter {
 		public float to_pixels ();
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_vertex_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_vertex_get_type ()")]
 	[Version (since = "0.4")]
 	public struct Vertex {
 		public float x;

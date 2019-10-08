@@ -5418,7 +5418,7 @@ namespace Gdk {
 		public int x;
 		public int y;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rgba_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rgba_get_type ()")]
 	public struct RGBA {
 		public double red;
 		public double green;
@@ -5433,7 +5433,7 @@ namespace Gdk {
 		public bool parse (string spec);
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rectangle_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rectangle_get_type ()")]
 	public struct Rectangle : Cairo.RectangleInt {
 		public bool contains_point (int x, int y);
 		public bool equal (Gdk.Rectangle rect2);
@@ -12732,7 +12732,7 @@ namespace Gtk {
 		[CCode (cname = "d.string_data")]
 		public weak string string_data;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_border_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_border_get_type ()")]
 	public struct Border {
 		public int16 left;
 		public int16 right;
@@ -12782,7 +12782,7 @@ namespace Gtk {
 		public int minimum_size;
 		public int natural_size;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_requisition_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_requisition_get_type ()")]
 	public struct Requisition {
 		public int width;
 		public int height;
@@ -12794,7 +12794,7 @@ namespace Gtk {
 		public weak string origin;
 		public GLib.Value value;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_iter_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_text_iter_get_type ()")]
 	public struct TextIter {
 		public void assign (Gtk.TextIter other);
 		public bool backward_char ();
@@ -12887,7 +12887,7 @@ namespace Gtk {
 		public bool starts_word ();
 		public bool toggles_tag (Gtk.TextTag? tag);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_iter_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_tree_iter_get_type ()")]
 	public struct TreeIter {
 		public int stamp;
 		public void* user_data;
