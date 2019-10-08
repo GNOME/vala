@@ -5930,7 +5930,7 @@ namespace Gdk {
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public string name ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_color_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_color_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "3.14")]
 	public struct Color {
 		public uint32 pixel;
@@ -5970,7 +5970,7 @@ namespace Gdk {
 		public int x;
 		public int y;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rgba_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rgba_get_type ()")]
 	public struct RGBA {
 		public double red;
 		public double green;
@@ -5989,7 +5989,7 @@ namespace Gdk {
 		[Version (since = "3.0")]
 		public string to_string ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_rectangle_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rectangle_get_type ()")]
 	public struct Rectangle : Cairo.RectangleInt {
 		[Version (since = "3.20")]
 		public bool equal (Gdk.Rectangle rect2);
