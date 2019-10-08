@@ -621,7 +621,7 @@ namespace Pango {
 	public struct AttrFontFeatures {
 		public weak string features;
 	}
-	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_color_get_type ()")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_color_get_type ()")]
 	public struct Color {
 		public uint16 red;
 		public uint16 green;
@@ -663,7 +663,7 @@ namespace Pango {
 		public Pango.GlyphGeometry geometry;
 		public Pango.GlyphVisAttr attr;
 	}
-	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_glyph_item_iter_get_type ()")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_item_iter_get_type ()")]
 	[Version (since = "1.22")]
 	public struct GlyphItemIter {
 		public weak Pango.GlyphItem glyph_item;
@@ -705,7 +705,7 @@ namespace Pango {
 		public uint is_expandable_space;
 		public uint is_word_boundary;
 	}
-	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_matrix_get_type ()")]
+	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_matrix_get_type ()")]
 	[Version (since = "1.6")]
 	public struct Matrix {
 		public double xx;
