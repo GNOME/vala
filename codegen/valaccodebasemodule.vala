@@ -2752,7 +2752,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (dup_function == null) {
 					dup_function = "";
 				}
-			} else if (cl != null && get_ccode_is_gboxed (cl)) {
+			} else if (get_ccode_is_gboxed (type.type_symbol)) {
 				// allow duplicates of gboxed instances
 				dup_function = generate_dup_func_wrapper (type);
 				if (dup_function == null) {
@@ -3062,11 +3062,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		unowned Class? cl = type.type_symbol as Class;
-		assert (cl != null && get_ccode_is_gboxed (cl));
-
 		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_copy"));
-		free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
+		free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (type.type_symbol)));
 		free_call.add_argument (new CCodeIdentifier ("self"));
 
 		ccode.add_return (free_call);
@@ -3154,10 +3151,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		unowned Class? cl = type.type_symbol as Class;
-		if (cl != null && get_ccode_is_gboxed (cl)) {
+		if (get_ccode_is_gboxed (type.type_symbol)) {
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_free"));
-			free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
+			free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (type.type_symbol)));
 			free_call.add_argument (new CCodeIdentifier ("self"));
 
 			ccode.add_expression (free_call);
@@ -3260,8 +3256,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						return null;
 					}
 				} else {
-					unowned Class? cl = type.type_symbol as Class;
-					if (cl != null && get_ccode_is_gboxed (cl)) {
+					if (get_ccode_is_gboxed (type.type_symbol)) {
 						unref_function = generate_free_func_wrapper (type);
 					} else {
 						if (is_free_function_address_of (type)) {
@@ -3273,7 +3268,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else {
 				if (type.nullable) {
-					unref_function = get_ccode_free_function (type.type_symbol);
+					if (get_ccode_is_gboxed (type.type_symbol)) {
+						unref_function = generate_free_func_wrapper (type);
+					} else {
+						unref_function = get_ccode_free_function (type.type_symbol);
+					}
 					if (unref_function == null) {
 						if (type.type_symbol is Struct && ((Struct) type.type_symbol).is_disposable ()) {
 							unref_function = generate_free_func_wrapper (type);
