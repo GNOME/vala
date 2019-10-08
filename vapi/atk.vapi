@@ -587,7 +587,7 @@ namespace Atk {
 		public GLib.Value old_value;
 		public GLib.Value new_value;
 	}
-	[CCode (cheader_filename = "atk/atk.h", type_id = "atk_rectangle_get_type ()")]
+	[CCode (cheader_filename = "atk/atk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_rectangle_get_type ()")]
 	public struct Rectangle {
 		public int x;
 		public int y;

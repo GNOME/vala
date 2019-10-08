@@ -887,7 +887,7 @@ namespace Poppler {
 		public string title;
 		public string uri;
 	}
-	[CCode (cheader_filename = "poppler.h", type_id = "poppler_rectangle_get_type ()")]
+	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_rectangle_get_type ()")]
 	public struct Rectangle {
 		public double x1;
 		public double y1;

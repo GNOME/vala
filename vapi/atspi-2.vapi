@@ -399,7 +399,7 @@ namespace Atspi {
 	[SimpleType]
 	public struct ControllerEventMask : uint {
 	}
-	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_event_get_type ()")]
+	[CCode (cheader_filename = "atspi/atspi.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atspi_device_event_get_type ()")]
 	public struct DeviceEvent {
 		public Atspi.EventType type;
 		public uint id;

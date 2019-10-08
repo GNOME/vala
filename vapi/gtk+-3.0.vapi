@@ -10882,7 +10882,7 @@ namespace Gtk {
 		public weak string string_data;
 		public GLib.Type arg_type;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_border_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_border_get_type ()")]
 	public struct Border {
 		public int16 left;
 		public int16 right;
@@ -10951,7 +10951,7 @@ namespace Gtk {
 		public int minimum_size;
 		public int natural_size;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_requisition_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_requisition_get_type ()")]
 	public struct Requisition {
 		public int width;
 		public int height;
@@ -10974,7 +10974,7 @@ namespace Gtk {
 		public Gtk.StockItem? copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_target_entry_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_target_entry_get_type ()")]
 	public struct TargetEntry {
 		public weak string target;
 		public uint flags;
@@ -10995,7 +10995,7 @@ namespace Gtk {
 		[CCode (array_length = false)]
 		public Gdk.RGBA rgba[2];
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_iter_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_text_iter_get_type ()")]
 	public struct TextIter {
 		[Version (since = "3.2")]
 		public void assign (Gtk.TextIter other);
@@ -11117,7 +11117,7 @@ namespace Gtk {
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_iter_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_tree_iter_get_type ()")]
 	public struct TreeIter {
 		public int stamp;
 		public void* user_data;
