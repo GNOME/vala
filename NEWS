@@ -1,3 +1,27 @@
+Vala 0.46.3
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Accept children after generating type specific declarations
+    + Preserve full access to delegate variables and its target/destroy cvalues
+    + Initialize delegate temp-var which is assigned by property getter
+    + Silence warning about copying if delegate doesn't carry its target
+    + Use gtype-boxed API for structs with "g_boxed_free" attribute [#863]
+  - ccode: Implicitly register declaration for added CCodeFunction
+  - vala: Fix compatible/disposable check between structs and their subtypes
+  - vala: Don't issue a warning for non-public struct fields in bindings
+  - girparser: Add required copy/free attributes for gtype-boxed structs
+    and regenerate GIR-based bindings to pick up copy/free attributes [#863]
+  - docs: Mention requirement of autoconf-archive as build-dependency
+  - vapi: Perform syntax and semantic check for all bindings on "make check"
+
+ * Bindings:
+  - avahi-client: Fix "use of possibly unassigned parameter" warnings
+  - glib-2.0: Set default_value attribute for GLib.pointer
+  - gnutls: Fix "use of possibly unassigned parameter" warnings
+  - tokyocabinet: Fix deprecation warnings
+  - xcb: Fix "missing return statement at end of subroutine body" errors
+
 Vala 0.46.2
 ===========
  * Various improvements and bug fixes:
