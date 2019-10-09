@@ -5448,6 +5448,8 @@ namespace GLib {
 	[Version (since = "2.18")]
 	[CCode (cname = "NC_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string NC_ (string context, [FormatArg] string str);
+	[CCode (cname = "gettext", cheader_filename = "glib/gi18n-lib.h")]
+	public static unowned string gettext ([FormatArg] string str);
 	[CCode (cname = "ngettext", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static unowned string ngettext (string msgid, [FormatArg] string msgid_plural, ulong n);
 	[Version (since = "2.18")]
