@@ -1,3 +1,40 @@
+Vala 0.44.9
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Directly use "memmove()" while g_memmove() is deprecated
+    + Accept children after generating type specific declarations
+    + Preserve full access to delegate variables and its target/destroy cvalues
+    + Initialize delegate temp-var which is assigned by property getter
+    + Silence warning about copying if delegate doesn't carry its target
+    + Use gtype-boxed API for structs with "g_boxed_free" attribute [#863]
+  - ccode: Implicitly register declaration for added CCodeFunction
+  - vala:
+    + Report dedicated error message for params-array parameter mismatch
+    + Output "params" qualifier of parameters
+    + Allow to override virtual interface implementations [#852]
+    + Fix compatible/disposable check between structs and their subtypes
+    + Don't issue a warning for non-public struct fields in bindings
+    + Trust "value_owned" when writing property getter and regenerate
+      GIDL/GIR-based bindings fix getter ownership of struct properties
+  - girparser: Add required copy/free attributes for gtype-boxed structs
+    and regenerate GIR-based bindings to pick up copy/free attributes [#863]
+  - valadoc: Explicitly pass --pkg libgvc
+  - docs: Mention requirement of autoconf-archive as build-dependency
+  - vapi: Perform syntax and semantic check for all bindings on "make check"
+
+ * Bindings:
+  - gio-unix-2.0: Fix DesktopAppInfo.get_string(), UnixFDMessage.steal_fds()
+  - gobject-2.0: Some cherry-picking from GIR generated binding
+  - gtk+-3.0: Ownership mismatch of ColorButton.rgba property-accessor [#844]
+  - gtk4: Update to 3.96.0+bcea9652
+  - gtk4: Constructors of Gtk.MediaFile needs to be static functions
+  - avahi-client: Fix "use of possibly unassigned parameter" warnings
+  - glib-2.0: Set default_value attribute for GLib.pointer
+  - gnutls: Fix "use of possibly unassigned parameter" warnings
+  - tokyocabinet: Fix deprecation warnings
+  - xcb: Fix "missing return statement at end of subroutine body" errors
+
 Vala 0.44.8
 ===========
  * Various improvements and bug fixes:
