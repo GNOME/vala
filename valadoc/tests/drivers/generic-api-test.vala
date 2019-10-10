@@ -1541,7 +1541,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 	bool func1 = false;
 	bool func2 = false;
 	bool func3 = false;
+	bool func3a = false;
 	bool func4 = false;
+	bool func4a = false;
 	bool func5 = false;
 	bool func6 = false;
 	bool func7 = false;
@@ -1663,6 +1665,41 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			func3 = true;
 			break;
 
+		case "test_function_param_3a":
+			assert (params.size == 1);
+
+			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			assert (param != null);
+			// (.FormalParameter)
+			assert (param.default_value == null);
+			assert (param.is_out == false);
+			assert (param.is_ref == true);
+			assert (param.has_default_value == false);
+			assert (param.parameter_type != null);
+			assert (param.ellipsis == false);
+			// (.Symbol check)
+			assert (param.is_deprecated == false);
+			assert (param.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			assert (param.get_full_name () == "ParamTest.test_function_param_3a.a");
+			assert (param.get_filename () == "api-test.data.vapi");
+			assert (param.nspace == ns);
+			assert (param.package == pkg);
+			assert (param.name == "a");
+			// param type:
+			assert (param.parameter_type.data_type != null);
+			assert (param.parameter_type.data_type is Api.Class);
+			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "string");
+			assert (param.parameter_type.get_type_arguments ().size == 0);
+			assert (param.parameter_type.is_owned == false);
+			assert (param.parameter_type.is_unowned == true);
+			assert (param.parameter_type.is_weak == false);
+			assert (param.parameter_type.is_dynamic == false);
+			assert (param.parameter_type.is_nullable == true);
+
+			func3a = true;
+			break;
+
 		case "test_function_param_4":
 			assert (params.size == 1);
 
@@ -1697,6 +1734,41 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.is_nullable == false);
 
 			func4 = true;
+			break;
+
+		case "test_function_param_4a":
+			assert (params.size == 1);
+
+			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			assert (param != null);
+			// (.FormalParameter)
+			assert (param.default_value == null);
+			assert (param.is_out == true);
+			assert (param.is_ref == false);
+			assert (param.has_default_value == false);
+			assert (param.parameter_type != null);
+			assert (param.ellipsis == false);
+			// (.Symbol check)
+			assert (param.is_deprecated == false);
+			assert (param.accessibility == Api.SymbolAccessibility.PUBLIC);
+			// (.Node)
+			assert (param.get_full_name () == "ParamTest.test_function_param_4a.a");
+			assert (param.get_filename () == "api-test.data.vapi");
+			assert (param.nspace == ns);
+			assert (param.package == pkg);
+			assert (param.name == "a");
+			// param type:
+			assert (param.parameter_type.data_type != null);
+			assert (param.parameter_type.data_type is Api.Class);
+			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "string");
+			assert (param.parameter_type.get_type_arguments ().size == 0);
+			assert (param.parameter_type.is_owned == false);
+			assert (param.parameter_type.is_unowned == true);
+			assert (param.parameter_type.is_weak == false);
+			assert (param.parameter_type.is_dynamic == false);
+			assert (param.parameter_type.is_nullable == true);
+
+			func4a = true;
 			break;
 
 		case "test_function_param_5":
@@ -2257,7 +2329,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 	assert (func1 == true);
 	assert (func2 == true);
 	assert (func3 == true);
+	assert (func3a == true);
 	assert (func4 == true);
+	assert (func4a == true);
 	assert (func5 == true);
 	assert (func6 == true);
 	assert (func7 == true);

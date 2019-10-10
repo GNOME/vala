@@ -687,12 +687,28 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private Ownership get_type_reference_ownership (Vala.DataType? element) {
-		if (is_type_reference_owned (element)) {
-			return Ownership.OWNED;
-		} else if (is_type_reference_weak (element)) {
-			return Ownership.WEAK;
-		} else if (is_type_reference_unowned (element)) {
-			return Ownership.UNOWNED;
+		unowned Vala.DataType? type = element;
+		if (type != null) {
+			if (type.parent_node is Vala.Parameter) {
+				if (((Vala.Parameter) type.parent_node).direction == Vala.ParameterDirection.IN) {
+					if (type.value_owned) {
+						return Ownership.OWNED;
+					}
+				} else {
+					if (type.is_weak ()) {
+						return Ownership.UNOWNED;
+					}
+				}
+				return Ownership.DEFAULT;
+			} else if (type.parent_node is Vala.PropertyAccessor) {
+				if (((Vala.PropertyAccessor) type.parent_node).value_type.value_owned) {
+					return Ownership.OWNED;
+				}
+				return Ownership.DEFAULT;
+			}
+			if (type.is_weak ()) {
+				return Ownership.UNOWNED;
+			}
 		}
 
 		return Ownership.DEFAULT;
