@@ -95,7 +95,9 @@ namespace ParamTest {
 	public void test_function_param_1 ();
 	public void test_function_param_2 (int a);
 	public void test_function_param_3 (ref int a);
+	public void test_function_param_3a (ref unowned string? a);
 	public void test_function_param_4 (out int a);
+	public void test_function_param_4a (out unowned string? a);
 	public void test_function_param_5 (owned Object o);
 	public void test_function_param_6 (int? a);
 	public void test_function_param_7 (...);
