@@ -57,7 +57,7 @@ public class TestClassGlobal {
 	public static void static_method ();
 	public int property_1 { get; set; }
 	public int property_2 { get; }
-	public int property_3 { owned get; set; }
+	public string property_3 { owned get; set; }
 	public delegate int Foo ();
 	public signal int sig_1 ();
 }
@@ -70,7 +70,7 @@ public interface TestInterfaceGlobal {
 	public static void static_method ();
 	public int property_1 { get; set; }
 	public int property_2 { get; }
-	public int property_3 { owned get; set; }
+	public string property_3 { owned get; set; }
 	public delegate int Foo ();
 	public signal int sig_1 ();
 }
@@ -87,7 +87,7 @@ public struct TestStructGlobal {
 	public const int constant;
 	public int property_1 { get; set; }
 	public int property_2 { get; }
-	public int property_3 { owned get; set; }
+	public string property_3 { owned get; set; }
 }
 
 
