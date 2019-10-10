@@ -92,11 +92,6 @@ public class Valadoc.Api.TypeReference : Item {
 		get;
 	}
 
-	public bool pass_ownership {
-		private set;
-		get;
-	}
-
 	/**
 	 * Specifies that the expression is owned.
 	 */

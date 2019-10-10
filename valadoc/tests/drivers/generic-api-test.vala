@@ -1619,7 +1619,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1655,7 +1654,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1726,7 +1724,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1797,7 +1794,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Class);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "GLib.Object");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == true);
 			assert (param.parameter_type.is_owned == true);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1833,7 +1829,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1896,7 +1891,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1932,7 +1926,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1964,7 +1957,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -1996,7 +1988,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2028,7 +2019,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Class);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "GLib.Object");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == true);
 			assert (param.parameter_type.is_owned == true);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2060,7 +2050,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2092,7 +2081,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (param.parameter_type.data_type is Api.Struct);
 			assert (((Api.Symbol) param.parameter_type.data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2153,7 +2141,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Pointer) param.parameter_type.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Pointer) param.parameter_type.data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2192,7 +2179,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Pointer) ((Api.Pointer) param.parameter_type.data_type).data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Pointer) ((Api.Pointer) param.parameter_type.data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2231,7 +2217,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2270,7 +2255,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) param.parameter_type.data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2311,7 +2295,6 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.Array) param.parameter_type.data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (param.parameter_type.get_type_arguments ().size == 0);
-			assert (param.parameter_type.pass_ownership == false);
 			assert (param.parameter_type.is_owned == false);
 			assert (param.parameter_type.is_unowned == false);
 			assert (param.parameter_type.is_weak == false);
@@ -2421,7 +2404,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_1":
 			assert (ret.data_type == null);
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2435,7 +2417,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (ret.data_type is Api.Struct);
 			assert (((Api.Struct) ret.data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2449,7 +2430,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (ret.data_type is Api.Struct);
 			assert (((Api.Struct) ret.data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2463,7 +2443,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (ret.data_type is Api.Class);
 			assert (((Api.Class) ret.data_type).get_full_name () == "string");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == true);
 			assert (ret.is_weak == false);
@@ -2479,7 +2458,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Pointer) ret.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Pointer) ret.data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2496,7 +2474,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Pointer) ((Api.Pointer) ret.data_type).data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Pointer) ((Api.Pointer) ret.data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2512,7 +2489,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2529,7 +2505,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ret.data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
@@ -2548,7 +2523,6 @@ public static void return_test (Api.Namespace ns, Api.Package pkg) {
 			assert (((Api.TypeReference) ((Api.Array) ((Api.Array) ret.data_type).data_type).data_type).data_type is Api.Struct);
 			assert (((Api.Struct) ((Api.TypeReference) ((Api.Array) ((Api.Array) ret.data_type).data_type).data_type).data_type).get_full_name () == "int");
 			assert (ret.get_type_arguments ().size == 0);
-			assert (ret.pass_ownership == false);
 			assert (ret.is_owned == false);
 			assert (ret.is_unowned == false);
 			assert (ret.is_weak == false);
