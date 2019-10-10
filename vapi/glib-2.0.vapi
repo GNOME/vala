@@ -1465,8 +1465,10 @@ public class string {
 		GLib.Memory.copy (dest, this, start);
 		dest += start;
 
-		GLib.Memory.copy (dest, str, str_size);
-		dest += str_size;
+		if (str != null) {
+			GLib.Memory.copy (dest, str, str_size);
+			dest += str_size;
+		}
 
 		GLib.Memory.copy (dest, (char*) this + end, string_length - end);
 
