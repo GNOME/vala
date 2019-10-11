@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	const owned string FOO = "foo";
+}
