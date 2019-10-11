@@ -1,0 +1,6 @@
+Invalid Code
+
+const owned string FOO = "foo";
+
+void main () {
+}
