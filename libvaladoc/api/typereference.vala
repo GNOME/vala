@@ -62,6 +62,8 @@ public class Valadoc.Api.TypeReference : Item {
 					return Ownership.OWNED;
 				}
 				return Ownership.DEFAULT;
+			} else if (type.parent_node is Vala.Constant) {
+				return Ownership.DEFAULT;
 			}
 			if (type.is_weak ()) {
 				return Ownership.UNOWNED;
