@@ -705,6 +705,8 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 					return Ownership.OWNED;
 				}
 				return Ownership.DEFAULT;
+			} else if (type.parent_node is Vala.Constant) {
+				return Ownership.DEFAULT;
 			}
 			if (type.is_weak ()) {
 				return Ownership.UNOWNED;
