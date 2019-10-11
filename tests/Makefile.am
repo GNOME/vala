@@ -476,6 +476,8 @@ TESTS = \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-wrong-number.test \
+	parser/constant-owned.test \
+	parser/constant-local-owned.test \
 	parser/constructor-class-exists.test \
 	parser/constructor-exists.test \
 	parser/constructor-no-new.test \

@@ -1895,6 +1895,10 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.ASSIGN);
 		var initializer = parse_expression ();
 
+		if (type.value_owned) {
+			Report.error (src, "`owned' is not allowed on constants");
+		}
+
 		return new Constant (id, type, initializer, src);
 	}
 
@@ -2633,6 +2637,10 @@ public class Vala.Parser : CodeVisitor {
 
 		if (ModifierFlags.STATIC in flags) {
 			Report.warning (c.source_reference, "the modifier `static' is not applicable to constants");
+		}
+
+		if (type.value_owned) {
+			Report.error (c.source_reference, "`owned' is not allowed on constants");
 		}
 
 		if (accept (TokenType.ASSIGN)) {
