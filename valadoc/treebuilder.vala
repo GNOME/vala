@@ -284,10 +284,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		return Vala.get_ccode_type_id (node);
 	}
 
-	private bool is_reference_counting (Vala.TypeSymbol sym) {
-		return Vala.is_reference_counting (sym);
-	}
-
 	private string? get_ref_function (Vala.Class sym) {
 		return Vala.get_ccode_ref_function (sym);
 	}
@@ -627,63 +623,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		return false;
-	}
-
-	private bool is_type_reference_unowned (Vala.DataType? element) {
-			if (element == null) {
-				return false;
-			}
-
-			// non ref counted types are weak, not unowned
-			if (element.data_type is Vala.TypeSymbol
-				&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == true)
-			{
-				return false;
-			}
-
-			// FormalParameters are weak by default
-			return (element.parent_node is Vala.Parameter == false)
-				? element.is_weak ()
-				: false;
-	}
-
-	private bool is_type_reference_owned (Vala.DataType? element) {
-		if (element == null) {
-			return false;
-		}
-
-		weak Vala.CodeNode parent = element.parent_node;
-
-		// parameter:
-		if (parent is Vala.Parameter) {
-			if (((Vala.Parameter)parent).direction != Vala.ParameterDirection.IN) {
-				return false;
-			}
-			return ((Vala.Parameter)parent).variable_type.value_owned;
-		}
-
-		return false;
-	}
-
-	private bool is_type_reference_weak (Vala.DataType? element) {
-		if (element == null) {
-			return false;
-		}
-
-		// non ref counted types are unowned, not weak
-		if (element.data_type is Vala.TypeSymbol
-			&& is_reference_counting ((Vala.TypeSymbol) element.data_type) == false)
-		{
-			return false;
-		}
-
-		// arrays are unowned, not weak
-		if (element is Vala.ArrayType) {
-			return false;
-		}
-
-		// FormalParameters are weak by default
-		return (element.parent_node is Vala.Parameter == false)? element.is_weak () : false;
 	}
 
 	private Ownership get_type_reference_ownership (Vala.DataType? element) {
