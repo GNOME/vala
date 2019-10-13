@@ -5456,7 +5456,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		    && expr.left.value_type.compatible (string_type)
 		    && !(expr.right.value_type is NullType)
 		    && expr.right.value_type.compatible (string_type)) {
-			if (expr.operator == BinaryOperator.PLUS) {
+			switch (expr.operator) {
+			case BinaryOperator.PLUS:
 				// string concatenation
 				if (expr.left.is_constant () && expr.right.is_constant ()) {
 					string left, right;
@@ -5479,7 +5480,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 
 					set_cvalue (expr, new CCodeConstant ("%s %s".printf (left, right)));
-					return;
 				} else {
 					var temp_value = create_temp_value (expr.value_type, false, expr);
 					CCodeFunctionCall ccall;
@@ -5513,14 +5513,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					ccode.add_assignment (get_cvalue_ (temp_value), ccall);
 					expr.target_value = temp_value;
-					return;
 				}
-			} else if (expr.operator == BinaryOperator.EQUALITY
-			           || expr.operator == BinaryOperator.INEQUALITY
-			           || expr.operator == BinaryOperator.LESS_THAN
-			           || expr.operator == BinaryOperator.GREATER_THAN
-			           || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
-			           || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+				return;
+			case BinaryOperator.EQUALITY:
+			case BinaryOperator.INEQUALITY:
+			case BinaryOperator.LESS_THAN:
+			case BinaryOperator.GREATER_THAN:
+			case BinaryOperator.LESS_THAN_OR_EQUAL:
+			case BinaryOperator.GREATER_THAN_OR_EQUAL:
 				CCodeFunctionCall ccall;
 				if (context.profile == Profile.POSIX) {
 					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
@@ -5531,6 +5531,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cright);
 				cleft = ccall;
 				cright = new CCodeConstant ("0");
+				break;
+			default:
+				break;
 			}
 		}
 
