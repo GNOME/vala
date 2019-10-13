@@ -166,7 +166,9 @@ public class Vala.UnaryExpression : Expression {
 			return false;
 		}
 
-		if (operator == UnaryOperator.PLUS || operator == UnaryOperator.MINUS) {
+		switch (operator) {
+		case UnaryOperator.PLUS:
+		case UnaryOperator.MINUS:
 			// integer or floating point type
 			if (!is_numeric_type (inner.value_type)) {
 				error = true;
@@ -175,7 +177,8 @@ public class Vala.UnaryExpression : Expression {
 			}
 
 			value_type = inner.value_type;
-		} else if (operator == UnaryOperator.LOGICAL_NEGATION) {
+			break;
+		case UnaryOperator.LOGICAL_NEGATION:
 			// boolean type
 			if (inner.value_type.nullable || !inner.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
@@ -184,7 +187,8 @@ public class Vala.UnaryExpression : Expression {
 			}
 
 			value_type = inner.value_type;
-		} else if (operator == UnaryOperator.BITWISE_COMPLEMENT) {
+			break;
+		case UnaryOperator.BITWISE_COMPLEMENT:
 			// integer type
 			if (!is_integer_type (inner.value_type) && !(inner.value_type is EnumValueType)) {
 				error = true;
@@ -193,8 +197,9 @@ public class Vala.UnaryExpression : Expression {
 			}
 
 			value_type = inner.value_type;
-		} else if (operator == UnaryOperator.INCREMENT ||
-		           operator == UnaryOperator.DECREMENT) {
+			break;
+		case UnaryOperator.INCREMENT:
+		case UnaryOperator.DECREMENT:
 			// integer type
 			if (!is_integer_type (inner.value_type)) {
 				error = true;
@@ -218,7 +223,8 @@ public class Vala.UnaryExpression : Expression {
 			parent_node.replace_expression (this, assignment);
 			assignment.check (context);
 			return true;
-		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
+		case UnaryOperator.REF:
+		case UnaryOperator.OUT:
 			unowned ElementAccess? ea = inner as ElementAccess;
 			if (inner.symbol_reference is Field || inner.symbol_reference is Parameter || inner.symbol_reference is LocalVariable ||
 			    (ea != null && ea.container.value_type is ArrayType)) {
@@ -230,7 +236,8 @@ public class Vala.UnaryExpression : Expression {
 				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");
 				return false;
 			}
-		} else {
+			break;
+		default:
 			error = true;
 			Report.error (source_reference, "internal error: unsupported unary operator");
 			return false;
