@@ -322,8 +322,8 @@ public class Vala.BinaryExpression : Expression {
 		right.target_type = right.value_type.copy ();
 		right.target_type.value_owned = false;
 
-		if (left.value_type.type_symbol == context.analyzer.string_type.type_symbol
-		    && operator == BinaryOperator.PLUS) {
+		if (operator == BinaryOperator.PLUS
+		    && left.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
 			// string concatenation
 
 			if (right.value_type == null || right.value_type.type_symbol != context.analyzer.string_type.type_symbol) {
@@ -338,7 +338,10 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				value_type.value_owned = true;
 			}
-		} else if (left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
+
+			value_type.check (context);
+			return !error;
+		} else if (operator == BinaryOperator.PLUS && left.value_type is ArrayType) {
 			// array concatenation
 
 			unowned ArrayType array_type = (ArrayType) left.value_type;
@@ -353,10 +356,16 @@ public class Vala.BinaryExpression : Expression {
 
 			value_type = array_type.copy ();
 			value_type.value_owned = true;
-		} else if (operator == BinaryOperator.PLUS
-			   || operator == BinaryOperator.MINUS
-			   || operator == BinaryOperator.MUL
-			   || operator == BinaryOperator.DIV) {
+
+			value_type.check (context);
+			return !error;
+		}
+
+		switch (operator) {
+		case BinaryOperator.PLUS:
+		case BinaryOperator.MINUS:
+		case BinaryOperator.MUL:
+		case BinaryOperator.DIV:
 			// check for pointer arithmetic
 			if (left.value_type is PointerType) {
 				unowned PointerType pointer_type = (PointerType) left.value_type;
@@ -391,9 +400,10 @@ public class Vala.BinaryExpression : Expression {
 				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 				return false;
 			}
-		} else if (operator == BinaryOperator.MOD
-			   || operator == BinaryOperator.SHIFT_LEFT
-			   || operator == BinaryOperator.SHIFT_RIGHT) {
+			break;
+		case BinaryOperator.MOD:
+		case BinaryOperator.SHIFT_LEFT:
+		case BinaryOperator.SHIFT_RIGHT:
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
 
@@ -404,10 +414,11 @@ public class Vala.BinaryExpression : Expression {
 				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 				return false;
 			}
-		} else if (operator == BinaryOperator.LESS_THAN
-			   || operator == BinaryOperator.GREATER_THAN
-			   || operator == BinaryOperator.LESS_THAN_OR_EQUAL
-			   || operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+			break;
+		case BinaryOperator.LESS_THAN:
+		case BinaryOperator.GREATER_THAN:
+		case BinaryOperator.LESS_THAN_OR_EQUAL:
+		case BinaryOperator.GREATER_THAN_OR_EQUAL:
 			if (left.value_type.compatible (context.analyzer.string_type)
 			    && right.value_type.compatible (context.analyzer.string_type)) {
 				// string comparison
@@ -438,8 +449,9 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			value_type = context.analyzer.bool_type;
-		} else if (operator == BinaryOperator.EQUALITY
-			   || operator == BinaryOperator.INEQUALITY) {
+			break;
+		case BinaryOperator.EQUALITY:
+		case BinaryOperator.INEQUALITY:
 			/* relational operation */
 
 			if (context.profile == Profile.GOBJECT) {
@@ -491,16 +503,18 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			value_type = context.analyzer.bool_type;
-		} else if (operator == BinaryOperator.BITWISE_AND
-			   || operator == BinaryOperator.BITWISE_OR
-			   || operator == BinaryOperator.BITWISE_XOR) {
+			break;
+		case BinaryOperator.BITWISE_AND:
+		case BinaryOperator.BITWISE_OR:
+		case BinaryOperator.BITWISE_XOR:
 			// integer type or flags type
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
 
 			value_type = left.target_type.copy ();
-		} else if (operator == BinaryOperator.AND
-			   || operator == BinaryOperator.OR) {
+			break;
+		case BinaryOperator.AND:
+		case BinaryOperator.OR:
 			if (!left.value_type.compatible (context.analyzer.bool_type) || !right.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
 				Report.error (source_reference, "Operands must be boolean");
@@ -509,7 +523,8 @@ public class Vala.BinaryExpression : Expression {
 			right.target_type.nullable = false;
 
 			value_type = context.analyzer.bool_type;
-		} else if (operator == BinaryOperator.IN) {
+			break;
+		case BinaryOperator.IN:
 			if (left.value_type.compatible (context.analyzer.int_type)
 			    && right.value_type.compatible (context.analyzer.int_type)) {
 				// integers or enums
@@ -545,8 +560,8 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			value_type = context.analyzer.bool_type;
-
-		} else {
+			break;
+		default:
 			error = true;
 			Report.error (source_reference, "internal error: unsupported binary operator");
 			return false;
