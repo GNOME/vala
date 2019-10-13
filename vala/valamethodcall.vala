@@ -228,9 +228,8 @@ public class Vala.MethodCall : Expression {
 			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {
 				this.is_assert = true;
 
-				var args = get_argument_list ();
-				if (args.size == 1) {
-					this.source_reference = args[0].source_reference;
+				if (argument_list.size == 1) {
+					this.source_reference = argument_list[0].source_reference;
 				}
 			}
 		}
@@ -315,7 +314,7 @@ public class Vala.MethodCall : Expression {
 
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
-			foreach (Expression arg in get_argument_list ()) {
+			foreach (Expression arg in argument_list) {
 				struct_creation_expression.add_argument (arg);
 			}
 			struct_creation_expression.target_type = target_type;
@@ -390,8 +389,7 @@ public class Vala.MethodCall : Expression {
 
 		Expression last_arg = null;
 
-		var args = get_argument_list ();
-		Iterator<Expression> arg_it = args.iterator ();
+		Iterator<Expression> arg_it = argument_list.iterator ();
 		foreach (Parameter param in params) {
 			if (!param.check (context)) {
 				error = true;
@@ -443,11 +441,11 @@ public class Vala.MethodCall : Expression {
 			} else if (last_arg != null) {
 				// use last argument as format string
 				format_literal = StringLiteral.get_format_literal (last_arg);
-				if (format_literal == null && args.size == params.size - 1) {
+				if (format_literal == null && argument_list.size == params.size - 1) {
 					// insert "%s" to avoid issues with embedded %
 					format_literal = new StringLiteral ("\"%s\"");
 					format_literal.target_type = context.analyzer.string_type.copy ();
-					argument_list.insert (args.size - 1, format_literal);
+					argument_list.insert (argument_list.size - 1, format_literal);
 
 					// recreate iterator and skip to right position
 					arg_it = argument_list.iterator ();
@@ -474,7 +472,7 @@ public class Vala.MethodCall : Expression {
 		}
 
 		bool force_lambda_method_closure = false;
-		foreach (Expression arg in get_argument_list ()) {
+		foreach (Expression arg in argument_list) {
 			arg.check (context);
 
 			if (arg is LambdaExpression && ((LambdaExpression) arg).method.closure) {
@@ -484,7 +482,7 @@ public class Vala.MethodCall : Expression {
 		// force all lambda arguments using the same closure scope
 		// TODO https://gitlab.gnome.org/GNOME/vala/issues/59
 		if (force_lambda_method_closure) {
-			foreach (Expression arg in get_argument_list ()) {
+			foreach (Expression arg in argument_list) {
 				unowned LambdaExpression? lambda = arg as LambdaExpression;
 				if (lambda != null && lambda.method.binding != MemberBinding.STATIC) {
 					lambda.method.closure = true;
@@ -534,7 +532,7 @@ public class Vala.MethodCall : Expression {
 
 			unowned Signal? sig = m.parent_symbol as Signal;
 			if (sig != null && m.name == "disconnect") {
-				var param = get_argument_list ()[0];
+				var param = argument_list[0];
 				if (param is LambdaExpression) {
 					error = true;
 					Report.error (source_reference, "Cannot disconnect lambda expression from signal");
@@ -565,7 +563,7 @@ public class Vala.MethodCall : Expression {
 						DataType type_arg = null;
 
 						// infer type arguments from arguments
-						arg_it = args.iterator ();
+						arg_it = argument_list.iterator ();
 						foreach (Parameter param in params) {
 							if (param.ellipsis || param.params_array) {
 								break;
@@ -598,7 +596,7 @@ public class Vala.MethodCall : Expression {
 					}
 
 					// recalculate argument target types with new information
-					arg_it = args.iterator ();
+					arg_it = argument_list.iterator ();
 					foreach (Parameter param in params) {
 						if (param.ellipsis || param.params_array) {
 							break;
@@ -624,13 +622,13 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		if (!context.analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
+		if (!context.analyzer.check_arguments (this, mtype, params, argument_list)) {
 			error = true;
 			return false;
 		}
 
 		//Resolve possible generic-type in SizeofExpression used as parameter default-value
-		foreach (Expression arg in get_argument_list ()) {
+		foreach (Expression arg in argument_list) {
 			unowned SizeofExpression? sizeof_expr = arg as SizeofExpression;
 			if (sizeof_expr != null && sizeof_expr.type_reference is GenericType) {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (target_object_type, method_type_args, this);
@@ -639,8 +637,8 @@ public class Vala.MethodCall : Expression {
 		}
 
 		/* Check for constructv chain up */
-		if (base_cm != null && base_cm.is_variadic () && args.size == base_cm.get_parameters ().size) {
-			var this_last_arg = args[args.size-1];
+		if (base_cm != null && base_cm.is_variadic () && argument_list.size == base_cm.get_parameters ().size) {
+			var this_last_arg = argument_list[argument_list.size - 1];
 			if (this_last_arg.value_type is StructValueType && this_last_arg.value_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 				is_constructv_chainup = true;
 			}

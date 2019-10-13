@@ -347,7 +347,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			return false;
 		}
 
-		if (symbol_reference == null && get_argument_list ().size != 0) {
+		if (symbol_reference == null && argument_list.size != 0) {
 			value_type = null;
 			error = true;
 			Report.error (source_reference, "No arguments allowed when constructing type `%s'".printf (type.get_full_name ()));
@@ -372,8 +372,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			Expression last_arg = null;
 
-			var args = get_argument_list ();
-			Iterator<Expression> arg_it = args.iterator ();
+			Iterator<Expression> arg_it = argument_list.iterator ();
 			foreach (Parameter param in m.get_parameters ()) {
 				if (!param.check (context)) {
 					error = true;
@@ -402,11 +401,11 @@ public class Vala.ObjectCreationExpression : Expression {
 				} else if (last_arg != null) {
 					// use last argument as format string
 					format_literal = StringLiteral.get_format_literal (last_arg);
-					if (format_literal == null && args.size == m.get_parameters ().size - 1) {
+					if (format_literal == null && argument_list.size == m.get_parameters ().size - 1) {
 						// insert "%s" to avoid issues with embedded %
 						format_literal = new StringLiteral ("\"%s\"");
 						format_literal.target_type = context.analyzer.string_type.copy ();
-						argument_list.insert (args.size - 1, format_literal);
+						argument_list.insert (argument_list.size - 1, format_literal);
 
 						// recreate iterator and skip to right position
 						arg_it = argument_list.iterator ();
@@ -426,11 +425,11 @@ public class Vala.ObjectCreationExpression : Expression {
 				}
 			}
 
-			foreach (Expression arg in args) {
+			foreach (Expression arg in argument_list) {
 				arg.check (context);
 			}
 
-			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
+			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), argument_list);
 		} else if (type_reference is ErrorType) {
 			if (type_reference != null) {
 				type_reference.check (context);
@@ -448,11 +447,11 @@ public class Vala.ObjectCreationExpression : Expression {
 				init.check (context);
 			}
 
-			if (get_argument_list ().size == 0) {
+			if (argument_list.size == 0) {
 				error = true;
 				Report.error (source_reference, "Too few arguments, errors need at least 1 argument");
 			} else {
-				Iterator<Expression> arg_it = get_argument_list ().iterator ();
+				Iterator<Expression> arg_it = argument_list.iterator ();
 				arg_it.next ();
 				var ex = arg_it.get ();
 				if (ex.value_type == null || !ex.value_type.compatible (context.analyzer.string_type)) {
@@ -469,7 +468,7 @@ public class Vala.ObjectCreationExpression : Expression {
 					}
 				}
 
-				arg_it = get_argument_list ().iterator ();
+				arg_it = argument_list.iterator ();
 				arg_it.next ();
 				if (!context.analyzer.check_variadic_arguments (arg_it, 1, source_reference)) {
 					error = true;
@@ -479,7 +478,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 
 		//Resolve possible generic-type in SizeofExpression used as parameter default-value
-		foreach (Expression arg in get_argument_list ()) {
+		foreach (Expression arg in argument_list) {
 			unowned SizeofExpression sizeof_expr = arg as SizeofExpression;
 			if (sizeof_expr != null && sizeof_expr.type_reference is GenericType) {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (type_reference, type_reference.get_type_arguments (), this);
