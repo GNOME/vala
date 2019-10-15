@@ -227,6 +227,7 @@ TESTS = \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
+	structs/constructor-wrong-name.test \
 	structs/default-gtype.vala \
 	structs/gmutex.vala \
 	structs/gvalue.vala \
@@ -305,6 +306,7 @@ TESTS = \
 	objects/compact-class-refcount.vala \
 	objects/constructor-abstract-public.test \
 	objects/constructor-variadic.test \
+	objects/constructor-wrong-name.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
 	objects/duplicating-instance-invalid.test \
