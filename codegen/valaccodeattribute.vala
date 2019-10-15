@@ -918,8 +918,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 		if (sym != null) {
 			if (sym is Class && !((Class) sym).is_compact || sym is Interface) {
 				return get_ccode_upper_case_name (sym, "TYPE_");
-			} else if (sym is ErrorType) {
-				return "G_TYPE_ERROR";
 			} else if (sym is Struct) {
 				var st = (Struct) sym;
 				if (!get_ccode_has_type_id (st)) {
