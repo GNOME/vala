@@ -2671,7 +2671,7 @@ namespace GLib {
 
 	[Compact]
 	[ErrorBase]
-	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
+	[CCode (copy_function = "g_error_copy", free_function = "g_error_free", type_id = "G_TYPE_ERROR")]
 	public class Error {
 		[PrintfFormat]
 		public Error (Quark domain, int code, string format, ...);
