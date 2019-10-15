@@ -1020,7 +1020,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (get_ccode_has_type_id (edomain)) {
 					return get_ccode_upper_case_name (edomain, "TYPE_");
 				} else {
-					return "G_TYPE_INT";
+					return "G_TYPE_ERROR";
 				}
 			} else {
 				return "G_TYPE_POINTER";
