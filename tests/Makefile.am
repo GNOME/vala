@@ -206,6 +206,7 @@ TESTS = \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
 	structs/structs.vala \
+	structs/constructor-wrong-name.test \
 	structs/gmutex.vala \
 	structs/gvalue.vala \
 	structs/gvalue-implicit-comparison.vala \
@@ -270,6 +271,7 @@ TESTS = \
 	objects/classes.vala \
 	objects/compact-class-destructor.vala \
 	objects/constructor-variadic.test \
+	objects/constructor-wrong-name.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
 	objects/duplicating-instance-invalid.test \
