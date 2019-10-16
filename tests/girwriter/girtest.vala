@@ -79,6 +79,10 @@ namespace GirTest {
 
 	public delegate bool DelegateTest (void* a, void* b);
 
+	public delegate bool DelegateErrorTest () throws ErrorTest;
+
+	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
+
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
 
@@ -117,6 +121,9 @@ namespace GirTest {
 		public ObjectTest () {
 		}
 		public ObjectTest.with_int (int param) {
+			field = param;
+		}
+		public ObjectTest.may_fail (int param) throws ErrorTest {
 			field = param;
 		}
 		public ObjectTest.newv (int param, ...) {
@@ -232,6 +239,9 @@ namespace GirTest {
 		public async void coroutine_async () {
 		}
 
+		public virtual async void coroutine_virtual_async () {
+		}
+
 		public virtual async void coroutine_method_throw (int i1, out int o1) throws ErrorTest {
 			o1 = i1;
 		}
@@ -267,6 +277,12 @@ namespace GirTest {
 		public int property { get; construct set; }
 	}
 
+	[Compact]
+	public class CompactClass {
+		public string s;
+		public int i;
+	}
+
 	[GIR (visible = false)]
 	public class SkippedClass {
 	}
@@ -277,6 +293,9 @@ namespace GirTest {
 
 	public class GenericsTest<G,T> {
 		public GenericsTest (owned DelegateTest cb) {
+		}
+
+		public GenericsTest.typed (owned DelegateGenericsTest<G,T> cb) {
 		}
 
 		public void method (T param) {
