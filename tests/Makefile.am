@@ -299,6 +299,7 @@ TESTS = \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
 	objects/class_only.vala \
+	objects/class-inner-types.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \
 	objects/classes-interfaces-virtuals.vala \
@@ -321,6 +322,7 @@ TESTS = \
 	objects/gsource.vala \
 	objects/instance-comparison.vala \
 	objects/interface_only.vala \
+	objects/interface-inner-types.vala \
 	objects/interfaces.vala \
 	objects/interface-generics.vala \
 	objects/interface-virtual-override.vala \

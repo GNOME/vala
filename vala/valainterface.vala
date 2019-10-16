@@ -270,6 +270,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 			cl.check (context);
 		}
 
+		foreach (Interface iface in get_interfaces ()) {
+			iface.check (context);
+		}
+
 		foreach (Struct st in get_structs ()) {
 			st.check (context);
 		}

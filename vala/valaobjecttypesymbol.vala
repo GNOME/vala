@@ -41,6 +41,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 
 	// inner types
 	private List<Class> classes = new ArrayList<Class> ();
+	private List<Interface> interfaces = new ArrayList<Interface> ();
 	private List<Struct> structs = new ArrayList<Struct> ();
 	private List<Enum> enums = new ArrayList<Enum> ();
 	private List<Delegate> delegates = new ArrayList<Delegate> ();
@@ -157,6 +158,15 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	}
 
 	/**
+	 * Returns the list of interfaces.
+	 *
+	 * @return list of interfaces
+	 */
+	public unowned List<Interface> get_interfaces () {
+		return interfaces;
+	}
+
+	/**
 	 * Returns the list of structs.
 	 *
 	 * @return list of structs
@@ -191,6 +201,16 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	public override void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
+	}
+
+	/**
+	 * Adds the specified interface as an inner interface.
+	 *
+	 * @param iface an interface
+	 */
+	public override void add_interface (Interface iface) {
+		interfaces.add (iface);
+		scope.add (iface.name, iface);
 	}
 
 	/**
@@ -351,6 +371,10 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 
 		foreach (Class cl in get_classes ()) {
 			cl.accept (visitor);
+		}
+
+		foreach (Interface iface in get_interfaces ()) {
+			iface.accept (visitor);
 		}
 
 		foreach (Struct st in get_structs ()) {
