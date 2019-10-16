@@ -2599,6 +2599,10 @@ namespace GLib {
 	public void warning (string format, ...);
 	[Diagnostics]
 	[PrintfFormat]
+	[Version (since = "2.64")]
+	public void warning_once (string format, ...);
+	[Diagnostics]
+	[PrintfFormat]
 	public void critical (string format, ...);
 	[Diagnostics]
 	[PrintfFormat]
