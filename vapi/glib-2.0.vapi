@@ -3176,6 +3176,9 @@ namespace GLib {
 		public static unowned string get_host_name ();
 		[CCode (cname = "g_get_home_dir")]
 		public static unowned string get_home_dir ();
+		[Version (since = "2.64")]
+		[CCode (cname = "g_get_os_info")]
+		public static string? get_os_info (string key_name);
 		[CCode (cname = "g_get_tmp_dir")]
 		public static unowned string get_tmp_dir ();
 		[CCode (cname = "g_get_current_dir")]
@@ -3226,6 +3229,22 @@ namespace GLib {
 		public static bool is_ip_address (string hostname);
 		public static string to_ascii (string hostname);
 		public static string to_unicode (string hostname);
+	}
+
+	[Version (since = "2.64")]
+	[CCode (lower_case_cprefix = "G_OS_INFO_KEY_")]
+	namespace OsInfoKey {
+		public const string NAME;
+		public const string PRETTY_NAME;
+		public const string VERSION;
+		public const string VERSION_CODENAME;
+		public const string VERSION_ID;
+		public const string ID;
+		public const string HOME_URL;
+		public const string DOCUMENTATION_URL;
+		public const string SUPPORT_URL;
+		public const string BUG_REPORT_URL;
+		public const string PRIVACY_POLICY_URL;
 	}
 
 	namespace Path {
@@ -3728,6 +3747,9 @@ namespace GLib {
 		public static string read_link (string filename) throws FileError;
 		public static int error_from_errno (int err_no);
 
+		[Version (since = "2.64")]
+		[CCode (cname = "g_fsync")]
+		public static int fsync (int fd);
 		[CCode (cname = "g_mkstemp")]
 		public static int mkstemp (string tmpl);
 		[Version (since = "2.6")]
@@ -5137,6 +5159,9 @@ namespace GLib {
 				return compare_func ((G**) (*a), (G**) (*b));
 			});
 		}
+		[Version (since = "2.64")]
+		[CCode (array_length_type = "gsize")]
+		public G[] steal ();
 		[Version (since = "2.58")]
 		public G steal_index (uint index);
 		[Version (since = "2.58")]
@@ -5218,6 +5243,9 @@ namespace GLib {
 		public void sort (CompareFunc<int8> compare_func);
 		public void sort_with_data (CompareDataFunc<int8> compare_func);
 		public void set_size (uint length);
+		[Version (since = "2.64")]
+		[CCode (array_length_type = "gsize")]
+		public uint8[] steal ();
 
 		public uint len;
 		[CCode (array_length_cname = "len", array_length_type = "guint")]
@@ -5394,6 +5422,9 @@ namespace GLib {
 		public void set_size (uint length);
 		[Version (since = "2.32")]
 		public void set_clear_func (GLib.DestroyNotify clear_func);
+		[Version (since = "2.64")]
+		[CCode (array_length_type = "gsize")]
+		public G[] steal ();
 	}
 
 	/* GTree */
@@ -5560,6 +5591,7 @@ namespace GLib {
 		public const uint @2_58;
 		public const uint @2_60;
 		public const uint @2_62;
+		public const uint @2_64;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
