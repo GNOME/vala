@@ -121,6 +121,9 @@ namespace Gst {
 			public Gst.Buffer pull ();
 			[CCode (cname = "gst_harness_pull_event")]
 			public Gst.Event pull_event ();
+			[CCode (cname = "gst_harness_pull_until_eos")]
+			[Version (since = "1.18")]
+			public bool pull_until_eos (out Gst.Buffer buf);
 			[CCode (cname = "gst_harness_pull_upstream_event")]
 			public Gst.Event pull_upstream_event ();
 			[CCode (cname = "gst_harness_push")]
