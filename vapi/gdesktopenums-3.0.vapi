@@ -164,6 +164,11 @@ namespace GDesktop {
 		LEFT,
 		MOUSE
 	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_USB_PROTECTION_", has_type_id = false)]
+	public enum UsbProtection {
+		LOCKSCREEN,
+		ALWAYS
+	}
 	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_VISUAL_BELL_", has_type_id = false)]
 	public enum VisualBellType {
 		FULLSCREEN_FLASH,

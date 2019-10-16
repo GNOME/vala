@@ -617,6 +617,7 @@ IconInfo since="3.8"
 
 // Forward upstream
 ///////////////////
+_MountOperationHandler* skip
 Widget
   .drag_dest_set.targets array_length_idx=3
   .drag_source_set.targets array_length_idx=3

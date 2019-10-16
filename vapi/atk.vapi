@@ -164,6 +164,8 @@ namespace Atk {
 		public string get_id ();
 		[NoWrapper]
 		public virtual string get_object_id ();
+		[Version (since = "2.35.0")]
+		public void set_child (Atk.Object child);
 	}
 	[CCode (cheader_filename = "atk/atk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atk_range_get_type ()")]
 	[Compact]

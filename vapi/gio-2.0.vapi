@@ -2962,6 +2962,9 @@ namespace GLib {
 		public TlsCertificate.from_files (string cert_file, string key_file) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_pem (string data, ssize_t length) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.64")]
+		public TlsCertificate.from_pkcs11_uris (string pkcs11_uri, string? private_key_pkcs11_uri) throws GLib.Error;
 		public unowned GLib.TlsCertificate get_issuer ();
 		[Version (since = "2.34")]
 		public bool is_same (GLib.TlsCertificate cert_two);
@@ -2973,9 +2976,15 @@ namespace GLib {
 		public string certificate_pem { owned get; construct; }
 		public GLib.TlsCertificate issuer { get; construct; }
 		[NoAccessorMethod]
+		[Version (since = "2.64")]
+		public string pkcs11_uri { owned get; construct; }
+		[NoAccessorMethod]
 		public GLib.ByteArray private_key { construct; }
 		[NoAccessorMethod]
 		public string private_key_pem { construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.64")]
+		public string private_key_pkcs11_uri { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_connection_get_type ()")]
 	[Version (since = "2.28")]
