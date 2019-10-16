@@ -450,14 +450,16 @@ public class Vala.GIRWriter : CodeVisitor {
 				buffer.append_printf("</field>\n");
 			}
 
-			write_indent ();
-			buffer.append_printf ("<field name=\"priv\" readable=\"0\" private=\"1\">\n");
-			indent++;
-			write_indent ();
-			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", get_gir_name (cl), get_ccode_name (cl));
-			indent--;
-			write_indent ();
-			buffer.append_printf("</field>\n");
+			if (!context.abi_stability) {
+				write_indent ();
+				buffer.append_printf ("<field name=\"priv\" readable=\"0\" private=\"1\">\n");
+				indent++;
+				write_indent ();
+				buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", get_gir_name (cl), get_ccode_name (cl));
+				indent--;
+				write_indent ();
+				buffer.append_printf("</field>\n");
+			}
 
 			if (cl.base_class != null && cl.base_class.is_subtype_of (gobject_type)) {
 				foreach (var p in cl.get_type_parameters ()) {
@@ -468,6 +470,17 @@ public class Vala.GIRWriter : CodeVisitor {
 			hierarchy.insert (0, cl);
 			cl.accept_children (this);
 			hierarchy.remove_at (0);
+
+			if (context.abi_stability) {
+				write_indent ();
+				buffer.append_printf ("<field name=\"priv\" readable=\"0\" private=\"1\">\n");
+				indent++;
+				write_indent ();
+				buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", get_gir_name (cl), get_ccode_name (cl));
+				indent--;
+				write_indent ();
+				buffer.append_printf("</field>\n");
+			}
 
 			indent--;
 			write_indent ();
