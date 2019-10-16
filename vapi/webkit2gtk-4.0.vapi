@@ -1083,6 +1083,9 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (deprecated = true, deprecated_since = "2.10.", since = "2.8")]
 		public string local_storage_directory { owned get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.28")]
+		public bool process_swap_on_cross_site_navigation_enabled { get; construct; }
 		[Version (since = "2.10")]
 		public WebKit.WebsiteDataManager website_data_manager { get; construct; }
 		[Version (since = "2.18")]
@@ -1233,6 +1236,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public bool is_playing_audio { get; }
+		[Version (since = "2.28")]
+		public uint64 page_id { get; }
 		[NoAccessorMethod]
 		[Version (since = "2.4")]
 		public WebKit.WebView related_view { construct; }
