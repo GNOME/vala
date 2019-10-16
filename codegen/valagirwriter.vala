@@ -1544,6 +1544,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is PointerType) {
 			write_indent ();
 			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s%s\"/>\n", get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
+		} else if (type is DelegateType) {
+			var deleg_type = (DelegateType) type;
+			write_indent ();
+			buffer.append_printf ("<type name=\"%s\" c:type=\"%s%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
 		} else if (type.type_symbol != null) {
 			write_indent ();
 			string type_name = gi_type_name (type.type_symbol);
@@ -1568,10 +1572,6 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_indent ();
 				buffer.append_printf ("</%s>\n", is_array ? "array" : "type");
 			}
-		} else if (type is DelegateType) {
-			var deleg_type = (DelegateType) type;
-			write_indent ();
-			buffer.append_printf ("<type name=\"%s\" c:type=\"%s%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
 		} else if (type is GenericType) {
 			// generic type parameters not supported in GIR
 			write_indent ();

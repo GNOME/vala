@@ -22,6 +22,7 @@ namespace GirTest {
 	public class GenericsTest<G,T> {
 		public GenericsTest (owned GirTest.DelegateTest cb);
 		public void method (T param);
+		public GenericsTest.typed (owned GirTest.DelegateGenericsTest<G,T> cb);
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public class ImplementionTest : GLib.Object, GirTest.InterfaceTest {
@@ -161,6 +162,8 @@ namespace GirTest {
 		SMELLY,
 		FISHY
 	}
+	[CCode (cheader_filename = "girtest.h")]
+	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateTest (void* a, void* b);
 	[CCode (cheader_filename = "girtest.h")]

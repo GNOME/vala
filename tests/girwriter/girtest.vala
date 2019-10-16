@@ -79,6 +79,8 @@ namespace GirTest {
 
 	public delegate bool DelegateTest (void* a, void* b);
 
+	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
+
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
 
@@ -277,6 +279,9 @@ namespace GirTest {
 
 	public class GenericsTest<G,T> {
 		public GenericsTest (owned DelegateTest cb) {
+		}
+
+		public GenericsTest.typed (owned DelegateGenericsTest<G,T> cb) {
 		}
 
 		public void method (T param) {

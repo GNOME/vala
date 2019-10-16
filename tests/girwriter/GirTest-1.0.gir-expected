@@ -1021,6 +1021,40 @@
 				</parameter>
 			</parameters>
 		</constructor>
+		<constructor name="typed" c:identifier="gir_test_generics_test_new_typed">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="cb" transfer-ownership="none" closure="7" scope="notified" destroy="8">
+					<type name="GirTest.DelegateGenericsTest" c:type="GirTestDelegateGenericsTest"/>
+				</parameter>
+				<parameter name="cb_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="cb_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
 		<method name="method" c:identifier="gir_test_generics_test_method">
 			<return-value transfer-ownership="full">
 				<type name="none"/>
@@ -1373,6 +1407,40 @@
 				<type name="gpointer" c:type="void*"/>
 			</parameter>
 			<parameter name="user_data" transfer-ownership="none" closure="2">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+		</parameters>
+	</callback>
+	<callback name="DelegateGenericsTest" c:type="GirTestDelegateGenericsTest">
+		<return-value transfer-ownership="full">
+			<type name="gboolean" c:type="gboolean"/>
+		</return-value>
+		<parameters>
+			<parameter name="g_type" transfer-ownership="none">
+				<type name="GType" c:type="GType"/>
+			</parameter>
+			<parameter name="g_dup_func" transfer-ownership="none">
+				<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+			</parameter>
+			<parameter name="g_destroy_func" transfer-ownership="none">
+				<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+			</parameter>
+			<parameter name="t_type" transfer-ownership="none">
+				<type name="GType" c:type="GType"/>
+			</parameter>
+			<parameter name="t_dup_func" transfer-ownership="none">
+				<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+			</parameter>
+			<parameter name="t_destroy_func" transfer-ownership="none">
+				<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+			</parameter>
+			<parameter name="g" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</parameter>
+			<parameter name="t" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</parameter>
+			<parameter name="user_data" transfer-ownership="none" closure="8">
 				<type name="gpointer" c:type="void*"/>
 			</parameter>
 		</parameters>
