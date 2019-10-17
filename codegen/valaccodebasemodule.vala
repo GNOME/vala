@@ -2362,6 +2362,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public CCodeExpression get_this_interface_cexpression (Interface iface) {
+		if (current_class.implements (iface)) {
+			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (iface)));
+		}
+
+		if (!current_class.is_a (iface)) {
+			Report.warning (current_class.source_reference, "internal: `%s' is not a `%s'".printf (current_class.get_full_name (), iface.get_full_name ()));
+		}
+
+		var vcast = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+		vcast.add_argument (get_this_cexpression ());
+		vcast.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
+		vcast.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+		return vcast;
+	}
+
 	public CCodeExpression get_inner_error_cexpression () {
 		if (is_in_coroutine ()) {
 			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_inner_error%d_".printf (current_inner_error_id));
@@ -6056,9 +6072,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (ccall);
 			} else if (prop.base_interface_property != null) {
 				var base_iface = (Interface) prop.base_interface_property.parent_symbol;
-				string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (base_iface));
+				var vcast = get_this_interface_cexpression (base_iface);
 
-				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "set_%s".printf (prop.name)));
+				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
 				var cexpr = get_cvalue_ (value);
 				if (prop.property_type.is_real_non_null_struct_type ()) {

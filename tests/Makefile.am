@@ -283,7 +283,10 @@ TESTS = \
 	objects/fields.vala \
 	objects/gsource.vala \
 	objects/instance-comparison.vala \
+	objects/interface-async-base-access.vala \
+	objects/interface-base-access.vala \
 	objects/interfaces.vala \
+	objects/interface-property-base-access.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
