@@ -79,6 +79,7 @@ TESTS = \
 	chainup/class-this-foo.vala \
 	chainup/method-lambda-base.vala \
 	chainup/no-chainup.vala \
+	chainup/signal-default-handler.vala \
 	chainup/struct-base.vala \
 	chainup/struct-base-foo.vala \
 	chainup/struct-this.vala \
