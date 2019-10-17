@@ -507,17 +507,27 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
-	private bool class_is_a (Class cl, TypeSymbol t) {
-		if (cl == t) {
+	public bool is_a (ObjectTypeSymbol t) {
+		if (this == t) {
 			return true;
 		}
 
-		foreach (DataType base_type in cl.get_base_types ()) {
+		foreach (DataType base_type in get_base_types ()) {
 			if (base_type.data_type is Class) {
-				if (class_is_a ((Class) base_type.data_type, t)) {
+				if (((Class) base_type.data_type).is_a (t)) {
 					return true;
 				}
 			} else if (base_type.data_type == t) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public bool implements (Interface i) {
+		foreach (DataType base_type in get_base_types ()) {
+			if (base_type.data_type == i) {
 				return true;
 			}
 		}
@@ -705,7 +715,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		/* check whether all prerequisites are met */
 		List<string> missing_prereqs = new ArrayList<string> ();
 		foreach (TypeSymbol prereq in prerequisites) {
-			if (!class_is_a (this, prereq)) {
+			if (!is_a ((ObjectTypeSymbol) prereq)) {
 				missing_prereqs.insert (0, prereq.get_full_name ());
 			}
 		}
