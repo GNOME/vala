@@ -79,6 +79,8 @@ namespace GirTest {
 
 	public delegate bool DelegateTest (void* a, void* b);
 
+	public delegate bool DelegateErrorTest () throws ErrorTest;
+
 	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
 
 	[GIR (visible = false)]
@@ -119,6 +121,9 @@ namespace GirTest {
 		public ObjectTest () {
 		}
 		public ObjectTest.with_int (int param) {
+			field = param;
+		}
+		public ObjectTest.may_fail (int param) throws ErrorTest {
 			field = param;
 		}
 		public ObjectTest.newv (int param, ...) {
@@ -234,6 +239,9 @@ namespace GirTest {
 		public async void coroutine_async () {
 		}
 
+		public virtual async void coroutine_virtual_async () {
+		}
+
 		public virtual async void coroutine_method_throw (int i1, out int o1) throws ErrorTest {
 			o1 = i1;
 		}
@@ -267,6 +275,12 @@ namespace GirTest {
 
 	public class ImplementionTest : Object, InterfaceTest {
 		public int property { get; construct set; }
+	}
+
+	[Compact]
+	public class CompactClass {
+		public string s;
+		public int i;
 	}
 
 	[GIR (visible = false)]

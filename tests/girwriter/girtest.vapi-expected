@@ -9,6 +9,13 @@ namespace GirTest {
 		public abstract void method_throw () throws GirTest.ErrorTest;
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	[Compact]
+	public class CompactClass {
+		public int i;
+		public string s;
+		public CompactClass ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
 	public class DeprecatedClassTest {
 		public DeprecatedClassTest ();
@@ -42,6 +49,7 @@ namespace GirTest {
 		public (unowned string)[] container_return ();
 		public async void coroutine_async ();
 		public virtual async void coroutine_method_throw (int i1, out int o1) throws GirTest.ErrorTest;
+		public virtual async void coroutine_virtual_async ();
 		public GirTest.DelegateTest delegate_return ();
 		public GirTest.DelegateTest delegate_return_int_in_array_out (int i1, out int[] a);
 		public static void full_inout (ref GirTest.ObjectTest obj);
@@ -52,6 +60,7 @@ namespace GirTest {
 		public void int8_out (out int8 param);
 		public void int_in_int_in_array_out (int param1, int param2, out int[] array);
 		public int[] int_in_int_in_array_return (int param1, int param2);
+		public ObjectTest.may_fail (int param) throws GirTest.ErrorTest;
 		public void method ();
 		public virtual void method_throw () throws GirTest.ErrorTest;
 		public void method_valist (int param, va_list vargs);
@@ -162,6 +171,8 @@ namespace GirTest {
 		SMELLY,
 		FISHY
 	}
+	[CCode (cheader_filename = "girtest.h")]
+	public delegate bool DelegateErrorTest () throws GirTest.ErrorTest;
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
 	[CCode (cheader_filename = "girtest.h")]
