@@ -104,10 +104,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					string parent_iface_var = "%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (base_iface));
+					var vcast = get_this_interface_cexpression (base_iface);
 
-					async_call.call = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), get_ccode_vfunc_name (m));
-					finish_call.call = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), get_ccode_finish_vfunc_name (m));
+					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
+					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
 				}
 			}
 
