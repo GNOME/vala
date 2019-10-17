@@ -41,6 +41,24 @@ class Foo {
 			assert_not_reached ();
 		}
 	}
+
+	public virtual int manam (int i) ensures (result > 23) {
+		switch (i) {
+		case 67:
+			return i;
+		default:
+			assert_not_reached ();
+		}
+	}
+
+	public virtual int manam_pre (int i) requires (i > 23) {
+		switch (i) {
+		case 231:
+			return i;
+		default:
+			assert_not_reached ();
+		}
+	}
 }
 
 void main () {
@@ -53,6 +71,8 @@ void main () {
 	assert(foo.bar_pre (4711) == 4711);
 	assert (foo.faz (42) == 42);
 	assert (foo.faz_pre (4711) == 4711);
+	assert (foo.manam (67) == 67);
+	assert (foo.manam_pre (231) == 231);
 
 	var foo2 = new Foo.post ();
 	assert (foo2.ensured);
