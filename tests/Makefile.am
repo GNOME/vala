@@ -314,8 +314,11 @@ TESTS = \
 	objects/gsource.vala \
 	objects/instance-comparison.vala \
 	objects/interface_only.vala \
+	objects/interface-async-base-access.vala \
+	objects/interface-base-access.vala \
 	objects/interfaces.vala \
 	objects/interface-generics.vala \
+	objects/interface-property-base-access.vala \
 	objects/interface-virtual-override.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
