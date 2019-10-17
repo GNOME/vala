@@ -773,23 +773,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						creturn_type = new VoidType ();
 					}
 
-
-					if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
-					    && current_class.has_type_parameters ()
-					    && !((CreationMethod) m).chain_up) {
-						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
-						ccode.open_while (ccond);
-						ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it")));
-						var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
-						cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
-						ccode.add_expression (cunsetcall);
-						ccode.close ();
-
-						var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-						cfreeparams.add_argument (new CCodeIdentifier ("__params"));
-						ccode.add_expression (cfreeparams);
-					}
-
 					if (current_type_symbol is Class && !m.coroutine) {
 						CCodeExpression cresult = new CCodeIdentifier ("self");
 						if (get_ccode_type (m) != null) {
