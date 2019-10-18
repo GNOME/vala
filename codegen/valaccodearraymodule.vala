@@ -519,8 +519,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		if (requires_copy (array_type.element_type)) {
 			var cvardecl = new CCodeVariableDeclarator ("result");
-			var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			gnew.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+			CCodeFunctionCall gnew;
+			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
+				gnew = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+			} else {
+				gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+				gnew.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+			}
 
 			CCodeExpression length_expr = new CCodeIdentifier ("length");
 			// add extra item to have array NULL-terminated for all reference types
@@ -528,6 +534,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, length_expr, new CCodeConstant ("1"));
 			}
 			gnew.add_argument (length_expr);
+
+			if (context.profile == Profile.POSIX) {
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+				gnew.add_argument (csizeof);
+			}
 
 			ccode.add_declaration (get_ccode_name (array_type), cvardecl);
 			ccode.add_assignment (new CCodeIdentifier ("result"), gnew);

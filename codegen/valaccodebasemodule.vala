@@ -3040,9 +3040,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			ccode.add_declaration (get_ccode_name (value_type), new CCodeVariableDeclarator ("dup"));
 
-			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-			creation_call.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
-			creation_call.add_argument (new CCodeConstant ("1"));
+			CCodeFunctionCall creation_call;
+			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+				creation_call.add_argument (new CCodeConstant ("1"));
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (value_type.type_symbol)));
+				creation_call.add_argument (csizeof);
+			} else {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+				creation_call.add_argument (new CCodeIdentifier (get_ccode_name (value_type.type_symbol)));
+				creation_call.add_argument (new CCodeConstant ("1"));
+			}
 			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 
 			var st = value_type.type_symbol as Struct;
