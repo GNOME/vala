@@ -286,7 +286,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
-		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
+		fun.add_parameter (new CCodeParameter ("destroy_func", get_ccode_name (delegate_target_destroy_type)));
 
 		push_function (fun);
 
@@ -310,7 +310,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
-		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
+		fun.add_parameter (new CCodeParameter ("destroy_func", get_ccode_name (delegate_target_destroy_type)));
 
 		push_function (fun);
 
@@ -482,7 +482,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
 			ccall.add_argument (get_cvalue_ (value));
 			ccall.add_argument (get_ccodenode (array_type.length));
-			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), get_ccode_name (delegate_target_destroy_type)));
 
 			return ccall;
 		} else {

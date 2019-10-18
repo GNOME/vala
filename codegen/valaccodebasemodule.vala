@@ -3665,7 +3665,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							requires_array_free = true;
 							ccall.call = new CCodeIdentifier ("_vala_array_free");
 							ccall.add_argument (csizeexpr);
-							ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+							ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), get_ccode_name (delegate_target_destroy_type)));
 						}
 					}
 				}
