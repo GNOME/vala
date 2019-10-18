@@ -6128,24 +6128,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public void store_property (Property prop, Expression? instance, TargetValue value) {
 		if (instance is BaseAccess) {
+			CCodeExpression? vcast = null;
 			if (prop.base_property != null) {
-				var base_class = (Class) prop.base_property.parent_symbol;
-				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
-				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-				
-				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
-				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
-				var cexpr = get_cvalue_ (value);
-				if (prop.property_type.is_real_non_null_struct_type ()) {
-					cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
-				}
-				ccall.add_argument (cexpr);
-
-				ccode.add_expression (ccall);
+				unowned Class base_class = (Class) prop.base_property.parent_symbol;
+				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class))));
+				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
 			} else if (prop.base_interface_property != null) {
-				var base_iface = (Interface) prop.base_interface_property.parent_symbol;
-				var vcast = get_this_interface_cexpression (base_iface);
-
+				unowned Interface base_iface = (Interface) prop.base_interface_property.parent_symbol;
+				vcast = get_this_interface_cexpression (base_iface);
+			}
+			if (vcast != null) {
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
 				var cexpr = get_cvalue_ (value);

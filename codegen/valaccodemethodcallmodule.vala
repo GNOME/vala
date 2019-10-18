@@ -93,17 +93,16 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			finish_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_finish_name (m)));
 
 			if (ma.inner is BaseAccess) {
+				CCodeExpression? vcast = null;
 				if (m.base_method != null) {
-					var base_class = (Class) m.base_method.parent_symbol;
-					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-
-					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
-					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
+					unowned Class base_class = (Class) m.base_method.parent_symbol;
+					vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class))));
+					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
 				} else if (m.base_interface_method != null) {
-					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					var vcast = get_this_interface_cexpression (base_iface);
-
+					unowned Interface base_iface = (Interface) m.base_interface_method.parent_symbol;
+					vcast = get_this_interface_cexpression (base_iface);
+				}
+				if (vcast != null) {
 					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
 					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
 				}

@@ -49,17 +49,16 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (expr.inner is BaseAccess) {
+				CCodeExpression? vcast = null;
 				if (m.base_method != null) {
-					var base_class = (Class) m.base_method.parent_symbol;
-					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-					
-					set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m)));
-					return;
+					unowned Class base_class = (Class) m.base_method.parent_symbol;
+					vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class))));
+					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
 				} else if (m.base_interface_method != null) {
-					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					var vcast = get_this_interface_cexpression (base_iface);
-
+					unowned Interface base_iface = (Interface) m.base_interface_method.parent_symbol;
+					vcast = get_this_interface_cexpression (base_iface);
+				}
+				if (vcast != null) {
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m)));
 					return;
 				}
@@ -188,26 +187,16 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				} else if (prop.base_interface_property != null) {
 					base_prop = prop.base_interface_property;
 				}
+				CCodeExpression? vcast = null;
 				if (base_prop.parent_symbol is Class) {
-					var base_class = (Class) base_prop.parent_symbol;
-					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class, null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class, null))));
-					
-					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
-					ccall.add_argument (get_cvalue (expr.inner));
-					if (prop.property_type.is_real_non_null_struct_type ()) {
-						var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);
-						expr.target_value = load_temp_value (temp_value);
-						var ctemp = get_cvalue_ (temp_value);
-						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-						ccode.add_expression (ccall);
-					} else {
-						set_cvalue (expr, ccall);
-					}
+					unowned Class base_class = (Class) base_prop.parent_symbol;
+					vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (get_ccode_upper_case_name (base_class))));
+					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
 				} else if (base_prop.parent_symbol is Interface) {
-					var base_iface = (Interface) base_prop.parent_symbol;
-					var vcast = get_this_interface_cexpression (base_iface);
-
+					unowned Interface base_iface = (Interface) base_prop.parent_symbol;
+					vcast = get_this_interface_cexpression (base_iface);
+				}
+				if (vcast != null) {
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument (get_cvalue (expr.inner));
 					if (prop.property_type.is_real_non_null_struct_type ()) {
