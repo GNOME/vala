@@ -130,7 +130,11 @@ public class Vala.ArrayType : ReferenceType {
 			resize_method.return_type = new VoidType ();
 			resize_method.access = SymbolAccessibility.PUBLIC;
 
-			resize_method.set_attribute_string ("CCode", "cname", "g_renew");
+			if (CodeContext.get ().profile == Profile.POSIX) {
+				resize_method.set_attribute_string ("CCode", "cname", "realloc");
+			} else {
+				resize_method.set_attribute_string ("CCode", "cname", "g_renew");
+			}
 
 			resize_method.add_parameter (new Parameter ("length", length_type));
 

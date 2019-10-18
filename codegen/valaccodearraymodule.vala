@@ -663,15 +663,29 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("length"));
 		var size = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("size"));
 
-		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
-		renew_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
-		renew_call.add_argument (array);
+		CCodeFunctionCall renew_call;
+		if (context.profile == Profile.POSIX) {
+			cfile.add_include ("stdlib.h");
+			renew_call = new CCodeFunctionCall (new CCodeIdentifier ("realloc"));
+			renew_call.add_argument (array);
+		} else {
+			renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
+			renew_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+			renew_call.add_argument (array);
+		}
+		CCodeExpression renew_call_size;
 		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 			// NULL terminate array
-			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, size, new CCodeConstant ("1")));
+			renew_call_size = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, size, new CCodeConstant ("1"));
 		} else {
-			renew_call.add_argument (size);
+			renew_call_size = size;
 		}
+		if (context.profile == Profile.POSIX) {
+			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+			renew_call_size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, size, csizeof);
+		}
+		renew_call.add_argument (renew_call_size);
 
 		var csizecheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, length, size);
 		ccode.open_if (csizecheck);
