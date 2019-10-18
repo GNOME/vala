@@ -1867,7 +1867,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
 					} else if (property_type.compatible (string_type)) {
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+						CCodeFunctionCall ccall;
+						if (context.profile == Profile.POSIX) {
+							ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
+						} else {
+							ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+						}
 						ccall.add_argument (new CCodeIdentifier ("value"));
 						ccall.add_argument (get_call);
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("0")));
@@ -2913,7 +2918,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			make_comparable_cexpression (ref variable_type, ref s1, ref variable_type, ref s2);
 
 			if (!(f.variable_type is NullType) && f.variable_type.compatible (string_type)) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+				CCodeFunctionCall ccall;
+				if (context.profile == Profile.POSIX) {
+					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
+				} else {
+					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+				}
 				ccall.add_argument (s1);
 				ccall.add_argument (s2);
 				cexp = ccall;
@@ -5621,7 +5631,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cneedle = new CCodeIdentifier ("needle");
 		CCodeBinaryExpression cif_condition;
 		if (array_type.element_type.compatible (string_type)) {
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+			CCodeFunctionCall ccall;
+			if (context.profile == Profile.POSIX) {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
+			} else {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+			}
 			ccall.add_argument (celement);
 			ccall.add_argument (cneedle);
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("0"));
