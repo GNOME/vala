@@ -5611,7 +5611,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("stack", "%s *".printf (get_ccode_name (array_type.element_type))));
-		function.add_parameter (new CCodeParameter ("stack_length", "int"));
+		function.add_parameter (new CCodeParameter ("stack_length", get_ccode_name (int_type)));
 		if (array_type.element_type is StructValueType) {
 			function.add_parameter (new CCodeParameter ("needle", "const %s *".printf (get_ccode_name (array_type.element_type))));
 		} else {
@@ -5620,7 +5620,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
 
 		var cloop_initializer = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
 		var cloop_condition = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("stack_length"));
@@ -5676,7 +5676,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (cmpid.name == "g_strcmp0") {
 			cmp0_func = cmpid.name;
 		} else if (add_wrapper (cmp0_func)) {
-			var cmp0_fun = new CCodeFunction (cmp0_func, "int");
+			var cmp0_fun = new CCodeFunction (cmp0_func, get_ccode_name (int_type));
 			cmp0_fun.add_parameter (new CCodeParameter ("s1", "const void *"));
 			cmp0_fun.add_parameter (new CCodeParameter ("s2", "const void *"));
 			cmp0_fun.modifiers = CCodeModifiers.STATIC;

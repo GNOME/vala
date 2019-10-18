@@ -371,14 +371,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cfile.add_include ("stdio.h");
 
 			var counter = new CCodeIdentifier (prefix + "_counter");
-			var counter_decl = new CCodeDeclaration ("gint");
+			var counter_decl = new CCodeDeclaration (get_ccode_name (int_type));
 			counter_decl.add_declarator (new CCodeVariableDeclarator (counter.name));
 			counter_decl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_type_member_declaration (counter_decl);
 
 			// nesting level for recursive functions
 			var level = new CCodeIdentifier (prefix + "_level");
-			var level_decl = new CCodeDeclaration ("gint");
+			var level_decl = new CCodeDeclaration (get_ccode_name (int_type));
 			level_decl.add_declarator (new CCodeVariableDeclarator (level.name));
 			level_decl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_type_member_declaration (level_decl);

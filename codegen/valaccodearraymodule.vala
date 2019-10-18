@@ -231,14 +231,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (st))));
-		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
 
 		push_function (fun);
 
 		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
 		ccode.open_if (ccondarr);
 
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
 		append_struct_array_free_loop (st);
 
 		ccode.close ();
@@ -280,7 +280,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction ("_vala_array_destroy", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
-		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
 		push_function (fun);
@@ -289,7 +289,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var ccondfunc = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("destroy_func"), new CCodeConstant ("NULL"));
 		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccondarr, ccondfunc));
 
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
 		append_vala_array_free_loop ();
 
 		ccode.close ();
@@ -304,7 +304,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun = new CCodeFunction ("_vala_array_free", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
-		fun.add_parameter (new CCodeParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
 		push_function (fun);
@@ -335,9 +335,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeParameter ("element_size", "gsize"));
-		fun.add_parameter (new CCodeParameter ("src", "gint"));
-		fun.add_parameter (new CCodeParameter ("dest", "gint"));
-		fun.add_parameter (new CCodeParameter ("length", "gint"));
+		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (int_type)));
+		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (int_type)));
+		fun.add_parameter (new CCodeParameter ("length", get_ccode_name (int_type)));
 
 		push_function (fun);
 
@@ -391,13 +391,13 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void append_vala_array_length () {
-		var fun = new CCodeFunction ("_vala_array_length", "gint");
+		var fun = new CCodeFunction ("_vala_array_length", get_ccode_name (int_type));
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
 
 		push_function (fun);
 
-		ccode.add_declaration ("int", new CCodeVariableDeclarator ("length", new CCodeConstant ("0")));
+		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("length", new CCodeConstant ("0")));
 
 		// return 0 if the array is NULL
 		// avoids an extra NULL check on the caller side
@@ -495,7 +495,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		function.add_parameter (new CCodeParameter ("self", get_ccode_name (array_type)));
 		// total length over all dimensions
-		function.add_parameter (new CCodeParameter ("length", "int"));
+		function.add_parameter (new CCodeParameter ("length", get_ccode_name (int_type)));
 		if (array_type.element_type is GenericType) {
 			// dup function array elements
 			string func_name = "%s_dup_func".printf (((GenericType) array_type.element_type).type_parameter.name.down ());
@@ -522,7 +522,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccode.add_declaration (get_ccode_name (array_type), cvardecl);
 			ccode.add_assignment (new CCodeIdentifier ("result"), gnew);
 
-			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+			ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
 
 			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
 			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")),
@@ -575,7 +575,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		push_function (function);
 
 		if (requires_copy (array_type.element_type)) {
-			ccode.add_declaration ("int", new CCodeVariableDeclarator ("i"));
+			ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
 
 			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
 			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), get_ccodenode (array_type.length)),
@@ -619,8 +619,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (array_type))));
-		function.add_parameter (new CCodeParameter ("length", "int*"));
-		function.add_parameter (new CCodeParameter ("size", "int*"));
+		function.add_parameter (new CCodeParameter ("length", "%s*".printf (get_ccode_name (int_type))));
+		function.add_parameter (new CCodeParameter ("size", "%s*".printf (get_ccode_name (int_type))));
 
 		push_function (function);
 
