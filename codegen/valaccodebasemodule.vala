@@ -3200,7 +3200,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (destroy_call);
 			}
 
-			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			CCodeFunctionCall free_call;
+			if (context.profile == Profile.POSIX) {
+				free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+			} else {
+				free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			}
 			free_call.add_argument (new CCodeIdentifier ("self"));
 
 			ccode.add_expression (free_call);
@@ -3308,7 +3313,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						if (type.type_symbol is Struct && ((Struct) type.type_symbol).is_disposable ()) {
 							unref_function = generate_free_func_wrapper (type);
 						} else {
-							unref_function = "g_free";
+							if (context.profile == Profile.POSIX) {
+								unref_function = "free";
+							} else {
+								unref_function = "g_free";
+							}
 						}
 					}
 				} else if (type is EnumValueType) {

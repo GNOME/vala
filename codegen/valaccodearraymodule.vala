@@ -243,7 +243,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.close ();
 
-		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		CCodeFunctionCall carrfree;
+		if (context.profile == Profile.POSIX) {
+			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+		} else {
+			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		}
 		carrfree.add_argument (new CCodeIdentifier ("array"));
 		ccode.add_expression (carrfree);
 
@@ -316,7 +321,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccall.add_argument (new CCodeIdentifier ("destroy_func"));
 		ccode.add_expression (ccall);
 
-		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		CCodeFunctionCall carrfree;
+		if (context.profile == Profile.POSIX) {
+			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("free"));
+		} else {
+			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		}
 		carrfree.add_argument (new CCodeIdentifier ("array"));
 		ccode.add_expression (carrfree);
 
