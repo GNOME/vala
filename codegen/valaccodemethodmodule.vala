@@ -450,7 +450,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			} else {
 				if (m.body != null) {
-					function = new CCodeFunction (real_name + "_co", "gboolean");
+					function = new CCodeFunction (real_name + "_co", get_ccode_name (bool_type));
 
 					// data struct to hold parameters, local variables, and the return value
 					function.add_parameter (new CCodeParameter ("_data_", Symbol.lower_case_to_camel_case (get_ccode_const_name (m)) + "Data*"));

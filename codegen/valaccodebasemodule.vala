@@ -2873,7 +2873,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return equal_func;
 		}
 
-		var function = new CCodeFunction (equal_func, "gboolean");
+		var function = new CCodeFunction (equal_func, get_ccode_name (bool_type));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("s1", "const %s *".printf (get_ccode_name (st))));
@@ -2970,7 +2970,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return equal_func;
 		}
 
-		var function = new CCodeFunction (equal_func, "gboolean");
+		var function = new CCodeFunction (equal_func, get_ccode_name (bool_type));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("s1", "const %s *".printf (get_ccode_name (sym))));
@@ -3389,7 +3389,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			CCodeFunctionCall element_free_call;
 			string destroy_node_func = "%s_node".printf (destroy_func);
-			var wrapper = new CCodeFunction (destroy_node_func, "gboolean");
+			var wrapper = new CCodeFunction (destroy_node_func, get_ccode_name (bool_type));
 			wrapper.modifiers = CCodeModifiers.STATIC;
 			wrapper.add_parameter (new CCodeParameter ("node", get_ccode_name (collection_type)));
 			wrapper.add_parameter (new CCodeParameter ("free_func", "GDestroyNotify"));
@@ -5607,7 +5607,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return array_contains_func;
 		}
 
-		var function = new CCodeFunction (array_contains_func, "gboolean");
+		var function = new CCodeFunction (array_contains_func, get_ccode_name (bool_type));
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("stack", "%s *".printf (get_ccode_name (array_type.element_type))));
