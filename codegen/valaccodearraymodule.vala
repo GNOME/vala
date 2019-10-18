@@ -555,14 +555,34 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			ccode.add_return (new CCodeIdentifier ("result"));
 		} else {
-			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
-			dup_call.add_argument (new CCodeIdentifier ("self"));
-
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
-			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("length"), sizeof_call));
+			var length_expr = new CCodeIdentifier ("length");
 
-			ccode.add_return (dup_call);
+			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
+				var alloc = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+				alloc.add_argument (length_expr);
+				alloc.add_argument (sizeof_call);
+
+				var cvardecl = new CCodeVariableDeclarator ("result");
+				ccode.add_declaration (get_ccode_name (array_type), cvardecl);
+				ccode.add_assignment (new CCodeIdentifier ("result"), alloc);
+
+				var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+				dup_call.add_argument (new CCodeIdentifier ("result"));
+				dup_call.add_argument (new CCodeIdentifier ("self"));
+				dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length_expr, sizeof_call));
+				ccode.add_expression (dup_call);
+
+				ccode.add_return (new CCodeIdentifier ("result"));
+			} else {
+				var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				dup_call.add_argument (new CCodeIdentifier ("self"));
+				dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length_expr, sizeof_call));
+
+				ccode.add_return (dup_call);
+			}
 		}
 
 		// append to file
