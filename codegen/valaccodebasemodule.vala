@@ -3631,42 +3631,42 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (context.profile == Profile.GOBJECT) {
-			if (type.type_symbol != null && !is_reference_counting (type.type_symbol) &&
-			    (type.type_symbol.is_subtype_of (gstringbuilder_type)
-			     || type.type_symbol.is_subtype_of (garray_type)
-			     || type.type_symbol.is_subtype_of (gbytearray_type)
-			     || type.type_symbol.is_subtype_of (gptrarray_type))) {
-				ccall.add_argument (new CCodeConstant ("TRUE"));
-			} else if (type.type_symbol == gthreadpool_type) {
-				ccall.add_argument (new CCodeConstant ("FALSE"));
-				ccall.add_argument (new CCodeConstant ("TRUE"));
-			} else if (type is ArrayType) {
-				var array_type = (ArrayType) type;
-				if (requires_destroy (array_type.element_type)) {
-					CCodeExpression csizeexpr = null;
-					if (((GLibValue) value).array_length_cvalues != null) {
-						csizeexpr = get_array_length_cvalue (value);
-					} else if (get_array_null_terminated (value)) {
-						requires_array_length = true;
-						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (cvar);
-						csizeexpr = len_call;
-					} else {
-						csizeexpr = get_array_length_cexpr (value);
-					}
+		if (context.profile == Profile.GOBJECT
+		    && type.type_symbol != null && !is_reference_counting (type.type_symbol) &&
+		    (type.type_symbol.is_subtype_of (gstringbuilder_type)
+		     || type.type_symbol.is_subtype_of (garray_type)
+		     || type.type_symbol.is_subtype_of (gbytearray_type)
+		     || type.type_symbol.is_subtype_of (gptrarray_type))) {
+			ccall.add_argument (new CCodeConstant ("TRUE"));
+		} else if (context.profile == Profile.GOBJECT
+		    && type.type_symbol == gthreadpool_type) {
+			ccall.add_argument (new CCodeConstant ("FALSE"));
+			ccall.add_argument (new CCodeConstant ("TRUE"));
+		} else if (type is ArrayType) {
+			var array_type = (ArrayType) type;
+			if (requires_destroy (array_type.element_type)) {
+				CCodeExpression csizeexpr = null;
+				if (((GLibValue) value).array_length_cvalues != null) {
+					csizeexpr = get_array_length_cvalue (value);
+				} else if (get_array_null_terminated (value)) {
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+					len_call.add_argument (cvar);
+					csizeexpr = len_call;
+				} else {
+					csizeexpr = get_array_length_cexpr (value);
+				}
 
-					if (csizeexpr != null) {
-						unowned Struct? st = array_type.element_type.type_symbol as Struct;
-						if (st != null && !array_type.element_type.nullable) {
-							ccall.call = new CCodeIdentifier (append_struct_array_free (st));
-							ccall.add_argument (csizeexpr);
-						} else {
-							requires_array_free = true;
-							ccall.call = new CCodeIdentifier ("_vala_array_free");
-							ccall.add_argument (csizeexpr);
-							ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), get_ccode_name (delegate_target_destroy_type)));
-						}
+				if (csizeexpr != null) {
+					unowned Struct? st = array_type.element_type.type_symbol as Struct;
+					if (st != null && !array_type.element_type.nullable) {
+						ccall.call = new CCodeIdentifier (append_struct_array_free (st));
+						ccall.add_argument (csizeexpr);
+					} else {
+						requires_array_free = true;
+						ccall.call = new CCodeIdentifier ("_vala_array_free");
+						ccall.add_argument (csizeexpr);
+						ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), get_ccode_name (delegate_target_destroy_type)));
 					}
 				}
 			}
