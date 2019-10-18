@@ -267,7 +267,7 @@ public class Valadoc.SymbolResolver : Visitor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public override void visit_formal_parameter (FormalParameter item) {
+	public override void visit_formal_parameter (Api.Parameter item) {
 		if (item.ellipsis) {
 			return;
 		}

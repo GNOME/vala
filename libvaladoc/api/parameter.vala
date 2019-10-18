@@ -1,4 +1,4 @@
-/* formalparameter.vala
+/* parameter.vala
  *
  * Copyright (C) 2008-2011  Florian Brosch
  *
@@ -24,9 +24,9 @@
 using Valadoc.Content;
 
 /**
- * Represents a formal parameter in method, signal and delegate signatures.
+ * Represents a parameter in method, signal and delegate signatures.
  */
-public class Valadoc.Api.FormalParameter : Symbol {
+public class Valadoc.Api.Parameter : Symbol {
 	public Content.Run default_value {
 		get;
 		set;
@@ -58,7 +58,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 
 	private Vala.ParameterDirection type;
 
-	public FormalParameter (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility, Vala.ParameterDirection type, bool ellipsis, Vala.Parameter data) {
+	public Parameter (Node parent, SourceFile file, string? name, Vala.SymbolAccessibility accessibility, Vala.ParameterDirection type, bool ellipsis, Vala.Parameter data) {
 		base (parent, file, name, accessibility, null, data);
 		assert ((name == null && ellipsis) || (name != null && !ellipsis));
 

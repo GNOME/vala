@@ -79,11 +79,11 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		file = null;
 	}
 
-	private Api.FormalParameter? find_parameter (Api.Node node, string name) {
+	private Api.Parameter? find_parameter (Api.Node node, string name) {
 		Vala.List<Api.Node> parameters = node.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
 		foreach (Api.Node param in parameters) {
-			if (((Api.FormalParameter) param).name == name) {
-				return (Api.FormalParameter) param;
+			if (((Api.Parameter) param).name == name) {
+				return (Api.Parameter) param;
 			}
 		}
 
@@ -117,7 +117,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		if (param_names != null) {
 			foreach (ImplicitParameterPos pos in destroy_notifies) {
-				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				Api.Parameter? param = find_parameter (node, param_names[pos.parameter]);
 				if (param == null) {
 					continue ;
 				}
@@ -127,7 +127,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			}
 
 			foreach (ImplicitParameterPos pos in closures) {
-				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				Api.Parameter? param = find_parameter (node, param_names[pos.parameter]);
 				if (param == null) {
 					continue ;
 				}
@@ -137,7 +137,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			}
 
 			foreach (ImplicitParameterPos pos in array_lengths) {
-				Api.FormalParameter? param = find_parameter (node, param_names[pos.parameter]);
+				Api.Parameter? param = find_parameter (node, param_names[pos.parameter]);
 				if (param == null) {
 					continue ;
 				}

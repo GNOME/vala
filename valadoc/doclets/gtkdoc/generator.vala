@@ -1245,7 +1245,7 @@ It is important that your <link linkend="GValue"><type>GValue</type></link> hold
 		}
 	}
 
-	public override void visit_formal_parameter (Api.FormalParameter param) {
+	public override void visit_formal_parameter (Api.Parameter param) {
 		var param_name = param.name ?? "...";
 		var annotations = new string[]{};
 		var direction = "in";

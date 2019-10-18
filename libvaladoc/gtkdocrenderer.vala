@@ -31,8 +31,8 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 	private string? get_cname (Api.Item item) {
 		if (item is Api.Method) {
 			return ((Api.Method)item).get_cname ();
-		} else if (item is Api.FormalParameter) {
-			return ((Api.FormalParameter)item).name;
+		} else if (item is Api.Parameter) {
+			return ((Api.Parameter)item).name;
 		} else if (item is Api.Constant) {
 			return ((Api.Constant)item).get_cname ();
 		} else if (item is Api.Property) {
@@ -68,9 +68,9 @@ public class Valadoc.GtkdocRenderer : ContentRenderer {
 			writer.start_tag ("function")
 				.text (((Api.Method)item).get_cname ())
 				.end_tag ("function");
-		} else if (item is Api.FormalParameter) {
+		} else if (item is Api.Parameter) {
 			writer.start_tag ("parameter").
-				text (((Api.FormalParameter)item).name ?? "...")
+				text (((Api.Parameter)item).name ?? "...")
 				.end_tag ("parameter");
 		} else if (item is Api.Constant) {
 			writer.start_tag ("constant").text (((Api.Constant)item)

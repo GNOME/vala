@@ -130,11 +130,11 @@ public abstract class Valadoc.Api.Visitor : GLib.Object {
 	}
 
 	/**
-	 * Visit operation called for formal parameters.
+	 * Visit operation called for parameters.
 	 *
-	 * @param item a formal parameter
+	 * @param item a parameter
 	 */
-	public virtual void visit_formal_parameter (FormalParameter item) {
+	public virtual void visit_formal_parameter (Parameter item) {
 	}
 
 	/**

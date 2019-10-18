@@ -962,13 +962,13 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		Api.Node parent = get_parent_node_for (element);
 		SourceFile? file = get_source_file (element);
 
-		FormalParameter node = new FormalParameter (parent,
-													file,
-													element.name,
-													element.access,
-													element.direction,
-													element.ellipsis,
-													element);
+		Api.Parameter node = new Api.Parameter (parent,
+												file,
+												element.name,
+												element.access,
+												element.direction,
+												element.ellipsis,
+												element);
 		node.parameter_type = create_type_reference (element.variable_type, node, node);
 		parent.add_child (node);
 

@@ -37,8 +37,8 @@ namespace Gtkdoc {
 	public string? get_cname (Api.Item item) {
 		if (item is Api.Method) {
 			return ((Api.Method)item).get_cname ();
-		} else if (item is Api.FormalParameter) {
-			return ((Api.FormalParameter)item).name;
+		} else if (item is Api.Parameter) {
+			return ((Api.Parameter)item).name;
 		} else if (item is Api.Constant) {
 			return ((Api.Constant)item).get_cname ();
 		} else if (item is Api.Property) {
@@ -132,8 +132,8 @@ namespace Gtkdoc {
 			}
 			return """<link linkend="%s%s"><function>%s()</function></link>"""
 				.printf (to_docbook_id (parent), to_docbook_id (name), name);
-		} else if (item is Api.FormalParameter) {
-			return "<parameter>%s</parameter>".printf (((Api.FormalParameter)item).name);
+		} else if (item is Api.Parameter) {
+			return "<parameter>%s</parameter>".printf (((Api.Parameter)item).name);
 		} else if (item is Api.Constant) {
 			var cname = ((Api.Constant)item).get_cname ();
 			return """<link linkend="%s:CAPS"><literal>%s</literal></link>"""

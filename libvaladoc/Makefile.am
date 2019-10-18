@@ -67,7 +67,6 @@ libvaladoc_la_VALASOURCES = \
 	api/errorcode.vala \
 	api/errordomain.vala \
 	api/field.vala \
-	api/formalparameter.vala \
 	api/interface.vala \
 	api/item.vala \
 	api/method.vala \
@@ -76,6 +75,7 @@ libvaladoc_la_VALASOURCES = \
 	api/nodetype.vala \
 	api/ownership.vala \
 	api/package.vala \
+	api/parameter.vala \
 	api/pointer.vala \
 	api/property.vala \
 	api/propertyaccessor.vala \

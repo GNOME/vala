@@ -69,7 +69,7 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 		} else if (parameter_name == "...") {
 			Vala.List<Api.Node> params = container.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false);
 			foreach (Api.Node param in params) {
-				if (((Api.FormalParameter) param).ellipsis) {
+				if (((Api.Parameter) param).ellipsis) {
 					this.parameter = (Api.Symbol) param;
 					this.position = (has_instance)? params.size : params.size - 1;
 					break;
@@ -88,7 +88,7 @@ public class Valadoc.Taglets.Param : BlockContent, Taglet, Block {
 					break;
 				}
 
-				Api.FormalParameter formalparam = param as Api.FormalParameter;
+				Api.Parameter formalparam = param as Api.Parameter;
 				if (formalparam != null && (formalparam.implicit_array_length_cparameter_name == parameter_name
 					|| formalparam.implicit_closure_cparameter_name == parameter_name
 					|| formalparam.implicit_destroy_cparameter_name == parameter_name))

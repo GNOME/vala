@@ -1596,9 +1596,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_2":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1631,9 +1631,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_3":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == true);
@@ -1666,9 +1666,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_3a":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == true);
@@ -1701,9 +1701,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_4":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == true);
 			assert (param.is_ref == false);
@@ -1736,9 +1736,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_4a":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == true);
 			assert (param.is_ref == false);
@@ -1771,9 +1771,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_5":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1806,9 +1806,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_6":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1841,9 +1841,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_7":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1868,9 +1868,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_8":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value != null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1903,9 +1903,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_9":
 			assert (params.size == 7);
 
-			Api.FormalParameter? param = params.get (0) as Api.FormalParameter;
+			Api.Parameter? param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -1934,9 +1934,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (1) as Api.FormalParameter;
+			param = params.get (1) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == true);
@@ -1965,9 +1965,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (2) as Api.FormalParameter;
+			param = params.get (2) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == true);
 			assert (param.is_ref == false);
@@ -1996,9 +1996,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (3) as Api.FormalParameter;
+			param = params.get (3) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2027,9 +2027,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (4) as Api.FormalParameter;
+			param = params.get (4) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2058,9 +2058,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (5) as Api.FormalParameter;
+			param = params.get (5) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value != null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2089,9 +2089,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 
 
 
-			param = params.get (6) as Api.FormalParameter;
+			param = params.get (6) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2116,9 +2116,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_10":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2153,9 +2153,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_11":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2191,9 +2191,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_12":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2229,9 +2229,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_13":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);
@@ -2267,9 +2267,9 @@ public static void param_test (Api.Namespace ns, Api.Package pkg) {
 		case "test_function_param_14":
 			assert (params.size == 1);
 
-			Api.FormalParameter param = params.get (0) as Api.FormalParameter;
+			Api.Parameter param = params.get (0) as Api.Parameter;
 			assert (param != null);
-			// (.FormalParameter)
+			// (.Parameter)
 			assert (param.default_value == null);
 			assert (param.is_out == false);
 			assert (param.is_ref == false);

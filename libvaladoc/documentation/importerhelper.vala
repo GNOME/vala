@@ -36,15 +36,15 @@ namespace Valadoc.ImporterHelper {
 		is_return_type_len = false;
 		param_array_name = null;
 
-		Api.FormalParameter? param = null; // type parameter or formal parameter
+		Api.Parameter? param = null; // type parameter or formal parameter
 		foreach (Api.Node node in element.get_children_by_type (Api.NodeType.FORMAL_PARAMETER, false)) {
 			if (node.name == parts[0]) {
-				param = node as Api.FormalParameter;
+				param = node as Api.Parameter;
 				break;
 			}
 
-			if (((Api.FormalParameter) node).implicit_array_length_cparameter_name == parts[0]) {
-				param_array_name = ((Api.FormalParameter) node).name;
+			if (((Api.Parameter) node).implicit_array_length_cparameter_name == parts[0]) {
+				param_array_name = ((Api.Parameter) node).name;
 				break;
 			}
 		}
