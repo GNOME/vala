@@ -261,7 +261,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var cforiter = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1")));
 		ccode.open_for (cforinit, cforcond, cforiter);
 
-		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");
+		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "%s*".printf (get_ccode_name (pointer_type)));
 		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
 
 		var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
@@ -279,7 +279,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var fun = new CCodeFunction ("_vala_array_destroy", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
@@ -303,7 +303,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		fun = new CCodeFunction ("_vala_array_free", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("destroy_func", "GDestroyNotify"));
 
@@ -333,7 +333,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		// FIXME will leak memory if that's not the case
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("element_size", "gsize"));
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (int_type)));
@@ -393,7 +393,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override void append_vala_array_length () {
 		var fun = new CCodeFunction ("_vala_array_length", get_ccode_name (int_type));
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 
 		push_function (fun);
 
@@ -404,7 +404,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var array_check = new CCodeIdentifier ("array");
 		ccode.open_if (array_check);
 
-		var array_element_check = new CCodeElementAccess (new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*"), new CCodeConstant ("length"));
+		var array_element_check = new CCodeElementAccess (new CCodeCastExpression (new CCodeIdentifier ("array"), "%s*".printf (get_ccode_name (pointer_type))), new CCodeConstant ("length"));
 		ccode.open_while (array_element_check);
 		ccode.add_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("length")));
 		ccode.close ();

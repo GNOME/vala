@@ -305,6 +305,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public DataType regex_type;
 	public DataType float_type;
 	public DataType double_type;
+	public DataType pointer_type;
 	public TypeSymbol gtype_type;
 	public TypeSymbol gobject_type;
 	public ErrorType gerror_type;
@@ -514,11 +515,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			dbus_proxy_type = (TypeSymbol) glib_ns.scope.lookup ("DBusProxy");
 
-			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
+			pointer_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
+
+			delegate_target_type = pointer_type;
 			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
 		} else {
-			delegate_target_type = new PointerType (new VoidType ());
+			pointer_type = new PointerType (new VoidType ());
+
+			delegate_target_type = pointer_type;
 			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());
 			destroy_notify.add_parameter (new Parameter ("data", new PointerType (new VoidType ())));
 			destroy_notify.has_target = false;
@@ -2122,7 +2127,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (m.coroutine) {
 					// capture async data to allow invoking callback from inside closure
-					data.add_field ("gpointer", "_async_data_");
+					data.add_field (get_ccode_name (pointer_type), "_async_data_");
 
 					// async method is suspended while waiting for callback,
 					// so we never need to care about memory management of async data
@@ -3143,7 +3148,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var function = new CCodeFunction (destroy_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
-		function.add_parameter (new CCodeParameter ("data", "gpointer"));
+		function.add_parameter (new CCodeParameter ("data", get_ccode_name (pointer_type)));
 		push_function (function);
 
 		ccode.add_declaration (get_ccode_name (type), new CCodeVariableDeclarator ("self"));
@@ -3220,7 +3225,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var function = new CCodeFunction (free0_func, "void");
 				function.modifiers = CCodeModifiers.STATIC;
 
-				function.add_parameter (new CCodeParameter ("var", "gpointer"));
+				function.add_parameter (new CCodeParameter ("var", get_ccode_name (pointer_type)));
 
 				push_function (function);
 
@@ -4474,12 +4479,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (dupid.name == "g_strdup") {
 				dup0_func = dupid.name;
 			} else if (add_wrapper (dup0_func)) {
-				string pointer_cname = "gpointer";
-				if (context.profile == Profile.POSIX) {
-					pointer_cname = "void *";
-				}
-				var dup0_fun = new CCodeFunction (dup0_func, pointer_cname);
-				dup0_fun.add_parameter (new CCodeParameter ("self", pointer_cname));
+				var dup0_fun = new CCodeFunction (dup0_func, get_ccode_name (pointer_type));
+				dup0_fun.add_parameter (new CCodeParameter ("self", get_ccode_name (pointer_type)));
 				dup0_fun.modifiers = CCodeModifiers.STATIC;
 
 				push_function (dup0_fun);
@@ -4518,7 +4519,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (type is GenericType) {
 				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
-				ccall.add_argument (new CCodeCastExpression (cexpr, "gpointer"));
+				ccall.add_argument (new CCodeCastExpression (cexpr, get_ccode_name (pointer_type)));
 			} else {
 				ccall.add_argument (cexpr);
 			}
@@ -4545,7 +4546,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// cast from gconstpointer to gpointer as methods in
 				// generic classes may not return gconstpointer
-				cifnull = new CCodeCastExpression (cexpr, "gpointer");
+				cifnull = new CCodeCastExpression (cexpr, get_ccode_name (pointer_type));
 			}
 
 			if (is_ref_function_void (type)) {
@@ -5797,9 +5798,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		unowned SemanticAnalyzer analyzer = context.analyzer;
 		var result = cexpr;
 		if (analyzer.is_signed_integer_type_argument (actual_type)) {
-			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), "gpointer");
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (pointer_type));
 		} else if (analyzer.is_unsigned_integer_type_argument (actual_type)) {
-			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), "gpointer");
+			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), get_ccode_name (pointer_type));
 		}
 		return result;
 	}
