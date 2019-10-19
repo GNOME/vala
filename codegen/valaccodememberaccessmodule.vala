@@ -165,7 +165,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (array_type != null) {
 				string sub = "";
 				for (int i = 0; i < array_type.rank; i++) {
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
+					CCodeFunctionCall ccall;
+					if (context.profile == Profile.POSIX) {
+						requires_array_n_elements = true;
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("VALA_N_ELEMENTS"));
+					} else {
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
+					}
 					ccall.add_argument (new CCodeIdentifier (get_ccode_name (c) + sub));
 					append_array_length (expr, ccall);
 					sub += "[0]";

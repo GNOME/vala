@@ -344,6 +344,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
+	public bool requires_array_n_elements;
 	public bool requires_clear_mutex;
 
 	public Set<string> wrappers;
@@ -773,6 +774,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_array_length = false;
+		requires_array_n_elements = false;
 		requires_clear_mutex = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
@@ -806,6 +808,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (requires_array_length) {
 			append_vala_array_length ();
+		}
+		if (requires_array_n_elements) {
+			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("VALA_N_ELEMENTS(arr)", new CCodeConstant ("(sizeof (arr) / sizeof ((arr)[0]))")));
 		}
 		if (requires_clear_mutex) {
 			append_vala_clear_mutex ("GMutex", "g_mutex");
