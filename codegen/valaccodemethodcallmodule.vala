@@ -991,6 +991,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		ccode.add_expression (va_start);
 
+		if (context.profile == Profile.POSIX) {
+			cfile.add_include ("stdio.h");
+		}
+
 		var vsnprintf = new CCodeFunctionCall (new CCodeIdentifier ("vsnprintf"));
 		vsnprintf.add_argument (new CCodeConstant ("NULL"));
 		vsnprintf.add_argument (new CCodeConstant ("0"));

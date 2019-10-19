@@ -3212,6 +3212,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			CCodeFunctionCall free_call;
 			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
 				free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
 			} else {
 				free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
@@ -3324,6 +3325,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							unref_function = generate_free_func_wrapper (type);
 						} else {
 							if (context.profile == Profile.POSIX) {
+								cfile.add_include ("stdlib.h");
 								unref_function = "free";
 							} else {
 								unref_function = "g_free";
@@ -3371,12 +3373,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else if (type is ArrayType) {
 			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
 				return new CCodeIdentifier ("free");
 			} else {
 				return new CCodeIdentifier ("g_free");
 			}
 		} else if (type is PointerType) {
 			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("stdlib.h");
 				return new CCodeIdentifier ("free");
 			} else {
 				return new CCodeIdentifier ("g_free");
@@ -3664,6 +3668,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						ccall.add_argument (csizeexpr);
 					} else {
 						requires_array_free = true;
+						generate_type_declaration (delegate_target_destroy_type, cfile);
+
 						ccall.call = new CCodeIdentifier ("_vala_array_free");
 						ccall.add_argument (csizeexpr);
 						ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), get_ccode_name (delegate_target_destroy_type)));

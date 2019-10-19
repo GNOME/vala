@@ -245,6 +245,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		CCodeFunctionCall carrfree;
 		if (context.profile == Profile.POSIX) {
+			cfile.add_include ("stdlib.h");
 			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("free"));
 		} else {
 			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
@@ -281,6 +282,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 	public override void append_vala_array_free () {
 		// _vala_array_destroy only frees elements but not the array itself
+		generate_type_declaration (delegate_target_destroy_type, cfile);
 
 		var fun = new CCodeFunction ("_vala_array_destroy", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
@@ -323,6 +325,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		CCodeFunctionCall carrfree;
 		if (context.profile == Profile.POSIX) {
+			cfile.add_include ("stdlib.h");
 			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("free"));
 		} else {
 			carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
@@ -476,6 +479,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 
 			requires_array_free = true;
+			generate_type_declaration (delegate_target_destroy_type, cfile);
 
 			var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
@@ -561,6 +565,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			if (context.profile == Profile.POSIX) {
 				cfile.add_include ("stdlib.h");
+				cfile.add_include ("string.h");
+
 				var alloc = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 				alloc.add_argument (length_expr);
 				alloc.add_argument (sizeof_call);
