@@ -193,7 +193,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		// the complete call expression, might include casts, comma expressions, and/or assignments
 		CCodeExpression ccall_expr = ccall;
 
-		if (m is ArrayResizeMethod) {
+		if (m is ArrayResizeMethod && context.profile != Profile.POSIX) {
 			var array_type = (ArrayType) ma.inner.value_type;
 			in_arg_map.set (get_param_pos (0), new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 		} else if (m is ArrayMoveMethod) {
@@ -493,6 +493,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			arg_pos = get_param_pos (param != null ? get_ccode_pos (param) : i, ellipsis);
 			carg_map.set (arg_pos, cexpr);
+
+			if (m is ArrayResizeMethod && context.profile == Profile.POSIX) {
+				var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (((ArrayType) ma.inner.value_type).element_type)));
+				carg_map.set (arg_pos, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeof, cexpr));
+			} else {
+				carg_map.set (arg_pos, cexpr);
+			}
 
 			if (arg is NamedArgument && ellipsis) {
 				var named_arg = (NamedArgument) arg;
