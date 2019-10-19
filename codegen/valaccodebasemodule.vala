@@ -2890,19 +2890,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		{
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("TRUE"));
+			ccode.add_return (get_boolean_cconstant (true));
 			ccode.close ();
 		}
 		// if (s1 == NULL || s2 == NULL) return FALSE;
 		{
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeConstant ("NULL"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_return (get_boolean_cconstant (false));
 			ccode.close ();
 
 			cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s2"), new CCodeConstant ("NULL"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_return (get_boolean_cconstant (false));
 			ccode.close ();
 		}
 
@@ -2943,7 +2943,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_return (get_boolean_cconstant (false));
 			ccode.close ();
 		}
 
@@ -2953,10 +2953,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s1")), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s2")));
 				ccode.add_return (cexp);
 			} else {
-				ccode.add_return (new CCodeConstant ("FALSE"));
+				ccode.add_return (get_boolean_cconstant (false));
 			}
 		} else {
-			ccode.add_return (new CCodeConstant ("TRUE"));
+			ccode.add_return (get_boolean_cconstant (true));
 		}
 
 		pop_function ();
@@ -2987,19 +2987,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		{
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("TRUE"));
+			ccode.add_return (get_boolean_cconstant (true));
 			ccode.close ();
 		}
 		// if (s1 == NULL || s2 == NULL) return FALSE;
 		{
 			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeConstant ("NULL"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_return (get_boolean_cconstant (false));
 			ccode.close ();
 
 			cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s2"), new CCodeConstant ("NULL"));
 			ccode.open_if (cexp);
-			ccode.add_return (new CCodeConstant ("FALSE"));
+			ccode.add_return (get_boolean_cconstant (false));
 			ccode.close ();
 		}
 		// return (*s1 == *s2);
@@ -4140,12 +4140,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
-		if (context.profile == Profile.GOBJECT) {
-			set_cvalue (expr, new CCodeConstant (expr.value ? "TRUE" : "FALSE"));
-		} else {
-			cfile.add_include ("stdbool.h");
-			set_cvalue (expr, new CCodeConstant (expr.value ? "true" : "false"));
-		}
+		set_cvalue (expr, get_boolean_cconstant (expr.value));
 	}
 
 	public override void visit_character_literal (CharacterLiteral expr) {
@@ -5486,7 +5481,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
 				cleft = ccall;
-				cright = new CCodeConstant ("TRUE");
+				cright = get_boolean_cconstant (true);
 			} else if ((left_type is IntegerType || left_type is FloatingType || left_type is BooleanType || left_type is EnumValueType) && left_type.nullable &&
 			           (right_type is IntegerType || right_type is FloatingType || right_type is BooleanType || right_type is EnumValueType) && right_type.nullable) {
 				var equalfunc = generate_numeric_equal_function ((TypeSymbol) left_type.type_symbol);
@@ -5494,7 +5489,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
 				cleft = ccall;
-				cright = new CCodeConstant ("TRUE");
+				cright = get_boolean_cconstant (true);
 			}
 		}
 
@@ -5665,18 +5660,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, celement));
 			ccall.add_argument (cneedle);
-			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("TRUE"));
+			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, get_boolean_cconstant (true));
 		} else {
 			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cneedle, celement);
 		}
 
 		ccode.open_if (cif_condition);
-		ccode.add_return (new CCodeConstant ("TRUE"));
+		ccode.add_return (get_boolean_cconstant (true));
 		ccode.close ();
 
 		ccode.close ();
 
-		ccode.add_return (new CCodeConstant ("FALSE"));
+		ccode.add_return (get_boolean_cconstant (false));
 
 		pop_function ();
 
@@ -6498,6 +6493,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public virtual string generate_ready_function (Method m) {
 		return "";
+	}
+
+	public CCodeExpression get_boolean_cconstant (bool b) {
+		if (context.profile == Profile.GOBJECT) {
+			return new CCodeConstant (b ? "TRUE" : "FALSE");
+		} else {
+			cfile.add_include ("stdbool.h");
+			return new CCodeConstant (b ? "true" : "false");
+		}
 	}
 
 	public CCodeExpression? get_cvalue (Expression expr) {
