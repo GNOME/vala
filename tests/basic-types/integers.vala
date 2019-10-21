@@ -95,7 +95,7 @@ void test_int () {
 	int.try_parse (s, out i, out unparsed);
 	assert (i == int.MIN);
 	assert (unparsed == "m");
-	s = "%lim".printf (long.MAX);
+	s = "%um".printf (uint.MAX);
 	assert (!int.try_parse (s, out i));
 
 	s = "%lim".printf (long.MIN);
@@ -111,7 +111,7 @@ void test_int () {
 	uint.try_parse (s, out u, out unparsed);
 	assert (u == uint.MAX);
 	assert (unparsed == "m");
-	s = "%lum".printf (ulong.MAX);
+	s = "%im".printf (int.MIN);
 	assert (!uint.try_parse (s, out u));
 
 	s = "%lum".printf (ulong.MAX);
