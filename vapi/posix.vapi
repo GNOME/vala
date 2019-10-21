@@ -1692,6 +1692,18 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public const int EXIT_SUCCESS;
 
+	/* Memory Allocation */
+	[CCode (cheader_filename = "stdlib.h")]
+	public void* malloc (size_t size);
+	[CCode (cheader_filename = "stdlib.h")]
+	public void* calloc (size_t nmemb, size_t size);
+	[CCode (cheader_filename = "stdlib.h")]
+	public void* realloc (void* ptr, size_t size);
+	[CCode (cheader_filename = "stdlib.h", feature_test_macro = "_GNU_SOURCE")]
+	public void* reallocarray (void* ptr, size_t nmemb, size_t size);
+	[CCode (cheader_filename = "stdlib.h")]
+	public void free (void* ptr);
+
 	[CCode (cheader_filename = "string.h")]
 	public void* memccpy (void* s1, void* s2, int c, size_t n);
 	[CCode (cheader_filename = "string.h")]
