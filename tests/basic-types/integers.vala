@@ -91,6 +91,13 @@ void test_int () {
 	assert (s == "42");
 
 	unowned string unparsed;
+	s = "%im".printf (int.MIN);
+	int.try_parse (s, out i, out unparsed);
+	assert (i == int.MIN);
+	assert (unparsed == "m");
+	s = "%lim".printf (long.MAX);
+	assert (!int.try_parse (s, out i));
+
 	s = "%lim".printf (long.MIN);
 	long l;
 	long.try_parse (s, out l, out unparsed);
@@ -98,6 +105,14 @@ void test_int () {
 	assert (unparsed == "m");
 	s = "%lum".printf (ulong.MAX);
 	assert (!long.try_parse (s, out l));
+
+	s = "%um".printf (uint.MAX);
+	uint u;
+	uint.try_parse (s, out u, out unparsed);
+	assert (u == uint.MAX);
+	assert (unparsed == "m");
+	s = "%lum".printf (ulong.MAX);
+	assert (!uint.try_parse (s, out u));
 
 	s = "%lum".printf (ulong.MAX);
 	ulong ul;

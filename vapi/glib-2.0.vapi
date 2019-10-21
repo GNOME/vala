@@ -149,6 +149,26 @@ public struct int {
 
 	[CCode (cname = "atoi", cheader_filename = "stdlib.h")]
 	public static int parse (string str);
+
+	[CCode (cname = "strtol", cheader_filename = "stdlib.h")]
+	static long strtol (string nptr, out char* endptr, int _base);
+
+	public static bool try_parse (string str, out int result = null, out unowned string unparsed = null, uint _base = 0) {
+		char* endptr;
+		long long_result = strtol (str, out endptr, (int) _base);
+		if (endptr == (char*) str + str.length) {
+			unparsed = "";
+		} else {
+			unparsed = (string) endptr;
+		}
+		if (int.MIN <= long_result <= int.MAX) {
+			result = (int) long_result;
+			return true;
+		} else {
+			result = int.MAX;
+			return false;
+		}
+	}
 }
 
 [SimpleType]
@@ -185,6 +205,30 @@ public struct uint {
 	public static uint from_big_endian (uint val);
 	[CCode (cname = "GUINT_FROM_LE")]
 	public static uint from_little_endian (uint val);
+
+	[CCode (cname = "strtoul", cheader_filename = "stdlib.h")]
+	static ulong strtoul (string nptr, out char* endptr, int _base);
+
+	public static uint parse (string str, uint _base = 0) {
+		return (uint) strtoul (str, null, (int) _base);
+	}
+
+	public static bool try_parse (string str, out uint result = null, out unowned string unparsed = null, uint _base = 0) {
+		char* endptr;
+		ulong ulong_result = strtoul (str, out endptr, (int) _base);
+		if (endptr == (char*) str + str.length) {
+			unparsed = "";
+		} else {
+			unparsed = (string) endptr;
+		}
+		if (uint.MIN <= ulong_result <= uint.MAX) {
+			result = (uint) ulong_result;
+			return true;
+		} else {
+			result = uint.MAX;
+			return false;
+		}
+	}
 }
 
 [SimpleType]
