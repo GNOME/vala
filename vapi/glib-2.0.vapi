@@ -264,15 +264,15 @@ public struct long {
 	public static long from_little_endian (long val);
 
 	[CCode (cname = "strtol", cheader_filename = "stdlib.h")]
-	static long strtol (string nptr, out char* endptr, uint _base);
+	static long strtol (string nptr, out char* endptr, int _base);
 
-	public static long parse (string str) {
-		return strtol (str, null, 0);
+	public static long parse (string str, uint _base = 0) {
+		return strtol (str, null, (int) _base);
 	}
 
-	public static bool try_parse (string str, out long result = null, out unowned string unparsed = null) {
+	public static bool try_parse (string str, out long result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
-		result = strtol (str, out endptr, 0);
+		result = strtol (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
 			return true;
@@ -314,15 +314,15 @@ public struct ulong {
 	public static ulong from_little_endian (ulong val);
 
 	[CCode (cname = "strtoul", cheader_filename = "stdlib.h")]
-	static ulong strtoul (string nptr, out char* endptr, uint _base);
+	static ulong strtoul (string nptr, out char* endptr, int _base);
 
-	public static ulong parse (string str) {
-		return strtoul (str, null, 0);
+	public static ulong parse (string str, uint _base = 0) {
+		return strtoul (str, null, (int) _base);
 	}
 
-	public static bool try_parse (string str, out ulong result = null, out unowned string unparsed = null) {
+	public static bool try_parse (string str, out ulong result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
-		result = strtoul (str, out endptr, 0);
+		result = strtoul (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
 			return true;
@@ -719,14 +719,14 @@ public struct int64 {
 	static int64 ascii_strtoll (string nptr, out char* endptr, uint _base);
 
 	[Version (since = "2.12")]
-	public static int64 parse (string str) {
-		return ascii_strtoll (str, null, 0);
+	public static int64 parse (string str, uint _base = 0) {
+		return ascii_strtoll (str, null, _base);
 	}
 
 	[Version (since = "2.12")]
-	public static bool try_parse (string str, out int64 result = null, out unowned string unparsed = null) {
+	public static bool try_parse (string str, out int64 result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
-		result = ascii_strtoll (str, out endptr, 0);
+		result = ascii_strtoll (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
 			return true;
@@ -779,13 +779,13 @@ public struct uint64 {
 	[CCode (cname = "g_ascii_strtoull")]
 	static uint64 ascii_strtoull (string nptr, out char* endptr, uint _base);
 
-	public static uint64 parse (string str) {
-		return ascii_strtoull (str, null, 0);
+	public static uint64 parse (string str, uint _base = 0) {
+		return ascii_strtoull (str, null, _base);
 	}
 
-	public static bool try_parse (string str, out uint64 result = null, out unowned string unparsed = null) {
+	public static bool try_parse (string str, out uint64 result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
-		result = ascii_strtoull (str, out endptr, 0);
+		result = ascii_strtoull (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
 			return true;
