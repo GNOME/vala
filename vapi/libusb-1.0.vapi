@@ -282,8 +282,6 @@ namespace LibUSB {
 
 	public static uint16 le16_to_cpu (uint16 n);
 	public static uint16 cpu_to_le16 (uint16 n);
-	[CCode (cname = "malloc", cheader_filename = "stdlib.h")]
-	private static void* malloc (ulong n_bytes);
 
 	[Compact, CCode (cname = "struct libusb_control_setup")]
 	public class ControlSetup {
