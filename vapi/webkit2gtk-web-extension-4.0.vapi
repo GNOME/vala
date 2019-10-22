@@ -4097,6 +4097,30 @@ namespace WebKit {
 		public string suggested_filename { get; }
 		public string uri { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_user_message_get_type ()")]
+	public class UserMessage : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage (string name, GLib.Variant? parameters);
+		public static GLib.Quark error_quark ();
+		[Version (since = "2.28")]
+		public unowned GLib.UnixFDList get_fd_list ();
+		[Version (since = "2.28")]
+		public unowned string get_name ();
+		[Version (since = "2.28")]
+		public unowned GLib.Variant get_parameters ();
+		[Version (since = "2.28")]
+		public void send_reply (WebKit.UserMessage reply);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
+		[Version (since = "2.28")]
+		public GLib.UnixFDList fd_list { get; construct; }
+		[Version (since = "2.28")]
+		public string name { get; construct; }
+		[Version (since = "2.28")]
+		public GLib.Variant parameters { get; construct; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_editor_get_type ()")]
 	public class WebEditor : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -4111,7 +4135,11 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected WebExtension ();
 		public unowned WebKit.WebPage get_page (uint64 page_id);
+		[Version (since = "2.28")]
+		public async WebKit.UserMessage send_message_to_context (WebKit.UserMessage message, GLib.Cancellable? cancellable) throws GLib.Error;
 		public signal void page_created (WebKit.WebPage web_page);
+		[Version (since = "2.28")]
+		public signal void user_message_received (WebKit.UserMessage message);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
 	public class WebHitTestResult : WebKit.HitTestResult {
@@ -4132,6 +4160,8 @@ namespace WebKit {
 		[Version (since = "2.2")]
 		public unowned WebKit.Frame get_main_frame ();
 		public unowned string get_uri ();
+		[Version (since = "2.28")]
+		public async WebKit.UserMessage send_message_to_view (WebKit.UserMessage message, GLib.Cancellable? cancellable) throws GLib.Error;
 		public string uri { get; }
 		[Version (since = "2.12")]
 		public signal void console_message_sent (WebKit.ConsoleMessage console_message);
@@ -4143,6 +4173,8 @@ namespace WebKit {
 		[Version (since = "2.26")]
 		public signal void form_controls_associated_for_frame (GLib.GenericArray<WebKit.DOM.Element> elements, WebKit.Frame frame);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
+		[Version (since = "2.28")]
+		public signal bool user_message_received (WebKit.UserMessage message);
 		[Version (since = "2.20")]
 		public signal void will_submit_form (WebKit.DOM.Element form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
 	}
@@ -4229,6 +4261,12 @@ namespace WebKit {
 		EDITABLE,
 		SCROLLBAR,
 		SELECTION
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_USER_MESSAGE_UNHANDLED_", has_type_id = false)]
+	[Version (since = "2.28")]
+	public enum UserMessageError {
+		[CCode (cname = "WEBKIT_USER_MESSAGE_UNHANDLED_MESSAGE")]
+		USER_MESSAGE_UNHANDLED_MESSAGE
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", has_target = false)]
 	public delegate void WebExtensionInitializeFunction (WebKit.WebExtension extension);
