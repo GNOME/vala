@@ -163,7 +163,7 @@ public struct int {
 		}
 		if (int.MIN <= long_result <= int.MAX) {
 			result = (int) long_result;
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			result = int.MAX;
 			return false;
@@ -223,7 +223,7 @@ public struct uint {
 		}
 		if (uint.MIN <= ulong_result <= uint.MAX) {
 			result = (uint) ulong_result;
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			result = uint.MAX;
 			return false;
@@ -319,7 +319,7 @@ public struct long {
 		result = strtol (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -369,7 +369,7 @@ public struct ulong {
 		result = strtoul (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -773,7 +773,7 @@ public struct int64 {
 		result = ascii_strtoll (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -832,7 +832,7 @@ public struct uint64 {
 		result = ascii_strtoull (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE && errno != EINVAL;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -913,7 +913,7 @@ public struct float {
 		result = strtof (str, out endptr);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -994,7 +994,7 @@ public struct double {
 		result = ascii_strtod (str, out endptr);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
-			return true;
+			return errno != ERANGE;
 		} else {
 			unparsed = (string) endptr;
 			return false;
@@ -1609,6 +1609,14 @@ public class string16 {
 		}
 	}
 }
+
+// Required for proper error checking in *.try_parse()
+[CCode (cheader_filename = "errno.h")]
+private int errno;
+[CCode (cheader_filename = "errno.h")]
+private const int ERANGE;
+[CCode (cheader_filename = "errno.h")]
+private const int EINVAL;
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h", gir_namespace = "GLib", gir_version = "2.0")]
 namespace GLib {
