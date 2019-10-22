@@ -7634,7 +7634,7 @@ namespace Gtk {
 		public unowned Pango.TabArray? get_tabs ();
 		public uint16 get_text_length ();
 		public bool get_visibility ();
-		public void grab_focus_without_selecting ();
+		public bool grab_focus_without_selecting ();
 		public void progress_pulse ();
 		public void reset_im_context ();
 		public void set_activates_default (bool setting);
@@ -8456,8 +8456,6 @@ namespace Gtk {
 	public class IconInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IconInfo ();
-		[CCode (has_construct_function = false)]
-		public IconInfo.for_pixbuf (Gtk.IconTheme icon_theme, Gdk.Pixbuf pixbuf);
 		public int get_base_scale ();
 		public int get_base_size ();
 		public unowned string? get_filename ();
@@ -8478,13 +8476,11 @@ namespace Gtk {
 		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
 		public Gtk.IconInfo? choose_icon_for_scale ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
 		public static unowned Gtk.IconTheme get_default ();
-		public string? get_example_icon_name ();
 		public static unowned Gtk.IconTheme get_for_display (Gdk.Display display);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public int[] get_icon_sizes (string icon_name);
 		public void get_search_path ([CCode (array_length_cname = "n_elements", array_length_pos = 1.1)] out string[] path);
 		public bool has_icon (string icon_name);
-		public GLib.List<string> list_contexts ();
 		public GLib.List<string> list_icons (string? context);
 		public Gdk.Paintable? load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
 		public Gdk.Paintable? load_icon_for_scale (string icon_name, int size, int scale, Gtk.IconLookupFlags flags) throws GLib.Error;
@@ -10390,7 +10386,7 @@ namespace Gtk {
 		public string gtk_xft_rgba { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcut_label_get_type ()")]
-	public class ShortcutLabel : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
+	public class ShortcutLabel : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ShortcutLabel (string accelerator);
 		public unowned string? get_accelerator ();
@@ -10839,7 +10835,7 @@ namespace Gtk {
 		public bool get_visibility ();
 		public bool grab_focus_without_selecting ();
 		public void set_activates_default (bool activates);
-		public void set_attributes (Pango.AttrList attrs);
+		public void set_attributes (Pango.AttrList? attrs);
 		public void set_buffer (Gtk.EntryBuffer buffer);
 		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_input_hints (Gtk.InputHints hints);
@@ -13806,6 +13802,8 @@ namespace Gtk {
 	public delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate int AssistantPageFunc (int current_page);
+	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
+	public delegate void BindingCallback (Gtk.Widget widget, GLib.Variant? args);
 	[CCode (cheader_filename = "gtk/gtk.h", has_typedef = false)]
 	public delegate void BuildableParserEndElementFunc (Gtk.BuildableParseContext context, string element_name) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", has_typedef = false)]
@@ -14239,7 +14237,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void binding_entry_add_action_variant (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string action_name, GLib.Variant args);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void binding_entry_add_callback (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, owned Gtk.Callback callback);
+	public static void binding_entry_add_callback (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, [CCode (delegate_target_pos = 5.1, destroy_notify_pos = 5.2)] owned Gtk.BindingCallback callback, GLib.Variant args);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.TokenType binding_entry_add_signal_from_string (Gtk.BindingSet binding_set, string signal_desc);
 	[CCode (cheader_filename = "gtk/gtk.h")]

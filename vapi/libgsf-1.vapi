@@ -386,6 +386,8 @@ namespace Gsf {
 		[CCode (has_construct_function = false, type = "GsfOutput*")]
 		public OutputGZip (Gsf.Output sink) throws GLib.Error;
 		[NoAccessorMethod]
+		public int deflate_level { get; set; }
+		[NoAccessorMethod]
 		public bool raw { get; construct; }
 		[NoAccessorMethod]
 		public Gsf.Output sink { owned get; construct; }
@@ -423,6 +425,8 @@ namespace Gsf {
 		public OutputMemory ();
 		[CCode (array_length = false)]
 		public unowned uint8[]? get_bytes ();
+		[CCode (array_length = false)]
+		public unowned uint8[]? steal_bytes ();
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_output_stdio_get_type ()")]
 	public class OutputStdio : Gsf.Output {

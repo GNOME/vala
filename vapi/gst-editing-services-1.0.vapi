@@ -252,8 +252,8 @@ namespace GES {
 		public bool move (GES.Marker marker, Gst.ClockTime position);
 		public bool remove (GES.Marker marker);
 		public uint size ();
-		public signal void marker_added (uint64 object, GES.Marker p0);
-		public signal void marker_moved (uint64 object, GES.Marker p0);
+		public signal void marker_added (uint64 position, GES.Marker marker);
+		public signal void marker_moved (uint64 previous_position, uint64 new_position, GES.Marker marker);
 		public signal void marker_removed (GES.Marker marker);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_multi_file_source_get_type ()")]
