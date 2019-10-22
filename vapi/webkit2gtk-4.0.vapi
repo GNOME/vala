@@ -904,7 +904,7 @@ namespace WebKit {
 	public class URISchemeRequest : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected URISchemeRequest ();
-		public void finish (GLib.InputStream stream, int64 stream_length, string? mime_type);
+		public void finish (GLib.InputStream stream, int64 stream_length, string? content_type);
 		[Version (since = "2.2")]
 		public void finish_error (GLib.Error error);
 		public unowned string get_path ();
@@ -983,6 +983,29 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public bool is_for_video_device { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_message_get_type ()")]
+	public class UserMessage : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage (string name, GLib.Variant? parameters);
+		[Version (since = "2.28")]
+		public unowned GLib.UnixFDList get_fd_list ();
+		[Version (since = "2.28")]
+		public unowned string get_name ();
+		[Version (since = "2.28")]
+		public unowned GLib.Variant get_parameters ();
+		[Version (since = "2.28")]
+		public void send_reply (WebKit.UserMessage reply);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
+		[Version (since = "2.28")]
+		public GLib.UnixFDList fd_list { get; construct; }
+		[Version (since = "2.28")]
+		public string name { get; construct; }
+		[Version (since = "2.28")]
+		public GLib.Variant parameters { get; construct; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
 	[Compact]
 	public class UserScript {
@@ -1055,6 +1078,8 @@ namespace WebKit {
 		public bool is_ephemeral ();
 		public void prefetch_dns (string hostname);
 		public void register_uri_scheme (string scheme, owned WebKit.URISchemeRequestCallback callback);
+		[Version (since = "2.28")]
+		public void send_message_to_all_extensions (WebKit.UserMessage message);
 		public void set_additional_plugins_directory (string directory);
 		[Version (since = "2.18")]
 		public void set_automation_allowed (bool allowed);
@@ -1095,6 +1120,8 @@ namespace WebKit {
 		public virtual signal void initialize_notification_permissions ();
 		[Version (since = "2.4")]
 		public virtual signal void initialize_web_extensions ();
+		[Version (since = "2.28")]
+		public virtual signal bool user_message_received (WebKit.UserMessage message);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_web_inspector_get_type ()")]
 	public class WebInspector : GLib.Object {
@@ -1197,6 +1224,8 @@ namespace WebKit {
 		public async WebKit.JavascriptResult run_javascript_in_world (string script, string world_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.InputStream save (WebKit.SaveMode save_mode, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool save_to_file (GLib.File file, WebKit.SaveMode save_mode, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.28")]
+		public async WebKit.UserMessage send_message_to_page (WebKit.UserMessage message, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.8")]
 		public void set_background_color (Gdk.RGBA rgba);
 		public void set_custom_charset (string? charset);
@@ -1280,6 +1309,8 @@ namespace WebKit {
 		[Version (since = "2.8")]
 		public virtual signal bool show_notification (WebKit.Notification notification);
 		public virtual signal void submit_form (WebKit.FormSubmissionRequest request);
+		[Version (since = "2.28")]
+		public virtual signal bool user_message_received (WebKit.UserMessage message);
 		[Version (deprecated = true, deprecated_since = "2.20")]
 		public virtual signal bool web_process_crashed ();
 		[Version (since = "2.20")]
@@ -1696,6 +1727,12 @@ namespace WebKit {
 	public errordomain UserContentFilterError {
 		INVALID_SOURCE,
 		NOT_FOUND;
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_MESSAGE_UNHANDLED_")]
+	[Version (since = "2.28")]
+	public errordomain UserMessageError {
+		MESSAGE;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", instance_pos = 1.9)]
