@@ -2483,6 +2483,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		if (name == null) {
 			name = default_name;
+		} else if (name.contains ("-")) {
+			Report.warning (get_current_src (), "parameter name contains hyphen");
+			name = name.replace ("-", "_");
 		}
 		string direction = null;
 		if (metadata.has_argument (ArgumentType.OUT)) {
