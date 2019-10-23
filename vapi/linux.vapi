@@ -1280,6 +1280,17 @@ namespace Linux {
     [CCode (cheader_filename = "sys/mman.h")]
     public void *mremap (void *old_address, size_t old_size, size_t new_size, MremapFlags flags);
 
+    // memfd_create(2)
+    [CCode (cname = "unsigned int", cheader_filename = "linux/memfd.h", cprefix = "MFD_", has_type_id = false)]
+    public enum MemfdFlags {
+        CLOEXEC,
+        ALLOW_SEALING,
+        HUGETLB
+    }
+
+    [CCode (cheader_filename = "sys/mman.h", feature_test_macro = "_GNU_SOURCE")]
+    public int memfd_create (string name, MemfdFlags flags);
+
     /*
      * Network
      */
