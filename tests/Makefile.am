@@ -24,6 +24,7 @@ TESTS = \
 	basic-types/escape-chars.vala \
 	basic-types/floats.vala \
 	basic-types/custom-types.vala \
+	basic-types/default-gtype.vala \
 	basic-types/strings.vala \
 	basic-types/arrays.vala \
 	basic-types/arrays-fixed-assignment.vala \
