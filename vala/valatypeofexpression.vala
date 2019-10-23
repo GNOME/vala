@@ -86,6 +86,10 @@ public class Vala.TypeofExpression : Expression {
 			Report.warning (_data_type.source_reference, "Type argument list without effect");
 		}
 
+		if (_data_type is ArrayType && ((ArrayType) _data_type).element_type.type_symbol != context.analyzer.string_type.type_symbol) {
+			Report.warning (_data_type.source_reference, "Arrays do not have a `GLib.Type', with the exception of `string[]'");
+		}
+
 		return !error;
 	}
 
