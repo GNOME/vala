@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	if (true != false & 0) {
+		assert_not_reached ();
+	}
+}
