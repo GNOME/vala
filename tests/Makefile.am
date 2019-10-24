@@ -201,6 +201,8 @@ TESTS = \
 	control-semantic/argument-owned-ref.test \
 	control-semantic/argument-value-out.test \
 	control-semantic/argument-value-ref.test \
+	control-semantic/condition-not-boolean.test \
+	control-semantic/expression-not-boolean.test \
 	control-semantic/literal-immutable.test \
 	control-semantic/member-incompatible-type.test \
 	control-semantic/member-invalid.test \

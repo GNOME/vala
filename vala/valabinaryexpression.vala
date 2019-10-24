@@ -511,7 +511,13 @@ public class Vala.BinaryExpression : Expression {
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
 
-			value_type = left.target_type.copy ();
+			// Don't falsely resolve to bool
+			if (left.value_type.compatible (context.analyzer.bool_type)
+			    && !right.value_type.compatible (context.analyzer.bool_type)) {
+				value_type = right.target_type.copy ();
+			} else {
+				value_type = left.target_type.copy ();
+			}
 			break;
 		case BinaryOperator.AND:
 		case BinaryOperator.OR:
