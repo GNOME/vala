@@ -16,7 +16,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceBuffer (Gtk.TextTagTable? table);
 		[Version (since = "2.2")]
-		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string? category);
+		public bool backward_iter_to_source_mark (ref Gtk.TextIter iter, string? category);
 		public void begin_not_undoable_action ();
 		[Version (since = "3.12")]
 		public void change_case (Gtk.SourceChangeCaseType case_type, Gtk.TextIter start, Gtk.TextIter end);
@@ -25,7 +25,7 @@ namespace Gtk {
 		public void end_not_undoable_action ();
 		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
 		[Version (since = "2.2")]
-		public bool forward_iter_to_source_mark (Gtk.TextIter iter, string? category);
+		public bool forward_iter_to_source_mark (ref Gtk.TextIter iter, string? category);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.10")]
 		public string[] get_context_classes_at_iter (Gtk.TextIter iter);
@@ -42,9 +42,9 @@ namespace Gtk {
 		public unowned Gtk.SourceStyleScheme? get_style_scheme ();
 		public unowned Gtk.SourceUndoManager? get_undo_manager ();
 		[Version (since = "2.10")]
-		public bool iter_backward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
+		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		[Version (since = "2.10")]
-		public bool iter_forward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
+		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		[Version (since = "2.10")]
 		public bool iter_has_context_class (Gtk.TextIter iter, string context_class);
 		[Version (since = "3.16")]
