@@ -528,6 +528,7 @@ StyleProperties
   .register_property skip=false
   .register_property.parse_func nullable
 TextBuffer
+  .backspace.iter ref
   .delete.start ref
   .delete.end ref
   .delete_interactive.start_iter ref
