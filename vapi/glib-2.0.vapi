@@ -1904,6 +1904,15 @@ namespace GLib {
 		public void invoke_full (int priority, owned SourceFunc function);
 	}
 
+	[Compact]
+	[Version (since = "2.64")]
+	[CCode (free_function = "g_main_context_pusher_free")]
+	public class MainContextPusher {
+		public MainContextPusher (MainContext context);
+		[DestroysInstance]
+		public void free ();
+	}
+
 	[CCode (has_target = false)]
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
 
@@ -5954,7 +5963,9 @@ namespace GLib {
 		UNEXPECTED_TOKEN,
 		UNKNOWN_KEYWORD,
 		UNTERMINATED_STRING_CONSTANT,
-		VALUE_EXPECTED;
+		VALUE_EXPECTED,
+		[Version (since = "2.64")]
+		RECURSION;
 		public static GLib.Quark quark ();
 	}
 
