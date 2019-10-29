@@ -5,12 +5,12 @@ namespace Gtk {
 	public class SourceBuffer : Gtk.TextBuffer {
 		[CCode (has_construct_function = false)]
 		public SourceBuffer (Gtk.TextTagTable? table);
-		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string category);
+		public bool backward_iter_to_source_mark (ref Gtk.TextIter iter, string category);
 		public void begin_not_undoable_action ();
 		public unowned Gtk.SourceMark create_source_mark (string name, string category, Gtk.TextIter where);
 		public void end_not_undoable_action ();
 		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
-		public bool forward_iter_to_source_mark (Gtk.TextIter iter, string category);
+		public bool forward_iter_to_source_mark (ref Gtk.TextIter iter, string category);
 		public unowned string get_context_classes_at_iter (Gtk.TextIter iter);
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
@@ -20,8 +20,8 @@ namespace Gtk {
 		public unowned GLib.SList get_source_marks_at_line (int line, string category);
 		public unowned Gtk.SourceStyleScheme get_style_scheme ();
 		public unowned Gtk.SourceUndoManager get_undo_manager ();
-		public bool iter_backward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
-		public bool iter_forward_to_context_class_toggle (Gtk.TextIter iter, string context_class);
+		public bool iter_backward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
+		public bool iter_forward_to_context_class_toggle (ref Gtk.TextIter iter, string context_class);
 		public bool iter_has_context_class (Gtk.TextIter iter, string context_class);
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
 		public void set_highlight_matching_brackets (bool highlight);
