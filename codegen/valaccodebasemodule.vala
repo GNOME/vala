@@ -4642,10 +4642,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
 			if (type_parameters != null) {
-				var type_param_name = type_parameters.get (type_param_index).name.down ();
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s_type\"".printf (type_param_name)));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s_dup_func\"".printf (type_param_name)));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s_destroy_func\"".printf (type_param_name)));
+				var type_param_name = type_parameters.get (type_param_index).name.down ().replace ("_", "-");
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name)));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s-dup-func\"".printf (type_param_name)));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s-destroy-func\"".printf (type_param_name)));
 			}
 
 			arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), get_type_id_expression (type_arg, is_chainup));
