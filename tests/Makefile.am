@@ -500,6 +500,7 @@ TESTS = \
 	asynchronous/yield.vala \
 	generics/arrays-not-supported.test \
 	generics/constructor-chain-up.vala \
+	generics/gobject-construction.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \
 	generics/bug640330.test \
