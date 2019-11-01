@@ -427,7 +427,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			write_indent ();
-			buffer.append_printf ("<field name=\"parent_instance\">\n");
+			buffer.append_printf ("<field name=\"parent_instance\" readable=\"0\" private=\"1\">\n");
 			indent++;
 			write_indent ();
 			if (cl.base_class == null) {
@@ -451,7 +451,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			write_indent ();
-			buffer.append_printf ("<field name=\"priv\">\n");
+			buffer.append_printf ("<field name=\"priv\" readable=\"0\" private=\"1\">\n");
 			indent++;
 			write_indent ();
 			buffer.append_printf ("<type name=\"%sPrivate\" c:type=\"%sPrivate*\"/>\n", get_gir_name (cl), get_ccode_name (cl));
@@ -481,7 +481,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			indent++;
 
 			write_indent ();
-			buffer.append_printf ("<field name=\"parent_class\">\n");
+			buffer.append_printf ("<field name=\"parent_class\" readable=\"0\" private=\"1\">\n");
 			indent++;
 			write_indent ();
 			if (cl.base_class == null) {
@@ -657,7 +657,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent++;
 
 		write_indent ();
-		buffer.append_printf ("<field name=\"parent_iface\">\n");
+		buffer.append_printf ("<field name=\"parent_iface\" readable=\"0\" private=\"1\">\n");
 		indent++;
 		write_indent ();
 		buffer.append_printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (gtypeinterface_type), get_ccode_name (gtypeinterface_type));
