@@ -169,6 +169,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Class gsource_type;
 	public DataType delegate_target_type;
 	public DelegateType delegate_target_destroy_type;
+	public DelegateType generics_dup_func_type;
 
 	Delegate destroy_notify;
 
@@ -236,6 +237,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
 			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");
 			delegate_target_destroy_type = new DelegateType (destroy_notify);
+
+			generics_dup_func_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("BoxedCopyFunc"));
 		} else {
 			delegate_target_type = new PointerType (new VoidType ());
 			destroy_notify = new Delegate ("ValaDestroyNotify", new VoidType ());

@@ -31,6 +31,9 @@ public class Vala.GenericType : DataType {
 	 */
 	public weak TypeParameter type_parameter { get; set; }
 
+	GenericDupField? dup_field;
+	GenericDestroyField? destroy_field;
+
 	public GenericType (TypeParameter type_parameter) {
 		this.type_parameter = type_parameter;
 		// type parameters are always considered nullable
@@ -74,6 +77,27 @@ public class Vala.GenericType : DataType {
 	}
 
 	public override Symbol? get_member (string member_name) {
+		if (member_name == "dup") {
+			return get_dup_field ();
+		} else if (member_name == "destroy") {
+			return get_destroy_field ();
+		}
 		return null;
+	}
+
+	unowned GenericDupField get_dup_field () {
+		if (dup_field == null) {
+			dup_field = new GenericDupField (source_reference);
+			dup_field.access = SymbolAccessibility.PUBLIC;
+		}
+		return dup_field;
+	}
+
+	unowned GenericDestroyField get_destroy_field () {
+		if (destroy_field == null) {
+			destroy_field = new GenericDestroyField (source_reference);
+			destroy_field.access = SymbolAccessibility.PUBLIC;
+		}
+		return destroy_field;
 	}
 }

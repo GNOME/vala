@@ -362,6 +362,11 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
+			if (inner is MemberAccess && inner.symbol_reference is TypeParameter) {
+				inner.value_type = new GenericType ((TypeParameter) inner.symbol_reference);
+				inner.value_type.source_reference = source_reference;
+			}
+
 			if (symbol_reference == null && inner.value_type != null) {
 				if (pointer_member_access) {
 					symbol_reference = inner.value_type.get_pointer_member (member_name);

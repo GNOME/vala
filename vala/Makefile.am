@@ -90,6 +90,8 @@ libvala_la_VALASOURCES = \
 	valaforeachstatement.vala \
 	valaforstatement.vala \
 	valagirparser.vala \
+	valagenericdestroyfield.vala \
+	valagenericdupfield.vala \
 	valagenerictype.vala \
 	valagenieparser.vala \
 	valageniescanner.vala \
