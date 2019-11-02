@@ -495,6 +495,7 @@ TESTS = \
 	generics/constructor-chain-up.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \
+	generics/type-parameter-properties.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
 	generics/bug694765-1.vala \
