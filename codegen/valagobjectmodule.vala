@@ -93,7 +93,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (new CCodeConstant ("\"type\""));
 			cspec.add_argument (new CCodeConstant ("\"type\""));
 			cspec.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
 			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
@@ -109,7 +109,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (func_name_constant);
 			cspec.add_argument (new CCodeConstant ("\"dup func\""));
 			cspec.add_argument (new CCodeConstant ("\"dup func\""));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
 			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
@@ -125,7 +125,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cspec.add_argument (func_name_constant);
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY"));
 			cinst.add_argument (cspec);
 			ccode.add_expression (cinst);
 			prop_enum.add_value (new CCodeEnumValue (enum_value));
@@ -282,6 +282,43 @@ public class Vala.GObjectModule : GTypeModule {
 					ccode.close ();
 				}
 			}
+			ccode.add_break ();
+		}
+
+		/* type, dup func, and destroy func properties for generic types */
+		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			string func_name, enum_value;
+			CCodeMemberAccess cfield;
+			CCodeFunctionCall csetcall;
+
+			func_name = "%s_type".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
+			ccode.add_case (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_gtype"));
+			csetcall.add_argument (new CCodeIdentifier ("value"));
+			csetcall.add_argument (cfield);
+			ccode.add_expression (csetcall);
+			ccode.add_break ();
+
+			func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
+			ccode.add_case (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+			csetcall.add_argument (new CCodeIdentifier ("value"));
+			csetcall.add_argument (cfield);
+			ccode.add_expression (csetcall);
+			ccode.add_break ();
+
+			func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
+			enum_value = "%s_%s".printf (get_ccode_lower_case_name (cl, null), func_name).ascii_up ();
+			ccode.add_case (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+			csetcall.add_argument (new CCodeIdentifier ("value"));
+			csetcall.add_argument (cfield);
+			ccode.add_expression (csetcall);
 			ccode.add_break ();
 		}
 		ccode.add_default ();
