@@ -633,6 +633,8 @@ TESTS = \
 	semantic/foreach-next-void.test \
 	semantic/foreach-wrong-types.test \
 	semantic/initializer-unknown-type.test \
+	semantic/interface-prerequisite-invalid.test \
+	semantic/interface-prerequisite-less-accessible.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \
