@@ -1,0 +1,10 @@
+Invalid Code
+
+class Bar {
+}
+
+public interface Foo : Bar {
+}
+
+void main () {
+}

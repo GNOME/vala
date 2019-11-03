@@ -176,28 +176,21 @@ public class Vala.Interface : ObjectTypeSymbol {
 		/* check prerequisites */
 		Class prereq_class = null;
 		foreach (DataType prereq in get_prerequisites ()) {
-			TypeSymbol class_or_interface = prereq.type_symbol;
-			/* skip on previous errors */
-			if (class_or_interface == null) {
+			if (!(prereq is ObjectType)) {
 				error = true;
-				continue;
-			}
-
-			if (!(class_or_interface is ObjectTypeSymbol)) {
-				error = true;
-				Report.error (source_reference, "Prerequisite `%s' of interface `%s' is not a class or interface".printf (get_full_name (), class_or_interface.to_string ()));
+				Report.error (source_reference, "Prerequisite `%s' of interface `%s' is not a class or interface".printf (prereq.to_string (), get_full_name ()));
 				return false;
 			}
 
 			/* interfaces are not allowed to have multiple instantiable prerequisites */
-			if (class_or_interface is Class) {
+			if (prereq.type_symbol is Class) {
 				if (prereq_class != null) {
 					error = true;
-					Report.error (source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (get_full_name (), class_or_interface.get_full_name (), prereq_class.get_full_name ()));
+					Report.error (source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (get_full_name (), prereq.type_symbol.get_full_name (), prereq_class.get_full_name ()));
 					return false;
 				}
 
-				prereq_class = (Class) class_or_interface;
+				prereq_class = (Class) prereq.type_symbol;
 			}
 		}
 
