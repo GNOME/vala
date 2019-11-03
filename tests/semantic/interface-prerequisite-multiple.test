@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+}
+
+class Bar {
+}
+
+interface Baz : Foo, Bar {
+}
+
+void main () {
+}
