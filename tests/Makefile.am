@@ -646,6 +646,7 @@ TESTS = \
 	semantic/chainup-gobject-unsupported-type-property.test \
 	semantic/class-base-type-invalid.test \
 	semantic/class-base-type-less-accessible.test \
+	semantic/class-base-type-multiple.test \
 	semantic/class-compact-field-class.test \
 	semantic/class-compact-field-lock.test \
 	semantic/class-compact-field-private.test \
@@ -704,6 +705,7 @@ TESTS = \
 	semantic/initializer-unknown-type.test \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
+	semantic/interface-prerequisite-multiple.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \
