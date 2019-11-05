@@ -462,7 +462,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_identifier (ev.name);
 
-			if (type == CodeWriterType.FAST && ev.value != null) {
+			if (type == CodeWriterType.FAST && ev.value != null && ev.value.is_constant ()) {
 				write_string(" = ");
 				ev.value.accept (this);
 			}
@@ -574,7 +574,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string (" ");
 		write_identifier (c.name);
 		write_type_suffix (c.type_reference);
-		if (type == CodeWriterType.FAST && c.value != null) {
+		if (type == CodeWriterType.FAST && c.value != null && c.value.is_constant ()) {
 			write_string(" = ");
 			c.value.accept (this);
 		}
