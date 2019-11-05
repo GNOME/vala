@@ -31,17 +31,23 @@
 		</struct>
 		<struct name="GtkPrintJob_listautoptr">
 		</struct>
+		<struct name="GtkPrintJob_queueautoptr">
+		</struct>
 		<struct name="GtkPrintJob_slistautoptr">
 		</struct>
 		<struct name="GtkPrintUnixDialog_autoptr">
 		</struct>
 		<struct name="GtkPrintUnixDialog_listautoptr">
 		</struct>
+		<struct name="GtkPrintUnixDialog_queueautoptr">
+		</struct>
 		<struct name="GtkPrintUnixDialog_slistautoptr">
 		</struct>
 		<struct name="GtkPrinter_autoptr">
 		</struct>
 		<struct name="GtkPrinter_listautoptr">
+		</struct>
+		<struct name="GtkPrinter_queueautoptr">
 		</struct>
 		<struct name="GtkPrinter_slistautoptr">
 		</struct>
@@ -61,6 +67,9 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkConstraintTarget"/>
+				<interface name="GtkNative"/>
+				<interface name="GtkRoot"/>
 			</implements>
 			<method name="get_page_setup" symbol="gtk_page_setup_unix_dialog_get_page_setup">
 				<return-type type="GtkPageSetup*"/>
@@ -315,7 +324,7 @@
 			<signal name="status-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="job" type="GtkPrintJob*"/>
+					<parameter name="object" type="GtkPrintJob*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -323,6 +332,9 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkConstraintTarget"/>
+				<interface name="GtkNative"/>
+				<interface name="GtkRoot"/>
 			</implements>
 			<method name="add_custom_tab" symbol="gtk_print_unix_dialog_add_custom_tab">
 				<return-type type="void"/>
@@ -616,8 +628,8 @@
 			<signal name="details-acquired" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="printer" type="GtkPrinter*"/>
-					<parameter name="success" type="gboolean"/>
+					<parameter name="object" type="GtkPrinter*"/>
+					<parameter name="p0" type="gboolean"/>
 				</parameters>
 			</signal>
 		</object>
