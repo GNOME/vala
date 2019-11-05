@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
-	public class PageSetupUnixDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+	public class PageSetupUnixDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PageSetupUnixDialog (string title, Gtk.Window parent);
 		public unowned Gtk.PageSetup get_page_setup ();
@@ -57,7 +57,7 @@ namespace Gtk {
 		public virtual signal void status_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
-	public class PrintUnixDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+	public class PrintUnixDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PrintUnixDialog (string title, Gtk.Window parent);
 		public void add_custom_tab (Gtk.Widget child, Gtk.Widget tab_label);
@@ -132,7 +132,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool paused { get; }
 		public string state_message { get; }
-		public virtual signal void details_acquired (bool success);
+		public virtual signal void details_acquired (bool p0);
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", cprefix = "GTK_PRINT_CAPABILITY_")]
 	[Flags]

@@ -10640,8 +10640,8 @@ namespace Gtk {
 	public class Stack : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Stack ();
-		public void add_named (Gtk.Widget child, string name);
-		public void add_titled (Gtk.Widget child, string name, string title);
+		public unowned Gtk.StackPage add_named (Gtk.Widget child, string name);
+		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string name, string title);
 		public unowned Gtk.Widget? get_child_by_name (string name);
 		public bool get_hhomogeneous ();
 		public bool get_homogeneous ();
