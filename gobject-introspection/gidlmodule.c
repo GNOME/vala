@@ -64,7 +64,7 @@ GMetadata *
 g_idl_module_build_metadata (GIdlModule  *module,
 			     GList       *modules)
 {
-  guchar *metadata;
+  GMetadata *metadata;
   gsize length;
   gint i;
   GList *e;
@@ -101,6 +101,11 @@ g_idl_module_build_metadata (GIdlModule  *module,
       
       size += g_idl_node_get_full_size (node);
     }
+
+  /* Adjust size for strings allocated in header below specially */
+  size += strlen (module->name);
+  if (module->shared_library)
+    size += strlen (module->shared_library);
 
   g_message ("allocating %d bytes (%d header, %d directory, %d entries)\n", 
 	  size, header_size, dir_size, size - header_size - dir_size);
@@ -201,15 +206,19 @@ g_idl_module_build_metadata (GIdlModule  *module,
     }
 
   dump_stats ();
-  g_hash_table_destroy (strings);
-  g_hash_table_destroy (types);
 
   header->annotations = offset2;
   
   g_message ("reallocating to %d bytes", offset2);
 
-  metadata = g_realloc (data, offset2);
+  data = g_realloc (data, offset2);
+  header = (Header*) data;
   length = header->size = offset2;
-  return g_metadata_new_from_memory (metadata, length);
+  metadata = g_metadata_new_from_memory (data, length);
+
+  g_hash_table_destroy (strings);
+  g_hash_table_destroy (types);
+
+  return metadata;
 }
 
