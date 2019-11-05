@@ -273,6 +273,10 @@ interface_generate (GIdlWriter * writer, GIdlNodeInterface * node)
 	("<interface name=\"%s\" type-name=\"%s\" get-type=\"%s\">\n",
 	 node->node.name, node->gtype_name, node->gtype_init);
     }
+  else
+    {
+      g_assert_not_reached ();
+    }
 
   g_writer_write_indent (writer, markup);
   g_free (markup);
