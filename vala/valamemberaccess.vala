@@ -737,7 +737,17 @@ public class Vala.MemberAccess : Expression {
 			member = symbol_reference;
 		}
 
-		member.used = true;
+		// recursive usage of itself doesn't count as used
+		unowned CodeNode? parent = this;
+		while (parent != member) {
+			parent = parent.parent_node;
+			if (parent == null || parent == member) {
+				break;
+			}
+		}
+		if (parent != member) {
+			member.used = true;
+		}
 		member.version.check (source_reference);
 
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
