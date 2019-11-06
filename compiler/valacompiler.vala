@@ -76,6 +76,7 @@ class Vala.Compiler {
 	static bool disable_since_check;
 	static bool disable_warnings;
 	static bool keep_going;
+	static bool list_sources;
 	static string cc_command;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] cc_options;
@@ -125,6 +126,7 @@ class Vala.Compiler {
 		{ "use-fast-vapi", 0, 0, OptionArg.STRING_ARRAY, ref fast_vapis, "Use --fast-vapi output during this compile", null },
 		{ "vapi-comments", 0, 0, OptionArg.NONE, ref vapi_comments, "Include comments in generated vapi", null },
 		{ "deps", 0, 0, OptionArg.STRING, ref dependencies, "Write make-style dependency information to this file", null },
+		{ "list-sources", 0, 0, OptionArg.NONE, ref list_sources, "Output a list of all source and binding files which are used", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
@@ -372,6 +374,18 @@ class Vala.Compiler {
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
+		}
+
+		if (list_sources) {
+			foreach (SourceFile file in context.get_source_files ()) {
+				print ("%s\n", file.filename);
+			}
+			if (!ccode_only) {
+				foreach (string filename in context.get_c_source_files ()) {
+					print ("%s\n", filename);
+				}
+			}
+			return 0;
 		}
 
 		var parser = new Parser ();
