@@ -306,6 +306,7 @@ TESTS = \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
 	objects/class_only.vala \
+	objects/class-destroysinstance.vala \
 	objects/class-inner-types.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \

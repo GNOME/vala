@@ -944,7 +944,8 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		if (symbol_reference is Method && ((Method) symbol_reference).get_attribute ("DestroysInstance") != null) {
-			if (ma != null) {
+			unowned Class? cl = ((Method) symbol_reference).parent_symbol as Class;
+			if (cl != null && cl.is_compact && ma != null) {
 				ma.lvalue = true;
 				ma.check_lvalue_access ();
 			}
