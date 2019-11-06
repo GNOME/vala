@@ -8,6 +8,8 @@ namespace Peas {
 		public Engine ();
 		public void add_search_path (string module_dir, string? data_dir);
 		public Peas.Extension create_extension (Peas.PluginInfo info, GLib.Type extension_type, ...);
+		[Version (since = "1.24")]
+		public Peas.Extension create_extension_with_properties (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] string[] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] prop_values);
 		public Peas.Extension create_extensionv (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[]? parameters);
 		public void enable_loader (string loader_name);
 		public void garbage_collect ();
@@ -62,6 +64,8 @@ namespace Peas {
 		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
 		[CCode (cname = "peas_extension_set_newv", has_construct_function = false)]
 		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
+		[CCode (has_construct_function = false)]
+		public ExtensionSet.with_properties (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] string[] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] prop_values);
 		[NoAccessorMethod]
 		public void* construct_properties { construct; }
 		[NoAccessorMethod]

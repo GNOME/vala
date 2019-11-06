@@ -10902,6 +10902,7 @@ namespace Gtk {
 		public void add_selection_clipboard (Gdk.Clipboard clipboard);
 		public void apply_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		public bool backspace (ref Gtk.TextIter iter, bool interactive, bool default_editable);
+		public void begin_irreversible_action ();
 		public void copy_clipboard (Gdk.Clipboard clipboard);
 		public unowned Gtk.TextChildAnchor create_child_anchor (Gtk.TextIter iter);
 		public unowned Gtk.TextMark create_mark (string? mark_name, Gtk.TextIter where, bool left_gravity);
@@ -10912,8 +10913,12 @@ namespace Gtk {
 		public void delete_mark (Gtk.TextMark mark);
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
+		public void end_irreversible_action ();
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
+		public bool get_can_redo ();
+		public bool get_can_undo ();
 		public int get_char_count ();
+		public bool get_enable_undo ();
 		public void get_end_iter (out Gtk.TextIter iter);
 		public bool get_has_selection ();
 		public unowned Gtk.TextMark get_insert ();
@@ -10925,6 +10930,7 @@ namespace Gtk {
 		public void get_iter_at_offset (out Gtk.TextIter iter, int char_offset);
 		public int get_line_count ();
 		public unowned Gtk.TextMark? get_mark (string name);
+		public uint get_max_undo_levels ();
 		public bool get_modified ();
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
@@ -10949,12 +10955,17 @@ namespace Gtk {
 		public void remove_selection_clipboard (Gdk.Clipboard clipboard);
 		public void remove_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
+		public void set_enable_undo (bool enable_undo);
+		public void set_max_undo_levels (uint max_undo_levels);
 		public void set_modified (bool setting);
 		public void set_text (string text, int len = -1);
+		public bool can_redo { get; }
+		public bool can_undo { get; }
 		[NoAccessorMethod]
 		public Gdk.ContentFormats copy_target_list { owned get; }
 		[NoAccessorMethod]
 		public int cursor_position { get; }
+		public bool enable_undo { get; set; }
 		public bool has_selection { get; }
 		[NoAccessorMethod]
 		public Gdk.ContentFormats paste_target_list { owned get; }
@@ -10979,7 +10990,11 @@ namespace Gtk {
 		public virtual signal void modified_changed ();
 		public virtual signal void paste_done (Gdk.Clipboard clipboard);
 		[HasEmitter]
+		public virtual signal void redo ();
+		[HasEmitter]
 		public virtual signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start, Gtk.TextIter end);
+		[HasEmitter]
+		public virtual signal void undo ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_text_cell_accessible_get_type ()")]
 	public class TextCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.TableCell, Atk.Text {
@@ -12415,6 +12430,7 @@ namespace Gtk {
 		public float get_alignment ();
 		public string get_chars (int start_pos = 0, int end_pos = -1);
 		public bool get_editable ();
+		public bool get_enable_undo ();
 		public int get_max_width_chars ();
 		public int get_position ();
 		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
@@ -12426,6 +12442,7 @@ namespace Gtk {
 		public abstract void select_region (int start_pos, int end_pos);
 		public void set_alignment (float xalign);
 		public void set_editable (bool is_editable);
+		public void set_enable_undo (bool enable_undo);
 		public void set_max_width_chars (int n_chars);
 		public void set_position (int position);
 		public void set_text (string text);
@@ -12434,6 +12451,8 @@ namespace Gtk {
 		public abstract int cursor_position { get; }
 		[ConcreteAccessor]
 		public abstract bool editable { get; set; }
+		[ConcreteAccessor]
+		public abstract bool enable_undo { get; set; }
 		[ConcreteAccessor]
 		public abstract int max_width_chars { get; set; }
 		[NoAccessorMethod]
@@ -13117,6 +13136,7 @@ namespace Gtk {
 		PROP_WIDTH_CHARS,
 		PROP_MAX_WIDTH_CHARS,
 		PROP_XALIGN,
+		PROP_ENABLE_UNDO,
 		NUM_PROPERTIES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ENTRY_ICON_", type_id = "gtk_entry_icon_position_get_type ()")]
