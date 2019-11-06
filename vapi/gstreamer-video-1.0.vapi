@@ -206,6 +206,9 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[NoAccessorMethod]
+			[Version (since = "1.18")]
+			public bool qos { get; set; }
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
@@ -327,6 +330,8 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public Info ();
 			public bool align (Gst.Video.Alignment align);
+			[Version (since = "1.18")]
+			public bool align_full (Gst.Video.Alignment align, out size_t plane_size);
 			public bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, out int64 dest_value);
 			[Version (since = "1.6")]
 			public Gst.Video.Info copy ();
@@ -783,7 +788,14 @@ namespace Gst {
 			public weak size_t offset[4];
 			[CCode (array_length = false)]
 			public weak int stride[4];
+			public Gst.Video.Alignment alignment;
+			[Version (since = "1.18")]
+			public bool get_plane_height (out uint plane_height);
+			[Version (since = "1.18")]
+			public bool get_plane_size (out size_t plane_size);
 			public bool map (uint plane, Gst.MapInfo info, out void* data, out int stride, Gst.MapFlags flags);
+			[Version (since = "1.18")]
+			public bool set_alignment (Gst.Video.Alignment alignment);
 			public bool unmap (uint plane, Gst.MapInfo info);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]

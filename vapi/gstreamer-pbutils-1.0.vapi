@@ -204,6 +204,7 @@ namespace Gst {
 			public unowned string get_preset ();
 			public unowned string get_preset_name ();
 			public Gst.Caps get_restriction ();
+			public bool get_single_segment ();
 			public unowned string get_type_nick ();
 			public bool is_enabled ();
 			public bool is_equal (Gst.PbUtils.EncodingProfile b);
@@ -217,6 +218,7 @@ namespace Gst {
 			public void set_preset (string? preset);
 			public void set_preset_name (string? preset_name);
 			public void set_restriction (owned Gst.Caps? restriction);
+			public void set_single_segment (bool single_segment);
 			[NoAccessorMethod]
 			public Gst.Caps restriction_caps { owned get; set; }
 		}

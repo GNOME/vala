@@ -907,8 +907,8 @@ namespace Gst {
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
 		public delegate void KeepAliveFunc ();
-		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 0.9)]
-		public delegate void MessageSentFunc ();
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 1.9)]
+		public delegate void MessageSentFunc (Gst.RTSPServer.StreamTransport trans);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendListFunc", instance_pos = 2.9)]
