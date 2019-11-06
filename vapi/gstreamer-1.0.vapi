@@ -145,6 +145,8 @@ namespace Gst {
 		public const Gst.ElementFactoryListType ENCRYPTOR;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_FORMATTER")]
 		public const Gst.ElementFactoryListType FORMATTER;
+		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_HARDWARE")]
+		public const Gst.ElementFactoryListType HARDWARE;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MAX_ELEMENTS")]
 		public const Gst.ElementFactoryListType MAX_ELEMENTS;
 		[CCode (cheader_filename = "gst/gst.h", cname = "GST_ELEMENT_FACTORY_TYPE_MEDIA_ANY")]
@@ -1391,6 +1393,12 @@ namespace Gst {
 		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public Event.instant_rate_change (double rate_multiplier, Gst.SegmentFlags new_flags);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public Event.instant_rate_sync_time (double rate, Gst.ClockTime running_time, Gst.ClockTime upstream_running_time);
+		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
 		[CCode (has_construct_function = false)]
 		public Event.navigation (owned Gst.Structure structure);
@@ -1400,6 +1408,10 @@ namespace Gst {
 		public void parse_gap (out Gst.ClockTime timestamp, out Gst.ClockTime duration);
 		[Version (since = "1.2")]
 		public bool parse_group_id (out uint group_id);
+		[Version (since = "1.18")]
+		public void parse_instant_rate_change (out double rate_multiplier, out Gst.SegmentFlags new_flags);
+		[Version (since = "1.18")]
+		public void parse_instant_rate_sync_time (double rate, out Gst.ClockTime running_time, out Gst.ClockTime upstream_running_time);
 		public void parse_latency (out Gst.ClockTime latency);
 		[Version (since = "1.6")]
 		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, out unowned string origin);
@@ -1619,6 +1631,9 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public Message.info_with_details (Gst.Object? src, GLib.Error error, string debug, owned Gst.Structure? details);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public Message.instant_rate_request (Gst.Object src, double rate_multiplier);
+		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object? src);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.2")]
@@ -1648,6 +1663,8 @@ namespace Gst {
 		public void parse_info (out GLib.Error gerror, out string debug);
 		[Version (since = "1.10")]
 		public void parse_info_details (out unowned Gst.Structure structure);
+		[Version (since = "1.18")]
+		public void parse_instant_rate_request (out double rate_multiplier);
 		public void parse_new_clock (out unowned Gst.Clock clock);
 		public void parse_progress (out Gst.ProgressType type, out string code, out string text);
 		[Version (since = "1.10")]
@@ -3172,6 +3189,7 @@ namespace Gst {
 		PROTECTION,
 		SEGMENT_DONE,
 		GAP,
+		INSTANT_RATE_CHANGE,
 		QOS,
 		SEEK,
 		NAVIGATION,
@@ -3180,6 +3198,7 @@ namespace Gst {
 		RECONFIGURE,
 		TOC_SELECT,
 		SELECT_STREAMS,
+		INSTANT_RATE_SYNC_TIME,
 		CUSTOM_UPSTREAM,
 		CUSTOM_DOWNSTREAM,
 		CUSTOM_DOWNSTREAM_OOB,
@@ -3316,6 +3335,7 @@ namespace Gst {
 		STREAMS_SELECTED,
 		REDIRECT,
 		DEVICE_CHANGED,
+		INSTANT_RATE_REQUEST,
 		ANY;
 		public unowned string get_name ();
 		public GLib.Quark to_quark ();
@@ -3559,7 +3579,8 @@ namespace Gst {
 		SNAP_NEAREST,
 		TRICKMODE_KEY_UNITS,
 		TRICKMODE_NO_AUDIO,
-		TRICKMODE_FORWARD_PREDICTED
+		TRICKMODE_FORWARD_PREDICTED,
+		INSTANT_RATE_CHANGE
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_SEEK_TYPE_", type_id = "gst_seek_type_get_type ()")]
 	public enum SeekType {
@@ -4042,6 +4063,8 @@ namespace Gst {
 	public const Gst.QueryTypeFlags QUERY_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SECOND")]
 	public const Gst.ClockTimeDiff SECOND;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_INSTANT_FLAGS")]
+	public const int SEGMENT_INSTANT_FLAGS;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
 	[Version (since = "1.14")]
 	public const int SEQNUM_INVALID;

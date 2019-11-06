@@ -232,6 +232,8 @@ namespace Gst {
 			public bool is_shared ();
 			public bool is_stop_on_disconnect ();
 			public bool is_time_provider ();
+			[Version (since = "1.18")]
+			public void @lock ();
 			public uint n_streams ();
 			public virtual bool prepare (owned Gst.RTSPServer.Thread? thread);
 			[NoWrapper]
@@ -277,6 +279,8 @@ namespace Gst {
 			public virtual bool setup_sdp (Gst.SDP.Message sdp, Gst.RTSPServer.SDPInfo info);
 			public virtual bool suspend ();
 			public void take_pipeline (owned Gst.Pipeline pipeline);
+			[Version (since = "1.18")]
+			public void @unlock ();
 			public virtual bool unprepare ();
 			public virtual bool unsuspend ();
 			public void use_time_provider (bool time_provider);
@@ -546,6 +550,8 @@ namespace Gst {
 			public bool release_media (Gst.RTSPServer.SessionMedia media);
 			public void set_timeout (uint timeout);
 			public void touch ();
+			[NoAccessorMethod]
+			public uint extra_timeout { get; set; }
 			public string sessionid { get; construct; }
 			public uint timeout { get; set; }
 			[NoAccessorMethod]
@@ -901,8 +907,8 @@ namespace Gst {
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
 		public delegate void KeepAliveFunc ();
-		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 0.9)]
-		public delegate void MessageSentFunc ();
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 1.9)]
+		public delegate void MessageSentFunc (Gst.RTSPServer.StreamTransport trans);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendListFunc", instance_pos = 2.9)]

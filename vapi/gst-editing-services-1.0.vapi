@@ -252,8 +252,8 @@ namespace GES {
 		public bool move (GES.Marker marker, Gst.ClockTime position);
 		public bool remove (GES.Marker marker);
 		public uint size ();
-		public signal void marker_added (uint64 object, GES.Marker p0);
-		public signal void marker_moved (uint64 object, GES.Marker p0);
+		public signal void marker_added (uint64 position, GES.Marker marker);
+		public signal void marker_moved (uint64 previous_position, uint64 new_position, GES.Marker marker);
 		public signal void marker_removed (GES.Marker marker);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_multi_file_source_get_type ()")]
@@ -833,6 +833,7 @@ namespace GES {
 		public bool register_meta_string (GES.MetaFlag flags, string meta_item, string? value);
 		public bool register_meta_uint (GES.MetaFlag flags, string meta_item, uint value);
 		public bool register_meta_uint64 (GES.MetaFlag flags, string meta_item, uint64 value);
+		public bool register_static_meta (GES.MetaFlag flags, string meta_item, GLib.Type type);
 		public bool set_boolean (string meta_item, bool value);
 		public bool set_date (string meta_item, GLib.Date value);
 		public bool set_date_time (string meta_item, Gst.DateTime value);
@@ -1077,6 +1078,8 @@ namespace GES {
 	public const string META_FORMATTER_VERSION;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_META_FORMAT_VERSION")]
 	public const string META_FORMAT_VERSION;
+	[CCode (cheader_filename = "ges/ges.h", cname = "GES_META_MARKER_COLOR")]
+	public const string META_MARKER_COLOR;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_META_VOLUME")]
 	public const string META_VOLUME;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_META_VOLUME_DEFAULT")]
