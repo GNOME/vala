@@ -294,23 +294,18 @@ public class Vala.Assignment : Expression {
 				error = true;
 				Report.error (source_reference, "`length' field of fixed length arrays is read-only");
 				return false;
-			} else if (ma.symbol_reference is Variable && right.value_type == null) {
+			} else if (ma.symbol_reference is Variable && right.value_type is MethodType) {
 				unowned Variable variable = (Variable) ma.symbol_reference;
 
-				if (right.symbol_reference is Method &&
-				    variable.variable_type is DelegateType) {
-					unowned Method m = (Method) right.symbol_reference;
-					unowned DelegateType dt = (DelegateType) variable.variable_type;
-					unowned Delegate cb = dt.delegate_symbol;
-
+				if (variable.variable_type is DelegateType) {
 					/* check whether method matches callback type */
-					if (!cb.matches_method (m, dt)) {
+					if (!right.value_type.compatible (variable.variable_type)) {
+						unowned Method m = (Method) right.symbol_reference;
+						unowned Delegate cb = ((DelegateType) variable.variable_type).delegate_symbol;
 						error = true;
-						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'".printf (m.get_full_name (), cb.get_full_name ()));
 						return false;
 					}
-
-					right.value_type = variable.variable_type.copy ();
 				} else {
 					error = true;
 					Report.error (source_reference, "Assignment: Invalid assignment attempt");

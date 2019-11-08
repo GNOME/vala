@@ -113,6 +113,19 @@ public class Vala.PointerType : DataType {
 		base_type.accept (visitor);
 	}
 
+	public override bool stricter (DataType type2) {
+		if (type2 is PointerType) {
+			return compatible (type2);
+		}
+
+		if (base_type is VoidType) {
+			// void* can hold reference types
+			return type2 is ReferenceType;
+		}
+
+		return base_type.stricter (type2);
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (base_type == old_type) {
 			base_type = new_type;

@@ -282,8 +282,11 @@ TESTS = \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
 	delegates/incompatible.test \
+	delegates/incompatible-assignment.test \
+	delegates/incompatible-initializer.test \
 	delegates/incompatible-target.test \
 	delegates/instance-method-to-no-target.test \
+	delegates/instance-method-to-no-target-2.test \
 	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
 	delegates/member-target-destroy.vala \

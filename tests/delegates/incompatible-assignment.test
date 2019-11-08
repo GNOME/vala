@@ -1,0 +1,15 @@
+Invalid Code
+
+[CCode (has_target = false)]
+delegate void Foo (string s);
+
+class Bar {
+	public void foo () {
+	}
+}
+
+void main () {
+	var bar = new Bar ();
+	Foo foo;
+	foo = bar.foo;
+}

@@ -162,27 +162,22 @@ public class Vala.LocalVariable : Variable {
 		}
 
 		if (initializer != null && !initializer.error) {
-			if (initializer.value_type == null) {
+			if (initializer.value_type is MethodType) {
 				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {
 					error = true;
 					Report.error (source_reference, "expression type not allowed as initializer");
 					return false;
 				}
 
-				if (initializer.symbol_reference is Method &&
-				    variable_type is DelegateType) {
-					var m = (Method) initializer.symbol_reference;
-					var dt = (DelegateType) variable_type;
-					var cb = dt.delegate_symbol;
-
+				if (variable_type is DelegateType) {
 					/* check whether method matches callback type */
-					if (!cb.matches_method (m, dt)) {
+					if (!initializer.value_type.compatible (variable_type)) {
+						unowned Method m = (Method) initializer.symbol_reference;
+						unowned Delegate cb = ((DelegateType) variable_type).delegate_symbol;
 						error = true;
-						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'".printf (m.get_full_name (), cb.get_full_name ()));
 						return false;
 					}
-
-					initializer.value_type = variable_type;
 				} else {
 					error = true;
 					Report.error (source_reference, "expression type not allowed as initializer");

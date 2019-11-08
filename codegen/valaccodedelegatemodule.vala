@@ -294,8 +294,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			} else {
 				// use first delegate parameter as instance
 				if (d_params.size == 0 || m.closure) {
-					Report.error (node != null ? node.source_reference : null, "Cannot create delegate without target for instance method or closure");
-					arg = new CCodeConstant ("NULL");
+					Report.error (node != null ? node.source_reference : null, "internal: Cannot create delegate wrapper");
+					arg = new CCodeInvalidExpression ();
 				} else {
 					arg = new CCodeIdentifier (get_ccode_name (d_params.get (0)));
 					i = 1;
