@@ -25,7 +25,7 @@ using GLib;
 /**
  * Interface for all callable types.
  */
-public interface Vala.Callable : CodeNode {
+public interface Vala.Callable : Symbol {
 	/**
 	 * The return type of this callable.
 	 */
