@@ -302,7 +302,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		push_function (function);
 
-		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
+		var dest_struct = new GLibValue (SemanticAnalyzer.get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
 		unowned Struct sym = st;
 		while (sym.base_struct != null) {
 			sym = sym.base_struct;

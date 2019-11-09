@@ -1294,7 +1294,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		DataType instance_type = null;
 		if (instance) {
-			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
+			instance_type = SemanticAnalyzer.get_data_type_for_symbol (m.parent_symbol);
 		}
 
 		write_params_and_return (params, m.get_type_parameters (), return_type, get_ccode_array_length (m), return_comment, false, instance_type);
@@ -1340,7 +1340,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_doc (get_method_comment (m));
 
-		var datatype = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
+		var datatype = SemanticAnalyzer.get_data_type_for_symbol (m.parent_symbol);
 		List<TypeParameter>? type_params = null;
 		if (m.parent_symbol is Class) {
 			type_params = ((Class) m.parent_symbol).get_type_parameters ();

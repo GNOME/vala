@@ -1582,7 +1582,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (prop.binding == MemberBinding.INSTANCE) {
 			var t = (TypeSymbol) prop.parent_symbol;
-			var this_type = get_data_type_for_symbol (t);
+			var this_type = SemanticAnalyzer.get_data_type_for_symbol (t);
 			generate_type_declaration (this_type, decl_space);
 			var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
 			if (t is Struct && !((Struct) t).is_simple_type ()) {
@@ -1664,7 +1664,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		var this_type = get_data_type_for_symbol (t);
+		var this_type = SemanticAnalyzer.get_data_type_for_symbol (t);
 		var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
 		if (t is Struct && !((Struct) t).is_simple_type ()) {
 			cselfparam.type_name += "*";
@@ -2032,7 +2032,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
 			} else {
 				if (get_this_type () != null) {
-					data.add_field (get_ccode_name (get_data_type_for_symbol (current_type_symbol)), "self");
+					data.add_field (get_ccode_name (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol)), "self");
 				}
 
 				if (current_method != null) {
@@ -2099,7 +2099,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				bool in_creation_method_with_chainup = (current_method is CreationMethod && current_class != null && current_class.base_class != null);
 
 				if (get_this_type () != null && (!in_creation_method_with_chainup || current_method.body != b)) {
-					var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_data_type_for_symbol (current_type_symbol), b.source_reference));
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol), b.source_reference));
 					ref_call.add_argument (get_this_cexpression ());
 
 					// never increase reference count for self in finalizers to avoid infinite recursion on following unref
@@ -2196,7 +2196,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (get_this_type () != null) {
 				// assign "self" for type parameters
-				ccode.add_declaration(get_ccode_name (get_data_type_for_symbol (current_type_symbol)), new CCodeVariableDeclarator ("self"));
+				ccode.add_declaration(get_ccode_name (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol)), new CCodeVariableDeclarator ("self"));
 				ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeMemberAccess.pointer (outer_block, "self"));
 			}
 
@@ -2296,7 +2296,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					this_type.value_owned = true;
 					if (this_type.is_disposable () && !is_in_destructor ()) {
 						// reference count for self is not increased in finalizers
-						var this_value = new GLibValue (get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
+						var this_value = new GLibValue (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
 						ccode.add_expression (destroy_value (this_value));
 					}
 				}
@@ -4973,7 +4973,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
-					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+					var instance_target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance, true), instance_target_type, init);
 					store_field (f, typed_inst, init.initializer.target_value, init.source_reference);
 
@@ -4983,7 +4983,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				} else if (init.symbol_reference is Property) {
 					var p = (Property) init.symbol_reference;
-					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) p.parent_symbol);
+					var instance_target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) p.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
 					var inst_ma = new MemberAccess.simple ("fake");
 					inst_ma.target_value = typed_inst;
@@ -6191,37 +6191,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return generated_external_symbols.add (external_symbol);
 	}
 
-	public static DataType get_data_type_for_symbol (TypeSymbol sym) {
-		DataType type = null;
-
-		if (sym is Class) {
-			type = new ObjectType ((Class) sym);
-		} else if (sym is Interface) {
-			type = new ObjectType ((Interface) sym);
-		} else if (sym is Struct) {
-			var st = (Struct) sym;
-			if (st.is_boolean_type ()) {
-				type = new BooleanType (st);
-			} else if (st.is_integer_type ()) {
-				type = new IntegerType (st);
-			} else if (st.is_floating_type ()) {
-				type = new FloatingType (st);
-			} else {
-				type = new StructValueType (st);
-			}
-		} else if (sym is Enum) {
-			type = new EnumValueType ((Enum) sym);
-		} else if (sym is ErrorDomain) {
-			type = new ErrorType ((ErrorDomain) sym, null);
-		} else if (sym is ErrorCode) {
-			type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym);
-		} else {
-			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
-			return new InvalidType ();
-		}
-
-		return type;
-	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression, bool on_error = false) {
 		unowned Struct? st = type.type_symbol as Struct;
@@ -6396,7 +6365,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		push_context (new EmitContext ());
 		push_function (function);
 
-		var dest_struct = new GLibValue (get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
+		var dest_struct = new GLibValue (SemanticAnalyzer.get_data_type_for_symbol (st), new CCodeIdentifier ("(*dest)"), true);
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var value = load_field (f, load_this_parameter ((TypeSymbol) st));

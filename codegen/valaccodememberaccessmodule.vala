@@ -594,7 +594,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				pub_inst = get_cvalue_ (instance);
 			}
 
-			var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
+			var instance_target_type = SemanticAnalyzer.get_data_type_for_symbol (field.parent_symbol);
 
 			unowned Class? cl = instance_target_type.type_symbol as Class;
 			bool is_gtypeinstance = ((instance_target_type.type_symbol == cl) && (cl == null || !cl.is_compact));
@@ -812,7 +812,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 	/* Convenience method returning access to "this" */
 	public override TargetValue load_this_parameter (TypeSymbol sym) {
-		var param = new Parameter ("this", get_data_type_for_symbol (sym));
+		var param = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (sym));
 		return load_parameter (param);
 	}
 

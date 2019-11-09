@@ -1091,7 +1091,10 @@
 		</field>
 		<constructor name="new" c:identifier="gir_test_generics_test_new">
 			<return-value transfer-ownership="full">
-				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*">
+					<type name="gpointer" c:type="gpointer"/>
+					<type name="gpointer" c:type="gpointer"/>
+				</type>
 			</return-value>
 			<parameters>
 				<parameter name="g_type" transfer-ownership="none">
@@ -1125,7 +1128,10 @@
 		</constructor>
 		<constructor name="typed" c:identifier="gir_test_generics_test_new_typed">
 			<return-value transfer-ownership="full">
-				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*">
+					<type name="gpointer" c:type="gpointer"/>
+					<type name="gpointer" c:type="gpointer"/>
+				</type>
 			</return-value>
 			<parameters>
 				<parameter name="g_type" transfer-ownership="none">
@@ -1225,7 +1231,10 @@
 		</method>
 		<constructor name="new" c:identifier="gir_test_generics_object_test_new">
 			<return-value transfer-ownership="full">
-				<type name="GirTest.GenericsObjectTest" c:type="GirTestGenericsObjectTest*"/>
+				<type name="GirTest.GenericsObjectTest" c:type="GirTestGenericsObjectTest*">
+					<type name="gpointer" c:type="gpointer"/>
+					<type name="gpointer" c:type="gpointer"/>
+				</type>
 			</return-value>
 			<parameters>
 				<parameter name="g_type" transfer-ownership="none">

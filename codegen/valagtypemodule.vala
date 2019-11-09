@@ -1396,7 +1396,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var function = new CCodeFunction (name, return_type);
 		function.modifiers = CCodeModifiers.STATIC;
-		var this_type = get_data_type_for_symbol (cl);
+		var this_type = SemanticAnalyzer.get_data_type_for_symbol (cl);
 		function.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 		push_function (function);
 		ccode.add_return (expression);
@@ -1468,7 +1468,7 @@ public class Vala.GTypeModule : GErrorModule {
 		if (iface.get_attribute ("GenericAccessors") != null) {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
 				GenericType p_type = new GenericType (p);
-				DataType p_data_type = p_type.get_actual_type (get_data_type_for_symbol (cl), null, cl);
+				DataType p_data_type = p_type.get_actual_type (SemanticAnalyzer.get_data_type_for_symbol (cl), null, cl);
 
 				add_generic_accessor_function ("get_%s_type".printf (p.name.down ()),
 				                               "GType",
@@ -2118,7 +2118,7 @@ public class Vala.GTypeModule : GErrorModule {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
 				string method_name = "get_%s_type".printf (p.name.down ());
 				var vdeclarator = new CCodeFunctionDeclarator (method_name);
-				var this_type = get_data_type_for_symbol (iface);
+				var this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 
 				var vdecl = new CCodeDeclaration ("GType");
@@ -2127,7 +2127,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				method_name = "get_%s_dup_func".printf (p.name.down ());
 				vdeclarator = new CCodeFunctionDeclarator (method_name);
-				this_type = get_data_type_for_symbol (iface);
+				this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 
 				vdecl = new CCodeDeclaration ("GBoxedCopyFunc");
@@ -2136,7 +2136,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				method_name = "get_%s_destroy_func".printf (p.name.down ());
 				vdeclarator = new CCodeFunctionDeclarator (method_name);
-				this_type = get_data_type_for_symbol (iface);
+				this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 
 				vdecl = new CCodeDeclaration ("GDestroyNotify");
