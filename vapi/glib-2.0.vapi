@@ -4143,14 +4143,15 @@ namespace GLib {
 		public void* get_user_data ();
 	}
 
+	[CCode (has_typedef = false)]
 	public delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws MarkupError;
-
+	[CCode (has_typedef = false)]
 	public delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name) throws MarkupError;
-
+	[CCode (has_typedef = false)]
 	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, size_t text_len) throws MarkupError;
-
+	[CCode (has_typedef = false)]
 	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, size_t text_len) throws MarkupError;
-
+	[CCode (has_typedef = false)]
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 
 	public struct MarkupParser {
