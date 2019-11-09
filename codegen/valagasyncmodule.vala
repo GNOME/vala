@@ -671,11 +671,7 @@ public class Vala.GAsyncModule : GtkModule {
 			return;
 		}
 
-		var creturn_type = m.return_type;
-		if (m.return_type.is_real_non_null_struct_type ()) {
-			// structs are returned via out parameter
-			creturn_type = new VoidType ();
-		}
+		var creturn_type = get_callable_creturn_type (m);
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));

@@ -343,13 +343,10 @@ public class Vala.GTypeModule : GErrorModule {
 		if (prop.get_accessor != null) {
 			var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 			vdeclarator.add_parameter (cselfparam);
-			string creturn_type;
+			var creturn_type = get_callable_creturn_type (prop.get_accessor.get_method ());
 			if (prop.property_type.is_real_non_null_struct_type ()) {
 				var cvalueparam = new CCodeParameter ("result", "%s *".printf (get_ccode_name (prop.get_accessor.value_type)));
 				vdeclarator.add_parameter (cvalueparam);
-				creturn_type = "void";
-			} else {
-				creturn_type = get_ccode_name (prop.get_accessor.value_type);
 			}
 
 			var array_type = prop.property_type as ArrayType;
@@ -362,7 +359,7 @@ public class Vala.GTypeModule : GErrorModule {
 				vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
 			}
 
-			var vdecl = new CCodeDeclaration (creturn_type);
+			var vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));
 			vdecl.add_declarator (vdeclarator);
 			type_struct.add_declaration (vdecl);
 
@@ -468,11 +465,7 @@ public class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
-		var creturn_type = m.return_type;
-		if (m.return_type.is_real_non_null_struct_type ()) {
-			// structs are returned via out parameter
-			creturn_type = new VoidType ();
-		}
+		var creturn_type = get_callable_creturn_type (m);
 
 		// add vfunc field to the type struct
 		var vdeclarator = new CCodeFunctionDeclarator (get_ccode_vfunc_name (m));
@@ -2168,13 +2161,10 @@ public class Vala.GTypeModule : GErrorModule {
 				if (prop.get_accessor != null) {
 					var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 					vdeclarator.add_parameter (cselfparam);
-					string creturn_type;
+					var creturn_type = get_callable_creturn_type (prop.get_accessor.get_method ());
 					if (returns_real_struct) {
 						var cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (prop.get_accessor.value_type)));
 						vdeclarator.add_parameter (cvalueparam);
-						creturn_type = "void";
-					} else {
-						creturn_type = get_ccode_name (prop.get_accessor.value_type);
 					}
 
 					var array_type = prop.property_type as ArrayType;
@@ -2185,7 +2175,7 @@ public class Vala.GTypeModule : GErrorModule {
 						}
 					}
 
-					var vdecl = new CCodeDeclaration (creturn_type);
+					var vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));
 					vdecl.add_declarator (vdeclarator);
 					type_struct.add_declaration (vdecl);
 				}

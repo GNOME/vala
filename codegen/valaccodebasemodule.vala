@@ -6191,6 +6191,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return generated_external_symbols.add (external_symbol);
 	}
 
+	public static DataType get_callable_creturn_type (Callable c) {
+		assert (c is Method || c is Delegate);
+		var creturn_type = c.return_type.copy ();
+		if (c is CreationMethod) {
+			unowned Class? cl = c.parent_symbol as Class;
+			if (cl != null) {
+				// object creation methods return the new object in C
+				// in Vala they have no return type
+				creturn_type = new ObjectType (cl);
+			}
+		} else if (c.return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			creturn_type = new VoidType ();
+		}
+		return creturn_type;
+	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression, bool on_error = false) {
 		unowned Struct? st = type.type_symbol as Struct;

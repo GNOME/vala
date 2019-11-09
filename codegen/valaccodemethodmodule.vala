@@ -54,18 +54,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public virtual void generate_method_result_declaration (Method m, CCodeFile decl_space, CCodeFunction cfunc, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
-		var creturn_type = m.return_type;
-		if (m is CreationMethod) {
-			var cl = m.parent_symbol as Class;
-			if (cl != null) {
-				// object creation methods return the new object in C
-				// in Vala they have no return type
-				creturn_type = new ObjectType (cl);
-			}
-		} else if (m.return_type.is_real_non_null_struct_type ()) {
-			// structs are returned via out parameter
-			creturn_type = new VoidType ();
-		}
+		var creturn_type = get_callable_creturn_type (m);
 		cfunc.return_type = get_creturn_type (m, get_ccode_name (creturn_type));
 
 		generate_type_declaration (m.return_type, decl_space);
@@ -342,11 +331,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		var creturn_type = m.return_type;
-		if (m.return_type.is_real_non_null_struct_type ()) {
-			// structs are returned via out parameter
-			creturn_type = new VoidType ();
-		}
+		var creturn_type = get_callable_creturn_type (m);
 
 		foreach (Parameter param in m.get_parameters ()) {
 			param.accept (this);
@@ -762,12 +747,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				if (m is CreationMethod) {
-					if (current_type_symbol is Class) {
-						creturn_type = new ObjectType (current_class);
-					} else {
-						creturn_type = new VoidType ();
-					}
-
 					if (current_type_symbol is Class && !m.coroutine) {
 						CCodeExpression cresult = new CCodeIdentifier ("self");
 						if (get_ccode_type (m) != null) {
