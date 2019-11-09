@@ -41,7 +41,7 @@ public class Valadoc.SymbolResolver : Visitor {
 		var error_types = new Vala.ArrayList<Vala.DataType> ();
 		vala_symbol.get_error_types (error_types);
 		foreach (Vala.DataType type in error_types) {
-			unowned Vala.ErrorDomain vala_edom = (Vala.ErrorDomain) type.type_symbol;
+			unowned Vala.ErrorDomain? vala_edom = ((Vala.ErrorType) type).error_domain;
 			Symbol? edom = symbol_map.get (vala_edom);
 			symbol.add_child (edom ?? glib_error);
 		}
