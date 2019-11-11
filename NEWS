@@ -1,3 +1,49 @@
+Vala 0.47.1
+===========
+ * Highlights:
+  - Various improvements for the POSIX profile
+  - codegen:
+    + Allow passing/retrieving any delegate to/from varargs parameter
+    + Support gobject property of null-terminated array without length [#855]
+    + Support gobject property of delegates not carrying their target [#856]
+    + Warn when directly accessing member of silent cast-expression
+  - vala:
+    + Add DelegateType.target/destroy fields to access its user-data [#857]
+    + Accept interface as inner type for object-type symbols [#697]
+    + Add GenericType.dup/destroy fields [#190]
+    + Support "unowned var" to declare local variables [#152]
+  - compiler: Add "--list-sources" options to output list of all sources [#872]
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Move type-argument checks to SemanticAnalyzer
+    + Make CCodeBaseModule.generate_method_declaration() return bool
+    + Fix custom reference-counting for compact classes
+    + G_DEFINE_AUTOPTR_CLEANUP_FUNC must not declared more than once
+    + Use SemanticAnalyzer.get_data_type_for_symbol()
+    + Commonize the determining of return-type for delegates and methods
+  - vala:
+    + Rename DataType.data_type property to DataType.type_symbol
+    + Unify backing symbol instance of data-types
+    + Respect --abi-stability in Class/Interface.accept_children()
+    + Don't mark method as used on recursive usage of itself [#100]
+    + Set GLib.Error as symbol of error-types if no error-domain was given
+    + Make Callable derive from Symbol
+  - libvaladoc: Remove TypeReference.pass_ownership API
+  - valadoc: Rename FormalParameter to Parameter
+  - girwriter: Fix position of priv field (--abi-stability) [#850]
+
+ * Bindings:
+  - glib-2.0: Add binding for "gettext()" [#864]
+  - glib-2.0: Add new symbols from 2.64
+  - glib-2.0: Add optional "base" parameter to *.parse/try_parse() of integers
+    and check errno for EINVAL and ERANGE in *.try_parse() [#223]
+  - glib-2.0: Add (u)int.try_parse() [#649]
+  - glib-2.0: Add "has_typedef = false" to custom MarkupParser*Func delegates
+  - gtk+-*.0: Fix iter parameter of TextBuffer.backspace()
+  - gtksourceview-2.0: Fix iter parameter in SourceBuffer.backward/forward/...
+  - libusb-1.0: Use a wrapper for Context.get_device_list() [#151]
+
 Vala 0.46.4
 ===========
  * Various improvements and bug fixes:
