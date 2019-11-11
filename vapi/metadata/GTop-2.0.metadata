@@ -44,6 +44,8 @@ glibtop_sysinfo name="SysInfo" cheader_filename="glibtop/sysinfo.h"
 glibtop_union skip // name="Union" cheader_filename="glibtop/union.h"
 glibtop_uptime name="Uptime" cheader_filename="glibtop/uptime.h"
 
+glibtop_init* skip=false
+
 glibtop_init* name="glibtop_(.+)"
 glibtop.get_*.buf out unowned nullable
 glibtop_get_*.buf out unowned nullable

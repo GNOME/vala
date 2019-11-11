@@ -11,7 +11,7 @@ namespace GTop {
 		[CCode (array_length = false)]
 		public char parameter[16];
 	}
-	[CCode (cheader_filename = "glibtop.h", cname = "glibtop", lower_case_cprefix = "glibtop_", type_id = "glibtop_get_type ()")]
+	[CCode (cheader_filename = "glibtop.h", cname = "glibtop", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_get_type ()")]
 	[GIR (name = "glibtop")]
 	public struct Context {
 		public uint flags;
@@ -253,7 +253,7 @@ namespace GTop {
 	[GIR (name = "glibtop_machine")]
 	public struct Machine {
 	}
-	[CCode (cheader_filename = "glibtop/procmap.h", cname = "glibtop_map_entry", lower_case_cprefix = "glibtop_", type_id = "glibtop_map_entry_get_type ()")]
+	[CCode (cheader_filename = "glibtop/procmap.h", cname = "glibtop_map_entry", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_map_entry_get_type ()")]
 	[GIR (name = "glibtop_map_entry")]
 	public struct MapEntry {
 		public uint64 flags;
@@ -287,7 +287,7 @@ namespace GTop {
 		public uint64 user;
 		public uint64 locked;
 	}
-	[CCode (cheader_filename = "glibtop/mountlist.h", cname = "glibtop_mountentry", lower_case_cprefix = "glibtop_", type_id = "glibtop_mountentry_get_type ()")]
+	[CCode (cheader_filename = "glibtop/mountlist.h", cname = "glibtop_mountentry", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_mountentry_get_type ()")]
 	[GIR (name = "glibtop_mountentry")]
 	public struct MountEntry {
 		public uint64 dev;
@@ -298,7 +298,7 @@ namespace GTop {
 		[CCode (array_length = false)]
 		public char type[80];
 	}
-	[CCode (cheader_filename = "glibtop/mountlist.h", cname = "glibtop_mountlist", lower_case_cprefix = "glibtop_", type_id = "glibtop_mountlist_get_type ()")]
+	[CCode (cheader_filename = "glibtop/mountlist.h", cname = "glibtop_mountlist", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_mountlist_get_type ()")]
 	[GIR (name = "glibtop_mountlist")]
 	public struct MountList {
 		public uint64 flags;
@@ -350,7 +350,7 @@ namespace GTop {
 		[CCode (array_length = false)]
 		public uint8 hwaddress[8];
 	}
-	[CCode (cheader_filename = "glibtop/procopenfiles.h", cname = "glibtop_open_files_entry", lower_case_cprefix = "glibtop_", type_id = "glibtop_open_files_entry_get_type ()")]
+	[CCode (cheader_filename = "glibtop/procopenfiles.h", cname = "glibtop_open_files_entry", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_open_files_entry_get_type ()")]
 	[GIR (name = "glibtop_open_files_entry")]
 	public struct OpenFileEntry {
 		public int fd;
@@ -419,7 +419,7 @@ namespace GTop {
 		public uint64 total;
 		public uint64 size;
 	}
-	[CCode (cheader_filename = "glibtop/procmap.h", cname = "glibtop_proc_map", lower_case_cprefix = "glibtop_", type_id = "glibtop_proc_map_get_type ()")]
+	[CCode (cheader_filename = "glibtop/procmap.h", cname = "glibtop_proc_map", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_proc_map_get_type ()")]
 	[GIR (name = "glibtop_proc_map")]
 	public struct ProcMap {
 		public uint64 flags;
@@ -438,7 +438,7 @@ namespace GTop {
 		public uint64 rss;
 		public uint64 rss_rlim;
 	}
-	[CCode (cheader_filename = "glibtop/procopenfiles.h", cname = "glibtop_proc_open_files", lower_case_cprefix = "glibtop_", type_id = "glibtop_proc_open_files_get_type ()")]
+	[CCode (cheader_filename = "glibtop/procopenfiles.h", cname = "glibtop_proc_open_files", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "glibtop_", type_id = "glibtop_proc_open_files_get_type ()")]
 	[GIR (name = "glibtop_proc_open_files")]
 	public struct ProcOpenFiles {
 		public uint64 flags;
