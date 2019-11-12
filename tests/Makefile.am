@@ -70,6 +70,7 @@ TESTS = \
 	basic-types/bug777697.test \
 	basic-types/bug787152.vala \
 	basic-types/bug788775.vala \
+	constants/glog.vala \
 	arrays/cast-silent-invalid.test \
 	arrays/class-field-length-cname.vala \
 	arrays/expression-bracket.test \
