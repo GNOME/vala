@@ -282,6 +282,7 @@ TESTS = \
 	delegates/error-pos.vala \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
+	delegates/gclosure-conversion.vala \
 	delegates/incompatible.test \
 	delegates/incompatible-assignment.test \
 	delegates/incompatible-initializer.test \
