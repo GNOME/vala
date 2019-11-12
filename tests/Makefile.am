@@ -257,6 +257,7 @@ TESTS = \
 	delegates/delegates-error.test \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
+	delegates/gclosure-conversion.vala \
 	delegates/instance-method-to-no-target.test \
 	delegates/reference_transfer.vala \
 	delegates/return-array-null-terminated.vala \
