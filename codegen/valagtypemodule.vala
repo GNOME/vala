@@ -2161,6 +2161,8 @@ public class Vala.GTypeModule : GErrorModule {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype));
 						}
+					} else if ((prop.property_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
+						vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
 					}
 
 					var vdecl = new CCodeDeclaration (creturn_type);
@@ -2184,6 +2186,8 @@ public class Vala.GTypeModule : GErrorModule {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));
 						}
+					} else if ((prop.property_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
+						vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
 					}
 
 					var vdecl = new CCodeDeclaration ("void");
