@@ -41,6 +41,13 @@ namespace FastVapi {
 		[Source (filename = "fastvapitest.vala", line = 5, column = 3)]
 		VALUE
 	}
+	[Source (filename = "fastvapitest.vala", line = 47, column = 2)]
+	public enum EnumTestTwo {
+		[Source (filename = "fastvapitest.vala", line = 48, column = 3)]
+		VALUE = 3,
+		[Source (filename = "fastvapitest.vala", line = 49, column = 3)]
+		VALUE_TWO
+	}
 	[Source (filename = "fastvapitest.vala", line = 8, column = 2)]
 	public errordomain ErrorTest {
 		[Source (filename = "fastvapitest.vala", line = 9, column = 3)]
@@ -50,4 +57,6 @@ namespace FastVapi {
 	public delegate bool DelegateTest (int param);
 	[Source (filename = "fastvapitest.vala", line = 2, column = 2)]
 	public const int CONSTANT = 42;
+	[Source (filename = "fastvapitest.vala", line = 45, column = 2)]
+	public const int CONSTANT_TWO;
 }
