@@ -434,6 +434,7 @@ TESTS = \
 	asynchronous/bug792942.vala \
 	asynchronous/bug793158.vala \
 	asynchronous/catch-in-finally.vala \
+	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
 	asynchronous/generator.vala \
 	asynchronous/result-pos.vala \
