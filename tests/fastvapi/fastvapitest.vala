@@ -41,4 +41,11 @@ namespace FastVapi {
 	public struct TestSubStruct : TestStruct {
 		public static int static_field_name;
 	}
+
+	public const int CONSTANT_TWO = CONSTANT;
+
+	public enum EnumTestTwo {
+		VALUE = 3,
+		VALUE_TWO = VALUE,
+	}
 }

@@ -123,8 +123,11 @@ public class Vala.Constant : Symbol {
 
 		if (!external) {
 			if (value == null) {
-				error = true;
-				Report.error (source_reference, "A const field requires a value to be provided");
+				// constants from fast-vapi files are special
+				if (source_type != SourceFileType.FAST) {
+					error = true;
+					Report.error (source_reference, "A const field requires a value to be provided");
+				}
 			} else {
 				value.target_type = type_reference;
 
