@@ -296,6 +296,7 @@ TESTS = \
 	objects/interface-base-access.vala \
 	objects/interfaces.vala \
 	objects/interface-property-base-access.vala \
+	objects/interface-property-delegate.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
