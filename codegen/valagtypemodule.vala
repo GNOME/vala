@@ -320,22 +320,24 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	void generate_struct_method_declaration (Class cl, Method m, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
-		if (!cl.is_compact) {
+	void generate_struct_method_declaration (ObjectTypeSymbol type_sym, Method m, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+		unowned Class? cl = type_sym as Class;
+		if (type_sym is Interface || (cl != null && !cl.is_compact)) {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
-		} else if (cl.is_compact && cl.base_class == null) {
+		} else if (cl != null && cl.is_compact && cl.base_class == null) {
 			generate_virtual_method_declaration (m, decl_space, instance_struct);
 			has_struct_member |= (m.is_abstract || m.is_virtual);
 		}
 	}
 
-	void generate_struct_property_declaration (Class cl, Property prop, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+	void generate_struct_property_declaration (ObjectTypeSymbol type_sym, Property prop, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
 		if (!prop.is_abstract && !prop.is_virtual) {
 			return;
 		}
 		generate_type_declaration (prop.property_type, decl_space);
 
-		var t = (ObjectTypeSymbol) prop.parent_symbol;
+		unowned ObjectTypeSymbol t = (ObjectTypeSymbol) prop.parent_symbol;
+		unowned Class? cl = type_sym as Class;
 
 		var this_type = new ObjectType (t);
 		var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
@@ -363,7 +365,7 @@ public class Vala.GTypeModule : GErrorModule {
 			vdecl.add_declarator (vdeclarator);
 			type_struct.add_declaration (vdecl);
 
-			if (cl.is_compact && cl.base_class == null) {
+			if (cl != null && cl.is_compact && cl.base_class == null) {
 				instance_struct.add_declaration (vdecl);
 				has_struct_member = true;
 			}
@@ -394,14 +396,14 @@ public class Vala.GTypeModule : GErrorModule {
 			vdecl.add_declarator (vdeclarator);
 			type_struct.add_declaration (vdecl);
 
-			if (cl.is_compact && cl.base_class == null) {
+			if (cl != null && cl.is_compact && cl.base_class == null) {
 				instance_struct.add_declaration (vdecl);
 				has_struct_member = true;
 			}
 		}
 	}
 
-	void generate_struct_field_declaration (Class cl, Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+	void generate_struct_field_declaration (ObjectTypeSymbol type_sym, Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
 		if (f.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
@@ -2076,6 +2078,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		decl_space.add_include ("glib-object.h");
 
+		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (iface)));
 		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (iface)));
 
 		decl_space.add_type_declaration (new CCodeNewline ());
@@ -2138,74 +2141,19 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		bool has_struct_member = false;
 		foreach (Symbol sym in iface.get_virtuals ()) {
 			Method m;
 			Signal sig;
 			Property prop;
 			if ((m = sym as Method) != null) {
-				generate_virtual_method_declaration (m, decl_space, type_struct);
+				generate_struct_method_declaration (iface, m, instance_struct, type_struct, decl_space, ref has_struct_member);
 			} else if ((sig = sym as Signal) != null) {
 				if (sig.default_handler != null) {
 					generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
 				}
 			} else if ((prop = sym as Property) != null) {
-				generate_type_declaration (prop.property_type, decl_space);
-
-				var t = (ObjectTypeSymbol) prop.parent_symbol;
-
-				bool returns_real_struct = prop.property_type.is_real_non_null_struct_type ();
-
-				var this_type = new ObjectType (t);
-				var cselfparam = new CCodeParameter ("self", get_ccode_name (this_type));
-
-				if (prop.get_accessor != null) {
-					var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
-					vdeclarator.add_parameter (cselfparam);
-					var creturn_type = get_callable_creturn_type (prop.get_accessor.get_method ());
-					if (returns_real_struct) {
-						var cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (prop.get_accessor.value_type)));
-						vdeclarator.add_parameter (cvalueparam);
-					}
-
-					var array_type = prop.property_type as ArrayType;
-					if (array_type != null && get_ccode_array_length (prop)) {
-						var length_ctype = get_ccode_array_length_type (array_type) + "*";
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("result", dim), length_ctype));
-						}
-					} else if ((prop.property_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-						vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("result"), "gpointer*"));
-					}
-
-					var vdecl = new CCodeDeclaration (get_ccode_name (creturn_type));
-					vdecl.add_declarator (vdeclarator);
-					type_struct.add_declaration (vdecl);
-				}
-				if (prop.set_accessor != null) {
-					var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
-					vdeclarator.add_parameter (cselfparam);
-					if (returns_real_struct) {
-						var cvalueparam = new CCodeParameter ("value", "%s *".printf (get_ccode_name (prop.set_accessor.value_type)));
-						vdeclarator.add_parameter (cvalueparam);
-					} else {
-						var cvalueparam = new CCodeParameter ("value", get_ccode_name (prop.set_accessor.value_type));
-						vdeclarator.add_parameter (cvalueparam);
-					}
-
-					var array_type = prop.property_type as ArrayType;
-					if (array_type != null && get_ccode_array_length (prop)) {
-						var length_ctype = get_ccode_array_length_type (array_type);
-						for (int dim = 1; dim <= array_type.rank; dim++) {
-							vdeclarator.add_parameter (new CCodeParameter (get_array_length_cname ("value", dim), length_ctype));
-						}
-					} else if ((prop.property_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
-						vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
-					}
-
-					var vdecl = new CCodeDeclaration ("void");
-					vdecl.add_declarator (vdeclarator);
-					type_struct.add_declaration (vdecl);
-				}
+				generate_struct_property_declaration (iface, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
 			} else {
 				Report.error (sym.source_reference, "internal: Unsupported symbol");
 			}
