@@ -100,7 +100,7 @@ archlinux-gcc-x86_64:
   stage: build
   image: archlinux/base:latest
   before_script:
-    - pacman -Syu --noconfirm automake autoconf-archive libtool bison dbus flex git glib2 graphviz gobject-introspection gcc make vala
+    - pacman -Syu --noconfirm automake autoconf-archive libtool bison gettext dbus flex git glib2 graphviz gobject-introspection gcc make vala
   script:
     - git fetch --tags
     - ./autogen.sh
