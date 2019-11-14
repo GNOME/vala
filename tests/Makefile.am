@@ -456,6 +456,7 @@ TESTS = \
 	dbus/errors.test \
 	dbus/async.test \
 	dbus/async-errors.test \
+	dbus/dynamic-method.test \
 	dbus/enum-string-marshalling.vala \
 	dbus/signals.test \
 	dbus/filedescriptor.test \
