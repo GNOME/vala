@@ -496,6 +496,7 @@ TESTS = \
 	asynchronous/bug793158.vala \
 	asynchronous/catch-error-scope.vala \
 	asynchronous/catch-in-finally.vala \
+	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
