@@ -408,6 +408,7 @@ public class Vala.MemberAccess : Expression {
 						m.add_error_type (err);
 						m.access = SymbolAccessibility.PUBLIC;
 						m.add_parameter (new Parameter.with_ellipsis ());
+						m.this_parameter = new Parameter ("this", dynamic_object_type.copy ());
 						dynamic_object_type.type_symbol.scope.add (null, m);
 						symbol_reference = m;
 					}
