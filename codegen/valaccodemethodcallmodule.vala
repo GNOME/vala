@@ -296,6 +296,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			in_arg_map.set (get_param_pos (0.1), csizeof);
 		} else if (m is DynamicMethod) {
+			emit_context.push_symbol (m);
 			m.clear_parameters ();
 			int param_nr = 1;
 			foreach (Expression arg in expr.get_argument_list ()) {
@@ -320,6 +321,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				param.accept (this);
 			}
 			generate_dynamic_method_wrapper ((DynamicMethod) m);
+			emit_context.pop_symbol ();
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
 			ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (current_class) + "*"));
 
@@ -871,6 +873,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (requires_destroy (unary.inner.value_type)) {
 				// unref old value
 				ccode.add_expression (destroy_value (unary.inner.target_value));
+			}
+
+			// infer type of out-parameter from argument
+			if (ma.symbol_reference is DynamicMethod && unary.target_value.value_type == null) {
+				unary.target_value.value_type = unary.inner.value_type.copy ();
 			}
 
 			// assign new value
