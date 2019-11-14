@@ -43,8 +43,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
-		var dynamic_method = (DynamicMethod) method;
-
 		var func = new CCodeFunction (get_ccode_name (method));
 		func.modifiers = CCodeModifiers.STATIC;
 
@@ -54,10 +52,10 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (func);
 
-		if (dynamic_method.dynamic_type.data_type == dbus_proxy_type) {
+		if (method.dynamic_type.data_type == dbus_proxy_type) {
 			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
 		} else {
-			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
+			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (method.dynamic_type.to_string ()));
 		}
 
 		pop_function ();
