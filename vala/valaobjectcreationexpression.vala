@@ -365,6 +365,11 @@ public class Vala.ObjectCreationExpression : Expression {
 					error = true;
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
+			} else if (m is CreationMethod) {
+				if (m.coroutine) {
+					error = true;
+					Report.error (source_reference, "missing `yield' before async creation expression");
+				}
 			}
 
 			// FIXME partial code duplication of MethodCall.check

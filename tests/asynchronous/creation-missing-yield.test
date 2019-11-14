@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	public async Foo () {
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+}
