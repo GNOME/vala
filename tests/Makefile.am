@@ -576,6 +576,7 @@ TESTS = \
 	ordering/delegate-interface.vala \
 	ordering/delegate-struct.vala \
 	ordering/struct-delegate.vala \
+	semantic/address-of-invalid.test \
 	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
