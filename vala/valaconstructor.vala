@@ -67,6 +67,10 @@ public class Vala.Constructor : Subroutine {
 
 		checked = true;
 
+		if (this_parameter != null) {
+			this_parameter.check (context);
+		}
+
 		context.analyzer.current_symbol = this;
 
 		if (body != null) {

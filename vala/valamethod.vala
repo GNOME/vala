@@ -704,6 +704,10 @@ public class Vala.Method : Subroutine, Callable {
 
 		checked = true;
 
+		if (this_parameter != null) {
+			this_parameter.check (context);
+		}
+
 		if (get_attribute ("DestroysInstance") != null) {
 			this_parameter.variable_type.value_owned = true;
 		}

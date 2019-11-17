@@ -93,6 +93,10 @@ public class Vala.CreationMethod : Method {
 			return false;
 		}
 
+		if (this_parameter != null) {
+			this_parameter.check (context);
+		}
+
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;
 

@@ -408,6 +408,10 @@ public class Vala.Property : Symbol, Lockable {
 
 		checked = true;
 
+		if (this_parameter != null) {
+			this_parameter.check (context);
+		}
+
 		if (parent_symbol is Class && (is_abstract || is_virtual)) {
 			var cl = (Class) parent_symbol;
 			if (cl.is_compact && cl.base_class != null) {
