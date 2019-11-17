@@ -1162,22 +1162,40 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static DataType? get_this_type (Method m) {
-		unowned TypeSymbol? parent_type = find_parent_type_symbol (m);
+	public static DataType? get_this_type (Symbol s, TypeSymbol? parent = null) {
+		unowned TypeSymbol? parent_type = parent ?? find_parent_type_symbol (s);
 		if (parent_type == null) {
 			Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
 			return new InvalidType ();
 		}
 
+		MemberBinding binding;
+		if (s is Method) {
+			binding = ((Method) s).binding;
+		} else if (s is Constructor) {
+			binding = ((Constructor) s).binding;
+		} else if (s is Destructor) {
+			binding = ((Destructor) s).binding;
+		} else if (s is Property) {
+			binding = ((Property) s).binding;
+		} else {
+			Report.error (s.source_reference, "internal: Unsupported symbol type");
+			return new InvalidType ();
+		}
+
 		DataType? this_type = null;
-		switch (m.binding) {
+		List<TypeParameter>? type_parameters = null;
+		switch (binding) {
 		case MemberBinding.INSTANCE:
 			if (parent_type is Class) {
 				this_type = new ObjectType ((Class) parent_type);
+				type_parameters = ((Class) parent_type).get_type_parameters ();
 			} else if (parent_type is Interface) {
 				this_type = new ObjectType ((Interface) parent_type);
+				type_parameters = ((Interface) parent_type).get_type_parameters ();
 			} else if (parent_type is Struct) {
 				this_type = new StructValueType ((Struct) parent_type);
+				type_parameters = ((Struct) parent_type).get_type_parameters ();
 			} else if (parent_type is Enum) {
 				this_type = new EnumValueType ((Enum) parent_type);
 			} else {
@@ -1188,6 +1206,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		case MemberBinding.CLASS:
 			if (parent_type is Class) {
 				this_type = new ClassType ((Class) parent_type);
+			} else if (parent_type is Interface) {
+				this_type = new InterfaceType ((Interface) parent_type);
 			} else {
 				Report.error (parent_type.source_reference, "internal: Unsupported symbol type");
 				this_type = new InvalidType ();
@@ -1195,10 +1215,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			break;
 		case MemberBinding.STATIC:
 		default:
-			Report.error (m.source_reference, "internal: Does not support a parent instance");
+			Report.error (s.source_reference, "internal: Does not support a parent instance");
 			this_type = new InvalidType ();
 			break;
 		}
+
+		if (type_parameters != null) {
+			foreach (var type_param in type_parameters) {
+				var type_arg = new GenericType (type_param);
+				type_arg.value_owned = true;
+				this_type.add_type_argument (type_arg);
+			}
+		}
+
 		return this_type;
 	}
 
