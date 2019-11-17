@@ -165,11 +165,6 @@ public class Vala.Class : ObjectTypeSymbol {
 			_destructor = value;
 			if (_destructor != null) {
 				_destructor.owner = scope;
-				if (_destructor.this_parameter != null) {
-					_destructor.scope.remove (_destructor.this_parameter.name);
-				}
-				_destructor.this_parameter = new Parameter ("this", get_this_type ());
-				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
 			}
 		}
 	}
@@ -269,11 +264,11 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @param m a method
 	 */
 	public override void add_method (Method m) {
-		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
+		if (m.binding != MemberBinding.STATIC || m is CreationMethod) {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new Parameter ("this", get_this_type ());
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -323,8 +318,10 @@ public class Vala.Class : ObjectTypeSymbol {
 	public override void add_property (Property prop) {
 		base.add_property (prop);
 
-		prop.this_parameter = new Parameter ("this", get_this_type ());
-		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		if (prop.binding != MemberBinding.STATIC) {
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		}
 
 		if (prop.field != null) {
 			add_field (prop.field);
@@ -354,6 +351,14 @@ public class Vala.Class : ObjectTypeSymbol {
 		default:
 			assert_not_reached ();
 		}
+
+		if (c.binding != MemberBinding.STATIC) {
+			if (c.this_parameter != null) {
+				c.scope.remove (c.this_parameter.name);
+			}
+			c.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (c, this));
+			c.scope.add (c.this_parameter.name, c.this_parameter);
+		}
 	}
 
 	public override void add_destructor (Destructor d) {
@@ -378,6 +383,14 @@ public class Vala.Class : ObjectTypeSymbol {
 			break;
 		default:
 			assert_not_reached ();
+		}
+
+		if (d.binding != MemberBinding.STATIC) {
+			if (d.this_parameter != null) {
+				d.scope.remove (d.this_parameter.name);
+			}
+			d.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (d, this));
+			d.scope.add (d.this_parameter.name, d.this_parameter);
 		}
 	}
 

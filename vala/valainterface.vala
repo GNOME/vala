@@ -73,8 +73,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 			m.error = true;
 			return;
 		}
-		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new Parameter ("this", get_this_type ());
+		if (m.binding != MemberBinding.STATIC) {
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -100,8 +100,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		base.add_property (prop);
 
-		prop.this_parameter = new Parameter ("this", new ObjectType (this));
-		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		if (prop.binding != MemberBinding.STATIC) {
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		}
 	}
 
 	public virtual List<Symbol> get_virtuals () {

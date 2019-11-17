@@ -234,7 +234,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public override void add_method (Method m) {
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
-			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -278,8 +278,10 @@ public class Vala.Struct : TypeSymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
-		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		if (prop.binding == MemberBinding.INSTANCE) {
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+		}
 
 		if (prop.field != null) {
 			add_field (prop.field);

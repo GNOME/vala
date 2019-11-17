@@ -296,16 +296,6 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 		return -1;
 	}
 
-	public ObjectType get_this_type () {
-		var result = new ObjectType (this);
-		foreach (var type_parameter in get_type_parameters ()) {
-			var type_arg = new GenericType (type_parameter);
-			type_arg.value_owned = true;
-			result.add_type_argument (type_arg);
-		}
-		return result;
-	}
-
 	/**
 	 * Adds the specified method as a hidden member to this class,
 	 * primarily used for default signal handlers.
@@ -322,7 +312,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new Parameter ("this", get_this_type ());
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
