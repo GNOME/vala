@@ -2031,8 +2031,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
 			} else {
-				if (get_this_type () != null) {
-					data.add_field (get_ccode_name (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol)), "self");
+				unowned DataType? this_type = get_this_type ();
+				if (this_type != null) {
+					data.add_field (get_ccode_name (this_type), "self");
 				}
 
 				if (current_method != null) {
@@ -2098,8 +2099,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				// the chainup statement takes care of assigning self in the closure struct
 				bool in_creation_method_with_chainup = (current_method is CreationMethod && current_class != null && current_class.base_class != null);
 
-				if (get_this_type () != null && (!in_creation_method_with_chainup || current_method.body != b)) {
-					var ref_call = new CCodeFunctionCall (get_dup_func_expression (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol), b.source_reference));
+				unowned DataType? this_type = get_this_type ();
+				if (this_type != null && (!in_creation_method_with_chainup || current_method.body != b)) {
+					var ref_call = new CCodeFunctionCall (get_dup_func_expression (this_type, b.source_reference));
 					ref_call.add_argument (get_this_cexpression ());
 
 					// never increase reference count for self in finalizers to avoid infinite recursion on following unref
@@ -2194,9 +2196,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				outer_block = new CCodeMemberAccess.pointer (outer_block, "_data%d_".printf (parent_block_id));
 			}
 
-			if (get_this_type () != null) {
+			var this_type = get_this_type ();
+			if (this_type != null) {
 				// assign "self" for type parameters
-				ccode.add_declaration(get_ccode_name (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol)), new CCodeVariableDeclarator ("self"));
+				ccode.add_declaration(get_ccode_name (this_type), new CCodeVariableDeclarator ("self"));
 				ccode.add_assignment (new CCodeIdentifier ("self"), new CCodeMemberAccess.pointer (outer_block, "self"));
 			}
 
@@ -2290,13 +2293,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (unref_call);
 				ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), new CCodeConstant ("NULL"));
 			} else {
-				var this_type = get_this_type ();
+				this_type = get_this_type ();
 				if (this_type != null) {
 					this_type = this_type.copy ();
 					this_type.value_owned = true;
 					if (this_type.is_disposable () && !is_in_destructor ()) {
 						// reference count for self is not increased in finalizers
-						var this_value = new GLibValue (SemanticAnalyzer.get_data_type_for_symbol (current_type_symbol), new CCodeIdentifier ("self"), true);
+						var this_value = new GLibValue (this_type, new CCodeIdentifier ("self"), true);
 						ccode.add_expression (destroy_value (this_value));
 					}
 				}
@@ -5775,6 +5778,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		set_cvalue (lambda, new CCodeIdentifier (get_ccode_name (lambda.method)));
 
+		unowned DataType? this_type;
 		if (lambda.method.closure) {
 			int block_id = get_block_id (current_closure_block);
 			var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
@@ -5787,14 +5791,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
 			set_delegate_target (lambda, delegate_target);
-		} else if (get_this_type () != null) {
+		} else if ((this_type = get_this_type ()) != null) {
 			CCodeExpression delegate_target = get_this_cexpression ();
-			delegate_target = convert_to_generic_pointer (delegate_target, get_this_type ());
+			delegate_target = convert_to_generic_pointer (delegate_target, this_type);
 			if (expr_owned || delegate_type.is_called_once) {
-				var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), lambda.source_reference));
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (this_type, lambda.source_reference));
 				ref_call.add_argument (delegate_target);
 				delegate_target = ref_call;
-				set_delegate_target_destroy_notify (lambda, get_destroy_func_expression (get_this_type ()));
+				set_delegate_target_destroy_notify (lambda, get_destroy_func_expression (this_type));
 			} else {
 				set_delegate_target_destroy_notify (lambda, new CCodeConstant ("NULL"));
 			}
@@ -6317,7 +6321,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.add_expression (cassert);
 	}
 
-	public DataType? get_this_type () {
+	public unowned DataType? get_this_type () {
 		if (current_method != null && current_method.binding == MemberBinding.INSTANCE) {
 			return current_method.this_parameter.variable_type;
 		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
