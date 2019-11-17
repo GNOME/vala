@@ -4180,7 +4180,6 @@ public class Vala.GirParser : CodeVisitor {
 			if (finish_method is CreationMethod) {
 				method = new CreationMethod (((CreationMethod) finish_method).class_name, null, m.source_reference);
 				method.access = m.access;
-				method.binding = m.binding;
 				method.coroutine = true;
 				method.has_construct_function = finish_method.has_construct_function;
 

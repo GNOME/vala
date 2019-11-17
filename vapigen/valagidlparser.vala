@@ -447,7 +447,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (node.type == IdlNodeTypeId.FUNCTION) {
 			var m = parse_function ((IdlNodeFunction) node);
 			if (m != null) {
-				m.binding = MemberBinding.STATIC;
+				if (!(m is CreationMethod)) {
+					m.binding = MemberBinding.STATIC;
+				}
 				add_symbol_to_container (container, m);
 				current_source_file.add_node (m);
 			}
@@ -2404,7 +2406,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.name = m.name.substring ("class_".length, m.name.length - "class_".length);
 					}
 					continue;
-				} else {
+				} else if (!(m is CreationMethod)) {
 					// static method
 					m.binding = MemberBinding.STATIC;
 				}
@@ -2604,7 +2606,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		if (first) {
+		if (first && !(m is CreationMethod)) {
 			// no parameters => static method
 			m.binding = MemberBinding.STATIC;
 		}
