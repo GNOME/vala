@@ -34,6 +34,10 @@ public class Vala.VoidType : DataType {
 		return (type2 is VoidType);
 	}
 
+	public override bool compatible (DataType type2) {
+		return (type2 is VoidType);
+	}
+
 	public override string to_qualified_string (Scope? scope) {
 		return "void";
 	}
