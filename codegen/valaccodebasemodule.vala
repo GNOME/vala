@@ -2573,6 +2573,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	 * Create a temporary variable and return lvalue access to it
 	 */
 	public TargetValue create_temp_value (DataType type, bool init, CodeNode node_reference, bool? value_owned = null) {
+		if (type is VoidType) {
+			Report.error (node_reference.source_reference, "internal: 'void' not supported as variable type");
+		}
+
 		var local = new LocalVariable (type.copy (), "_tmp%d_".printf (next_temp_var_id++), null, node_reference.source_reference);
 		local.init = init;
 		if (value_owned != null) {
