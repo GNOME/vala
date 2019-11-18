@@ -46,6 +46,7 @@ public abstract class Vala.TypeRegisterFunction {
 		string type_id_name = "%s_type_id".printf (get_ccode_lower_case_name (type_symbol));
 
 		var type_block = new CCodeBlock ();
+		var type_once_block = new CCodeBlock ();
 		CCodeDeclaration cdecl;
 		if (use_thread_safe) {
 			cdecl = new CCodeDeclaration ("gsize");
@@ -65,6 +66,7 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 		CCodeFunction fun;
+		CCodeFunction fun_once = null;
 		if (!plugin) {
 			fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
 			fun.modifiers = CCodeModifiers.CONST;
@@ -81,6 +83,16 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.is_declaration = true;
 			declaration_fragment.append (fun.copy ());
 			fun.is_declaration = false;
+
+			fun_once = new CCodeFunction ("%s_once".printf (fun.name), "GType");
+			fun_once.modifiers = CCodeModifiers.CONST | CCodeModifiers.STATIC;
+			if (context.require_glib_version (2, 58)) {
+				fun_once.modifiers |= CCodeModifiers.NO_INLINE;
+			}
+
+			fun_once.is_declaration = true;
+			declaration_fragment.append (fun_once.copy ());
+			fun_once.is_declaration = false;
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol)), "GType");
 			fun.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
@@ -200,10 +212,14 @@ public abstract class Vala.TypeRegisterFunction {
 			reg_call.add_argument (new CCodeConstant (get_type_flags ()));
 		}
 
+		var once_call_block = new CCodeBlock ();
 		if (use_thread_safe && !plugin) {
 			var temp_decl = new CCodeDeclaration ("GType");
 			temp_decl.add_declarator (new CCodeVariableDeclarator (type_id_name, reg_call));
 			type_init.add_statement (temp_decl);
+			temp_decl = new CCodeDeclaration ("GType");
+			temp_decl.add_declarator (new CCodeVariableDeclarator (type_id_name, new CCodeFunctionCall (new CCodeIdentifier (fun_once.name))));
+			once_call_block.add_statement (temp_decl);
 		} else {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		}
@@ -242,7 +258,7 @@ public abstract class Vala.TypeRegisterFunction {
 				var leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
 				leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
 				leave.add_argument (new CCodeIdentifier (type_id_name));
-				type_init.add_statement (new CCodeExpressionStatement (leave));
+				once_call_block.add_statement (new CCodeExpressionStatement (leave));
 			} else {
 				var id = new CCodeIdentifier (type_id_name);
 				var zero = new CCodeConstant ("0");
@@ -256,8 +272,11 @@ public abstract class Vala.TypeRegisterFunction {
 				cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
 				((CCodeFunctionCall) cond).add_argument (condition);
 			}
-			var cif = new CCodeIfStatement (cond, type_init);
+			var cif = new CCodeIfStatement (cond, once_call_block);
 			type_block.add_statement (cif);
+
+			type_init.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
+			type_once_block = type_init;
 		} else {
 			type_block = type_init;
 		}
@@ -269,6 +288,10 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 		fun.block = type_block;
+		if (!plugin) {
+			fun_once.block = type_once_block;
+			definition_fragment.append (fun_once);
+		}
 
 		definition_fragment.append (fun);
 	}
