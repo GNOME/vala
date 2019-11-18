@@ -1,3 +1,16 @@
+Vala 0.46.5
+===========
+ * Regression and bug fixes:
+  - codegen:
+    + Fix vfunc signature of delegate-typed property in interface
+    + Fix support of dynamic DBus methods
+  - vala:
+    + Don't require constant initializer in fast-vapi [#461]
+    + Report error for async creation expression without yield
+
+ * Bindings:
+  - glib-2.0: Add "has_typedef = false" to custom MarkupParser*Func delegates
+
 Vala 0.46.4
 ===========
  * Various improvements and bug fixes:
