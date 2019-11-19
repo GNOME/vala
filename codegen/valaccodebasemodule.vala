@@ -961,7 +961,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		if (!c.external || (c.source_type == SourceFileType.FAST && c.value != null)) {
+		if (!c.external && c.value != null) {
 			generate_type_declaration (c.type_reference, decl_space);
 
 			c.value.emit (this);
