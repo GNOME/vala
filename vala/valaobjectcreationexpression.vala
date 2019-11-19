@@ -495,6 +495,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			context.analyzer.visit_member_initializer (init, type_reference);
 		}
 
+		// FIXME code duplication in MethodCall.check
 		if (tree_can_fail) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
@@ -511,6 +512,8 @@ public class Vala.ObjectCreationExpression : Expression {
 				insert_statement (context.analyzer.insert_block, decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
+				temp_access.formal_target_type = formal_target_type;
+
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
 				decl.check (context);
