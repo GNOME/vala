@@ -643,6 +643,7 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
+		// FIXME code duplication in ObjectCreationExpression.check
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
@@ -659,6 +660,7 @@ public class Vala.MethodCall : Expression {
 				insert_statement (context.analyzer.insert_block, decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
+				temp_access.formal_target_type = formal_target_type;
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;

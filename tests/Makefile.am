@@ -444,6 +444,7 @@ TESTS = \
 	asynchronous/yield.vala \
 	generics/arrays-not-supported.test \
 	generics/constructor-chain-up.vala \
+	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \
 	generics/type-parameter-properties.vala \
