@@ -808,6 +808,11 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (parameters[0].source_reference, "Named parameter required before `...'");
 		}
 
+		if (get_attribute ("Print") != null && (parameters.size != 1 || parameters[0].variable_type.type_symbol != context.analyzer.string_type.type_symbol)) {
+			error = true;
+			Report.error (source_reference, "[Print] methods must have exactly one parameter of type `string'");
+		}
+
 		var optional_param = false;
 		foreach (Parameter param in parameters) {
 			param.check (context);
