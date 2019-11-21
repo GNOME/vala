@@ -1397,7 +1397,7 @@ namespace Gst {
 		public Event.instant_rate_change (double rate_multiplier, Gst.SegmentFlags new_flags);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.18")]
-		public Event.instant_rate_sync_time (double rate, Gst.ClockTime running_time, Gst.ClockTime upstream_running_time);
+		public Event.instant_rate_sync_time (double rate_multiplier, Gst.ClockTime running_time, Gst.ClockTime upstream_running_time);
 		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
 		[CCode (has_construct_function = false)]
@@ -1411,7 +1411,7 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public void parse_instant_rate_change (out double rate_multiplier, out Gst.SegmentFlags new_flags);
 		[Version (since = "1.18")]
-		public void parse_instant_rate_sync_time (double rate, out Gst.ClockTime running_time, out Gst.ClockTime upstream_running_time);
+		public void parse_instant_rate_sync_time (out double rate_multiplier, out Gst.ClockTime running_time, out Gst.ClockTime upstream_running_time);
 		public void parse_latency (out Gst.ClockTime latency);
 		[Version (since = "1.6")]
 		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, out unowned string origin);
@@ -2445,6 +2445,8 @@ namespace Gst {
 		public bool set_parent_refcount (int refcount);
 		public void set_valist (string fieldname, va_list varargs);
 		public void set_value (string fieldname, GLib.Value value);
+		[Version (since = "1.18")]
+		public static bool take (ref Gst.Structure? oldstr_ptr, owned Gst.Structure? newstr);
 		public void take_value (string fieldname, owned GLib.Value value);
 		public string to_string ();
 		[CCode (has_construct_function = false)]
