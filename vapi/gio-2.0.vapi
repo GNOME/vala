@@ -2854,6 +2854,8 @@ namespace GLib {
 		public ssize_t propagate_int () throws GLib.Error;
 		[Version (since = "2.36")]
 		public void* propagate_pointer () throws GLib.Error;
+		[Version (since = "2.64")]
+		public bool propagate_value (out GLib.Value value) throws GLib.Error;
 		[Version (since = "2.36")]
 		public static void report_error (GLib.Object? source_object, [CCode (scope = "async")] GLib.TaskReadyCallback callback, void* source_tag, owned GLib.Error error);
 		[PrintfFormat]
@@ -2872,10 +2874,12 @@ namespace GLib {
 		public void return_new_error (GLib.Quark domain, int code, string format, ...);
 		[Version (since = "2.36")]
 		public void return_pointer (owned void* result, GLib.DestroyNotify? result_destroy);
+		[Version (since = "2.64")]
+		public void return_value (GLib.Value? result);
 		[Version (since = "2.36")]
-		public void run_in_thread (GLib.TaskThreadFunc task_func);
+		public void run_in_thread ([CCode (scope = "async")] GLib.TaskThreadFunc task_func);
 		[Version (since = "2.36")]
-		public void run_in_thread_sync (GLib.TaskThreadFunc task_func);
+		public void run_in_thread_sync ([CCode (scope = "async")] GLib.TaskThreadFunc task_func);
 		[Version (since = "2.36")]
 		public void set_check_cancellable (bool check_cancellable);
 		[Version (since = "2.60")]
@@ -3035,6 +3039,7 @@ namespace GLib {
 		public string negotiated_protocol { get; }
 		public GLib.TlsCertificate peer_certificate { get; }
 		public GLib.TlsCertificateFlags peer_certificate_errors { get; }
+		[Version (deprecated = true, deprecated_since = "2.60", since = "2.28")]
 		public GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
 		public bool require_close_notify { get; set construct; }
 		[Version (deprecated = true, deprecated_since = "2.30")]
