@@ -50,6 +50,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_default (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message, void* user_data = null);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.18")]
+		public static string log_get_line (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string format, va_list args);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void print_stack_trace ();
@@ -625,6 +628,8 @@ namespace Gst {
 		public Gst.ElementFlags get_suppressed_flags ();
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
+		[Version (since = "1.18")]
+		public Gst.Iterator? iterate_all_by_element_factory_name (string factory_name);
 		public Gst.Iterator? iterate_all_by_interface (GLib.Type iface);
 		public Gst.Iterator? iterate_elements ();
 		public Gst.Iterator? iterate_recurse ();
@@ -1056,7 +1061,13 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DateTime.from_unix_epoch_local_time (int64 secs);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public DateTime.from_unix_epoch_local_time_usecs (int64 usecs);
+		[CCode (has_construct_function = false)]
 		public DateTime.from_unix_epoch_utc (int64 secs);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public DateTime.from_unix_epoch_utc_usecs (int64 usecs);
 		public int get_day ();
 		public int get_hour ();
 		public int get_microsecond ();
@@ -1397,7 +1408,7 @@ namespace Gst {
 		public Event.instant_rate_change (double rate_multiplier, Gst.SegmentFlags new_flags);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.18")]
-		public Event.instant_rate_sync_time (double rate, Gst.ClockTime running_time, Gst.ClockTime upstream_running_time);
+		public Event.instant_rate_sync_time (double rate_multiplier, Gst.ClockTime running_time, Gst.ClockTime upstream_running_time);
 		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
 		[CCode (has_construct_function = false)]
@@ -1411,7 +1422,7 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public void parse_instant_rate_change (out double rate_multiplier, out Gst.SegmentFlags new_flags);
 		[Version (since = "1.18")]
-		public void parse_instant_rate_sync_time (double rate, out Gst.ClockTime running_time, out Gst.ClockTime upstream_running_time);
+		public void parse_instant_rate_sync_time (out double rate_multiplier, out Gst.ClockTime running_time, out Gst.ClockTime upstream_running_time);
 		public void parse_latency (out Gst.ClockTime latency);
 		[Version (since = "1.6")]
 		public void parse_protection (out unowned string system_id, out unowned Gst.Buffer data, out unowned string origin);
@@ -2445,6 +2456,8 @@ namespace Gst {
 		public bool set_parent_refcount (int refcount);
 		public void set_valist (string fieldname, va_list varargs);
 		public void set_value (string fieldname, GLib.Value value);
+		[Version (since = "1.18")]
+		public static bool take (ref Gst.Structure? oldstr_ptr, owned Gst.Structure? newstr);
 		public void take_value (string fieldname, owned GLib.Value value);
 		public string to_string ();
 		[CCode (has_construct_function = false)]

@@ -204,6 +204,7 @@ namespace Gst {
 			public unowned string get_preset ();
 			public unowned string get_preset_name ();
 			public Gst.Caps get_restriction ();
+			[Version (since = "1.18")]
 			public bool get_single_segment ();
 			public unowned string get_type_nick ();
 			public bool is_enabled ();
@@ -218,6 +219,7 @@ namespace Gst {
 			public void set_preset (string? preset);
 			public void set_preset_name (string? preset_name);
 			public void set_restriction (owned Gst.Caps? restriction);
+			[Version (since = "1.18")]
 			public void set_single_segment (bool single_segment);
 			[NoAccessorMethod]
 			public Gst.Caps restriction_caps { owned get; set; }

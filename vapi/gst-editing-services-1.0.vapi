@@ -177,9 +177,11 @@ namespace GES {
 		public virtual bool can_load_uri (string uri) throws GLib.Error;
 		public static bool can_save_uri (string uri) throws GLib.Error;
 		public static unowned GES.Asset get_default ();
+		[Version (deprecated = true, deprecated_since = "1.18")]
 		public virtual bool load_from_uri (GES.Timeline timeline, string uri) throws GLib.Error;
 		[CCode (cname = "ges_formatter_class_register_metas")]
 		public class void register_metas (string name, string description, string extensions, string caps, double version, Gst.Rank rank);
+		[Version (deprecated = true, deprecated_since = "1.18")]
 		public virtual bool save_to_uri (GES.Timeline timeline, string uri, bool overwrite) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_group_get_type ()")]
@@ -517,7 +519,7 @@ namespace GES {
 		public virtual bool set_max_duration (Gst.ClockTime maxduration);
 		public bool set_name (string? name);
 		public virtual bool set_parent (GES.TimelineElement parent);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.10")]
 		public virtual bool set_priority (uint32 priority);
 		public virtual bool set_start (Gst.ClockTime start);
 		public bool set_timeline (GES.Timeline timeline);
@@ -1057,10 +1059,8 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
 	public delegate bool FormatterCanLoadURIMethod (GES.Formatter dummy_instance, string uri) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
-	[Version (deprecated = true, deprecated_since = "1.16")]
 	public delegate bool FormatterLoadFromURIMethod (GES.Formatter formatter, GES.Timeline timeline, string uri) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
-	[Version (deprecated = true, deprecated_since = "1.16")]
 	public delegate bool FormatterSaveToURIMethod (GES.Formatter formatter, GES.Timeline timeline, string uri, bool overwrite) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", instance_pos = 3.9)]
 	public delegate void MetaForeachFunc (GES.MetaContainer container, string key, GLib.Value value);
