@@ -140,6 +140,8 @@ TESTS = \
 	methods/bug791283.vala \
 	methods/argument-array-initilizer.vala \
 	methods/generics.vala \
+	methods/print-attribute.vala \
+	methods/print-attribute-invalid.test \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \

@@ -1,0 +1,8 @@
+Invalid Code
+
+[Print]
+void foo (int i, string s) {
+}
+
+void main () {
+}
