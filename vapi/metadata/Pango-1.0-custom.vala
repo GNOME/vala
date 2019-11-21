@@ -23,6 +23,13 @@ namespace Pango {
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
 
+	[CCode (cheader_filename = "pango/pango.h")]
+	[Compact]
+	public class AttrFontFeatures {
+		[CCode (has_construct_function = false, type = "PangoAttribute*")]
+		public AttrFontFeatures (string features);
+	}
+
 	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attr_iterator_destroy")]
 	[Compact]
 	public class AttrIterator {
@@ -41,6 +48,7 @@ namespace Pango {
 		[CCode (has_construct_function = false, type = "PangoAttribute*")]
 		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[CCode (has_construct_function = false, simple_generics = true, type = "PangoAttribute*")]
+		[Version (since = "1.8")]
 		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, owned T data, Pango.AttrDataCopyFunc<T> copy_func);
 	}
 
@@ -49,6 +57,9 @@ namespace Pango {
 	public class AttrSize {
 		[CCode (has_construct_function = false, type = "PangoAttribute*")]
 		public AttrSize (int size);
+		[CCode (cname = "pango_attr_size_new_absolute", has_construct_function = false, type = "PangoAttribute*")]
+		[Version (since = "1.8")]
+		public AttrSize.with_absolute (int size);
 	}
 
 	[CCode (cheader_filename = "pango/pango.h", free_function = "pango_attribute_destroy")]
@@ -56,19 +67,8 @@ namespace Pango {
 	public class Attribute {
 	}
 
-	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref")]
-	[Compact]
-	public class Coverage {
-		[CCode (has_construct_function = false)]
-		public Coverage ();
-		public static Pango.Coverage from_bytes (uint8[] bytes);
-	}
-
-	[CCode (cheader_filename = "pango/pango.h")]
-	[Compact]
-	public class ScriptIter {
-		[CCode (has_construct_function = false)]
-		public ScriptIter (string text, int length);
+	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_coverage_get_type ()", ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref")]
+	public class Coverage : GLib.Object {
 	}
 
 	[CCode (cheader_filename = "pango/pango.h", has_target = false)]

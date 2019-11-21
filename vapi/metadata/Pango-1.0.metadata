@@ -4,6 +4,7 @@ Attr*.attr skip
 AttrColor struct=false base_type="Pango.Attribute"
 AttrFloat struct=false base_type="Pango.Attribute"
 AttrFontDesc struct=false base_type="Pango.Attribute"
+AttrFontFeatures struct=false base_type="Pango.Attribute"
 AttrInt struct=false base_type="Pango.Attribute"
 // AttrIterator struct=false base_type="Pango.Attribute"
 AttrLanguage struct=false base_type="Pango.Attribute"
@@ -40,7 +41,6 @@ Coverage
 Font
   .find_shaper skip=false
   .get_coverage skip=false
-attr_*_new skip=false
 
 // Nullability of return values
 AttrIterator
@@ -51,7 +51,6 @@ Font
   .get_font_map nullable
 Layout
   .get_font_description nullable
-config_key_get* nullable
 
 // Variadic
 TabArray
@@ -74,3 +73,19 @@ GlyphItemIter struct
 Matrix struct
 
 *.ref unowned
+
+attr_language_new skip
+attr_font_features_new skip
+attr_shape_new skip
+attr_shape_new_with_data skip
+attr_size_new skip
+attr_size_new_absolute skip
+
+Attribute
+  .destroy destroys_instance
+AttrIterator
+  .destroy destroys_instance
+Coverage
+  .unref destroys_instance=false
+Item
+  .free destroys_instance
