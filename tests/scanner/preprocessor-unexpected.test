@@ -1,0 +1,8 @@
+Invalid Code
+
+#elif VALA_0_48
+void main () {
+#endif
+}
+#else
+}
