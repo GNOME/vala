@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	protected int i;
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.i = 42;
+}
