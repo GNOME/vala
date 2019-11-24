@@ -1,0 +1,12 @@
+Invalid Code
+
+delegate void FooFunc ();
+
+void foo (out string s) {
+	FooFunc f = () => {
+		s = "foo";
+	};
+}
+
+void main () {
+}

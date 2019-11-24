@@ -1,0 +1,11 @@
+Invalid Code
+
+async void bar () {
+}
+
+async void foo () {
+	bar.callback ();
+}
+
+void main () {
+}
