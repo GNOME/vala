@@ -109,14 +109,14 @@ void test_int () {
 
 	int64 i64;
 	int64.try_parse ("-4711inch", out i64, out unparsed);
-	assert (i64 == -4711);
+	assert (i64 == -4711LL);
 	assert (unparsed == "inch");
 	int64.try_parse ("-31415km", out i64);
 	assert (i64 == -31415);
 
 	uint64 ui64;
 	uint64.try_parse ("4711yards", out ui64, out unparsed);
-	assert (ui64 == 4711);
+	assert (ui64 == 4711ULL);
 	assert (unparsed == "yards");
 	uint64.try_parse ("31415yards", out ui64);
 	assert (ui64 == 31415);
