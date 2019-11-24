@@ -11,6 +11,12 @@ void test_double () {
 	double e = d;
 	assert (e == 23d);
 
+	// exponent
+	d = 1.0E-5;
+	assert (d == 0.00001);
+	d = 1.0E+4;
+	assert (d == 10000.0);
+
 	// +
 	d = 42d + 23d;
 	assert (d == 65d);
