@@ -749,8 +749,8 @@ public class Vala.Scanner {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
+							if (digit_length < 1 || digit_length > 2) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one or two hex digit");
 							}
 							break;
 						default:

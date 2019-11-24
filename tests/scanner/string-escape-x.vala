@@ -1,3 +1,3 @@
 void main () {
-	string foo = "\x1010";
+	string foo = "\x10";
 }
