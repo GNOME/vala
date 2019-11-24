@@ -2254,6 +2254,8 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		var method = new Method ("main", new VoidType (), get_src (begin));
+		method.access = SymbolAccessibility.PUBLIC;
+		method.binding = MemberBinding.STATIC;
 		method.body = new Block (get_src (begin));
 		parse_statements (method.body);
 		if (current () != TokenType.EOF) {
