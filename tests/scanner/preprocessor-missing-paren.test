@@ -1,0 +1,6 @@
+Invalid Code
+
+#if (VALA_0_46 && VALA_0_48
+void main () {
+}
+#endif
