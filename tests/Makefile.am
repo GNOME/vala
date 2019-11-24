@@ -750,6 +750,9 @@ TESTS = \
 	semantic/localvariable-var-static-access-instance-property.test \
 	semantic/localvariable-var-without-initializer.test \
 	semantic/localvariable-void.test \
+	semantic/member-access-async-callback-invalid.test \
+	semantic/member-access-capture-out.test \
+	semantic/member-access-protected-invalid.test \
 	semantic/method-abstract.test \
 	semantic/method-abstract-body.test \
 	semantic/method-async-ref-parameter.test \
@@ -834,6 +837,7 @@ TESTS = \
 NON_NULL_TESTS = \
 	nullability/bug611223.vala \
 	nullability/local-variable-invalid-convert.test \
+	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \
 	$(NULL)
