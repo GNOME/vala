@@ -380,24 +380,9 @@ public class Vala.Namespace : Symbol {
 	 * @param f a field
 	 */
 	public override void add_field (Field f) {
-		if (f.binding == MemberBinding.INSTANCE) {
-			// default to static member binding
-			f.binding = MemberBinding.STATIC;
-		}
-
 		// namespaces do not support private memebers
 		if (f.access == SymbolAccessibility.PRIVATE) {
 			f.access = SymbolAccessibility.INTERNAL;
-		}
-
-		if (f.binding == MemberBinding.INSTANCE) {
-			Report.error (f.source_reference, "instance members are not allowed outside of data types");
-			f.error = true;
-			return;
-		} else if (f.binding == MemberBinding.CLASS) {
-			Report.error (f.source_reference, "class members are not allowed outside of classes");
-			f.error = true;
-			return;
 		}
 
 		if (f.owner == null) {
@@ -414,30 +399,11 @@ public class Vala.Namespace : Symbol {
 	 * @param m a method
 	 */
 	public override void add_method (Method m) {
-		if (m.binding == MemberBinding.INSTANCE) {
-			// default to static member binding
-			m.binding = MemberBinding.STATIC;
-		}
-
 		// namespaces do not support private memebers
 		if (m.access == SymbolAccessibility.PRIVATE) {
 			m.access = SymbolAccessibility.INTERNAL;
 		}
 
-		if (m is CreationMethod) {
-			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-			m.error = true;
-			return;
-		}
-		if (m.binding == MemberBinding.INSTANCE) {
-			Report.error (m.source_reference, "instance members are not allowed outside of data types");
-			m.error = true;
-			return;
-		} else if (m.binding == MemberBinding.CLASS) {
-			Report.error (m.source_reference, "class members are not allowed outside of classes");
-			m.error = true;
-			return;
-		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
 			m.result_var.is_result = true;
@@ -515,6 +481,35 @@ public class Vala.Namespace : Symbol {
 		}
 		if (a != null && a.has_argument ("gir_version")) {
 			source_reference.file.gir_version = a.get_string ("gir_version");
+		}
+
+		foreach (Field f in fields) {
+			if (f.binding == MemberBinding.INSTANCE) {
+				Report.error (f.source_reference, "instance fields are not allowed outside of data types");
+				f.error = true;
+				error = true;
+			} else if (f.binding == MemberBinding.CLASS) {
+				Report.error (f.source_reference, "class fields are not allowed outside of classes");
+				f.error = true;
+				error = true;
+			}
+		}
+
+		foreach (Method m in methods) {
+			if (m is CreationMethod) {
+				Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+				m.error = true;
+				error = true;
+			}
+			if (m.binding == MemberBinding.INSTANCE) {
+				Report.error (m.source_reference, "instance methods are not allowed outside of data types");
+				m.error = true;
+				error = true;
+			} else if (m.binding == MemberBinding.CLASS) {
+				Report.error (m.source_reference, "class methods are not allowed outside of classes");
+				m.error = true;
+				error = true;
+			}
 		}
 
 		foreach (Namespace ns in namespaces) {

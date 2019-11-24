@@ -2683,6 +2683,9 @@ public class Vala.Parser : CodeVisitor {
 			f.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			f.binding = MemberBinding.CLASS;
+		} else if (parent is Namespace) {
+			// default to static member binding in namespace
+			f.binding = MemberBinding.STATIC;
 		}
 
 		if (!parent.external_package && parent is Struct
@@ -2748,6 +2751,9 @@ public class Vala.Parser : CodeVisitor {
 			method.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			method.binding = MemberBinding.CLASS;
+		} else if (parent is Namespace) {
+			// default to static member binding in namespace
+			method.binding = MemberBinding.STATIC;
 		}
 		if (ModifierFlags.ASYNC in flags) {
 			method.coroutine = true;

@@ -2587,13 +2587,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else if (sym is Delegate) {
 			ns.add_delegate ((Delegate) sym);
 		} else if (sym is Method) {
-			var method = (Method) sym;
+			unowned Method method = (Method) sym;
 			if (method.binding == MemberBinding.INSTANCE) {
 				method.binding = MemberBinding.STATIC;
 			}
 			ns.add_method (method);
 		} else if (sym is Field) {
-			var field = (Field) sym;
+			unowned Field field = (Field) sym;
 			if (field.binding == MemberBinding.INSTANCE) {
 				field.binding = MemberBinding.STATIC;
 			}

@@ -1522,11 +1522,19 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (sym is ErrorDomain) {
 				ns.add_error_domain ((ErrorDomain) sym);
 			} else if (sym is Field) {
-				ns.add_field ((Field) sym);
+				unowned Field field = (Field) sym;
+				if (field.binding == MemberBinding.INSTANCE) {
+					field.binding = MemberBinding.STATIC;
+				}
+				ns.add_field (field);
 			} else if (sym is Interface) {
 				ns.add_interface ((Interface) sym);
 			} else if (sym is Method) {
-				ns.add_method ((Method) sym);
+				unowned Method method = (Method) sym;
+				if (method.binding == MemberBinding.INSTANCE) {
+					method.binding = MemberBinding.STATIC;
+				}
+				ns.add_method (method);
 			} else if (sym is Struct) {
 				ns.add_struct ((Struct) sym);
 			}
