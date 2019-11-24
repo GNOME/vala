@@ -496,6 +496,21 @@ TESTS = \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
+	scanner/comment-not-closed.test \
+	scanner/preprocessor-invalid.test \
+	scanner/preprocessor-missing-paren.test \
+	scanner/preprocessor-unexpected.test \
+	scanner/regex-escape-invalid.test \
+	scanner/regex-escape-u-digit-length.test \
+	scanner/regex-escape-x-digit-length.test \
+	scanner/regex-escape-x.vala \
+	scanner/regex-multiple-i.test \
+	scanner/regex-multiple-m.test \
+	scanner/regex-multiple-s.test \
+	scanner/regex-multiple-x.test \
+	scanner/string-escape-u-digit-length.test \
+	scanner/string-escape-x-digit-length.test \
+	scanner/string-escape-x.vala \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-wrong-number.test \
