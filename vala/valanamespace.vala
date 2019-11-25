@@ -208,16 +208,6 @@ public class Vala.Namespace : Symbol {
 	}
 
 	/**
-	 * Removes the specified struct from this namespace.
-	 *
-	 * @param st a struct
-	 */
-	public void remove_struct (Struct st) {
-		structs.remove (st);
-		scope.remove (st.name);
-	}
-
-	/**
 	 * Adds the specified enum to this namespace.
 	 *
 	 * @param en an enum
