@@ -235,12 +235,14 @@ public class Vala.Genie.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 4 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 4) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u requires four hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+							} else if (digit_length < 4) {
+								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':
@@ -763,12 +765,14 @@ public class Vala.Genie.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 4 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 4) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u requires four hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+							} else if (digit_length < 4) {
+								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':
@@ -1341,12 +1345,14 @@ public class Vala.Genie.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; digit_length < 4 && current < end && current[0].isxdigit (); digit_length++) {
+							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length != 4) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u requires four hex digits");
+							if (digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+							} else if (digit_length < 4) {
+								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':

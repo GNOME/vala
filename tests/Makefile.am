@@ -570,6 +570,7 @@ TESTS = \
 	scanner/preprocessor-unexpected.test \
 	scanner/regex-escape-invalid.test \
 	scanner/regex-escape-u-digit-length.test \
+	scanner/regex-escape-u-empty.test \
 	scanner/regex-escape-x-digit-length.test \
 	scanner/regex-escape-x-empty.test \
 	scanner/regex-escape-x.vala \
@@ -578,6 +579,7 @@ TESTS = \
 	scanner/regex-multiple-s.test \
 	scanner/regex-multiple-x.test \
 	scanner/string-escape-u-digit-length.test \
+	scanner/string-escape-u-empty.test \
 	scanner/string-escape-x-digit-length.test \
 	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
