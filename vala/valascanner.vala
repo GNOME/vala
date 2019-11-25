@@ -233,12 +233,20 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
+							bool empty = true;
+							for (digit_length = 0; current < end && current[0].isxdigit ();) {
+								if (current[0] != '0') {
+									digit_length++;
+								} else {
+									empty = false;
+								}
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
+							if (empty && digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+							} else if (digit_length > 2) {
+								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:
@@ -745,12 +753,20 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
+							bool empty = true;
+							for (digit_length = 0; current < end && current[0].isxdigit ();) {
+								if (current[0] != '0') {
+									digit_length++;
+								} else {
+									empty = false;
+								}
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length < 1 || digit_length > 2) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one or two hex digit");
+							if (empty && digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+							} else if (digit_length > 2) {
+								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:
@@ -1180,12 +1196,20 @@ public class Vala.Scanner {
 							current++;
 							token_length_in_chars++;
 							int digit_length;
-							for (digit_length = 0; current < end && current[0].isxdigit (); digit_length++) {
+							bool empty = true;
+							for (digit_length = 0; current < end && current[0].isxdigit ();) {
+								if (current[0] != '0') {
+									digit_length++;
+								} else {
+									empty = false;
+								}
 								current++;
 								token_length_in_chars++;
 							}
-							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x requires at least one hex digit");
+							if (empty && digit_length < 1) {
+								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+							} else if (digit_length > 2) {
+								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:

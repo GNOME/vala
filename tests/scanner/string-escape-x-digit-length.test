@@ -1,5 +1,5 @@
 Invalid Code
 
 void main () {
-	string foo = "\x";
+	string foo = "\xaaa";
 }

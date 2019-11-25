@@ -1,5 +1,5 @@
 Invalid Code
 
 void main () {
-	Regex foo = /\xaaa/s;
+	Regex foo = /\x/s;
 }

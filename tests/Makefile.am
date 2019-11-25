@@ -571,6 +571,7 @@ TESTS = \
 	scanner/regex-escape-invalid.test \
 	scanner/regex-escape-u-digit-length.test \
 	scanner/regex-escape-x-digit-length.test \
+	scanner/regex-escape-x-empty.test \
 	scanner/regex-escape-x.vala \
 	scanner/regex-multiple-i.test \
 	scanner/regex-multiple-m.test \
@@ -578,6 +579,7 @@ TESTS = \
 	scanner/regex-multiple-x.test \
 	scanner/string-escape-u-digit-length.test \
 	scanner/string-escape-x-digit-length.test \
+	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
