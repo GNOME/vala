@@ -394,6 +394,7 @@ public abstract class Vala.CodeNode {
 		var str = new StringBuilder ();
 
 		str.append ("/* ");
+		str.append (type_name);
 
 		if (source_reference != null) {
 			str.append ("@").append (source_reference.to_string ());
