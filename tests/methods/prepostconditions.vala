@@ -61,6 +61,24 @@ class Foo {
 	}
 }
 
+struct Bar {
+	public bool ensured;
+	public bool required;
+
+	public Bar () requires (required = true) {
+	}
+
+	public Bar.post () ensures (ensured = true) {
+	}
+
+	public void bar () ensures (ensured = true) {
+	}
+
+	public string foo () ensures (result.length >= 3) {
+		return "foo";
+	}
+}
+
 void main () {
 	var foo = new Foo();
 	assert(foo.required);
@@ -76,4 +94,13 @@ void main () {
 
 	var foo2 = new Foo.post ();
 	assert (foo2.ensured);
+
+	var bar = new Bar ();
+	assert (bar.required);
+	bar.bar ();
+	assert (bar.ensured);
+	assert (bar.foo () == "foo");
+
+	var bar2 = new Bar.post ();
+	assert (bar2.ensured);
 }

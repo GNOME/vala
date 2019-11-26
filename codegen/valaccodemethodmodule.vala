@@ -1141,7 +1141,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	private void create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
+	private void create_precondition_statement (Method m, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
 
 		precondition.emit (this);
@@ -1152,10 +1152,15 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (message.replace ("\n", " ").escape (""))));
 		requires_assert = true;
 
-		if (method_node is CreationMethod) {
-			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
-			ccheck.add_argument (new CCodeConstant ("NULL"));
-		} else if (method_node is Method && ((Method) method_node).coroutine) {
+		if (m is CreationMethod) {
+			if (m.parent_symbol is Class) {
+				ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
+				ccheck.add_argument (new CCodeConstant ("NULL"));
+			} else {
+				// creation method of struct
+				ccheck.call = new CCodeIdentifier ("_vala_return_if_fail");
+			}
+		} else if (m.coroutine) {
 			// _co function
 			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
 			ccheck.add_argument (new CCodeConstant ("FALSE"));
