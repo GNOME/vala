@@ -698,7 +698,11 @@ TESTS = \
 	semantic/method-too-many-type-arguments.test \
 	semantic/method-virtual.test \
 	semantic/method-virtual-body.test \
+	semantic/methodcall-field-initializer-throws.test \
+	semantic/methodcall-void-expression.test \
+	semantic/methodcall-yield-with-begin.test \
 	semantic/objectcreation-abstract-class.test \
+	semantic/objectcreation-field-initializer-throws.test \
 	semantic/objectcreation-no-creation-method.test \
 	semantic/objectcreation-non-public-constructor.test \
 	semantic/objectcreation-unsupported-type.test \
