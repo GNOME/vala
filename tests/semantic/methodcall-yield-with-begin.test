@@ -1,0 +1,11 @@
+Invalid Code
+
+async void foo () {
+}
+
+async void bar () {
+	yield foo.begin ();
+}
+
+void main () {
+}

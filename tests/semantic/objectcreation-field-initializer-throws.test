@@ -1,0 +1,13 @@
+Invalid Code
+
+class Bar {
+	Foo bar = new Foo ();
+}
+
+class Foo {
+	public Foo () throws Error {
+	}
+}
+
+void main () {
+}

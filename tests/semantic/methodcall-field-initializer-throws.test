@@ -1,0 +1,12 @@
+Invalid Code
+
+class Bar {
+	int bar = foo ();
+}
+
+int foo () throws Error {
+	return 42;
+}
+
+void main () {
+}
