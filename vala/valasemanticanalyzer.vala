@@ -964,7 +964,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		init.initializer.formal_target_type = member_type;
 		init.initializer.target_type = init.initializer.formal_target_type.get_actual_type (type, null, init);
 
-		init.check (context);
+		if (!init.check (context)) {
+			return;
+		}
 
 		if (init.initializer.value_type == null || !init.initializer.value_type.compatible (init.initializer.target_type)) {
 			init.error = true;
