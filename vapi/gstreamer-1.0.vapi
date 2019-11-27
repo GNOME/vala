@@ -1056,7 +1056,13 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DateTime.from_unix_epoch_local_time (int64 secs);
 		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public DateTime.from_unix_epoch_local_time_usecs (int64 usecs);
+		[CCode (has_construct_function = false)]
 		public DateTime.from_unix_epoch_utc (int64 secs);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.18")]
+		public DateTime.from_unix_epoch_utc_usecs (int64 usecs);
 		public int get_day ();
 		public int get_hour ();
 		public int get_microsecond ();
