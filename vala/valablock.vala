@@ -159,7 +159,9 @@ public class Vala.Block : Symbol, Statement {
 		context.analyzer.insert_block = this;
 
 		for (int i = 0; i < statement_list.size; i++) {
-			statement_list[i].check (context);
+			if (!statement_list[i].check (context)) {
+				error = true;
+			}
 		}
 
 		foreach (LocalVariable local in get_local_variables ()) {

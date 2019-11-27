@@ -175,7 +175,7 @@ public class Vala.CreationMethod : Method {
 		}
 
 		// check that all errors that can be thrown in the method body are declared
-		if (body != null) {
+		if (body != null && !body.error) {
 			var body_errors = new ArrayList<DataType> ();
 			body.get_error_types (body_errors);
 			foreach (DataType body_error_type in body_errors) {
