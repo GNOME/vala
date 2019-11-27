@@ -857,7 +857,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		// check that all errors that can be thrown in the method body are declared
-		if (body != null) { 
+		if (body != null && !body.error) {
 			foreach (DataType body_error_type in body.get_error_types ()) {
 				bool can_propagate_error = false;
 				foreach (DataType method_error_type in get_error_types ()) {
