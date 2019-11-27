@@ -532,6 +532,11 @@ namespace WebKit {
 		public unowned string get_name ();
 		public unowned string get_path ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_pointer_lock_permission_request_get_type ()")]
+	public class PointerLockPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected PointerLockPermissionRequest ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_policy_decision_get_type ()")]
 	public abstract class PolicyDecision : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -1175,6 +1180,8 @@ namespace WebKit {
 		public void execute_editing_command (string command);
 		[Version (since = "2.10")]
 		public void execute_editing_command_with_argument (string command, string argument);
+		[Version (since = "2.28")]
+		public WebKit.AutomationBrowsingContextPresentation get_automation_presentation_type ();
 		public unowned WebKit.BackForwardList get_back_forward_list ();
 		[Version (since = "2.8")]
 		public Gdk.RGBA get_background_color ();
@@ -1249,6 +1256,8 @@ namespace WebKit {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.6")]
 		public WebView.with_user_content_manager (WebKit.UserContentManager user_content_manager);
+		[Version (since = "2.28")]
+		public WebKit.AutomationBrowsingContextPresentation automation_presentation_type { get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public bool editable { get; set; }
@@ -1437,6 +1446,12 @@ namespace WebKit {
 		CLIENT_CERTIFICATE_REQUESTED,
 		SERVER_TRUST_EVALUATION_REQUESTED,
 		UNKNOWN
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_AUTOMATION_BROWSING_CONTEXT_PRESENTATION_", type_id = "webkit_automation_browsing_context_presentation_get_type ()")]
+	[Version (since = "2.28")]
+	public enum AutomationBrowsingContextPresentation {
+		WINDOW,
+		TAB
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_CACHE_MODEL_", type_id = "webkit_cache_model_get_type ()")]
 	public enum CacheModel {
