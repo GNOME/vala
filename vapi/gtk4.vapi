@@ -6769,8 +6769,7 @@ namespace Gtk {
 		public bool add_objects_from_file (string filename, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public bool add_objects_from_resource (string resource_path, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
 		public bool add_objects_from_string (string buffer, ssize_t length, [CCode (array_length = false, array_null_terminated = true)] string[] object_ids) throws GLib.Error;
-		public void connect_signals (void* user_data);
-		public void connect_signals_full (Gtk.BuilderConnectFunc func);
+		public GLib.Closure? create_closure (string function_name, bool swapped, GLib.Object? object) throws GLib.Error;
 		public void expose_object (string name, GLib.Object object);
 		public bool extend_with_template (Gtk.Widget widget, GLib.Type template_type, string buffer, ssize_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -6779,13 +6778,11 @@ namespace Gtk {
 		public Builder.from_resource (string resource_path);
 		[CCode (has_construct_function = false)]
 		public Builder.from_string (string str, ssize_t length);
-		public unowned Gtk.Application? get_application ();
 		public unowned GLib.Object? get_object (string name);
 		public GLib.SList<weak GLib.Object> get_objects ();
 		public unowned string? get_translation_domain ();
-		public virtual GLib.Type get_type_from_name (string type_name);
+		public GLib.Type get_type_from_name (string type_name);
 		public unowned GLib.Callback? lookup_callback_symbol (string callback_name);
-		public void set_application (Gtk.Application application);
 		public void set_translation_domain (string? domain);
 		public bool value_from_string (GLib.ParamSpec pspec, string str, out GLib.Value value) throws GLib.Error;
 		public bool value_from_string_type (GLib.Type type, string str, out GLib.Value value) throws GLib.Error;
@@ -11994,8 +11991,8 @@ namespace Gtk {
 		public void set_can_focus (bool can_focus);
 		public void set_can_target (bool can_target);
 		public void set_child_visible (bool child_visible);
-		[CCode (cname = "gtk_widget_class_set_connect_func")]
-		public class void set_connect_func (owned Gtk.BuilderConnectFunc connect_func);
+		[CCode (cname = "gtk_widget_class_set_closure_func")]
+		public class void set_closure_func (owned Gtk.BuilderClosureFunc closure_func);
 		[CCode (cname = "gtk_widget_class_set_css_name")]
 		public class void set_css_name (string name);
 		public void set_cursor (Gdk.Cursor? cursor);
@@ -13762,7 +13759,8 @@ namespace Gtk {
 		TEMPLATE_MISMATCH,
 		INVALID_PROPERTY,
 		INVALID_SIGNAL,
-		INVALID_ID;
+		INVALID_ID,
+		INVALID_FUNCTION;
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
@@ -13842,8 +13840,8 @@ namespace Gtk {
 	public delegate void BuildableParserStartElementFunc (Gtk.BuildableParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", has_typedef = false)]
 	public delegate void BuildableParserTextFunc (Gtk.BuildableParseContext context, string text, size_t text_len) throws GLib.Error;
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 6.9)]
-	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object? connect_object, GLib.ConnectFlags flags);
+	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
+	public delegate GLib.Closure? BuilderClosureFunc (Gtk.Builder builder, string function_name, bool swapped, GLib.Object? object) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
 	public delegate string? CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -13900,8 +13898,6 @@ namespace Gtk {
 	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate void PrintSettingsFunc (string key, string value);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate string ScaleFormatValueFunc (Gtk.Scale scale, double value);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]

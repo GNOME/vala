@@ -329,7 +329,6 @@ WidgetPath
 TreeModel
   .get_value return_void
   .rows_reordered skip
-rc_property_parse_* skip
 show_about_dialog skip=false
 test_init skip=false
 
