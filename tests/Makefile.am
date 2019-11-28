@@ -414,6 +414,7 @@ TESTS = \
 	errors/errordomain-instance-method.test \
 	errors/errordomain-static-method.vala \
 	errors/invalid-type-check.test \
+	errors/loops.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
