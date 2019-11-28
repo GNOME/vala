@@ -490,6 +490,7 @@ TESTS = \
 	errors/errordomain-instance-method.test \
 	errors/errordomain-static-method.vala \
 	errors/invalid-type-check.test \
+	errors/loops.vala \
 	errors/method-throws.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
