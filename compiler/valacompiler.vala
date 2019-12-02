@@ -95,6 +95,7 @@ class Vala.Compiler {
 	static bool disable_colored_output;
 	static Report.Colored colored_output = Report.Colored.AUTO;
 	static string dependencies;
+	static string depfile;
 
 	static string entry_point;
 
@@ -126,6 +127,7 @@ class Vala.Compiler {
 		{ "use-fast-vapi", 0, 0, OptionArg.STRING_ARRAY, ref fast_vapis, "Use --fast-vapi output during this compile", null },
 		{ "vapi-comments", 0, 0, OptionArg.NONE, ref vapi_comments, "Include comments in generated vapi", null },
 		{ "deps", 0, 0, OptionArg.STRING, ref dependencies, "Write make-style dependency information to this file", null },
+		{ "depfile", 0, 0, OptionArg.STRING, ref depfile, "Write make-style external dependency information for build systems to this file", null },
 		{ "list-sources", 0, 0, OptionArg.NONE, ref list_sources, "Output a list of all source and binding files which are used", null },
 		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
@@ -523,6 +525,10 @@ class Vala.Compiler {
 
 		if (dependencies != null) {
 			context.write_dependencies (dependencies);
+		}
+
+		if (depfile != null) {
+			context.write_external_dependencies (depfile);
 		}
 
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {

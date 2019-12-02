@@ -715,6 +715,29 @@ public class Vala.CodeContext {
 		stream.printf ("\n\n");
 	}
 
+	public void write_external_dependencies (string filename) {
+		var stream = FileStream.open (filename, "w");
+
+		if (stream == null) {
+			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			return;
+		}
+
+		bool first = true;
+		foreach (var src in source_files) {
+			if (src.file_type != SourceFileType.SOURCE && src.used) {
+				if (first) {
+					first = false;
+					stream.printf ("%s: ", filename);
+				} else {
+					stream.puts (" \\\n\t");
+				}
+				stream.printf ("%s", src.filename);
+			}
+		}
+		stream.puts ("\n\n");
+	}
+
 	private static bool ends_with_dir_separator (string s) {
 		return Path.is_dir_separator (s.get_char (s.length - 1));
 	}
