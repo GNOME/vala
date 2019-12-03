@@ -1,0 +1,6 @@
+Invalid Code
+
+delegate va_list Foo ();
+
+void main () {
+}

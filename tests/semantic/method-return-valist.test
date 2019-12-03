@@ -1,0 +1,8 @@
+Invalid Code
+
+va_list foo () {
+	return {};
+}
+
+void main () {
+}

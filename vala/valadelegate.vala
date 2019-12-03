@@ -267,7 +267,13 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 		
 		return_type.check (context);
-		
+
+		if (return_type.data_type == context.analyzer.va_list_type.data_type) {
+			error = true;
+			Report.error (source_reference, "`%s' not supported as return type".printf (return_type.data_type.get_full_name ()));
+			return false;
+		}
+
 		foreach (Parameter param in parameters) {
 			param.check (context);
 		}
