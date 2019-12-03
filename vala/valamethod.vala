@@ -793,6 +793,12 @@ public class Vala.Method : Subroutine, Callable {
 			context.analyzer.check_type (return_type);
 		}
 
+		if (return_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+			error = true;
+			Report.error (source_reference, "`%s' not supported as return type".printf (return_type.type_symbol.get_full_name ()));
+			return false;
+		}
+
 		var init_attr = get_attribute ("ModuleInit");
 		if (init_attr != null) {
 			source_reference.file.context.module_init_method = this;

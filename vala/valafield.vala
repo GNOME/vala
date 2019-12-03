@@ -98,6 +98,12 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
+		if (variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+			error = true;
+			Report.error (source_reference, "`%s' not supported as field type".printf (variable_type.type_symbol.get_full_name ()));
+			return false;
+		}
+
 		variable_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (variable_type);

@@ -1,0 +1,6 @@
+Invalid Code
+
+va_list foo;
+
+void main () {
+}

@@ -1,0 +1,8 @@
+Invalid Code
+
+class Foo : Object {
+	public signal va_list bar ();
+}
+
+void main () {
+}

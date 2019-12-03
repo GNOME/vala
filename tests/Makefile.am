@@ -714,6 +714,7 @@ TESTS = \
 	semantic/constant-value-type.test \
 	semantic/constant-void.test \
 	semantic/construct-without-gobject.test \
+	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
 	semantic/delegate-too-many-type-arguments.test \
 	semantic/enum-empty.test \
@@ -727,6 +728,7 @@ TESTS = \
 	semantic/field-non-constant.test \
 	semantic/field-owned-to-unowned.test \
 	semantic/field-static-instance-access.test \
+	semantic/field-valist.test \
 	semantic/field-void.test \
 	semantic/floating-reference.vala \
 	semantic/foreach-iterator-args.test \
@@ -780,6 +782,7 @@ TESTS = \
 	semantic/method-private-virtual.test \
 	semantic/method-protected.test \
 	semantic/method-return-accessibility.test \
+	semantic/method-return-valist.test \
 	semantic/method-too-few-type-arguments.test \
 	semantic/method-too-many-type-arguments.test \
 	semantic/method-virtual.test \
@@ -822,6 +825,7 @@ TESTS = \
 	semantic/signal-detail-non-string.test \
 	semantic/struct-derived.test \
 	semantic/signal-disconnect-invalid.test \
+	semantic/signal-return-valist.test \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
