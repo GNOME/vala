@@ -111,6 +111,9 @@ public class Vala.CCodeFunction : CCodeNode {
 		if (CCodeModifiers.INTERNAL in modifiers) {
 			writer.write_string ("G_GNUC_INTERNAL ");
 		}
+		if (!is_declaration && CCodeModifiers.NO_INLINE in modifiers) {
+			writer.write_string ("G_GNUC_NO_INLINE ");
+		}
 		if (CCodeModifiers.STATIC in modifiers) {
 			writer.write_string ("static ");
 		}
