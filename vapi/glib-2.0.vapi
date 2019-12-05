@@ -1958,6 +1958,9 @@ namespace GLib {
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
+	[Version (since = "2.64")]
+	[CCode (has_target = false)]
+	public delegate void SourceDisposeFunc (Source source);
 
 	[CCode (cname = "GSource")]
 	public class ChildWatchSource : Source {
@@ -2008,6 +2011,8 @@ namespace GLib {
 		public unowned MainContext get_context ();
 		public void set_callback (owned SourceFunc func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
+		[Version (since = "2.64")]
+		public void set_dispose_function (SourceDisposeFunc dispose);
 		[Version (since = "2.36")]
 		public void* add_unix_fd (int fd, IOCondition events);
 		[Version (since = "2.36")]
@@ -6064,6 +6069,11 @@ namespace GLib {
 			public SignalSource (int signum);
 		}
 
+#if UNIX
+		[Version (since = "2.64")]
+		[CCode (cheader_filename = "glib-unix.h")]
+		public static Posix.Passwd get_passwd_entry (string user_name) throws GLib.Error;
+#endif
 		[Version (since = "2.30")]
 		[CCode (cheader_filename = "glib-unix.h")]
 		public static bool open_pipe ([CCode (array_length = false, array_null_terminated = false)] int[] fds, int flags) throws GLib.Error;
