@@ -1888,6 +1888,9 @@ namespace GLib {
 		[CCode (cname = "G_PID_FORMAT")]
 		[Version (since = "2.50")]
 		public const string FORMAT;
+
+		[CCode (cname = "g_strdup_printf", instance_pos = -1)]
+		public string to_string (string format = "%" + FORMAT);
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
@@ -1909,6 +1912,12 @@ namespace GLib {
 		public int fd;
 		public IOCondition events;
 		public IOCondition revents;
+
+		[CCode (cname = "G_POLLFD_FORMAT")]
+		public const string FORMAT;
+
+		[CCode (cname = "g_strdup_printf", instance_pos = -1)]
+		public string to_string (string format = "%" + FORMAT);
 	}
 
 	[Compact]
