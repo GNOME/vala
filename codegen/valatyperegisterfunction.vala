@@ -35,7 +35,6 @@ public abstract class Vala.TypeRegisterFunction {
 	 */
 	public void init_from_type (CodeContext context, bool plugin, bool declaration_only) {
 		var type_symbol = get_type_declaration ();
-		bool use_thread_safe = !plugin;
 
 		bool fundamental = false;
 		unowned Class? cl = type_symbol as Class;
@@ -47,20 +46,15 @@ public abstract class Vala.TypeRegisterFunction {
 
 		var type_block = new CCodeBlock ();
 		CCodeDeclaration cdecl;
-		if (use_thread_safe) {
+		if (!plugin) {
 			cdecl = new CCodeDeclaration ("gsize");
 			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name + "__volatile", new CCodeConstant ("0")));
+			cdecl.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+			type_block.add_statement (cdecl);
 		} else {
 			cdecl = new CCodeDeclaration ("GType");
 			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name, new CCodeConstant ("0")));
-		}
-		cdecl.modifiers = CCodeModifiers.STATIC;
-		if (use_thread_safe) {
-			cdecl.modifiers |= CCodeModifiers.VOLATILE;
-		}
-		if (!plugin) {
-			type_block.add_statement (cdecl);
-		} else {
+			cdecl.modifiers = CCodeModifiers.STATIC;
 			source_declaration_fragment.append (cdecl);
 		}
 
@@ -200,7 +194,7 @@ public abstract class Vala.TypeRegisterFunction {
 			reg_call.add_argument (new CCodeConstant (get_type_flags ()));
 		}
 
-		if (use_thread_safe && !plugin) {
+		if (!plugin) {
 			var temp_decl = new CCodeDeclaration ("GType");
 			temp_decl.add_declarator (new CCodeVariableDeclarator (type_id_name, reg_call));
 			type_init.add_statement (temp_decl);
@@ -233,38 +227,20 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 		if (!plugin) {
-			CCodeExpression condition; // the condition that guards the type initialisation
-			if (use_thread_safe) {
-				var enter = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
-				enter.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
-				condition = enter;
+			// the condition that guards the type initialisation
+			var enter = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
+			enter.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
 
-				var leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
-				leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
-				leave.add_argument (new CCodeIdentifier (type_id_name));
-				type_init.add_statement (new CCodeExpressionStatement (leave));
-			} else {
-				var id = new CCodeIdentifier (type_id_name);
-				var zero = new CCodeConstant ("0");
-				condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, id, zero);
-			}
+			var leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
+			leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
+			leave.add_argument (new CCodeIdentifier (type_id_name));
+			type_init.add_statement (new CCodeExpressionStatement (leave));
 
-			CCodeExpression cond;
-			if (use_thread_safe) {
-				cond = condition;
-			} else {
-				cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
-				((CCodeFunctionCall) cond).add_argument (condition);
-			}
-			var cif = new CCodeIfStatement (cond, type_init);
+			var cif = new CCodeIfStatement (enter, type_init);
 			type_block.add_statement (cif);
-		} else {
-			type_block = type_init;
-		}
-
-		if (use_thread_safe) {
 			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name + "__volatile")));
 		} else {
+			type_block = type_init;
 			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
 		}
 
