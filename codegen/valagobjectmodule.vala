@@ -684,6 +684,51 @@ public class Vala.GObjectModule : GTypeModule {
 			ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
 
+			// Initialize private type-parameter fields from construct properties
+			foreach (DataType base_type in cl.get_base_types ()) {
+				unowned ObjectTypeSymbol? base_sym = base_type.type_symbol as ObjectTypeSymbol;
+				if (base_sym == null || !base_sym.has_type_parameters ()) {
+					continue;
+				}
+
+				var base_type_parameters = base_sym.get_type_parameters ();
+				int type_param_index = 0;
+				foreach (var type_arg in base_type.get_type_arguments ()) {
+					if (!(type_arg is GenericType)) {
+						type_param_index++;
+						continue;
+					}
+
+					var type_param = ((GenericType) type_arg).type_parameter;
+					var base_type_param_name = base_type_parameters.get (type_param_index).name.down ().replace ("_", "-");
+					var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+
+					CCodeMemberAccess cfield;
+					string field_name;
+					field_name = "%s_type".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("self"));
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-type\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					field_name = "%s_dup_func".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-dup-func\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					field_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-destroy-func\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					cgetcall.add_argument (new CCodeConstant ("NULL"));
+
+					ccode.add_expression (cgetcall);
+
+					type_param_index++;
+				}
+			}
+
 			c.body.emit (this);
 
 			if (current_method_inner_error) {
