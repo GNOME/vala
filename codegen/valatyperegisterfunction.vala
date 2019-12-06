@@ -79,7 +79,7 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.is_declaration = false;
 
 			fun_once = new CCodeFunction ("%s_once".printf (fun.name), "GType");
-			fun_once.modifiers = CCodeModifiers.CONST | CCodeModifiers.STATIC;
+			fun_once.modifiers = CCodeModifiers.STATIC;
 			if (context.require_glib_version (2, 58)) {
 				fun_once.modifiers |= CCodeModifiers.NO_INLINE;
 			}
