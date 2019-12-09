@@ -134,7 +134,7 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (type_symbol != null) {
 			Symbol global_symbol = type_symbol;
-			while (global_symbol.parent_symbol.name != null) {
+			while (global_symbol.parent_symbol != null && global_symbol.parent_symbol.name != null) {
 				global_symbol = global_symbol.parent_symbol;
 			}
 
