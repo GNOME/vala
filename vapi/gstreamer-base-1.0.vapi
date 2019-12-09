@@ -104,6 +104,8 @@ namespace Gst {
 			public virtual bool start ();
 			[NoWrapper]
 			public virtual bool stop ();
+			[Version (since = "1.18")]
+			public void update_segment (Gst.Segment segment);
 			[NoWrapper]
 			public virtual Gst.FlowReturn update_src_caps (Gst.Caps caps, out Gst.Caps ret);
 			[NoAccessorMethod]

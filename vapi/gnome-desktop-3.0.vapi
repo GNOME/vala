@@ -353,4 +353,6 @@ namespace Gnome {
 	public delegate void IdleMonitorWatchFunc (Gnome.IdleMonitor monitor, uint id);
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cname = "GNOME_RR_CONNECTOR_TYPE_PANEL")]
 	public const string RR_CONNECTOR_TYPE_PANEL;
+	[CCode (cheader_filename = "libgnome-desktop/gnome-systemd.h")]
+	public static async bool start_systemd_scope (string name, int32 pid, string? description, GLib.DBusConnection? connection, GLib.Cancellable? cancellable) throws GLib.Error;
 }

@@ -265,6 +265,7 @@ namespace Gdk {
 		HYPER
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ALPHA_", type_id = "gdk_pixbuf_alpha_mode_get_type ()")]
+	[Version (deprecated = true)]
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL

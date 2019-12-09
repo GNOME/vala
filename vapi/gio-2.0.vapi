@@ -1674,6 +1674,10 @@ namespace GLib {
 		public ListStore (GLib.Type item_type);
 		[Version (since = "2.44")]
 		public void append (GLib.Object item);
+		[Version (since = "2.64")]
+		public bool find (GLib.Object item, out uint position);
+		[Version (since = "2.64")]
+		public bool find_with_equal_func (GLib.Object item, GLib.EqualFunc equal_func, out uint position);
 		[Version (since = "2.44")]
 		public void insert (uint position, GLib.Object item);
 		[Version (since = "2.44")]

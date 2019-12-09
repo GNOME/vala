@@ -307,7 +307,7 @@ namespace Pango {
 		[CCode (has_construct_function = false)]
 		protected FontFamily ();
 		[Version (since = "1.46")]
-		public virtual unowned Pango.FontFace get_face (string name);
+		public virtual unowned Pango.FontFace? get_face (string name);
 		public virtual unowned string get_name ();
 		[Version (since = "1.4")]
 		public virtual bool is_monospace ();

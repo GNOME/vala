@@ -29,6 +29,8 @@ RRConfig cheader_filename="libgnome-desktop/gnome-rr-config.h"
 RRScreen
 	.new name="new_sync"
 
+start_systemd_scope cheader_filename="libgnome-desktop/gnome-systemd.h"
+
 WallClock cheader_filename="libgnome-desktop/gnome-wall-clock.h"
 
 XkbInfo cheader_filename="libgnome-desktop/gnome-xkb-info.h"
