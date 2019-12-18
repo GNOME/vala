@@ -72,6 +72,11 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public bool qualified { get; set; }
 
+	/**
+	 * Null-safe access.
+	 */
+	public bool null_safe_access { get; set; }
+
 	private Expression? _inner;
 	private List<DataType> type_argument_list = new ArrayList<DataType> ();
 	bool is_with_variable_access;
@@ -212,6 +217,11 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		checked = true;
+
+		if (null_safe_access) {
+			error = !base.check (context);
+			return !error;
+		}
 
 		if (inner != null) {
 			inner.check (context);

@@ -60,6 +60,11 @@ public class Vala.SliceExpression : Expression {
 		}
 	}
 
+	/**
+	 * Null-safe access.
+	 */
+	public bool null_safe_access { get; set; }
+
 	Expression _container;
 	Expression _start;
 	Expression _stop;
@@ -110,6 +115,11 @@ public class Vala.SliceExpression : Expression {
 		}
 
 		checked = true;
+
+		if (null_safe_access) {
+			error = !base.check (context);
+			return !error;
+		}
 
 		if (!container.check (context)) {
 			error = true;
