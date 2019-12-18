@@ -940,6 +940,10 @@ public class Vala.Scanner {
 					type = TokenType.OP_COALESCING;
 					current++;
 				}
+				if (current < end && current[0] == '.') {
+					type = TokenType.NULL_COND;
+					current++;
+				}
 				break;
 			case '|':
 				type = TokenType.BITWISE_OR;
