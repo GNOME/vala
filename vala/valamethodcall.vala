@@ -174,6 +174,11 @@ public class Vala.MethodCall : Expression {
 
 		checked = true;
 
+		var call_member_access = call as MemberAccess;
+		if (call_member_access != null && call_member_access.null_cond_member_access) {
+			return check_cond_access (context, call_member_access);
+		}
+
 		if (!call.check (context)) {
 			/* if method resolving didn't succeed, skip this check */
 			error = true;
@@ -687,6 +692,109 @@ public class Vala.MethodCall : Expression {
 		}
 
 		return !error;
+	}
+
+	private bool check_cond_access (CodeContext context, MemberAccess member_access) {
+		if (member_access.inner == null) {
+			error = true;
+			Report.error (source_reference, "conditional member access without inner expression");
+			return false;
+		}
+
+		// Analyze the inner expression to get its value type
+		if (!member_access.inner.check (context)) {
+			error = true;
+			return false;
+		}
+
+		if (member_access.inner.value_type == null) {
+			error = true;
+			Report.error (member_access.inner.source_reference, "invalid type for inner expression");
+			return false;
+		}
+
+		// Declare the inner expression as a local variable to check for null
+		var inner_type = member_access.inner.value_type.copy ();
+		inner_type.value_owned = false;
+		if (context.experimental_non_null && !inner_type.nullable) {
+			Report.warning (member_access.inner.source_reference, "inner expression is never null");
+			inner_type.nullable = true;
+		}
+		var inner_local = new LocalVariable (inner_type, get_temp_name (), member_access.inner, source_reference);
+		var inner_decl = new DeclarationStatement (inner_local, source_reference);
+		insert_statement (context.analyzer.insert_block, inner_decl);
+
+		if (!inner_decl.check (context)) {
+			error = true;
+			return false;
+		}
+
+		// Create an equivalent, but non null-conditional, member access expression
+		Expression inner_access = new MemberAccess.simple (inner_local.name, source_reference);
+		if (context.experimental_non_null) {
+			inner_access = new CastExpression.non_null (new MemberAccess.simple (inner_local.name, source_reference), source_reference);
+		}
+		var non_null_access = new MemberAccess (inner_access, member_access.member_name, source_reference);
+
+		if (!non_null_access.check (context)) {
+			error = true;
+			return false;
+		}
+
+		if (non_null_access.value_type == null) {
+			error = true;
+			Report.error (source_reference, "invalid type for member access expression");
+			return false;
+		}
+
+		var result_type = non_null_access.value_type.get_return_type ().copy ();
+		if (result_type is VoidType) {
+			// For a void method call, replace the parent expression statement by a simple if statement
+			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_call = new ExpressionStatement (new MethodCall(non_null_access, source_reference), source_reference);
+			var non_null_block = new Block (source_reference);
+			non_null_block.add_statement (non_null_call);
+			var non_null_stmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+
+			if (!(parent_node is Statement)) {
+				error = true;
+				Report.error (source_reference, "void method call without a parent statement");
+				return false;
+			}
+
+			((Block) parent_node.parent_node).replace_statement ((Statement) parent_node, non_null_stmt);
+			return non_null_stmt.check (context);
+		} else {
+			// Otherwise, if the method has a non-void return type, declare a null local variable for the result
+			result_type.nullable = true;
+			var result_local = new LocalVariable (result_type, get_temp_name (), new NullLiteral (source_reference), source_reference);
+			var result_decl = new DeclarationStatement (result_local, source_reference);
+			insert_statement (context.analyzer.insert_block, result_decl);
+
+			if (!result_decl.check (context)) {
+				error = true;
+				return false;
+			}
+
+			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_assign = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), new MethodCall(non_null_access, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference);
+			var non_null_block = new Block (source_reference);
+			non_null_block.add_statement (non_null_assign);
+			var non_null_stmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+			insert_statement (context.analyzer.insert_block, non_null_stmt);
+
+			if (!non_null_stmt.check (context)) {
+				error = true;
+				return false;
+			}
+
+			var result_access = new MemberAccess.simple (result_local.name, source_reference);
+			result_access.formal_target_type = formal_target_type;
+			result_access.target_type = target_type;
+
+			parent_node.replace_expression (this, result_access);
+			return result_access.check (context);
+		}
 	}
 
 	public override void emit (CodeGenerator codegen) {

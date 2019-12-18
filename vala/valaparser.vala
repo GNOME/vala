@@ -700,6 +700,9 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.OP_PTR:
 				expr = parse_pointer_member_access (begin, expr);
 				break;
+			case TokenType.NULL_COND:
+				expr = parse_null_cond_member_access (begin, expr);
+				break;
 			case TokenType.OPEN_PARENS:
 				expr = parse_method_call (begin, expr);
 				break;
@@ -805,6 +808,19 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess.pointer (inner, id, get_src (begin));
+		if (type_arg_list != null) {
+			foreach (DataType type_arg in type_arg_list) {
+				expr.add_type_argument (type_arg);
+			}
+		}
+		return expr;
+	}
+
+	Expression parse_null_cond_member_access (SourceLocation begin, Expression inner) throws ParseError {
+		expect (TokenType.NULL_COND);
+		string id = parse_identifier ();
+		List<DataType> type_arg_list = parse_type_argument_list (true);
+		var expr = new MemberAccess.null_cond (inner, id, get_src (begin));
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
 				expr.add_type_argument (type_arg);
@@ -1704,6 +1720,8 @@ public class Vala.Parser : CodeVisitor {
 		// literal expression
 		case TokenType.INTEGER_LITERAL:
 		case TokenType.REAL_LITERAL:
+		// null-conditional member access
+		case TokenType.NULL_COND:
 			rollback (begin);
 			return true;
 		default:
