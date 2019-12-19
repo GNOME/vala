@@ -228,6 +228,7 @@ TESTS = \
 	control-flow/bug691514.vala	\
 	control-flow/bug736774-1.vala \
 	control-flow/bug736774-2.vala \
+	control-flow/bug761267.vala \
 	control-flow/bug764440.vala \
 	control-flow/bug790903.test \
 	control-flow/bug790903-2.test \
