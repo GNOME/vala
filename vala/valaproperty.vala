@@ -493,7 +493,7 @@ public class Vala.Property : Symbol, Lockable {
 			Report.error (source_reference, "property type `%s' is less accessible than property `%s'".printf (property_type.to_string (), get_full_name ()));
 		}
 
-		if (overrides && base_property == null) {
+		if (overrides && base_property == null && base_interface_property == null) {
 			Report.error (source_reference, "%s: no suitable property found to override".printf (get_full_name ()));
 		}
 
