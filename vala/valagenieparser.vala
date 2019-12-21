@@ -3300,6 +3300,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		expect (TokenType.EOL);
 
+		class_name = st.name;
+
 		parse_declarations (st);
 
 		Symbol result = st;
