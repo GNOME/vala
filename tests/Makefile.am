@@ -299,6 +299,7 @@ TESTS = \
 	objects/interfaces.vala \
 	objects/interface-property-base-access.vala \
 	objects/interface-property-delegate.vala \
+	objects/interface-property-override.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
