@@ -567,7 +567,19 @@ public class Vala.Parser : CodeVisitor {
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				list.add (parse_argument ());
+				try {
+					list.add (parse_argument ());
+				} catch (ParseError e) {
+					if (context.keep_going) {
+						report_parse_error (e);
+						// exit this loop, since language server uses
+						// number of correctly-supplied arguments from
+						// the left to determine which argument to complete
+						break;
+					} else {
+						throw e;        // rethrow
+					}
+				}
 			} while (accept (TokenType.COMMA));
 		}
 		return list;
@@ -795,7 +807,13 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_method_call (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OPEN_PARENS);
 		var arg_list = parse_argument_list ();
-		expect (TokenType.CLOSE_PARENS);
+		if (context.keep_going) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
@@ -819,6 +837,7 @@ public class Vala.Parser : CodeVisitor {
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
 			}
+			expr.initial_argument_count = arg_list.size;
 			return expr;
 		}
 	}
