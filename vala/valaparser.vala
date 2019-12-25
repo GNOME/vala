@@ -1755,8 +1755,15 @@ public class Vala.Parser : CodeVisitor {
 
 		var block = new Block (get_src (get_location ()));
 
-		var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
-		block.add_statement (stmt);
+                try {
+                    var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
+                    block.add_statement (stmt);
+                } catch (ParseError e) {
+                    if (lsp_mode)
+                        report_parse_error (e);
+                    else
+                        throw e;        // rethrow
+                }
 		block.source_reference.end = get_last_src ().end;
 
 		return block;
@@ -1959,7 +1966,12 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.IF);
 		expect (TokenType.OPEN_PARENS);
 		var condition = parse_expression ();
-		expect (TokenType.CLOSE_PARENS);
+                if (lsp_mode) {
+                    if (!accept (TokenType.CLOSE_PARENS)) {
+                        report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
+                    }
+                } else
+                    expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
 		var true_stmt = parse_embedded_statement ("if", false);
 		Block false_stmt = null;
