@@ -929,7 +929,13 @@ public class Vala.Parser : CodeVisitor {
 		member.creation_member = true;
 		bool extra_comma;
 		var arg_list = parse_argument_list (out extra_comma);
-		expect (TokenType.CLOSE_PARENS);
+		if (context.keep_going) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s", TokenType.CLOSE_PARENS.to_string ()), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
