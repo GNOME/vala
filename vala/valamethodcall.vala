@@ -746,14 +746,19 @@ public class Vala.MethodCall : Expression {
 			return false;
 		}
 
+		var non_null_call = new MethodCall(non_null_access, source_reference);
+		foreach (Expression arg in get_argument_list ()) {
+			non_null_call.add_argument (arg);
+		}
+
 		var result_type = non_null_access.value_type.get_return_type ().copy ();
 		if (result_type is VoidType) {
 			// For a void method call, replace the parent expression statement by a simple if statement
 			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
-			var non_null_call = new ExpressionStatement (new MethodCall(non_null_access, source_reference), source_reference);
+			var non_null_stmt = new ExpressionStatement (non_null_call, source_reference);
 			var non_null_block = new Block (source_reference);
-			non_null_block.add_statement (non_null_call);
-			var non_null_stmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+			non_null_block.add_statement (non_null_stmt);
+			var non_null_ifstmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
 
 			if (!(parent_node is Statement)) {
 				error = true;
@@ -761,8 +766,8 @@ public class Vala.MethodCall : Expression {
 				return false;
 			}
 
-			((Block) parent_node.parent_node).replace_statement ((Statement) parent_node, non_null_stmt);
-			return non_null_stmt.check (context);
+			((Block) parent_node.parent_node).replace_statement ((Statement) parent_node, non_null_ifstmt);
+			return non_null_ifstmt.check (context);
 		} else {
 			// Otherwise, if the method has a non-void return type, declare a null local variable for the result
 			result_type.nullable = true;
@@ -776,13 +781,13 @@ public class Vala.MethodCall : Expression {
 			}
 
 			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
-			var non_null_assign = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), new MethodCall(non_null_access, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference);
+			var non_null_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), non_null_call, AssignmentOperator.SIMPLE, source_reference), source_reference);
 			var non_null_block = new Block (source_reference);
-			non_null_block.add_statement (non_null_assign);
-			var non_null_stmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
-			insert_statement (context.analyzer.insert_block, non_null_stmt);
+			non_null_block.add_statement (non_null_stmt);
+			var non_null_ifstmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+			insert_statement (context.analyzer.insert_block, non_null_ifstmt);
 
-			if (!non_null_stmt.check (context)) {
+			if (!non_null_ifstmt.check (context)) {
 				error = true;
 				return false;
 			}
