@@ -1044,13 +1044,13 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
-		var non_null_assign = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), non_null_access, AssignmentOperator.SIMPLE, source_reference), source_reference);
+		var non_null_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), non_null_access, AssignmentOperator.SIMPLE, source_reference), source_reference);
 		var non_null_block = new Block (source_reference);
-		non_null_block.add_statement (non_null_assign);
-		var non_null_stmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
-		insert_statement (context.analyzer.insert_block, non_null_stmt);
+		non_null_block.add_statement (non_null_stmt);
+		var non_null_ifstmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+		insert_statement (context.analyzer.insert_block, non_null_ifstmt);
 
-		if (!non_null_stmt.check (context)) {
+		if (!non_null_ifstmt.check (context)) {
 			error = true;
 			return false;
 		}
