@@ -414,32 +414,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 			instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
 			has_struct_member = true;
-			if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-				// create fields to store array dimensions
-				var array_type = (ArrayType) f.variable_type;
-
-				if (!array_type.fixed_length) {
-					var length_ctype = get_ccode_array_length_type (array_type);
-
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						string length_cname = get_variable_array_length_cname (f, dim);
-						instance_struct.add_field (length_ctype, length_cname);
-					}
-
-					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						instance_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
-					}
-				}
-			} else if (get_ccode_delegate_target (f)) {
-				var delegate_type = (DelegateType) f.variable_type;
-				if (delegate_type.delegate_symbol.has_target) {
-					// create field to store delegate target
-					instance_struct.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (f));
-					if (delegate_type.is_disposable ()) {
-						instance_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (f));
-					}
-				}
-			}
+			generate_composite_field_declaration (f, instance_struct, decl_space);
 		} else if (f.binding == MemberBinding.CLASS) {
 			type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 		}
@@ -522,34 +497,8 @@ public class Vala.GTypeModule : GErrorModule {
 			if (f.binding == MemberBinding.INSTANCE) {
 				if (f.access == SymbolAccessibility.PRIVATE)  {
 					generate_type_declaration (f.variable_type, decl_space);
-
 					instance_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
-					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-						// create fields to store array dimensions
-						var array_type = (ArrayType) f.variable_type;
-
-						if (!array_type.fixed_length) {
-							var length_ctype = get_ccode_array_length_type (array_type);
-
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								string length_cname = get_variable_array_length_cname (f, dim);
-								instance_priv_struct.add_field (length_ctype, length_cname);
-							}
-
-							if (array_type.rank == 1 && f.is_internal_symbol ()) {
-								instance_priv_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
-							}
-						}
-					} else if (get_ccode_delegate_target (f)) {
-						var delegate_type = (DelegateType) f.variable_type;
-						if (delegate_type.delegate_symbol.has_target) {
-							// create field to store delegate target
-							instance_priv_struct.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (f));
-							if (delegate_type.is_disposable ()) {
-								instance_priv_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (f));
-							}
-						}
-					}
+					generate_composite_field_declaration (f, instance_priv_struct, decl_space);
 				}
 
 				if (f.lock_used) {
@@ -622,6 +571,44 @@ public class Vala.GTypeModule : GErrorModule {
 
 				string macro = "(G_TYPE_CLASS_GET_PRIVATE (klass, %s, %sClassPrivate))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_get_private_function (cl)), macro));
+			}
+		}
+	}
+
+	public void generate_composite_field_declaration (Field f, CCodeStruct ccode_struct, CCodeFile decl_space) {
+		generate_array_field_declaration (f, ccode_struct, decl_space);
+		generate_delegate_field_declaration (f, ccode_struct, decl_space);
+	}
+
+	public void generate_array_field_declaration (Field f, CCodeStruct ccode_struct, CCodeFile decl_space) {
+		if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+			// create fields to store array dimensions
+			var array_type = (ArrayType) f.variable_type;
+
+			if (!array_type.fixed_length) {
+				var length_ctype = get_ccode_array_length_type (array_type);
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_cname = get_variable_array_length_cname (f, dim);
+					ccode_struct.add_field (length_ctype, length_cname);
+				}
+
+				if (array_type.rank == 1 && f.is_internal_symbol ()) {
+					ccode_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
+				}
+			}
+		}
+	}
+
+	public void generate_delegate_field_declaration (Field f, CCodeStruct ccode_struct, CCodeFile decl_space) {
+		if (get_ccode_delegate_target (f)) {
+			var delegate_type = (DelegateType) f.variable_type;
+			if (delegate_type.delegate_symbol.has_target) {
+				// create field to store delegate target
+				ccode_struct.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (f));
+				if (delegate_type.is_disposable ()) {
+					ccode_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (f));
+				}
 			}
 		}
 	}
