@@ -1060,6 +1060,37 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		pop_line ();
 	}
 
+	public void append_field (CCodeStruct ccode_struct, Field f, CCodeFile decl_space) {
+		generate_type_declaration (f.variable_type, decl_space);
+
+		CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+		ccode_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
+
+		if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
+			// create fields to store array dimensions
+			var array_type = (ArrayType) f.variable_type;
+			if (!array_type.fixed_length) {
+				var length_ctype = get_ccode_array_length_type (array_type);
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_cname = get_variable_array_length_cname (f, dim);
+					ccode_struct.add_field (length_ctype, length_cname);
+				}
+				if (array_type.rank == 1 && f.is_internal_symbol ()) {
+					ccode_struct.add_field (length_ctype, get_array_size_cname (get_ccode_name (f)));
+				}
+			}
+		} else if (get_ccode_delegate_target (f)) {
+			var delegate_type = (DelegateType) f.variable_type;
+			if (delegate_type.delegate_symbol.has_target) {
+				// create field to store delegate target
+				ccode_struct.add_field (get_ccode_name (delegate_target_type), get_ccode_delegate_target_name (f));
+				if (delegate_type.is_disposable ()) {
+					ccode_struct.add_field (get_ccode_name (delegate_target_destroy_type), get_ccode_delegate_target_destroy_notify_name (f));
+				}
+			}
+		}
+	}
+
 	public void generate_field_declaration (Field f, CCodeFile decl_space) {
 		if (add_symbol_declaration (decl_space, f, get_ccode_name (f))) {
 			return;
