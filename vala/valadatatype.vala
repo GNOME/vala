@@ -42,7 +42,7 @@ public abstract class Vala.DataType : CodeNode {
 	/**
 	 * The referred data type.
 	 */
-	public weak TypeSymbol data_type { get; set; }
+	public weak TypeSymbol? data_type { get; set; }
 
 	/**
 	 * Specifies that the expression transfers a floating reference.
@@ -123,7 +123,7 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (data_type != null) {
 			Symbol global_symbol = data_type;
-			while (global_symbol.parent_symbol.name != null) {
+			while (global_symbol.parent_symbol != null && global_symbol.parent_symbol.name != null) {
 				global_symbol = global_symbol.parent_symbol;
 			}
 

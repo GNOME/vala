@@ -115,7 +115,7 @@ public class Vala.Constant : Symbol {
 
 		type_reference.check (context);
 
-		if (!check_const_type (type_reference, context)) {
+		if (!Constant.check_const_type (type_reference, context)) {
 			error = true;
 			Report.error (source_reference, "`%s' not supported as type for constants".printf (type_reference.to_string ()));
 			return false;
@@ -179,13 +179,13 @@ public class Vala.Constant : Symbol {
 		return !error;
 	}
 
-	bool check_const_type (DataType type, CodeContext context) {
+	static bool check_const_type (DataType type, CodeContext context) {
 		if (type is ValueType) {
 			return true;
 		} else if (type is ArrayType) {
 			var array_type = type as ArrayType;
 			return check_const_type (array_type.element_type, context);
-		} else if (type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
+		} else if (type.data_type != null && type.data_type.is_subtype_of (context.analyzer.string_type.data_type)) {
 			return true;
 		} else {
 			return false;

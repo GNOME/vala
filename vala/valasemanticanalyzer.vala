@@ -1053,7 +1053,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return result;
 	}
 
-	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
+	public DataType? get_arithmetic_result_type (DataType? left_type, DataType? right_type) {
 		var left = get_arithmetic_struct (left_type);
 		var right = get_arithmetic_struct (right_type);
 
