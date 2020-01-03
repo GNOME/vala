@@ -155,6 +155,7 @@ public struct int {
 
 	public static bool try_parse (string str, out int result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		long long_result = strtol (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -215,6 +216,7 @@ public struct uint {
 
 	public static bool try_parse (string str, out uint result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		ulong ulong_result = strtoul (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -316,6 +318,7 @@ public struct long {
 
 	public static bool try_parse (string str, out long result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		result = strtol (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -366,6 +369,7 @@ public struct ulong {
 
 	public static bool try_parse (string str, out ulong result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		result = strtoul (str, out endptr, (int) _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -770,6 +774,7 @@ public struct int64 {
 	[Version (since = "2.12")]
 	public static bool try_parse (string str, out int64 result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		result = ascii_strtoll (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -829,6 +834,7 @@ public struct uint64 {
 
 	public static bool try_parse (string str, out uint64 result = null, out unowned string unparsed = null, uint _base = 0) {
 		char* endptr;
+		errno = 0;
 		result = ascii_strtoull (str, out endptr, _base);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -910,6 +916,7 @@ public struct float {
 
 	public static bool try_parse (string str, out float result = null, out unowned string unparsed = null) {
 		char* endptr;
+		errno = 0;
 		result = strtof (str, out endptr);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
@@ -991,6 +998,7 @@ public struct double {
 
 	public static bool try_parse (string str, out double result = null, out unowned string unparsed = null) {
 		char* endptr;
+		errno = 0;
 		result = ascii_strtod (str, out endptr);
 		if (endptr == (char*) str + str.length) {
 			unparsed = "";
