@@ -231,6 +231,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			[Version (since = "1.18")]
+			public Gst.FlowReturn finish_subframe (Gst.Video.CodecFrame frame);
 			[NoWrapper]
 			public virtual bool flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
@@ -934,6 +936,7 @@ namespace Gst {
 			FIRST_IN_BUNDLE,
 			TOP_FIELD,
 			BOTTOM_FIELD,
+			MARKER,
 			LAST
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CAPTION_TYPE_", type_id = "gst_video_caption_type_get_type ()")]

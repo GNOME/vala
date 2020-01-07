@@ -50,6 +50,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_default (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message, void* user_data = null);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.18")]
+		public static string log_get_line (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string format, va_list args);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void print_stack_trace ();
@@ -625,6 +628,8 @@ namespace Gst {
 		public Gst.ElementFlags get_suppressed_flags ();
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
+		[Version (since = "1.18")]
+		public Gst.Iterator? iterate_all_by_element_factory_name (string factory_name);
 		public Gst.Iterator? iterate_all_by_interface (GLib.Type iface);
 		public Gst.Iterator? iterate_elements ();
 		public Gst.Iterator? iterate_recurse ();
