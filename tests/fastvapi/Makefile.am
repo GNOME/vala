@@ -14,7 +14,7 @@ check-fastvapi: $(top_builddir)/compiler/valac
 		--disable-version-header \
 		--vapidir $(top_srcdir)/vapi \
 		--use-fast-vapi fastvapitest.vapi \
-		--basedir $(srcdir) \
+		--basedir $(builddir) \
 		$(srcdir)/usefastvapitest.vala || exit 1; \
 	rm -f fastvapitest.vapi fastvapitest.c usefastvapitest.c
 
