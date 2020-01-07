@@ -247,7 +247,9 @@ public class Vala.ElementAccess : Expression {
 			}
 		}
 
-		value_type.check (context);
+		if (value_type != null) {
+			value_type.check (context);
+		}
 
 		return !error;
 	}
