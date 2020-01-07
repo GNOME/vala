@@ -1526,6 +1526,11 @@ public class Vala.GTypeModule : GErrorModule {
 					base_property = cl_prop.base_interface_property;
 				}
 
+				// Our base class provides this interface implementation
+				if (prop == base_property) {
+					continue;
+				}
+
 				var ciface = new CCodeIdentifier ("iface");
 
 				if (base_property.get_accessor != null && prop.get_accessor != null) {
