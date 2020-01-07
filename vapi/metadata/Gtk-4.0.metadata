@@ -75,8 +75,6 @@ binding_set_by_class skip=false
 *.*_valist skip=false
 *.*_valist.args type="va_list"
 *.*_valist.var_args type="va_list"
-Builder
-  .add_callback_symbols skip=false
 CellArea
   .add_with_properties skip=false
   .cell_get skip=false
@@ -134,10 +132,6 @@ TreeModel
   .ref_node#virtual_method virtual
   .unref_node#virtual_method virtual
 
-// Unregistered callback types
-Builder
-  .lookup_callback_symbol skip=false
-
 // Bug #: Default values
 CellAreaBox
   .pack_*.align default=false
@@ -160,8 +154,6 @@ IconInfo
   .load_symbolic*.error_color default=null
   .load_symbolic*.was_symbolic default=null
   .*.cancellable default=null
-Menu
-  .popup_at_*.trigger_event default=null
 Notebook
   .append_page.tab_label default=null
   .prepend_page.tab_label default=null
@@ -357,9 +349,6 @@ ComboBox
 FileChooserNative
   .accept_label nullable
   .cancel_label nullable
-Menu
-  .get_for_attach_widget type="unowned GLib.List<Gtk.Menu>"
-  .popped_up.*_rect type="Gdk.Rectangle"
 NativeDialog
   .title nullable
   .transient_for nullable
