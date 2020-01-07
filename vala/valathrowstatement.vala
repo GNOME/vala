@@ -76,9 +76,11 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		if (source_reference == null) {
 			source_reference = this.source_reference;
 		}
-		var error_type = error_expression.value_type.copy ();
-		error_type.source_reference = source_reference;
-		collection.add (error_type);
+		if (error_expression.value_type != null) {
+			var error_type = error_expression.value_type.copy ();
+			error_type.source_reference = source_reference;
+			collection.add (error_type);
+		}
 	}
 
 	public override bool check (CodeContext context) {
