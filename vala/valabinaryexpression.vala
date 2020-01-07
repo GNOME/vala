@@ -319,8 +319,10 @@ public class Vala.BinaryExpression : Expression {
 
 		left.target_type = left.value_type.copy ();
 		left.target_type.value_owned = false;
-		right.target_type = right.value_type.copy ();
-		right.target_type.value_owned = false;
+                if (right.value_type != null) {
+                    right.target_type = right.value_type.copy ();
+                    right.target_type.value_owned = false;
+                }
 
 		if (operator == BinaryOperator.PLUS
 		    && left.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
@@ -392,7 +394,7 @@ public class Vala.BinaryExpression : Expression {
 				}
 			} else {
 				left.target_type.nullable = false;
-				right.target_type.nullable = false;
+                                right.target_type.nullable = false;
 			}
 
 			if (value_type == null) {
@@ -409,7 +411,7 @@ public class Vala.BinaryExpression : Expression {
 		case BinaryOperator.SHIFT_LEFT:
 		case BinaryOperator.SHIFT_RIGHT:
 			left.target_type.nullable = false;
-			right.target_type.nullable = false;
+                        right.target_type.nullable = false;
 
 			value_type = context.analyzer.get_arithmetic_result_type (left.target_type, right.target_type);
 
@@ -536,7 +538,8 @@ public class Vala.BinaryExpression : Expression {
 			break;
 		case BinaryOperator.IN:
 			if (left.value_type.compatible (context.analyzer.int_type)
-			    && right.value_type.compatible (context.analyzer.int_type)) {
+			    && right.value_type != null
+                            && right.value_type.compatible (context.analyzer.int_type)) {
 				// integers or enums
 				left.target_type.nullable = false;
 				right.target_type.nullable = false;
@@ -546,9 +549,9 @@ public class Vala.BinaryExpression : Expression {
 				}
 			} else {
 				// otherwise require a bool contains () method
-				var contains_method = right.value_type.get_member ("contains") as Method;
+				var contains_method = (right.value_type != null ? right.value_type.get_member ("contains") : null) as Method;
 				if (contains_method == null) {
-					Report.error (source_reference, "`%s' does not have a `contains' method".printf (right.value_type.to_string ()));
+					Report.error (source_reference, "`%s' does not have a `contains' method".printf (right.value_type != null ? right.value_type.to_string () : "(null)"));
 					error = true;
 					return false;
 				}
