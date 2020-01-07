@@ -65,6 +65,10 @@ public class Vala.ObjectCreationExpression : Expression {
          */
         public bool extra_comma { get; set; }
 
+        /**
+         * For language servers, whether the object creation expression is incomplete.
+         */
+        public bool is_incomplete { get; set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
@@ -83,6 +87,20 @@ public class Vala.ObjectCreationExpression : Expression {
 	public ObjectCreationExpression (MemberAccess? member_name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
+	}
+
+	/**
+	 * Creates a new incomplete object creation expression, such as
+         * `new ...'
+	 *
+	 * @param member_name      object type to create
+	 * @param source_reference reference to source code
+	 * @return                 newly created object creation expression
+	 */
+	public ObjectCreationExpression.incomplete (MemberAccess? member_name, SourceReference? source_reference = null) {
+		this.source_reference = source_reference;
+		this.member_name = member_name;
+                this.is_incomplete = true;
 	}
 
 	/**
