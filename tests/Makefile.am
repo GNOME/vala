@@ -343,6 +343,7 @@ TESTS = \
 	objects/interfaces.vala \
 	objects/interface-generics.vala \
 	objects/interface-property-base-access.vala \
+	objects/interface-property-base-impl.vala \
 	objects/interface-property-delegate.vala \
 	objects/interface-property-override.vala \
 	objects/interface-virtual-override.vala \
