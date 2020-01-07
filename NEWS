@@ -1,3 +1,44 @@
+Vala 0.47.2
+===========
+ * Highlights:
+  - compiler: Add "--depfile" option writing package dependencies to given file
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Fix support of dynamic DBus methods
+    + Fix vfunc signature of delegate-typed property in interface
+    + Fix precondition in creation method of structs
+    + Remove unreachable code in TypeRegisterFunction.init_from_type()
+    + Improve *_get_type() fast path (requires glib >= 2.58) [#879]
+  - vala:
+    + Report error for async creation expression without yield
+    + Don't require constant initializer in fast-vapi [#461]
+    + VoidType is actually compatible with itself [#878]
+    + Improve handling of "void" as generic type [#878]
+    + Keep formal_target_type on transform of method-call/object-creation [#835]
+    + Add a basic parameter check for [Print] methods
+    + Let the parser have set namespace members as static
+    + Don't ignore inner errors in Block and acknowledge them further
+    + Improve error message for unsupported inner types and declarations
+    + Don't allow "va_list" as return-type or type of fields [#884]
+    + Check before accessing "name" of parent_symbol which might be null
+    + Allow to override base interface properties explicitly
+  - gidl/girparser: Creation methods must not be marked as static
+  - parser: Implicit "main" method of main-block is public and static
+  - scanner: "\x" requires two hex digits at most
+  - scanner: Improve check of "\u" escape sequence
+  - genie: Fix parser's inner state when a struct is declared after a class
+
+ * Bindings:
+  - glib-2.0: Add to_string() for GLib.PollFd and GLib.Pid
+  - glib-2.0: Add new symbols from 2.64
+  - glib-2.0: Reset errno before calling strto*() functions.
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk4: Update to 3.96.0+448a4023
+  - pango: Update to 1.44+
+  - vapi: Update GIR-based bindings
+  - webkit2gtk-4.0: Update to 2.27.3
+
 Vala 0.47.1
 ===========
  * Highlights:
