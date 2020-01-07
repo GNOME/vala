@@ -166,7 +166,8 @@ public class Vala.MethodCall : Expression {
 			// constructor
 			unowned Class cl = (Class) ((ObjectType) mtype).type_symbol;
 			unowned Method m = cl.default_construction_method;
-			m.get_error_types (collection, source_reference);
+                        if (m != null)
+                                m.get_error_types (collection, source_reference);
 		} else if (mtype is DelegateType) {
 			unowned Delegate d = ((DelegateType) mtype).delegate_symbol;
 			d.get_error_types (collection, source_reference);
@@ -485,7 +486,8 @@ public class Vala.MethodCall : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.check (context);
 
-			if (arg is LambdaExpression && ((LambdaExpression) arg).method.closure) {
+			if (arg is LambdaExpression && ((LambdaExpression) arg).method != null &&
+                            ((LambdaExpression) arg).method.closure) {
 				force_lambda_method_closure = true;
 			}
 		}
