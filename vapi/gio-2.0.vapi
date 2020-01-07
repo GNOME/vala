@@ -1432,6 +1432,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME")]
 		[Version (deprecated = true, deprecated_since = "2.28")]
 		public const string DESKTOP_APP_INFO_LOOKUP;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_MEMORY_MONITOR_EXTENSION_POINT_NAME")]
+		[Version (since = "2.64")]
+		public const string MEMORY_MONITOR;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME")]
 		public const string NATIVE_VOLUME_MONITOR;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_NETWORK_MONITOR_EXTENSION_POINT_NAME")]
@@ -3732,6 +3735,12 @@ namespace GLib {
 		public abstract GLib.InputStream load (int size, out string? type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.InputStream load_async (int size, GLib.Cancellable? cancellable = null, out string? type = null) throws GLib.Error;
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_cname = "GMemoryMonitorInterface", type_id = "g_memory_monitor_get_type ()")]
+	[Version (since = "2.64")]
+	public interface MemoryMonitor : GLib.Initable, GLib.Object {
+		public static GLib.MemoryMonitor dup_default ();
+		public virtual signal void low_memory_warning (GLib.MemoryMonitorWarningLevel level);
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_mount_get_type ()")]
 	public interface Mount : GLib.Object {
 		public abstract bool can_eject ();
@@ -4393,6 +4402,13 @@ namespace GLib {
 		CLOSE_STREAM2,
 		WAIT_FOR_BOTH
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MEMORY_MONITOR_WARNING_LEVEL_", type_id = "g_memory_monitor_warning_level_get_type ()")]
+	[Version (since = "2.64")]
+	public enum MemoryMonitorWarningLevel {
+		LOW,
+		MEDIUM,
+		CRITICAL
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_MOUNT_MOUNT_", type_id = "g_mount_mount_flags_get_type ()")]
 	[Flags]
 	public enum MountMountFlags {
@@ -4906,6 +4922,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.48")]
 	public static GLib.DtlsServerConnection dtls_server_connection_new (GLib.DatagramBased base_socket, GLib.TlsCertificate? certificate) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Version (since = "2.64")]
+	public static GLib.MemoryMonitor memory_monitor_dup_default ();
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.36")]
 	public static void networking_init ();
