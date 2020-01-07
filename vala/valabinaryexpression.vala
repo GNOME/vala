@@ -189,6 +189,11 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		if (operator == BinaryOperator.COALESCE) {
+			if (target_type != null) {
+				left.target_type = target_type.copy ();
+				right.target_type = target_type.copy ();
+			}
+
 			if (!left.check (context)) {
 				error = true;
 				return false;
