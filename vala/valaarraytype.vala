@@ -106,8 +106,12 @@ public class Vala.ArrayType : ReferenceType {
 		return null;
 	}
 
-	unowned ArrayLengthField get_length_field () {
+	unowned ArrayLengthField? get_length_field () {
 		if (length_field == null) {
+			if (length_type == null) {
+				return null;
+			}
+
 			length_field = new ArrayLengthField (source_reference);
 
 			length_field.access = SymbolAccessibility.PUBLIC;
