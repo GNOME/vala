@@ -38,6 +38,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_abstract { get; set; }
 
 	/**
+	 * Specifies whether this class is sealed. Sealed classes may not be
+	 * subclassed.
+	 */
+	public bool is_sealed { get; set; }
+
+	/**
 	 * Instances of compact classes are fast to create and have a
 	 * compact memory layout. Compact classes don't support runtime
 	 * type information or virtual methods.
@@ -789,6 +795,10 @@ public class Vala.Class : ObjectTypeSymbol {
 						}
 					}
 				}
+			}
+
+			if (base_class != null && base_class.is_sealed) {
+				Report.error (source_reference, "`%s' subclasses a `%s' which is a sealed class".printf (get_full_name (), base_class.get_full_name ()));
 			}
 
 			/* all abstract symbols defined in base classes have to be implemented in non-abstract classes */

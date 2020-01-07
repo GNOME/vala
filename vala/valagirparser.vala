@@ -1184,6 +1184,10 @@ public class Vala.GirParser : CodeVisitor {
 								// set the interface struct name
 								iface.symbol.set_attribute_string ("CCode", "type_cname", get_cname ());
 							}
+							var cls = iface.symbol as Class;
+							if (iface != null && cls != null && !cls.is_abstract && girdata["disguised"] != "1") {
+								cls.is_sealed = true;
+							}
 							merged = true;
 						}
 					}
@@ -2809,6 +2813,12 @@ public class Vala.GirParser : CodeVisitor {
 
 		var gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
 		if (gtype_struct_for != null) {
+			current.gtype_struct_for = parse_symbol_from_string (gtype_struct_for, current.source_reference);
+			unresolved_gir_symbols.add (current.gtype_struct_for);
+		}
+
+		var disguised = reader.get_attribute ("disguised");
+		if (disguised != null) {
 			current.gtype_struct_for = parse_symbol_from_string (gtype_struct_for, current.source_reference);
 			unresolved_gir_symbols.add (current.gtype_struct_for);
 		}

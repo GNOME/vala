@@ -363,6 +363,8 @@ TESTS = \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
 	objects/regex.vala \
+	objects/sealed.vala \
+	objects/sealed-subclass.test \
 	objects/signals.vala \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \

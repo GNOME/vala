@@ -2587,6 +2587,9 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
 		}
+		if (ModifierFlags.SEALED in flags) {
+			cl.is_sealed = true;
+		}
 		if (ModifierFlags.EXTERN in flags) {
 			cl.is_extern = true;
 		}
@@ -2695,8 +2698,9 @@ public class Vala.Parser : CodeVisitor {
 
 		if (ModifierFlags.ABSTRACT in flags
 		    || ModifierFlags.VIRTUAL in flags
-		    || ModifierFlags.OVERRIDE in flags) {
-			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
+		    || ModifierFlags.OVERRIDE in flags
+		    || ModifierFlags.SEALED in flags) {
+			Report.error (f.source_reference, "abstract, virtual, override, and modifiers are not applicable to fields");
 		}
 		if (ModifierFlags.EXTERN in flags) {
 			f.is_extern = true;
@@ -2772,6 +2776,9 @@ public class Vala.Parser : CodeVisitor {
 			if (ModifierFlags.OVERRIDE in flags) {
 				method.overrides = true;
 			}
+			if (ModifierFlags.SEALED in flags) {
+				throw new ParseError.SYNTAX ("the modifier `sealed' is not valid for methods");
+			}
 			if ((method.is_abstract && method.is_virtual)
 			    || (method.is_abstract && method.overrides)
 			    || (method.is_virtual && method.overrides)) {
@@ -2780,8 +2787,9 @@ public class Vala.Parser : CodeVisitor {
 		} else {
 			if (ModifierFlags.ABSTRACT in flags
 			    || ModifierFlags.VIRTUAL in flags
-			    || ModifierFlags.OVERRIDE in flags) {
-				throw new ParseError.SYNTAX ("the modifiers `abstract', `virtual', and `override' are not valid for %s methods", (ModifierFlags.CLASS in flags) ? "class" : "static");
+			    || ModifierFlags.OVERRIDE in flags
+			    || ModifierFlags.SEALED in flags) {
+				throw new ParseError.SYNTAX ("the modifiers `abstract', `virtual', `override', and `sealed' are not valid for %s methods", (ModifierFlags.CLASS in flags) ? "class" : "static");
 			}
 		}
 
@@ -2846,6 +2854,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.OVERRIDE in flags) {
 			prop.overrides = true;
+		}
+		if (ModifierFlags.SEALED in flags) {
+			throw new ParseError.SYNTAX ("the modifier `sealed' is not valid for properties");
 		}
 		if (ModifierFlags.NEW in flags) {
 			prop.hides = true;
@@ -2951,6 +2962,9 @@ public class Vala.Parser : CodeVisitor {
 			throw new ParseError.SYNTAX ("`static' modifier not allowed on signals");
 		} else if (ModifierFlags.CLASS in flags) {
 			throw new ParseError.SYNTAX ("`class' modifier not allowed on signals");
+		}
+		if (ModifierFlags.SEALED in flags) {
+			throw new ParseError.SYNTAX ("`sealed' modifier not allowed on signals");
 		}
 		if (ModifierFlags.VIRTUAL in flags) {
 			sig.is_virtual = true;
@@ -3388,8 +3402,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.ABSTRACT in flags
 		    || ModifierFlags.VIRTUAL in flags
-		    || ModifierFlags.OVERRIDE in flags) {
-			Report.error (method.source_reference, "abstract, virtual, and override modifiers are not applicable to creation methods");
+		    || ModifierFlags.OVERRIDE in flags
+		    || ModifierFlags.SEALED in flags) {
+			Report.error (method.source_reference, "abstract, virtual, override, and sealed modifiers are not applicable to creation methods");
 		}
 		if (ModifierFlags.ASYNC in flags) {
 			method.coroutine = true;
