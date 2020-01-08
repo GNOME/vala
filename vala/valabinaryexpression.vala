@@ -234,6 +234,12 @@ public class Vala.BinaryExpression : Expression {
 				local_type = right.value_type.copy ();
 			}
 
+			if (local_type != null && right.value_type is ValueType && !right.value_type.nullable) {
+				// immediate values in the right expression must always be boxed,
+				// otherwise the local variable may receive a stale pointer to the stack
+				local_type.value_owned = true;
+			}
+
 			var local = new LocalVariable (local_type, get_temp_name (), left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
