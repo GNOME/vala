@@ -63,7 +63,6 @@ public enum Vala.TokenType {
 	DO,
 	DOUBLE_COLON,
 	DOT,
-	NULL_COND,
 	DYNAMIC,
 	ELLIPSIS,
 	ELSE,
@@ -197,7 +196,6 @@ public enum Vala.TokenType {
 		case DO: return "`do'";
 		case DOUBLE_COLON: return "`::'";
 		case DOT: return "`.'";
-		case NULL_COND: return "`?.'";
 		case DYNAMIC: return "`dynamic'";
 		case ELLIPSIS: return "`...'";
 		case ELSE: return "`else'";
