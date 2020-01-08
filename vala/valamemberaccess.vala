@@ -52,11 +52,6 @@ public class Vala.MemberAccess : Expression {
 	public bool pointer_member_access { get; set; }
 
 	/**
-	 * Null-conditional member access.
-	 */
-	public bool null_cond_member_access { get; set; }
-
-	/**
 	 * Represents access to an instance member without an actual instance,
 	 * e.g. `MyClass.an_instance_method`.
 	 */
@@ -71,6 +66,11 @@ public class Vala.MemberAccess : Expression {
 	 * Qualified access to global symbol.
 	 */
 	public bool qualified { get; set; }
+
+	/**
+	 * Null-conditional access.
+	 */
+	public bool null_cond_access { get; set; }
 
 	private Expression? _inner;
 	private List<DataType> type_argument_list = new ArrayList<DataType> ();
@@ -100,13 +100,6 @@ public class Vala.MemberAccess : Expression {
 		this.member_name = member_name;
 		this.source_reference = source_reference;
 		pointer_member_access = true;
-	}
-
-	public MemberAccess.null_cond (Expression inner, string member_name, SourceReference? source_reference = null) {
-		this.inner = inner;
-		this.member_name = member_name;
-		this.source_reference = source_reference;
-		null_cond_member_access = true;
 	}
 
 	/**
@@ -219,8 +212,9 @@ public class Vala.MemberAccess : Expression {
 
 		checked = true;
 
-		if (null_cond_member_access) {
-			return check_cond_access (context);
+		if (null_cond_access) {
+			error = !check_null_cond_access (context, this);
+			return !error;
 		}
 
 		if (inner != null) {
