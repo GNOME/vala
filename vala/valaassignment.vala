@@ -166,7 +166,7 @@ public class Vala.Assignment : Expression {
 
 			if ((!(ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
 					(ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ()) ||
-					(ma.null_cond_member_access)) {
+					(ma.null_cond_access)) {
 				error = true;
 				Report.error (source_reference, "unsupported lvalue in assignment");
 				return false;
