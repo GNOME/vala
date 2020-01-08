@@ -42,6 +42,11 @@ public class Vala.ElementAccess : Expression {
 	}
 
 	/**
+	 * Null-conditional access.
+	 */
+	public bool null_cond_access { get; set; }
+
+	/**
 	 * Expressions representing the indices we want to access inside the container.
 	 */
 	private List<Expression> indices = new ArrayList<Expression> ();
@@ -133,6 +138,11 @@ public class Vala.ElementAccess : Expression {
 		}
 
 		checked = true;
+
+		if (null_cond_access) {
+			error = !check_null_cond_access (context, this);
+			return !error;
+		}
 
 		if (!container.check (context)) {
 			/* don't proceed if a child expression failed */
