@@ -199,9 +199,11 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
-			if (!right.check (context)) {
-				error = true;
-				return false;
+			if (left.value_type is NullType || left.value_type == null || context.experimental_non_null) {
+				if (!right.check (context)) {
+					error = true;
+					return false;
+				}
 			}
 
 			DataType local_type = null;
@@ -215,10 +217,7 @@ public class Vala.BinaryExpression : Expression {
 				}
 			} else if (left.value_type != null) {
 				local_type = left.value_type.copy ();
-				if (right.value_type != null && right.value_type.value_owned) {
-					// value owned if either left or right is owned
-					local_type.value_owned = true;
-				}
+				local_type.value_owned = true;
 				if (context.experimental_non_null) {
 					if (!local_type.nullable) {
 						Report.warning (left.source_reference, "left operand is never null");
