@@ -549,8 +549,8 @@ public class Vala.BinaryExpression : Expression {
 			break;
 		case BinaryOperator.IN:
 			if (left.value_type.compatible (context.analyzer.int_type)
-					&& right.value_type != null
-					&& right.value_type.compatible (context.analyzer.int_type)) {
+			    && right.value_type != null
+			    && right.value_type.compatible (context.analyzer.int_type)) {
 				// integers or enums
 				left.target_type.nullable = false;
 				right.target_type.nullable = false;

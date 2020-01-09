@@ -957,11 +957,11 @@ public class Vala.Parser : CodeVisitor {
 		foreach (Expression arg in arg_list) {
 			expr.add_argument (arg);
 		}
-                expr.initial_argument_count = arg_list.size;
+		expr.initial_argument_count = arg_list.size;
 		foreach (MemberInitializer initializer in init_list) {
 			expr.add_member_initializer (initializer);
 		}
-                expr.extra_comma = extra_comma;
+		expr.extra_comma = extra_comma;
 		return expr;
 	}
 

@@ -487,8 +487,8 @@ public class Vala.MethodCall : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.check (context);
 
-			if (arg is LambdaExpression && ((LambdaExpression) arg).method != null &&
-					((LambdaExpression) arg).method.closure) {
+			if (arg is LambdaExpression && ((LambdaExpression) arg).method != null
+			    && ((LambdaExpression) arg).method.closure) {
 				force_lambda_method_closure = true;
 			}
 		}
