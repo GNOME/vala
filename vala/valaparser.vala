@@ -43,7 +43,7 @@ public class Vala.Parser : CodeVisitor {
 
 	static List<TypeParameter> _empty_type_parameter_list;
 
-        public bool lsp_mode { get; set; }
+	public bool lsp_mode { get; set; }
 
 	struct TokenInfo {
 		public TokenType type;
@@ -67,7 +67,7 @@ public class Vala.Parser : CodeVisitor {
 
 	public Parser () {
 		tokens = new TokenInfo[BUFFER_SIZE];
-                lsp_mode = false;
+		lsp_mode = false;
 	}
 
 	/**
@@ -120,8 +120,9 @@ public class Vala.Parser : CodeVisitor {
 
 	void report_parse_error (ParseError e, bool advance = true) {
 		var begin = get_location ();
-                if (advance)
-                    next ();
+		if (advance) {
+			next ();
+		}
 		Report.error (get_src (begin), "syntax error, " + e.message);
 	}
 
@@ -570,19 +571,20 @@ public class Vala.Parser : CodeVisitor {
                 extra_comma = false;
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-                                try {
-                                    list.add (parse_argument ());
-                                } catch (ParseError e) {
-                                    if (lsp_mode) {
-                                        extra_comma = true;
-                                        report_parse_error (e, false);
-                                        // exit this loop, since language server uses
-                                        // number of correctly-supplied arguments from
-                                        // the left to determine which argument to complete
-                                        break;
-                                    } else
-                                        throw e;        // rethrow
-                                }
+				try {
+					list.add (parse_argument ());
+				} catch (ParseError e) {
+					if (lsp_mode) {
+						extra_comma = true;
+						report_parse_error (e, false);
+						// exit this loop, since language server uses
+						// number of correctly-supplied arguments from
+						// the left to determine which argument to complete
+						break;
+					} else {
+						throw e;        // rethrow
+					}
+				}
 			} while (accept (TokenType.COMMA));
 		}
 		return list;
@@ -763,15 +765,15 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.DOT);
 		string id = "";
-                try {
-                    id = parse_identifier ();
-                } catch (ParseError e) {
-                    if (lsp_mode) {
-                        report_parse_error (e, false);
-                    } else {
-                        throw e;
-                    }
-                }
+		try {
+			id = parse_identifier ();
+		} catch (ParseError e) {
+			if (lsp_mode) {
+				report_parse_error (e, false);
+			} else {
+				throw e;
+			}
+		}
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (inner, id, get_src (begin));
 		if (type_arg_list != null) {
@@ -785,14 +787,15 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_pointer_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OP_PTR);
 		string id = "";
-                try {
-                    id = parse_identifier ();
-                } catch (ParseError e) {
-                    if (lsp_mode) {
-                        report_parse_error (e, false);
-                    } else
-                        throw e;
-                }
+		try {
+			id = parse_identifier ();
+		} catch (ParseError e) {
+			if (lsp_mode) {
+				report_parse_error (e, false);
+			} else {
+				throw e;
+			}
+		}
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess.pointer (inner, id, get_src (begin));
 		if (type_arg_list != null) {
@@ -805,14 +808,15 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_method_call (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OPEN_PARENS);
-                bool extra_comma;
-                var arg_list = parse_argument_list (out extra_comma);
-                if (lsp_mode) {
-                    if (!accept (TokenType.CLOSE_PARENS)) {
-                        report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
-                    }
-                } else
-                    expect (TokenType.CLOSE_PARENS);
+		bool extra_comma;
+		var arg_list = parse_argument_list (out extra_comma);
+		if (lsp_mode) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
@@ -836,8 +840,8 @@ public class Vala.Parser : CodeVisitor {
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
 			}
-                        expr.initial_argument_count = arg_list.size;
-                        expr.extra_comma = extra_comma;
+			expr.initial_argument_count = arg_list.size;
+			expr.extra_comma = extra_comma;
 			return expr;
 		}
 	}
@@ -903,19 +907,20 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		MemberAccess? member;
-                try {
-                    member = parse_member_name ();
-                } catch (ParseError e) {
-                    if (lsp_mode) {
-                        member = null;
-                        report_parse_error (e);
-                    } else
-                        throw e;        // rethrow
-                }
+		try {
+			member = parse_member_name ();
+		} catch (ParseError e) {
+			if (lsp_mode) {
+				member = null;
+				report_parse_error (e);
+			} else {
+				throw e;        // rethrow
+			}
+		}
 		if (accept (TokenType.OPEN_PARENS)) {
 			var expr = parse_object_creation_expression (begin, member);
 			return expr;
-                } else {
+		} else {
 			bool is_pointer_type = false;
 			while (accept (TokenType.STAR)) {
 				is_pointer_type = true;
@@ -928,9 +933,9 @@ public class Vala.Parser : CodeVisitor {
 				var expr = parse_array_creation_expression ();
 				return expr;
 			} else if (lsp_mode) {
-                            var expr = new ObjectCreationExpression.incomplete (member, get_src (begin));
-                            return expr;
-                        } else {
+				var expr = new ObjectCreationExpression.incomplete (member, get_src (begin));
+				return expr;
+			} else {
 				throw new ParseError.SYNTAX ("expected ( or [");
 			}
 		}
@@ -938,13 +943,15 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		member.creation_member = true;
-                bool extra_comma;
+		bool extra_comma;
 		var arg_list = parse_argument_list (out extra_comma);
-                if (lsp_mode) {
-                    if (!accept (TokenType.CLOSE_PARENS))
-                        report_parse_error (new ParseError.SYNTAX ("expected %s", TokenType.CLOSE_PARENS.to_string ()), false);
-                } else
-                    expect (TokenType.CLOSE_PARENS);
+		if (lsp_mode) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s", TokenType.CLOSE_PARENS.to_string ()), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
@@ -953,11 +960,11 @@ public class Vala.Parser : CodeVisitor {
 		foreach (Expression arg in arg_list) {
 			expr.add_argument (arg);
 		}
-                expr.initial_argument_count = arg_list.size;
+		expr.initial_argument_count = arg_list.size;
 		foreach (MemberInitializer initializer in init_list) {
 			expr.add_member_initializer (initializer);
 		}
-                expr.extra_comma = extra_comma;
+		expr.extra_comma = extra_comma;
 		return expr;
 	}
 
@@ -1682,16 +1689,16 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		// decide between declaration and expression statement
-                try {
-                    skip_type ();
-                } catch (ParseError e) {
-                    if (lsp_mode) {
-                        rollback (begin);
-                        return true;
-                    } else {
-                        throw e;        // rethrow
-                    }
-                }
+		try {
+			skip_type ();
+		} catch (ParseError e) {
+			if (lsp_mode) {
+				rollback (begin);
+				return true;
+			} else {
+				throw e;        // rethrow
+			}
+		}
 		switch (current ()) {
 		// invocation expression
 		case TokenType.OPEN_PARENS:
@@ -1778,15 +1785,16 @@ public class Vala.Parser : CodeVisitor {
 
 		var block = new Block (get_src (get_location ()));
 
-                try {
-                    var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
-                    block.add_statement (stmt);
-                } catch (ParseError e) {
-                    if (lsp_mode)
-                        report_parse_error (e);
-                    else
-                        throw e;        // rethrow
-                }
+		try {
+			var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
+			block.add_statement (stmt);
+		} catch (ParseError e) {
+			if (lsp_mode) {
+				report_parse_error (e);
+			} else {
+				throw e;        // rethrow
+			}
+		}
 		block.source_reference.end = get_last_src ().end;
 
 		return block;
@@ -1976,13 +1984,13 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var expr = parse_statement_expression ();
 		var src = get_src (begin);
-                if (lsp_mode) {
-                    if (!accept (TokenType.SEMICOLON)) {
-                        report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
-                    }
-                } else {
-                    expect (TokenType.SEMICOLON);
-                }
+		if (lsp_mode) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new ExpressionStatement (expr, src);
 	}
 
@@ -1998,12 +2006,13 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.IF);
 		expect (TokenType.OPEN_PARENS);
 		var condition = parse_expression ();
-                if (lsp_mode) {
-                    if (!accept (TokenType.CLOSE_PARENS)) {
-                        report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
-                    }
-                } else
-                    expect (TokenType.CLOSE_PARENS);
+		if (lsp_mode) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 		var true_stmt = parse_embedded_statement ("if", false);
 		Block false_stmt = null;
@@ -3660,34 +3669,34 @@ public class Vala.Parser : CodeVisitor {
 		MemberAccess expr = null;
 		bool first = true;
 		do {
-                        try {
-                            string id = parse_identifier ();
+			try {
+				string id = parse_identifier ();
 
-                            // The first member access can be global:: qualified
-                            bool qualified = false;
-                            if (first && id == "global" && accept (TokenType.DOUBLE_COLON)) {
-                                    id = parse_identifier ();
-                                    qualified = true;
-                            }
+				// The first member access can be global:: qualified
+				bool qualified = false;
+				if (first && id == "global" && accept (TokenType.DOUBLE_COLON)) {
+					id = parse_identifier ();
+					qualified = true;
+				}
 
-                            List<DataType> type_arg_list = parse_type_argument_list (false);
-                            expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
-                            expr.qualified = qualified;
-                            if (type_arg_list != null) {
-                                    foreach (DataType type_arg in type_arg_list) {
-                                            expr.add_type_argument (type_arg);
-                                    }
-                            }
+				List<DataType> type_arg_list = parse_type_argument_list (false);
+				expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
+				expr.qualified = qualified;
+				if (type_arg_list != null) {
+					foreach (DataType type_arg in type_arg_list) {
+						expr.add_type_argument (type_arg);
+					}
+				}
 
-                            first = false;
-                        } catch (ParseError e) {
-                            if (!lsp_mode || first)
-                                throw e;
-                            else {
-                                report_parse_error (e);
-                                return expr;
-                            }
-                        }
+				first = false;
+			} catch (ParseError e) {
+				if (!lsp_mode || first) {
+					throw e;
+				} else {
+					report_parse_error (e);
+					return expr;
+				}
+			}
 		} while (accept (TokenType.DOT));
 		return expr;
 	}

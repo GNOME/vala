@@ -1381,11 +1381,11 @@ public class Vala.GirParser : CodeVisitor {
 				continue;
 			}
 
-                        if (ns == null) {
-                                // We should not have a null namespace unless we're in LSP mode.
-                                assert (context.keep_going);
-                                continue;
-                        }
+			if (ns == null) {
+				// We should not have a null namespace unless we're in LSP mode.
+				assert (context.keep_going);
+				continue;
+			}
 
 			provided_namespaces.add ("%s-%s".printf (gir_namespace, gir_version));
 

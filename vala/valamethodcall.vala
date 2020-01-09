@@ -48,15 +48,15 @@ public class Vala.MethodCall : Expression {
 
 	public bool is_chainup { get; private set; }
 
-        /**
-         * For language servers, the number of completed arguments from the left.
-         */
-        public int initial_argument_count { get; set; }
+	/**
+	 * For language servers, the number of completed arguments from the left.
+	 */
+	public int initial_argument_count { get; set; }
 
-        /**
-         * For language servers, whether there is an extra comma at the end of the argument list.
-         */
-        public bool extra_comma { get; set; }
+	/**
+	 * For language servers, whether there is an extra comma at the end of the argument list.
+	 */
+	public bool extra_comma { get; set; }
 
 	private Expression _call;
 
@@ -166,8 +166,9 @@ public class Vala.MethodCall : Expression {
 			// constructor
 			unowned Class cl = (Class) ((ObjectType) mtype).type_symbol;
 			unowned Method m = cl.default_construction_method;
-                        if (m != null)
-                                m.get_error_types (collection, source_reference);
+			if (m != null) {
+				m.get_error_types (collection, source_reference);
+			}
 		} else if (mtype is DelegateType) {
 			unowned Delegate d = ((DelegateType) mtype).delegate_symbol;
 			d.get_error_types (collection, source_reference);
@@ -487,7 +488,7 @@ public class Vala.MethodCall : Expression {
 			arg.check (context);
 
 			if (arg is LambdaExpression && ((LambdaExpression) arg).method != null &&
-                            ((LambdaExpression) arg).method.closure) {
+					((LambdaExpression) arg).method.closure) {
 				force_lambda_method_closure = true;
 			}
 		}
