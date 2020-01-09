@@ -56,16 +56,6 @@ public class Vala.ObjectCreationExpression : Expression {
 	public bool struct_creation { get; set; }
 
 	/**
-	 * For language servers, the number of completed arguments from the left.
-	 */
-	public int initial_argument_count { get; set; }
-
-	/**
-	 * For language servers, whether there is an extra comma at the end of the argument list.
-	 */
-	public bool extra_comma { get; set; }
-
-	/**
 	 * For language servers, whether the object creation expression is incomplete.
 	 */
 	public bool is_incomplete { get; set; }
