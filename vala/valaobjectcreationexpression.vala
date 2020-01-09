@@ -58,7 +58,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	/**
 	 * For language servers, whether the object creation expression is incomplete.
 	 */
-	public bool is_incomplete { get; set; }
+	public bool is_incomplete { get; private set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
@@ -91,6 +91,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
 		this.is_incomplete = true;
+		error = true;
 	}
 
 	/**
