@@ -55,20 +55,20 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public bool struct_creation { get; set; }
 
-        /**
-         * For language servers, the number of completed arguments from the left.
-         */
-        public int initial_argument_count { get; set; }
+	/**
+	 * For language servers, the number of completed arguments from the left.
+	 */
+	public int initial_argument_count { get; set; }
 
-        /**
-         * For language servers, whether there is an extra comma at the end of the argument list.
-         */
-        public bool extra_comma { get; set; }
+	/**
+	 * For language servers, whether there is an extra comma at the end of the argument list.
+	 */
+	public bool extra_comma { get; set; }
 
-        /**
-         * For language servers, whether the object creation expression is incomplete.
-         */
-        public bool is_incomplete { get; set; }
+	/**
+	 * For language servers, whether the object creation expression is incomplete.
+	 */
+	public bool is_incomplete { get; set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
@@ -91,7 +91,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	/**
 	 * Creates a new incomplete object creation expression, such as
-         * `new ...'
+	 * `new ...'
 	 *
 	 * @param member_name      object type to create
 	 * @param source_reference reference to source code
@@ -100,7 +100,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	public ObjectCreationExpression.incomplete (MemberAccess? member_name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
-                this.is_incomplete = true;
+		this.is_incomplete = true;
 	}
 
 	/**

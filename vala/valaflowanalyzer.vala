@@ -350,16 +350,16 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		foreach (BasicBlock block in block_list) {
 			var defined_variables = new ArrayList<Variable> ();
 			foreach (CodeNode node in block.get_nodes ()) {
-                                var temp_dv = new ArrayList<Variable> ();
+				var temp_dv = new ArrayList<Variable> ();
 				node.get_defined_variables (temp_dv);
-                                foreach (Variable v in temp_dv) {
-                                        if (v == null) {
-                                                // Should not have null variable defined when not in LSP mode.
-                                                assert (context.keep_going);
-                                                return null;
-                                        }
-                                }
-                                defined_variables.add_all (temp_dv);
+				foreach (Variable v in temp_dv) {
+					if (v == null) {
+						// Should not have null variable defined when not in LSP mode.
+						assert (context.keep_going);
+						return null;
+					}
+				}
+				defined_variables.add_all (temp_dv);
 			}
 
 			foreach (Variable variable in defined_variables) {
@@ -377,9 +377,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	void insert_phi_functions (List<BasicBlock> block_list, BasicBlock entry_block) {
 		var assign = get_assignment_map (block_list, entry_block);
 
-                if (assign == null) {
-                        return;
-                }
+		if (assign == null) {
+			return;
+		}
 
 		int counter = 0;
 		var work_list = new ArrayList<BasicBlock> ();
@@ -489,10 +489,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			node.get_defined_variables (defined_variables);
 
 			foreach (Variable variable in defined_variables) {
-                                if (variable == null) {
-                                        assert (context.keep_going);
-                                        continue;
-                                }
+				if (variable == null) {
+					assert (context.keep_going);
+					continue;
+				}
 				process_assignment (var_map, variable);
 			}
 		}
@@ -527,11 +527,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			node.get_defined_variables (defined_variables);
 
 			foreach (Variable variable in defined_variables) {
-                                if (variable == null) {
-                                        // We should not have null variables outside of LSP context.
-                                        assert (context.keep_going);
-                                        continue;
-                                }
+				if (variable == null) {
+					// We should not have null variables outside of LSP context.
+					assert (context.keep_going);
+					continue;
+				}
 				var variable_stack = var_map.get (variable);
 				variable_stack.remove_at (variable_stack.size - 1);
 			}
@@ -548,7 +548,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var_symbol.single_assignment = false;
 		}
 		Variable versioned_var;
-                DataType? var_type = var_symbol.variable_type != null ? var_symbol.variable_type.copy () : null;
+		DataType? var_type = var_symbol.variable_type != null ? var_symbol.variable_type.copy () : null;
 		if (var_symbol is LocalVariable) {
 			versioned_var = new LocalVariable (var_type, var_symbol.name, null, var_symbol.source_reference);
 		} else {
