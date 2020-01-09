@@ -115,9 +115,11 @@ public class Vala.Parser : CodeVisitor {
 		return false;
 	}
 
-	void report_parse_error (ParseError e) {
+	void report_parse_error (ParseError e, bool advance = true) {
 		var begin = get_location ();
-		next ();
+		if (advance) {
+			next ();
+		}
 		Report.error (get_src (begin), "syntax error, " + e.message);
 	}
 
@@ -753,7 +755,7 @@ public class Vala.Parser : CodeVisitor {
 			id = parse_identifier ();
 		} catch (ParseError e) {
 			if (context.keep_going) {
-				report_parse_error (e);
+				report_parse_error (e, false);
 			} else {
 				throw e;
 			}
@@ -775,7 +777,7 @@ public class Vala.Parser : CodeVisitor {
 			id = parse_identifier ();
 		} catch (ParseError e) {
 			if (context.keep_going) {
-				report_parse_error (e);
+				report_parse_error (e, false);
 			} else {
 				throw e;
 			}
@@ -1931,7 +1933,7 @@ public class Vala.Parser : CodeVisitor {
 		var src = get_src (begin);
 		if (context.keep_going) {
 			if (!accept (TokenType.SEMICOLON)) {
-				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())));
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
 			}
 		} else {
 			expect (TokenType.SEMICOLON);
