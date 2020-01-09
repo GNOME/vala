@@ -573,7 +573,7 @@ public class Vala.Parser : CodeVisitor {
 				} catch (ParseError e) {
 					if (context.keep_going) {
 						extra_comma = true;
-						report_parse_error (e);
+						report_parse_error (e, false);
 						// exit this loop, since language server uses
 						// number of correctly-supplied arguments from
 						// the left to determine which argument to complete
@@ -903,7 +903,17 @@ public class Vala.Parser : CodeVisitor {
 			return parse_array_creation_expression ();
 		}
 
-		var member = parse_member_name ();
+		MemberAccess? member;
+		try {
+			member = parse_member_name ();
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				member = null;
+				report_parse_error (e);
+			} else {
+				throw e;        // rethrow
+			}
+		}
 		if (accept (TokenType.OPEN_PARENS)) {
 			var expr = parse_object_creation_expression (begin, member);
 			return expr;
@@ -918,6 +928,9 @@ public class Vala.Parser : CodeVisitor {
 			if (accept (TokenType.OPEN_BRACKET)) {
 				rollback (begin);
 				var expr = parse_array_creation_expression ();
+				return expr;
+			} else if (context.keep_going) {
+				var expr = new ObjectCreationExpression.incomplete (member, get_src (begin));
 				return expr;
 			} else {
 				throw new ParseError.SYNTAX ("expected ( or [");
@@ -944,9 +957,11 @@ public class Vala.Parser : CodeVisitor {
 		foreach (Expression arg in arg_list) {
 			expr.add_argument (arg);
 		}
+		expr.initial_argument_count = arg_list.size;
 		foreach (MemberInitializer initializer in init_list) {
 			expr.add_member_initializer (initializer);
 		}
+		expr.extra_comma = extra_comma;
 		return expr;
 	}
 
@@ -3651,25 +3666,34 @@ public class Vala.Parser : CodeVisitor {
 		MemberAccess expr = null;
 		bool first = true;
 		do {
-			string id = parse_identifier ();
+			try {
+				string id = parse_identifier ();
 
-			// The first member access can be global:: qualified
-			bool qualified = false;
-			if (first && id == "global" && accept (TokenType.DOUBLE_COLON)) {
-				id = parse_identifier ();
-				qualified = true;
-			}
+				// The first member access can be global:: qualified
+				bool qualified = false;
+				if (first && id == "global" && accept (TokenType.DOUBLE_COLON)) {
+					id = parse_identifier ();
+					qualified = true;
+				}
 
-			List<DataType> type_arg_list = parse_type_argument_list (false);
-			expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
-			expr.qualified = qualified;
-			if (type_arg_list != null) {
-				foreach (DataType type_arg in type_arg_list) {
-					expr.add_type_argument (type_arg);
+				List<DataType> type_arg_list = parse_type_argument_list (false);
+				expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
+				expr.qualified = qualified;
+				if (type_arg_list != null) {
+					foreach (DataType type_arg in type_arg_list) {
+						expr.add_type_argument (type_arg);
+					}
+				}
+
+				first = false;
+			} catch (ParseError e) {
+				if (!context.keep_going || first) {
+					throw e;
+				} else {
+					report_parse_error (e);
+					return expr;
 				}
 			}
-
-			first = false;
 		} while (accept (TokenType.DOT));
 		return expr;
 	}
