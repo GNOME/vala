@@ -53,6 +53,11 @@ public class Vala.MethodCall : Expression {
 	 */
 	public int initial_argument_count { get; set; }
 
+	/**
+	 * For language servers, whether there is an extra comma at the end of the argument list.
+	 */
+	public bool extra_comma { get; set; }
+
 	private Expression _call;
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
