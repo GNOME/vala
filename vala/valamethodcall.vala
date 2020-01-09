@@ -42,21 +42,18 @@ public class Vala.MethodCall : Expression {
 	public bool is_assert { get; private set; }
 
 	/**
+	 * For language servers, the initial number of arguments added from
+	 * parsing. We need this to figure out how many user-supplied arguments
+	 * there are.
+	 */
+	public int initial_argument_count { get; set; }
+
+	/**
 	 * Whether this chain up uses the constructv function with va_list.
 	 */
 	public bool is_constructv_chainup { get; private set; }
 
 	public bool is_chainup { get; private set; }
-
-	/**
-	 * For language servers, the number of completed arguments from the left.
-	 */
-	public int initial_argument_count { get; set; }
-
-	/**
-	 * For language servers, whether there is an extra comma at the end of the argument list.
-	 */
-	public bool extra_comma { get; set; }
 
 	private Expression _call;
 
