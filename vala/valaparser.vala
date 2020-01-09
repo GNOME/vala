@@ -573,7 +573,7 @@ public class Vala.Parser : CodeVisitor {
 				} catch (ParseError e) {
 					if (context.keep_going) {
 						extra_comma = true;
-						report_parse_error (e);
+						report_parse_error (e, false);
 						// exit this loop, since language server uses
 						// number of correctly-supplied arguments from
 						// the left to determine which argument to complete
@@ -944,9 +944,11 @@ public class Vala.Parser : CodeVisitor {
 		foreach (Expression arg in arg_list) {
 			expr.add_argument (arg);
 		}
+		expr.initial_argument_count = arg_list.size;
 		foreach (MemberInitializer initializer in init_list) {
 			expr.add_member_initializer (initializer);
 		}
+		expr.extra_comma = extra_comma;
 		return expr;
 	}
 
