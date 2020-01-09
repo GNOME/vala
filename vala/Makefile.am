@@ -103,6 +103,7 @@ libvala_la_VALASOURCES = \
 	valainterface.vala \
 	valainterfacetype.vala \
 	valainvalidtype.vala \
+	valainvalidexpression.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
 	valalocalvariable.vala \
