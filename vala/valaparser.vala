@@ -563,14 +563,16 @@ public class Vala.Parser : CodeVisitor {
 		return type;
 	}
 
-	List<Expression> parse_argument_list () throws ParseError {
+	List<Expression> parse_argument_list (out bool extra_comma) throws ParseError {
 		var list = new ArrayList<Expression> ();
+		extra_comma = false;
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
 				try {
 					list.add (parse_argument ());
 				} catch (ParseError e) {
 					if (context.keep_going) {
+						extra_comma = true;
 						report_parse_error (e);
 						// exit this loop, since language server uses
 						// number of correctly-supplied arguments from
@@ -803,7 +805,8 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_method_call (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OPEN_PARENS);
-		var arg_list = parse_argument_list ();
+		bool extra_comma;
+		var arg_list = parse_argument_list (out extra_comma);
 		if (context.keep_going) {
 			if (!accept (TokenType.CLOSE_PARENS)) {
 				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
@@ -835,6 +838,7 @@ public class Vala.Parser : CodeVisitor {
 				expr.add_argument (arg);
 			}
 			expr.initial_argument_count = arg_list.size;
+			expr.extra_comma = extra_comma;
 			return expr;
 		}
 	}
@@ -923,7 +927,8 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		member.creation_member = true;
-		var arg_list = parse_argument_list ();
+		bool extra_comma;
+		var arg_list = parse_argument_list (out extra_comma);
 		expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
 
