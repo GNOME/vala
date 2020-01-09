@@ -29,4 +29,8 @@ public class Vala.InvalidExpression : Expression {
 	public InvalidExpression () {
 		error = true;
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }
