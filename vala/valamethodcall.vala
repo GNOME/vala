@@ -174,8 +174,8 @@ public class Vala.MethodCall : Expression {
 
 		checked = true;
 
-		if ((call is MemberAccess) && ((MemberAccess) call).null_cond_access) {
-			error = !check_null_cond_access (context, this);
+		if ((call is MemberAccess) && ((MemberAccess) call).null_safe_access) {
+			error = !check_null_safe_access (context, this);
 			return !error;
 		}
 

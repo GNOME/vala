@@ -696,7 +696,7 @@ public class Vala.Parser : CodeVisitor {
 		while (found) {
 			switch (current ()) {
 			case TokenType.INTERR:
-				// check for null-conditional member or array access
+				// check for null-safe member or array access
 				next ();
 				if (current () == TokenType.DOT) {
 					expr = parse_member_access (begin, expr, true);
@@ -800,12 +800,12 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Expression parse_member_access (SourceLocation begin, Expression inner, bool null_cond = false) throws ParseError {
+	Expression parse_member_access (SourceLocation begin, Expression inner, bool null_safe = false) throws ParseError {
 		expect (TokenType.DOT);
 		string id = parse_identifier ();
 		List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (inner, id, get_src (begin));
-		expr.null_cond_access = null_cond;
+		expr.null_safe_access = null_safe;
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
 				expr.add_type_argument (type_arg);
@@ -856,7 +856,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Expression parse_element_access (SourceLocation begin, Expression inner, bool null_cond = false) throws ParseError {
+	Expression parse_element_access (SourceLocation begin, Expression inner, bool null_safe = false) throws ParseError {
 		Expression? stop = null;
 		List<Expression> index_list;
 
@@ -881,14 +881,14 @@ public class Vala.Parser : CodeVisitor {
 
 		if (stop == null) {
 			var expr = new ElementAccess (inner, get_src (begin));
-			expr.null_cond_access = null_cond;
+			expr.null_safe_access = null_safe;
 			foreach (Expression index in index_list) {
 				expr.append_index (index);
 			}
 			return expr;
 		} else {
 			var expr = new SliceExpression (inner, index_list[0], stop, get_src (begin));
-			expr.null_cond_access = null_cond;
+			expr.null_safe_access = null_safe;
 			return expr;
 		}
 	}

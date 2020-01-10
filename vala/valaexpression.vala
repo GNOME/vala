@@ -127,11 +127,11 @@ public abstract class Vala.Expression : CodeNode {
 	}
 
 	/**
-	 * Adds null checks to a null-conditional expression.
+	 * Adds null checks to a null-safe expression.
 	 * @param context code context
-	 * @param expr null-conditional expression (MemberAccess, ElementAccess, SliceExpression or MethodCall)
+	 * @param expr null-safe expression (MemberAccess, ElementAccess, SliceExpression or MethodCall)
 	 */
-	public static bool check_null_cond_access (CodeContext context, Expression expr) {
+	public static bool check_null_safe_access (CodeContext context, Expression expr) {
 		unowned SourceReference source_reference = expr.source_reference;
 		unowned MethodCall? call = expr as MethodCall;
 		unowned Expression access = call != null ? call.call : expr;
@@ -186,7 +186,7 @@ public abstract class Vala.Expression : CodeNode {
 			return false;
 		}
 
-		// create an equivalent non null-conditional expression
+		// create an equivalent non null-safe expression
 		Expression? non_null_expr = null;
 
 		Expression inner_access = new MemberAccess.simple (inner_local.name, source_reference);
@@ -211,7 +211,7 @@ public abstract class Vala.Expression : CodeNode {
 		}
 
 		if (non_null_expr.value_type == null) {
-			Report.error (source_reference, "invalid null-conditional expression");
+			Report.error (source_reference, "invalid null-safe expression");
 			return false;
 		}
 
@@ -235,8 +235,8 @@ public abstract class Vala.Expression : CodeNode {
 			var non_null_block = new Block (source_reference);
 			non_null_block.add_statement (non_null_stmt);
 
-			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
-			var non_null_ifstmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+			var non_null_safe = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
 
 			unowned ExpressionStatement? parent_stmt = expr.parent_node as ExpressionStatement;
 			unowned Block? parent_block = parent_stmt != null ? parent_stmt.parent_node as Block : null;
@@ -267,11 +267,11 @@ public abstract class Vala.Expression : CodeNode {
 			}
 
 			// assign the non-conditional member access if the inner expression is not null
-			var non_null_cond = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_safe = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
 			var non_null_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), non_null_expr, AssignmentOperator.SIMPLE, source_reference), source_reference);
 			var non_null_block = new Block (source_reference);
 			non_null_block.add_statement (non_null_stmt);
-			var non_null_ifstmt = new IfStatement (non_null_cond, non_null_block, null, source_reference);
+			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
 			expr.insert_statement (context.analyzer.insert_block, non_null_ifstmt);
 
 			if (!non_null_ifstmt.check (context)) {
