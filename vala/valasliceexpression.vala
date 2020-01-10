@@ -59,9 +59,9 @@ public class Vala.SliceExpression : Expression {
 	}
 
 	/**
-	 * Null-conditional access.
+	 * Null-safe access.
 	 */
-	public bool null_cond_access { get; set; }
+	public bool null_safe_access { get; set; }
 
 	Expression _container;
 	Expression _start;
@@ -114,8 +114,8 @@ public class Vala.SliceExpression : Expression {
 
 		checked = true;
 
-		if (null_cond_access) {
-			error = !check_null_cond_access (context, this);
+		if (null_safe_access) {
+			error = !check_null_safe_access (context, this);
 			return !error;
 		}
 
