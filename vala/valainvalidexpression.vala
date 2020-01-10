@@ -26,11 +26,20 @@ using GLib;
  * An invalid expression.
  */
 public class Vala.InvalidExpression : Expression {
-	public InvalidExpression () {
+	public InvalidExpressionType kind { get; private set; }
+
+	public InvalidExpression (InvalidExpressionType kind = InvalidExpressionType.NONE, SourceReference? source_reference = null) {
 		error = true;
 	}
 
 	public override bool is_pure () {
 		return false;
 	}
+}
+
+public enum Vala.InvalidExpressionType {
+	NONE,
+	ARGUMENT,
+	EMPTY,
+	INCOMPLETE
 }

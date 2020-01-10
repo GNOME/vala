@@ -567,11 +567,12 @@ public class Vala.Parser : CodeVisitor {
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
+				var begin = get_location ();
 				try {
 					list.add (parse_argument ());
 				} catch (ParseError e) {
 					if (context.keep_going) {
-						list.add (new InvalidExpression ());
+						list.add (new InvalidExpression (InvalidExpressionType.ARGUMENT, get_src (begin)));
 						report_parse_error (e, false);
 						// exit this loop, since language server uses
 						// number of correctly-supplied arguments from
@@ -926,7 +927,7 @@ public class Vala.Parser : CodeVisitor {
 				var expr = parse_array_creation_expression ();
 				return expr;
 			} else if (context.keep_going) {
-				var expr = new ObjectCreationExpression.incomplete (member, get_src (begin));
+				var expr = new InvalidExpression (InvalidExpressionType.INCOMPLETE, get_src (begin));
 				return expr;
 			} else {
 				throw new ParseError.SYNTAX ("expected ( or [");
