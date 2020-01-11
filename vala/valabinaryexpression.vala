@@ -199,10 +199,21 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
-			if (!right.check (context)) {
+			string temp_name = get_temp_name ();
+
+			// right expression is checked under a block (required for short-circuiting)
+			var right_local = new LocalVariable (null, temp_name, right, right.source_reference);
+			var right_decl = new DeclarationStatement (right_local, right.source_reference);
+			var true_block = new Block (source_reference);
+			true_block.add_statement (right_decl);
+
+			if (!true_block.check (context)) {
 				error = true;
 				return false;
 			}
+
+			// right expression may have been replaced by the check
+			right = right_local.initializer;
 
 			DataType local_type = null;
 			bool cast_non_null = false;
@@ -240,26 +251,32 @@ public class Vala.BinaryExpression : Expression {
 				local_type.value_owned = true;
 			}
 
-			var local = new LocalVariable (local_type, get_temp_name (), left, source_reference);
+			var local = new LocalVariable (local_type, temp_name, left, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
-			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
-
-			var true_block = new Block (source_reference);
-
-			true_block.add_statement (right_stmt);
-
-			var cond = new BinaryExpression (BinaryOperator.EQUALITY, new MemberAccess.simple (local.name, left.source_reference), new NullLiteral (source_reference), source_reference);
-
-			var if_stmt = new IfStatement (cond, true_block, null, source_reference);
-
 			insert_statement (context.analyzer.insert_block, decl);
-			insert_statement (context.analyzer.insert_block, if_stmt);
 
 			if (!decl.check (context)) {
 				error = true;
 				return false;
 			}
+
+			// replace the temporary local variable used to compute the type of the right expression by an assignment
+			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
+
+			true_block.remove_local_variable (right_local);
+			true_block.replace_statement (right_decl, right_stmt);
+
+			if (!right_stmt.check (context)) {
+				error = true;
+				return false;
+			}
+
+			var cond = new BinaryExpression (BinaryOperator.EQUALITY, new MemberAccess.simple (local.name, left.source_reference), new NullLiteral (source_reference), source_reference);
+
+			var if_stmt = new IfStatement (cond, true_block, null, source_reference);
+
+			insert_statement (context.analyzer.insert_block, if_stmt);
 
 			if (!if_stmt.check (context)) {
 				error = true;
