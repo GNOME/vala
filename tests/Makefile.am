@@ -165,8 +165,10 @@ TESTS = \
 	control-flow/assigned-local-variable.vala \
 	control-flow/break.vala \
 	control-flow/break-invalid.test \
+	control-flow/coalesce-execution-order.vala \
 	control-flow/coalesce-reference-transfer.vala \
 	control-flow/coalesce-right-value.vala \
+	control-flow/coalesce-short-circuit.vala \
 	control-flow/continue-invalid.test \
 	control-flow/double-catch.test \
 	control-flow/expressions-conditional.vala \
@@ -194,6 +196,7 @@ TESTS = \
 	control-flow/bug691514.vala	\
 	control-flow/bug736774-1.vala \
 	control-flow/bug736774-2.vala \
+	control-flow/bug764440.vala \
 	control-flow/bug790903.test \
 	control-flow/bug790903-2.test \
 	control-semantic/argument-extra.test \
