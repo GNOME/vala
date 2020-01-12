@@ -725,8 +725,11 @@ public class Vala.Parser : CodeVisitor {
 				tuple.add_expression (expr);
 			}
 			return tuple;
+		} else {
+			var expr = expr_list.get (0);
+			expr.source_reference = get_src (begin);
+			return expr;
 		}
-		return expr_list.get (0);
 	}
 
 	Expression parse_template () throws ParseError {
