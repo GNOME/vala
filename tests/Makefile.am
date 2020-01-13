@@ -701,7 +701,11 @@ TESTS = \
 	semantic/class-base-type-multiple.test \
 	semantic/class-compact-field-class.test \
 	semantic/class-compact-field-lock.test \
-	semantic/class-compact-field-private.test \
+	semantic/class-compact-opaque.vala \
+	semantic/class-compact-mixed-field-access.test \
+	semantic/class-compact-abstract-method-private-field.test \
+	semantic/class-compact-automatic-property.vala \
+	semantic/class-compact-automatic-property-public-field.test \
 	semantic/class-compact-derived-instance-field.test \
 	semantic/class-compact-interface.test \
 	semantic/class-compact-method-baseaccess.test \

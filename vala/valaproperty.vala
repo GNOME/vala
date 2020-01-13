@@ -419,6 +419,11 @@ public class Vala.Property : Symbol, Lockable {
 				Report.error (source_reference, "Abstract and virtual properties may not be declared in derived compact classes");
 				return false;
 			}
+			if (cl.is_compact && cl.has_private_fields) {
+				error = true;
+				Report.error (source_reference, "Abstract and virtual properties may not be declared in compact classes with private fields");
+				return false;
+			}
 		}
 
 		if (is_abstract) {
