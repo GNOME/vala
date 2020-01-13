@@ -2,7 +2,8 @@ Invalid Code
 
 [Compact]
 class Foo {
-	int i;
+	public int i;
+	int j;
 }
 
 void main () {

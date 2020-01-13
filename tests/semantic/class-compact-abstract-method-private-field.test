@@ -1,0 +1,10 @@
+Invalid Code
+
+[Compact]
+class Foo {
+	int i;
+	public abstract void bar ();
+}
+
+void main () {
+}

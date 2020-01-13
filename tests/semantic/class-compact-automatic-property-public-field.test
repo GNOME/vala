@@ -1,0 +1,7 @@
+Invalid Code
+
+[Compact]
+public class Foo {
+	public int i;
+	public bool bar { get; set; }
+}
