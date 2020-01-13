@@ -59,6 +59,10 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
+	public bool is_opaque {
+		get { return is_compact && !has_non_private_fields; }
+	}
+
 	/**
 	 * Instances of immutable classes are immutable after construction.
 	 */
@@ -99,6 +103,8 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; set; }
+
+	public bool has_non_private_fields { get; set; }
 
 	/**
 	 * Specifies whether this class has class fields.
@@ -255,6 +261,8 @@ public class Vala.Class : ObjectTypeSymbol {
 			has_private_fields = true;
 		} else if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.CLASS) {
 			has_class_private_fields = true;
+		} else if (f.access != SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
+			has_non_private_fields = true;
 		}
 	}
 
@@ -590,8 +598,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Field f in get_fields ()) {
 			if (is_compact && f.binding != MemberBinding.STATIC) {
 				//FIXME Should external bindings follow this too?
-				if (!external_package && f.access == SymbolAccessibility.PRIVATE) {
-					Report.error (source_reference, "private fields are not supported in compact classes");
+				if (!external_package && f.access == SymbolAccessibility.PRIVATE && has_non_private_fields) {
+					Report.error (source_reference, "having both private and non-private fields is not supported in compact classes");
 					error = true;
 				}
 				if (f.binding == MemberBinding.CLASS) {
