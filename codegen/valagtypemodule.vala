@@ -275,9 +275,9 @@ public class Vala.GTypeModule : GErrorModule {
 				} else if (s is Property) {
 					var prop = (Property) s;
 					generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
-				} else if (s is Field) {
+				} else if (s is Field && s.access != SymbolAccessibility.PRIVATE) {
 					var f = (Field) s;
-					generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
+					generate_struct_field_declaration (f, instance_struct, type_struct, decl_space, ref has_struct_member);
 				} else {
 					Report.error (s.source_reference, "internal: Unsupported symbol");
 				}
@@ -298,7 +298,9 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			foreach (Field f in cl.get_fields ()) {
-				generate_struct_field_declaration (cl, f, instance_struct, type_struct, decl_space, ref has_struct_member);
+				if (f.access != SymbolAccessibility.PRIVATE) {
+					generate_struct_field_declaration (f, instance_struct, type_struct, decl_space, ref has_struct_member);
+				}
 			}
 		}
 
@@ -403,15 +405,10 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	void generate_struct_field_declaration (ObjectTypeSymbol type_sym, Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
-		if (f.access == SymbolAccessibility.PRIVATE) {
-			return;
-		}
-
+	void generate_struct_field_declaration (Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
 		CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 		if (f.binding == MemberBinding.INSTANCE) {
 			generate_type_declaration (f.variable_type, decl_space);
-
 			instance_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
 			has_struct_member = true;
 			generate_composite_field_declaration (f, instance_struct, decl_space);
@@ -492,26 +489,17 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
+		bool has_struct_member = false;
 		foreach (Field f in cl.get_fields ()) {
-			CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
-			if (f.binding == MemberBinding.INSTANCE) {
-				if (f.access == SymbolAccessibility.PRIVATE)  {
-					generate_type_declaration (f.variable_type, decl_space);
-					instance_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers, get_ccode_declarator_suffix (f.variable_type));
-					generate_composite_field_declaration (f, instance_priv_struct, decl_space);
-				}
-
-				if (f.lock_used) {
+			if (f.access == SymbolAccessibility.PRIVATE) {
+				generate_struct_field_declaration (f, instance_priv_struct, type_priv_struct, decl_space, ref has_struct_member);
+			}
+			if (f.lock_used) {
+				if (f.binding == MemberBinding.INSTANCE) {
 					cl.has_private_fields = true;
 					// add field for mutex
 					instance_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
-				}
-			} else if (f.binding == MemberBinding.CLASS) {
-				if (f.access == SymbolAccessibility.PRIVATE) {
-					type_priv_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
-				}
-
-				if (f.lock_used) {
+				} else if (f.binding == MemberBinding.CLASS) {
 					has_class_locks = true;
 					// add field for mutex
 					type_priv_struct.add_field (get_ccode_name (mutex_type), get_symbol_lock_name (get_ccode_name (f)));
