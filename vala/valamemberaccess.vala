@@ -976,7 +976,7 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		// Analyze the inner expression to get its value type
+		// analyze the inner expression to get its value type
 		if (!inner.check (context)) {
 			error = true;
 			return false;
@@ -988,9 +988,8 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		// Declare the inner expression as a local variable to check for null
+		// declare the inner expression as a local variable to check for null
 		var inner_type = inner.value_type.copy ();
-		inner_type.value_owned = false;
 		if (context.experimental_non_null && !inner_type.nullable) {
 			Report.warning (inner.source_reference, "inner expression is never null");
 			inner_type.nullable = true;
@@ -1004,12 +1003,19 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		// Create an equivalent, but non null-conditional, member access expression
+		// create an equivalent, but non null-conditional, member access expression
 		Expression inner_access = new MemberAccess.simple (inner_local.name, source_reference);
+
 		if (context.experimental_non_null) {
 			inner_access = new CastExpression.non_null (new MemberAccess.simple (inner_local.name, source_reference), source_reference);
 		}
-		var non_null_access = new MemberAccess (inner_access, member_name, source_reference);
+
+		Expression non_null_access = new MemberAccess (inner_access, member_name, source_reference);
+
+		if (parent_node is ReferenceTransferExpression) {
+			// conditional member access with ownership transfer
+			non_null_access = new ReferenceTransferExpression (non_null_access, source_reference);
+		}
 
 		if (!non_null_access.check (context)) {
 			error = true;
@@ -1022,9 +1028,17 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		// Declare a null local variable for the result
+		// declare a null local variable for the result
 		var result_type = non_null_access.value_type.copy ();
-		result_type.nullable = true;
+
+		if (!result_type.nullable) {
+			if (result_type is ValueType) {
+				// value must be owned, otherwise the local variable may receive a stale pointer to the stack
+				result_type.value_owned = true;
+			}
+			result_type.nullable = true;
+		}
+
 		var result_local = new LocalVariable (result_type, get_temp_name (), new NullLiteral (source_reference), source_reference);
 		var result_decl = new DeclarationStatement (result_local, source_reference);
 		insert_statement (context.analyzer.insert_block, result_decl);
@@ -1046,11 +1060,20 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		var result_access = new MemberAccess.simple (result_local.name, source_reference);
-		result_access.formal_target_type = formal_target_type;
-		result_access.target_type = target_type;
-
+		var result_access = SemanticAnalyzer.create_temp_access (result_local, target_type);
 		parent_node.replace_expression (this, result_access);
+
+		if (lvalue) {
+			if (parent_node is ReferenceTransferExpression) {
+				// ownership transfer is supported
+				result_access.lvalue = true;
+			} else {
+				error = true;
+				Report.error (source_reference, "conditional member access not supported as lvalue here");
+				return false;
+			}
+		}
+
 		return result_access.check (context);
 	}
 

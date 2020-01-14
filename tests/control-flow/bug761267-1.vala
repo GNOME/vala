@@ -17,7 +17,7 @@ void bar (Foo? f) {
 	}
 	{
 		int k = 23;
-		k = f?.i;
+		k = f?.i ?? 0;
 		assert (k == 0);
 	}
 }
@@ -34,7 +34,7 @@ void baz (Foo? f) {
 	}
 	{
 		int k = 23;
-		k = f?.foo ()?.i;
+		k = f?.foo ()?.i ?? 0;
 		assert (k == 0);
 	}
 }

@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	public int i;
+}
+
+void main () {
+	Foo? f = new Foo ();
+	f?.i = 56;
+}
