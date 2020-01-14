@@ -246,6 +246,7 @@ public abstract class Vala.Expression : CodeNode {
 				return false;
 			}
 
+			context.analyzer.replaced_nodes.add (parent_stmt);
 			parent_block.replace_statement (parent_stmt, non_null_ifstmt);
 			return non_null_ifstmt.check (context);
 		} else {
@@ -279,6 +280,7 @@ public abstract class Vala.Expression : CodeNode {
 			}
 
 			var result_access = SemanticAnalyzer.create_temp_access (result_local, expr.target_type);
+			context.analyzer.replaced_nodes.add (expr);
 			expr.parent_node.replace_expression (expr, result_access);
 			return result_access.check (context);
 		}
