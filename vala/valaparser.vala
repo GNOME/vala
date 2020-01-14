@@ -736,7 +736,12 @@ public class Vala.Parser : CodeVisitor {
 			expr.source_reference = get_src (begin);
 			return expr;
 		}
-	}
+                var expr = expr_list.get (0);
+                // expand the Expression's SourceReference to include the extra
+                // parentheses around it
+                expr.source_reference = get_src (begin);
+                return expr;
+        }
 
 	Expression parse_template () throws ParseError {
 		var begin = get_location ();
