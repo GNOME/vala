@@ -164,7 +164,7 @@ public struct int {
 		}
 		if (int.MIN <= long_result <= int.MAX) {
 			result = (int) long_result;
-			return errno != ERANGE && errno != EINVAL;
+			return errno != ERANGE && errno != EINVAL && unparsed != endptr;
 		} else {
 			result = int.MAX;
 			return false;
@@ -225,7 +225,7 @@ public struct uint {
 		}
 		if (uint.MIN <= ulong_result <= uint.MAX) {
 			result = (uint) ulong_result;
-			return errno != ERANGE && errno != EINVAL;
+			return errno != ERANGE && errno != EINVAL && unparsed != endptr;
 		} else {
 			result = uint.MAX;
 			return false;
