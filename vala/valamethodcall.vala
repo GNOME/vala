@@ -766,6 +766,7 @@ public class Vala.MethodCall : Expression {
 				return false;
 			}
 
+			context.analyzer.replaced_nodes.add (parent_stmt);
 			parent_block.replace_statement (parent_stmt, non_null_ifstmt);
 			return non_null_ifstmt.check (context);
 		} else {
@@ -800,6 +801,7 @@ public class Vala.MethodCall : Expression {
 			}
 
 			var result_access = SemanticAnalyzer.create_temp_access (result_local, target_type);
+			context.analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, result_access);
 
 			return result_access.check (context);

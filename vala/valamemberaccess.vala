@@ -1061,6 +1061,7 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		var result_access = SemanticAnalyzer.create_temp_access (result_local, target_type);
+		context.analyzer.replaced_nodes.add (this);
 		parent_node.replace_expression (this, result_access);
 
 		if (lvalue) {
