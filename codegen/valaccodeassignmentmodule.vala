@@ -83,7 +83,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		if (assignment.left.value_type is ArrayType && (((ArrayType) assignment.left.value_type).inline_allocated)) {
 			return load_variable (variable, assignment.left.target_value);
 		} else {
-			return assignment.right.target_value;
+			return assignment.left.target_value;
 		}
 	}
 
