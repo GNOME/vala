@@ -733,15 +733,12 @@ public class Vala.Parser : CodeVisitor {
 			return tuple;
 		} else {
 			var expr = expr_list.get (0);
+			// expand the Expression's SourceReference to include the extra
+			// parentheses around it
 			expr.source_reference = get_src (begin);
 			return expr;
 		}
-                var expr = expr_list.get (0);
-                // expand the Expression's SourceReference to include the extra
-                // parentheses around it
-                expr.source_reference = get_src (begin);
-                return expr;
-        }
+	}
 
 	Expression parse_template () throws ParseError {
 		var begin = get_location ();
@@ -1579,7 +1576,8 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	void parse_statements (Block block) throws ParseError {
+	void parse_statements (Block block) {
+		var begin = get_location ();
 		while (current () != TokenType.CLOSE_BRACE
 		       && current () != TokenType.CASE
 		       && current () != TokenType.DEFAULT
@@ -1589,6 +1587,7 @@ public class Vala.Parser : CodeVisitor {
 				bool is_decl = false;
 
 				comment = scanner.pop_comment ();
+				begin = get_location ();
 				switch (current ()) {
 				case TokenType.OPEN_BRACE:
 					stmt = parse_block ();
@@ -1673,6 +1672,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 			} catch (ParseError e) {
 				report_parse_error (e);
+				rollback (begin);
 				if (recover () != RecoveryState.STATEMENT_BEGIN) {
 					// beginning of next declaration or end of file reached
 					// return what we have so far
@@ -2542,7 +2542,7 @@ public class Vala.Parser : CodeVisitor {
 						break;
 					}
 				} while (true);
-				if (r == RecoveryState.EOF) {
+				if (r == RecoveryState.END_OF_BLOCK || r == RecoveryState.EOF) {
 					return;
 				}
 			}
@@ -2560,10 +2560,12 @@ public class Vala.Parser : CodeVisitor {
 	enum RecoveryState {
 		EOF,
 		DECLARATION_BEGIN,
-		STATEMENT_BEGIN
+		STATEMENT_BEGIN,
+		END_OF_BLOCK
 	}
 
 	RecoveryState recover () {
+		int unbalanced_open_braces = 1;
 		while (current () != TokenType.EOF) {
 			switch (current ()) {
 			case TokenType.ABSTRACT:
@@ -2607,6 +2609,18 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.WHILE:
 			case TokenType.YIELD:
 				return RecoveryState.STATEMENT_BEGIN;
+			case TokenType.OPEN_BRACE:
+				unbalanced_open_braces++;
+				next ();
+				break;
+			case TokenType.CLOSE_BRACE:
+				if (unbalanced_open_braces == 1) {
+					return RecoveryState.END_OF_BLOCK;
+				} else {
+					unbalanced_open_braces--;
+					next ();
+				}
+				break;
 			default:
 				next ();
 				break;
