@@ -190,6 +190,7 @@ public abstract class Vala.Expression : CodeNode {
 		Expression? non_null_expr = null;
 
 		Expression inner_access = new MemberAccess.simple (inner_local.name, source_reference);
+
 		if (context.experimental_non_null) {
 			inner_access = new CastExpression.non_null (inner_access, source_reference);
 		}
@@ -204,6 +205,12 @@ public abstract class Vala.Expression : CodeNode {
 			non_null_expr = non_null_elem_access;
 		} else if (slice_expr != null) {
 			non_null_expr = new SliceExpression (inner_access, slice_expr.start, slice_expr.stop, source_reference);
+		}
+
+		if ((member_access != null || elem_access != null)
+				&& access.parent_node is ReferenceTransferExpression) {
+			// preserve ownership transfer
+			non_null_expr = new ReferenceTransferExpression (non_null_expr, source_reference);
 		}
 
 		if (!non_null_expr.check (context)) {
@@ -282,6 +289,17 @@ public abstract class Vala.Expression : CodeNode {
 			var result_access = SemanticAnalyzer.create_temp_access (result_local, expr.target_type);
 			context.analyzer.replaced_nodes.add (expr);
 			expr.parent_node.replace_expression (expr, result_access);
+
+			if (expr.lvalue) {
+				if (non_null_expr is ReferenceTransferExpression) {
+					// ownership can be transferred transitively
+					result_access.lvalue = true;
+				} else {
+					Report.error (source_reference, "null-safe expression not supported as lvalue");
+					return false;
+				}
+			}
+
 			return result_access.check (context);
 		}
 	}
