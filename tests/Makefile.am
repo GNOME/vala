@@ -153,6 +153,7 @@ TESTS = \
 	methods/bug791283.vala \
 	methods/argument-array-initilizer.vala \
 	methods/generics.vala \
+	methods/params-array.vala \
 	methods/print-attribute.vala \
 	methods/print-attribute-invalid.test \
 	methods/printf-invalid.test \
@@ -512,6 +513,7 @@ TESTS = \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
+	asynchronous/params-array-invalid.test \
 	asynchronous/result-pos.vala \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
@@ -809,6 +811,8 @@ TESTS = \
 	semantic/parameter-params.test \
 	semantic/parameter-ref-default.test \
 	semantic/parameter-void.test \
+	semantic/params-array-multiple.test \
+	semantic/params-array-struct-length.test \
 	semantic/pointer-indirection-type-not-supported.test \
 	semantic/pointer-indirection-void-not-supported.test \
 	semantic/property-abstract.test \
