@@ -1,0 +1,7 @@
+Invalid Code
+
+void foo (params string[] strv, params int[] intv) {
+}
+
+void main () {
+}
