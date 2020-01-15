@@ -115,7 +115,7 @@ public class Vala.SliceExpression : Expression {
 		checked = true;
 
 		if (null_safe_access) {
-			error = !check_null_safe_access (context, this);
+			error = !check_null_safe_access (context);
 			return !error;
 		}
 

@@ -129,12 +129,10 @@ public abstract class Vala.Expression : CodeNode {
 	/**
 	 * Adds null checks to a null-safe expression.
 	 * @param context code context
-	 * @param expr null-safe expression (MemberAccess, ElementAccess, SliceExpression or MethodCall)
 	 */
-	public static bool check_null_safe_access (CodeContext context, Expression expr) {
-		unowned SourceReference source_reference = expr.source_reference;
-		unowned MethodCall? call = expr as MethodCall;
-		unowned Expression access = call != null ? call.call : expr;
+	public bool check_null_safe_access (CodeContext context) {
+		unowned MethodCall? call = this as MethodCall;
+		unowned Expression access = call != null ? call.call : this;
 		unowned MemberAccess member_access = access as MemberAccess;
 		unowned ElementAccess elem_access = access as ElementAccess;
 		unowned SliceExpression slice_expr = access as SliceExpression;
@@ -180,7 +178,7 @@ public abstract class Vala.Expression : CodeNode {
 		var inner_local = new LocalVariable (inner_type, get_temp_name (), inner, inner.source_reference);
 
 		var inner_decl = new DeclarationStatement (inner_local, inner.source_reference);
-		expr.insert_statement (context.analyzer.insert_block, inner_decl);
+		insert_statement (context.analyzer.insert_block, inner_decl);
 
 		if (!inner_decl.check (context)) {
 			return false;
@@ -245,7 +243,7 @@ public abstract class Vala.Expression : CodeNode {
 			var non_null_safe = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
 			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
 
-			unowned ExpressionStatement? parent_stmt = expr.parent_node as ExpressionStatement;
+			unowned ExpressionStatement? parent_stmt = parent_node as ExpressionStatement;
 			unowned Block? parent_block = parent_stmt != null ? parent_stmt.parent_node as Block : null;
 
 			if (parent_stmt == null || parent_block == null) {
@@ -268,7 +266,7 @@ public abstract class Vala.Expression : CodeNode {
 			var result_local = new LocalVariable (result_type, get_temp_name (), new NullLiteral (source_reference), source_reference);
 
 			var result_decl = new DeclarationStatement (result_local, source_reference);
-			expr.insert_statement (context.analyzer.insert_block, result_decl);
+			insert_statement (context.analyzer.insert_block, result_decl);
 
 			if (!result_decl.check (context)) {
 				return false;
@@ -280,17 +278,17 @@ public abstract class Vala.Expression : CodeNode {
 			var non_null_block = new Block (source_reference);
 			non_null_block.add_statement (non_null_stmt);
 			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
-			expr.insert_statement (context.analyzer.insert_block, non_null_ifstmt);
+			insert_statement (context.analyzer.insert_block, non_null_ifstmt);
 
 			if (!non_null_ifstmt.check (context)) {
 				return false;
 			}
 
-			var result_access = SemanticAnalyzer.create_temp_access (result_local, expr.target_type);
-			context.analyzer.replaced_nodes.add (expr);
-			expr.parent_node.replace_expression (expr, result_access);
+			var result_access = SemanticAnalyzer.create_temp_access (result_local, target_type);
+			context.analyzer.replaced_nodes.add (this);
+			parent_node.replace_expression (this, result_access);
 
-			if (expr.lvalue) {
+			if (lvalue) {
 				if (non_null_expr is ReferenceTransferExpression) {
 					// ownership can be transferred transitively
 					result_access.lvalue = true;
