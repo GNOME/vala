@@ -190,6 +190,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.CONSTRUCT:
 		case TokenType.CONTINUE:
 		case TokenType.DEFAULT:
+		case TokenType.DEFINE:
 		case TokenType.DELEGATE:
 		case TokenType.DELETE:
 		case TokenType.DO:
@@ -2295,6 +2296,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		switch (current ()) {
+		case TokenType.DEFINE:
+			rollback (begin);
+			parse_define (parent);
+			return;
 		case TokenType.CONSTRUCT:
 			if (context.profile == Profile.GOBJECT) {
 				rollback (begin);
@@ -2569,6 +2574,25 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.SEMICOLON);
 		}
+	}
+
+	void parse_define (Symbol parent) throws ParseError {
+		if (parent != context.root) {
+			throw new ParseError.SYNTAX ("`define' expressions allowed only in root namespace");
+		}
+
+		expect (TokenType.DEFINE);
+		do {
+			var begin = get_location ();
+			var name = parse_identifier ();
+			Expression? val = null;
+			if (accept (TokenType.ASSIGN)) {
+				val = parse_literal ();
+			}
+			var def = new Define (name, val, get_src (begin), comment);
+			scanner.source_file.add_define (def);
+		} while (accept (TokenType.COMMA));
+		expect (TokenType.SEMICOLON);
 	}
 
 	void parse_class_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
