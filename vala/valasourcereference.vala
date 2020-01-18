@@ -84,6 +84,15 @@ public class Vala.SourceReference {
 	 * @return human-readable string
 	 */
 	public string to_string () {
+		// FIXME DON'T MERGE THIS
+		if (begin.line > end.line) {
+			Report.error (null, "bad line reference");
+		} else if (begin.line == end.line && begin.column > end.column) {
+			Report.error (null, "bad column reference");
+		} else if (begin.pos > end.pos) {
+			Report.error (null, "bad file position reference");
+		}
+
 		return ("%s:%d.%d-%d.%d".printf (file.get_relative_filename (), begin.line, begin.column, end.line, end.column));
 	}
 }
