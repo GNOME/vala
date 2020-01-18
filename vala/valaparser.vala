@@ -372,7 +372,16 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		UnresolvedSymbol sym = null;
 		do {
-			string name = parse_identifier ();
+			string name = "";
+                        try {
+                                name = parse_identifier ();
+                        } catch (ParseError e) {
+                                if (sym == null || !context.keep_going) {
+                                        throw e;
+                                } else {
+                                        return new UnresolvedSymbol (sym, name, get_src (begin));
+                                }
+                        }
 			if (name == "global" && accept (TokenType.DOUBLE_COLON)) {
 				// global::Name
 				// qualified access to global symbol
