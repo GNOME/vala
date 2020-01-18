@@ -575,12 +575,14 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	List<Expression> parse_argument_list () throws ParseError {
+		expect (TokenType.OPEN_PARENS);
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
 				list.add (parse_argument ());
 			} while (accept (TokenType.COMMA));
 		}
+		expect (TokenType.CLOSE_PARENS);
 		return list;
 	}
 
@@ -786,9 +788,7 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_method_call (SourceLocation begin, Expression inner) throws ParseError {
-		expect (TokenType.OPEN_PARENS);
 		var arg_list = parse_argument_list ();
-		expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
@@ -877,7 +877,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		var member = parse_member_name ();
-		if (accept (TokenType.OPEN_PARENS)) {
+		if (current () == TokenType.OPEN_PARENS) {
 			var expr = parse_object_creation_expression (begin, member);
 			return expr;
 		} else {
@@ -901,7 +901,6 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		member.creation_member = true;
 		var arg_list = parse_argument_list ();
-		expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
 
 		var init_list = parse_object_initializer ();
@@ -2733,8 +2732,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_BRACE);
 		var initializer = new InitializerList (get_src (begin));
 		while (current () != TokenType.CLOSE_BRACE) {
-			var init = parse_argument ();
-			initializer.append (init);
+			initializer.append (parse_argument ());
 
 			if (!accept (TokenType.COMMA)) {
 				break;
