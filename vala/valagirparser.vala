@@ -3130,6 +3130,11 @@ public class Vala.GirParser : CodeVisitor {
 			symbol_type = element_name;
 		}
 
+		string? ctype = null;
+		if (metadata.has_argument (ArgumentType.CTYPE)) {
+			ctype = metadata.get_string (ArgumentType.CTYPE);
+		}
+
 		string name = current.name;
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
@@ -3286,6 +3291,10 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 		current.return_array_length_idx = return_array_length_idx;
+
+		if (ctype != null) {
+			s.set_attribute_string ("CCode", "type", ctype);
+		}
 
 		current.symbol = s;
 
