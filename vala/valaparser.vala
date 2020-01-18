@@ -146,6 +146,11 @@ public class Vala.Parser : CodeVisitor {
 		return tokens[index].begin;
 	}
 
+	string get_location_string () {
+		var begin = get_location ();
+		return "__VALA_L%d_C%d__".printf (begin.line, begin.column);
+	}
+
 	string get_current_string () {
 		var token = tokens[index];
 		return ((string) token.begin.pos).substring (0, (int) (token.end.pos - token.begin.pos));
@@ -287,7 +292,7 @@ public class Vala.Parser : CodeVisitor {
 			if (context.keep_going) {
 				report_parse_error (e);
 				prev ();
-				return "";
+				return get_location_string ();
 			} else {
 				throw e;
 			}
