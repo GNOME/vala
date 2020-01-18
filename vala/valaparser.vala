@@ -287,7 +287,7 @@ public class Vala.Parser : CodeVisitor {
 			if (context.keep_going) {
 				report_parse_error (e);
 				prev ();
-				return "";
+				return get_src (get_location ()).to_source_string ();
 			} else {
 				throw e;
 			}
