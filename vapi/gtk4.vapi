@@ -8989,15 +8989,15 @@ namespace Gtk {
 		public void clear ();
 		[NoWrapper]
 		public virtual void close ();
-		[CCode (cname = "gtk_media_file_new")]
+		[CCode (cname = "gtk_media_file_new", type = "GtkMediaStream*")]
 		public static Gtk.MediaFile empty ();
-		[CCode (cname = "gtk_media_file_new_for_file")]
+		[CCode (cname = "gtk_media_file_new_for_file", type = "GtkMediaStream*")]
 		public static Gtk.MediaFile for_file (GLib.File file);
-		[CCode (cname = "gtk_media_file_new_for_filename")]
+		[CCode (cname = "gtk_media_file_new_for_filename", type = "GtkMediaStream*")]
 		public static Gtk.MediaFile for_filename (string filename);
-		[CCode (cname = "gtk_media_file_new_for_input_stream")]
+		[CCode (cname = "gtk_media_file_new_for_input_stream", type = "GtkMediaStream*")]
 		public static Gtk.MediaFile for_input_stream (GLib.InputStream stream);
-		[CCode (cname = "gtk_media_file_new_for_resource")]
+		[CCode (cname = "gtk_media_file_new_for_resource", type = "GtkMediaStream*")]
 		public static Gtk.MediaFile for_resource (string resource_path);
 		public unowned GLib.File? get_file ();
 		public unowned GLib.InputStream? get_input_stream ();
