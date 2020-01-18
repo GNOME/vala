@@ -579,7 +579,18 @@ public class Vala.Parser : CodeVisitor {
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				list.add (parse_argument ());
+				try {
+					list.add (parse_argument ());
+				} catch (ParseError e) {
+					if (current () == TokenType.CLOSE_PARENS) {
+						prev ();
+						report_parse_error (new ParseError.SYNTAX ("incomplete argument list"));
+					} else if (context.keep_going) {
+						report_parse_error (e);
+					} else {
+						throw e;
+					}
+				}
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
@@ -2732,7 +2743,18 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_BRACE);
 		var initializer = new InitializerList (get_src (begin));
 		while (current () != TokenType.CLOSE_BRACE) {
-			initializer.append (parse_argument ());
+			try {
+				initializer.append (parse_argument ());
+			} catch (ParseError e) {
+				if (current () == TokenType.CLOSE_BRACE) {
+					prev ();
+					report_parse_error (new ParseError.SYNTAX ("incomplete initializer"));
+				} else if (context.keep_going) {
+					report_parse_error (e);
+				} else {
+					throw e;
+				}
+			}
 
 			if (!accept (TokenType.COMMA)) {
 				break;
