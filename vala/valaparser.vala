@@ -1734,8 +1734,16 @@ public class Vala.Parser : CodeVisitor {
 
 		var block = new Block (get_src (get_location ()));
 
-		var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
-		block.add_statement (stmt);
+		try {
+			var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
+			block.add_statement (stmt);
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				report_parse_error (e);
+			} else {
+				throw e;
+			}
+		}
 		block.source_reference.end = get_last_src ().end;
 
 		return block;
