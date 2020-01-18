@@ -281,7 +281,17 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	string parse_identifier () throws ParseError {
-		skip_identifier ();
+		try {
+			skip_identifier ();
+		} catch (ParseError e) {
+			if (context.keep_going) {
+				report_parse_error (e);
+				prev ();
+				return "";
+			} else {
+				throw e;
+			}
+		}
 		return get_last_string ();
 	}
 
