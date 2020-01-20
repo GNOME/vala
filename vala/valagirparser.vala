@@ -1453,6 +1453,14 @@ public class Vala.GirParser : CodeVisitor {
 		return new SourceReference (this.current_source_file, begin, end);
 	}
 
+	SourceReference get_src (SourceLocation begin, SourceLocation? end = null) {
+		var e = this.end;
+		if (end != null) {
+			e = end;
+		}
+		return new SourceReference (this.current_source_file, begin, e);
+	}
+
 	const string GIR_VERSION = "1.2";
 
 	static void add_symbol_to_container (Symbol container, Symbol sym) {
@@ -2467,6 +2475,7 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	Parameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment = null, string? default_name = null) {
+		var begin = this.begin;
 		Parameter param;
 
 		array_length_idx = -1;
@@ -2528,7 +2537,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (reader.name == "varargs") {
 			start_element ("varargs");
 			next ();
-			param = new Parameter.with_ellipsis (get_current_src ());
+			param = new Parameter.with_ellipsis (get_src (begin));
 			end_element ("varargs");
 		} else {
 			string ctype;
@@ -2549,7 +2558,7 @@ public class Vala.GirParser : CodeVisitor {
 				ctype = null;
 			}
 
-			param = new Parameter (name, type, get_current_src ());
+			param = new Parameter (name, type, get_src (begin));
 			if (ctype != null) {
 				param.set_attribute_string ("CCode", "type", ctype);
 			}
