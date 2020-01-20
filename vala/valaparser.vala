@@ -2130,14 +2130,26 @@ public class Vala.Parser : CodeVisitor {
 		if (current () != TokenType.SEMICOLON) {
 			condition = parse_expression ();
 		}
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		var iterator_list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
 				iterator_list.add (parse_statement_expression ());
 			} while (accept (TokenType.COMMA));
 		}
-		expect (TokenType.CLOSE_PARENS);
+		if (context.keep_going) {
+			if (!accept (TokenType.CLOSE_PARENS)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.CLOSE_PARENS.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.CLOSE_PARENS);
+		}
 		var src = get_src (begin);
 		var body = parse_embedded_statement ("for");
 		var stmt = new ForStatement (condition, body, src);
@@ -2180,7 +2192,13 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.BREAK);
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new BreakStatement (src);
 	}
 
@@ -2188,7 +2206,13 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.CONTINUE);
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new ContinueStatement (src);
 	}
 
@@ -2200,7 +2224,13 @@ public class Vala.Parser : CodeVisitor {
 			expr = parse_expression ();
 		}
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new ReturnStatement (expr, src);
 	}
 
@@ -2217,7 +2247,13 @@ public class Vala.Parser : CodeVisitor {
 			return parse_expression_statement ();
 		}
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new YieldStatement (src);
 	}
 
@@ -2226,7 +2262,13 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.THROW);
 		var expr = parse_expression ();
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new ThrowStatement (expr, src);
 	}
 
@@ -2295,7 +2337,13 @@ public class Vala.Parser : CodeVisitor {
 		var expr = parse_expression ();
 		expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new UnlockStatement (expr, src);
 	}
 
@@ -2304,7 +2352,13 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.DELETE);
 		var expr = parse_expression ();
 		var src = get_src (begin);
-		expect (TokenType.SEMICOLON);
+		if (context.keep_going) {
+			if (!accept (TokenType.SEMICOLON)) {
+				report_parse_error (new ParseError.SYNTAX ("expected %s".printf (TokenType.SEMICOLON.to_string ())), false);
+			}
+		} else {
+			expect (TokenType.SEMICOLON);
+		}
 		return new DeleteStatement (expr, src);
 	}
 
