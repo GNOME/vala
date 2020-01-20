@@ -321,7 +321,7 @@ namespace Json {
 		[Version (since = "0.10")]
 		public bool default_deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		[Version (since = "0.10")]
-		public Json.Node default_serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
+		public Json.Node? default_serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		public virtual bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		[Version (since = "0.14")]
 		public virtual unowned GLib.ParamSpec? find_property (string name);

@@ -684,8 +684,4 @@ namespace Graphene {
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_VEC4_LEN")]
 	[Version (since = "1.0")]
 	public const int VEC4_LEN;
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "false")]
-	public const int @false;
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "true")]
-	public const int @true;
 }

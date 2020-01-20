@@ -415,7 +415,6 @@ NumerableIcon
   .new_with_style_context symbol_type="constructor"
 TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
-  .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
 
 // These aren't actually used publicly anywhere.
 TableChild skip

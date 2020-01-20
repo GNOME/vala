@@ -794,6 +794,8 @@ namespace Atk {
 		FOOTNOTE,
 		CONTENT_DELETION,
 		CONTENT_INSERTION,
+		MARK,
+		SUGGESTION,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);
@@ -899,6 +901,7 @@ namespace Atk {
 		STRETCH,
 		VARIANT,
 		STYLE,
+		TEXT_POSITION,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.TextAttribute for_name (string name);

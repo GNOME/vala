@@ -701,6 +701,8 @@ namespace Atspi {
 		FOOTNOTE,
 		CONTENT_DELETION,
 		CONTENT_INSERTION,
+		MARK,
+		SUGGESTION,
 		LAST_DEFINED;
 		public string get_name ();
 	}

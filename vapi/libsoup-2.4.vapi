@@ -489,7 +489,7 @@ namespace Soup {
 		public bool is_past ();
 		public string to_string (Soup.DateFormat format);
 		public time_t to_time_t ();
-		[Version (since = "2.24")]
+		[Version (deprecated = true, since = "2.24")]
 		public GLib.TimeVal to_timeval ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_hsts_enforcer_get_type ()")]

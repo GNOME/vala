@@ -3502,6 +3502,7 @@ namespace GLib {
 		public abstract unowned string? get_negotiated_protocol ();
 		public unowned GLib.TlsCertificate get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
+		[Version (deprecated = true, deprecated_since = "2.64.", since = "2.48")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
 		public bool get_require_close_notify ();
 		public abstract bool handshake (GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3535,7 +3536,7 @@ namespace GLib {
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificateFlags peer_certificate_errors { get; }
 		[ConcreteAccessor]
-		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.48")]
+		[Version (deprecated = true, deprecated_since = "2.60", since = "2.48")]
 		public abstract GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
 		[ConcreteAccessor]
 		public abstract bool require_close_notify { get; set construct; }

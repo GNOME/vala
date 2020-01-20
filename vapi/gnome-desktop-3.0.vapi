@@ -48,13 +48,14 @@ namespace Gnome {
 		public BG ();
 		public bool changes_with_time ();
 		public Gdk.Pixbuf create_frame_thumbnail (Gnome.DesktopThumbnailFactory factory, Gdk.Screen screen, int dest_width, int dest_height, int frame_num);
-		public Cairo.Surface create_surface (Gdk.Window window, int width, int height, bool root);
+		public Cairo.Surface create_surface (Gdk.Window window, int width, int height);
 		public Gdk.Pixbuf create_thumbnail (Gnome.DesktopThumbnailFactory factory, Gdk.Screen screen, int dest_width, int dest_height);
-		public void draw (Gdk.Pixbuf dest, Gdk.Screen screen, bool is_root);
+		public void draw (Gdk.Pixbuf dest);
 		public unowned string get_filename ();
 		public bool get_image_size (Gnome.DesktopThumbnailFactory factory, int best_width, int best_height, int width, int height);
 		public GDesktop.BackgroundStyle get_placement ();
 		public void get_rgba (GDesktop.BackgroundShading type, Gdk.RGBA primary, Gdk.RGBA secondary);
+		[Version (deprecated = true, deprecated_since = "3.36")]
 		public static Cairo.Surface get_surface_from_root (Gdk.Screen screen);
 		public bool has_multiple_sizes ();
 		public bool is_dark (int dest_width, int dest_height);
@@ -63,7 +64,9 @@ namespace Gnome {
 		public void set_filename (string filename);
 		public void set_placement (GDesktop.BackgroundStyle placement);
 		public void set_rgba (GDesktop.BackgroundShading type, Gdk.RGBA primary, Gdk.RGBA secondary);
+		[Version (deprecated = true, deprecated_since = "3.36")]
 		public static void set_surface_as_root (Gdk.Screen screen, Cairo.Surface surface);
+		[Version (deprecated = true, deprecated_since = "3.36")]
 		public static Gnome.BGCrossfade set_surface_as_root_with_crossfade (Gdk.Screen screen, Cairo.Surface surface);
 		public signal void changed ();
 		public signal void transitioned ();
@@ -130,10 +133,12 @@ namespace Gnome {
 		public uint add_idle_watch (uint64 interval_msec, owned Gnome.IdleMonitorWatchFunc? callback);
 		public uint add_user_active_watch (owned Gnome.IdleMonitorWatchFunc? callback);
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "3.36")]
 		public IdleMonitor.for_device (Gdk.Device device) throws GLib.Error;
 		public uint64 get_idletime ();
 		public void remove_watch (uint id);
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "3.36")]
 		public Gdk.Device device { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-pnp-ids.h", type_id = "gnome_pnp_ids_get_type ()")]
