@@ -137,6 +137,8 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool drop_backlog { get; set; }
 			public Gst.RTSPServer.MountPoints mount_points { owned get; set; }
+			[NoAccessorMethod]
+			public int post_session_timeout { get; set; }
 			public Gst.RTSPServer.SessionPool session_pool { owned get; set; }
 			public virtual signal void announce_request (Gst.RTSPServer.Context ctx);
 			[Version (since = "1.6")]
