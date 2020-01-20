@@ -365,6 +365,59 @@ namespace WebKit {
 		public string link_uri { get; construct; }
 		public string media_uri { get; construct; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_input_method_context_get_type ()")]
+	public abstract class InputMethodContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected InputMethodContext ();
+		[Version (since = "2.28")]
+		public virtual bool filter_key_event (Gdk.EventKey key_event);
+		[Version (since = "2.28")]
+		public WebKit.InputHints get_input_hints ();
+		[Version (since = "2.28")]
+		public WebKit.InputPurpose get_input_purpose ();
+		[Version (since = "2.28")]
+		public virtual void get_preedit (out string? text, out GLib.List<WebKit.InputMethodUnderline>? underlines, out uint cursor_offset);
+		[Version (since = "2.28")]
+		public virtual void notify_cursor_area (int x, int y, int width, int height);
+		[Version (since = "2.28")]
+		public virtual void notify_focus_in ();
+		[Version (since = "2.28")]
+		public virtual void notify_focus_out ();
+		[Version (since = "2.28")]
+		public virtual void notify_surrounding (string text, uint length, uint cursor_index);
+		[Version (since = "2.28")]
+		public virtual void reset ();
+		[Version (since = "2.28")]
+		public virtual void set_enable_preedit (bool enabled);
+		public void set_input_hints (WebKit.InputHints hints);
+		[Version (since = "2.28")]
+		public void set_input_purpose (WebKit.InputPurpose purpose);
+		public WebKit.InputHints input_hints { get; set; }
+		public WebKit.InputPurpose input_purpose { get; set; }
+		[Version (since = "2.28")]
+		public virtual signal void committed (string text);
+		[Version (since = "2.28")]
+		public virtual signal void delete_surrounding (int offset, uint n_chars);
+		[Version (since = "2.28")]
+		public virtual signal void preedit_changed ();
+		[Version (since = "2.28")]
+		public virtual signal void preedit_finished ();
+		[Version (since = "2.28")]
+		public virtual signal void preedit_started ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_input_method_underline_get_type ()")]
+	[Compact]
+	public class InputMethodUnderline {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public InputMethodUnderline (uint start_offset, uint end_offset);
+		[Version (since = "2.28")]
+		public WebKit.InputMethodUnderline copy ();
+		[Version (since = "2.28")]
+		public void free ();
+		[Version (since = "2.28")]
+		public void set_color (Gdk.RGBA? rgba);
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_install_missing_media_plugins_permission_request_get_type ()")]
 	public class InstallMissingMediaPluginsPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
@@ -1192,6 +1245,8 @@ namespace WebKit {
 		public double get_estimated_load_progress ();
 		public unowned Cairo.Surface get_favicon ();
 		public unowned WebKit.FindController get_find_controller ();
+		[Version (since = "2.28")]
+		public unowned WebKit.InputMethodContext? get_input_method_context ();
 		public unowned WebKit.WebInspector get_inspector ();
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
@@ -1238,6 +1293,8 @@ namespace WebKit {
 		public void set_custom_charset (string? charset);
 		[Version (since = "2.8")]
 		public void set_editable (bool editable);
+		[Version (since = "2.28")]
+		public void set_input_method_context (WebKit.InputMethodContext? context);
 		public void set_settings (WebKit.Settings settings);
 		public void set_zoom_level (double zoom_level);
 		[NoWrapper]
@@ -1563,6 +1620,29 @@ namespace WebKit {
 		EDITABLE,
 		SCROLLBAR,
 		SELECTION
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_INPUT_HINT_", type_id = "webkit_input_hints_get_type ()")]
+	[Flags]
+	[Version (since = "2.28")]
+	public enum InputHints {
+		NONE,
+		SPELLCHECK,
+		LOWERCASE,
+		UPPERCASE_CHARS,
+		UPPERCASE_WORDS,
+		UPPERCASE_SENTENCES,
+		INHIBIT_OSK
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_INPUT_PURPOSE_", type_id = "webkit_input_purpose_get_type ()")]
+	[Version (since = "2.28")]
+	public enum InputPurpose {
+		FREE_FORM,
+		DIGITS,
+		NUMBER,
+		PHONE,
+		URL,
+		EMAIL,
+		PASSWORD
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_INSECURE_CONTENT_", type_id = "webkit_insecure_content_event_get_type ()")]
 	public enum InsecureContentEvent {

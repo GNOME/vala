@@ -280,6 +280,9 @@ namespace JSC {
 		[CCode (has_construct_function = false)]
 		public Value.boolean (JSC.Context context, bool value);
 		public JSC.Value constructor_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public Value.from_json (JSC.Context context, global::string json);
 		public JSC.Value function_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
 		[CCode (has_construct_function = false)]
 		public Value.function_variadic (JSC.Context context, global::string? name, GLib.Callback callback, void* user_data, GLib.DestroyNotify? destroy_notify, GLib.Type return_type);
@@ -320,6 +323,8 @@ namespace JSC {
 		public bool to_boolean ();
 		public double to_double ();
 		public int32 to_int32 ();
+		[Version (since = "2.28")]
+		public global::string to_json (uint indent);
 		public global::string to_string ();
 		public GLib.Bytes to_string_as_bytes ();
 		[CCode (has_construct_function = false)]
