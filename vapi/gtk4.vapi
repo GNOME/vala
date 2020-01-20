@@ -5021,6 +5021,7 @@ namespace Gdk {
 		public unowned Gdk.Drag? get_drag ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public unowned Gdk.Surface get_surface ();
+		public bool has_value (GLib.Type type);
 		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -5420,10 +5421,10 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rgba_get_type ()")]
 	public struct RGBA {
-		public double red;
-		public double green;
-		public double blue;
-		public double alpha;
+		public float red;
+		public float green;
+		public float blue;
+		public float alpha;
 		public Gdk.RGBA? copy ();
 		public bool equal (Gdk.RGBA p2);
 		public void free ();
@@ -5869,6 +5870,10 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
 	public delegate void ContentDeserializeFunc (Gdk.ContentDeserializer deserializer);
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate GLib.Bytes ContentProviderGetBytesFunc (string mime_type, void* data);
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate void ContentProviderGetValueFunc (GLib.Value value, void* data);
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
 	public delegate void ContentSerializeFunc (Gdk.ContentSerializer serializer);
 	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 2.9)]
 	public delegate void SeatGrabPrepareFunc (Gdk.Seat seat, Gdk.Surface surface);
@@ -6006,9 +6011,9 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class BlurNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public BlurNode (Gsk.RenderNode child, double radius);
+		public BlurNode (Gsk.RenderNode child, float radius);
 		public Gsk.RenderNode get_child ();
-		public double get_radius ();
+		public float get_radius ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class BorderNode : Gsk.RenderNode {
@@ -6066,9 +6071,9 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class CrossFadeNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public CrossFadeNode (Gsk.RenderNode start, Gsk.RenderNode end, double progress);
+		public CrossFadeNode (Gsk.RenderNode start, Gsk.RenderNode end, float progress);
 		public Gsk.RenderNode get_end_child ();
-		public double get_progress ();
+		public float get_progress ();
 		public Gsk.RenderNode get_start_child ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
@@ -6106,9 +6111,9 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class OpacityNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
-		public OpacityNode (Gsk.RenderNode child, double opacity);
+		public OpacityNode (Gsk.RenderNode child, float opacity);
 		public unowned Gsk.RenderNode get_child ();
-		public double get_opacity ();
+		public float get_opacity ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode")]
 	public class OutsetShadowNode : Gsk.RenderNode {
@@ -6245,7 +6250,7 @@ namespace Gsk {
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
 	public struct ColorStop {
-		public double offset;
+		public float offset;
 		public Gdk.RGBA color;
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
@@ -6795,6 +6800,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected BuilderCScope ();
 		public void add_callback_symbol (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
+		public static Gtk.BuilderScope @new ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_button_get_type ()")]
 	public class Button : Gtk.Bin, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -7584,6 +7590,32 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void response (int response_id);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drag_icon_get_type ()")]
+	public class DragIcon : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
+		[CCode (has_construct_function = false)]
+		protected DragIcon ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public DragIcon.for_drag (Gdk.Drag drag);
+		public static void set_from_paintable (Gdk.Drag drag, Gdk.Paintable paintable, int hot_x, int hot_y);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drag_source_get_type ()")]
+	public class DragSource : Gtk.GestureSingle {
+		[CCode (has_construct_function = false)]
+		public DragSource ();
+		public Gdk.DragAction get_actions ();
+		public unowned Gdk.ContentProvider get_content ();
+		public unowned Gdk.Drag? get_drag ();
+		public void set_actions (Gdk.DragAction actions);
+		public void set_content (Gdk.ContentProvider? content);
+		public void set_icon (Gdk.Paintable? paintable, int hot_x, int hot_y);
+		public Gdk.DragAction actions { get; set; }
+		public Gdk.ContentProvider content { get; set; }
+		public signal void drag_begin (Gdk.Drag drag);
+		[HasEmitter]
+		public signal bool drag_cancel (Gdk.Drag drag, Gdk.DragCancelReason reason);
+		public signal void drag_end (Gdk.Drag drag, bool delete_data);
+		public signal Gdk.ContentProvider? prepare (double x, double y);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drawing_area_get_type ()")]
 	public class DrawingArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -7595,6 +7627,28 @@ namespace Gtk {
 		public void set_draw_func (owned Gtk.DrawingAreaDrawFunc? draw_func);
 		public int content_height { get; set; }
 		public int content_width { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_get_type ()")]
+	public class DropTarget : Gtk.EventController {
+		[CCode (has_construct_function = false)]
+		public DropTarget (Gdk.ContentFormats? formats, Gdk.DragAction actions);
+		public void deny_drop (Gdk.Drop drop);
+		public unowned string? find_mimetype ();
+		public Gdk.DragAction get_actions ();
+		public unowned Gdk.Drop? get_drop ();
+		public Gdk.ContentFormats get_formats ();
+		public async Gtk.SelectionData? read_selection (Gdk.Atom target, GLib.Cancellable? cancellable) throws GLib.Error;
+		public void set_actions (Gdk.DragAction actions);
+		public void set_formats (Gdk.ContentFormats? formats);
+		public Gdk.DragAction actions { get; set; }
+		[NoAccessorMethod]
+		public bool contains { get; }
+		public Gdk.ContentFormats formats { owned get; set; }
+		public signal bool accept (Gdk.Drop object);
+		public signal bool drag_drop (Gdk.Drop drop, int x, int y);
+		public signal void drag_enter (Gdk.Drop drop);
+		public signal void drag_leave (Gdk.Drop drop);
+		public signal void drag_motion (Gdk.Drop drop, int x, int y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_get_type ()")]
 	public class Entry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.ConstraintTarget, Gtk.Editable {
@@ -7640,7 +7694,7 @@ namespace Gtk {
 		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_has_frame (bool setting);
 		public void set_icon_activatable (Gtk.EntryIconPosition icon_pos, bool activatable);
-		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gdk.ContentFormats formats, Gdk.DragAction actions);
+		public void set_icon_drag_source (Gtk.EntryIconPosition icon_pos, Gdk.ContentProvider provider, Gdk.DragAction actions);
 		public void set_icon_from_gicon (Gtk.EntryIconPosition icon_pos, GLib.Icon? icon);
 		public void set_icon_from_icon_name (Gtk.EntryIconPosition icon_pos, string? icon_name);
 		public void set_icon_from_paintable (Gtk.EntryIconPosition icon_pos, Gdk.Paintable? paintable);
@@ -8495,7 +8549,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public IconView ();
 		public Gdk.Paintable create_drag_icon (Gtk.TreePath path);
-		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
+		public unowned Gtk.DropTarget enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public bool get_activate_on_single_click ();
 		public bool get_cell_rect (Gtk.TreePath path, Gtk.CellRenderer? cell, out Gdk.Rectangle rect);
@@ -9101,11 +9155,11 @@ namespace Gtk {
 	public class MenuToolButton : Gtk.ToolButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkToolItem*")]
 		public MenuToolButton (Gtk.Widget? icon_widget, string? label);
+		public unowned Gtk.Widget? get_popover ();
 		public void set_arrow_tooltip_markup (string markup);
 		public void set_arrow_tooltip_text (string text);
 		public void set_popover (Gtk.Widget popover);
-		[NoAccessorMethod]
-		public Gtk.Popover popover { owned get; set; }
+		public Gtk.Popover popover { get; set; }
 		public signal void show_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_message_dialog_get_type ()")]
@@ -9509,9 +9563,9 @@ namespace Gtk {
 		public PopoverMenu.from_model (Gtk.Widget? relative_to, GLib.MenuModel? model);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenu.from_model_full (Gtk.Widget? relative_to, GLib.MenuModel model, Gtk.PopoverMenuFlags flags);
+		public unowned GLib.MenuModel get_menu_model ();
 		public void set_menu_model (GLib.MenuModel model);
-		[NoAccessorMethod]
-		public GLib.MenuModel menu_model { owned get; set; }
+		public GLib.MenuModel menu_model { get; set; }
 		[NoAccessorMethod]
 		public string visible_submenu { owned get; set; }
 	}
@@ -10735,6 +10789,7 @@ namespace Gtk {
 		public bool get_modified ();
 		public unowned Gtk.TextMark get_selection_bound ();
 		public bool get_selection_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
+		public Gdk.ContentProvider get_selection_content ();
 		public string get_slice (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
 		public void get_start_iter (out Gtk.TextIter iter);
 		public unowned Gtk.TextTagTable get_tag_table ();
@@ -11425,7 +11480,7 @@ namespace Gtk {
 		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
 		public void convert_widget_to_tree_coords (int wx, int wy, out int tx, out int ty);
 		public Gdk.Paintable create_row_drag_icon (Gtk.TreePath path);
-		public void enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
+		public unowned Gtk.DropTarget enable_model_drag_dest (Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gdk.ContentFormats formats, Gdk.DragAction actions);
 		public void expand_all ();
 		public bool expand_row (Gtk.TreePath path, bool open_all);
@@ -11902,15 +11957,6 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void destroy ();
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
-		public virtual signal void drag_begin (Gdk.Drag drag);
-		public virtual signal void drag_data_delete (Gdk.Drag drag);
-		public virtual signal void drag_data_get (Gdk.Drag drag, Gtk.SelectionData selection_data);
-		public virtual signal void drag_data_received (Gdk.Drop drop, Gtk.SelectionData selection_data);
-		public virtual signal bool drag_drop (Gdk.Drop drop, int x, int y);
-		public virtual signal void drag_end (Gdk.Drag drag);
-		public virtual signal bool drag_failed (Gdk.Drag drag, Gtk.DragResult result);
-		public virtual signal void drag_leave (Gdk.Drop drop);
-		public virtual signal bool drag_motion (Gdk.Drop drop, int x, int y);
 		public virtual signal void grab_notify (bool was_grabbed);
 		[HasEmitter]
 		public virtual signal void hide ();
@@ -12913,14 +12959,6 @@ namespace Gtk {
 		PARAGRAPHS,
 		WHITESPACE
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEST_DEFAULT_", type_id = "gtk_dest_defaults_get_type ()")]
-	[Flags]
-	public enum DestDefaults {
-		MOTION,
-		HIGHLIGHT,
-		DROP,
-		ALL
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DIALOG_", type_id = "gtk_dialog_flags_get_type ()")]
 	[Flags]
 	public enum DialogFlags {
@@ -12936,15 +12974,6 @@ namespace Gtk {
 		DOWN,
 		LEFT,
 		RIGHT
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DRAG_RESULT_", type_id = "gtk_drag_result_get_type ()")]
-	public enum DragResult {
-		SUCCESS,
-		NO_TARGET,
-		USER_CANCELLED,
-		TIMEOUT_EXPIRED,
-		GRAB_BROKEN,
-		ERROR
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_EDITABLE_", type_id = "gtk_editable_properties_get_type ()")]
 	public enum EditableProperties {
@@ -13475,7 +13504,8 @@ namespace Gtk {
 	public enum StyleContextPrintFlags {
 		NONE,
 		RECURSE,
-		SHOW_STYLE
+		SHOW_STYLE,
+		SHOW_CHANGE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_", type_id = "gtk_text_buffer_target_info_get_type ()")]
 	public enum TextBufferTargetInfo {
@@ -14096,12 +14126,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string? check_version (uint required_major, uint required_minor, uint required_micro);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static Gdk.ContentFormats content_formats_add_image_targets (Gdk.ContentFormats list, bool writable);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static Gdk.ContentFormats content_formats_add_text_targets (Gdk.ContentFormats list);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static Gdk.ContentFormats content_formats_add_uri_targets (Gdk.ContentFormats list);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void device_grab_add (Gtk.Widget widget, Gdk.Device device, bool block_others);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void device_grab_remove (Gtk.Widget widget, Gdk.Device device);
@@ -14110,69 +14134,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.Drag drag_begin (Gtk.Widget widget, Gdk.Device? device, Gdk.ContentFormats targets, Gdk.DragAction actions, int x, int y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_cancel (Gdk.Drag drag);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_add_image_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_add_text_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_add_uri_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned string? drag_dest_find_target (Gtk.Widget widget, Gdk.Drop drop, Gdk.ContentFormats? target_list);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.ContentFormats? drag_dest_get_target_list (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool drag_dest_get_track_motion (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_set (Gtk.Widget widget, Gtk.DestDefaults flags, Gdk.ContentFormats? targets, Gdk.DragAction actions);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_set_target_list (Gtk.Widget widget, Gdk.ContentFormats? target_list);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_set_track_motion (Gtk.Widget widget, bool track_motion);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_dest_unset (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_get_data (Gtk.Widget widget, Gdk.Drop drop, Gdk.Atom target);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Widget? drag_get_source_widget (Gdk.Drag drag);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_highlight (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_default (Gdk.Drag drag);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_gicon (Gdk.Drag drag, GLib.Icon icon, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_name (Gdk.Drag drag, string icon_name, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_paintable (Gdk.Drag drag, Gdk.Paintable paintable, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_set_icon_widget (Gdk.Drag drag, Gtk.Widget widget, int hot_x, int hot_y);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_add_image_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_add_text_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_add_uri_targets (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gdk.ContentFormats? drag_source_get_target_list (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set (Gtk.Widget widget, Gdk.ModifierType start_button_mask, Gdk.ContentFormats? targets, Gdk.DragAction actions);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set_icon_gicon (Gtk.Widget widget, GLib.Icon icon);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set_icon_name (Gtk.Widget widget, string icon_name);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set_icon_paintable (Gtk.Widget widget, Gdk.Paintable paintable);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_set_target_list (Gtk.Widget widget, Gdk.ContentFormats? target_list);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_source_unset (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_unhighlight (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14214,7 +14176,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void grab_remove (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void hsv_to_rgb (double h, double s, double v, out double r, out double g, out double b);
+	public static void hsv_to_rgb (float h, float s, float v, out float r, out float g, out float b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void im_modules_init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14242,9 +14204,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void print_run_page_setup_dialog_async (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings, [CCode (scope = "async")] Gtk.PageSetupDoneFunc done_cb);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void propagate_event (Gtk.Widget widget, [CCode (type = "GdkEvent*")] Gdk.Event event);
+	public static bool propagate_event (Gtk.Widget widget, [CCode (type = "GdkEvent*")] Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void rgb_to_hsv (double r, double g, double b, out double h, out double s, out double v);
+	public static void rgb_to_hsv (float r, float g, float b, out float h, out float s, out float v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void set_debug_flags (uint flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]

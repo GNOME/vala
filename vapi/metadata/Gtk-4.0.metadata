@@ -236,7 +236,6 @@ RecentInfo
 // Not sure what g-i was thinking
 TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
-  .sort_new_with_model parent="Gtk.TreeModelSort" name="new_with_model" symbol_type="constructor"
 
 // Vala-specific, not really bugs
 /////////////////////////////////
