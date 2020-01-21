@@ -354,6 +354,7 @@ TESTS = \
 	objects/interface-property-delegate.vala \
 	objects/interface-property-override.vala \
 	objects/interface-virtual-override.vala \
+	objects/member-initializer-base-properties.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/plugin-module-init.vala \
