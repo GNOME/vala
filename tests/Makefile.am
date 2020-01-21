@@ -302,6 +302,7 @@ TESTS = \
 	objects/interface-property-base-impl.vala \
 	objects/interface-property-delegate.vala \
 	objects/interface-property-override.vala \
+	objects/member-initializer-base-properties.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \

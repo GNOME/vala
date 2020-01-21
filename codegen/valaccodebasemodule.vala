@@ -5027,6 +5027,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				} else if (init.symbol_reference is Property) {
 					var p = (Property) init.symbol_reference;
+					if (p.base_property != null) {
+						p = p.base_property;
+					} else if (p.base_interface_property != null) {
+						p = p.base_interface_property;
+					}
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) p.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance), instance_target_type, init);
 					var inst_ma = new MemberAccess.simple ("fake");
