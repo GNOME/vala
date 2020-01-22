@@ -218,9 +218,9 @@ namespace JSC {
 		[CCode (has_construct_function = false)]
 		protected Class ();
 		[CCode (cname = "jsc_class_add_constructor_variadic")]
-		public JSC.Value add_constructor (string? name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667, type = "GCallback")] JSC.ClassConstructorCb callback, GLib.Type return_type);
+		public JSC.Value add_constructor (string? name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667, type = "GCallback")] owned JSC.ClassConstructorCb callback, GLib.Type return_type);
 		[CCode (cname = "jsc_class_add_method_variadic")]
-		public void add_method (string name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667, type = "GCallback")] JSC.ClassMethodCb callback, GLib.Type return_type);
+		public void add_method (string name, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667, type = "GCallback")] owned JSC.ClassMethodCb callback, GLib.Type return_type);
 		public void add_property (string name, GLib.Type property_type, [CCode (scope = "async")] GLib.Callback? getter, GLib.Callback? setter, void* user_data, GLib.DestroyNotify? destroy_notify);
 		public unowned string get_name ();
 		public unowned JSC.Class get_parent ();
@@ -395,8 +395,8 @@ namespace JSC {
 	public delegate JSC.Value? ClassGetPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name);
 	[CCode (cheader_filename = "jsc/jsc.h", has_target = false)]
 	public delegate bool ClassHasPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name);
-	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 0.9, type_cname = "GCallback")]
-	public delegate T ClassMethodCb<T> (GLib.GenericArray<JSC.Value> values);
+	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 2.9, type_cname = "GCallback")]
+	public delegate T ClassMethodCb<T> (JSC.Class instance, GLib.GenericArray<JSC.Value> values);
 	[CCode (cheader_filename = "jsc/jsc.h", has_target = false)]
 	public delegate bool ClassSetPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name, JSC.Value value);
 	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 2.9)]
