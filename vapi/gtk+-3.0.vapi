@@ -11492,7 +11492,8 @@ namespace Gtk {
 		EMAIL,
 		NAME,
 		PASSWORD,
-		PIN
+		PIN,
+		TERMINAL
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_JUNCTION_", type_id = "gtk_junction_sides_get_type ()")]
 	[Flags]
