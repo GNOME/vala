@@ -1,3 +1,27 @@
+Vala 0.47.3
+===========
+ * Highlights:
+  - Add further support for params arrays [#128]
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Don't set implemenation of interface property to its own [#891]
+    + Use result value of assignment rather than its computation [#895]
+    + Cast instance parameter in member-initializer for base-properties [#899]
+  - vala:
+    + Infer target_type in coalescing expressions [#892]
+    + Non-nullable value-type in coalesce expression needs to be copied [#893]
+    + Fix short-circuiting behavior of coalescing operator [#534]
+    + Always bail if there are semantic errors
+  - girparser: Apply explicitly given ctype metadata attributes on callables
+
+ * Bindings:
+  - glib-2.0: Let (u)int.try_parse() return false if there is an unparsed part
+  - gtk4: Update to 3.96.0+7e2e92a8
+  - gstreamer: Update from 1.17.0+ git master
+  - vapi: Update GIR-based bindings
+  - webkit2gtk-4.0: Update to 2.27.4
+
 Vala 0.47.2
 ===========
  * Highlights:
