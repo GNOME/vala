@@ -234,6 +234,7 @@ TESTS = \
 	structs/struct-base-types.vala \
 	structs/struct-empty-still.test \
 	structs/struct-no-gtype.vala \
+	structs/struct-no-gtype-inherit.vala \
 	structs/struct-static-field-initializer.vala \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
