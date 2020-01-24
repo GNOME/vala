@@ -4203,15 +4203,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		CCodeExpression this_access;
-		if (is_in_coroutine ()) {
-			// use closure
-			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
+		unowned Class? cl = expr.value_type.data_type as Class;
+		if (cl != null && !cl.is_compact) {
+			set_cvalue (expr, generate_instance_cast (get_this_cexpression (), cl));
 		} else {
-			this_access = new CCodeIdentifier ("self");
+			expr.target_value = load_this_parameter (expr.value_type.data_type);
 		}
-
-		set_cvalue (expr, generate_instance_cast (this_access, expr.value_type.data_type));
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
