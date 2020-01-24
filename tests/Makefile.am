@@ -90,6 +90,7 @@ TESTS = \
 	chainup/base-struct-invalid.test \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
+	chainup/class-compact-base.vala \
 	chainup/class-object.vala \
 	chainup/class-this.vala \
 	chainup/class-this-foo.vala \
@@ -98,6 +99,8 @@ TESTS = \
 	chainup/signal-default-handler.vala \
 	chainup/struct-base.vala \
 	chainup/struct-base-foo.vala \
+	chainup/struct-no-gtype-base.vala \
+	chainup/struct-simple-no-gtype-base.vala \
 	chainup/struct-this.vala \
 	chainup/struct-this-foo.vala \
 	chainup/bug791785.vala \

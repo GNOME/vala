@@ -4284,7 +4284,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		set_cvalue (expr, generate_instance_cast (get_this_cexpression (), expr.value_type.data_type));
+		unowned Class? cl = expr.value_type.data_type as Class;
+		if (cl != null && !cl.is_compact) {
+			set_cvalue (expr, generate_instance_cast (get_this_cexpression (), cl));
+		} else {
+			expr.target_value = load_this_parameter (expr.value_type.data_type);
+		}
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
