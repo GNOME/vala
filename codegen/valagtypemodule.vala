@@ -2316,6 +2316,12 @@ public class Vala.GTypeModule : GErrorModule {
 	public override void visit_struct (Struct st) {
 		base.visit_struct (st);
 
+		if (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ()) {
+			// Skip GType handling for these struct types,
+			// like in CCodeStructModule.generate_struct_declaration()
+			return;
+		}
+
 		if (get_ccode_has_type_id (st)) {
 			push_line (st.source_reference);
 			var type_fun = new StructRegisterFunction (st);
