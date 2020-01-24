@@ -31,6 +31,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		if (st.is_boolean_type () || st.is_integer_type () || st.is_floating_type ()) {
+			// See GTypeModule.visit_struct()
 			if (st.base_struct != null) {
 				generate_struct_declaration (st.base_struct, decl_space);
 				decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (st.base_struct), new CCodeVariableDeclarator (get_ccode_name (st))));
