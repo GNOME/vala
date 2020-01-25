@@ -1665,7 +1665,19 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		// decide between declaration and expression statement
-		skip_type ();
+		try {
+			skip_type ();
+		} catch (ParseError e) {
+			prev ();
+			var token = current ();
+			next ();
+			if (context.keep_going && (token == TokenType.DOT || token == TokenType.DOUBLE_COLON)) {
+				rollback (begin);
+				return true;
+			} else {
+				throw e;	// rethrow
+			}
+		}
 		switch (current ()) {
 		// invocation expression
 		case TokenType.OPEN_PARENS:
