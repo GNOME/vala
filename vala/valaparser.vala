@@ -919,6 +919,10 @@ public class Vala.Parser : CodeVisitor {
 				rollback (begin);
 				var expr = parse_array_creation_expression ();
 				return expr;
+			} else if (context.keep_going) {
+				// -1 represents that there isn't even an argument list
+				var expr = new ObjectCreationExpression (member, get_src (begin), -1);
+				return expr;
 			} else {
 				throw new ParseError.SYNTAX ("expected ( or [");
 			}
