@@ -53,15 +53,22 @@ public class Vala.MethodCall : Expression {
 	private List<Expression> argument_list = new ArrayList<Expression> ();
 
 	/**
+	 * The number of arguments supplied before semantic analysis. For language servers.
+	 */
+	public int initial_argument_count { get; private set; }
+
+	/**
 	 * Creates a new invocation expression.
 	 *
 	 * @param call             method to call
 	 * @param source_reference reference to source code
+	 * @param init_args        initial count of arguments
 	 * @return                 newly created invocation expression
 	 */
-	public MethodCall (Expression call, SourceReference? source_reference = null) {
+	public MethodCall (Expression call, SourceReference? source_reference = null, int init_args = 0) {
 		this.source_reference = source_reference;
 		this.call = call;
+		this.initial_argument_count = init_args;
 	}
 
 	/**
