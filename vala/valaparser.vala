@@ -597,6 +597,7 @@ public class Vala.Parser : CodeVisitor {
 				try {
 					list.add (parse_argument ());
 				} catch (ParseError e) {
+					list.add (new InvalidExpression ());
 					if (current () == TokenType.CLOSE_PARENS) {
 						prev ();
 						report_parse_error (new ParseError.SYNTAX ("incomplete argument list"));
@@ -824,7 +825,7 @@ public class Vala.Parser : CodeVisitor {
 			unowned MemberAccess member = (MemberAccess) inner;
 			member.creation_member = true;
 
-			var expr = new ObjectCreationExpression (member, src);
+			var expr = new ObjectCreationExpression (member, src, arg_list.size);
 			expr.struct_creation = true;
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
@@ -834,7 +835,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return expr;
 		} else {
-			var expr = new MethodCall (inner, src);
+			var expr = new MethodCall (inner, src, arg_list.size);
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
 			}
