@@ -63,15 +63,22 @@ public class Vala.ObjectCreationExpression : Expression {
 	private MemberAccess? _member_name;
 
 	/**
+	 * The number of arguments supplied before semantic analysis. For language servers.
+	 */
+	public int initial_argument_count { get; private set; }
+
+	/**
 	 * Creates a new object creation expression.
 	 *
 	 * @param member_name      object type to create
 	 * @param source_reference reference to source code
+	 * @param init_args        initial count of arguments
 	 * @return                 newly created object creation expression
 	 */
-	public ObjectCreationExpression (MemberAccess? member_name, SourceReference? source_reference = null) {
+	public ObjectCreationExpression (MemberAccess? member_name, SourceReference? source_reference = null, int init_args = 0) {
 		this.source_reference = source_reference;
 		this.member_name = member_name;
+		this.initial_argument_count = init_args;
 	}
 
 	/**
