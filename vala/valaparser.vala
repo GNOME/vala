@@ -1633,7 +1633,7 @@ public class Vala.Parser : CodeVisitor {
 					stmt = parse_expression_statement ();
 					break;
 				default:
-					bool is_expr = is_expression ();
+					bool is_expr = is_expression (true);
 					if (is_expr) {
 						stmt = parse_expression_statement ();
 					} else {
@@ -1657,7 +1657,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	bool is_expression () throws ParseError {
+	bool is_expression (bool in_block = false) throws ParseError {
 		if (current () == TokenType.OPEN_PARENS) {
 			return !is_inner_array_type ();
 		}
@@ -1703,6 +1703,15 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.OP_PTR:
 			rollback (begin);
 			return true;
+		case TokenType.OPEN_BRACE:
+			rollback (begin);
+			if (context.keep_going) {
+				// if we reach the start of a block, and we've already
+				// ruled out other special blocks (like `try'),
+				// then this is probably an incomplete expression
+				return in_block;
+			}
+			return false;
 		default:
 			rollback (begin);
 			return false;
@@ -1814,7 +1823,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NEW:
 			return parse_expression_statement ();
 		default:
-			if (is_expression ()) {
+			if (is_expression (true)) {
 				return parse_expression_statement ();
 			} else {
 				throw new ParseError.SYNTAX ("embedded statement cannot be declaration");
@@ -1963,7 +1972,16 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var expr = parse_statement_expression ();
 		var src = get_src (begin);
+		prev ();
+		var prev_token = current ();
+		next ();
+		var token = current ();
 		expect (TokenType.SEMICOLON);
+		if (context.keep_going && token == TokenType.OPEN_BRACE && prev_token == TokenType.TRY) {
+			// if we've hit an open brace instead of a semicolon, and the previous token was
+			// a try, then perform some minor recovery:
+			prev ();
+		}
 		return new ExpressionStatement (expr, src);
 	}
 
