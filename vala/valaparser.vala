@@ -1547,6 +1547,8 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void parse_statements (Block block) throws ParseError {
+		var begin = get_location ();
+		bool at_keyword;
 		while (current () != TokenType.CLOSE_BRACE
 		       && current () != TokenType.CASE
 		       && current () != TokenType.DEFAULT
@@ -1556,11 +1558,15 @@ public class Vala.Parser : CodeVisitor {
 				bool is_decl = false;
 
 				comment = scanner.pop_comment ();
+				begin = get_location ();
+				at_keyword = true;
 				switch (current ()) {
 				case TokenType.OPEN_BRACE:
+					at_keyword = false;
 					stmt = parse_block ();
 					break;
 				case TokenType.SEMICOLON:
+					at_keyword = false;
 					stmt = parse_empty_statement ();
 					break;
 				case TokenType.IF:
@@ -1626,6 +1632,7 @@ public class Vala.Parser : CodeVisitor {
 					break;
 				default:
 					bool is_expr = is_expression (true);
+					at_keyword = false;
 					if (is_expr) {
 						stmt = parse_expression_statement ();
 					} else {
@@ -1639,7 +1646,13 @@ public class Vala.Parser : CodeVisitor {
 					block.add_statement (stmt);
 				}
 			} catch (ParseError e) {
+				if (current () == TokenType.CLOSE_BRACE) {
+					prev ();
+				}
 				report_parse_error (e);
+				if (current () != TokenType.CLOSE_BRACE && current () != TokenType.EOF && !at_keyword) {
+					rollback (begin);
+				}
 				if (recover () != RecoveryState.STATEMENT_BEGIN) {
 					// beginning of next declaration or end of file reached
 					// return what we have so far
@@ -2511,14 +2524,14 @@ public class Vala.Parser : CodeVisitor {
 				report_parse_error (e);
 				int r;
 				do {
-					r = recover ();
+					r = recover (root);
 					if (r == RecoveryState.STATEMENT_BEGIN) {
 						next ();
 					} else {
 						break;
 					}
 				} while (true);
-				if (r == RecoveryState.EOF) {
+				if (r == RecoveryState.END_OF_BLOCK || r == RecoveryState.EOF) {
 					return;
 				}
 			}
@@ -2536,10 +2549,12 @@ public class Vala.Parser : CodeVisitor {
 	enum RecoveryState {
 		EOF,
 		DECLARATION_BEGIN,
-		STATEMENT_BEGIN
+		STATEMENT_BEGIN,
+		END_OF_BLOCK
 	}
 
-	RecoveryState recover () {
+	RecoveryState recover (bool root = false) {
+		int unbalanced_open_braces = root ? 0 : 1;
 		while (current () != TokenType.EOF) {
 			switch (current ()) {
 			case TokenType.ABSTRACT:
@@ -2583,6 +2598,18 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.WHILE:
 			case TokenType.YIELD:
 				return RecoveryState.STATEMENT_BEGIN;
+			case TokenType.OPEN_BRACE:
+				unbalanced_open_braces++;
+				next ();
+				break;
+			case TokenType.CLOSE_BRACE:
+				if (unbalanced_open_braces == 1) {
+					return RecoveryState.END_OF_BLOCK;
+				} else {
+					unbalanced_open_braces--;
+					next ();
+				}
+				break;
 			default:
 				next ();
 				break;
