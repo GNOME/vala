@@ -464,15 +464,18 @@ public class Vala.Struct : TypeSymbol {
 		return false;
 	}
 
-	bool is_recursive_value_type (DataType type) {
-		var struct_type = type as StructValueType;
+	bool is_recursive_value_type (CodeContext context, DataType type) {
+		unowned StructValueType? struct_type = type as StructValueType;
 		if (struct_type != null && !struct_type.nullable) {
-			var st = (Struct) struct_type.type_symbol;
+			unowned Struct st = (Struct) struct_type.type_symbol;
 			if (st == this) {
 				return true;
 			}
+			if (!st.check (context)) {
+				return false;
+			}
 			foreach (Field f in st.fields) {
-				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
+				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (context, f.variable_type)) {
 					return true;
 				}
 			}
@@ -512,7 +515,7 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Field f in fields) {
 			f.check (context);
 
-			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
+			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (context, f.variable_type)) {
 				error = true;
 				Report.error (f.source_reference, "Recursive value types are not allowed");
 				return false;
