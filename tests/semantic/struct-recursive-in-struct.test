@@ -1,0 +1,13 @@
+Invalid Code
+
+struct ThingList {
+	Thing things;
+}
+
+struct Thing {
+	Thing next;
+	Thing prev;
+}
+
+void main () {
+}
