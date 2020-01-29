@@ -464,7 +464,15 @@ public class Vala.Struct : TypeSymbol {
 		return false;
 	}
 
-	bool is_recursive_value_type (DataType type) {
+	bool is_recursive_value_type (DataType type, ArrayList<DataType> seen = new ArrayList<DataType> ()) {
+		if (type in seen) {
+			// this struct contains a recursively-defined type, but
+			// itself is not recursively-defined
+			return false;
+		}
+
+		seen.add (type);
+
 		unowned StructValueType? struct_type = type as StructValueType;
 		if (struct_type != null && !struct_type.nullable) {
 			unowned Struct st = (Struct) struct_type.type_symbol;
@@ -472,7 +480,7 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 			foreach (Field f in st.fields) {
-				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type)) {
+				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.variable_type, seen)) {
 					return true;
 				}
 			}
