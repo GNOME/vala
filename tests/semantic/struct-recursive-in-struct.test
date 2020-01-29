@@ -1,0 +1,13 @@
+Invalid Code
+
+struct Bar {
+	Foo foo;
+}
+
+struct Foo {
+	Foo next;
+	Foo prev;
+}
+
+void main () {
+}
