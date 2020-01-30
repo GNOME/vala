@@ -591,6 +591,7 @@ TESTS = \
 	parser/creation-no-new.test \
 	parser/creation-no-override.test \
 	parser/creation-no-virtual.test \
+	parser/declaration-embedded.test \
 	parser/delegate-anonymous.test \
 	parser/delegate-no-new.test \
 	parser/destructor-class-exists.test \
@@ -612,6 +613,7 @@ TESTS = \
 	parser/invalid-brace.test \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
+	parser/member-access-pointer.vala \
 	parser/method-no-abstract-override.test \
 	parser/method-no-abstract-virtual-override.test \
 	parser/method-no-abstract-virtual.test \
