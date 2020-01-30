@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	if (true)
+		var i = 42;
+}

@@ -533,6 +533,7 @@ TESTS = \
 	parser/creation-no-new.test \
 	parser/creation-no-override.test \
 	parser/creation-no-virtual.test \
+	parser/declaration-embedded.test \
 	parser/delegate-no-new.test \
 	parser/destructor-class-exists.test \
 	parser/destructor-exists.test \
@@ -551,6 +552,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/member-access-pointer.vala \
 	parser/method-no-abstract-override.test \
 	parser/method-no-abstract-virtual-override.test \
 	parser/method-no-abstract-virtual.test \
