@@ -3344,12 +3344,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		string id = parse_identifier ();
 
-		var array_type = parse_inline_array_type (type);
-		if (!(type is ArrayType) && (array_type is ArrayType) && !((ArrayType) array_type).fixed_length) {
-			throw new ParseError.SYNTAX ("invalid array parameter declaration");
-		} else {
-			type = array_type;
-		}
+		type = parse_inline_array_type (type);
 
 		var param = new Parameter (id, type, get_src (begin));
 		set_attributes (param, attrs);

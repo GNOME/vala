@@ -153,6 +153,11 @@ public class Vala.LocalVariable : Variable {
 			initializer = null;
 		}
 
+		if (variable_array_type != null && variable_array_type.inline_allocated
+		    && variable_array_type.length == null && !(initializer is ArrayCreationExpression)) {
+			Report.error (source_reference, "Inline allocated array requires either a given length or an initializer");
+		}
+
 		if (initializer != null && !initializer.error) {
 			if (initializer.value_type == null) {
 				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {

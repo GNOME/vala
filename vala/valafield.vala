@@ -120,6 +120,11 @@ public class Vala.Field : Variable, Lockable {
 			initializer = null;
 		}
 
+		if (variable_array_type != null && variable_array_type.inline_allocated
+		    && !variable_array_type.fixed_length) {
+			Report.error (source_reference, "Inline allocated array as field requires to have fixed length");
+		}
+
 		if (initializer != null) {
 			initializer.target_type = variable_type;
 
