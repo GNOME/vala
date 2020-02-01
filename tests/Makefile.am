@@ -37,6 +37,7 @@ TESTS = \
 	basic-types/gptrarray.vala \
 	basic-types/gvariants.vala \
 	basic-types/gvariants-unboxing-safe.vala \
+	basic-types/null.vala \
 	basic-types/bug570846.test \
 	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
