@@ -167,6 +167,12 @@ public class Vala.Parameter : Variable {
 				initializer.target_type = variable_type.copy ();
 				initializer.check (context);
 			}
+
+			unowned ArrayType? variable_array_type = variable_type as ArrayType;
+			if (variable_array_type != null && variable_array_type.inline_allocated
+				&& !variable_array_type.fixed_length) {
+				Report.error (source_reference, "Inline allocated array as parameter requires to have fixed length");
+			}
 		}
 
 		if (initializer != null) {
