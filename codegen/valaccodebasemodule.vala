@@ -4237,7 +4237,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
-		if (context.profile != Profile.GOBJECT) {
+		if (context.profile == Profile.GOBJECT) {
+			cfile.add_include ("glib.h");
+		} else {
 			cfile.add_include ("stddef.h");
 		}
 		set_cvalue (expr, new CCodeConstant ("NULL"));
