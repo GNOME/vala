@@ -69,6 +69,10 @@ TESTS = \
 	arrays/fixed-length-concat-invalid.test \
 	arrays/fixed-length-non-const.test \
 	arrays/fixed-length-resize-invalid.test \
+	arrays/inline-field.test \
+	arrays/inline-local-variable.test \
+	arrays/inline-parameter.test \
+	arrays/inline-struct-field.test \
 	arrays/length-inline-assignment.vala \
 	arrays/struct-field-length-cname.vala \
 	arrays/slice-invalid-start.test \

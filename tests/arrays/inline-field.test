@@ -1,0 +1,6 @@
+Invalid Code
+
+int bar[];
+
+void main () {
+}
