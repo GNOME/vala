@@ -83,6 +83,7 @@ TESTS = \
 	arrays/inline-parameter.test \
 	arrays/inline-struct-field.test \
 	arrays/length-inline-assignment.vala \
+	arrays/length-type-include.vala \
 	arrays/struct-field-length-cname.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/slice-invalid-start.test \

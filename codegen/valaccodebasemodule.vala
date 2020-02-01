@@ -1553,6 +1553,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 			generate_type_declaration (array_type.element_type, decl_space);
+			if (array_type.length_type != null) {
+				generate_type_declaration (array_type.length_type, decl_space);
+			}
 		} else if (type is ErrorType) {
 			var error_type = (ErrorType) type;
 			if (error_type.error_domain != null) {
