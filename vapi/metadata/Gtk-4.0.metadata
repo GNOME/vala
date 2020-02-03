@@ -98,8 +98,6 @@ MessageDialog
   .new_with_markup skip=false printf_format
 Snapshot
   .* skip=false
-StyleContext
-  .get skip=false
 TextBuffer
   .create_tag skip=false
   .insert_with_tags skip=false
@@ -148,12 +146,9 @@ Gesture
 Grid
   .attach*.width default=1
   .attach*.height default=1
-IconInfo
-  .load_symbolic*.success_color default=null
-  .load_symbolic*.warning_color default=null
-  .load_symbolic*.error_color default=null
-  .load_symbolic*.was_symbolic default=null
-  .*.cancellable default=null
+Icon
+  .download_colored_texture.*_color default=null
+  .snapshot_with_colors.*_color default=null
 Notebook
   .append_page.tab_label default=null
   .prepend_page.tab_label default=null
@@ -315,8 +310,6 @@ Widget
   .grab_add parent="Gtk" symbol_type="function"
   .grab_remove parent="Gtk" symbol_type="function"
   .size_allocate#method name="size_allocate_emit"
-WidgetPath
-  .free destroys_instance
 TreeModel
   .get_value return_void
   .rows_reordered skip
