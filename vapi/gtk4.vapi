@@ -4587,6 +4587,7 @@ namespace Gdk {
 			public void error_trap_pop_ignored ();
 			public void error_trap_push ();
 			public static bool get_glx_version (Gdk.Display display, out int major, out int minor);
+			public static unowned Gdk.Monitor get_primary_monitor (Gdk.Display display);
 			public static unowned Gdk.X11.Screen get_screen (Gdk.Display display);
 			public unowned string get_startup_notification_id ();
 			public uint32 get_user_time ();
@@ -4930,7 +4931,6 @@ namespace Gdk {
 		public int get_n_monitors ();
 		public unowned string get_name ();
 		public unowned Gdk.Clipboard get_primary_clipboard ();
-		public unowned Gdk.Monitor get_primary_monitor ();
 		public bool get_setting (string name, GLib.Value value);
 		public unowned string get_startup_notification_id ();
 		public bool has_pending ();
@@ -5200,7 +5200,6 @@ namespace Gdk {
 		public Gdk.SubpixelLayout get_subpixel_layout ();
 		public int get_width_mm ();
 		public Gdk.Rectangle get_workarea ();
-		public bool is_primary ();
 		public bool is_valid ();
 		public string connector { get; }
 		public Gdk.Display display { get; construct; }
@@ -5936,6 +5935,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool cairo_get_clip_rectangle (Cairo.Context cr, out Gdk.Rectangle rect);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static void cairo_image_surface_recolor (Cairo.Surface image_surface, Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_region (Cairo.Context cr, Cairo.Region region);
@@ -6230,6 +6231,7 @@ namespace Gsk {
 		[DestroysInstance]
 		public Gsk.Transform transform (Gsk.Transform? other);
 		public Graphene.Rect transform_bounds (Graphene.Rect rect);
+		public Graphene.Point transform_point (Graphene.Point point);
 		[DestroysInstance]
 		public Gsk.Transform translate (Graphene.Point point);
 		[DestroysInstance]
@@ -7509,7 +7511,6 @@ namespace Gtk {
 		public GLib.List<weak Gtk.Widget> get_children ();
 		public unowned Gtk.Adjustment? get_focus_hadjustment ();
 		public unowned Gtk.Adjustment? get_focus_vadjustment ();
-		public virtual Gtk.WidgetPath get_path_for_child (Gtk.Widget child);
 		[NoWrapper]
 		public virtual void set_focus_child (Gtk.Widget child);
 		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
@@ -8501,20 +8502,17 @@ namespace Gtk {
 		public unowned string get_context_id ();
 		public void set_context_id (string context_id);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_info_get_type ()")]
-	public class IconInfo : GLib.Object {
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_get_type ()")]
+	public class Icon : GLib.Object, Gdk.Paintable {
 		[CCode (has_construct_function = false)]
-		protected IconInfo ();
+		protected Icon ();
+		public Gdk.Texture download_colored_texture (Gdk.RGBA? foreground_color = null, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null) throws GLib.Error;
+		public Gdk.Texture download_texture () throws GLib.Error;
 		public int get_base_scale ();
 		public int get_base_size ();
 		public unowned string? get_filename ();
 		public bool is_symbolic ();
-		public Gdk.Paintable? load_icon () throws GLib.Error;
-		public async Gdk.Paintable load_icon_async (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public Gdk.Paintable load_symbolic (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, out bool was_symbolic = null) throws GLib.Error;
-		public async Gdk.Paintable load_symbolic_async (Gdk.RGBA fg, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null, GLib.Cancellable? cancellable = null, out bool was_symbolic = null) throws GLib.Error;
-		public Gdk.Paintable? load_symbolic_for_context (Gtk.StyleContext context, out bool was_symbolic = null) throws GLib.Error;
-		public async Gdk.Paintable load_symbolic_for_context_async (Gtk.StyleContext context, GLib.Cancellable? cancellable = null, out bool was_symbolic = null) throws GLib.Error;
+		public void snapshot_with_colors (Gtk.Snapshot snapshot, double width, double height, Gdk.RGBA? foreground_color = null, Gdk.RGBA? success_color = null, Gdk.RGBA? warning_color = null, Gdk.RGBA? error_color = null);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_theme_get_type ()")]
 	public class IconTheme : GLib.Object {
@@ -8522,8 +8520,8 @@ namespace Gtk {
 		public IconTheme ();
 		public void add_resource_path (string path);
 		public void append_search_path (string path);
-		public Gtk.IconInfo? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo? choose_icon_for_scale ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
+		public Gtk.Icon? choose_icon ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags);
+		public async Gtk.Icon choose_icon_async ([CCode (array_length = false, array_null_terminated = true)] string[] icon_names, int size, int scale, Gtk.IconLookupFlags flags, int priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public static unowned Gtk.IconTheme get_default ();
 		public static unowned Gtk.IconTheme get_for_display (Gdk.Display display);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -8531,12 +8529,8 @@ namespace Gtk {
 		public void get_search_path ([CCode (array_length_cname = "n_elements", array_length_pos = 1.1)] out string[] path);
 		public bool has_icon (string icon_name);
 		public GLib.List<string> list_icons (string? context);
-		public Gdk.Paintable? load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
-		public Gdk.Paintable? load_icon_for_scale (string icon_name, int size, int scale, Gtk.IconLookupFlags flags) throws GLib.Error;
-		public Gtk.IconInfo? lookup_by_gicon (GLib.Icon icon, int size, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo? lookup_by_gicon_for_scale (GLib.Icon icon, int size, int scale, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo? lookup_icon (string icon_name, int size, Gtk.IconLookupFlags flags);
-		public Gtk.IconInfo? lookup_icon_for_scale (string icon_name, int size, int scale, Gtk.IconLookupFlags flags);
+		public Gtk.Icon? lookup_by_gicon (GLib.Icon icon, int size, int scale, Gtk.IconLookupFlags flags);
+		public Gtk.Icon? lookup_icon (string icon_name, int size, int scale, Gtk.IconLookupFlags flags);
 		public void prepend_search_path (string path);
 		public bool rescan_if_needed ();
 		public void set_custom_theme (string? theme_name);
@@ -10591,19 +10585,14 @@ namespace Gtk {
 		public void add_class (string class_name);
 		public void add_provider (Gtk.StyleProvider provider, uint priority);
 		public static void add_provider_for_display (Gdk.Display display, Gtk.StyleProvider provider, uint priority);
-		public void @get (...);
 		public Gtk.Border get_border ();
 		public Gdk.RGBA get_color ();
 		public unowned Gdk.Display get_display ();
 		public Gtk.Border get_margin ();
 		public Gtk.Border get_padding ();
 		public unowned Gtk.StyleContext? get_parent ();
-		public unowned Gtk.WidgetPath get_path ();
-		public GLib.Value get_property (string property);
 		public int get_scale ();
-		public unowned Gtk.CssSection? get_section (string property);
 		public Gtk.StateFlags get_state ();
-		public void get_valist (string first_property_name, [CCode (type = "va_list")] va_list args);
 		public bool has_class (string class_name);
 		public GLib.List<weak string> list_classes ();
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
@@ -10616,8 +10605,6 @@ namespace Gtk {
 		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background")]
 		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background_get_clip")]
-		public Gdk.Rectangle render_background_get_clip (double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_check")]
 		public void render_check (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_expander")]
@@ -10645,7 +10632,6 @@ namespace Gtk {
 		public void save ();
 		public void set_display (Gdk.Display display);
 		public void set_parent (Gtk.StyleContext? parent);
-		public void set_path (Gtk.WidgetPath path);
 		public void set_scale (int scale);
 		public void set_state (Gtk.StateFlags flags);
 		public string to_string (Gtk.StyleContextPrintFlags flags);
@@ -11727,6 +11713,7 @@ namespace Gtk {
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_mnemonic_label (Gtk.Widget label);
+		public void add_style_class (string style_class);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
 		public void allocate (int width, int height, int baseline, owned Gsk.Transform? transform);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
@@ -11793,7 +11780,6 @@ namespace Gtk {
 		public Gtk.Overflow get_overflow ();
 		public unowned Pango.Context get_pango_context ();
 		public unowned Gtk.Widget? get_parent ();
-		public unowned Gtk.WidgetPath get_path ();
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
 		public unowned Gtk.Widget? get_prev_sibling ();
 		public unowned Gdk.Clipboard get_primary_clipboard ();
@@ -11818,6 +11804,7 @@ namespace Gtk {
 		public int get_width ();
 		public virtual bool grab_focus ();
 		public bool has_grab ();
+		public bool has_style_class (string style_class);
 		public bool has_visible_focus ();
 		public bool in_destruction ();
 		public void init_template ();
@@ -11845,6 +11832,7 @@ namespace Gtk {
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_controller (Gtk.EventController controller);
 		public void remove_mnemonic_label (Gtk.Widget label);
+		public void remove_style_class (string style_class);
 		public void remove_tick_callback (uint id);
 		public void reset_style ();
 		public void set_accel_path (string? accel_path, Gtk.AccelGroup? accel_group);
@@ -11995,44 +11983,6 @@ namespace Gtk {
 		public unowned Gtk.Widget? get_widget ();
 		public void set_widget (Gtk.Widget? widget);
 		public Gtk.Widget widget { get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_widget_path_ref", type_id = "gtk_widget_path_get_type ()", unref_function = "gtk_widget_path_unref")]
-	[Compact]
-	public class WidgetPath {
-		[CCode (has_construct_function = false)]
-		public WidgetPath ();
-		public int append_for_widget (Gtk.Widget widget);
-		public int append_type (GLib.Type type);
-		public int append_with_siblings (Gtk.WidgetPath siblings, uint sibling_index);
-		public Gtk.WidgetPath copy ();
-		[DestroysInstance]
-		public void free ();
-		public GLib.Type get_object_type ();
-		public bool has_parent (GLib.Type type);
-		public bool is_type (GLib.Type type);
-		public void iter_add_class (int pos, string name);
-		public void iter_clear_classes (int pos);
-		public unowned string? iter_get_name (int pos);
-		public unowned string? iter_get_object_name (int pos);
-		public GLib.Type iter_get_object_type (int pos);
-		public uint iter_get_sibling_index (int pos);
-		public unowned Gtk.WidgetPath iter_get_siblings (int pos);
-		public Gtk.StateFlags iter_get_state (int pos);
-		public bool iter_has_class (int pos, string name);
-		public bool iter_has_name (int pos, string name);
-		public bool iter_has_qclass (int pos, GLib.Quark qname);
-		public bool iter_has_qname (int pos, GLib.Quark qname);
-		public GLib.SList<weak string> iter_list_classes (int pos);
-		public void iter_remove_class (int pos, string name);
-		public void iter_set_name (int pos, string name);
-		public void iter_set_object_name (int pos, string? name);
-		public void iter_set_object_type (int pos, GLib.Type type);
-		public void iter_set_state (int pos, Gtk.StateFlags state);
-		public int length ();
-		public void prepend_type (GLib.Type type);
-		public unowned Gtk.WidgetPath @ref ();
-		public string to_string ();
-		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_get_type ()")]
 	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
@@ -14051,26 +14001,6 @@ namespace Gtk {
 	public const string STYLE_CLASS_WARNING;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_WIDE")]
 	public const string STYLE_CLASS_WIDE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BACKGROUND_COLOR")]
-	public const string STYLE_PROPERTY_BACKGROUND_COLOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BACKGROUND_IMAGE")]
-	public const string STYLE_PROPERTY_BACKGROUND_IMAGE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BORDER_COLOR")]
-	public const string STYLE_PROPERTY_BORDER_COLOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BORDER_RADIUS")]
-	public const string STYLE_PROPERTY_BORDER_RADIUS;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BORDER_STYLE")]
-	public const string STYLE_PROPERTY_BORDER_STYLE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_BORDER_WIDTH")]
-	public const string STYLE_PROPERTY_BORDER_WIDTH;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_COLOR")]
-	public const string STYLE_PROPERTY_COLOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_FONT")]
-	public const string STYLE_PROPERTY_FONT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_MARGIN")]
-	public const string STYLE_PROPERTY_MARGIN;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROPERTY_PADDING")]
-	public const string STYLE_PROPERTY_PADDING;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROVIDER_PRIORITY_APPLICATION")]
 	public const int STYLE_PROVIDER_PRIORITY_APPLICATION;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROVIDER_PRIORITY_FALLBACK")]
