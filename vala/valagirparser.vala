@@ -1327,6 +1327,7 @@ public class Vala.GirParser : CodeVisitor {
 	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 	HashMap<UnresolvedType,Node> unresolved_type_arguments = new HashMap<UnresolvedType,Node> ();
+	ArrayList<Interface> ifaces_needing_object_prereq = new ArrayList<Interface> ();
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -2123,6 +2124,10 @@ public class Vala.GirParser : CodeVisitor {
 		if (vala_namespace == null) {
 			vala_namespace = gir_namespace;
 		}
+                // special case for GObject-*.gir
+                if (vala_namespace == "G") {
+                        vala_namespace = "GLib";
+                }
 
 		current_source_file.gir_namespace = gir_namespace;
 		current_source_file.gir_version = gir_version;
@@ -3698,6 +3703,10 @@ public class Vala.GirParser : CodeVisitor {
 				map_from = map_from.inner;
 			}
 		}
+
+		foreach (var iface in ifaces_needing_object_prereq) {
+			iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("Object")));
+		}
 	}
 
 	void create_new_namespaces () {
@@ -3743,7 +3752,13 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		if (!has_instantiable_prereq) {
-			iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("Object")));
+			var ots = glib_ns.scope.lookup ("Object");
+			if (ots == null) {
+				// if we're parsing GObject.gir, it's possible that GLib.Object has not yet been resolved
+				ifaces_needing_object_prereq.add (iface);
+			} else {
+				iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) ots));
+			}
 		}
 	}
 
