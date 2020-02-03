@@ -24,8 +24,6 @@
 using GLib;
 
 public class Vala.GErrorModule : CCodeDelegateModule {
-	private int current_try_id = 0;
-	private int next_try_id = 0;
 	private bool is_in_catch = false;
 
 	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {

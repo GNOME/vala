@@ -31,6 +31,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public Symbol? current_symbol;
 		public ArrayList<Symbol> symbol_stack = new ArrayList<Symbol> ();
 		public TryStatement current_try;
+		public int current_try_id;
+		public int next_try_id;
 		public CatchClause current_catch;
 		public CCodeFunction ccode;
 		public ArrayList<CCodeFunction> ccode_stack = new ArrayList<CCodeFunction> ();
@@ -75,6 +77,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TryStatement current_try {
 		get { return emit_context.current_try; }
 		set { emit_context.current_try = value; }
+	}
+
+	public int current_try_id {
+		get { return emit_context.current_try_id; }
+		set { emit_context.current_try_id = value; }
+	}
+
+	public int next_try_id {
+		get { return emit_context.next_try_id; }
+		set { emit_context.next_try_id = value; }
 	}
 
 	public CatchClause current_catch {
