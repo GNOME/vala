@@ -3119,7 +3119,8 @@ namespace Gst {
 	public enum ClockType {
 		REALTIME,
 		MONOTONIC,
-		OTHER
+		OTHER,
+		TAI
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_DEBUG_", type_id = "gst_debug_color_flags_get_type ()")]
 	[Flags]

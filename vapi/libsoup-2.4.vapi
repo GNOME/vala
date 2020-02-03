@@ -377,6 +377,8 @@ namespace Soup {
 		public unowned string get_name ();
 		[Version (since = "2.32")]
 		public unowned string get_path ();
+		[Version (since = "2.70")]
+		public Soup.SameSitePolicy get_same_site_policy ();
 		[Version (since = "2.32")]
 		public bool get_secure ();
 		[Version (since = "2.32")]
@@ -388,6 +390,8 @@ namespace Soup {
 		public void set_max_age (int max_age);
 		public void set_name (string name);
 		public void set_path (string path);
+		[Version (since = "2.70")]
+		public void set_same_site_policy (Soup.SameSitePolicy policy);
 		public void set_secure (bool secure);
 		public void set_value (string value);
 		public string to_cookie_header ();
@@ -412,6 +416,8 @@ namespace Soup {
 		public Soup.CookieJarAcceptPolicy get_accept_policy ();
 		[Version (since = "2.40")]
 		public GLib.SList<Soup.Cookie> get_cookie_list (Soup.URI uri, bool for_http);
+		[Version (since = "2.70")]
+		public GLib.SList<Soup.Cookie> get_cookie_list_with_same_site_info (Soup.URI uri, Soup.URI? top_level, Soup.URI? site_for_cookies, bool for_http, bool is_safe_method, bool is_top_level_navigation);
 		[Version (since = "2.24")]
 		public string? get_cookies (Soup.URI uri, bool for_http);
 		[Version (since = "2.40")]
@@ -581,8 +587,12 @@ namespace Soup {
 		public Soup.HTTPVersion get_http_version ();
 		[Version (since = "2.34")]
 		public bool get_https_status (out unowned GLib.TlsCertificate certificate, out GLib.TlsCertificateFlags errors);
+		[Version (since = "2.70")]
+		public bool get_is_top_level_navigation ();
 		[Version (since = "2.44")]
 		public Soup.MessagePriority get_priority ();
+		[Version (since = "2.70")]
+		public unowned Soup.URI get_site_for_cookies ();
 		[Version (since = "2.42")]
 		public unowned Soup.Request get_soup_request ();
 		public unowned Soup.URI get_uri ();
@@ -593,12 +603,16 @@ namespace Soup {
 		public void set_first_party (Soup.URI first_party);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
+		[Version (since = "2.70")]
+		public void set_is_top_level_navigation (bool is_top_level_navigation);
 		[Version (since = "2.44")]
 		public void set_priority (Soup.MessagePriority priority);
 		[Version (since = "2.38")]
 		public void set_redirect (uint status_code, string redirect_uri);
 		public void set_request (string? content_type, Soup.MemoryUse req_use, [CCode (array_length_cname = "req_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] req_body);
 		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[]? resp_body);
+		[Version (since = "2.70")]
+		public void set_site_for_cookies (Soup.URI? site_for_cookies);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.URI uri);
@@ -606,6 +620,8 @@ namespace Soup {
 		public Soup.URI first_party { get; set; }
 		public Soup.MessageFlags flags { get; set; }
 		public Soup.HTTPVersion http_version { get; set; }
+		[Version (since = "2.70")]
+		public bool is_top_level_navigation { get; set; }
 		[NoAccessorMethod]
 		public string method { owned get; set; }
 		public Soup.MessagePriority priority { get; set; }
@@ -613,6 +629,7 @@ namespace Soup {
 		public string reason_phrase { owned get; set; }
 		[NoAccessorMethod]
 		public bool server_side { get; construct; }
+		public Soup.URI site_for_cookies { get; set; }
 		[NoAccessorMethod]
 		public uint status_code { get; set; }
 		[NoAccessorMethod]
@@ -1472,6 +1489,13 @@ namespace Soup {
 		HIGH,
 		VERY_HIGH
 	}
+	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SAME_SITE_POLICY_", type_id = "soup_same_site_policy_get_type ()")]
+	[Version (since = "2.70")]
+	public enum SameSitePolicy {
+		NONE,
+		LAX,
+		STRICT
+	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_SERVER_LISTEN_", type_id = "soup_server_listen_options_get_type ()")]
 	[Flags]
 	[Version (since = "2.48")]
@@ -1768,6 +1792,8 @@ namespace Soup {
 	public const string MESSAGE_FLAGS;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_HTTP_VERSION")]
 	public const string MESSAGE_HTTP_VERSION;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_IS_TOP_LEVEL_NAVIGATION")]
+	public const string MESSAGE_IS_TOP_LEVEL_NAVIGATION;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_METHOD")]
 	public const string MESSAGE_METHOD;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_PRIORITY")]
@@ -1791,6 +1817,8 @@ namespace Soup {
 	public const string MESSAGE_RESPONSE_HEADERS;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_SERVER_SIDE")]
 	public const string MESSAGE_SERVER_SIDE;
+	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_SITE_FOR_COOKIES")]
+	public const string MESSAGE_SITE_FOR_COOKIES;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_STATUS_CODE")]
 	public const string MESSAGE_STATUS_CODE;
 	[CCode (cheader_filename = "libsoup/soup.h", cname = "SOUP_MESSAGE_TLS_CERTIFICATE")]
