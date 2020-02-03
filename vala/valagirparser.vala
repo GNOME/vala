@@ -1308,7 +1308,6 @@ public class Vala.GirParser : CodeVisitor {
 	MarkupReader reader;
 
 	CodeContext context;
-	Namespace glib_ns;
 
 	SourceFile current_source_file;
 	Node root;
@@ -1330,6 +1329,7 @@ public class Vala.GirParser : CodeVisitor {
 	HashMap<UnresolvedSymbol,Symbol> unresolved_symbols_map = new HashMap<UnresolvedSymbol,Symbol> (unresolved_symbol_hash, unresolved_symbol_equal);
 	ArrayList<UnresolvedSymbol> unresolved_gir_symbols = new ArrayList<UnresolvedSymbol> ();
 	HashMap<UnresolvedType,Node> unresolved_type_arguments = new HashMap<UnresolvedType,Node> ();
+	ArrayList<Interface> ifaces_needing_object_prereq = new ArrayList<Interface> ();
 
 	/**
 	 * Parses all .gir source files in the specified code
@@ -1339,7 +1339,6 @@ public class Vala.GirParser : CodeVisitor {
 	 */
 	public void parse (CodeContext context) {
 		this.context = context;
-		glib_ns = context.root.scope.lookup ("GLib") as Namespace;
 
 		root = new Node (null);
 		root.symbol = context.root;
@@ -1355,6 +1354,16 @@ public class Vala.GirParser : CodeVisitor {
 		resolve_type_arguments ();
 
 		root.process (this);
+
+		/* Temporarily workaround G-I bug not adding GLib.Object prerequisite:
+		   ensure we have at least one instantiable prerequisite */
+		var glib_ns = context.root.scope.lookup ("GLib") as Namespace;
+		if (glib_ns != null) {
+			var object_type = (Class) glib_ns.scope.lookup ("Object");
+			foreach (var iface in ifaces_needing_object_prereq) {
+				iface.add_prerequisite (new ObjectType (object_type));
+			}
+		}
 
 		foreach (var metadata in metadata_roots) {
 			report_unused_metadata (metadata);
@@ -3709,7 +3718,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		if (!has_instantiable_prereq) {
-			iface.add_prerequisite (new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("Object")));
+			ifaces_needing_object_prereq.add (iface);
 		}
 	}
 
