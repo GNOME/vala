@@ -4058,7 +4058,7 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (resolved_type is DelegateType) {
 					var d = ((DelegateType) resolved_type).delegate_symbol;
-					if (!(d.name == "DestroyNotify" && d.parent_symbol.name == "GLib")) {
+					if (!(d.name == "DestroyNotify" && (d.parent_symbol == null || d.parent_symbol.name == "GLib"))) {
 						info.param.set_attribute_string ("CCode", "scope", "async");
 						info.param.variable_type.value_owned = (info.closure_idx != -1 && info.destroy_idx != -1);
 					}
