@@ -487,7 +487,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			if (length != null) {
 				array_length_pos = int.parse (length);
 				if (array_length_pos < 0) {
-					warning ("invalid array lenght position");
+					warning ("invalid array length position");
 				}
 			}
 
