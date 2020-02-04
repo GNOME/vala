@@ -1,3 +1,22 @@
+Vala 0.47.4
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Skip StructRegisterFunction for boolean/integer/floating types [#901]
+    + Handle different type-symbols in visit_base_access() [#901]
+    + Explicitly include header for length-type of arrays
+    + Explicitly include <glib.h> as needed for null-literal
+    + Make *_try_id specific to emit-context instead being global states
+  - vala:
+    + Improve detection of recursive struct declarations [#902]
+    + Inline allocated arrays require length or initializer [#903]
+  - parser: Improve robustness and behavior of --keep-going
+
+ * Bindings:
+  - javascriptcoregtk-4.0: Make JSC.Class usable by defining the right callback
+  - gtk4: Update to 3.96.0+4ab12ab7
+  - vapi: Update GIR-based bindings
+
 Vala 0.47.3
 ===========
  * Highlights:
