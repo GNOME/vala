@@ -205,7 +205,9 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 				return false;
 			}
 
-			param.check (context);
+			if (!param.check (context)) {
+				error = true;
+			}
 		}
 
 		if (!is_virtual && body != null) {
