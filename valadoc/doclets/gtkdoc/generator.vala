@@ -716,7 +716,7 @@ It is important that your <link linkend="GValue"><type>GValue</type></link> hold
 		if (edomain != null) {
 			if (param_header == null) {
 				add_custom_header ("error",
-								   "location to store the error occuring, or %NULL to ignore",
+								   "location to store the error occurring, or %NULL to ignore",
 								   {"error-domains %s".printf (edomain.get_cname ())},
 								   double.MAX-1);
 			} else {
@@ -727,7 +727,7 @@ It is important that your <link linkend="GValue"><type>GValue</type></link> hold
 			}
 		} else if (param_header == null) {
 			add_custom_header ("error",
-							   "location to store the error occuring, or %NULL to ignore",
+							   "location to store the error occurring, or %NULL to ignore",
 							   null,
 							   double.MAX - 1);
 		}
