@@ -312,7 +312,9 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 
 		foreach (Parameter param in parameters) {
-			param.check (context);
+			if (!param.check (context)) {
+				error = true;
+			}
 		}
 
 		if (error_types != null) {

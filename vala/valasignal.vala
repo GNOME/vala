@@ -217,7 +217,9 @@ public class Vala.Signal : Symbol, Callable {
 				return false;
 			}
 
-			param.check (context);
+			if (!param.check (context)) {
+				error = true;
+			}
 		}
 
 		if (!is_virtual && body != null) {

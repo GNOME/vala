@@ -103,7 +103,9 @@ public class Vala.CreationMethod : Method {
 
 		int i = 0;
 		foreach (Parameter param in get_parameters()) {
-			param.check (context);
+			if (!param.check (context)) {
+				error = true;
+			}
 			if (i == 0 && param.ellipsis && body != null) {
 				error = true;
 				Report.error (param.source_reference, "Named parameter required before `...'");
