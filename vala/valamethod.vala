@@ -823,7 +823,10 @@ public class Vala.Method : Subroutine, Callable {
 
 		var optional_param = false;
 		foreach (Parameter param in parameters) {
-			param.check (context);
+			if (!param.check (context)) {
+				error = true;
+				continue;
+			}
 			if (coroutine && param.direction == ParameterDirection.REF) {
 				error = true;
 				Report.error (param.source_reference, "Reference parameters are not supported for async methods");
