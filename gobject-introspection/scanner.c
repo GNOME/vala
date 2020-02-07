@@ -24,7 +24,9 @@
 
 #include <string.h>
 #include <stdlib.h>
+#ifndef YY_NO_UNISTD_H
 #include <unistd.h>
+#endif
 #include <ctype.h>
 #include <errno.h>
 #include <glib.h>
