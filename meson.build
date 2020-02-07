@@ -112,15 +112,19 @@ test_cflags = [
 ]
 supported_test_cflags = cc.get_supported_arguments(test_cflags)
 
-add_project_arguments([
-		'-Wno-discarded-qualifiers',
-		'-Wno-incompatible-pointer-types',
-		'-Wno-unused',
-		'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48',
-		'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48',
-	],
-	language: 'c',
-)
+common_cflags = [
+	'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48',
+	'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48',
+]
+common_cflags += cc.get_supported_arguments([
+	'-Wno-discarded-qualifiers',
+	'-Wno-incompatible-pointer-types',
+	'-Wno-unused',
+])
+if cc.get_id() == 'msvc'
+	common_cflags += '-DYY_NO_UNISTD_H'
+endif
+add_project_arguments(common_cflags, language: 'c')
 
 glib_version_required = '2.48'
 libgvc_version_required = '2.16'
