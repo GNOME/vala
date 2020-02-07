@@ -14,6 +14,9 @@ valac_exe = executable(
 vala_name = 'vala@0@'.format(vala_version_suffix)
 
 # https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ valac'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ @2@'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name, vala_name))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vala'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name))
+if symlinks_enabled
+bindir_path = join_paths(get_option('prefix'), get_option('bindir'))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs @1@ @2@ valac'.format(bindir_path, ln_options, valac_name))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs @1@ @2@ @3@'.format(bindir_path, ln_options, valac_name, vala_name))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs @1@ @2@ vala'.format(bindir_path, ln_options, valac_name))
+endif

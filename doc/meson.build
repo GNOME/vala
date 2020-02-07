@@ -53,11 +53,14 @@ else
 endif
 
 # https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative vala-gen-introspect.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'vala-gen-introspect@0@.1'.format(vala_version_suffix)))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative valac.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'valac@0@.1'.format(vala_version_suffix)))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative vapigen.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'vapigen@0@.1'.format(vala_version_suffix)))
+if symlinks_enabled
+mandir_path = join_paths(get_option('prefix'), get_option('mandir'))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs @1@ vala-gen-introspect.1 @2@'.format(mandir_path, ln_options, 'vala-gen-introspect@0@.1'.format(vala_version_suffix)))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs @1@ valac.1 @2@'.format(mandir_path, ln_options, 'valac@0@.1'.format(vala_version_suffix)))
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs @1@ vapigen.1 @2@'.format(mandir_path, ln_options, 'vapigen@0@.1'.format(vala_version_suffix)))
 if valadoc_enabled
-	meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative valadoc.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'valadoc@0@.1'.format(vala_version_suffix)))
+	meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs @1@ valadoc.1 @2@'.format(mandir_path, ln_options, 'valadoc@0@.1'.format(vala_version_suffix)))
+endif
 endif
 
 if valadoc_enabled
