@@ -156,6 +156,17 @@ if (vg.found())
 	)
 endif
 
+if build_machine.system() != 'windows'
+	symlinks_enabled = true
+
+	ln_options = ''
+	if run_command('ln', '--help').stdout().contains('--relative')
+		ln_options += '--relative'
+	endif
+else
+	symlinks_enabled = false
+else
+
 subdir('gobject-introspection')
 subdir('gee')
 subdir('vala')
