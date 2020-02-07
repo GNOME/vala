@@ -112,15 +112,27 @@ test_cflags = [
 ]
 supported_test_cflags = cc.get_supported_arguments(test_cflags)
 
-add_project_arguments([
-		'-Wno-discarded-qualifiers',
-		'-Wno-incompatible-pointer-types',
-		'-Wno-unused',
-		'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48',
-		'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48',
-	],
-	language: 'c',
-)
+common_cflags = [
+	'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48',
+	'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48',
+]
+buildtype = get_option('buildtype')
+if buildtype == 'release' or buildtype == 'minsize'
+	common_cflags += [
+		'-DG_DISABLE_CAST_CHECKS',
+		'-DG_DISABLE_ASSERT',
+		'-DG_DISABLE_CHECKS',
+	]
+endif
+common_cflags += cc.get_supported_arguments([
+	'-Wno-discarded-qualifiers',
+	'-Wno-incompatible-pointer-types',
+	'-Wno-unused',
+])
+if cc.get_id() == 'msvc'
+	common_cflags += '-DYY_NO_UNISTD_H'
+endif
+add_project_arguments(common_cflags, language: 'c')
 
 glib_version_required = '2.48'
 libgvc_version_required = '2.16'
@@ -154,6 +166,17 @@ if (vg.found())
 		exe_wrapper: [vg, '--error-exitcode=1', '--leak-check=full', '--track-origins=yes'],
 		timeout_multiplier: 100,
 	)
+endif
+
+if build_machine.system() != 'windows'
+	symlinks_enabled = true
+
+	ln_options = ''
+	if run_command('ln', '--help').stdout().contains('--relative')
+		ln_options += '--relative'
+	endif
+else
+	symlinks_enabled = false
 endif
 
 subdir('gobject-introspection')

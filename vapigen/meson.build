@@ -14,7 +14,12 @@ vapigen_exe = executable(
 )
 
 # https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vapigen'.format(join_paths(get_option('prefix'), get_option('bindir')), vapigen_name))
+if symlinks_enabled
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs @1@ @2@ vapigen'.format(
+	join_paths(get_option('prefix'), get_option('bindir')),
+	ln_options,
+	vapigen_name))
+endif
 
 vapicheck_sources = files(
 	'valavapicheck.vala',
@@ -31,7 +36,12 @@ executable(
 )
 
 # https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vapicheck'.format(join_paths(get_option('prefix'), get_option('bindir')), vapicheck_name))
+if symlinks_enabled
+meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs @1@ @2@ vapicheck'.format(
+	join_paths(get_option('prefix'), get_option('bindir')),
+	ln_options,
+	vapicheck_name))
+endif
 
 configure_file(
 	input: 'vapigen.pc.in',
