@@ -79,7 +79,11 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 
 		checked = true;
 
-		declaration.check (context);
+		if (!declaration.check (context)) {
+			// ignore inner error
+			error = true;
+			return false;
+		}
 
 		return !error;
 	}

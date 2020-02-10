@@ -65,6 +65,7 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 
 		if (!expression.check (context)) {
 			// if there was an error in the inner expression, skip this check
+			error = true;
 			return false;
 		}
 
