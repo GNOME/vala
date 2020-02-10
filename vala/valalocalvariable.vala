@@ -139,6 +139,7 @@ public class Vala.LocalVariable : Variable {
 
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && variable_array_type.length == null && !(initializer is ArrayCreationExpression)) {
+			error = true;
 			Report.error (source_reference, "Inline allocated array requires either a given length or an initializer");
 		}
 

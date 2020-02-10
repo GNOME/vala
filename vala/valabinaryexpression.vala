@@ -546,6 +546,7 @@ public class Vala.BinaryExpression : Expression {
 				right.target_type.nullable = false;
 			} else if (right.value_type is ArrayType) {
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
+					error = true;
 					Report.error (source_reference, "Cannot look for `%s' in `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 				}
 			} else {

@@ -339,9 +339,11 @@ public class Vala.Assignment : Expression {
 				           && context.analyzer.find_current_method () is CreationMethod) {
 					if (ma.inner.symbol_reference != context.analyzer.find_current_method ().this_parameter) {
 						// trying to set construct-only property in creation method for foreign instance
+						error = true;
 						Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 						return false;
 					} else {
+						error = true;
 						Report.error (ma.source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
 						return false;
 					}

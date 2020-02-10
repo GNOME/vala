@@ -687,12 +687,16 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (is_abstract && body != null) {
+			error = true;
 			Report.error (source_reference, "Abstract methods cannot have bodies");
 		} else if ((is_abstract || is_virtual) && external && !external_package && !parent_symbol.external) {
+			error = true;
 			Report.error (source_reference, "Extern methods cannot be abstract or virtual");
 		} else if (external && body != null) {
+			error = true;
 			Report.error (source_reference, "Extern methods cannot have bodies");
 		} else if (!is_abstract && !external && source_type == SourceFileType.SOURCE && body == null) {
+			error = true;
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
@@ -922,14 +926,17 @@ public class Vala.Method : Subroutine, Callable {
 			context.entry_point = this;
 
 			if (tree_can_fail) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
 
 			if (is_inline) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot be inline");
 			}
 
 			if (coroutine) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot be async");
 			}
 		}

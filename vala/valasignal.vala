@@ -211,6 +211,7 @@ public class Vala.Signal : Symbol, Lockable, Callable {
 		}
 
 		if (!is_virtual && body != null) {
+			error = true;
 			Report.error (source_reference, "Only virtual signals can have a default signal handler body");
 		}
 
