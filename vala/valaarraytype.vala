@@ -290,17 +290,20 @@ public class Vala.ArrayType : ReferenceType {
 			length.check (context);
 
 			if (length.value_type == null || !(length.value_type is IntegerType) || !length.is_constant ()) {
+				error = true;
 				Report.error (length.source_reference, "Expression of constant integer type expected");
 				return false;
 			}
 		}
 
 		if (element_type is ArrayType) {
+			error = true;
 			Report.error (source_reference, "Stacked arrays are not supported");
 			return false;
 		} else if (element_type is DelegateType) {
 			var delegate_type = (DelegateType) element_type;
 			if (delegate_type.delegate_symbol.has_target) {
+				error = true;
 				Report.error (source_reference, "Delegates with target are not supported as array element type");
 				return false;
 			}

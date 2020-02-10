@@ -766,12 +766,16 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (is_abstract && body != null) {
+			error = true;
 			Report.error (source_reference, "Abstract methods cannot have bodies");
 		} else if ((is_abstract || is_virtual) && is_extern) {
+			error = true;
 			Report.error (source_reference, "Extern methods cannot be abstract or virtual");
 		} else if (is_extern && body != null) {
+			error = true;
 			Report.error (source_reference, "Extern methods cannot have bodies");
 		} else if (!is_abstract && !external && source_type == SourceFileType.SOURCE && body == null) {
+			error = true;
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
@@ -849,6 +853,7 @@ public class Vala.Method : Subroutine, Callable {
 			// Add local variable to provide access to params arrays which will be constructed out of the given va-args
 			if (param.params_array && body != null) {
 				if (params_array_var != null) {
+					error = true;
 					Report.error (param.source_reference, "Only one params-array parameter is allowed");
 					continue;
 				}
@@ -859,9 +864,11 @@ public class Vala.Method : Subroutine, Callable {
 				type.element_type.value_owned = type.value_owned;
 				type.value_owned = true;
 				if (type.element_type.is_real_struct_type () && !type.element_type.nullable) {
+					error = true;
 					Report.error (param.source_reference, "Only nullable struct elements are supported in params-array");
 				}
 				if (type.length != null) {
+					error = true;
 					Report.error (param.source_reference, "Passing length to params-array is not supported yet");
 				}
 				params_array_var = new LocalVariable (type, param.name, null, param.source_reference);
@@ -1049,14 +1056,17 @@ public class Vala.Method : Subroutine, Callable {
 			context.entry_point = this;
 
 			if (tree_can_fail) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot throw errors");
 			}
 
 			if (is_inline) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot be inline");
 			}
 
 			if (coroutine) {
+				error = true;
 				Report.error (source_reference, "\"main\" method cannot be async");
 			}
 		}

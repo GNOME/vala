@@ -176,6 +176,7 @@ public class Vala.CreationMethod : Method {
 		context.analyzer.current_symbol = old_symbol;
 
 		if (is_abstract || is_virtual || overrides) {
+			error = true;
 			Report.error (source_reference, "The creation method `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
 			return false;
 		}
