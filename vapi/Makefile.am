@@ -154,6 +154,8 @@ dist_vapi_DATA = \
 	gudev-1.0.vapi \
 	hal.deps \
 	hal.vapi \
+	harfbuzz-gobject.deps \
+	harfbuzz-gobject.vapi \
 	hildon-1.deps \
 	hildon-1.vapi \
 	hildon-fm-2.deps \
@@ -363,6 +365,7 @@ GIR_BINDINGS = \
 	gtk+-3.0 \
 	gtk4 \
 	gudev-1.0 \
+	harfbuzz-gobject \
 	javascriptcoregtk-4.0 \
 	json-glib-1.0 \
 	libgeoclue-2.0 \
@@ -594,6 +597,9 @@ gtksourceview-2.0:
 
 gudev-1.0:
 	$(GENVAPI) --library $(srcdir)/gudev-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GUdev-1.0-custom.vala $(GIRDIR)/GUdev-1.0.gir
+
+harfbuzz-gobject:
+	$(GENVAPI) --library $(srcdir)/harfbuzz-gobject --metadatadir $(METADATADIR) $(GIRDIR)/HarfBuzz-0.0.gir
 
 hildon-1:
 	$(GENVAPI) --library $(srcdir)/hildon-1 $(PACKAGESDIR)/hildon-1/hildon-1-custom.vala $(PACKAGESDIR)/hildon-1/hildon-1.gi
