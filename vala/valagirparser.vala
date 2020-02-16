@@ -947,6 +947,9 @@ public class Vala.GirParser : CodeVisitor {
 									}
 									node.merged = true;
 								}
+							} else if (m.is_class_member ()) {
+								Report.warning (symbol.source_reference, "Class method `%s' conflicts with method of the same name".printf (get_full_name ()));
+								node.merged = true;
 							}
 						}
 					}
