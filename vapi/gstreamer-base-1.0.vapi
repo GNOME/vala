@@ -799,6 +799,8 @@ namespace Gst {
 			public virtual bool propose_allocation (Gst.Query decide_query, Gst.Query query);
 			[NoWrapper]
 			public virtual bool query (Gst.PadDirection direction, Gst.Query query);
+			[Version (since = "1.18")]
+			public bool reconfigure ();
 			public void reconfigure_sink ();
 			public void reconfigure_src ();
 			[NoWrapper]

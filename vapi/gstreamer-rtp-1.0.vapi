@@ -117,6 +117,9 @@ namespace Gst {
 			public uint timestamp { get; }
 			[NoAccessorMethod]
 			public uint timestamp_offset { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.18")]
+			public uint twcc_ext_id { get; set; }
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[Compact]
@@ -316,6 +319,9 @@ namespace Gst {
 		public static uint32 buffer_default_clock_rate (uint8 payload_type);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static uint64 buffer_ext_timestamp (ref uint64 exttimestamp, uint32 timestamp);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		[Version (since = "1.18")]
+		public static bool buffer_get_extension_onebyte_header_from_bytes (GLib.Bytes bytes, uint16 bit_pattern, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 5.1, array_length_type = "guint")] out unowned uint8[] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_get_rtp_source_meta")]
 		[Version (since = "1.16")]
 		public static unowned Gst.RTP.SourceMeta? buffer_get_rtp_source_meta (Gst.Buffer buffer);
