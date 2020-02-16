@@ -6511,7 +6511,7 @@ namespace Gtk {
 		public bool is_cursor_position ();
 		public bool is_end ();
 		public bool is_start ();
-		public void order (Gtk.TextIter second);
+		public void order (ref Gtk.TextIter second);
 		public void set_line (int line_number);
 		public void set_line_index (int byte_on_line);
 		public void set_line_offset (int char_on_line);
