@@ -384,7 +384,7 @@ namespace WebKit {
 		[Version (since = "2.28")]
 		public virtual void notify_focus_out ();
 		[Version (since = "2.28")]
-		public virtual void notify_surrounding (string text, uint length, uint cursor_index);
+		public virtual void notify_surrounding (string text, uint length, uint cursor_index, uint selection_index);
 		[Version (since = "2.28")]
 		public virtual void reset ();
 		[Version (since = "2.28")]
@@ -713,6 +713,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public bool get_allow_file_access_from_file_urls ();
 		public bool get_allow_modal_dialogs ();
+		[Version (since = "2.28")]
+		public bool get_allow_top_navigation_to_data_urls ();
 		[Version (since = "2.14")]
 		public bool get_allow_universal_access_from_file_urls ();
 		public bool get_auto_load_images ();
@@ -785,6 +787,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public void set_allow_file_access_from_file_urls (bool allowed);
 		public void set_allow_modal_dialogs (bool allowed);
+		[Version (since = "2.28")]
+		public void set_allow_top_navigation_to_data_urls (bool allowed);
 		[Version (since = "2.14")]
 		public void set_allow_universal_access_from_file_urls (bool allowed);
 		public void set_auto_load_images (bool enabled);
@@ -858,6 +862,8 @@ namespace WebKit {
 		[Version (since = "2.10")]
 		public bool allow_file_access_from_file_urls { get; set construct; }
 		public bool allow_modal_dialogs { get; set construct; }
+		[Version (since = "2.28")]
+		public bool allow_top_navigation_to_data_urls { get; set construct; }
 		[Version (since = "2.14")]
 		public bool allow_universal_access_from_file_urls { get; set construct; }
 		public bool auto_load_images { get; set construct; }
@@ -1361,8 +1367,8 @@ namespace WebKit {
 		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);
 		[CCode (cname = "show-option-menu")]
-		[Version (since = "2.18")]
-		public signal bool on_show_option_menu (WebKit.OptionMenu menu, Gdk.Event event, Gdk.Rectangle rectangle);
+		[Version (since = "2.28")]
+		public signal bool on_show_option_menu (WebKit.OptionMenu object, Gdk.Event p0, Gdk.Rectangle p1);
 		public virtual signal bool permission_request (WebKit.PermissionRequest permission_request);
 		public virtual signal bool print (WebKit.PrintOperation print_operation);
 		public virtual signal void ready_to_show ();
