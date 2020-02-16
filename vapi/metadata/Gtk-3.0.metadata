@@ -537,6 +537,8 @@ TextBuffer
   .insert*.iter ref
   .insert_text.pos ref
   .insert_text#signal.location ref
+TextIter
+  .order.second ref
 TextView
   .backward*.iter ref
   .forward*.iter ref
