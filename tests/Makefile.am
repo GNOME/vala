@@ -75,6 +75,7 @@ TESTS = \
 	arrays/cast-silent-invalid.test \
 	arrays/class-field-length-cname.vala \
 	arrays/expression-bracket.test \
+	arrays/fixed-length-init0-not-allowed.vala \
 	arrays/field-global-length-cname.vala \
 	arrays/fixed-length-concat-invalid.test \
 	arrays/fixed-length-non-const.test \

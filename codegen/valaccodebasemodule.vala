@@ -2547,8 +2547,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				cvar.initializer = default_value_for_type (local.variable_type, true);
-				cvar.init0 = true;
+				if (is_init_allowed (local.variable_type)) {
+					cvar.initializer = default_value_for_type (local.variable_type, true);
+					cvar.init0 = true;
+				}
 
 				ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
 			}
@@ -3802,7 +3804,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else {
 			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
-			if (init) {
+			if (init && is_init_allowed (local.variable_type)) {
 				cvar.initializer = default_value_for_type (local.variable_type, true, on_error);
 				cvar.init0 = true;
 			}
@@ -6346,6 +6348,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (type.type_symbol != null) {
 			return type.type_symbol.get_attribute_bool ("CCode", "lvalue_access", true);
+		}
+		return true;
+	}
+
+	public bool is_init_allowed (DataType type) {
+		unowned ArrayType? array_type = type as ArrayType;
+		if (array_type != null && array_type.inline_allocated
+		   && array_type.fixed_length) {
+		   unowned Constant? c = array_type.length.symbol_reference as Constant;
+		   // our local constants are not actual constants in C
+		   return (c == null || !(c.parent_symbol is Block));
 		}
 		return true;
 	}
