@@ -1,3 +1,22 @@
+Vala 0.47.91
+============
+ * Various improvements and bug fixes:
+  - vala:
+    + Fix base-access check for compact classes (2)
+    + Don't ignore errors in Parameter and acknowledge them further
+    + Properly set CodeNode.error when reporting an error
+  - girparser: Report a warning for conflicting class and instance methods
+  - testrunner: Invalid tests and therefore expected failures must return 1
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - Add harfbuzz-gobject binding [#909]
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk+-*.0,gtk4: Fix iter parameter of TextIter.order() [#908]
+  - gtk4: Update to 3.98.0+410dbdf6
+  - pango: Update and add harfbuzz-gobject as dependency
+  - webkit2gtk-4.0: Update to 2.27.90
+
 Vala 0.47.4
 ===========
  * Various improvements and bug fixes:
