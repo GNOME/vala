@@ -225,6 +225,8 @@ namespace Pango {
 	public abstract class Font : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Font ();
+		[NoWrapper]
+		public virtual HarfBuzz.Font create_hb_font ();
 		public virtual Pango.FontDescription describe ();
 		[NoWrapper]
 		public virtual Pango.FontDescription describe_absolute ();
@@ -236,6 +238,8 @@ namespace Pango {
 		public virtual Pango.Coverage get_coverage (Pango.Language language);
 		[Version (since = "1.46")]
 		public unowned Pango.FontFace get_face ();
+		[Version (since = "1.44")]
+		public virtual void get_features ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint")] out unowned HarfBuzz.Feature[] features, ref uint num_features);
 		[Version (since = "1.10")]
 		public virtual unowned Pango.FontMap? get_font_map ();
 		public virtual void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);

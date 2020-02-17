@@ -671,7 +671,7 @@ packagekit-glib2:
 	$(GENVAPI) --library $(srcdir)/packagekit-glib2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/PackageKitGlib-1.0.gir
 
 pango:
-	$(GENVAPI) --library $(srcdir)/pango --metadatadir $(METADATADIR) $(METADATADIR)/Pango-1.0-custom.vala $(GIRDIR)/Pango-1.0.gir
+	$(GENVAPI) --library $(srcdir)/pango --pkg cairo --pkg harfbuzz-gobject --metadatadir $(METADATADIR) $(METADATADIR)/Pango-1.0-custom.vala $(GIRDIR)/Pango-1.0.gir
 
 pangocairo:
 	$(GENVAPI) --library $(srcdir)/pangocairo --metadatadir $(METADATADIR) $(GIRDIR)/PangoCairo-1.0.gir
