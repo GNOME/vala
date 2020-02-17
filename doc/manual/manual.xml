@@ -2279,7 +2279,8 @@
 <para> <emphasis role="strong">Description (optional)</emphasis></para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>array_length</para></entry><entry colsep="1" rowsep="1">
 <para>delegate, field, property, method, parameter</para></entry><entry colsep="1" rowsep="1">
-<para>bool</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
+<para>bool</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" nameend="col_3" namest="col_0" rowsep="1">
+<para> If the array length is unknown, setting array_length = false in the CCode attribute will cause Vala to set the array's .length property to -1 and not pass the length when used as a parameter.</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>array_length_cname</para></entry><entry colsep="1" rowsep="1">
 <para>field</para></entry><entry colsep="1" rowsep="1">
 <para>string</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
