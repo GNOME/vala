@@ -454,7 +454,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (DataType base_type in base_types) {
-			if (base_type.type_symbol != null && base_type.type_symbol.is_subtype_of (t)) {
+			if (base_type.type_symbol != null && base_type.type_symbol != this
+			    && base_type.type_symbol.is_subtype_of (t)) {
 				return true;
 			}
 		}
