@@ -301,7 +301,9 @@ TESTS = \
 	objects/initially-unowned.vala \
 	objects/field-leading-digit.test \
 	objects/fields.vala \
+	objects/gobject-class-lifetime.vala \
 	objects/gsource.vala \
+	objects/gtype-class-lifetime.vala \
 	objects/instance-comparison.vala \
 	objects/interface-async-base-access.vala \
 	objects/interface-base-access.vala \
