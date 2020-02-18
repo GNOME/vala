@@ -649,6 +649,7 @@ TESTS = \
 	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
 	semantic/delegate-too-many-type-arguments.test \
+	semantic/element-access-index-invalid.test \
 	semantic/enum-empty.test \
 	semantic/errordomain-empty.test \
 	semantic/field-accessibility.test \
