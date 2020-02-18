@@ -473,7 +473,10 @@ public class Vala.MethodCall : Expression {
 
 		bool force_lambda_method_closure = false;
 		foreach (Expression arg in argument_list) {
-			arg.check (context);
+			if (!arg.check (context)) {
+				error = true;
+				continue;
+			}
 
 			if (arg is LambdaExpression && ((LambdaExpression) arg).method.closure) {
 				force_lambda_method_closure = true;
@@ -481,7 +484,7 @@ public class Vala.MethodCall : Expression {
 		}
 		// force all lambda arguments using the same closure scope
 		// TODO https://gitlab.gnome.org/GNOME/vala/issues/59
-		if (force_lambda_method_closure) {
+		if (!error && force_lambda_method_closure) {
 			foreach (Expression arg in argument_list) {
 				unowned LambdaExpression? lambda = arg as LambdaExpression;
 				if (lambda != null && lambda.method.binding != MemberBinding.STATIC) {

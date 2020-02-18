@@ -1,0 +1,8 @@
+Invalid Code
+
+void foo (int i) {
+}
+
+void main () {
+	foo (() => {});
+}
