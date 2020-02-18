@@ -123,7 +123,7 @@ function sourceend() {
 		if [ $INVALIDCODE -eq 1 ]; then
 			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 			echo '' > prepare
-			echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
+			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
 			echo "RET=\$?" >> check
 			echo "if [ \$RET -ne 1 ]; then exit 1; fi" >> check
 			echo "exit 0" >> check
