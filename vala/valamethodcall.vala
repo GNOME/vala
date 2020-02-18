@@ -452,7 +452,10 @@ public class Vala.MethodCall : Expression {
 		}
 
 		foreach (Expression arg in get_argument_list ()) {
-			arg.check (context);
+			if (!arg.check (context)) {
+				error = true;
+				continue;
+			}
 		}
 
 		if (ret_type is VoidType) {
