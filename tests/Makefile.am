@@ -727,6 +727,7 @@ TESTS = \
 	semantic/objectcreation-non-public-constructor.test \
 	semantic/objectcreation-unsupported-type.test \
 	semantic/parameter-accessibility.test \
+	semantic/parameter-default-invalid.test \
 	semantic/parameter-default-type.test \
 	semantic/parameter-out-default.test \
 	semantic/parameter-params.test \
