@@ -195,6 +195,8 @@ public class Vala.Constant : Symbol, Lockable {
 	bool check_const_type (DataType type, CodeContext context) {
 		if (type is ValueType) {
 			return true;
+		} else if (type is VoidType || type is PointerType) {
+			return false;
 		} else if (type is ArrayType) {
 			var array_type = type as ArrayType;
 			return check_const_type (array_type.element_type, context);
