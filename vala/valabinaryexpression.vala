@@ -328,7 +328,7 @@ public class Vala.BinaryExpression : Expression {
 			return false;
 		}
 
-		if (operator != BinaryOperator.IN && right.value_type == null) {
+		if (right.value_type == null) {
 			Report.error (right.source_reference, "invalid right operand");
 			error = true;
 			return false;

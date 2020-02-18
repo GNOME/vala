@@ -91,7 +91,9 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override Symbol? get_member (string member_name) {
-		if (member_name == "length") {
+		if (error) {
+			// don't try anything
+		} else if (member_name == "length") {
 			return get_length_field ();
 		} else if (member_name == "move") {
 			return get_move_method ();

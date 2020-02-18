@@ -155,8 +155,10 @@ public class Vala.MethodCall : Expression {
 		} else if (mtype is ObjectType) {
 			// constructor
 			unowned Class cl = (Class) ((ObjectType) mtype).type_symbol;
-			unowned Method m = cl.default_construction_method;
-			m.get_error_types (collection, source_reference);
+			unowned Method? m = cl.default_construction_method;
+			if (m != null) {
+				m.get_error_types (collection, source_reference);
+			}
 		} else if (mtype is DelegateType) {
 			unowned Delegate d = ((DelegateType) mtype).delegate_symbol;
 			d.get_error_types (collection, source_reference);

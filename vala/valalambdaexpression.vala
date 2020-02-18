@@ -233,7 +233,9 @@ public class Vala.LambdaExpression : Expression {
 		/* lambda expressions should be usable like MemberAccess of a method */
 		symbol_reference = method;
 
-		method.check (context);
+		if (!method.check (context)) {
+			error = true;
+		}
 
 		value_type = new MethodType (method);
 		value_type.value_owned = target_type.value_owned;
