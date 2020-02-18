@@ -176,7 +176,7 @@ public class Vala.Parameter : Variable {
 			}
 		}
 
-		if (initializer != null) {
+		if (initializer != null && !initializer.error) {
 			if (initializer is NullLiteral
 			    && !variable_type.nullable
 			    && direction != ParameterDirection.OUT) {
