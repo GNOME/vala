@@ -710,6 +710,7 @@ TESTS = \
 	semantic/class-too-few-type-arguments.test \
 	semantic/class-too-many-type-arguments.test \
 	semantic/constant-extern.test \
+	semantic/constant-pointer.test \
 	semantic/constant-value.test \
 	semantic/constant-value-missing.test \
 	semantic/constant-value-type.test \
