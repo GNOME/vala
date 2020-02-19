@@ -45,7 +45,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_compact {
 		get {
 			if (_is_compact == null) {
-				if (base_class != null) {
+				if (base_class != null && !base_class.is_subtype_of (this)) {
 					_is_compact = base_class.is_compact;
 				} else {
 					_is_compact = get_attribute ("Compact") != null;
@@ -65,7 +65,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_immutable {
 		get {
 			if (_is_immutable == null) {
-				if (base_class != null) {
+				if (base_class != null && !base_class.is_subtype_of (this)) {
 					_is_immutable = base_class.is_immutable;
 				} else {
 					_is_immutable = get_attribute ("Immutable") != null;
