@@ -242,8 +242,12 @@ public class Vala.PropertyAccessor : Subroutine {
 			var error_types = new ArrayList<DataType> ();
 			body.get_error_types (error_types);
 			foreach (DataType body_error_type in error_types) {
-				if (!((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				if (body_error_type is ErrorType) {
+					if (!((ErrorType) body_error_type).dynamic_error) {
+						Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					}
+				} else {
+					Report.warning (body_error_type.source_reference, "trying to use a non ErrorType object: Internal Error");
 				}
 			}
 		}
