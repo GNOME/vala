@@ -466,6 +466,7 @@ public class Vala.MethodCall : Expression {
 			if (format_literal != null) {
 				string format = format_literal.eval ();
 				if (!context.analyzer.check_print_format (format, arg_it, source_reference)) {
+					error = true;
 					return false;
 				}
 			}
@@ -655,6 +656,7 @@ public class Vala.MethodCall : Expression {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
 				// can't handle errors in field initializers
+				error = true;
 				Report.error (source_reference, "Field initializers must not throw errors");
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
@@ -670,7 +672,9 @@ public class Vala.MethodCall : Expression {
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
-				decl.check (context);
+				if (!decl.check (context)) {
+					error = true;
+				}
 
 				// move temp variable to insert block to ensure the
 				// variable is in the same block as the declaration
@@ -680,7 +684,9 @@ public class Vala.MethodCall : Expression {
 				context.analyzer.insert_block.add_local_variable (local);
 
 				old_parent_node.replace_expression (this, temp_access);
-				temp_access.check (context);
+				if (!temp_access.check (context)) {
+					error = true;
+				}
 			}
 		}
 

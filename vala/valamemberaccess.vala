@@ -307,6 +307,10 @@ public class Vala.MemberAccess : Expression {
 
 			if (symbol_reference == null && source_reference != null) {
 				foreach (UsingDirective ns in source_reference.using_directives) {
+					if (ns.error) {
+						// ignore previous error
+						continue;
+					}
 					var local_sym = ns.namespace_symbol.scope.lookup (member_name);
 					if (local_sym != null) {
 						if (symbol_reference != null && symbol_reference != local_sym) {
@@ -825,6 +829,7 @@ public class Vala.MemberAccess : Expression {
 			} else if (symbol_reference is Property) {
 				value_type = new PropertyPrototype ((Property) symbol_reference);
 			} else {
+				error = true;
 				value_type = new InvalidType ();
 			}
 

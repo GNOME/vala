@@ -108,6 +108,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		}
 
 		if (context.analyzer.current_return_type is VoidType) {
+			error = true;
 			Report.error (source_reference, "Return with value in void function");
 			return false;
 		}
