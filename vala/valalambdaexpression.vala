@@ -249,7 +249,7 @@ public class Vala.LambdaExpression : Expression {
 
 	public override void get_used_variables (Collection<Variable> collection) {
 		// require captured variables to be initialized
-		if (method.closure) {
+		if (method != null && method.closure) {
 			method.get_captured_variables ((Collection<LocalVariable>) collection);
 		}
 	}
