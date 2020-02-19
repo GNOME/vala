@@ -405,6 +405,8 @@ public class Vala.ForeachStatement : Block {
 	}
 
 	public override void get_defined_variables (Collection<Variable> collection) {
-		collection.add (element_variable);
+		if (element_variable != null) {
+			collection.add (element_variable);
+		}
 	}
 }
