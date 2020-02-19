@@ -530,9 +530,7 @@ public class Vala.CodeContext {
 
 		analyzer.analyze (this);
 
-		// Don't run the FlowAnalyzer if we have semantic errors, since
-		// the messages from FlowAnalyzer will usually be nonsensical.
-		if (report.get_errors () > 0) {
+		if (!keep_going && report.get_errors () > 0) {
 			return;
 		}
 
