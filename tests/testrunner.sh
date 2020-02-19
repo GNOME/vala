@@ -33,6 +33,7 @@ VALAFLAGS="$VALAFLAGS \
 	--disable-warnings \
 	--main main \
 	--save-temps \
+	--keep-going \
 	--cc $CC \
 	-X -g \
 	-X -O0 \
