@@ -987,7 +987,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var error_block = new BasicBlock ();
 			all_basic_blocks.add (error_block);
 
-			if (catch_clause.error_type != null) {
+			if (catch_clause.error_type != null && !catch_clause.error) {
 				if (context.profile == Profile.GOBJECT) {
 					var error_type = (ErrorType) catch_clause.error_type;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
