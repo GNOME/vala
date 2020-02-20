@@ -1,0 +1,9 @@
+Invalid Code
+
+unowned string foo () {
+	var s = "foo";
+	return s;
+}
+
+void main () {
+}
