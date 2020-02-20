@@ -1,0 +1,8 @@
+Invalid Code
+
+void foo () {
+	return 23;
+}
+
+void main () {
+}

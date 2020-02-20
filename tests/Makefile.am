@@ -854,6 +854,10 @@ TESTS = \
 	semantic/property-void.test \
 	semantic/reference-transfer-not-supported.test \
 	semantic/reference-transfer-unavailable.test \
+	semantic/return-in-nonvoid.test \
+	semantic/return-in-void.test \
+	semantic/return-missing-ownership.test \
+	semantic/return-missing-transfer.test \
 	semantic/signal-clash-inherited.test \
 	semantic/signal-compact-class.test \
 	semantic/signal-detail-invalid.test \
