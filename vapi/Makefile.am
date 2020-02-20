@@ -5,6 +5,7 @@ vapidir = $(pkgdatadir)/vapi
 dist_vapi_DATA = \
 	alsa.vapi \
 	alsa.deps \
+	atk.deps \
 	atk.vapi \
 	atspi-2.vapi \
 	atspi-2.deps \
@@ -66,11 +67,13 @@ dist_vapi_DATA = \
 	gdu-gtk.vapi \
 	gedit-2.20.vapi \
 	gedit-2.20.deps \
+	gio-2.0.deps \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
 	gio-windows-2.0.deps \
 	gio-windows-2.0.vapi \
+	gmodule-2.0.deps \
 	gmodule-2.0.vapi \
 	gnet-2.0.deps \
 	gnet-2.0.vapi \
@@ -80,7 +83,9 @@ dist_vapi_DATA = \
 	gnome-desktop-3.0.vapi \
 	gnome-vfs-2.0.vapi \
 	gnutls.vapi \
+	gobject-2.0.deps \
 	gobject-2.0.vapi \
+	gobject-introspection-1.0.deps \
 	gobject-introspection-1.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
@@ -125,6 +130,7 @@ dist_vapi_DATA = \
 	gstreamer-tag-0.10.vapi \
 	gstreamer-video-0.10.deps \
 	gstreamer-video-0.10.vapi \
+	gstreamer-1.0.deps \
 	gstreamer-1.0.vapi \
 	gstreamer-allocators-1.0.vapi \
 	gstreamer-allocators-1.0.deps \
