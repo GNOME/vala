@@ -797,6 +797,7 @@ public class Vala.MemberAccess : Expression {
 			} else if (symbol_reference is Property) {
 				value_type = new PropertyPrototype ((Property) symbol_reference);
 			} else {
+				error = true;
 				value_type = new InvalidType ();
 			}
 

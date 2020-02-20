@@ -85,7 +85,10 @@ public class Vala.LocalVariable : Variable {
 				Report.error (source_reference, "'void' not supported as variable type");
 				return false;
 			}
-			variable_type.check (context);
+			if (!variable_type.check (context)) {
+				error = true;
+				return false;
+			}
 		}
 
 		// Catch initializer list transformation:
