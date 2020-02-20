@@ -80,16 +80,7 @@ public class Vala.SwitchSection : Block {
 			label.accept (visitor);
 		}
 
-		foreach (Statement st in get_statements ()) {
-			st.accept (visitor);
-		}
-	}
-
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
-		// use get_statements () instead of statement_list to not miss errors within StatementList objects
-		foreach (var stmt in get_statements ()) {
-			stmt.get_error_types (collection, source_reference);
-		}
+		base.accept_children (visitor);
 	}
 
 	public override bool check (CodeContext context) {
@@ -97,29 +88,15 @@ public class Vala.SwitchSection : Block {
 			return !error;
 		}
 
-		checked = true;
-
 		foreach (SwitchLabel label in get_labels ()) {
 			label.check (context);
 		}
 
-		owner = context.analyzer.current_symbol.scope;
-
-		var old_symbol = context.analyzer.current_symbol;
-		var old_insert_block = context.analyzer.insert_block;
-		context.analyzer.current_symbol = this;
-		context.analyzer.insert_block = this;
-
-		foreach (Statement st in get_statements ()) {
-			st.check (context);
+		if (!base.check (context)) {
+			error = true;
 		}
 
-		foreach (LocalVariable local in get_local_variables ()) {
-			local.active = false;
-		}
-
-		context.analyzer.current_symbol = old_symbol;
-		context.analyzer.insert_block = old_insert_block;
+		checked = true;
 
 		return !error;
 	}
