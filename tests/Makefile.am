@@ -773,6 +773,7 @@ TESTS = \
 	semantic/switch-label-not-constant.test \
 	semantic/switch-type-unsupported.test \
 	semantic/throw-no-error-type.test \
+	semantic/throw-unknown-error-type.test \
 	semantic/unary-unsupported-complement.test \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \

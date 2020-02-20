@@ -1,0 +1,14 @@
+Invalid Code
+
+void foo () throws Error {
+	int bar = 1;
+	switch (bar) {
+		case 0:
+			break;
+		default:
+			throw new FooError.FAIL ("");
+	}
+}
+
+void main () {
+}
