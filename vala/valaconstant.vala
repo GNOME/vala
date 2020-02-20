@@ -190,8 +190,8 @@ public class Vala.Constant : Symbol {
 		} else if (type is ArrayType) {
 			unowned ArrayType array_type = (ArrayType) type;
 			return check_const_type (array_type.element_type, context);
-		} else if (type.type_symbol.is_subtype_of (context.analyzer.string_type.type_symbol)) {
-			return true;
+		} else if (type.type_symbol != null) {
+			return type.type_symbol.is_subtype_of (context.analyzer.string_type.type_symbol);
 		} else {
 			return false;
 		}
