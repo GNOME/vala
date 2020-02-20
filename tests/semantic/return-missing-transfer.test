@@ -1,0 +1,12 @@
+Invalid Code
+
+string bar () {
+	return "bar";
+}
+
+unowned string foo () {
+	return bar ();
+}
+
+void main () {
+}
