@@ -234,7 +234,9 @@ public class Vala.PropertyAccessor : Subroutine {
 			}
 
 			body.check (context);
+		}
 
+		if (body != null && !body.error) {
 			var error_types = new ArrayList<DataType> ();
 			body.get_error_types (error_types);
 			foreach (DataType body_error_type in error_types) {
