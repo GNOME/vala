@@ -33,7 +33,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -46,7 +46,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			_condition.parent_node = this;
 		}

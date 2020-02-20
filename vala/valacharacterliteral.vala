@@ -35,7 +35,7 @@ public class Vala.CharacterLiteral : Literal {
 		get {
 			return _value;
 		}
-		set {
+		private set {
 			_value = value;
 
 			if (!value.validate ()) {

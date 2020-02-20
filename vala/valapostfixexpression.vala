@@ -31,7 +31,7 @@ public class Vala.PostfixExpression : Expression {
 	 */
 	public Expression inner {
 		get { return _inner; }
-		set {
+		private set {
 			_inner = value;
 			_inner.parent_node = this;
 		}
@@ -40,7 +40,7 @@ public class Vala.PostfixExpression : Expression {
 	/**
 	 * Specifies whether value should be incremented or decremented.
 	 */
-	public bool increment { get; set; }
+	public bool increment { get; private set; }
 
 	private Expression _inner;
 

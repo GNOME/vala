@@ -30,7 +30,7 @@ public class Vala.BinaryExpression : Expression {
 	/**
 	 * The binary operator.
 	 */
-	public BinaryOperator operator { get; set; }
+	public BinaryOperator operator { get; private set; }
 
 	/**
 	 * The left operand.
@@ -39,7 +39,7 @@ public class Vala.BinaryExpression : Expression {
 		get {
 			return _left;
 		}
-		set {
+		private set {
 			_left = value;
 			_left.parent_node = this;
 		}
@@ -52,7 +52,7 @@ public class Vala.BinaryExpression : Expression {
 		get {
 			return _right;
 		}
-		set {
+		private set {
 			_right = value;
 			_right.parent_node = this;
 		}

@@ -31,7 +31,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 */
 	public Block body {
 		get { return _body; }
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -42,7 +42,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 */
 	public Block? finally_body {
 		get { return _finally_body; }
-		set {
+		private set {
 			_finally_body = value;
 			if (_finally_body != null)
 				_finally_body.parent_node = this;

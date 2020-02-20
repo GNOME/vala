@@ -30,7 +30,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	 */
 	public Expression? return_expression {
 		get { return _return_expression; }
-		set {
+		private set {
 			_return_expression = value;
 			if (_return_expression != null) {
 				_return_expression.parent_node = this;

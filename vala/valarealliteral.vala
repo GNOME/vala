@@ -29,7 +29,7 @@ public class Vala.RealLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string value { get; set; }
+	public string value { get; private set; }
 
 	/**
 	 * Creates a new real literal.

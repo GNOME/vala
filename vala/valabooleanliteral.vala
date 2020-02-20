@@ -29,7 +29,7 @@ public class Vala.BooleanLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public bool value { get; set; }
+	public bool value { get; private set; }
 
 	/**
 	 * Creates a new boolean literal.

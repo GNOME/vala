@@ -32,7 +32,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		get {
 			return _declaration;
 		}
-		set {
+		private set {
 			_declaration = value;
 			if (_declaration != null) {
 				_declaration.parent_node = this;

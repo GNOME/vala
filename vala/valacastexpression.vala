@@ -32,7 +32,7 @@ public class Vala.CastExpression : Expression {
 		get {
 			return _inner;
 		}
-		set {
+		private set {
 			_inner = value;
 			_inner.parent_node = this;
 		}
@@ -43,7 +43,7 @@ public class Vala.CastExpression : Expression {
 	 */
 	public DataType type_reference {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			_data_type.parent_node = this;
 		}

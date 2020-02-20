@@ -33,7 +33,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	 */
 	public DataType element_type {
 		get { return _element_type; }
-		set {
+		private set {
 			_element_type = value;
 			_element_type.parent_node = this;
 		}
@@ -55,7 +55,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The rank of the array.
 	 */
-	public int rank { get; set; }
+	public int rank { get; private set; }
 
 	/**
 	 * The size for each dimension ascending from left to right.
@@ -67,7 +67,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	 */
 	public InitializerList? initializer_list {
 		get { return _initializer_list; }
-		set {
+		private set {
 			_initializer_list = value;
 			if (_initializer_list != null) {
 				_initializer_list.parent_node = this;

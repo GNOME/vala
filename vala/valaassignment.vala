@@ -32,7 +32,7 @@ public class Vala.Assignment : Expression {
 	 */
 	public Expression left {
 		get { return _left; }
-		set {
+		private set {
 			_left = value;
 			_left.parent_node = this;
 		}
@@ -41,14 +41,14 @@ public class Vala.Assignment : Expression {
 	/**
 	 * Assignment operator.
 	 */
-	public AssignmentOperator operator { get; set; }
+	public AssignmentOperator operator { get; private set; }
 
 	/**
 	 * Right hand side of the assignment.
 	 */
 	public Expression right {
 		get { return _right; }
-		set {
+		private set {
 			_right = value;
 			_right.parent_node = this;
 		}
