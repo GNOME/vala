@@ -945,7 +945,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		var catch_clauses = stmt.get_catch_clauses ();
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
-			if (catch_clause.error_type != null) {
+			if (catch_clause.error_type != null && !catch_clause.error) {
 				var error_type = (ErrorType) catch_clause.error_type;
 				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
 			} else {
