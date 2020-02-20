@@ -989,8 +989,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			if (catch_clause.error_type != null) {
 				if (context.profile == Profile.GOBJECT) {
-					unowned ErrorType error_type = (ErrorType) catch_clause.error_type;
-					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.type_symbol as ErrorDomain, error_type.error_code, null));
+					ErrorCode error_code = new Vala.ErrorCode ("invalid-code");
+					if (catch_clause.error_type is ErrorType) {
+						error_code = ((ErrorType) catch_clause.error_type).error_code;
+					}
+
+					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, catch_clause.error_type.type_symbol as ErrorDomain, error_code, null));
 				} else {
 					unowned Class? error_class = catch_clause.error_type.type_symbol as Class;
 					jump_stack.add (new JumpTarget.error_target (error_block, catch_clause, null, null, error_class));
