@@ -83,16 +83,6 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		checked = true;
 
-		if (return_expression != null) {
-			return_expression.target_type = context.analyzer.current_return_type.copy ();
-		}
-
-		if (return_expression != null && !return_expression.check (context)) {
-			// ignore inner error
-			error = true;
-			return false;
-		}
-
 		if (context.analyzer.current_return_type == null) {
 			error = true;
 			Report.error (source_reference, "Return not allowed in this context");
@@ -109,6 +99,14 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		if (context.analyzer.current_return_type is VoidType) {
 			Report.error (source_reference, "Return with value in void function");
+			return false;
+		}
+
+		return_expression.target_type = context.analyzer.current_return_type.copy ();
+
+		if (!return_expression.check (context)) {
+			// ignore inner error
+			error = true;
 			return false;
 		}
 
