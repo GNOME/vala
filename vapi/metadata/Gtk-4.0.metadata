@@ -257,9 +257,6 @@ ListStore
   .remove.iter ref
 PaperSize
   .free destroys_instance
-SelectionData
-  .free destroys_instance
-  .get_data skip=false
 Snapshot
   .free_to_node destroys_instance
   .free_to_paintable destroys_instance
@@ -302,8 +299,6 @@ TreeView
 Widget
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
-  .grab_add parent="Gtk" symbol_type="function"
-  .grab_remove parent="Gtk" symbol_type="function"
   .size_allocate#method name="size_allocate_emit"
 TreeModel
   .get_value return_void
