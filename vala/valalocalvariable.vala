@@ -83,11 +83,8 @@ public class Vala.LocalVariable : Variable {
 			if (variable_type is VoidType) {
 				error = true;
 				Report.error (source_reference, "'void' not supported as variable type");
-				return false;
-			}
-			if (!variable_type.check (context)) {
+			} else if (!variable_type.check (context)) {
 				error = true;
-				return false;
 			}
 		}
 
@@ -95,7 +92,7 @@ public class Vala.LocalVariable : Variable {
 		bool is_initializer_list = false;
 		int initializer_size = -1;
 
-		if (initializer != null) {
+		if (initializer != null && !error) {
 			initializer.target_type = variable_type;
 
 			if (initializer is InitializerList) {
@@ -105,8 +102,14 @@ public class Vala.LocalVariable : Variable {
 
 			if (!initializer.check (context)) {
 				error = true;
-				return false;
 			}
+		}
+
+		// local variables are defined even on errors
+		context.analyzer.current_symbol.scope.add (name, this);
+
+		if (error) {
+			return false;
 		}
 
 		if (variable_type == null) {
@@ -206,8 +209,6 @@ public class Vala.LocalVariable : Variable {
 				}
 			}
 		}
-
-		context.analyzer.current_symbol.scope.add (name, this);
 
 		// current_symbol is a Method if this is the `result'
 		// variable used for postconditions
