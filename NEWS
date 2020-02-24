@@ -1,3 +1,16 @@
+Vala 0.47.92
+============
+ * Various improvements and bug fixes:
+  - Add support for sealed classes in bindings [#278]
+  - codegen: Don't initialize stack-allocated array with local-constant
+    length [#910]
+  - vala: Improve robustness of analyzer pass for language-servers [#911]
+  - vala: Add local-variables to current scope regardless its error state
+  - testrunner: Pass G_DEBUG=fatal-warnings to invalid test
+
+ * Bindings:
+  - Add some fundamental deps files to improve --nostdpkg support [#911]
+
 Vala 0.47.91
 ============
  * Various improvements and bug fixes:
