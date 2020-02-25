@@ -2683,6 +2683,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							clist.append (get_array_length_cvalue (expr.target_value, dim));
 						}
+						if (array_type.rank == 1 && field.is_internal_symbol ()) {
+							clist.append (get_array_length_cvalue (expr.target_value, 1));
+						}
 					}
 				}
 
