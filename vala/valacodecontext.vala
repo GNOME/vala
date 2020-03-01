@@ -258,6 +258,11 @@ public class Vala.CodeContext {
 	public static CodeContext get () {
 		List<CodeContext>* context_stack = context_stack_key.get ();
 
+		if (context_stack == null || context_stack->size == 0) {
+			Report.error (null, "internal: No context available to get");
+			assert_not_reached ();
+		}
+
 		return context_stack->get (context_stack->size - 1);
 	}
 
@@ -279,6 +284,11 @@ public class Vala.CodeContext {
 	 */
 	public static void pop () {
 		List<CodeContext>* context_stack = context_stack_key.get ();
+
+		if (context_stack == null || context_stack->size == 0) {
+			Report.error (null, "internal: No context available to pop");
+			assert_not_reached ();
+		}
 
 		context_stack->remove_at (context_stack->size - 1);
 	}
