@@ -1007,6 +1007,8 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 
 		context.accept(this);
 
+		Vala.CodeContext.pop ();
+
 		return (reporter.errors == 0)? tree : null;
 	}
 }
