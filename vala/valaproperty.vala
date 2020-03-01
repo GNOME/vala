@@ -223,7 +223,7 @@ public class Vala.Property : Symbol, Lockable {
 	private DataType _data_type;
 
 	private weak Property _base_property;
-	private Property _base_interface_property;
+	private weak Property _base_interface_property;
 	private bool base_properties_valid;
 	PropertyAccessor? _get_accessor;
 	PropertyAccessor? _set_accessor;
