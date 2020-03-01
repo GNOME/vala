@@ -184,17 +184,20 @@ class Vala.Compiler {
 
 	private int quit () {
 		if (context.report.get_errors () == 0 && context.report.get_warnings () == 0) {
+			CodeContext.pop ();
 			return 0;
 		}
 		if (context.report.get_errors () == 0 && (!fatal_warnings || context.report.get_warnings () == 0)) {
 			if (!quiet_mode) {
 				stdout.printf ("Compilation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
+			CodeContext.pop ();
 			return 0;
 		} else {
 			if (!quiet_mode) {
 				stdout.printf ("Compilation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
 			}
+			CodeContext.pop ();
 			return 1;
 		}
 	}
