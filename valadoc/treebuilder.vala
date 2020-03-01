@@ -1485,6 +1485,8 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 		context.accept(this);
 
+		Vala.CodeContext.pop ();
+
 		return (reporter.errors == 0)? tree : null;
 	}
 }

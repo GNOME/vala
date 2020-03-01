@@ -62,11 +62,13 @@ class Vala.VAPIGen {
 			if (!quiet_mode) {
 				stdout.printf ("Generation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
+			CodeContext.pop ();
 			return 0;
 		} else {
 			if (!quiet_mode) {
 				stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
 			}
+			CodeContext.pop ();
 			return 1;
 		}
 	}
