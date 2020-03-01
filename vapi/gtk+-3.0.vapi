@@ -2454,11 +2454,11 @@ namespace Gtk {
 		public unowned Gtk.Widget add_button (string button_text, int response_id);
 		public void add_buttons (...);
 		[Version (deprecated = true, deprecated_since = "3.12", since = "2.14")]
-		public unowned Gtk.Widget get_action_area ();
+		public unowned Gtk.Box get_action_area ();
 		[Version (since = "2.14")]
 		public unowned Gtk.Box get_content_area ();
 		[Version (since = "3.12")]
-		public unowned Gtk.Widget get_header_bar ();
+		public unowned Gtk.HeaderBar get_header_bar ();
 		[Version (since = "2.8")]
 		public int get_response_for_widget (Gtk.Widget widget);
 		[Version (since = "2.20")]
@@ -4316,7 +4316,7 @@ namespace Gtk {
 		[Version (since = "2.18")]
 		public void add_buttons (...);
 		[Version (since = "2.18")]
-		public unowned Gtk.Widget get_action_area ();
+		public unowned Gtk.Box get_action_area ();
 		[Version (since = "2.18")]
 		public unowned Gtk.Container get_content_area ();
 		[Version (since = "2.18")]
