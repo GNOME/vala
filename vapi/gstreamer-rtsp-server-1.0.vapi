@@ -280,7 +280,7 @@ namespace Gst {
 			public virtual bool setup_rtpbin (Gst.Element rtpbin);
 			public virtual bool setup_sdp (Gst.SDP.Message sdp, Gst.RTSPServer.SDPInfo info);
 			public virtual bool suspend ();
-			public void take_pipeline (owned Gst.Pipeline pipeline);
+			public void take_pipeline (Gst.Pipeline pipeline);
 			[Version (since = "1.18")]
 			public void @unlock ();
 			public virtual bool unprepare ();

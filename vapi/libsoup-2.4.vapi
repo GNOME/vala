@@ -1012,6 +1012,7 @@ namespace Soup {
 		[Version (since = "2.42")]
 		public GLib.ProxyResolver proxy_resolver { owned get; set; }
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "2.70")]
 		public Soup.URI proxy_uri { owned get; set; }
 		[NoAccessorMethod]
 		[Version (deprecated = true)]

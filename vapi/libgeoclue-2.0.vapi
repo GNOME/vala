@@ -60,14 +60,21 @@ namespace GClue {
 		public async Simple (string desktop_id, GClue.AccuracyLevel accuracy_level, GLib.Cancellable? cancellable) throws GLib.Error;
 		public unowned GClue.ClientProxy get_client ();
 		public unowned GClue.Location get_location ();
+		public static async void new_with_thresholds (string desktop_id, GClue.AccuracyLevel accuracy_level, uint time_threshold, uint distance_threshold, GLib.Cancellable? cancellable);
 		[CCode (has_construct_function = false)]
 		public Simple.sync (string desktop_id, GClue.AccuracyLevel accuracy_level, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Simple.with_thresholds_sync (string desktop_id, GClue.AccuracyLevel accuracy_level, uint time_threshold, uint distance_threshold, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
 		public GClue.AccuracyLevel accuracy_level { construct; }
 		public GClue.ClientProxy client { get; }
 		[NoAccessorMethod]
 		public string desktop_id { construct; }
+		[NoAccessorMethod]
+		public uint distance_threshold { get; construct; }
 		public GClue.LocationProxy location { get; }
+		[NoAccessorMethod]
+		public uint time_threshold { get; construct; }
 	}
 	[CCode (cheader_filename = "geoclue.h", type_id = "gclue_client_get_type ()")]
 	public interface Client : GLib.Object {
