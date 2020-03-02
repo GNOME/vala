@@ -363,6 +363,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		if (clause.error_variable != null) {
 			visit_local_variable (clause.error_variable);
 			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_inner_error_cexpression ());
+			ccode.add_assignment (get_inner_error_cexpression (), new CCodeConstant ("NULL"));
 		} else {
 			// error object is not used within catch statement, clear it
 			cfile.add_include ("glib.h");
@@ -370,7 +371,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 			ccode.add_expression (cclear);
 		}
-		ccode.add_assignment (get_inner_error_cexpression (), new CCodeConstant ("NULL"));
 
 		clause.body.emit (this);
 
