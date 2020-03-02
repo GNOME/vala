@@ -360,11 +360,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		ccode.open_block ();
 
-		if (clause.error_variable != null) {
+		if (clause.error_variable != null && clause.error_variable.used) {
 			visit_local_variable (clause.error_variable);
 			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_inner_error_cexpression ());
 			ccode.add_assignment (get_inner_error_cexpression (), new CCodeConstant ("NULL"));
 		} else {
+			if (clause.error_variable != null) {
+				clause.error_variable.unreachable = true;
+			}
 			// error object is not used within catch statement, clear it
 			cfile.add_include ("glib.h");
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
