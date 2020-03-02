@@ -4105,6 +4105,7 @@ public class Vala.GirParser : CodeVisitor {
 					ns.remove_member (node);
 					node.name = new_name;
 					node.parameters.remove_at (0);
+					node.return_array_length_idx--;
 					method.name = new_name;
 					method.binding = MemberBinding.INSTANCE;
 					parent.add_member (node);
