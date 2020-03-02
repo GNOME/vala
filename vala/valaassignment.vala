@@ -427,6 +427,8 @@ public class Vala.Assignment : Expression {
 		if (binary != null && binary.left.value_type is ArrayType) {
 			if (binary.operator == BinaryOperator.PLUS) {
 				if (left.symbol_reference == binary.left.symbol_reference) {
+					// Allow direct access to array variable
+					binary.left.lvalue = true;
 					return true;
 				}
 			}
