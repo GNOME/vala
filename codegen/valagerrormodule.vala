@@ -123,6 +123,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			append_local_free (current_symbol);
 		}
 
+		cfile.add_include ("glib.h");
+
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant (unexpected ? "\"file %s: line %d: unexpected error: %s (%s, %d)\"" : "\"file %s: line %d: uncaught error: %s (%s, %d)\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
@@ -363,6 +365,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			ccode.add_assignment (get_variable_cexpression (get_local_cname (clause.error_variable)), get_inner_error_cexpression ());
 		} else {
 			// error object is not used within catch statement, clear it
+			cfile.add_include ("glib.h");
 			var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
 			cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_inner_error_cexpression ()));
 			ccode.add_expression (cclear);

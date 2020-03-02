@@ -732,6 +732,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
 				if (current_method_inner_error) {
+					cfile.add_include ("glib.h");
 					/* always separate error parameter and inner_error local variable
 					 * as error may be set to NULL but we're always interested in inner errors
 					 */

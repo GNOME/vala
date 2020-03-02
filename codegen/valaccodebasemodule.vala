@@ -3112,6 +3112,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (value_type.type_symbol)));
 				creation_call.add_argument (csizeof);
 			} else {
+				cfile.add_include ("glib.h");
 				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				creation_call.add_argument (new CCodeIdentifier (get_ccode_name (value_type.type_symbol)));
 				creation_call.add_argument (new CCodeConstant ("1"));
@@ -3278,6 +3279,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_include ("stdlib.h");
 				free_call = new CCodeFunctionCall (new CCodeIdentifier ("free"));
 			} else {
+				cfile.add_include ("glib.h");
 				free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 			}
 			free_call.add_argument (new CCodeIdentifier ("self"));
@@ -3355,6 +3357,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return new CCodeIdentifier (get_ccode_free_function (type.type_symbol));
 			}
 		} else if (type is ErrorType) {
+			cfile.add_include ("glib.h");
 			return new CCodeIdentifier ("g_error_free");
 		} else if (type.type_symbol != null) {
 			string unref_function;
@@ -3391,6 +3394,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								cfile.add_include ("stdlib.h");
 								unref_function = "free";
 							} else {
+								cfile.add_include ("glib.h");
 								unref_function = "g_free";
 							}
 						}
@@ -3439,6 +3443,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_include ("stdlib.h");
 				return new CCodeIdentifier ("free");
 			} else {
+				cfile.add_include ("glib.h");
 				return new CCodeIdentifier ("g_free");
 			}
 		} else if (type is PointerType) {
@@ -3446,6 +3451,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_include ("stdlib.h");
 				return new CCodeIdentifier ("free");
 			} else {
+				cfile.add_include ("glib.h");
 				return new CCodeIdentifier ("g_free");
 			}
 		} else {
