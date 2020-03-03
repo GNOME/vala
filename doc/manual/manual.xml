@@ -2256,8 +2256,7 @@
 <para>Give extra information to Vala that isn't included in code.  Mostly used internally in Vala. </para></listitem></itemizedlist>
 <para>Most of these attributes are only useful within bindings. Some, however, are useful in normal code: </para><itemizedlist><listitem>
 <para><code>[DBus]</code>, <code>[Description]</code>, <code>[Version]</code>, <code>[Signal]</code>, <code>[ModuleInit]</code> (if you're writing a module). </para></listitem><listitem>
-<para><code>CCode</code>'s <code>instance_pos</code> (if you're using <code>Gtk.Builder</code>'s signal auto-connection functionality). </para></listitem><listitem>
-<para><code>[ThreadLocal]</code> (if you're using the Dova profile). </para></listitem></itemizedlist>
+<para><code>CCode</code>'s <code>instance_pos</code> (if you're using <code>Gtk.Builder</code>'s signal auto-connection functionality). </para></listitem></itemizedlist>
 
 <section>
 <title>Applying attributes</title>
@@ -2672,7 +2671,6 @@
 <para>ErrorBase</para></entry><entry colsep="1" rowsep="1">
 <para>class</para></entry><entry colsep="1" rowsep="1">
 <para>Only use by GLib.Error at the moment</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
-<para>Experimental</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>Flags</para></entry><entry colsep="1" rowsep="1">
 <para>enum</para></entry><entry colsep="1" rowsep="1">
 <para>Marks the enum values to be flags</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
@@ -2688,9 +2686,6 @@
 <para>Marks the associated type as dynamic, and marks the method as a <ulink url="https://valadoc.org/gobject-2.0/GLib.TypeModule">TypeModule</ulink> init function. See <ulink url="https://wiki.gnome.org/Projects/Vala/TypeModuleSample">TypeModule example</ulink></para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>NoAccessorMethod</para></entry><entry colsep="1" rowsep="1">
 <para>property</para></entry><entry colsep="1" rowsep="1"/></row><row rowsep="1"><entry colsep="1" rowsep="1">
-<para>NoArrayLength</para></entry><entry colsep="1" rowsep="1">
-<para>method</para></entry><entry colsep="1" rowsep="1">
-<para>Deprecated, use <code>[CCode (array_length = false)]</code> instead</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>NoReturn</para></entry><entry colsep="1" rowsep="1">
 <para>method</para></entry><entry colsep="1" rowsep="1">
 <para>Once the method is called, it will never return</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
@@ -2711,9 +2706,9 @@
 <para>ScanfFormat</para></entry><entry colsep="1" rowsep="1">
 <para>method</para></entry><entry colsep="1" rowsep="1">
 <para>See also PrintFormat attribute</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
-<para>ThreadLocal</para></entry><entry colsep="1" rowsep="1">
-<para>field</para></entry><entry colsep="1" rowsep="1">
-<para>Thread local fields. Dova profile only</para></entry></row></tbody></tgroup></informaltable>
+<para>SingleInstance</para></entry><entry colsep="1" rowsep="1">
+<para>class</para></entry><entry colsep="1" rowsep="1">
+<para>Makes the class a thread-safe singleton</para></entry></row></tbody></tgroup></informaltable>
 </section>
 
 <section>
@@ -2727,7 +2722,10 @@
 <para> [Version (deprecated = true, deprecated_since = &quot;&quot;, replacement = &quot;&quot;)]</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
 <para>Experimental </para></entry><entry colsep="1" rowsep="1">
 <para>0.31.1 </para></entry><entry colsep="1" rowsep="1">
-<para>[Version (experimental = true, experimental_until = &quot;&quot;)]</para></entry></row></tbody></tgroup></informaltable>
+<para>[Version (experimental = true, experimental_until = &quot;&quot;)]</para></entry></row><row rowsep="1"><entry colsep="1" rowsep="1">
+<para>NoArrayLength</para></entry><entry colsep="1" rowsep="1">
+<para>0.7.10</para></entry><entry colsep="1" rowsep="1">
+<para>[CCode (array_length = false)]</para></entry></row></tbody></tgroup></informaltable>
 </section>
 
 <section>
