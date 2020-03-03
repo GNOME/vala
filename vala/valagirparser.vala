@@ -1870,6 +1870,8 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	string? element_get_name (string? gir_name = null) {
+		unowned string tag = reader.name;
+
 		var name = gir_name;
 		if (name == null) {
 			name = reader.get_attribute ("name");
@@ -1893,7 +1895,9 @@ public class Vala.GirParser : CodeVisitor {
 					name = pattern;
 				}
 			}
-		} else {
+		} else if (tag == "enumeration") {
+			// FIXME Stripping "Enum"-suffix is required for error-domains
+			// Applied to all enumerations to preserve backwards compatibility
 			if (name != null && name.has_suffix ("Enum")) {
 				name = name.substring (0, name.length - "Enum".length);
 			}
