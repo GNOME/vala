@@ -1,3 +1,24 @@
+Vala 0.48.0
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Fix circular reference in Property/EnumValueType
+    + Report an internal error for unavailable context and bail
+    + Prevent possible stack-overflow in Class.is_subtype_of()
+  - Add missing CodeContext.pop() calls
+  - codegen: Add more "low-level" includes of "glib.h"
+  - girparser: Decrease return_array_length_idx for transformed function
+  - girparser: Delay adding of "GLib.Object" prerequisite to interfaces
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - vapi: Update GIR-based bindings
+
+ * Contributors:
+   Alberto Fanjul, Arnaud Bonatti, Corentin Noël, Evan Nemerson, Florian Brosch,
+   Jeremy Philippe, Michael Gratton, Ole André Vadla Ravnås, Princeton Ferro,
+   Rico Tzschichholz, Simon Werbeck
+
 Vala 0.47.92
 ============
  * Various improvements and bug fixes:
