@@ -313,6 +313,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public DataType uint32_type;
 	public DataType int64_type;
 	public DataType uint64_type;
+	public DataType size_t_type;
 	public DataType string_type;
 	public DataType regex_type;
 	public DataType float_type;
@@ -472,6 +473,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		uint32_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint32"));
 		int64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int64"));
 		uint64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint64"));
+		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));

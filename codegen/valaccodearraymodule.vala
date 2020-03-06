@@ -347,7 +347,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
-		fun.add_parameter (new CCodeParameter ("element_size", "gsize"));
+		fun.add_parameter (new CCodeParameter ("element_size", get_ccode_name (size_t_type)));
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (int_type)));
 		fun.add_parameter (new CCodeParameter ("length", get_ccode_name (int_type)));
