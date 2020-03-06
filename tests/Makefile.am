@@ -28,6 +28,7 @@ TESTS = \
 	basic-types/default-gtype.vala \
 	basic-types/strings.vala \
 	basic-types/arrays.vala \
+	basic-types/arrays-generics.vala \
 	basic-types/arrays-fixed-assignment.vala \
 	basic-types/array-uint8-uchar-compat.vala \
 	basic-types/pointers.vala \
