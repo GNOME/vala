@@ -273,6 +273,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		current_scope = cl.scope;
 
 		visit_sorted (cl.get_classes ());
+		visit_sorted (cl.get_interfaces ());
 		visit_sorted (cl.get_structs ());
 		visit_sorted (cl.get_enums ());
 		visit_sorted (cl.get_delegates ());
@@ -394,6 +395,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		current_scope = iface.scope;
 
 		visit_sorted (iface.get_classes ());
+		visit_sorted (iface.get_interfaces ());
 		visit_sorted (iface.get_structs ());
 		visit_sorted (iface.get_enums ());
 		visit_sorted (iface.get_delegates ());
