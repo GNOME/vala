@@ -582,6 +582,8 @@ public class Vala.CodeContext {
 		for (int i = 16; i <= target_glib_minor; i += 2) {
 			defines.add ("GLIB_2_%d".printf (i));
 		}
+
+		add_define ("VALA_CC_" + Config.VALA_CC.up ());
 	}
 
 	/**

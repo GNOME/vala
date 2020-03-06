@@ -3813,7 +3813,11 @@ namespace GLib {
 		}
 	}
 
+#if VALA_CC_MSVC
+	[CCode (cname = "struct utimbuf", cheader_filename = "sys/types.h,sys/utime.h")]
+#else
 	[CCode (cname = "struct utimbuf", cheader_filename = "sys/types.h,utime.h")]
+#endif
 	public struct UTimBuf {
 		time_t actime;       /* access time */
 		time_t modtime;      /* modification time */
@@ -3857,7 +3861,11 @@ namespace GLib {
 		[CCode (cname = "symlink", cheader_filename = "unistd.h")]
 		public static int symlink (string oldpath, string newpath);
 
+#if VALA_CC_MSVC
+		[CCode (cname = "_close", cheader_filename = "io.h")]
+#else
 		[CCode (cname = "close", cheader_filename = "unistd.h")]
+#endif
 		public static int close (int fd);
 
 		[Version (since = "2.36")]

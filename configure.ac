@@ -45,6 +45,31 @@ AC_PROG_MKDIR_P
 
 AC_CANONICAL_HOST
 
+vala_cc=unknown
+AC_PREPROC_IFELSE(
+	[AC_LANG_SOURCE([
+		#ifndef __clang__
+		#error Not Clang
+		#endif
+	])], [vala_cc=clang], [])
+if test "$vala_cc" = "unknown"; then
+	AC_PREPROC_IFELSE(
+		[AC_LANG_SOURCE([
+			#ifndef __GNUC__
+			#error Not GCC
+			#endif
+		])], [vala_cc=gcc], [])
+fi
+if test "$vala_cc" = "unknown"; then
+	AC_PREPROC_IFELSE(
+		[AC_LANG_SOURCE([
+			#ifndef _MSC_VER
+			#error Not MSVC
+			#endif
+		])], [vala_cc=msvc], [])
+fi
+AC_DEFINE_UNQUOTED(VALA_CC, ["$vala_cc"], [Define to name of the C compiler being targeted.])
+
 # Detect the target system
 build_linux=no
 case "${host_os}" in
