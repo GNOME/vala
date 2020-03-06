@@ -1248,7 +1248,11 @@ namespace Linux {
     public int adjtimex (Linux.timex buf);
 
     [CCode (cheader_filename = "time.h")]
+#if POSIX
+    public time_t timegm (Posix.tm t);
+#else
     public time_t timegm (GLib.Time t);
+#endif
 
     [CCode (cheader_filename = "time.h")]
     public const Posix.clockid_t CLOCK_MONOTONIC_RAW;
