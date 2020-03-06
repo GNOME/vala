@@ -152,7 +152,7 @@ all=0
 fail=0
 EOF
 
-PACKAGES=gio-2.0
+PACKAGES=$([ -z "$PACKAGES" ] && echo "gio-2.0" || echo $PACKAGES)
 for testfile in "$@"; do
 	rm -f prepare check
 	echo 'set -e' >> prepare

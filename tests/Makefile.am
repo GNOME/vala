@@ -901,6 +901,13 @@ LINUX_TESTS = \
 	posix/file-commandpipe.vala \
 	$(NULL)
 
+POSIX_TESTS = \
+	basic-types/arrays.vala \
+	structs/struct_only.vala \
+	delegates/delegate_only.vala \
+	enums/enum_only.vala \
+	$(NULL)
+
 GENIE_TESTS = \
 	genie/class.gs \
 	genie/control-flow-if-do.gs \
@@ -973,7 +980,9 @@ check-TESTS: $(TESTS) $(NON_NULL_TESTS)
 		$(srcdir)/testrunner.sh $(TESTS)
 if HAVE_LINUX
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		VALAFLAGS="--pkg linux" $(srcdir)/testrunner.sh $(LINUX_TESTS)
+		PACKAGES="linux" $(srcdir)/testrunner.sh $(LINUX_TESTS)
+	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
+		VALAFLAGS="--profile posix" PACKAGES="posix linux" $(srcdir)/testrunner.sh $(POSIX_TESTS)
 endif
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
