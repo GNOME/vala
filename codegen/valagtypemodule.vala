@@ -393,6 +393,9 @@ public class Vala.GTypeModule : GErrorModule {
 				}
 			} else if ((prop.property_type is DelegateType) && get_ccode_delegate_target (prop) && ((DelegateType) prop.property_type).delegate_symbol.has_target) {
 				vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_cname ("value"), "gpointer"));
+				if (prop.set_accessor.value_type.value_owned) {
+					vdeclarator.add_parameter (new CCodeParameter (get_delegate_target_destroy_notify_cname ("value"), get_ccode_name (delegate_target_destroy_type)));
+				}
 			}
 
 			var vdecl = new CCodeDeclaration ("void");

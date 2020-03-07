@@ -381,6 +381,7 @@ TESTS = \
 	objects/property-construct-only-write.test \
 	objects/property-construct-only-write-foreign.test \
 	objects/property-delegate.vala \
+	objects/property-delegate-owned.vala \
 	objects/property-gboxed-nullable.vala \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \
