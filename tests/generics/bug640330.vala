@@ -4,7 +4,7 @@ interface Foo<G> : Object {
 		assert (typeof (G) == typeof (string));
 		G g_copy = g;
 		assert (GLib.strcmp ((string) g_copy, "foo") == 0);
-		assert (&g_copy != &g);
+		assert (g_copy != g);
 		return g;
 	}
 }
