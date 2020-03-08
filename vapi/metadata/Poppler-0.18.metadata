@@ -1,3 +1,6 @@
+* skip=false
+*.* skip=false
+
 Page
   .get_image type="Cairo.Surface"
   .get_selected_region type="Cairo.Region"
