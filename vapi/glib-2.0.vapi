@@ -2395,10 +2395,15 @@ namespace GLib {
 	public class MemVTable {
 	}
 
+	[Version (deprecated_since = "2.46")]
 	[CCode (cname = "glib_mem_profiler_table")]
 	public static MemVTable mem_profiler_table;
 
+	[Version (deprecated_since = "2.46")]
+	public static bool mem_is_system_malloc ();
+	[Version (deprecated_since = "2.46")]
 	public static void mem_set_vtable (MemVTable vtable);
+	[Version (deprecated_since = "2.46")]
 	public static void mem_profile ();
 
 	[CCode (cheader_filename = "string.h")]
