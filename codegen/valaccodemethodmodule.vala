@@ -78,7 +78,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), get_cexpression (cparam.name));
 				}
 			}
-		} else if (m.return_type is DelegateType) {
+		} else if (get_ccode_delegate_target (m) && m.return_type is DelegateType) {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) m.return_type;
 			if (deleg_type.delegate_symbol.has_target) {

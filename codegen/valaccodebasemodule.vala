@@ -3935,7 +3935,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.open_if (get_parameter_cexpression (param));
 		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_parameter_cexpression (param)), get_cvalue_ (value));
 
-		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+		if (get_ccode_delegate_target (param) && delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
 			if (delegate_type.is_disposable ()) {
 				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_destroy_notify_name (param))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
@@ -3996,7 +3996,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			stmt.return_expression.target_value = temp_value;
-		} else if ((current_method != null || (current_property_accessor != null && get_ccode_delegate_target (current_property_accessor.prop))) && current_return_type is DelegateType) {
+		} else if (((current_method != null && get_ccode_delegate_target (current_method)) || (current_property_accessor != null && get_ccode_delegate_target (current_property_accessor))) && current_return_type is DelegateType) {
 			var delegate_type = (DelegateType) current_return_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
@@ -4868,7 +4868,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_array_length_cexpression (arg, dim));
 							}
-						} else if (param.variable_type is DelegateType) {
+						} else if (get_ccode_delegate_target (param) && param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {

@@ -70,7 +70,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
 				cparam_map.set (get_param_pos (get_ccode_array_length_pos (d) + 0.01 * dim), cparam);
 			}
-		} else if (d.return_type is DelegateType) {
+		} else if (get_ccode_delegate_target (d) && d.return_type is DelegateType) {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) d.return_type;
 			if (deleg_type.delegate_symbol.has_target) {
@@ -232,7 +232,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) d.return_type;
 
-			if (deleg_type.delegate_symbol.has_target) {
+			if (get_ccode_delegate_target (d) && deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), get_ccode_name (delegate_target_type) + "*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d)), cparam);
 				if (deleg_type.is_disposable ()) {
@@ -328,7 +328,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), clength);
 				}
-			} else if (param.variable_type is DelegateType) {
+			} else if (get_ccode_delegate_target (param) && param.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) param.variable_type;
 
 				if (deleg_type.delegate_symbol.has_target) {
@@ -354,7 +354,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				carg_map.set (get_param_pos (get_ccode_array_length_pos (m) + 0.01 * dim), clength);
 			}
-		} else if (m.return_type is DelegateType) {
+		} else if (get_ccode_delegate_target (m) && m.return_type is DelegateType) {
 			var deleg_type = (DelegateType) m.return_type;
 
 			if (deleg_type.delegate_symbol.has_target) {
@@ -476,7 +476,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 			generate_delegate_declaration (deleg_type.delegate_symbol, decl_space);
 
-			if (deleg_type.delegate_symbol.has_target) {
+			if (get_ccode_delegate_target (param) && deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
 				if (carg_map != null) {
