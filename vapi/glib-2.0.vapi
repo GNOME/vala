@@ -1567,7 +1567,7 @@ public class string16 {
 namespace GLib {
 	[PointerType]
 	[GIR (fullname = "gpointer")]
-	[CCode (cname = "gpointer", const_cname = "gconstpointer", cheader_filename = "glib.h", default_value = "NULL")]
+	[CCode (cname = "gpointer", const_cname = "gconstpointer", cheader_filename = "glib.h", default_value = "NULL", type_id = "G_TYPE_POINTER")]
 	public struct pointer {
 	}
 
@@ -1908,6 +1908,7 @@ namespace GLib {
 		public static uint add_full (int priority, Pid pid, owned ChildWatchFunc function);
 	}
 
+	[CCode (type_id = "G_TYPE_POLLFD")]
 	public struct PollFD {
 		public int fd;
 		public IOCondition events;
@@ -1992,6 +1993,7 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void SourceFinalizeFunc (Source source);
 
+	[CCode (has_type_id = false)]
 	public struct SourceFuncs {
 		public SourcePrepareFunc prepare;
 		public SourceCheckFunc check;
@@ -2069,7 +2071,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.32")]
-	[CCode (destroy_function = "g_mutex_clear", lvalue_access = false)]
+	[CCode (destroy_function = "g_mutex_clear", has_type_id = false, lvalue_access = false)]
 	public struct Mutex {
 		public Mutex ();
 		public void @lock ();
@@ -2087,7 +2089,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.32")]
-	[CCode (destroy_function = "g_rec_mutex_clear")]
+	[CCode (destroy_function = "g_rec_mutex_clear", has_type_id = false)]
 	public struct RecMutex {
 		public RecMutex ();
 		public void lock ();
@@ -2096,7 +2098,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.32")]
-	[CCode (destroy_function = "g_rw_lock_clear")]
+	[CCode (destroy_function = "g_rw_lock_clear", has_type_id = false)]
 	public struct RWLock {
 		public RWLock ();
 		public void writer_lock ();
@@ -2108,7 +2110,7 @@ namespace GLib {
 	}
 
 	[Version (deprecated_since = "2.32", replacement = "Mutex")]
-	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT")]
+	[CCode (destroy_function = "g_static_mutex_free", default_value = "G_STATIC_MUTEX_INIT", has_type_id = false)]
 	public struct StaticMutex {
 		public StaticMutex ();
 		public void lock ();
@@ -2118,7 +2120,7 @@ namespace GLib {
 	}
 
 	[Version (deprecated_since = "2.32", replacement = "RecMutex")]
-	[CCode (destroy_function = "g_static_rec_mutex_free", default_value = "G_STATIC_REC_MUTEX_INIT")]
+	[CCode (destroy_function = "g_static_rec_mutex_free", default_value = "G_STATIC_REC_MUTEX_INIT", has_type_id = false)]
 	public struct StaticRecMutex {
 		public StaticRecMutex ();
 		public void lock ();
@@ -2128,7 +2130,7 @@ namespace GLib {
 	}
 
 	[Version (deprecated_since = "2.32", replacement = "RWLock")]
-	[CCode (destroy_function = "g_static_rw_lock_free", default_value = "G_STATIC_RW_LOCK_INIT")]
+	[CCode (destroy_function = "g_static_rw_lock_free", default_value = "G_STATIC_RW_LOCK_INIT", has_type_id = false)]
 	public struct StaticRWLock {
 		public StaticRWLock ();
 		public void reader_lock ();
@@ -2148,7 +2150,7 @@ namespace GLib {
 		public void replace (void* data);
 	}
 
-	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT")]
+	[CCode (destroy_function = "g_static_private_free", default_value = "G_STATIC_PRIVATE_INIT", has_type_id = false)]
 	[Version (deprecated_since = "2.32")]
 	public struct StaticPrivate {
 		public StaticPrivate ();
@@ -2157,7 +2159,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.32")]
-	[CCode (destroy_function = "g_cond_clear", lvalue_access = false)]
+	[CCode (destroy_function = "g_cond_clear", has_type_id = false, lvalue_access = false)]
 	public struct Cond {
 		public Cond ();
 		public void @signal ();
@@ -2173,7 +2175,7 @@ namespace GLib {
 	public delegate G OnceFunc<G> ();
 
 	[Version (since = "2.4")]
-	[CCode (default_value = "G_ONCE_INIT")]
+	[CCode (default_value = "G_ONCE_INIT", has_type_id = false)]
 	public struct Once<G> {
 		[CCode (cname = "g_once")]
 		public unowned G once (OnceFunc<G> function);
@@ -2669,6 +2671,7 @@ namespace GLib {
 	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 
 	[SimpleType]
+	[CCode (has_type_id = false)]
 	public struct IConv {
 		public static IConv open (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
@@ -3291,6 +3294,7 @@ namespace GLib {
 		public void unexp_token (TokenType expected_token, string? identifier_spec, string? symbol_spec, string? symbol_name, string? message, bool is_error);
 	}
 
+	[CCode (has_type_id = false)]
 	public struct ScannerConfig {
 		public string* cset_skip_characters;
 		public string* cset_identifier_first;
@@ -3357,6 +3361,7 @@ namespace GLib {
 		LAST
 	}
 
+	[CCode (has_type_id = false)]
 	[SimpleType]
 	public struct TokenValue {
 		[CCode (cname="v_symbol")]
@@ -3667,7 +3672,7 @@ namespace GLib {
 		}
 	}
 
-	[CCode (cname = "struct utimbuf", cheader_filename = "sys/types.h,utime.h")]
+	[CCode (cname = "struct utimbuf", cheader_filename = "sys/types.h,utime.h", has_type_id = false)]
 	public struct UTimBuf {
 		time_t actime;       /* access time */
 		time_t modtime;      /* modification time */
@@ -3716,7 +3721,7 @@ namespace GLib {
 		public static bool close_checked (int fd) throws FileError;
 	}
 
-	[CCode (cname = "GStatBuf", cheader_filename = "glib/gstdio.h")]
+	[CCode (cname = "GStatBuf", cheader_filename = "glib/gstdio.h", has_type_id = false)]
 	public struct Stat {
 		public time_t st_atime;
 		public time_t st_mtime;
@@ -3890,6 +3895,7 @@ namespace GLib {
 		NOALIAS
 	}
 
+	[CCode (has_type_id = false)]
 	public struct OptionEntry {
 		public unowned string long_name;
 		public char short_name;
@@ -4142,6 +4148,7 @@ namespace GLib {
 
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 
+	[CCode (has_type_id = false)]
 	public struct MarkupParser {
 		[CCode (delegate_target = false)]
 		public unowned MarkupParserStartElementFunc start_element;
@@ -4863,6 +4870,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.16")]
+	[CCode (has_type_id = false)]
 	public struct HashTableIter<K,V> {
 		public HashTableIter (GLib.HashTable<K,V> table);
 		public bool next ([CCode (type = "gpointer*")] out unowned K key, [CCode (type = "gpointer*")] out unowned V value);
@@ -4894,7 +4902,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.32")]
-	[CCode (cname = "GHashTableIter", lower_case_cprefix = "g_hash_table_iter_")]
+	[CCode (cname = "GHashTableIter", lower_case_cprefix = "g_hash_table_iter_", has_type_id = false)]
 	public struct GenericSetIter<T> {
 		[CCode (cname = "_vala_hash_set_next_value")]
 		public unowned T? next_value () {
@@ -5249,7 +5257,7 @@ namespace GLib {
 
 	/* Keyed Data Lists */
 
-	[CCode (cname = "GData*")]
+	[CCode (cname = "GData*", has_type_id = false)]
 	public struct Datalist<G> {
 		public Datalist ();
 		public void clear ();
