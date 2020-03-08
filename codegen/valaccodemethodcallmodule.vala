@@ -670,14 +670,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
-		if (itype is DelegateType) {
-			var deleg_type = (DelegateType) itype;
-			var d = deleg_type.delegate_symbol;
-			if (d.has_target) {
-				CCodeExpression delegate_target_destroy_notify;
-				in_arg_map.set (get_param_pos (get_ccode_instance_pos (d)), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
-				out_arg_map.set (get_param_pos (get_ccode_instance_pos (d)), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
-			}
+		if (deleg != null && deleg.has_target) {
+			CCodeExpression delegate_target_destroy_notify;
+			in_arg_map.set (get_param_pos (get_ccode_instance_pos (deleg)), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
+			out_arg_map.set (get_param_pos (get_ccode_instance_pos (deleg)), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
 		}
 
 		// structs are returned via out parameter
