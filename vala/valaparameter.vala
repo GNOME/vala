@@ -206,8 +206,13 @@ public class Vala.Parameter : Variable {
 
 		var m = parent_symbol as Method;
 		if (m != null) {
-			Method base_method = m.base_method != null ? m.base_method : m.base_interface_method;
-			if (base_method != null && base_method != m) {
+			unowned Method? base_method = null;
+			if (m.base_method != null && m.base_method != m) {
+				base_method = m.base_method;
+			} else if (m.base_interface_method != null && m.base_interface_method != m) {
+				base_method = m.base_interface_method;
+			}
+			if (base_method != null) {
 				int index = m.get_parameters ().index_of (this);
 				if (index >= 0) {
 					base_parameter = base_method.get_parameters ().get (index);
