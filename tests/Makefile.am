@@ -387,6 +387,7 @@ TESTS = \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
+	objects/property-struct-no-gtype.vala \
 	objects/regex.vala \
 	objects/sealed-abstract-class.test \
 	objects/sealed-class.test \

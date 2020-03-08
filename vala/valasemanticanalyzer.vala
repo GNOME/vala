@@ -491,6 +491,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// Allow GType-based struct types
 			} else if (property_type.nullable) {
 				return false;
+			} else if (!st.get_attribute_bool ("CCode", "has_type_id", true)) {
+				return false;
 			}
 		}
 
