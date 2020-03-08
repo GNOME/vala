@@ -3978,7 +3978,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		// return array length if appropriate
-		if (((current_method != null && get_ccode_array_length (current_method)) || (current_property_accessor != null && get_ccode_array_length (current_property_accessor.prop))) && current_return_type is ArrayType) {
+		if (((current_method != null && get_ccode_array_length (current_method)) || (current_property_accessor != null && get_ccode_array_length (current_property_accessor))) && current_return_type is ArrayType) {
 			var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
 
 			var array_type = (ArrayType) current_return_type;
