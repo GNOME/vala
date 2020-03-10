@@ -48,6 +48,41 @@ void test_nullable_value_array () {
 	}
 }
 
+class Bar {
+	public int i;
+}
+
+interface Manam : Object {
+}
+
+class Foo : Object, Manam {
+	public int i;
+}
+
+void test_gtype () {
+	var o = new Bar ();
+	o.i = 42;
+	Value vo = o;
+	Bar o2 = (Bar) vo;
+	assert (o2.i == 42);
+}
+
+void test_gobject () {
+	var o = new Foo ();
+	o.i = 42;
+	Value vo = o;
+	Foo o2 = (Foo) vo;
+	assert (o2.i == 42);
+}
+
+void test_ginterface () {
+	Manam i = new Foo ();
+	((Foo) i).i = 42;
+	Value vi = i;
+	Manam i2 = (Manam) vi;
+	assert (((Foo) i2).i == 42);
+}
+
 void take_value (Value v) {
 }
 
@@ -78,6 +113,9 @@ void main () {
 	test_value_array ();
 	test_nullable_value ();
 	test_nullable_value_array ();
+	test_gtype ();
+	test_gobject ();
+	test_ginterface ();
 	take_value (make_bool ());
 	test_try_cast_value ();
 }
