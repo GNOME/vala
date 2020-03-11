@@ -1,3 +1,28 @@
+Vala 0.48.1
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Replace hard-coded "gsize" with resolved "size_t"
+    + Add destroy of parameter in vfunc of delegate property setter [#919]
+    + Inherit "array" attributes from (base/-interface) property
+    + Inherit "delegate_target" from (base/-interface) parameter/property/method
+    + Actually respect "delegate_target" attribute of method/parameter
+    + Move ObjectTypeSymbol casting to GTypeModule
+    + Factor out GValueModule and GLibValue into a separate source-files
+    + Avoid symbol clashes with "va_*" from "stdarg.h"
+  - vala:
+    + Fix search for Parameter.base_parameter
+    + Real struct-type without type_id can't be used for GObject property [#921]
+  - codewriter: Output inner interface declarations [#918]
+
+ * Bindings:
+  - glib-2.0: Add missing "type_id"/"has_type_id" attributes to structs [#921]
+  - glib-2.0: Memory profiling ("g_mem_*") is deprecated since 2.46
+  - linux: Don't depend on GLib.Time when using POSIX profile
+  - gtk4: Update to 3.98+2da445f9
+  - poppler-glib: Update to 0.85
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.0
 ===========
  * Various improvements and bug fixes:
