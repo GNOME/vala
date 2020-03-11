@@ -1852,6 +1852,8 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
 
+	public int poll ([CCode (array_length_type = "guint")] PollFD[] fds, int timeout);
+
 	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
 		public TimeoutSource (uint interval);
