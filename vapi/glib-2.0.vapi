@@ -1925,7 +1925,7 @@ namespace GLib {
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
 	
 	[CCode (cname = "g_poll")]
-    public int poll(PollFD[] ufds, int timeout);
+	public int poll(PollFD[] ufds, int timeout);
 
 	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
