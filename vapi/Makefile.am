@@ -22,6 +22,8 @@ dist_vapi_DATA = \
 	avahi-gobject.vapi \
 	bzlib.vapi \
 	cairo.vapi \
+	cairo-gobject.deps \
+	cairo-gobject.vapi \
 	cairo-xcb.deps \
 	cairo-xcb.vapi \
 	ccss-1.vapi \
