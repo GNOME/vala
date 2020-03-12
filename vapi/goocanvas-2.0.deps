@@ -1,5 +1,5 @@
 atk
-cairo
+cairo-gobject
 pango
 gdk-3.0
 gio-2.0
