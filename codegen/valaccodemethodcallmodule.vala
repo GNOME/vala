@@ -874,6 +874,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			var unary = arg as UnaryExpression;
+
+			// update possible stale _*_size_ variable
+			if (unary != null && unary.operator == UnaryOperator.REF) {
+				if (get_ccode_array_length (param) && param.variable_type is ArrayType
+				    && !((ArrayType) param.variable_type).fixed_length && ((ArrayType) param.variable_type).rank == 1) {
+					unowned Symbol? array_var = unary.inner.symbol_reference;
+					unowned LocalVariable? array_local = array_var as LocalVariable;
+					if (array_var != null && array_var.is_internal_symbol ()
+					    && ((array_local != null && !array_local.captured) || array_var is Field)) {
+						ccode.add_assignment (get_array_size_cvalue (unary.inner.target_value), get_array_length_cvalue (unary.inner.target_value, 1));
+					}
+				}
+			}
+
 			if (unary == null || unary.operator != UnaryOperator.OUT) {
 				continue;
 			}

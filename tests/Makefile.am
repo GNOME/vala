@@ -104,6 +104,7 @@ TESTS = \
 	methods/closures.vala \
 	methods/contains.vala \
 	methods/iterator.vala \
+	methods/parameter-ref-array-resize.vala \
 	methods/prepostconditions.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
