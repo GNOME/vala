@@ -120,6 +120,7 @@ TESTS = \
 	methods/iterator.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/prepostconditions.vala \
+	methods/postconditions.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
 	methods/bug540483.vala \
