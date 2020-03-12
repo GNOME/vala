@@ -118,6 +118,7 @@ TESTS = \
 	methods/contains.vala \
 	methods/extern.vala \
 	methods/iterator.vala \
+	methods/parameter-ref-array-resize.vala \
 	methods/prepostconditions.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
