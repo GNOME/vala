@@ -236,7 +236,11 @@ namespace Cairo {
 		public void set_variations (string? variations);
 		public Cairo.Status status ();
 	}
-	[CCode (cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class ImageSurface : Cairo.Surface {
 		[CCode (cname = "cairo_image_surface_create")]
@@ -254,7 +258,11 @@ namespace Cairo {
 		public int get_stride ();
 		public int get_width ();
 	}
+#if GOBJECT
+	[CCode (cname = "cairo_pattern_t", ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy", type_id = "cairo_gobject_pattern_get_type ()")]
+#else
 	[CCode (cname = "cairo_pattern_t", ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy")]
+#endif
 	[Compact]
 	public class MeshPattern : Cairo.Pattern {
 		[CCode (cname = "cairo_pattern_create_mesh")]
@@ -272,7 +280,7 @@ namespace Cairo {
 		public void set_corner_color_rgb (uint corner_num, double red, double green, double blue);
 		public void set_corner_color_rgba (uint corner_num, double red, double green, double blue, double alpha);
 	}
-	[CCode (cname = "cairo_path_t", free_function = "cairo_path_destroy")]
+	[CCode (cname = "cairo_path_t", free_function = "cairo_path_destroy", has_type_id = false)]
 	[Compact]
 	public class Path {
 		[CCode (array_length = false)]
@@ -316,7 +324,11 @@ namespace Cairo {
 		public Cairo.Status set_user_data<G> (Cairo.UserDataKey? key, owned G? data);
 		public Cairo.Status status ();
 	}
-	[CCode (cheader_filename = "cairo-pdf.h", cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cheader_filename = "cairo-pdf.h,cairo-gobject.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cheader_filename = "cairo-pdf.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class PdfSurface : Cairo.Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
@@ -334,7 +346,11 @@ namespace Cairo {
 		[Version (since = "1.16")]
 		public void set_thumbnail_size (int width, int height);
 	}
-	[CCode (cheader_filename = "cairo-ps.h", cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cheader_filename = "cairo-ps.h,cairo-gobject.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cheader_filename = "cairo-ps.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class PsSurface : Cairo.Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
@@ -350,7 +366,11 @@ namespace Cairo {
 		public void set_eps (bool eps);
 		public void set_size (double width_in_points, double height_in_points);
 	}
+#if GOBJECT
+	[CCode (cname = "cairo_pattern_t", ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy", type_id = "cairo_gobject_pattern_get_type ()")]
+#else
 	[CCode (cname = "cairo_pattern_t", ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy")]
+#endif
 	[Compact]
 	public class RasterSourcePattern : Cairo.Pattern {
 		[CCode (cname = "cairo_pattern_create_raster_source")]
@@ -366,7 +386,11 @@ namespace Cairo {
 		public void set_finish (Cairo.RasterSourceFinishFunc finish);
 		public void set_snapshot (Cairo.RasterSourceSnapshotFunc snapshot);
 	}
-	[CCode (cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class RecordingSurface : Cairo.Surface {
 		[CCode (cname = "cairo_recording_surface_create")]
@@ -374,7 +398,7 @@ namespace Cairo {
 		public bool get_extents (out Cairo.Rectangle extents);
 		public void ink_extents (out double x0, out double y0, out double width, out double height);
 	}
-	[CCode (cname = "cairo_rectangle_list_t", free_function = "cairo_rectangle_list_destroy")]
+	[CCode (cname = "cairo_rectangle_list_t", free_function = "cairo_rectangle_list_destroy", has_type_id = false)]
 	[Compact]
 	public class RectangleList {
 		[CCode (array_length_cname = "num_rectangles")]
@@ -443,7 +467,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_win32_scaled_font_get_logical_to_device")]
 		public Cairo.Matrix win32_get_logical_to_device ();
 	}
-	[CCode (cname = "cairo_device_t", ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy")]
+	[CCode (cname = "cairo_device_t", ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy", has_type_id = false)]
 	[Compact]
 	public class Script : Cairo.Device {
 		[CCode (cname = "cairo_script_create")]
@@ -456,7 +480,11 @@ namespace Cairo {
 		public void set_mode (Cairo.ScriptMode mode);
 		public void write_comment (string comment, int len = -1);
 	}
-	[CCode (cheader_filename = "cairo-svg.h", cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cheader_filename = "cairo-svg.h,cairo-gobject.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cheader_filename = "cairo-svg.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class ScriptSurface : Cairo.Surface {
 		[CCode (cname = "cairo_script_surface_create")]
@@ -527,7 +555,11 @@ namespace Cairo {
 		public double elapsed ();
 		public Cairo.Status print (Cairo.WriteFunc write_func);
 	}
-	[CCode (cheader_filename = "cairo-svg.h", cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cheader_filename = "cairo-svg.h,cairo-gobject.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cheader_filename = "cairo-svg.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class SvgSurface : Cairo.Surface {
 		[CCode (cname = "cairo_svg_surface_create")]
@@ -540,7 +572,7 @@ namespace Cairo {
 		[Version (since = "1.16")]
 		public void set_document_unit (Cairo.SvgUnit unit);
 	}
-	[CCode (cname = "cairo_font_face_t", ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy")]
+	[CCode (cname = "cairo_font_face_t", ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy", has_type_id = false)]
 	[Compact]
 	public class ToyFontFace : Cairo.FontFace {
 		[CCode (cname = "cairo_toy_font_face_create")]
@@ -549,7 +581,7 @@ namespace Cairo {
 		public Cairo.FontSlant get_slant ();
 		public Cairo.FontWeight get_weight ();
 	}
-	[CCode (cname = "cairo_font_face_t", ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy")]
+	[CCode (cname = "cairo_font_face_t", ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy", has_type_id = false)]
 	[Compact]
 	public class UserFontFace : Cairo.FontFace {
 		[CCode (cname = "cairo_user_font_face_create")]
@@ -571,7 +603,11 @@ namespace Cairo {
 	[Compact]
 	public class UserScaledFont {
 	}
-	[CCode (cheader_filename = "cairo-xlib.h", cname = "cairo_surface_t")]
+#if GOBJECT
+	[CCode (cheader_filename = "cairo-xlib.h,cairo-gobject.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", type_id = "cairo_gobject_surface_get_type ()")]
+#else
+	[CCode (cheader_filename = "cairo-xlib.h", cname = "cairo_surface_t", ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy")]
+#endif
 	[Compact]
 	public class XlibSurface : Cairo.Surface {
 		[CCode (cname = "cairo_xlib_surface_create")]
