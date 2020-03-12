@@ -2304,6 +2304,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			pop_line ();
 		}
 
+		if (b.parent_symbol is Method) {
+			unowned Method m = (Method) b.parent_symbol;
+			// check postconditions
+			foreach (var postcondition in m.get_postconditions ()) {
+				create_postcondition_statement (postcondition);
+			}
+		}
+
 		// free in reverse order
 		for (int i = local_vars.size - 1; i >= 0; i--) {
 			var local = local_vars[i];
@@ -2327,10 +2335,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
 					return_out_parameter (param);
 				}
-			}
-			// check postconditions
-			foreach (var postcondition in m.get_postconditions ()) {
-				create_postcondition_statement (postcondition);
 			}
 		} else if (!unreachable_exit_block && b.parent_symbol is PropertyAccessor) {
 			var acc = (PropertyAccessor) b.parent_symbol;
@@ -3894,15 +3898,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (result_lhs, get_cvalue (stmt.return_expression));
 		}
 
-		// free local variables
-		append_local_free (current_symbol);
-
 		if (current_method != null) {
 			// check postconditions
 			foreach (Expression postcondition in current_method.get_postconditions ()) {
 				create_postcondition_statement (postcondition);
 			}
 		}
+
+		// free local variables
+		append_local_free (current_symbol);
 
 		if (current_method != null && !current_method.coroutine) {
 			// assign values to output parameters if they are not NULL
