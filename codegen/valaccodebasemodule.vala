@@ -696,42 +696,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_set_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_set_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_set_pointer");
-		}
-	}
-
-	public CCodeIdentifier get_value_taker_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_take_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_take_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_set_pointer");
-		}
-	}
-
-	CCodeIdentifier get_value_getter_function (DataType type_reference) {
-		var array_type = type_reference as ArrayType;
-		if (type_reference.type_symbol != null) {
-			return new CCodeIdentifier (get_ccode_get_value_function (type_reference.type_symbol));
-		} else if (array_type != null && array_type.element_type.type_symbol == string_type.type_symbol) {
-			// G_TYPE_STRV
-			return new CCodeIdentifier ("g_value_get_boxed");
-		} else {
-			return new CCodeIdentifier ("g_value_get_pointer");
-		}
-	}
-
 	public virtual void append_vala_array_free () {
 	}
 
@@ -3935,7 +3899,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		ccode.open_if (get_parameter_cexpression (param));
 		ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_parameter_cexpression (param)), get_cvalue_ (value));
 
-		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+		if (get_ccode_delegate_target (param) && delegate_type != null && delegate_type.delegate_symbol.has_target) {
 			ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_name (param))), get_delegate_target_cvalue (value));
 			if (delegate_type.is_disposable ()) {
 				ccode.add_assignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_cexpression (get_ccode_delegate_target_destroy_notify_name (param))), get_delegate_target_destroy_notify_cvalue (get_parameter_cvalue (param)));
@@ -3978,7 +3942,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		// return array length if appropriate
-		if (((current_method != null && get_ccode_array_length (current_method)) || (current_property_accessor != null && get_ccode_array_length (current_property_accessor.prop))) && current_return_type is ArrayType) {
+		if (((current_method != null && get_ccode_array_length (current_method)) || (current_property_accessor != null && get_ccode_array_length (current_property_accessor))) && current_return_type is ArrayType) {
 			var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
 
 			var array_type = (ArrayType) current_return_type;
@@ -3996,7 +3960,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			stmt.return_expression.target_value = temp_value;
-		} else if ((current_method != null || (current_property_accessor != null && get_ccode_delegate_target (current_property_accessor.prop))) && current_return_type is DelegateType) {
+		} else if (((current_method != null && get_ccode_delegate_target (current_method)) || (current_property_accessor != null && get_ccode_delegate_target (current_property_accessor))) && current_return_type is DelegateType) {
 			var delegate_type = (DelegateType) current_return_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				var temp_value = store_temp_value (stmt.return_expression.target_value, stmt);
@@ -4868,7 +4832,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), get_array_length_cexpression (arg, dim));
 							}
-						} else if (param.variable_type is DelegateType) {
+						} else if (get_ccode_delegate_target (param) && param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {
@@ -5226,49 +5190,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		set_cvalue (expr, new CCodeUnaryExpression (op, get_cvalue (expr.inner)));
 	}
 
-	public CCodeExpression? try_cast_value_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
-		if (from == null || gvalue_type == null || from.type_symbol != gvalue_type || to.type_symbol == gvalue_type || get_ccode_type_id (to) == "") {
-			return null;
-		}
-
-		// explicit conversion from GValue
-		var ccall = new CCodeFunctionCall (get_value_getter_function (to));
-		CCodeExpression gvalue;
-		if (from.nullable) {
-			gvalue = ccodeexpr;
-		} else {
-			gvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ccodeexpr);
-		}
-		ccall.add_argument (gvalue);
-
-		CCodeExpression rv = ccall;
-
-		if (expr != null && to is ArrayType) {
-			// null-terminated string array
-			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-			len_call.add_argument (rv);
-			append_array_length (expr, len_call);
-		} else if (to is StructValueType) {
-			CodeNode node = expr != null ? (CodeNode) expr : to;
-			var temp_value = create_temp_value (to, true, node, true);
-			var ctemp = get_cvalue_ (temp_value);
-
-			rv = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (rv, get_ccode_name (new PointerType (to))));
-			var holds = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_HOLDS"));
-			holds.add_argument (gvalue);
-			holds.add_argument (new CCodeIdentifier (get_ccode_type_id (to)));
-			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.AND, holds, ccall);
-			var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
-			warn.add_argument (new CCodeConstant ("\"Invalid GValue unboxing (wrong type or NULL)\""));
-			var fail = new CCodeCommaExpression ();
-			fail.append_expression (warn);
-			fail.append_expression (ctemp);
-			rv = new CCodeConditionalExpression (cond, rv,  fail);
-		}
-
-		return rv;
-	}
-
 	public virtual CCodeExpression? deserialize_expression (DataType type, CCodeExpression variant_expr, CCodeExpression? expr, CCodeExpression? error_expr = null, out bool may_fail = null) {
 		assert_not_reached ();
 	}
@@ -5278,118 +5199,81 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
+		if (expr.is_silent_cast) {
+			set_cvalue (expr, new CCodeInvalidExpression ());
+			expr.error = true;
+			Report.error (expr.source_reference, "Operation not supported for this type");
+			return;
+		}
+
 		generate_type_declaration (expr.type_reference, cfile);
 
-		if (!expr.is_non_null_cast) {
-			var valuecast = try_cast_value_to_type (get_cvalue (expr.inner), expr.inner.value_type, expr.type_reference, expr);
-			if (valuecast != null) {
-				set_cvalue (expr, valuecast);
-				return;
+		// recompute array length when casting to other array type
+		var array_type = expr.type_reference as ArrayType;
+		if (array_type != null && expr.inner.value_type is ArrayType) {
+			if (array_type.element_type is GenericType || ((ArrayType) expr.inner.value_type).element_type is GenericType) {
+				// element size unknown for generic arrays, retain array length as is
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
+				}
+			} else {
+				var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
+
+				var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) expr.inner.value_type).element_type)));
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					append_array_length (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_array_length_cexpression (expr.inner, dim), sizeof_from), sizeof_to));
+				}
+			}
+		} else if (array_type != null) {
+			CCodeExpression array_length_expr;
+
+			var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
+			var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+
+			var value_type = expr.inner.value_type;
+			if (value_type is ValueType) {
+				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
+				array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
+			} else if (value_type is PointerType && ((PointerType) value_type).base_type is ValueType) {
+				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((PointerType) value_type).base_type.type_symbol)));
+				array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
+			} else {
+				// cast from unsupported non-array to array, set invalid length
+				// required by string.data, e.g.
+				array_length_expr = new CCodeConstant ("-1");
+			}
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				append_array_length (expr, array_length_expr);
 			}
 		}
 
-		unowned Class? cl = expr.type_reference.type_symbol as Class;
-		unowned Interface? iface = expr.type_reference.type_symbol as Interface;
-		if (context.profile == Profile.GOBJECT && (iface != null || (cl != null && !cl.is_compact))) {
-			// checked cast for strict subtypes of GTypeInstance
-			if (expr.is_silent_cast) {
-				TargetValue to_cast = expr.inner.target_value;
-				CCodeExpression cexpr;
-				if (!get_lvalue (to_cast)) {
-					to_cast = store_temp_value (to_cast, expr);
-				}
-				cexpr = get_cvalue_ (to_cast);
-				var ccheck = create_type_check (cexpr, expr.type_reference);
-				var ccast = new CCodeCastExpression (cexpr, get_ccode_name (expr.type_reference));
-				var cnull = new CCodeConstant ("NULL");
-				var cast_value = new GLibValue (expr.value_type, new CCodeConditionalExpression (ccheck, ccast, cnull));
-				if (requires_destroy (expr.inner.value_type)) {
-					var casted = store_temp_value (cast_value, expr);
-					ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_cvalue_ (casted), new CCodeConstant ("NULL")));
-					ccode.add_expression (destroy_value (to_cast));
-					ccode.close ();
-					expr.target_value = ((GLibValue) casted).copy ();
-				} else {
-					expr.target_value = cast_value;
-				}
+		var innercexpr = get_cvalue (expr.inner);
+		if (expr.type_reference is ValueType && !expr.type_reference.nullable &&
+			expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
+			// nullable integer or float or boolean or struct or enum cast to non-nullable
+			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
+		} else if (expr.type_reference is ArrayType && !(expr.inner is Literal)
+		    && expr.inner.value_type is ValueType && !expr.inner.value_type.nullable) {
+			// integer or float or boolean or struct or enum to array cast
+			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
+		}
+		set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
+
+		if (expr.type_reference is DelegateType) {
+			if (get_delegate_target (expr.inner) != null) {
+				set_delegate_target (expr, get_delegate_target (expr.inner));
 			} else {
-				set_cvalue (expr, generate_instance_cast (get_cvalue (expr.inner), expr.type_reference.type_symbol));
+				set_delegate_target (expr, new CCodeConstant ("NULL"));
 			}
-		} else {
-			if (expr.is_silent_cast) {
-				set_cvalue (expr, new CCodeInvalidExpression ());
-				expr.error = true;
-				Report.error (expr.source_reference, "Operation not supported for this type");
-				return;
-			}
-
-			// recompute array length when casting to other array type
-			var array_type = expr.type_reference as ArrayType;
-			if (array_type != null && expr.inner.value_type is ArrayType) {
-				if (array_type.element_type is GenericType || ((ArrayType) expr.inner.value_type).element_type is GenericType) {
-					// element size unknown for generic arrays, retain array length as is
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
-					}
-				} else {
-					var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
-
-					var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) expr.inner.value_type).element_type)));
-
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						append_array_length (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_array_length_cexpression (expr.inner, dim), sizeof_from), sizeof_to));
-					}
-				}
-			} else if (array_type != null) {
-				CCodeExpression array_length_expr;
-
-				var sizeof_to = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
-				var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-
-				var value_type = expr.inner.value_type;
-				if (value_type is ValueType) {
-					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
-					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
-				} else if (value_type is PointerType && ((PointerType) value_type).base_type is ValueType) {
-					sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((PointerType) value_type).base_type.type_symbol)));
-					array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
-				} else {
-					// cast from unsupported non-array to array, set invalid length
-					// required by string.data, e.g.
-					array_length_expr = new CCodeConstant ("-1");
-				}
-
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					append_array_length (expr, array_length_expr);
-				}
-			}
-
-			var innercexpr = get_cvalue (expr.inner);
-			if (expr.type_reference is ValueType && !expr.type_reference.nullable &&
-				expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
-				// nullable integer or float or boolean or struct or enum cast to non-nullable
-				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
-			} else if (expr.type_reference is ArrayType && !(expr.inner is Literal)
-			    && expr.inner.value_type is ValueType && !expr.inner.value_type.nullable) {
-				// integer or float or boolean or struct or enum to array cast
-				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
-			}
-			set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
-
-			if (expr.type_reference is DelegateType) {
-				if (get_delegate_target (expr.inner) != null) {
-					set_delegate_target (expr, get_delegate_target (expr.inner));
-				} else {
-					set_delegate_target (expr, new CCodeConstant ("NULL"));
-				}
-				if (get_delegate_target_destroy_notify (expr.inner) != null) {
-					set_delegate_target_destroy_notify (expr, get_delegate_target_destroy_notify (expr.inner));
-				} else {
-					set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
-				}
+			if (get_delegate_target_destroy_notify (expr.inner) != null) {
+				set_delegate_target_destroy_notify (expr, get_delegate_target_destroy_notify (expr.inner));
+			} else {
+				set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 			}
 		}
 	}
@@ -5673,7 +5557,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	CCodeExpression? create_type_check (CCodeNode ccodenode, DataType type) {
+	public CCodeExpression? create_type_check (CCodeNode ccodenode, DataType type) {
 		var et = type as ErrorType;
 		if (et != null && et.error_code != null) {
 			var matches_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
@@ -6525,6 +6409,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeFunctionCall (new CCodeIdentifier (""));
 	}
 
+	public virtual CCodeExpression get_value_getter_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
+	}
+
+	public virtual CCodeExpression get_value_setter_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
+	}
+
+	public virtual CCodeExpression get_value_taker_function (DataType type_reference) {
+		return new CCodeInvalidExpression ();
+	}
+
 	public virtual void register_dbus_info (CCodeBlock block, ObjectTypeSymbol bindable) {
 	}
 
@@ -6588,163 +6484,5 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_include ("stdbool.h");
 			return new CCodeConstant (b ? "true" : "false");
 		}
-	}
-
-	public CCodeExpression? get_cvalue (Expression expr) {
-		if (expr.target_value == null) {
-			return null;
-		}
-		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.cvalue;
-	}
-
-	public CCodeExpression? get_cvalue_ (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.cvalue;
-	}
-
-	public void set_cvalue (Expression expr, CCodeExpression? cvalue) {
-		var glib_value = (GLibValue) expr.target_value;
-		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
-		}
-		glib_value.cvalue = cvalue;
-	}
-
-	public CCodeExpression? get_array_size_cvalue (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_size_cvalue;
-	}
-
-	public void set_array_size_cvalue (TargetValue value, CCodeExpression? cvalue) {
-		var glib_value = (GLibValue) value;
-		glib_value.array_size_cvalue = cvalue;
-	}
-
-	public CCodeExpression? get_delegate_target (Expression expr) {
-		if (expr.target_value == null) {
-			return null;
-		}
-		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.delegate_target_cvalue;
-	}
-
-	public void set_delegate_target (Expression expr, CCodeExpression? delegate_target) {
-		var glib_value = (GLibValue) expr.target_value;
-		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
-		}
-		glib_value.delegate_target_cvalue = delegate_target;
-	}
-
-	public CCodeExpression? get_delegate_target_destroy_notify (Expression expr) {
-		if (expr.target_value == null) {
-			return null;
-		}
-		var glib_value = (GLibValue) expr.target_value;
-		return glib_value.delegate_target_destroy_notify_cvalue;
-	}
-
-	public void set_delegate_target_destroy_notify (Expression expr, CCodeExpression? destroy_notify) {
-		var glib_value = (GLibValue) expr.target_value;
-		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
-		}
-		glib_value.delegate_target_destroy_notify_cvalue = destroy_notify;
-	}
-
-	public void append_array_length (Expression expr, CCodeExpression size) {
-		var glib_value = (GLibValue) expr.target_value;
-		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
-		}
-		glib_value.append_array_length_cvalue (size);
-	}
-
-	public List<CCodeExpression>? get_array_lengths (Expression expr) {
-		var glib_value = (GLibValue) expr.target_value;
-		if (glib_value == null) {
-			glib_value = new GLibValue (expr.value_type);
-			expr.target_value = glib_value;
-		}
-		return glib_value.array_length_cvalues;
-	}
-
-	public bool get_lvalue (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.lvalue;
-	}
-
-	public bool get_non_null (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.non_null;
-	}
-
-	public string? get_ctype (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.ctype;
-	}
-
-	public bool get_array_null_terminated (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_null_terminated;
-	}
-
-	public CCodeExpression get_array_length_cexpr (TargetValue value) {
-		var glib_value = (GLibValue) value;
-		return glib_value.array_length_cexpr;
-	}
-}
-
-internal class Vala.GLibValue : TargetValue {
-	public CCodeExpression cvalue;
-	public bool lvalue;
-	public bool non_null;
-	public string? ctype;
-
-	public List<CCodeExpression> array_length_cvalues;
-	public CCodeExpression? array_size_cvalue;
-	public bool array_null_terminated;
-	public CCodeExpression? array_length_cexpr;
-
-	public CCodeExpression? delegate_target_cvalue;
-	public CCodeExpression? delegate_target_destroy_notify_cvalue;
-
-	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null, bool lvalue = false) {
-		base (value_type);
-		this.cvalue = cvalue;
-		this.lvalue = lvalue;
-	}
-
-	public void append_array_length_cvalue (CCodeExpression length_cvalue) {
-		if (array_length_cvalues == null) {
-			array_length_cvalues = new ArrayList<CCodeExpression> ();
-		}
-		array_length_cvalues.add (length_cvalue);
-	}
-
-	public GLibValue copy () {
-		var result = new GLibValue (value_type.copy (), cvalue, lvalue);
-		result.actual_value_type = actual_value_type;
-		result.non_null = non_null;
-		result.ctype = ctype;
-
-		if (array_length_cvalues != null) {
-			foreach (var cexpr in array_length_cvalues) {
-				result.append_array_length_cvalue (cexpr);
-			}
-		}
-		result.array_size_cvalue = array_size_cvalue;
-		result.array_null_terminated = array_null_terminated;
-		result.array_length_cexpr = array_length_cexpr;
-
-		result.delegate_target_cvalue = delegate_target_cvalue;
-		result.delegate_target_destroy_notify_cvalue = delegate_target_destroy_notify_cvalue;
-
-		return result;
 	}
 }

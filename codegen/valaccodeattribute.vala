@@ -1477,13 +1477,33 @@ public class Vala.CCodeAttribute : AttributeCache {
 
 	private bool get_default_delegate_target () {
 		if (node is Field || node is Parameter || node is LocalVariable) {
+			if (node is Parameter) {
+				unowned Parameter param = (Parameter) node;
+				if (param.base_parameter != null) {
+					return get_ccode_delegate_target (param.base_parameter);
+				}
+			}
 			unowned DelegateType? delegate_type = ((Variable) node).variable_type as DelegateType;
 			return delegate_type != null && delegate_type.delegate_symbol.has_target;
 		} else if (node is Callable) {
+			if (node is Method) {
+				unowned Method method = (Method) node;
+				if (method.base_method != null && method.base_method != method) {
+					return get_ccode_delegate_target (method.base_method);
+				} else if (method.base_interface_method != null && method.base_interface_method != method) {
+					return get_ccode_delegate_target (method.base_interface_method);
+				}
+			}
 			unowned DelegateType? delegate_type = ((Callable) node).return_type as DelegateType;
 			return delegate_type != null && delegate_type.delegate_symbol.has_target;
 		} else if (node is Property) {
-			unowned DelegateType? delegate_type = ((Property) node).property_type as DelegateType;
+			unowned Property prop = (Property) node;
+			if (prop.base_property != null && prop.base_property != prop) {
+				return get_ccode_delegate_target (prop.base_property);
+			} else if (prop.base_interface_property != null && prop.base_interface_property != prop) {
+				return get_ccode_delegate_target (prop.base_interface_property);
+			}
+			unowned DelegateType? delegate_type = prop.property_type as DelegateType;
 			return delegate_type != null && delegate_type.delegate_symbol.has_target;
 		} else if (node is PropertyAccessor) {
 			return get_ccode_delegate_target (((PropertyAccessor) node).prop);
@@ -1509,6 +1529,15 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else if (method.base_interface_method != null && method.base_interface_method != method) {
 				return get_ccode_array_length (method.base_interface_method);
 			}
+		} else if (node is Property) {
+			unowned Property prop = (Property) node;
+			if (prop.base_property != null && prop.base_property != prop) {
+				return get_ccode_array_length (prop.base_property);
+			} else if (prop.base_interface_property != null && prop.base_interface_property != prop) {
+				return get_ccode_array_length (prop.base_interface_property);
+			}
+		} else if (node is PropertyAccessor) {
+			return get_ccode_array_length (((PropertyAccessor) node).prop);
 		}
 		return true;
 	}
@@ -1526,6 +1555,15 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else if (method.base_interface_method != null && method.base_interface_method != method) {
 				return get_ccode_array_null_terminated (method.base_interface_method);
 			}
+		} else if (node is Property) {
+			unowned Property prop = (Property) node;
+			if (prop.base_property != null && prop.base_property != prop) {
+				return get_ccode_array_null_terminated (prop.base_property);
+			} else if (prop.base_interface_property != null && prop.base_interface_property != prop) {
+				return get_ccode_array_null_terminated (prop.base_interface_property);
+			}
+		} else if (node is PropertyAccessor) {
+			return get_ccode_array_null_terminated (((PropertyAccessor) node).prop);
 		}
 		return false;
 	}

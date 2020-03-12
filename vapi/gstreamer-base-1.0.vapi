@@ -89,7 +89,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool sink_event (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
 			[NoWrapper]
-			public virtual bool sink_event_pre_queue (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
+			public virtual Gst.FlowReturn sink_event_pre_queue (Gst.Base.AggregatorPad aggregator_pad, Gst.Event event);
 			[NoWrapper]
 			public virtual bool sink_query (Gst.Base.AggregatorPad aggregator_pad, Gst.Query query);
 			[NoWrapper]

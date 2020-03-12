@@ -532,7 +532,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						result.cvalue = get_variable_cexpression (name);
 					}
 				}
-				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+				if (get_ccode_delegate_target (param) && delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					var target_cname = get_ccode_delegate_target_name (param);
 					var destroy_cname = get_ccode_delegate_target_destroy_notify_name (param);
 					if (param.direction == ParameterDirection.OUT) {

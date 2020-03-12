@@ -252,9 +252,14 @@ namespace Poppler {
 	public class Document : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Document ();
+		[Version (since = "0.78")]
+		public GLib.Tree? create_dests_tree ();
 		public Poppler.Dest find_dest (string link_name);
 		[CCode (has_construct_function = false)]
-		public Document.from_data (string data, int length, string? password) throws GLib.Error;
+		[Version (since = "0.82")]
+		public Document.from_bytes (GLib.Bytes bytes, string? password) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Document.from_data ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[] data, string? password) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Document.from_file (string uri, string? password) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -302,6 +307,13 @@ namespace Poppler {
 		public string get_pdf_version_string ();
 		[Version (since = "0.16")]
 		public Poppler.Permissions get_permissions ();
+		[Version (since = "0.80")]
+		public Poppler.PrintDuplex get_print_duplex ();
+		[Version (since = "0.80")]
+		public int get_print_n_copies ();
+		[CCode (array_length_pos = 0.1)]
+		[Version (since = "0.80")]
+		public Poppler.PageRange[] get_print_page_ranges ();
 		[Version (since = "0.73")]
 		public Poppler.PrintScaling get_print_scaling ();
 		[Version (since = "0.16")]
@@ -349,6 +361,10 @@ namespace Poppler {
 		public Poppler.PageLayout page_layout { get; }
 		public Poppler.PageMode page_mode { get; }
 		public Poppler.Permissions permissions { get; }
+		[Version (since = "0.80")]
+		public Poppler.PrintDuplex print_duplex { get; }
+		[Version (since = "0.80")]
+		public int print_n_copies { get; }
 		[Version (since = "0.73")]
 		public Poppler.PrintScaling print_scaling { get; }
 		public string producer { owned get; set; }
@@ -528,10 +544,22 @@ namespace Poppler {
 	public class Movie : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Movie ();
+		[Version (since = "0.80")]
+		public uint64 get_duration ();
 		[Version (since = "0.14")]
 		public unowned string get_filename ();
 		[Version (since = "0.54")]
 		public Poppler.MoviePlayMode get_play_mode ();
+		[Version (since = "0.80")]
+		public double get_rate ();
+		[Version (since = "0.80")]
+		public ushort get_rotation_angle ();
+		[Version (since = "0.80")]
+		public uint64 get_start ();
+		[Version (since = "0.80")]
+		public double get_volume ();
+		[Version (since = "0.80")]
+		public bool is_synchronous ();
 		[Version (since = "0.14")]
 		public bool need_poster ();
 		[Version (since = "0.14")]
@@ -887,6 +915,12 @@ namespace Poppler {
 		public string title;
 		public string uri;
 	}
+	[CCode (cheader_filename = "poppler.h", has_type_id = false)]
+	[Version (since = "0.80")]
+	public struct PageRange {
+		public int start_page;
+		public int end_page;
+	}
 	[CCode (cheader_filename = "poppler.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "poppler_rectangle_get_type ()")]
 	public struct Rectangle {
 		public double x1;
@@ -1188,6 +1222,14 @@ namespace Poppler {
 		OK_TO_ASSEMBLE,
 		OK_TO_PRINT_HIGH_RESOLUTION,
 		FULL
+	}
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PRINT_DUPLEX_", type_id = "poppler_print_duplex_get_type ()")]
+	[Version (since = "0.80")]
+	public enum PrintDuplex {
+		NONE,
+		SIMPLEX,
+		DUPLEX_FLIP_SHORT_EDGE,
+		DUPLEX_FLIP_LONG_EDGE
 	}
 	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_PRINT_", type_id = "poppler_print_flags_get_type ()")]
 	[Flags]

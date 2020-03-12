@@ -46,10 +46,12 @@ libvalaccodegen_la_VALASOURCES = \
 	valagdbusservermodule.vala \
 	valagerrormodule.vala \
 	valagirwriter.vala \
+	valaglibvalue.vala \
 	valagobjectmodule.vala \
 	valagtkmodule.vala \
 	valagsignalmodule.vala \
 	valagtypemodule.vala \
+	valagvaluemodule.vala \
 	valagvariantmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valastructregisterfunction.vala \

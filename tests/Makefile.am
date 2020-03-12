@@ -163,6 +163,7 @@ TESTS = \
 	methods/bug791215.vala \
 	methods/bug791283.vala \
 	methods/argument-array-initilizer.vala \
+	methods/delegate-target.vala \
 	methods/generics.vala \
 	methods/params-array.vala \
 	methods/print-attribute.vala \
@@ -386,6 +387,7 @@ TESTS = \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
+	objects/property-struct-no-gtype.vala \
 	objects/regex.vala \
 	objects/sealed-abstract-class.test \
 	objects/sealed-class.test \
