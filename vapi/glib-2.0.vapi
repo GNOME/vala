@@ -1923,6 +1923,9 @@ namespace GLib {
 
 	[CCode (has_target = false)]
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
+	
+	[CCode (cname = "g_poll")]
+	public int poll ([CCode (array_length_type = "guint")] PollFD[] fds, int timeout);
 
 	public int poll ([CCode (array_length_type = "guint")] PollFD[] fds, int timeout);
 
