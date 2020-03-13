@@ -984,8 +984,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		this.settings = settings;
 		this.reporter = reporter;
 
-		var context = new Vala.CodeContext ();
-		Vala.CodeContext.push (context);
+		var context = Vala.CodeContext.get ();
 
 		this.tree = new Api.Tree (reporter, settings, context);
 		create_valac_tree (context, settings);
@@ -1006,8 +1005,6 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		context.accept(this);
-
-		Vala.CodeContext.pop ();
 
 		return (reporter.errors == 0)? tree : null;
 	}

@@ -2926,6 +2926,8 @@ public static void test_driver () {
 	settings.pkg_name = "out";
 	settings.path = "out";
 
+	var context = new Vala.CodeContext ();
+	Vala.CodeContext.push (context);
 
 	TreeBuilder builder = new TreeBuilder ();
 	Api.Tree? doctree = builder.build (settings, reporter);
@@ -2971,6 +2973,8 @@ public static void test_driver () {
 	assert (glib == true);
 	assert (gobj == true);
 	assert (test == true);
+
+	Vala.CodeContext.pop ();
 }
 
 
