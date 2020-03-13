@@ -821,9 +821,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 
 	private Vala.CodeContext create_valac_tree (Settings settings) {
 		// init context:
-		var context = new Vala.CodeContext ();
-		Vala.CodeContext.push (context);
-
+		var context = Vala.CodeContext.get ();
 
 		// settings:
 		context.experimental = settings.experimental;
@@ -1484,8 +1482,6 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		context.accept(this);
-
-		Vala.CodeContext.pop ();
 
 		return (reporter.errors == 0)? tree : null;
 	}

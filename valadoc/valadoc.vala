@@ -129,9 +129,11 @@ public class ValaDoc : Object {
 	private static int quit (ErrorReporter reporter) {
 		if (reporter.errors == 0) {
 			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
+			Vala.CodeContext.pop ();
 			return 0;
 		} else {
 			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
+			Vala.CodeContext.pop ();
 			return 1;
 		}
 	}
@@ -229,6 +231,8 @@ public class ValaDoc : Object {
 
 		settings.alternative_resource_dirs = alternative_resource_dirs;
 
+		var context = new Vala.CodeContext ();
+		Vala.CodeContext.push (context);
 
 		var driver = new Valadoc.Drivers.Driver ();
 
