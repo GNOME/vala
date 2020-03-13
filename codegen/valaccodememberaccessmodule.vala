@@ -463,7 +463,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else {
 			string name = param.name;
 
-			if (param.captured) {
+			if (param.captured && !is_in_method_precondition) {
 				// captured variables are stored on the heap
 				var block = param.parent_symbol as Block;
 				if (block == null) {

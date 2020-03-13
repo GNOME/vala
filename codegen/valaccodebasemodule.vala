@@ -43,6 +43,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		public Map<string,int> closure_variable_count_map = new HashMap<string,int> (str_hash, str_equal);
 		public Map<LocalVariable,int> closure_variable_clash_map = new HashMap<LocalVariable,int> ();
+		public bool is_in_method_precondition;
 
 		public EmitContext (Symbol? symbol = null) {
 			current_symbol = symbol;
@@ -85,6 +86,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public int current_inner_error_id {
 		get { return emit_context.current_inner_error_id; }
 		set { emit_context.current_inner_error_id = value; }
+	}
+
+	public bool is_in_method_precondition {
+		get { return emit_context.is_in_method_precondition; }
+		set { emit_context.is_in_method_precondition = value; }
 	}
 
 	public TypeSymbol? current_type_symbol {
