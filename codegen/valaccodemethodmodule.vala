@@ -1142,6 +1142,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	private void create_precondition_statement (Method m, DataType ret_type, Expression precondition) {
+		is_in_method_precondition = true;
+
 		var ccheck = new CCodeFunctionCall ();
 
 		precondition.emit (this);
@@ -1181,6 +1183,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ccode.add_expression (ccheck);
 
 		current_method_return = true;
+		is_in_method_precondition = false;
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
