@@ -265,7 +265,8 @@ public class Vala.ArrayType : ReferenceType {
 		if (fixed_length && length != null) {
 			length.check (context);
 
-			if (length.value_type == null || !(length.value_type is IntegerType) || !length.is_constant ()) {
+			if (length.value_type == null || !(length.value_type is IntegerType || length.value_type is EnumValueType)
+			    || !length.is_constant ()) {
 				error = true;
 				Report.error (length.source_reference, "Expression of constant integer type expected");
 				return false;
