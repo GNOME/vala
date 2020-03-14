@@ -79,6 +79,7 @@ TESTS = \
 	arrays/fixed-length-init0-not-allowed.vala \
 	arrays/field-global-length-cname.vala \
 	arrays/fixed-length-concat-invalid.test \
+	arrays/fixed-length-enum-value.vala \
 	arrays/fixed-length-non-const.test \
 	arrays/fixed-length-resize-invalid.test \
 	arrays/inline-field.test \
