@@ -2494,6 +2494,10 @@ namespace GLib {
 		public IOStatus set_encoding (string? encoding) throws IOChannelError;
 		public bool get_close_on_unref ();
 		public void set_close_on_unref (bool do_close);
+		[CCode (cname = "g_io_channel_win32_make_pollfd")]
+		public void win32_make_pollfd (IOCondition condition, ref PollFD fd);
+		[CCode (cname = "g_io_channel_win32_poll")]
+		public int win32_poll (PollFD[] fds, int timeout);
 	}
 
 	[Compact]
