@@ -2385,6 +2385,7 @@ namespace GLib {
 		public int unix_get_fd ();
 		[CCode (cname = "g_io_channel_win32_new_fd")]
 		public IOChannel.win32_new_fd (int fd);
+		public int win32_get_fd ();
 		[CCode (cname = "g_io_channel_win32_new_socket")]
 		public IOChannel.win32_socket (int socket);
 		[CCode (cname = "g_io_channel_win32_new_messages")]
@@ -2420,6 +2421,9 @@ namespace GLib {
 		public IOStatus set_encoding (string? encoding) throws IOChannelError;
 		public bool get_close_on_unref ();
 		public void set_close_on_unref (bool do_close);
+		public void win32_make_pollfd (IOCondition condition, ref PollFD fd);
+		public static int win32_poll (PollFD[] fds, int timeout);
+		public void win32_set_debug (bool flag);
 	}
 
 	[Compact]
@@ -5616,6 +5620,9 @@ namespace GLib {
 		[Version (since = "2.40")]
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_command_line ();
+
+		[CCode (cname = "G_WIN32_MSG_HANDLE")]
+		public const int MSG_HANDLE;
 	}
 
 	[Compact]
