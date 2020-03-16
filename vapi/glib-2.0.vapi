@@ -5522,6 +5522,7 @@ namespace GLib {
 		public bool check_windows_version (int major, int minor, int spver, GLib.Win32.OSType os_type);
 
 		public string error_message (int error);
+		public int ftruncate (int f, uint size);
 		public string getlocale ();
 		[Version (since = "2.16")]
 		public string get_package_installation_directory_of_module (void* hmodule);
