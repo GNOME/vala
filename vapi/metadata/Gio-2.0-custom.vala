@@ -169,6 +169,12 @@ namespace GLib {
 		public static GLib.IOError from_errno (int err_no) {
 			return (GLib.IOError) new GLib.Error (GLib.IOError.quark (), GLib.IOError._from_errno (err_no), "%s", GLib.strerror (err_no));
 		}
+		[CCode (cname = "g_io_error_from_win32_error")]
+		public static int _from_win32_error (int error_code);
+		[CCode (cname = "vala_g_io_error_from_win32_error")]
+		public static GLib.IOError from_win32_error (int error_code) {
+			return (GLib.IOError) new GLib.Error (GLib.IOError.quark (), GLib.IOError._from_win32_error (error_code), "%s", GLib.Win32.error_message (error_code));
+		}
 	}
 
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
