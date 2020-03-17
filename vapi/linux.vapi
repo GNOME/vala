@@ -3323,8 +3323,6 @@ namespace Linux {
 
             public uint16 len;
             public uint16 flags;
-            [CCode (array_length_cname = "len", array_length_type = "uint16")]
-            public uint8 data[0];
         }
 
         [CCode (cheader_filename = "linux/cn_proc.h", cname = "enum proc_cn_mcast_op", cprefix = "PROC_CN_MCAST_", has_type_id = false)]
