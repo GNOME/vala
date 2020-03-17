@@ -137,6 +137,14 @@ public class Vala.LambdaExpression : Expression {
 		method.used = true;
 		method.version.check (source_reference);
 
+		if (return_type is ArrayType) {
+			method.copy_attribute_bool (cb, "CCode", "array_length");
+			method.copy_attribute_bool (cb, "CCode", "array_null_terminated");
+			method.copy_attribute_string (cb, "CCode", "array_length_type");
+		} else if (return_type is DelegateType) {
+			method.copy_attribute_bool (cb, "CCode", "delegate_target");
+		}
+
 		if (!cb.has_target || !context.analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
 		} else {
