@@ -195,6 +195,7 @@ public class Vala.LambdaExpression : Expression {
 			}
 
 			lambda_param.variable_type = cb_param.variable_type.get_actual_type (target_type, null, this);
+			lambda_param.base_parameter = cb_param;
 			method.add_parameter (lambda_param);
 		}
 
