@@ -289,7 +289,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							ccode.add_assignment (temp_value.array_length_cvalues[0], len_call);
 						} else if (get_ccode_array_length (prop)) {
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cvalue (temp_value, dim)));
+								var length_ctype = get_ccode_array_length_type (prop) ?? get_ccode_array_length_type (array_type);
+								var temp_var = get_temp_variable (new CType (length_ctype, "0"), true, null, true);
+								var temp_ref = get_variable_cexpression (temp_var.name);
+								emit_temp_var (temp_var);
+								ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+								ccode.add_assignment (temp_value.array_length_cvalues[dim - 1], temp_ref);
 							}
 						}
 					} else {
