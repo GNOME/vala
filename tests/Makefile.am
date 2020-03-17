@@ -114,6 +114,7 @@ TESTS = \
 	chainup/struct-this-foo.vala \
 	chainup/bug791785.vala \
 	pointers/bug590641.vala \
+	methods/array-length-type.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
 	methods/contains.vala \

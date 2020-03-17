@@ -1054,7 +1054,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			// create fields to store array dimensions
 			var array_type = (ArrayType) f.variable_type;
 			if (!array_type.fixed_length) {
-				var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_array_length_type (f);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					string length_cname = get_variable_array_length_cname (f, dim);
 					ccode_struct.add_field (length_ctype, length_cname);
@@ -1117,7 +1117,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var array_type = (ArrayType) f.variable_type;
 
 			if (!array_type.fixed_length) {
-				var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_array_length_type (f);
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					cdecl = new CCodeDeclaration (length_ctype);
@@ -1322,7 +1322,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var array_type = (ArrayType) f.variable_type;
 
 					if (!array_type.fixed_length) {
-						var length_ctype = get_ccode_array_length_type (array_type);
+						var length_ctype = get_ccode_array_length_type (f);
 
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var len_def = new CCodeDeclaration (length_ctype);
@@ -1619,7 +1619,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 			var array_type = (ArrayType) acc.value_type;
-			var length_ctype = get_ccode_array_length_type (array_type);
+			var length_ctype = get_ccode_array_length_type (prop);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 			}
@@ -1713,7 +1713,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 				var array_type = (ArrayType) acc.value_type;
-				var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_array_length_type (prop);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*": length_ctype));
 				}
@@ -1837,7 +1837,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 				var array_type = (ArrayType) acc.value_type;
-				var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_array_length_type (prop);
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeParameter (get_array_length_cname (acc.readable ? "result" : "value", dim), acc.readable ? length_ctype + "*" : length_ctype));
 				}
@@ -1894,7 +1894,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
 
 					if (property_type is ArrayType && get_ccode_array_length (prop)) {
-						ccode.add_declaration (get_ccode_array_length_type (property_type), new CCodeVariableDeclarator ("old_value_length"));
+						ccode.add_declaration (get_ccode_array_length_type (prop), new CCodeVariableDeclarator ("old_value_length"));
 						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
 					} else if (property_type.compatible (string_type)) {
@@ -1994,7 +1994,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var deleg_type = param.variable_type as DelegateType;
 
 		if (array_type != null && get_ccode_array_length (param)) {
-			var length_ctype = get_ccode_array_length_type (array_type);
+			var length_ctype = get_ccode_array_length_type (param);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field (length_ctype, get_variable_array_length_cname (param, dim));
 			}

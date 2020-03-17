@@ -201,7 +201,7 @@ public class Vala.GSignalModule : GObjectModule {
 			n_params++;
 			if (p.variable_type is ArrayType) {
 				var array_type = (ArrayType) p.variable_type;
-				var length_ctype = get_ccode_array_length_type (array_type);
+				var length_ctype = get_ccode_array_length_type (p);
 				for (var j = 0; j < array_type.rank; j++) {
 					callback_decl.add_parameter (new CCodeParameter ("arg_%d".printf (n_params), length_ctype));
 					n_params++;
