@@ -2674,6 +2674,69 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
 	public int faccessat (int dirfd, string pathname, int mode, int flags);
 
+	/**
+	 * Gets a value for the configuration option name for the open file
+	 * descriptor fd.
+	 */
+	[CCode (cheader_filename = "unistd.h")]
+	public long fpathconf (int fd, Posix.PathConfName name);
+
+	/**
+	 * Gets a value for the configuration option name for the filename path.
+	 */
+	[CCode (cheader_filename = "unistd.h")]
+	public long pathconf (string path, Posix.PathConfName name);
+
+	[CCode (cname = "int", cprefix = "_PC_", has_type_id = false, cheader_filename = "unistd.h")]
+	public enum PathConfName {
+		/**
+		 * Returns the maximum number of links to the file. If fd or path refer
+		 * to a directory, then the value applies to the whole directory.
+		 */
+		LINK_MAX,
+		/**
+		 * Returns the maximum length of a formatted input line, where fd or
+		 * path must refer to a terminal.
+		 */
+		MAX_CANON,
+		/**
+		 * Returns the maximum length of an input line, where fd or path must
+		 * refer to a terminal.
+		 */
+		MAX_INPUT,
+		/**
+		 * Returns the maximum length of a filename in the directory path or fd
+		 * that the process is allowed to create.
+		 */
+		NAME_MAX,
+		/**
+		 * Returns the maximum length of a relative pathname when path or fd is
+		 * the current working directory.
+		 */
+		PATH_MAX,
+		/**
+		 * Returns the size of the pipe buffer, where fd must refer to a pipe or
+		 * FIFO and path must refer to a FIFO.
+		 */
+		PIPE_BUF,
+		/**
+		 * Returns nonzero if the chown call may not be used on this file. If fd
+		 * or path refer to a directory, then this applies to all files in that
+		 * directory.
+		 */
+		CHOWN_RESTRICTED,
+		/**
+		 * Returns nonzero if accessing filenames longer than
+		 * #Posix.PathConfName.NAME_MAX generates an error.
+		 */
+		NO_TRUNC,
+		/**
+		 * Returns nonzero if special character processing can be disabled,
+		 * where fd or path must refer to a terminal.
+		 */
+		VDISABLE
+	}
+
 	[CCode (cheader_filename = "unistd.h")]
 	public uint alarm (uint seconds);
 	[CCode (cheader_filename = "unistd.h")]
@@ -2744,6 +2807,68 @@ namespace Posix {
 	public int truncate(string path, off_t length);
 	[CCode (cheader_filename = "unistd.h")]
 	public int nice (int inc);
+
+
+	[CCode (cheader_filename = "langinfo.h", cname = "nl_item", cprefix = "", has_type_id = false)]
+	public enum NLItem {
+		ABDAY_1,
+		ABDAY_2,
+		ABDAY_3,
+		ABDAY_4,
+		ABDAY_5,
+		ABDAY_6,
+		ABDAY_7,
+		DAY_1,
+		DAY_2,
+		DAY_3,
+		DAY_4,
+		DAY_5,
+		DAY_6,
+		DAY_7,
+		ABMON_1,
+		ABMON_2,
+		ABMON_3,
+		ABMON_4,
+		ABMON_5,
+		ABMON_6,
+		ABMON_7,
+		ABMON_8,
+		ABMON_9,
+		ABMON_10,
+		ABMON_11,
+		ABMON_12,
+		MON_1,
+		MON_2,
+		MON_3,
+		MON_4,
+		MON_5,
+		MON_6,
+		MON_7,
+		MON_8,
+		MON_9,
+		MON_10,
+		MON_11,
+		MON_12,
+		AM_STR,
+		PM_STR,
+		D_T_FMT,
+		D_FMT,
+		T_FMT,
+		T_FMT_AMPM,
+		ERA,
+		ERA_D_FMT,
+		ALT_DIGITS,
+		ERA_D_T_FMT,
+		ERA_T_FMT,
+		CODESET,
+		CRNCYSTR,
+		RADIXCHAR,
+		THOUSEP,
+		YESEXPR,
+		NOEXPR;
+		[CCode (cheader_filename = "langinfo.h", cname = "nl_langinfo")]
+		public unowned string to_string ();
+	}
 
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h", has_type_id = false)]
