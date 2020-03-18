@@ -1433,6 +1433,21 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return (null != cparenthesized && is_constant_ccode_expression (cparenthesized.inner));
 	}
 
+	public static bool is_constant_ccode (CodeNode expr) {
+		if (expr is Constant) {
+			// Local constants are not considered constant in C
+			return !(((Constant) expr).parent_symbol is Block);
+		} else if (expr is IntegerLiteral) {
+			return ((IntegerLiteral) expr).is_constant ();
+		} else if (expr is MemberAccess) {
+			return is_constant_ccode (((MemberAccess) expr).symbol_reference);
+		} else if (expr is CastExpression) {
+			return is_constant_ccode (((CastExpression) expr).inner);
+		}
+
+		return false;
+	}
+
 	/**
 	 * Returns whether the passed cexpr is a pure expression, i.e. an
 	 * expression without side-effects.
@@ -2505,9 +2520,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				// try to initialize uninitialized variables
 				// initialization not necessary for variables stored in closure
-				if (is_init_allowed (local.variable_type)) {
+				CCodeExpression? size = null;
+				if (!requires_memset_init (local, out size)) {
 					cvar.initializer = default_value_for_type (local.variable_type, true);
 					cvar.init0 = true;
+				} else if (size != null && local.initializer == null) {
+					cfile.add_include ("string.h");
+					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					memset_call.add_argument (get_variable_cexpression (local.name));
+					memset_call.add_argument (new CCodeConstant ("0"));
+					memset_call.add_argument (size);
+					ccode.add_expression (memset_call);
 				}
 
 				ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
@@ -3726,9 +3749,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		} else {
 			var cvar = new CCodeVariableDeclarator (local.name, null, get_ccode_declarator_suffix (local.variable_type));
-			if (init && is_init_allowed (local.variable_type)) {
+			CCodeExpression? size = null;
+			if (init && !requires_memset_init (local, out size)) {
 				cvar.initializer = default_value_for_type (local.variable_type, true, on_error);
 				cvar.init0 = true;
+			} else if (init && size != null && local.initializer == null) {
+				cfile.add_include ("string.h");
+				var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+				memset_call.add_argument (get_variable_cexpression (local.name));
+				memset_call.add_argument (new CCodeConstant ("0"));
+				memset_call.add_argument (size);
+				ccode.add_expression (memset_call);
 			}
 			ccode.add_declaration (get_ccode_name (local.variable_type), cvar);
 		}
@@ -6405,15 +6436,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return true;
 	}
 
-	public bool is_init_allowed (DataType type) {
-		unowned ArrayType? array_type = type as ArrayType;
-		if (array_type != null && array_type.inline_allocated
-		   && array_type.fixed_length) {
-		   unowned Constant? c = array_type.length.symbol_reference as Constant;
-		   // our local constants are not actual constants in C
-		   return (c == null || !(c.parent_symbol is Block));
+	public bool requires_memset_init (Variable variable, out CCodeExpression? size) {
+		unowned ArrayType? array_type = variable.variable_type as ArrayType;
+		if (array_type != null && array_type.fixed_length && !is_constant_ccode (array_type.length)) {
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+			size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_ccodenode (array_type.length), sizeof_call);
+			return true;
 		}
-		return true;
+		size = null;
+		return false;
 	}
 
 	public CCodeDeclaratorSuffix? get_ccode_declarator_suffix (DataType type) {
