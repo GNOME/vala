@@ -318,6 +318,7 @@ TESTS = \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/properties.vala \
+	objects/property-array-length.vala \
 	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
 	objects/property-read-only-write.test \
