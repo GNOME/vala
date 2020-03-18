@@ -277,8 +277,6 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccode.add_expression (ccall);
 				} else {
-					ccode.add_assignment (ctemp, ccall);
-
 					array_type = prop.property_type as ArrayType;
 					if (array_type != null) {
 						if (get_ccode_array_null_terminated (prop)) {
@@ -286,18 +284,29 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 							len_call.add_argument (ctemp);
 
+							ccode.add_assignment (ctemp, ccall);
 							ccode.add_assignment (temp_value.array_length_cvalues[0], len_call);
 						} else if (get_ccode_array_length (prop)) {
+							var temp_refs = new ArrayList<CCodeExpression> ();
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var length_ctype = get_ccode_array_length_type (prop);
 								var temp_var = get_temp_variable (new CType (length_ctype, "0"), true, null, true);
 								var temp_ref = get_variable_cexpression (temp_var.name);
 								emit_temp_var (temp_var);
 								ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
-								ccode.add_assignment (temp_value.array_length_cvalues[dim - 1], temp_ref);
+								temp_refs.add (temp_ref);
 							}
+
+							ccode.add_assignment (ctemp, ccall);
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								ccode.add_assignment (temp_value.array_length_cvalues[dim - 1], temp_refs.get (dim - 1));
+							}
+						} else {
+							ccode.add_assignment (ctemp, ccall);
 						}
 					} else {
+						ccode.add_assignment (ctemp, ccall);
+
 						delegate_type = prop.property_type as DelegateType;
 						if (delegate_type != null && get_ccode_delegate_target (prop) && delegate_type.delegate_symbol.has_target) {
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_cvalue (temp_value)));
