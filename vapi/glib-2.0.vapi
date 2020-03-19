@@ -1924,6 +1924,8 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate int PollFunc (PollFD[] ufds, int timeout_);
 
+	public int poll ([CCode (array_length_type = "guint")] PollFD[] fds, int timeout);
+
 	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
 		public TimeoutSource (uint interval);
@@ -2457,6 +2459,7 @@ namespace GLib {
 		public int unix_get_fd ();
 		[CCode (cname = "g_io_channel_win32_new_fd")]
 		public IOChannel.win32_new_fd (int fd);
+		public int win32_get_fd ();
 		[CCode (cname = "g_io_channel_win32_new_socket")]
 		public IOChannel.win32_socket (int socket);
 		[CCode (cname = "g_io_channel_win32_new_messages")]
@@ -2492,6 +2495,9 @@ namespace GLib {
 		public IOStatus set_encoding (string? encoding) throws IOChannelError;
 		public bool get_close_on_unref ();
 		public void set_close_on_unref (bool do_close);
+		public void win32_make_pollfd (IOCondition condition, ref PollFD fd);
+		public static int win32_poll (PollFD[] fds, int timeout);
+		public void win32_set_debug (bool flag);
 	}
 
 	[Compact]
@@ -5713,6 +5719,7 @@ namespace GLib {
 		public bool check_windows_version (int major, int minor, int spver, GLib.Win32.OSType os_type);
 
 		public string error_message (int error);
+		public int ftruncate (int f, uint size);
 		public string getlocale ();
 		[Version (since = "2.16")]
 		public string get_package_installation_directory_of_module (void* hmodule);
@@ -5726,6 +5733,9 @@ namespace GLib {
 		[Version (since = "2.40")]
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_command_line ();
+
+		[CCode (cname = "G_WIN32_MSG_HANDLE")]
+		public const int MSG_HANDLE;
 	}
 
 	[Compact]

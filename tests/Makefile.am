@@ -79,6 +79,7 @@ TESTS = \
 	arrays/fixed-length-init0-not-allowed.vala \
 	arrays/field-global-length-cname.vala \
 	arrays/fixed-length-concat-invalid.test \
+	arrays/fixed-length-enum-value.vala \
 	arrays/fixed-length-non-const.test \
 	arrays/fixed-length-resize-invalid.test \
 	arrays/inline-field.test \
@@ -113,12 +114,16 @@ TESTS = \
 	chainup/struct-this-foo.vala \
 	chainup/bug791785.vala \
 	pointers/bug590641.vala \
+	methods/array-length-type.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
 	methods/contains.vala \
 	methods/extern.vala \
 	methods/iterator.vala \
+	methods/parameter-ref-array-resize.vala \
 	methods/prepostconditions.vala \
+	methods/prepostconditions-captured.vala \
+	methods/postconditions.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
 	methods/bug540483.vala \
@@ -375,6 +380,7 @@ TESTS = \
 	objects/plugin-module-init.vala \
 	objects/properties.vala \
 	objects/property-array.vala \
+	objects/property-array-length.vala \
 	objects/property-notify.vala \
 	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
@@ -614,6 +620,7 @@ TESTS = \
 	scanner/string-escape-x-digit-length.test \
 	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
+	parser/array-creation-invalid.test \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-wrong-number.test \

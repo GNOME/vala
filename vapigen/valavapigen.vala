@@ -76,6 +76,7 @@ class Vala.VAPIGen {
 	private int run () {
 		context = new CodeContext ();
 		context.profile = Profile.GOBJECT;
+		context.add_define ("GOBJECT");
 		context.vapi_directories = vapi_directories;
 		context.gir_directories = gir_directories;
 		context.metadata_directories = metadata_directories;

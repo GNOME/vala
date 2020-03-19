@@ -69,7 +69,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (get_ccode_array_length (m) && m.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) m.return_type;
-			var length_ctype = (get_ccode_array_length_type (m) ?? get_ccode_array_length_type (array_type)) + "*";
+			var length_ctype = get_ccode_array_length_type (m) + "*";
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeParameter (get_array_length_cname ("result", dim), length_ctype);
@@ -567,7 +567,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							var array_type = (ArrayType) param.variable_type;
 
 							if (!array_type.fixed_length) {
-								var length_ctype = get_ccode_array_length_type (array_type);
+								var length_ctype = get_ccode_array_length_type (param);
 								for (int dim = 1; dim <= array_type.rank; dim++) {
 									vardecl = new CCodeVariableDeclarator.zero (get_array_length_cname ("_vala_%s".printf (get_ccode_name (param)), dim), new CCodeConstant ("0"));
 									ccode.add_declaration (length_ctype, vardecl);
@@ -1152,6 +1152,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	private void create_precondition_statement (Method m, DataType ret_type, Expression precondition) {
+		is_in_method_precondition = true;
+
 		var ccheck = new CCodeFunctionCall ();
 
 		precondition.emit (this);
@@ -1191,6 +1193,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		ccode.add_expression (ccheck);
 
 		current_method_return = true;
+		is_in_method_precondition = false;
 	}
 
 	public override void visit_creation_method (CreationMethod m) {

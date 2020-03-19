@@ -2674,6 +2674,69 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h", feature_test_macro = "_GNU_SOURCE")]
 	public int faccessat (int dirfd, string pathname, int mode, int flags);
 
+	/**
+	 * Gets a value for the configuration option name for the open file
+	 * descriptor fd.
+	 */
+	[CCode (cheader_filename = "unistd.h")]
+	public long fpathconf (int fd, Posix.PathConfName name);
+
+	/**
+	 * Gets a value for the configuration option name for the filename path.
+	 */
+	[CCode (cheader_filename = "unistd.h")]
+	public long pathconf (string path, Posix.PathConfName name);
+
+	[CCode (cname = "int", cprefix = "_PC_", has_type_id = false, cheader_filename = "unistd.h")]
+	public enum PathConfName {
+		/**
+		 * Returns the maximum number of links to the file. If fd or path refer
+		 * to a directory, then the value applies to the whole directory.
+		 */
+		LINK_MAX,
+		/**
+		 * Returns the maximum length of a formatted input line, where fd or
+		 * path must refer to a terminal.
+		 */
+		MAX_CANON,
+		/**
+		 * Returns the maximum length of an input line, where fd or path must
+		 * refer to a terminal.
+		 */
+		MAX_INPUT,
+		/**
+		 * Returns the maximum length of a filename in the directory path or fd
+		 * that the process is allowed to create.
+		 */
+		NAME_MAX,
+		/**
+		 * Returns the maximum length of a relative pathname when path or fd is
+		 * the current working directory.
+		 */
+		PATH_MAX,
+		/**
+		 * Returns the size of the pipe buffer, where fd must refer to a pipe or
+		 * FIFO and path must refer to a FIFO.
+		 */
+		PIPE_BUF,
+		/**
+		 * Returns nonzero if the chown call may not be used on this file. If fd
+		 * or path refer to a directory, then this applies to all files in that
+		 * directory.
+		 */
+		CHOWN_RESTRICTED,
+		/**
+		 * Returns nonzero if accessing filenames longer than
+		 * #Posix.PathConfName.NAME_MAX generates an error.
+		 */
+		NO_TRUNC,
+		/**
+		 * Returns nonzero if special character processing can be disabled,
+		 * where fd or path must refer to a terminal.
+		 */
+		VDISABLE
+	}
+
 	[CCode (cheader_filename = "unistd.h")]
 	public uint alarm (uint seconds);
 	[CCode (cheader_filename = "unistd.h")]

@@ -1,5 +1,5 @@
 atk
-cairo
+cairo-gobject
 gio-2.0
 gdesktopenums-3.0
 gdk-pixbuf-2.0

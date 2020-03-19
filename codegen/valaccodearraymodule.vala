@@ -806,7 +806,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		if (!array_type.fixed_length && get_ccode_array_length (param)) {
-			var length_ctype = get_ccode_array_length_type (param) ?? get_ccode_array_length_type (array_type);
+			var length_ctype = get_ccode_array_length_type (param);
 			if (param.direction != ParameterDirection.IN) {
 				length_ctype = "%s*".printf (length_ctype);
 			}
@@ -858,17 +858,17 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			cfile.add_include ("stdarg.h");
 		}
 		ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_va_list_%s".printf (get_ccode_name (local))));
-		var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		va_start.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
-		va_start.add_argument (new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
-		ccode.add_expression (va_start);
+		var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+		vastart.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		vastart.add_argument (new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
+		ccode.add_expression (vastart);
 
 		ccode.add_assignment (get_local_cexpression (element), new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
 		ccode.open_while (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_local_cexpression (element), new CCodeConstant ("NULL")));
 
-		var va_arg = new CCodeFunctionCall (new CCodeIdentifier ("va_arg"));
-		va_arg.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
-		va_arg.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
+		var vaarg = new CCodeFunctionCall (new CCodeIdentifier ("va_arg"));
+		vaarg.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		vaarg.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (array_type)));
 		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_local_cexpression (local)));
@@ -877,12 +877,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccall.add_argument (get_local_cexpression (element));
 
 		ccode.add_expression (ccall);
-		ccode.add_assignment (get_local_cexpression (element), va_arg);
+		ccode.add_assignment (get_local_cexpression (element), vaarg);
 
 		ccode.close ();
 
-		var va_end = new CCodeFunctionCall (new CCodeIdentifier ("va_end"));
-		va_end.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
-		ccode.add_expression (va_end);
+		var vaend = new CCodeFunctionCall (new CCodeIdentifier ("va_end"));
+		vaend.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+		ccode.add_expression (vaend);
 	}
 }

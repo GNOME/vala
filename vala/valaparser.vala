@@ -1012,6 +1012,9 @@ public class Vala.Parser : CodeVisitor {
 			foreach (Expression size in size_specifier_list) {
 				expr.append_size (size);
 			}
+		} else if (initializer == null) {
+			Report.warning (src, "possibly missing array size");
+			throw new ParseError.SYNTAX ("expected array initializer list");
 		}
 		return expr;
 	}

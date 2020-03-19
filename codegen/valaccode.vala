@@ -302,11 +302,14 @@ namespace Vala {
 		return get_ccode_attribute(node).array_length;
 	}
 
-	public static string? get_ccode_array_length_type (CodeNode node) {
+	public static string get_ccode_array_length_type (CodeNode node) {
 		if (node is ArrayType) {
 			return get_ccode_name (((ArrayType) node).length_type);
+		} else if (node is DataType) {
+			Report.error (node.source_reference, "`CCode.array_length_type' not supported");
+			return "";
 		} else {
-			assert (node is Method || node is Parameter || node is Delegate);
+			assert (node is Method || node is Parameter || node is Delegate || node is Property || node is Field);
 			return get_ccode_attribute(node).array_length_type;
 		}
 	}
