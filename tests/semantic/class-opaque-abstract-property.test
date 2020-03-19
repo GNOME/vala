@@ -1,0 +1,9 @@
+Invalid Code
+
+[Compact (opaque = true)]
+class Foo {
+	public abstract int bar { get; set; }
+}
+
+void main () {
+}

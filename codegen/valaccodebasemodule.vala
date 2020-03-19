@@ -675,7 +675,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public bool add_symbol_declaration (CCodeFile decl_space, Symbol sym, string name) {
 		bool in_generated_header = context.header_filename != null
-		                           && (decl_space.file_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol ());
+		                           && (decl_space.file_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol () && !(sym is Class && ((Class) sym).is_opaque));
 		if (decl_space.add_declaration (name)) {
 			return true;
 		}
