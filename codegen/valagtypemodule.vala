@@ -276,7 +276,7 @@ public class Vala.GTypeModule : GErrorModule {
 					var prop = (Property) s;
 					generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
 				} else if (s is Field) {
-					if (s.access != SymbolAccessibility.PRIVATE) {
+					if (s.access != SymbolAccessibility.PRIVATE || cl.is_opaque) {
 						generate_struct_field_declaration ((Field) s, instance_struct, type_struct, decl_space, ref has_struct_member);
 					}
 				} else {
@@ -299,7 +299,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			foreach (Field f in cl.get_fields ()) {
-				if (f.access != SymbolAccessibility.PRIVATE) {
+				if (f.access != SymbolAccessibility.PRIVATE || cl.is_opaque) {
 					generate_struct_field_declaration (f, instance_struct, type_struct, decl_space, ref has_struct_member);
 				}
 			}
@@ -465,7 +465,7 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	void generate_class_private_declaration (Class cl, CCodeFile decl_space) {
-		if (decl_space.add_declaration ("%sPrivate".printf (get_ccode_name (cl)))) {
+		if (cl.is_opaque || decl_space.add_declaration ("%sPrivate".printf (get_ccode_name (cl)))) {
 			return;
 		}
 
@@ -613,7 +613,11 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (!cl.is_internal_symbol ()) {
-			generate_class_struct_declaration (cl, header_file);
+			if (!cl.is_opaque) {
+				generate_class_struct_declaration (cl, header_file);
+			} else {
+				generate_class_declaration (cl, header_file);
+			}
 		}
 		if (!cl.is_private_symbol ()) {
 			generate_class_struct_declaration (cl, internal_header_file);
@@ -2318,11 +2322,6 @@ public class Vala.GTypeModule : GErrorModule {
 			base_prop = prop.base_property;
 		} else if (prop.base_interface_property != null) {
 			base_prop = prop.base_interface_property;
-		}
-
-		if (cl != null && cl.is_compact && (prop.get_accessor == null || prop.get_accessor.automatic_body)) {
-			Report.error (prop.source_reference, "Properties without accessor bodies are not supported in compact classes");
-			return;
 		}
 
 		if (base_prop.get_attribute ("NoAccessorMethod") == null &&
