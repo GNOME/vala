@@ -620,6 +620,7 @@ TESTS = \
 	scanner/string-escape-x-digit-length.test \
 	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
+	parser/array-creation-invalid.test \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-wrong-number.test \
