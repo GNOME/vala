@@ -3303,9 +3303,9 @@ namespace Linux {
      */
     [CCode (cheader_filename = "linux/connector.h")]
     namespace Connector {
-        [CCode (cname="CONNECTOR_MAX_MSG_SIZE")]
+        [CCode (cname = "CONNECTOR_MAX_MSG_SIZE")]
         public const int MAX_MSG_SIZE;
-        [CCode (cname="CN_NETLINK_USERS")]
+        [CCode (cname = "CN_NETLINK_USERS")]
         public const int NETLINK_USERS;
 
         [CCode (cname = "struct cb_id", has_type_id = false)]
@@ -3335,7 +3335,7 @@ namespace Linux {
             IGNORE
         }
 
-        [CCode (cname = "__u32", has_type_id = false, cprefix = "CN_IDX_")]
+        [CCode (cname = "__u32", cprefix = "CN_IDX_", has_type_id = false)]
         public enum Idx {
             PROC,
             CIFS,
@@ -3350,10 +3350,10 @@ namespace Linux {
             [CCode (cname = "CN_KVP_IDX")]
             KVP,
             [CCode (cname = "CN_VSS_IDX")]
-            VSS,
+            VSS
         }
 
-        [CCode (cname = "__u32", has_type_id = false, cprefix = "CN_VAL_")]
+        [CCode (cname = "__u32", cprefix = "CN_VAL_", has_type_id = false)]
         public enum Val {
             PROC,
             CIFS,
@@ -3366,7 +3366,7 @@ namespace Linux {
             [CCode (cname = "CN_KVP_VAL")]
             KVP,
             [CCode (cname = "CN_VSS_VAL")]
-            VSS,
+            VSS
         }
     }
 
