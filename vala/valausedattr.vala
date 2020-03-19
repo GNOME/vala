@@ -44,7 +44,7 @@ public class Vala.UsedAttr : CodeVisitor {
 
 		"Immutable", "",
 		"SingleInstance", "",
-		"Compact", "",
+		"Compact", "opaque", "",
 		"NoWrapper", "",
 		"NoThrow", "",
 		"DestroysInstance", "",
