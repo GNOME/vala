@@ -91,7 +91,11 @@ public class Vala.CodeContext {
 	 */
 	public string? internal_header_filename { get; set; }
 
-	public bool use_header { get; set; }
+	public bool use_header {
+		get {
+			return (header_filename != null);
+		}
+	}
 
 	/**
 	 * Base directory used for header_filename in the VAPIs.
