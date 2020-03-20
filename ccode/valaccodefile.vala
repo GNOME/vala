@@ -22,7 +22,7 @@
 
 
 public class Vala.CCodeFile {
-	public CCodeFileType cfile_type { get; set; }
+	public CCodeFileType file_type { get; private set; }
 
 	public weak SourceFile? file { get; private set; }
 
@@ -39,11 +39,9 @@ public class Vala.CCodeFile {
 	CCodeFragment constant_declaration = new CCodeFragment ();
 	CCodeFragment type_member_definition = new CCodeFragment ();
 
-	public CCodeFile (SourceFile? source_file = null) {
+	public CCodeFile (CCodeFileType type = CCodeFileType.SOURCE, SourceFile? source_file = null) {
 		file = source_file;
-		if (source_file != null) {
-			cfile_type = CCodeFileType.SOURCE;
-		}
+		file_type = type;
 	}
 
 	public bool add_declaration (string name) {
@@ -154,7 +152,7 @@ public class Vala.CCodeFile {
 			return false;
 		}
 
-		if (cfile_type == CCodeFileType.SOURCE) {
+		if (file_type == CCodeFileType.SOURCE) {
 			writer.line_directives = line_directives;
 
 			comments.write (writer);

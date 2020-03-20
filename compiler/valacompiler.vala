@@ -55,7 +55,6 @@ class Vala.Compiler {
 	static bool ccode_only;
 	static bool abi_stability;
 	static string header_filename;
-	static bool use_header;
 	static string internal_header_filename;
 	static string internal_vapi_filename;
 	static string fast_vapi_filename;
@@ -119,7 +118,7 @@ class Vala.Compiler {
 		{ "api-version", 0, 0, OptionArg.NONE, ref api_version, "Display API version number", null },
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "header", 'H', 0, OptionArg.FILENAME, ref header_filename, "Output C header file", "FILE" },
-		{ "use-header", 0, 0, OptionArg.NONE, ref use_header, "Use C header file", null },
+		{ "use-header", 0, OptionFlags.OPTIONAL_ARG | OptionFlags.NO_ARG, OptionArg.CALLBACK, (void*) option_deprecated, "Use C header file (DEPRECATED AND IGNORED)", null },
 		{ "includedir", 0, 0, OptionArg.FILENAME, ref includedir, "Directory used to include the C header file", "DIRECTORY" },
 		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
@@ -266,10 +265,6 @@ class Vala.Compiler {
 		context.abi_stability = abi_stability;
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
-		if (header_filename == null && use_header) {
-			Report.error (null, "--use-header may only be used in combination with --header");
-		}
-		context.use_header = use_header;
 		context.internal_header_filename = internal_header_filename;
 		context.symbols_filename = symbols_filename;
 		context.includedir = includedir;
