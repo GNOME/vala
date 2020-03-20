@@ -557,10 +557,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gtk_widget_type = (Class) gtk_ns.scope.lookup ("Widget");
 		}
 
-		header_file = new CCodeFile ();
-		header_file.cfile_type = CCodeFileType.PUBLIC_HEADER;
-		internal_header_file = new CCodeFile ();
-		internal_header_file.cfile_type = CCodeFileType.INTERNAL_HEADER;
+		header_file = new CCodeFile (CCodeFileType.PUBLIC_HEADER);
+		internal_header_file = new CCodeFile (CCodeFileType.INTERNAL_HEADER);
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -670,8 +668,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool add_symbol_declaration (CCodeFile decl_space, Symbol sym, string name) {
-		bool in_generated_header = CodeContext.get ().use_header
-		                           && (decl_space.cfile_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol ());
+		bool in_generated_header = context.header_filename != null
+		                           && (decl_space.file_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol ());
 		if (decl_space.add_declaration (name)) {
 			return true;
 		}
@@ -753,7 +751,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		cfile = new CCodeFile (source_file);
+		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 
