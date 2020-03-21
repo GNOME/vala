@@ -22,7 +22,7 @@
 
 
 public class Vala.CCodeFile {
-	public bool is_header { get; set; }
+	public CCodeFileType cfile_type { get; set; }
 
 	public weak SourceFile? file { get; private set; }
 
@@ -151,7 +151,7 @@ public class Vala.CCodeFile {
 			return false;
 		}
 
-		if (!is_header) {
+		if (cfile_type == CCodeFileType.C_FILE) {
 			writer.line_directives = line_directives;
 
 			comments.write (writer);
@@ -210,3 +210,8 @@ public class Vala.CCodeFile {
 	}
 }
 
+public enum CCodeFileType {
+	C_FILE = 0,
+	PUB_H_FILE,
+	INT_H_FILE
+}
