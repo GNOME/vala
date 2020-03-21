@@ -117,9 +117,9 @@ public class Vala.Field : Variable, Lockable {
 		}
 
 		unowned ArrayType? variable_array_type = variable_type as ArrayType;
-		if (variable_array_type != null && variable_array_type.fixed_length
+		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && initializer is ArrayCreationExpression && ((ArrayCreationExpression) initializer).initializer_list == null) {
-			Report.warning (source_reference, "Arrays with fixed length don't require an explicit instantiation");
+			Report.warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
 			initializer = null;
 		}
 
