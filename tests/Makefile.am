@@ -83,6 +83,7 @@ TESTS = \
 	arrays/fixed-length-non-const.test \
 	arrays/fixed-length-resize-invalid.test \
 	arrays/inline-field.test \
+	arrays/inline-local-instantiation.test \
 	arrays/inline-local-variable.test \
 	arrays/inline-parameter.test \
 	arrays/inline-struct-field.test \
