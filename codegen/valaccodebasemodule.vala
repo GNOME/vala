@@ -558,9 +558,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		header_file = new CCodeFile ();
-		header_file.is_header = true;
+		header_file.cfile_type = CCodeFileType.PUBLIC_HEADER;
 		internal_header_file = new CCodeFile ();
-		internal_header_file.is_header = true;
+		internal_header_file.cfile_type = CCodeFileType.INTERNAL_HEADER;
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -672,6 +672,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool add_symbol_declaration (CCodeFile decl_space, Symbol sym, string name) {
+		bool in_generated_header = CodeContext.get ().use_header
+		                           && (decl_space.cfile_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol ());
 		if (decl_space.add_declaration (name)) {
 			return true;
 		}
@@ -679,13 +681,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			sym.source_reference.file.used = true;
 		}
 		if (sym.anonymous) {
-			return !decl_space.is_header && CodeContext.get ().use_header;
+			return in_generated_header;
 		}
 		// constants with initializer-list are special
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
-		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
+		if (sym.external_package || in_generated_header
 		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
