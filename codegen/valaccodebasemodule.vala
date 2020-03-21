@@ -1457,6 +1457,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (expr is Constant) {
 			// Local constants are not considered constant in C
 			return !(((Constant) expr).parent_symbol is Block);
+		} else if (expr is IntegerLiteral) {
+			return ((IntegerLiteral) expr).is_constant ();
 		} else if (expr is MemberAccess) {
 			return is_constant_ccode (((MemberAccess) expr).symbol_reference);
 		} else if (expr is CastExpression) {
