@@ -366,8 +366,9 @@ public class Vala.Parser : CodeVisitor {
 
 
 		try {
-			parse_using_directives (context.root);
-			parse_declarations (context.root, true);
+			Namespace root = parse_file_namespace ();
+			parse_using_directives (root);
+			parse_declarations (root, true);
 			if (accept (TokenType.CLOSE_BRACE)) {
 				// only report error if it's not a secondary error
 				if (context.report.get_errors () == 0) {
@@ -2567,6 +2568,33 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 		return RecoveryState.EOF;
+	}
+
+	Namespace parse_file_namespace () throws ParseError {
+		var begin = get_location ();
+		if (accept (TokenType.NAMESPACE)) {
+			var sym = parse_symbol_name ();
+			if (accept (TokenType.SEMICOLON)) {
+				if (!context.experimental) {
+					Report.warning (get_src (begin), "The file namespace declaration is experimental");
+				}
+				Namespace ns = new Namespace (sym.name, get_src (begin));
+				Namespace intermediate_ns = ns;
+				while (sym != null) {
+					sym = sym.inner;
+
+					Namespace next = (sym != null ? new Namespace (sym.name, ns.source_reference) : context.root);
+					next.add_namespace (intermediate_ns);
+					intermediate_ns = next;
+				}
+
+				return ns;
+			} else {
+				// This is a normal namespace declaration, ignoring
+				rollback (begin);
+			}
+		}
+		return context.root;
 	}
 
 	void parse_namespace_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
