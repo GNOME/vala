@@ -2684,7 +2684,7 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONST);
 		var type = parse_type (false, false);
-		string id = parse_identifier ();
+		var sym = parse_symbol_name ();
 
 		type = parse_inline_array_type (type);
 
@@ -2694,7 +2694,7 @@ public class Vala.Parser : CodeVisitor {
 			array_type.element_type.value_owned = false;
 		}
 
-		var c = new Constant (id, type, null, get_src (begin), comment);
+		var c = new Constant (sym.name, type, null, get_src (begin), comment);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			c.is_extern = true;
@@ -2717,7 +2717,24 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.SEMICOLON);
 
-		parent.add_constant (c);
+		if (parent is Namespace) {
+			Symbol result = c;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, c.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_constant ((Constant) result);
+				}
+				result = next;
+			}
+		} else if (sym.inner != null) {
+			Report.error (c.source_reference, "Specifying namespace is not allowed on constants inside types");
+		} else {
+			parent.add_constant (c);
+		}
 	}
 
 	void parse_field_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
