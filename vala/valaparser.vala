@@ -2802,7 +2802,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var method = new Method (sym.name, type, get_src (begin), comment);
-		if (sym.inner != null) {
+		if (sym.inner != null && !(parent is Namespace)) {
 			method.base_interface_type = new UnresolvedType.from_symbol (sym.inner, sym.inner.source_reference);
 		}
 		method.access = access;
@@ -2884,7 +2884,22 @@ public class Vala.Parser : CodeVisitor {
 			method.external = false;
 		}
 
-		parent.add_method (method);
+		if (parent is Namespace) {
+			Symbol result = method;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, method.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_method ((Method) result);
+				}
+				result = next;
+			}
+		} else {
+			parent.add_method (method);
+		}
 	}
 
 	void parse_property_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
