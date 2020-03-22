@@ -221,8 +221,3 @@ class Maman.ClassTest {
 		c.instance_method ();
 	}
 }
-
-void main () {
-	Maman.SubBar.main ();
-}
-

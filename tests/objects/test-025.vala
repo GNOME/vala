@@ -30,8 +30,3 @@ class Maman.SubBar : Bar {
 		return 0;
 	}
 }
-
-void main () {
-	Maman.SubBar.main ();
-}
-

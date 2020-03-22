@@ -23,8 +23,3 @@ class Maman.Foo : Object {
 		return 0;
 	}
 }
-
-void main () {
-	Maman.Foo.main ();
-}
-

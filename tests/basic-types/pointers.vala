@@ -35,8 +35,3 @@ struct SimpleStruct {
 		assert (i == 42);
 	}
 }
-
-void main () {
-	SimpleStruct.main ();
-}
-

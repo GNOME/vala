@@ -112,8 +112,3 @@ class Maman.Bar : Object, Foo {
 		return 0;
 	}
 }
-
-void main () {
-	Maman.Bar.main ();
-}
-
