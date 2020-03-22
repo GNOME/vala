@@ -2742,10 +2742,10 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ((parent is Struct) ? SymbolAccessibility.PUBLIC : SymbolAccessibility.PRIVATE);
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, true);
-		string id = parse_identifier ();
+		var sym = parse_symbol_name ();
 		type = parse_inline_array_type (type);
 
-		var f = new Field (id, type, null, get_src (begin), comment);
+		var f = new Field (sym.name, type, null, get_src (begin), comment);
 		f.access = access;
 
 		set_attributes (f, attrs);
@@ -2781,7 +2781,24 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.SEMICOLON);
 
-		parent.add_field (f);
+		if (parent is Namespace) {
+			Symbol result = f;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, f.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_field ((Field) result);
+				}
+				result = next;
+			}
+		} else if (sym.inner != null) {
+			Report.error (f.source_reference, "Specifying namespace is not allowed on fields inside types");
+		} else {
+			parent.add_field (f);
+		}
 	}
 
 	InitializerList parse_initializer () throws ParseError {
