@@ -31,7 +31,6 @@ VALAC=$topbuilddir/compiler/valac$EXEEXT
 VALAFLAGS="$VALAFLAGS \
 	--vapidir $vapidir \
 	--disable-warnings \
-	--main main \
 	--save-temps \
 	--cc $CC \
 	-X -g \
@@ -57,17 +56,21 @@ function testheader() {
 	if [ "$1" = "Packages:" ]; then
 		shift
 		PACKAGES="$PACKAGES $@"
+	elif [ "$1" = "Main:" ]; then
+		shift
+		MAINNAME="$1"
 	elif [ "$*" = "Invalid Code" ]; then
 		INVALIDCODE=1
-		INHEADER=0
 		testpath=${testfile/.test/}
 		ns=${testpath//\//_}
 		ns=${ns//-/_}\_invalid
 		SOURCEFILE=$ns.vala
 	elif [ "$1" = "D-Bus" ]; then
+		INHEADER=1
 		DBUSTEST=1
 		run_prefix="dbus-run-session -- $run_prefix"
 	elif [ "$1" = "GIR" ]; then
+		INHEADER=1
 		GIRTEST=1
 	fi
 }
@@ -116,7 +119,7 @@ function sourceend() {
 		if [ $INVALIDCODE -eq 1 ]; then
 			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 			echo '' > prepare
-			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
+			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS --main $MAINNAME $PACKAGEFLAGS -C $SOURCEFILE" > check
 			echo "RET=\$?" >> check
 			echo "if [ \$RET -ne 1 ]; then exit 1; fi" >> check
 			echo "exit 0" >> check
@@ -128,7 +131,7 @@ function sourceend() {
 			echo "G_DEBUG=fatal-warnings $VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
 		else
 			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS --main $MAINNAME $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 			if [ $DBUSTEST -eq 1 ]; then
 				if [ $ISSERVER -eq 1 ]; then
 					echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
@@ -168,7 +171,7 @@ for testfile in "$@"; do
 		cat "$srcdir/$testfile" >> $SOURCEFILE
 
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS --main main $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
 		;;
 	*.gs)
@@ -180,17 +183,21 @@ for testfile in "$@"; do
 		cat "$srcdir/$testfile" >> $SOURCEFILE
 
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+		echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS --main main $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 		echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
 		;;
 	*.test)
+		testpath=${testfile/.test/}
+		ns=${testpath//\//_}
+		ns=${ns//-/_}
+		SOURCEFILE=$ns.vala
 		PART=0
-		INHEADER=1
+		INHEADER=0
 		INVALIDCODE=0
 		GIRTEST=0
 		DBUSTEST=0
 		ISSERVER=0
-		testpath=
+		MAINNAME=main
 		while IFS="" read -r line; do
 			if [ $PART -eq 0 ]; then
 				if [ -n "$line" ]; then
