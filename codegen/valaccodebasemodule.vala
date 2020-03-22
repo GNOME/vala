@@ -660,6 +660,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		emit_context.ccode_stack.add (ccode);
 		emit_context.ccode = func;
 		ccode.current_line = current_line;
+		ccode.block.line = current_line;
 	}
 
 	public void pop_function () {

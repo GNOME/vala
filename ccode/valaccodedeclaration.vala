@@ -101,7 +101,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			return;
 		}
 
-		writer.write_indent ();
+		writer.write_indent (line);
 		if ((modifiers & CCodeModifiers.REGISTER) == CCodeModifiers.REGISTER) {
 			writer.write_string ("register ");
 		}
