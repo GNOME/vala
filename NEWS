@@ -1,3 +1,41 @@
+Vala 0.48.2
+===========
+ * Various improvements and bug fixes:
+  - vapigen: Define "GOBJECT" corresponding to set profile of CodeContext [#933]
+  - codegen:
+    + Reset outdated array _size_ variable after use as ref parameter [#929]
+    + Emit postconditions before free'ing local variables
+    + Correctly access captured parameter in precondition of method [#144]
+    + Use correctly typed array-length variable for property-getter
+    + Use correctly typed array-length variable for delegate invocation
+    + Inherit "array_length_type" from (base-) parameter/property/method [#938]
+    + Improve handling of "array_length_type" attribute [#938]
+    + Use memset to init inline-allocated array with non-constant size [#910]
+    + Initialize temp-var for property array length before calling getter
+    + Include "glib.h" for g_return_*() usage [#940]
+  - vala:
+    + Use error() instead of Report.error() inside of CodeContext.get()
+    + Accept enum-values as length for inline allocated arrays [#935]
+    + Improve copy of required attributes from delegate to lamdba method
+    + Inherit lambda parameter attributes from delegate
+    + Inline-allocated array aren't instantiated with creation expression [#926]
+  - valadoc: Create and register current Vala.CodeContext properly
+  - parser: Improve error message for invalid ArrayCreationExpression [#939]
+  - tests: Drop usage of "--main main" and avoid ambigious entry-points
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - Add cairo-gobject binding
+  - cairo: Add missing type_id attributes guarded by GOBJECT define
+  - glib-2.0: Add binding for g_poll() [#924]
+  - glib-2.0: Add binding for g_win32_ftruncate()
+  - glib-2.0: Add missing IOChannel's win32 API
+  - gio-2.0: Add binding for g_io_error_from_win32_error()
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk4: Update to 3.98.1
+  - posix: Add pathconf and fpathconf bindings
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.1
 ===========
  * Various improvements and bug fixes:
