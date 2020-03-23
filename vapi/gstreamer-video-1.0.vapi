@@ -523,6 +523,8 @@ namespace Gst {
 			public static bool event_parse_key_event (Gst.Event event, out unowned string key);
 			public static bool event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
 			public static bool event_parse_mouse_move_event (Gst.Event event, out double x, out double y);
+			[Version (since = "1.18")]
+			public static bool event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
 			public static Gst.Video.NavigationMessageType message_get_type (Gst.Message message);
 			public static Gst.Message message_new_angles_changed (Gst.Object src, uint cur_angle, uint n_angles);
 			public static Gst.Message message_new_commands_changed (Gst.Object src);
@@ -545,6 +547,8 @@ namespace Gst {
 			public abstract void send_event (Gst.Structure structure);
 			public void send_key_event (string event, string key);
 			public void send_mouse_event (string event, int button, double x, double y);
+			[Version (since = "1.18")]
+			public void send_mouse_scroll_event (double x, double y, double delta_x, double delta_y);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_orientation_get_type ()")]
 		[GIR (name = "VideoOrientation")]
@@ -1169,7 +1173,9 @@ namespace Gst {
 			Y444_16BE,
 			Y444_16LE,
 			P016_BE,
-			P016_LE
+			P016_LE,
+			P012_BE,
+			P012_LE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1323,7 +1329,8 @@ namespace Gst {
 			MOUSE_BUTTON_PRESS,
 			MOUSE_BUTTON_RELEASE,
 			MOUSE_MOVE,
-			COMMAND
+			COMMAND,
+			MOUSE_SCROLL
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationMessageType", cprefix = "GST_NAVIGATION_MESSAGE_", type_id = "gst_navigation_message_type_get_type ()")]
 		[GIR (name = "NavigationMessageType")]
@@ -1826,6 +1833,9 @@ namespace Gst {
 		public static bool navigation_event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_move_event")]
 		public static bool navigation_event_parse_mouse_move_event (Gst.Event event, out double x, out double y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_scroll_event")]
+		[Version (since = "1.18")]
+		public static bool navigation_event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_get_type")]
 		public static Gst.Video.NavigationMessageType navigation_message_get_type (Gst.Message message);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_message_new_angles_changed")]

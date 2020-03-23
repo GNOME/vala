@@ -3,8 +3,8 @@
 Asset
 	.request_async symbol_type="constructor"
 	.request symbol_type="constructor"
-SmartAdder
-	.pads_infos type_arguments="unowned Gst.Pad,void*"
+Timeline
+	.tracks type_arguments="GES.Track"
 UriClipAsset
 	.new symbol_type="constructor" finish_name="ges_asset_request_finish" throws="GLib.Error"
 	.request_sync symbol_type="constructor"

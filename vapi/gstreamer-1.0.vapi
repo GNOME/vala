@@ -2721,6 +2721,8 @@ namespace Gst {
 		public static void append_value (GLib.Value value, GLib.Value append_value);
 		public static uint get_size (GLib.Value value);
 		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
+		[Version (since = "1.18")]
+		public static unowned GLib.Value? init (GLib.Value value, uint prealloc);
 		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_list_get_type ()")]
@@ -2733,6 +2735,8 @@ namespace Gst {
 		public static void concat (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static uint get_size (GLib.Value value);
 		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
+		[Version (since = "1.18")]
+		public static unowned GLib.Value? init (GLib.Value value, uint prealloc);
 		public static void merge (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
 	}
