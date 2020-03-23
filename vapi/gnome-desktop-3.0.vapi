@@ -216,6 +216,8 @@ namespace Gnome {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned Gnome.RRMode[] list_modes ();
 		public bool set_backlight (int value) throws GLib.Error;
+		public bool set_color_transform (Gnome.RRCTM value) throws GLib.Error;
+		public bool supports_color_transform ();
 		public bool supports_mode (Gnome.RRMode mode);
 		public bool supports_underscanning ();
 	}
@@ -310,6 +312,11 @@ namespace Gnome {
 		public GLib.List<weak string> get_layouts_for_language (string language_code);
 		[Version (since = "3.6")]
 		public GLib.List<weak string> get_options_for_group (string group_id);
+	}
+	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", has_type_id = false)]
+	public struct RRCTM {
+		[CCode (array_length = false)]
+		public weak uint64 matrix[9];
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-thumbnail.h", cprefix = "GNOME_DESKTOP_THUMBNAIL_SIZE_", has_type_id = false)]
 	public enum DesktopThumbnailSize {
