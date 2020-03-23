@@ -5293,10 +5293,8 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Surface ();
 		public void beep ();
-		public void begin_move_drag (int button, int x, int y, uint32 timestamp);
-		public void begin_move_drag_for_device (Gdk.Device device, int button, int x, int y, uint32 timestamp);
-		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int x, int y, uint32 timestamp);
-		public void begin_resize_drag_for_device (Gdk.SurfaceEdge edge, Gdk.Device device, int button, int x, int y, uint32 timestamp);
+		public void begin_move_drag (Gdk.Device device, int button, int x, int y, uint32 timestamp);
+		public void begin_resize_drag (Gdk.SurfaceEdge edge, Gdk.Device device, int button, int x, int y, uint32 timestamp);
 		public static void constrain_size (Gdk.Geometry geometry, Gdk.SurfaceHints flags, int width, int height, out int new_width, out int new_height);
 		public Gdk.CairoContext create_cairo_context ();
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
@@ -5304,88 +5302,37 @@ namespace Gdk {
 		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		[DestroysInstance]
 		public void destroy ();
-		public void focus (uint32 timestamp);
 		public void freeze_updates ();
-		public void fullscreen ();
-		public void fullscreen_on_monitor (Gdk.Monitor monitor);
-		public bool get_accept_focus ();
-		public bool get_autohide ();
 		public unowned Gdk.Cursor? get_cursor ();
-		public bool get_decorations (out Gdk.WMDecoration decorations);
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
 		public void get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
-		public bool get_focus_on_map ();
 		public unowned Gdk.FrameClock get_frame_clock ();
-		public Gdk.FullscreenMode get_fullscreen_mode ();
 		public int get_height ();
 		public bool get_mapped ();
-		public bool get_modal_hint ();
-		public unowned Gdk.Surface? get_parent ();
-		public Gdk.Gravity get_popup_rect_anchor ();
-		public Gdk.Gravity get_popup_surface_anchor ();
-		public void get_position (out int x, out int y);
 		public int get_scale_factor ();
-		public Gdk.SurfaceState get_state ();
 		public bool get_support_multidevice ();
-		public Gdk.SurfaceType get_surface_type ();
-		public Gdk.SurfaceTypeHint get_type_hint ();
 		public int get_width ();
 		public void hide ();
-		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
 		public bool is_destroyed ();
 		public bool is_viewable ();
-		public void lower ();
-		public void maximize ();
-		public void minimize ();
 		[CCode (has_construct_function = false)]
 		public Surface.popup (Gdk.Surface parent, bool autohide);
-		public bool present_popup (int width, int height, Gdk.PopupLayout layout);
 		public void queue_expose ();
-		public void raise ();
-		public void resize (int width, int height);
-		public void restack (Gdk.Surface? sibling, bool above);
-		public void set_accept_focus (bool accept_focus);
 		public void set_cursor (Gdk.Cursor? cursor);
-		public void set_decorations (Gdk.WMDecoration decorations);
 		public void set_device_cursor (Gdk.Device device, Gdk.Cursor cursor);
-		public void set_focus_on_map (bool focus_on_map);
-		public void set_fullscreen_mode (Gdk.FullscreenMode mode);
-		public void set_functions (Gdk.WMFunction functions);
-		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.SurfaceHints geom_mask);
-		public void set_icon_list (GLib.List<Gdk.Texture> surfaces);
-		public void set_icon_name (string? name);
-		public void set_keep_above (bool setting);
-		public void set_keep_below (bool setting);
-		public void set_modal_hint (bool modal);
-		public void set_opacity (double opacity);
+		public void set_input_region (Cairo.Region region);
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_shadow_width (int left, int right, int top, int bottom);
-		public void set_startup_id (string startup_id);
 		public void set_support_multidevice (bool support_multidevice);
-		public void set_title (string title);
-		public void set_transient_for (Gdk.Surface parent);
-		public void set_type_hint (Gdk.SurfaceTypeHint hint);
-		public void show ();
-		public void show_unraised ();
-		public bool show_window_menu (Gdk.Event event);
-		public void stick ();
 		public void thaw_updates ();
 		[CCode (has_construct_function = false)]
 		public Surface.toplevel (Gdk.Display display, int width, int height);
 		public bool translate_coordinates (Gdk.Surface to, double x, double y);
-		public void unfullscreen ();
-		public void unmaximize ();
-		public void unminimize ();
-		public void unstick ();
-		public bool autohide { get; construct; }
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
 		public Gdk.FrameClock frame_clock { get; construct; }
 		public bool mapped { get; }
-		public Gdk.Surface parent { get; construct; }
-		public Gdk.SurfaceState state { get; }
-		public Gdk.SurfaceType surface_type { get; construct; }
 		public signal bool event (Gdk.Event event);
 		public signal void popup_layout_changed ();
 		public signal bool render (Cairo.Region region);
@@ -5407,6 +5354,24 @@ namespace Gdk {
 		public bool save_to_png (string filename);
 		public int height { get; construct; }
 		public int width { get; construct; }
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_toplevel_layout_ref", type_id = "gdk_toplevel_layout_get_type ()", unref_function = "gdk_toplevel_layout_unref")]
+	[Compact]
+	public class ToplevelLayout {
+		[CCode (has_construct_function = false)]
+		public ToplevelLayout (int min_width, int min_height);
+		public Gdk.ToplevelLayout copy ();
+		public bool equal (Gdk.ToplevelLayout other);
+		public bool get_fullscreen ();
+		public bool get_maximized ();
+		public int get_min_height ();
+		public int get_min_width ();
+		public bool get_resizable ();
+		public unowned Gdk.ToplevelLayout @ref ();
+		public void set_fullscreen (bool fullscreen, Gdk.Monitor? monitor);
+		public void set_maximized (bool maximized);
+		public void set_resizable (bool resizable);
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GdkEvent", ref_function = "gdk_event_ref", type_id = "gdk_event_get_type ()", unref_function = "gdk_event_unref")]
 	public class TouchEvent : Gdk.Event {
@@ -5442,6 +5407,10 @@ namespace Gdk {
 		public int get_n_features (Gdk.DevicePadFeature feature);
 		public int get_n_groups ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkDragSurfaceInterface", type_id = "gdk_drag_surface_get_type ()")]
+	public interface DragSurface : Gdk.Surface {
+		public bool present (int width, int height);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkPaintableInterface", type_id = "gdk_paintable_get_type ()")]
 	public interface Paintable : GLib.Object {
 		public void compute_concrete_size (double specified_width, double specified_height, double default_width, double default_height, out double concrete_width, out double concrete_height);
@@ -5458,6 +5427,55 @@ namespace Gdk {
 		public signal void invalidate_contents ();
 		[HasEmitter]
 		public signal void invalidate_size ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkPopupInterface", type_id = "gdk_popup_get_type ()")]
+	public interface Popup : Gdk.Surface {
+		public bool get_autohide ();
+		public unowned Gdk.Surface get_parent ();
+		public int get_position_x ();
+		public int get_position_y ();
+		public Gdk.Gravity get_rect_anchor ();
+		public Gdk.Gravity get_surface_anchor ();
+		public bool present (int width, int height, Gdk.PopupLayout layout);
+		[ConcreteAccessor]
+		public abstract bool autohide { get; construct; }
+		[ConcreteAccessor]
+		public abstract Gdk.Surface parent { get; construct; }
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkToplevelInterface", type_id = "gdk_toplevel_get_type ()")]
+	public interface Toplevel : Gdk.Surface {
+		public void focus (uint32 timestamp);
+		public Gdk.SurfaceState get_state ();
+		public bool lower ();
+		public bool minimize ();
+		public bool present (int width, int height, Gdk.ToplevelLayout layout);
+		public void set_decorated (bool decorated);
+		public void set_deletable (bool deletable);
+		public void set_icon_list (GLib.List<Gdk.Texture> surfaces);
+		public void set_modal (bool modal);
+		public void set_startup_id (string startup_id);
+		public void set_title (string title);
+		public void set_transient_for (Gdk.Surface parent);
+		public bool show_window_menu (Gdk.Event event);
+		public bool supports_edge_constraints ();
+		[NoAccessorMethod]
+		public abstract bool decorated { get; set; }
+		[NoAccessorMethod]
+		public abstract bool deletable { get; set; }
+		[NoAccessorMethod]
+		public abstract Gdk.FullscreenMode fullscreen_mode { get; set; }
+		[NoAccessorMethod]
+		public abstract void* icon_list { get; set; }
+		[NoAccessorMethod]
+		public abstract bool modal { get; set; }
+		[NoAccessorMethod]
+		public abstract string startup_id { owned get; set; }
+		[ConcreteAccessor]
+		public abstract Gdk.SurfaceState state { get; }
+		[NoAccessorMethod]
+		public abstract string title { owned get; set; }
+		[NoAccessorMethod]
+		public abstract Gdk.Surface transient_for { owned get; set; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct Geometry {
@@ -5858,12 +5876,6 @@ namespace Gdk {
 		LEFT_TILED,
 		LEFT_RESIZABLE
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_", type_id = "gdk_surface_type_get_type ()")]
-	public enum SurfaceType {
-		TOPLEVEL,
-		TEMP,
-		POPUP
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_TYPE_HINT_", type_id = "gdk_surface_type_hint_get_type ()")]
 	public enum SurfaceTypeHint {
 		NORMAL,
@@ -5887,27 +5899,6 @@ namespace Gdk {
 		UPDATE,
 		END,
 		CANCEL
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DECOR_", type_id = "gdk_wm_decoration_get_type ()")]
-	[Flags]
-	public enum WMDecoration {
-		ALL,
-		BORDER,
-		RESIZEH,
-		TITLE,
-		MENU,
-		MINIMIZE,
-		MAXIMIZE
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FUNC_", type_id = "gdk_wm_function_get_type ()")]
-	[Flags]
-	public enum WMFunction {
-		ALL,
-		RESIZE,
-		MOVE,
-		MINIMIZE,
-		MAXIMIZE,
-		CLOSE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_ERROR_")]
 	public errordomain GLError {
@@ -10862,6 +10853,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool accumulative_margin { get; set; }
 		[NoAccessorMethod]
+		public bool allow_breaks { get; set; }
+		[NoAccessorMethod]
+		public bool allow_breaks_set { get; set; }
+		[NoAccessorMethod]
 		public string background { set; }
 		[NoAccessorMethod]
 		public bool background_full_height { get; set; }
@@ -10904,6 +10899,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool indent_set { get; set; }
 		[NoAccessorMethod]
+		public bool insert_hyphens { get; set; }
+		[NoAccessorMethod]
+		public bool insert_hyphens_set { get; set; }
+		[NoAccessorMethod]
 		public bool invisible { get; set; }
 		[NoAccessorMethod]
 		public bool invisible_set { get; set; }
@@ -10925,6 +10924,14 @@ namespace Gtk {
 		public bool letter_spacing_set { get; set; }
 		[NoAccessorMethod]
 		public string name { owned get; construct; }
+		[NoAccessorMethod]
+		public Pango.Overline overline { get; set; }
+		[NoAccessorMethod]
+		public Gdk.RGBA overline_rgba { owned get; set; }
+		[NoAccessorMethod]
+		public bool overline_rgba_set { get; set; }
+		[NoAccessorMethod]
+		public bool overline_set { get; set; }
 		[NoAccessorMethod]
 		public string paragraph_background { set; }
 		[NoAccessorMethod]
@@ -10955,6 +10962,10 @@ namespace Gtk {
 		public double scale { get; set; }
 		[NoAccessorMethod]
 		public bool scale_set { get; set; }
+		[NoAccessorMethod]
+		public Pango.ShowFlags show_spaces { get; set; }
+		[NoAccessorMethod]
+		public bool show_spaces_set { get; set; }
 		[NoAccessorMethod]
 		public int size { get; set; }
 		[NoAccessorMethod]
@@ -11896,14 +11907,10 @@ namespace Gtk {
 		public bool activate_key ([CCode (type = "GdkEvent*")] Gdk.Event event);
 		public void add_accel_group (Gtk.AccelGroup accel_group);
 		public void add_mnemonic (uint keyval, Gtk.Widget target);
-		public void begin_move_drag (int button, int x, int y, uint32 timestamp);
-		public void begin_resize_drag (Gdk.SurfaceEdge edge, int button, int x, int y, uint32 timestamp);
 		public void close ();
 		public void fullscreen ();
 		public void fullscreen_on_monitor (Gdk.Monitor monitor);
-		public bool get_accept_focus ();
 		public unowned Gtk.Application? get_application ();
-		public unowned Gtk.Widget? get_attached_to ();
 		public bool get_decorated ();
 		public static unowned string get_default_icon_name ();
 		public void get_default_size (out int width, out int height);
@@ -11911,7 +11918,6 @@ namespace Gtk {
 		public bool get_deletable ();
 		public bool get_destroy_with_parent ();
 		public unowned Gtk.Widget? get_focus ();
-		public bool get_focus_on_map ();
 		public bool get_focus_visible ();
 		public unowned Gtk.WindowGroup get_group ();
 		public bool get_hide_on_close ();
@@ -11925,7 +11931,6 @@ namespace Gtk {
 		public unowned Gtk.Widget? get_titlebar ();
 		public static unowned GLib.ListModel get_toplevels ();
 		public unowned Gtk.Window? get_transient_for ();
-		public Gdk.SurfaceTypeHint get_type_hint ();
 		public bool has_group ();
 		public static GLib.List<weak Gtk.Window> list_toplevels ();
 		public void maximize ();
@@ -11937,9 +11942,7 @@ namespace Gtk {
 		public void remove_accel_group (Gtk.AccelGroup accel_group);
 		public void remove_mnemonic (uint keyval, Gtk.Widget target);
 		public void resize (int width, int height);
-		public void set_accept_focus (bool setting);
 		public void set_application (Gtk.Application? application);
-		public void set_attached_to (Gtk.Widget? attach_widget);
 		public static void set_auto_startup_notification (bool setting);
 		public void set_decorated (bool setting);
 		public static void set_default_icon_name (string name);
@@ -11949,14 +11952,11 @@ namespace Gtk {
 		public void set_destroy_with_parent (bool setting);
 		public void set_display (Gdk.Display display);
 		public void set_focus (Gtk.Widget? focus);
-		public void set_focus_on_map (bool setting);
 		public void set_focus_visible (bool setting);
 		public void set_has_user_ref_count (bool setting);
 		public void set_hide_on_close (bool setting);
 		public void set_icon_name (string? name);
 		public static void set_interactive_debugging (bool enable);
-		public void set_keep_above (bool setting);
-		public void set_keep_below (bool setting);
 		public void set_mnemonic_modifier (Gdk.ModifierType modifier);
 		public void set_mnemonics_visible (bool setting);
 		public void set_modal (bool modal);
@@ -11965,15 +11965,10 @@ namespace Gtk {
 		public void set_title (string title);
 		public void set_titlebar (Gtk.Widget? titlebar);
 		public void set_transient_for (Gtk.Window? parent);
-		public void set_type_hint (Gdk.SurfaceTypeHint hint);
-		public void stick ();
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unminimize ();
-		public void unstick ();
-		public bool accept_focus { get; set; }
 		public Gtk.Application application { get; set; }
-		public Gtk.Widget attached_to { get; set construct; }
 		public bool decorated { get; set; }
 		[NoAccessorMethod]
 		public int default_height { get; set; }
@@ -11984,7 +11979,6 @@ namespace Gtk {
 		public bool destroy_with_parent { get; set; }
 		[NoAccessorMethod]
 		public Gdk.Display display { owned get; set; }
-		public bool focus_on_map { get; set; }
 		public bool focus_visible { get; set; }
 		public bool hide_on_close { get; set; }
 		public string icon_name { get; set; }
@@ -11998,7 +11992,6 @@ namespace Gtk {
 		public string startup_id { set; }
 		public string title { get; set; }
 		public Gtk.Window transient_for { get; set construct; }
-		public Gdk.SurfaceTypeHint type_hint { get; set; }
 		public virtual signal void activate_default ();
 		public virtual signal void activate_focus ();
 		public virtual signal bool close_request ();
