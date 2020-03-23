@@ -1085,14 +1085,25 @@
 
 <section>
 <title>Contract programming</title>
-<para>TODO: requires, ensures. </para>
-<para>requires ( ... ) Denotes things that must be true to start execution. </para>
-<para>ensures ( ... ) Denotes things that must be true to end execution. </para>
-</section>
-
-<section>
-<title>Examples</title>
-<para>TODO: write examples. </para>
+<para>Vala supports basic <ulink url="http://en.wikipedia.org/wiki/Contract_programming">contract programming</ulink> features.  A method may have preconditions (<code>requires</code>) and postconditions (<code>ensures</code>) that must be fulfilled at the beginning or the end of a method respectively: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[x]]></methodname><![CDATA[, ]]><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[)]]>
+<![CDATA[                ]]><token><![CDATA[requires]]></token><![CDATA[ (]]><methodname><![CDATA[x]]></methodname><![CDATA[ > 0 && ]]><methodname><![CDATA[x]]></methodname><![CDATA[ < 10)]]>
+<![CDATA[                ]]><token><![CDATA[requires]]></token><![CDATA[ (]]><methodname><![CDATA[d]]></methodname><![CDATA[ >= 0.0 && ]]><methodname><![CDATA[d]]></methodname><![CDATA[ <= 1.0)]]>
+<![CDATA[                ]]><token><![CDATA[ensures]]></token><![CDATA[ (]]><methodname><![CDATA[result]]></methodname><![CDATA[ >= 0.0 && ]]><methodname><![CDATA[result]]></methodname><![CDATA[ <= 10.0) {]]>
+<![CDATA[        ]]><token><![CDATA[return]]></token><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[ * ]]><methodname><![CDATA[x]]></methodname><![CDATA[;]]>
+<![CDATA[}]]>
+</programlisting>
+<para><code>result</code> is a special variable representing the return value.  </para>
+<para>For example, if you call <code>method_name</code> with arguments <code>5</code> and <code>3.0</code>, it will output a CRITICAL message and return 0.  </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () {]]>
+<![CDATA[        ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[ (]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%i]]></phrase><![CDATA[
+]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (5, 3.0));]]>
+<![CDATA[}]]>
+</programlisting>
+<para>Output: </para><screen><![CDATA[CRITICAL **: 03:29:00.588: method_name: assertion 'd >= 0.0 && d <= 1.0' failed
+0]]></screen>
+<para>Vala allows you to manage the safety of issued messages at 6 levels: ERROR, CRITICAL, INFO, DEBUG, WARNING, MESSAGE. For example, the following code will cause a runtime error. </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[Log]]></methodname><![CDATA[.]]><methodname><![CDATA[set_always_fatal]]></methodname><![CDATA[ (]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_CRITICAL]]></methodname><![CDATA[ | ]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_WARNING]]></methodname><![CDATA[);]]>
+<methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[ (]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%i]]></phrase><![CDATA[
+]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (5, 3.0));]]>
+</programlisting>
 </section>
 </section>
 <para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
