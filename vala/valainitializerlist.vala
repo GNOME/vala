@@ -194,6 +194,10 @@ public class Vala.InitializerList : Expression {
 				st = st.base_struct;
 			}
 
+			if (in_array_creation_initializer ()) {
+				return transform_to_struct_creation (context, st);
+			}
+
 			var field_it = st.get_fields ().iterator ();
 			foreach (Expression e in get_initializers ()) {
 				Field field = null;
@@ -270,5 +274,42 @@ public class Vala.InitializerList : Expression {
 		foreach (Expression expr in initializers) {
 			expr.get_used_variables (collection);
 		}
+	}
+
+	bool in_array_creation_initializer () {
+		return parent_node is InitializerList && parent_node.parent_node is ArrayCreationExpression;
+	}
+
+	bool transform_to_struct_creation (CodeContext context, Struct st) {
+		var ma = new MemberAccess.simple (st.name, source_reference);
+		ma.creation_member = true;
+		ma.symbol_reference = st;
+		var struct_creation = new ObjectCreationExpression (ma, source_reference);
+		struct_creation.target_type = target_type.copy ();
+		struct_creation.struct_creation = true;
+
+		var field_it = st.get_fields ().iterator ();
+		foreach (Expression e in get_initializers ()) {
+			Field field = null;
+			while (field == null) {
+				if (!field_it.next ()) {
+					error = true;
+					Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (target_type.to_string ()));
+					return false;
+				}
+				field = field_it.get ();
+				if (field.binding != MemberBinding.INSTANCE) {
+					// we only initialize instance fields
+					field = null;
+				}
+			}
+
+			var member_init = new MemberInitializer (field.name, e, e.source_reference);
+			struct_creation.add_member_initializer (member_init);
+		}
+
+		parent_node.replace_expression (this, struct_creation);
+		checked = false;
+		return struct_creation.check (context);
 	}
 }
