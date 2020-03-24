@@ -4681,7 +4681,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
 	}
 
-	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false, List<TypeParameter>? type_parameters = null) {
+	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool simple_generics = false, bool is_chainup = false, List<TypeParameter>? type_parameters = null) {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
 			if (type_parameters != null) {
@@ -4691,19 +4691,27 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s-destroy-func\"".printf (type_param_name)));
 			}
 
-			arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), get_type_id_expression (type_arg, is_chainup));
-			if (requires_copy (type_arg)) {
-				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
-				if (dup_func == null) {
-					// type doesn't contain a copy function
-					expr.error = true;
-					return;
+			if (simple_generics) {
+				if (requires_copy (type_arg)) {
+					arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg, is_chainup));
+				} else {
+					arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
 				}
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeCastExpression (get_destroy_func_expression (type_arg, is_chainup), "GDestroyNotify"));
 			} else {
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeConstant ("NULL"));
-				arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeConstant ("NULL"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), get_type_id_expression (type_arg, is_chainup));
+				if (requires_copy (type_arg)) {
+					var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
+					if (dup_func == null) {
+						// type doesn't contain a copy function
+						expr.error = true;
+						return;
+					}
+					arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
+					arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeCastExpression (get_destroy_func_expression (type_arg, is_chainup), "GDestroyNotify"));
+				} else {
+					arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeConstant ("NULL"));
+					arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeConstant ("NULL"));
+				}
 			}
 			type_param_index++;
 		}
@@ -4838,15 +4846,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (cl != null && !cl.is_compact) {
 				add_generic_type_arguments (in_arg_map, expr.type_reference.get_type_arguments (), expr);
 			} else if (cl != null && get_ccode_simple_generics (m)) {
-				int type_param_index = 0;
-				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
-					if (requires_copy (type_arg)) {
-						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
-					} else {
-						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
-					}
-					type_param_index++;
-				}
+				add_generic_type_arguments (in_arg_map, expr.type_reference.get_type_arguments (), expr, true);
 			}
 
 			bool ellipsis = false;

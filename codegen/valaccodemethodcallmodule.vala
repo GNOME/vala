@@ -151,7 +151,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								// gobject-style chainup
 								type_parameters = ((Class) base_type.type_symbol).get_type_parameters ();
 							}
-							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true, type_parameters);
+							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, false, true, type_parameters);
 							break;
 						}
 					}
@@ -181,6 +181,17 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (current_class)));
 				ccall.add_argument (csizeof);
+			} else if (get_ccode_simple_generics (m)) {
+				if (current_class != m.parent_symbol) {
+					foreach (DataType base_type in current_class.get_base_types ()) {
+						if (base_type.type_symbol is Class) {
+							add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
+							break;
+						}
+					}
+				} else {
+					// TODO: simple generics are only supported in bindings.
+				}
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (get_this_cexpression ());
