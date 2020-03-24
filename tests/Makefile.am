@@ -230,6 +230,7 @@ TESTS = \
 	enums/bug780050.vala \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
+	structs/struct-initializer-list-in-array.vala \
 	structs/structs.vala \
 	structs/constructor-wrong-name.test \
 	structs/gmutex.vala \
