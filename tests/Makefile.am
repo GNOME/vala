@@ -482,6 +482,7 @@ TESTS = \
 	objects/signals-prototype-access-invalid.test \
 	objects/signals-prototype-access-invalid-2.test \
 	objects/signals-struct-return.vala \
+	objects/simple-generics-chainup.vala \
 	objects/singleton.vala \
 	objects/type-narrowing.vala \
 	objects/type-narrowing-fallback.vala \
