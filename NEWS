@@ -1,3 +1,58 @@
+Vala 0.46.7
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Don't initialize stack-allocated array with local-constant length [#910]
+    + Add destroy of parameter in vfunc of delegate property setter [#919]
+    + Reset outdated array _size_ variable after use as ref parameter [#929]
+    + Emit postconditions before free'ing local variables
+    + Correctly access captured parameter in precondition of method [#144]
+    + Use memset to init inline-allocated array with non-constant size [#910]
+    + Initialize temp-var for property array length before calling getter
+    + Include "glib.h" for g_return_*() usage [#940]
+  - vala:
+    + Properly set CodeNode.error when reporting an error
+    + Improve robustness of analyzer pass for language-servers [#911]
+    + Add local-variables to current scope regardless its error state
+    + Fix circular reference in Property/EnumValueType
+    + Report an internal error for unavailable context and bail
+    + Prevent possible stack-overflow in Class.is_subtype_of()
+    + Fix search for Parameter.base_parameter
+    + Use error() instead of Report.error() inside of CodeContext.get()
+    + Accept enum-values as length for inline allocated arrays [#935]
+    + Improve copy of required attributes from delegate to lamdba method
+    + Inherit lambda parameter attributes from delegate
+    + Inline-allocated array aren't instantiated with creation expression [#926]
+  - Add missing CodeContext.pop() calls
+  - girparser:
+    + Report a warning for conflicting class and instance methods
+    + Decrease return_array_length_idx for transformed function
+    + Delay adding of "GLib.Object" prerequisite to interfaces
+  - vapigen: Define "GOBJECT" corresponding to set profile of CodeContext [#933]
+  - valadoc: Create and register current Vala.CodeContext properly
+  - parser: Improve error message for invalid ArrayCreationExpression [#939]
+  - testrunner: Pass G_DEBUG=fatal-warnings to invalid test
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - Add cairo-gobject binding
+  - Add harfbuzz-gobject binding [#909]
+  - Add some fundamental deps files to improve --nostdpkg support [#911]
+  - cairo: Add missing type_id attributes guarded by GOBJECT define
+  - glib-2.0: Add binding for g_poll() [#924]
+  - glib-2.0: Add binding for g_win32_ftruncate()
+  - glib-2.0: Add missing IOChannel's win32 API
+  - glib-2.0: Add missing "type_id"/"has_type_id" attributes to structs [#921]
+  - glib-2.0: Memory profiling ("g_mem_*") is deprecated since 2.46
+  - gio-2.0: Add binding for g_io_error_from_win32_error()
+  - gtk+-3.0: Update to 3.24.14
+  - gtk+-*.0,gtk4: Fix iter parameter of TextIter.order() [#908]
+  - gtk4: Update to 3.98.0+410dbdf6
+  - linux: Don't depend on GLib.Time when using POSIX profile
+  - poppler-glib: Update to 0.85
+  - posix: Add pathconf and fpathconf bindings
+  - webkit2gtk-4.0: Update to 2.27.90
+
 Vala 0.46.6
 ===========
  * Various improvements and bug fixes:
