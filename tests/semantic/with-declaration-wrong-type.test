@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+}
+
+class Bar {
+}
+
+void main () {
+    with (Bar f = new Foo ()) {
+    }
+}

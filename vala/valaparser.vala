@@ -266,6 +266,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.VOLATILE:
 		case TokenType.WEAK:
 		case TokenType.WHILE:
+		case TokenType.WITH:
 		case TokenType.YIELD:
 			next ();
 			return;
@@ -1630,6 +1631,9 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.DELETE:
 					stmt = parse_delete_statement ();
 					break;
+				case TokenType.WITH:
+					stmt = parse_with_statement ();
+					break;
 				case TokenType.VAR:
 					is_decl = true;
 					parse_local_variable_declarations (block);
@@ -1919,7 +1923,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.SEMICOLON);
 	}
 
-	LocalVariable parse_local_variable (DataType? variable_type) throws ParseError {
+	LocalVariable parse_local_variable (DataType? variable_type, bool expect_initializer = false) throws ParseError {
 		var begin = get_location ();
 		string id = parse_identifier ();
 		var type = parse_inline_array_type (variable_type);
@@ -1928,6 +1932,10 @@ public class Vala.Parser : CodeVisitor {
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_expression ();
+		} else if (expect_initializer) {
+			report_parse_error (new ParseError.SYNTAX ("expected initializer"));
+			prev ();
+			initializer = new InvalidExpression ();
 		}
 		return new LocalVariable (type, id, initializer, src);
 	}
@@ -2273,6 +2281,40 @@ public class Vala.Parser : CodeVisitor {
 		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
 		return new DeleteStatement (expr, src);
+	}
+
+	Statement? parse_with_statement () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.WITH);
+		expect (TokenType.OPEN_PARENS);
+		var expr_or_decl = get_location ();
+
+		LocalVariable? local = null;
+
+		// Try "with (expr)"
+		Expression expr = parse_expression ();
+		if (!accept (TokenType.CLOSE_PARENS)) {
+			// Try "with (var identifier = expr)"
+			rollback (expr_or_decl);
+			DataType variable_type;
+			if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
+				variable_type = new VarType (false);
+			} else {
+				rollback (expr_or_decl);
+				if (accept (TokenType.VAR)) {
+					variable_type = new VarType ();
+				} else {
+					variable_type = parse_type (true, true);
+				}
+			}
+			local = parse_local_variable (variable_type, true);
+			expr = local.initializer;
+			expect (TokenType.CLOSE_PARENS);
+		}
+
+		var src = get_src (begin);
+		var body = parse_embedded_statement ("with", false);
+		return new WithStatement (local, expr, body, src);
 	}
 
 	string parse_attribute_value () throws ParseError {

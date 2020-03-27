@@ -1,0 +1,10 @@
+Invalid Code
+
+enum FooEnum {
+    FIRST
+}
+
+void main () {
+    with (FooEnum) {
+    }
+}

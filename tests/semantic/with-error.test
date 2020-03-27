@@ -1,0 +1,10 @@
+Invalid Code
+
+errordomain FooError {
+    FAIL
+}
+
+void main () {
+    with (FooError) {
+    }
+}

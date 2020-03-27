@@ -183,6 +183,7 @@ libvala_la_VALASOURCES = \
 	valaversionattribute.vala \
 	valavoidtype.vala \
 	valawhilestatement.vala \
+	valawithstatement.vala \
 	valayieldstatement.vala \
 	$(NULL)
 

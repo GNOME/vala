@@ -1,0 +1,13 @@
+Invalid Code
+
+class Foo {
+    public int i;
+}
+
+void main () {
+    with (var f = new Foo ()) {
+        i = 10;
+    }
+
+    f.i = 100;
+}

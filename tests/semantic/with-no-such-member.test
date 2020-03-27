@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+}
+
+void main () {
+    with (new Foo ()) {
+        field = 100;
+    }
+}
