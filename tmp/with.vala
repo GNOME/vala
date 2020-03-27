@@ -13,7 +13,7 @@ class Foo {
 void main() {
 	var foo = new Foo();
 	//  foo.print();
-	//foo.field = 0;
+	foo.field = 0;
     with(foo) {
 		field = 42;
 		prop = "foo";

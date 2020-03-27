@@ -225,6 +225,7 @@ public class Vala.MemberAccess : Expression {
 		bool may_access_klass_members = false;
 
 		symbol_reference = null;
+		var is_with = false;
 
 		if (qualified) {
 			base_symbol = context.root;
@@ -284,6 +285,7 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
+				stdout.printf("symbol_reference: %s\n", symbol_reference != null ? symbol_reference.name : "(null)");
 
 				if (symbol_reference == null && sym is TypeSymbol && may_access_instance_members) {
 					// used for generated to_string methods in enums
@@ -307,6 +309,17 @@ public class Vala.MemberAccess : Expression {
 						may_access_instance_members = false;
 						may_access_klass_members = false;
 					}
+				}
+
+				if (symbol_reference == null && sym is WithStatement) {
+					unowned WithStatement w = (WithStatement) sym;
+					var e = w.expression;
+					base_symbol = e.value_type.type_symbol;
+					symbol_reference = e.value_type.get_member (member_name);
+					may_access_instance_members = true;
+					may_access_klass_members = true;
+					is_with = true;
+					inner = e;
 				}
 
 				var x = "null";
@@ -373,6 +386,7 @@ public class Vala.MemberAccess : Expression {
 
 				if (symbol_reference == null && (base_symbol is Namespace || base_symbol is TypeSymbol)) {
 					symbol_reference = base_symbol.scope.lookup (member_name);
+					stdout.printf("Inner symbol_reference %s, synmol_reference_name %s\n", Type.from_instance(symbol_reference).name(), symbol_reference.name);
 					if (inner is BaseAccess) {
 						// inner expression is base access
 						// access to instance members of the base type possible
@@ -865,7 +879,7 @@ public class Vala.MemberAccess : Expression {
 			}
 		} else {
 			// implicit this access
-			if (instance && inner == null) {
+			if (instance && inner == null && !is_with) {
 				inner = new MemberAccess (null, "this", source_reference);
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
@@ -918,11 +932,13 @@ public class Vala.MemberAccess : Expression {
 				}
 			} else if (symbol_reference is Property
 			    && instance && symbol_reference.parent_symbol != null) {
-				inner.target_type = SemanticAnalyzer.get_data_type_for_symbol (symbol_reference.parent_symbol);
+					if (inner != null)
+						inner.target_type = SemanticAnalyzer.get_data_type_for_symbol (symbol_reference.parent_symbol);
 			} else if ((symbol_reference is Field || symbol_reference is Signal)
 			    && instance && symbol_reference.parent_symbol != null) {
 				var parent_type = SemanticAnalyzer.get_data_type_for_symbol (symbol_reference.parent_symbol);
-				inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
+				if (inner != null)
+					inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
 			}
 		}
 
