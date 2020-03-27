@@ -201,6 +201,10 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	public override bool check (CodeContext context) {
+		if (member_name == "field" || member_name == "foo") {
+			stdout.printf("member %s, inner %s\n", member_name, inner != null ? Type.from_instance(inner).name() : "(null)");
+		}
+
 		if (checked) {
 			return !error;
 		}
@@ -273,6 +277,9 @@ public class Vala.MemberAccess : Expression {
 						may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
 						may_access_klass_members = (m.binding != MemberBinding.STATIC);
 						method_found = true;
+					} else if (sym is WithStatement) {
+						unowned WithStatement w = (WithStatement) sym;
+						stdout.printf("Got ittttttttttttttttttttttttttttt\n");
 					}
 				}
 
@@ -302,6 +309,15 @@ public class Vala.MemberAccess : Expression {
 					}
 				}
 
+				var x = "null";
+				if (sym != null)
+					x = Type.from_instance(sym).name();
+
+				var y = "null";
+				if (sym.parent_symbol != null)
+					y = Type.from_instance(sym.parent_symbol).name();
+	
+				stdout.printf("sym: %s, parent %s\n", x, y);
 				sym = sym.parent_symbol;
 			}
 
@@ -530,6 +546,7 @@ public class Vala.MemberAccess : Expression {
 				// block as closures (to support nested closures)
 				unowned Symbol? sym = context.analyzer.current_method_or_property_accessor;
 				while (sym != block) {
+					stdout.printf("local: %s, block %s, current_sym: %s, sym : %s\n", Type.from_instance(local).name(), Type.from_instance(block).name(), Type.from_instance(context.analyzer.current_symbol).name(), sym != null ? Type.from_instance(sym).name() : "(null)");
 					unowned Method? method = sym as Method;
 					if (method != null) {
 						method.closure = true;
@@ -538,6 +555,8 @@ public class Vala.MemberAccess : Expression {
 						method.add_captured_variable (local);
 					}
 					sym = sym.parent_symbol;
+					if (sym == null) // DEBUG infinite loop
+						return false;
 				}
 
 				local.captured = true;
@@ -759,6 +778,10 @@ public class Vala.MemberAccess : Expression {
 		}
 		member.version.check (source_reference);
 
+		if (member_name == "field" || member_name == "foo") {
+			stdout.printf("member %s, inner %s\n", member_name, inner != null ? Type.from_instance(inner).name() : "(null)");
+		}
+
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
 			unowned TypeSymbol target_type = (TypeSymbol) member.parent_symbol;
 
@@ -904,6 +927,7 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		if (value_type != null) {
+			stdout.printf("Value type: %s\n",value_type.to_prototype_string() );
 			value_type.check (context);
 		}
 

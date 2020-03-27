@@ -405,6 +405,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for with statements.
+	 *
+	 * @param stmt a with statement
+	 */
+	public virtual void visit_with_statement (WithStatement stmt) {
+	}
+
+	/**
 	 * Visit operation called for delete statements.
 	 *
 	 * @param stmt a delete statement

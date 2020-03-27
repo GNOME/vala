@@ -93,7 +93,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Symbol? current_method_or_property_accessor {
 		get {
 			unowned Symbol? sym = current_symbol;
-			while (sym is Block) {
+			while (sym is Block || sym is WithStatement) {
 				sym = sym.parent_symbol;
 			}
 			if (sym is Method) {
@@ -318,7 +318,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return result;
 		}
 
-		if (sym is Class) {
+		if (sym is WithStatement) {
+			unowned WithStatement w = (WithStatement) sym;
+			stdout.printf("Resolved with statement\n");
+			return w.expression.symbol_reference;
+		} else if (sym is Class) {
 			unowned Class cl = (Class) sym;
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
