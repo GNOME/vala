@@ -1616,6 +1616,10 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.DELETE:
 					stmt = parse_delete_statement ();
 					break;
+				case TokenType.WITH:
+					stdout.printf("With");
+					stmt = parse_with_statement ();
+					break;
 				case TokenType.VAR:
 					is_decl = true;
 					parse_local_variable_declarations (block);
@@ -2247,6 +2251,20 @@ public class Vala.Parser : CodeVisitor {
 		var src = get_src (begin);
 		expect (TokenType.SEMICOLON);
 		return new DeleteStatement (expr, src);
+	}
+
+	Statement parse_with_statement () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.WITH);
+		expect (TokenType.OPEN_PARENS);
+		var expr = parse_expression ();
+		expect (TokenType.CLOSE_PARENS);
+		var src = get_src (begin);
+		Block? stmt = null;
+		if (current () != TokenType.SEMICOLON) {
+			stmt = parse_embedded_statement ("with", false);
+		}
+		return new WithStatement (expr, stmt, src);
 	}
 
 	string parse_attribute_value () throws ParseError {
@@ -3694,4 +3712,3 @@ public errordomain Vala.ParseError {
 	FAILED,
 	SYNTAX
 }
-

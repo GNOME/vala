@@ -153,6 +153,7 @@ public enum Vala.TokenType {
 	VOLATILE,
 	WEAK,
 	WHILE,
+	WITH,
 	YIELD;
 
 	public unowned string to_string () {
@@ -291,4 +292,3 @@ public enum Vala.TokenType {
 		}
 	}
 }
-
