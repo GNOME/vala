@@ -480,6 +480,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		list.accept_children (this);
 	}
 
+	public override void visit_with_statement (WithStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_expression_statement (ExpressionStatement stmt) {
 		if (stmt.checked) {
 			return;

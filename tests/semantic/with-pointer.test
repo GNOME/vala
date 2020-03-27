@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+    int i = 0;
+    with (&i) {
+    }
+}
