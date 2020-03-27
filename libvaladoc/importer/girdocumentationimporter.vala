@@ -273,6 +273,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_bitfield ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-macro") {
+				skip_element ();
 			} else if (reader.name == "callback") {
 				parse_callback ();
 			} else if (reader.name == "record") {
