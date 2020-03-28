@@ -1617,7 +1617,6 @@ public class Vala.Parser : CodeVisitor {
 					stmt = parse_delete_statement ();
 					break;
 				case TokenType.WITH:
-					stdout.printf("With");
 					stmt = parse_with_statement ();
 					break;
 				case TokenType.VAR:
