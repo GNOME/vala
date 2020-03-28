@@ -23,6 +23,8 @@
 using GLib;
 
 public class Vala.WithStatement : Block {
+	private static int next_with_id = 0;
+
 	/**
 	 * Expression representing the type of body's dominant scope.
 	 */
@@ -33,6 +35,11 @@ public class Vala.WithStatement : Block {
 			_expression.parent_node = this;
 		}
 	}
+
+	/**
+	 * Specifies the with-variable.
+	 */
+	public LocalVariable with_variable { get; private set; }
 
 	/**
 	 * The block which dominant scope is type of expression.
@@ -61,7 +68,9 @@ public class Vala.WithStatement : Block {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		expression.accept (visitor);
+		if (expression.symbol_reference == with_variable) {
+			expression.accept (visitor);
+		}
 		if (body != null) {
 			body.accept (visitor);
 		}
@@ -76,6 +85,13 @@ public class Vala.WithStatement : Block {
 	public override bool check (CodeContext context) {
 		expression.check (context);
 
+		LocalVariable local_var = expression.symbol_reference as LocalVariable;
+		if (local_var == null) {
+			local_var = new LocalVariable (expression.value_type, "_with_local%d_".printf (next_with_id++), expression, source_reference);
+			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
+		}
+		with_variable = local_var;
+
 		var old_symbol = context.analyzer.current_symbol;
 		owner = context.analyzer.current_symbol.scope;
 		context.analyzer.current_symbol = this;
@@ -88,7 +104,23 @@ public class Vala.WithStatement : Block {
 	}
 
 	public override void emit (CodeGenerator codegen) {
-		expression.emit (codegen);
+		if (expression.symbol_reference == with_variable) {
+			expression.emit (codegen);
+		}
 		body.emit (codegen);
+	}
+
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		if (source_reference == null) {
+			source_reference = this.source_reference;
+		}
+		expression.get_error_types (collection, source_reference);
+		body.get_error_types (collection, source_reference);
+	}
+
+	public override void get_defined_variables (Collection<Variable> collection) {
+		if (expression.symbol_reference != with_variable) {
+			collection.add (with_variable);
+		}
 	}
 }

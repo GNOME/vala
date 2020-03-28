@@ -278,6 +278,16 @@ public class Vala.MemberAccess : Expression {
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
 
+				if (symbol_reference == null && sym is WithStatement) {
+					unowned WithStatement w = (WithStatement) sym;
+					symbol_reference = w.with_variable.variable_type.get_member (member_name);
+					if (symbol_reference != null) {
+						inner = new MemberAccess (null, w.with_variable.name, source_reference);
+						inner.check (context);
+						may_access_instance_members = true;
+					}
+				}
+
 				if (symbol_reference == null && sym is TypeSymbol && may_access_instance_members) {
 					// used for generated to_string methods in enums
 					symbol_reference = this_parameter.variable_type.get_member (member_name);
@@ -300,16 +310,6 @@ public class Vala.MemberAccess : Expression {
 						may_access_instance_members = false;
 						may_access_klass_members = false;
 					}
-				}
-
-				if (symbol_reference == null && sym is WithStatement) {
-					unowned WithStatement w = (WithStatement) sym;
-					symbol_reference = w.expression.value_type.get_member (member_name);
-					if (symbol_reference != null) {
-						inner = w.expression;
-					}
-					may_access_instance_members = true;
-					may_access_klass_members = true;
 				}
 
 				sym = sym.parent_symbol;
