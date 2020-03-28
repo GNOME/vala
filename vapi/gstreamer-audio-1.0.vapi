@@ -181,9 +181,9 @@ namespace Gst {
 			public virtual bool close ();
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
-			public Gst.FlowReturn finish_frame (Gst.Buffer buf, int frames);
+			public Gst.FlowReturn finish_frame (owned Gst.Buffer? buf, int frames);
 			[Version (since = "1.16")]
-			public Gst.FlowReturn finish_subframe (Gst.Buffer buf);
+			public Gst.FlowReturn finish_subframe (owned Gst.Buffer? buf);
 			[NoWrapper]
 			public virtual void flush (bool hard);
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
@@ -266,7 +266,7 @@ namespace Gst {
 			public virtual bool close ();
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
-			public Gst.FlowReturn finish_frame (Gst.Buffer buffer, int samples);
+			public Gst.FlowReturn finish_frame (owned Gst.Buffer? buffer, int samples);
 			[NoWrapper]
 			public virtual void flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);

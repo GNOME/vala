@@ -31,7 +31,7 @@ public class Vala.ForeachStatement : Block {
 	 */
 	public DataType? type_reference {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			if (_data_type != null) {
 				_data_type.parent_node = this;
@@ -42,7 +42,7 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element variable name.
 	 */
-	public string variable_name { get; set; }
+	public string variable_name { get; private set; }
 
 	/**
 	 * Specifies the container.
@@ -51,7 +51,7 @@ public class Vala.ForeachStatement : Block {
 		get {
 			return _collection;
 		}
-		set {
+		private set {
 			_collection = value;
 			_collection.parent_node = this;
 		}
@@ -64,7 +64,7 @@ public class Vala.ForeachStatement : Block {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -75,17 +75,17 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the declarator for the generated element variable.
 	 */
-	public LocalVariable element_variable { get; set; }
+	public LocalVariable element_variable { get; private set; }
 
 	/**
 	 * Specifies the declarator for the generated collection variable.
 	 */
-	public LocalVariable collection_variable { get; set; }
+	public LocalVariable collection_variable { get; private set; }
 
 	/**
 	 * Specifies the declarator for the generated iterator variable.
 	 */
-	public LocalVariable iterator_variable { get; set; }
+	public LocalVariable iterator_variable { get; private set; }
 
 	private Expression _collection;
 	private Block _body;

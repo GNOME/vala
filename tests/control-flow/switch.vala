@@ -80,9 +80,3 @@ class Maman.Foo : Object {
 
 	private int counter = 0;
 }
-
-
-void main () {
-	Maman.Bar.main ();
-}
-

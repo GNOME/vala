@@ -31,7 +31,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public DataType type_reference {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			_data_type.parent_node = this;
 		}
@@ -43,7 +43,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public MemberAccess? member_name {
 		get { return _member_name; }
-		set {
+		private set {
 			_member_name = value;
 			if (_member_name != null) {
 				_member_name.parent_node = this;

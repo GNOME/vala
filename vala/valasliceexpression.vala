@@ -32,7 +32,7 @@ public class Vala.SliceExpression : Expression {
 		get {
 			return _container;
 		}
-		set {
+		private set {
 			_container = value;
 			_container.parent_node = this;
 		}

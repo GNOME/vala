@@ -83,12 +83,14 @@ TESTS = \
 	arrays/fixed-length-non-const.test \
 	arrays/fixed-length-resize-invalid.test \
 	arrays/inline-field.test \
+	arrays/inline-local-instantiation.test \
 	arrays/inline-local-variable.test \
 	arrays/inline-parameter.test \
 	arrays/inline-struct-field.test \
 	arrays/length-inline-assignment.vala \
 	arrays/length-type-include.vala \
 	arrays/struct-field-length-cname.vala \
+	arrays/struct-field-initializer.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
@@ -257,6 +259,7 @@ TESTS = \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
 	structs/struct-empty-still.test \
+	structs/struct-initializer-list-in-array.vala \
 	structs/struct-no-gtype.vala \
 	structs/struct-no-gtype-inherit.vala \
 	structs/struct-static-field-initializer.vala \
@@ -489,6 +492,7 @@ TESTS = \
 	errors/errordomain-instance-method.test \
 	errors/errordomain-static-method.vala \
 	errors/invalid-type-check.test \
+	errors/loops.vala \
 	errors/method-throws.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \

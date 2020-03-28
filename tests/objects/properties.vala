@@ -163,8 +163,3 @@ abstract class Maman.ABiz : Object, IBiz {
 class Maman.Biz : ABiz {
 	public override int number2 { get; construct; }
 }
-
-void main () {
-	Sample.main ();
-}
-

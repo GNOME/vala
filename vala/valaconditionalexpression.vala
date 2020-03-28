@@ -33,7 +33,7 @@ public class Vala.ConditionalExpression : Expression {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			_condition.parent_node = this;
 		}
@@ -46,7 +46,7 @@ public class Vala.ConditionalExpression : Expression {
 		get {
 			return _true_expression;
 		}
-		set {
+		private set {
 			_true_expression = value;
 			_true_expression.parent_node = this;
 		}
@@ -59,7 +59,7 @@ public class Vala.ConditionalExpression : Expression {
 		get {
 			return _false_expression;
 		}
-		set {
+		private set {
 			_false_expression = value;
 			_false_expression.parent_node = this;
 		}

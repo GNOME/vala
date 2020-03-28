@@ -103,6 +103,9 @@ namespace Gst {
 			[NoAccessorMethod]
 			public int64 ptime_multiple { get; set; }
 			[NoAccessorMethod]
+			[Version (since = "1.18")]
+			public bool scale_rtptime { get; set; }
+			[NoAccessorMethod]
 			public uint seqnum { get; }
 			[NoAccessorMethod]
 			public int seqnum_offset { get; set; }

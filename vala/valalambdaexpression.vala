@@ -33,18 +33,18 @@ public class Vala.LambdaExpression : Expression {
 	 * The expression body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
 	 */
-	public Expression expression_body { get; set; }
+	public Expression expression_body { get; private set; }
 
 	/**
 	 * The statement body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
 	 */
-	public Block statement_body { get; set; }
+	public Block statement_body { get; private set; }
 
 	/**
 	 * The generated method.
 	 */
-	public Method method { get; set; }
+	public Method method { get; private set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
 

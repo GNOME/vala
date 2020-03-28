@@ -34,12 +34,12 @@ public class Vala.Comment {
 	/**
 	 * The text describing the referenced source code.
 	 */
-	public string content { set; get; }
+	public string content { get; private set; }
 
 	/**
 	 * References the location in the source file where this code node has
 	 * been written.
 	 */
-	public SourceReference source_reference { get; set; }
+	public SourceReference source_reference { get; private set; }
 }
 

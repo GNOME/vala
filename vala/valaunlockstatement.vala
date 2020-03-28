@@ -30,7 +30,7 @@ public class Vala.UnlockStatement : CodeNode, Statement {
 	 */
 	public Expression resource {
 		get { return _resource; }
-		set {
+		private set {
 			_resource = value;
 			_resource.parent_node = this;
 		}

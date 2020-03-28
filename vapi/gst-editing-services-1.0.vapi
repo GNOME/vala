@@ -6,7 +6,7 @@ namespace GES {
 	public class Asset : GLib.Object, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected Asset ();
-		public virtual unowned GES.Extractable? extract () throws GLib.Error;
+		public virtual unowned GES.Extractable extract () throws GLib.Error;
 		[Version (since = "1.8")]
 		public unowned GLib.Error? get_error ();
 		public GLib.Type get_extractable_type ();
@@ -18,13 +18,13 @@ namespace GES {
 		[CCode (cname = "ges_list_assets")]
 		public static GLib.List<weak GES.Asset> list_assets (GLib.Type filter);
 		public unowned GLib.List<GES.Asset> list_proxies ();
-		public static bool needs_reload (GLib.Type extractable_type, string id);
+		public static bool needs_reload (GLib.Type extractable_type, string? id);
 		[NoWrapper]
 		public virtual void proxied (GES.Asset proxy);
 		[CCode (cname = "ges_asset_request", has_construct_function = false)]
 		public Asset.request (GLib.Type extractable_type, string? id) throws GLib.Error;
 		[CCode (cname = "ges_asset_request_async", has_construct_function = false, type = "void")]
-		public async Asset.request_async (GLib.Type extractable_type, string id, GLib.Cancellable? cancellable) throws GLib.Error;
+		public async Asset.request_async (GLib.Type extractable_type, string? id, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool request_id_update (string proposed_new_id, GLib.Error error);
 		public bool set_proxy (GES.Asset? proxy);
@@ -34,8 +34,7 @@ namespace GES {
 		public GLib.Type extractable_type { get; construct; }
 		public string id { get; construct; }
 		public GES.Asset proxy { get; set; }
-		[NoAccessorMethod]
-		public GES.Asset proxy_target { owned get; set; }
+		public GES.Asset proxy_target { get; }
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_audio_source_get_type ()")]
 	public abstract class AudioSource : GES.Source, GES.Extractable, GES.MetaContainer {
@@ -93,6 +92,10 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected Clip ();
 		public unowned GES.TrackElement? add_asset (GES.Asset asset);
+		[NoWrapper]
+		public virtual unowned GES.TrackElement? create_track_element (GES.TrackType type);
+		[NoWrapper]
+		public virtual GLib.List<weak GES.TrackElement> create_track_elements (GES.TrackType type);
 		public GES.TrackElement? find_track_element (GES.Track? track, GLib.Type type);
 		public GLib.List<GES.TrackElement> find_track_elements (GES.Track? track, GES.TrackType track_type, GLib.Type type);
 		public GES.Layer? get_layer ();
@@ -133,7 +136,7 @@ namespace GES {
 		[NoWrapper]
 		public virtual bool add_child (GES.TimelineElement element);
 		[Version (deprecated = true, deprecated_since = "1.18")]
-		public virtual bool edit (GLib.List<GES.Layer> layers, int new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
+		public virtual bool edit (GLib.List<GES.Layer>? layers, int new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public GLib.List<GES.TimelineElement> get_children (bool recursive);
 		public static unowned GES.Container group (GLib.List<GES.Container>? containers);
 		public bool remove (GES.TimelineElement child);
@@ -285,8 +288,8 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		public Pipeline ();
 		public GES.PipelineFlags get_mode ();
-		public Gst.Sample? get_thumbnail (Gst.Caps caps);
-		public Gst.Sample? get_thumbnail_rgb24 (int width, int height);
+		public Gst.Sample get_thumbnail (Gst.Caps caps);
+		public Gst.Sample get_thumbnail_rgb24 (int width, int height);
 		public Gst.Element preview_get_audio_sink ();
 		public Gst.Element preview_get_video_sink ();
 		public void preview_set_audio_sink (Gst.Element sink);
@@ -296,6 +299,7 @@ namespace GES {
 		public bool set_render_settings (string output_uri, Gst.PbUtils.EncodingProfile profile);
 		public bool set_timeline (owned GES.Timeline timeline);
 		[NoAccessorMethod]
+		[Version (since = "1.6.0")]
 		public Gst.Element audio_filter { owned get; set; }
 		[NoAccessorMethod]
 		public Gst.Element audio_sink { owned get; set; }
@@ -303,6 +307,7 @@ namespace GES {
 		[NoAccessorMethod]
 		public GES.Timeline timeline { owned get; set; }
 		[NoAccessorMethod]
+		[Version (since = "1.6.0")]
 		public Gst.Element video_filter { owned get; set; }
 		[NoAccessorMethod]
 		public Gst.Element video_sink { owned get; set; }
@@ -430,6 +435,7 @@ namespace GES {
 		public weak GLib.List<GES.Track> tracks;
 		[CCode (has_construct_function = false)]
 		public Timeline ();
+		[Version (deprecated = true, deprecated_since = "1.18")]
 		public bool add_layer (GES.Layer layer);
 		public bool add_track (owned GES.Track track);
 		public unowned GES.Layer append_layer ();
@@ -453,7 +459,7 @@ namespace GES {
 		public bool load_from_uri (string uri) throws GLib.Error;
 		[Version (since = "1.16")]
 		public bool move_layer (GES.Layer layer, uint new_layer_priority);
-		public unowned GES.TimelineElement paste_element (GES.TimelineElement element, Gst.ClockTime position, int layer_priority);
+		public GES.TimelineElement? paste_element (GES.TimelineElement element, Gst.ClockTime position, int layer_priority);
 		public bool remove_layer (GES.Layer layer);
 		public bool remove_track (GES.Track track);
 		public bool save_to_uri (string uri, GES.Asset? formatter_asset, bool overwrite) throws GLib.Error;
@@ -464,7 +470,7 @@ namespace GES {
 		public uint64 snapping_distance { get; set; }
 		public signal void commited ();
 		public virtual signal void group_added (GES.Group group);
-		public signal void group_removed (GES.Group group, owned GLib.GenericArray<weak GES.Container> children);
+		public signal void group_removed (GES.Group group, GLib.GenericArray<GES.Container> children);
 		public virtual signal void layer_added (GES.Layer layer);
 		public virtual signal void layer_removed (GES.Layer layer);
 		public signal GLib.GenericArray<GES.Track> select_tracks_for_object (GES.Clip clip, GES.TrackElement track_element);
@@ -485,7 +491,7 @@ namespace GES {
 		[NoWrapper]
 		public virtual void deep_copy (GES.TimelineElement copy);
 		[Version (since = "1.18")]
-		public bool edit (GLib.List<GES.Layer> layers, int64 new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
+		public bool edit (GLib.List<GES.Layer>? layers, int64 new_layer_priority, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public bool get_child_property (string property_name, out GLib.Value value);
 		public GLib.Value get_child_property_by_pspec (GLib.ParamSpec pspec);
 		public Gst.ClockTime get_duration ();
@@ -505,7 +511,7 @@ namespace GES {
 		public GLib.ParamSpec[] list_children_properties ();
 		public virtual bool lookup_child (string prop_name, out GLib.Object child, out GLib.ParamSpec pspec);
 		[Version (since = "1.6.0")]
-		public GES.TimelineElement paste (Gst.ClockTime paste_position);
+		public GES.TimelineElement? paste (Gst.ClockTime paste_position);
 		public bool remove_child_property (GLib.ParamSpec pspec);
 		public virtual bool ripple (uint64 start);
 		public virtual bool ripple_end (uint64 end);
@@ -530,11 +536,14 @@ namespace GES {
 		public uint64 max_duration { get; set construct; }
 		public string name { owned get; set construct; }
 		public GES.TimelineElement parent { owned get; set; }
+		[Version (deprecated = true, deprecated_since = "1.10")]
 		public uint priority { get; set; }
 		[NoAccessorMethod]
 		public bool serialize { get; set; }
 		public uint64 start { get; set; }
 		public GES.Timeline timeline { owned get; set; }
+		public signal void child_property_added (GLib.Object prop_object, GLib.ParamSpec prop);
+		public signal void child_property_removed (GLib.Object prop_object, GLib.ParamSpec prop);
 		public signal void deep_notify (GLib.Object prop_object, GLib.ParamSpec prop);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_title_clip_get_type ()")]
@@ -638,6 +647,7 @@ namespace GES {
 		[NoAccessorMethod]
 		public uint64 duration { get; }
 		[NoAccessorMethod]
+		[Version (since = "1.18")]
 		public string id { owned get; set; }
 		public bool mixing { get; set construct; }
 		public Gst.Caps restriction_caps { owned get; set; }
@@ -657,7 +667,7 @@ namespace GES {
 		[NoWrapper]
 		public virtual void changed ();
 		[Version (deprecated = true, deprecated_since = "1.18")]
-		public bool edit (GLib.List<GES.Layer> layers, GES.EditMode mode, GES.Edge edge, uint64 position);
+		public bool edit (GLib.List<GES.Layer>? layers, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public unowned GLib.HashTable<string,Gst.ControlBinding> get_all_control_bindings ();
 		public unowned Gst.ControlBinding? get_control_binding (string property_name);
 		public unowned Gst.Element get_element ();
@@ -676,9 +686,12 @@ namespace GES {
 		public bool remove_control_binding (string property_name);
 		public bool set_active (bool active);
 		public bool set_control_source (Gst.ControlSource source, string property_name, string binding_type);
+		public void set_has_internal_source (bool has_internal_source);
 		public void set_track_type (GES.TrackType type);
 		[NoAccessorMethod]
 		public bool active { get; set; }
+		[NoAccessorMethod]
+		public bool has_internal_source { get; set; }
 		public GES.Track track { get; }
 		public GES.TrackType track_type { get; set construct; }
 		public signal void control_binding_added (Gst.ControlBinding control_binding);
@@ -756,6 +769,7 @@ namespace GES {
 	public abstract class VideoSource : GES.Source, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		protected VideoSource ();
+		public bool get_natural_size (out int width, out int height);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_video_test_source_get_type ()")]
 	public class VideoTestSource : GES.VideoSource, GES.Extractable, GES.MetaContainer {
@@ -808,7 +822,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_cname = "GESMetaContainerInterface", type_id = "ges_meta_container_get_type ()")]
 	public interface MetaContainer : GLib.Object {
 		public bool add_metas_from_string (string str);
-		public bool check_meta_registered (string meta_item, GES.MetaFlag flags, GLib.Type type);
+		public bool check_meta_registered (string meta_item, out GES.MetaFlag? flags, out GLib.Type? type);
 		public void @foreach (GES.MetaForeachFunc func);
 		public bool get_boolean (string meta_item, out bool dest);
 		public bool get_date (string meta_item, out GLib.Date dest);
@@ -823,16 +837,16 @@ namespace GES {
 		public unowned string get_string (string meta_item);
 		public bool get_uint (string meta_item, out uint dest);
 		public bool get_uint64 (string meta_item, out uint64 dest);
-		public string? metas_to_string ();
+		public string metas_to_string ();
 		public bool register_meta (GES.MetaFlag flags, string meta_item, GLib.Value value);
 		public bool register_meta_boolean (GES.MetaFlag flags, string meta_item, bool value);
-		public bool register_meta_date (GES.MetaFlag flags, string meta_item, GLib.Date? value);
-		public bool register_meta_date_time (GES.MetaFlag flags, string meta_item, Gst.DateTime? value);
+		public bool register_meta_date (GES.MetaFlag flags, string meta_item, GLib.Date value);
+		public bool register_meta_date_time (GES.MetaFlag flags, string meta_item, Gst.DateTime value);
 		public bool register_meta_double (GES.MetaFlag flags, string meta_item, double value);
 		public bool register_meta_float (GES.MetaFlag flags, string meta_item, float value);
 		public bool register_meta_int (GES.MetaFlag flags, string meta_item, int value);
 		public bool register_meta_int64 (GES.MetaFlag flags, string meta_item, int64 value);
-		public bool register_meta_string (GES.MetaFlag flags, string meta_item, string? value);
+		public bool register_meta_string (GES.MetaFlag flags, string meta_item, string value);
 		public bool register_meta_uint (GES.MetaFlag flags, string meta_item, uint value);
 		public bool register_meta_uint64 (GES.MetaFlag flags, string meta_item, uint64 value);
 		public bool register_static_meta (GES.MetaFlag flags, string meta_item, GLib.Type type);
@@ -844,12 +858,12 @@ namespace GES {
 		public bool set_int (string meta_item, int value);
 		public bool set_int64 (string meta_item, int64 value);
 		[Version (since = "1.18")]
-		public bool set_marker_list (string meta_item, GES.MarkerList? list);
+		public bool set_marker_list (string meta_item, GES.MarkerList list);
 		public bool set_meta (string meta_item, GLib.Value? value);
 		public bool set_string (string meta_item, string value);
 		public bool set_uint (string meta_item, uint value);
 		public bool set_uint64 (string meta_item, uint64 value);
-		public signal void notify_meta (string object, GLib.Value p0);
+		public signal void notify_meta (string key, GLib.Value? value);
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_ASSET_LOADING_", has_type_id = false)]
 	public enum AssetLoadingReturn {
@@ -1053,8 +1067,13 @@ namespace GES {
 		SOLID_COLOR
 	}
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
+	public delegate unowned GES.TrackElement? CreateTrackElementFunc (GES.Clip clip, GES.TrackType type);
+	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
+	public delegate GLib.List<weak GES.TrackElement> CreateTrackElementsFunc (GES.Clip clip, GES.TrackType type);
+	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
 	public delegate string ExtractableCheckId (GLib.Type type, string id) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
+	[Version (deprecated = true, deprecated_since = "1.18")]
 	public delegate bool FillTrackElementFunc (GES.Clip clip, GES.TrackElement track_element, Gst.Element nleobj);
 	[CCode (cheader_filename = "ges/ges.h", has_target = false)]
 	public delegate bool FormatterCanLoadURIMethod (GES.Formatter dummy_instance, string uri) throws GLib.Error;

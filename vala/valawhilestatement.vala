@@ -33,7 +33,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			_condition.parent_node = this;
 		}
@@ -46,7 +46,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -81,16 +81,6 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	bool always_true (Expression condition) {
-		unowned BooleanLiteral? literal = condition as BooleanLiteral;
-		return (literal != null && literal.value);
-	}
-
-	bool always_false (Expression condition) {
-		unowned BooleanLiteral? literal = condition as BooleanLiteral;
-		return (literal != null && !literal.value);
-	}
-
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
@@ -106,9 +96,9 @@ public class Vala.WhileStatement : CodeNode, Statement {
 
 		// convert to simple loop
 
-		if (always_true (condition)) {
+		if (condition.is_always_true ()) {
 			// do not generate if block if condition is always true
-		} else if (always_false (condition)) {
+		} else if (condition.is_always_false ()) {
 			// do not generate if block if condition is always false
 			body.insert_statement (0, new BreakStatement (condition.source_reference));
 		} else {

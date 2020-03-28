@@ -30,7 +30,7 @@ public class Vala.UnaryExpression : Expression {
 	/**
 	 * The unary operator.
 	 */
-	public UnaryOperator operator { get; set; }
+	public UnaryOperator operator { get; private set; }
 
 	/**
 	 * The operand.
@@ -39,7 +39,7 @@ public class Vala.UnaryExpression : Expression {
 		get {
 			return _inner;
 		}
-		set {
+		private set {
 			_inner = value;
 			_inner.parent_node = this;
 		}

@@ -33,7 +33,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			_condition.parent_node = this;
 		}
@@ -44,7 +44,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 */
 	public Block true_statement {
 		get { return _true_statement; }
-		set {
+		private set {
 			_true_statement = value;
 			_true_statement.parent_node = this;
 		}
@@ -55,7 +55,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 */
 	public Block? false_statement {
 		get { return _false_statement; }
-		set {
+		private set {
 			_false_statement = value;
 			if (_false_statement != null)
 				_false_statement.parent_node = this;

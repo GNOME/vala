@@ -31,7 +31,6 @@ VALAC=$topbuilddir/compiler/valac$EXEEXT
 VALAFLAGS="$VALAFLAGS \
 	--vapidir $vapidir \
 	--disable-warnings \
-	--main main \
 	--save-temps \
 	--cc $CC \
 	-X -g \

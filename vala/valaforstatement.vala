@@ -33,7 +33,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			if (_condition != null) {
 				_condition.parent_node = this;
@@ -48,7 +48,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -154,16 +154,6 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 	}
 
-	bool always_true (Expression condition) {
-		unowned BooleanLiteral? literal = condition as BooleanLiteral;
-		return (literal != null && literal.value);
-	}
-
-	bool always_false (Expression condition) {
-		unowned BooleanLiteral? literal = condition as BooleanLiteral;
-		return (literal != null && !literal.value);
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -181,8 +171,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 
 		// do not generate if block if condition is always true
-		if (condition == null || always_true (condition)) {
-		} else if (always_false (condition)) {
+		if (condition == null || condition.is_always_true ()) {
+		} else if (condition.is_always_false ()) {
 			// do not generate if block if condition is always false
 			body.insert_statement (0, new BreakStatement (condition.source_reference));
 		} else {

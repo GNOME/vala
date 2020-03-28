@@ -38,7 +38,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 	 */
 	public Expression resource {
 		get { return _resource; }
-		set {
+		private set {
 			_resource = value;
 			_resource.parent_node = this;
 		}
@@ -49,7 +49,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 	 */
 	public Block? body {
 		get { return _body; }
-		set {
+		private set {
 			_body = value;
 			if (_body != null) {
 				_body.parent_node = this;

@@ -33,7 +33,7 @@ public class Vala.AddressofExpression : Expression {
 		get {
 			return _inner;
 		}
-		set {
+		private set {
 			_inner = value;
 			_inner.parent_node = this;
 		}

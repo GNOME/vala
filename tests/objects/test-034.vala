@@ -26,8 +26,3 @@ class Maman.Bar : Object {
 		stdout.printf ("as C: %d %d %d\n", null != (a as C) ? 1 : 0, null != (b as C) ? 1 : 0, null != (c as C) ? 1 : 0);
 	}
 }
-
-void main () {
-	Maman.Bar.main ();
-}
-

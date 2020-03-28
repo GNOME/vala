@@ -29,9 +29,9 @@ public class Vala.IntegerLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string value { get; set; }
+	public string value { get; private set; }
 
-	public string type_suffix { get; set; }
+	public string type_suffix { get; private set; }
 
 	/**
 	 * Creates a new integer literal.

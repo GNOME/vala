@@ -52,8 +52,3 @@ class Maman.Bar : Object {
 		return 0;
 	}
 }
-
-void main () {
-	Maman.Bar.main ();
-}
-

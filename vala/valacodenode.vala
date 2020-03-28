@@ -32,7 +32,7 @@ public abstract class Vala.CodeNode {
 	/**
 	 * Parent of this code node.
 	 */
-	public weak CodeNode? parent_node { get; set; }
+	public weak CodeNode? parent_node { get; protected set; }
 
 	/**
 	 * References the location in the source file where this code node has

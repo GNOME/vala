@@ -32,7 +32,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		get {
 			return _error_expression;
 		}
-		set {
+		private set {
 			_error_expression = value;
 			if (_error_expression != null) {
 				_error_expression.parent_node = this;

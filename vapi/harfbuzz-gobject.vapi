@@ -134,14 +134,6 @@ namespace HarfBuzz {
 		[Version (since = "0.9.2")]
 		public static void set_unicode_funcs (HarfBuzz.Buffer buffer, HarfBuzz.UnicodeFuncs unicode_funcs);
 	}
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_funcs_t", has_type_id = false)]
-	[Compact]
-	[GIR (name = "draw_funcs_t")]
-	public class DrawFuncs {
-		public void destroy ();
-		public HarfBuzz.Bool is_immutable ();
-		public void make_immutable ();
-	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_face_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "hb_gobject_face_get_type ()")]
 	[Compact]
 	[GIR (name = "face_t")]
@@ -213,7 +205,6 @@ namespace HarfBuzz {
 		public static HarfBuzz.Font create (HarfBuzz.Face face);
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Font create_sub_font (HarfBuzz.Font parent);
-		public static HarfBuzz.Bool draw_glyph (HarfBuzz.Font font, HarfBuzz.Codepoint glyph, HarfBuzz.DrawFuncs funcs, void* user_data);
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Font get_empty ();
 		[Version (since = "1.1.3")]
@@ -1520,16 +1511,6 @@ namespace HarfBuzz {
 	public delegate HarfBuzz.Bool BufferMessageFunc (HarfBuzz.Buffer buffer, HarfBuzz.Font font, string message);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_destroy_func_t", instance_pos = 0.9)]
 	public delegate void DestroyFunc ();
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_close_path_func_t", instance_pos = 0.9)]
-	public delegate void DrawClosePathFunc ();
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_cubic_to_func_t", instance_pos = 6.9)]
-	public delegate void DrawCubicToFunc (HarfBuzz.Position control1_x, HarfBuzz.Position control1_y, HarfBuzz.Position control2_x, HarfBuzz.Position control2_y, HarfBuzz.Position to_x, HarfBuzz.Position to_y);
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_line_to_func_t", instance_pos = 2.9)]
-	public delegate void DrawLineToFunc (HarfBuzz.Position to_x, HarfBuzz.Position to_y);
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_move_to_func_t", instance_pos = 2.9)]
-	public delegate void DrawMoveToFunc (HarfBuzz.Position to_x, HarfBuzz.Position to_y);
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_quadratic_to_func_t", instance_pos = 4.9)]
-	public delegate void DrawQuadraticToFunc (HarfBuzz.Position control_x, HarfBuzz.Position control_y, HarfBuzz.Position to_x, HarfBuzz.Position to_y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_font_extents_func_t", instance_pos = 3.9)]
 	public delegate HarfBuzz.Bool FontGetFontExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.FontExtents extents);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_font_extents_func_t", instance_pos = 3.9)]

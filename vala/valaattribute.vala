@@ -29,7 +29,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * The name of the attribute type.
 	 */
-	public string name { get; set; }
+	public string name { get; private set; }
 
 	/**
 	 * Contains all specified attribute arguments.

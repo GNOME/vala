@@ -33,7 +33,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		get {
 			return _body;
 		}
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -46,7 +46,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set {
+		private set {
 			_condition = value;
 			_condition.parent_node = this;
 		}
@@ -81,11 +81,6 @@ public class Vala.DoStatement : CodeNode, Statement {
 		visitor.visit_end_full_expression (condition);
 	}
 
-	bool always_true (Expression condition) {
-		unowned BooleanLiteral? literal = condition as BooleanLiteral;
-		return (literal != null && literal.value);
-	}
-
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
@@ -102,7 +97,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		// convert to simple loop
 
 		// do not generate variable and if block if condition is always true
-		if (always_true (condition)) {
+		if (condition.is_always_true ()) {
 			var loop = new Loop (body, source_reference);
 
 			unowned Block parent_block = (Block) parent_node;

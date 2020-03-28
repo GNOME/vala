@@ -33,7 +33,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		get {
 			return _expression;
 		}
-		set {
+		private set {
 			_expression = value;
 			_expression.parent_node = this;
 		}

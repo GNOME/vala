@@ -30,7 +30,7 @@ public class Vala.RegexLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string value { get; set; }
+	public string value { get; private set; }
 
 	/**
 	 * Creates a new regular expression literal.

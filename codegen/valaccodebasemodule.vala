@@ -1457,6 +1457,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (expr is Constant) {
 			// Local constants are not considered constant in C
 			return !(((Constant) expr).parent_symbol is Block);
+		} else if (expr is IntegerLiteral) {
+			return ((IntegerLiteral) expr).is_constant ();
 		} else if (expr is MemberAccess) {
 			return is_constant_ccode (((MemberAccess) expr).symbol_reference);
 		} else if (expr is CastExpression) {
@@ -2720,6 +2722,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (array_type != null && !array_type.fixed_length && get_ccode_array_length (field) && !get_ccode_array_null_terminated (field)) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							clist.append (get_array_length_cvalue (expr.target_value, dim));
+						}
+						if (array_type.rank == 1 && field.is_internal_symbol ()) {
+							clist.append (get_array_length_cvalue (expr.target_value, 1));
 						}
 					}
 				}

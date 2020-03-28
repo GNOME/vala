@@ -70,7 +70,7 @@ class Maman.Bar : Foo {
 					   private_class_field, public_class_field);
 	}
 
-	public static int main () {
+	public static void run () {
 		stdout.printf ("Field Test: 1");
 
 		var bar = new Bar ();
@@ -95,8 +95,6 @@ class Maman.Bar : Foo {
 		stdout.printf (" %d", compact.initialized_field);
 
 		stdout.printf (" 27\n");
-
-		return 0;
 	}
 }
 
@@ -105,7 +103,7 @@ class Maman.Baz<T> {
 }
 
 void main () {
-	Maman.Bar.main ();
+	Maman.Bar.run ();
 	Maman.Baz<Maman.Bar> baz = new Maman.Baz<Maman.Bar> ();
 	baz.foo = null;
 }
