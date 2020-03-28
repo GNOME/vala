@@ -1,4 +1,4 @@
-/* valalockstatement.vala
+/* valawithtatement.vala
  *
  * Copyright (C) 2020 Nick Schrader
  *
@@ -24,22 +24,22 @@ using GLib;
 
 public class Vala.WithStatement : Symbol, Statement {
 	/**
-	 * Expression representing the expression to be locked.
+	 * Expression representing the type of body's dominant scope.
 	 */
 	public Expression expression {
 		get { return _expression; }
-		set {
+		private set {
 			_expression = value;
 			_expression.parent_node = this;
 		}
 	}
 
 	/**
-	 * The statement during its execution the expression is locked.
+	 * The block which dominant scope is type of expression.
 	 */
-	public Block? body {
+	public Block body {
 		get { return _body; }
-		set {
+		private set {
 			_body = value;
 			if (_body != null) {
 				_body.parent_node = this;
@@ -50,18 +50,18 @@ public class Vala.WithStatement : Symbol, Statement {
 	private Expression _expression;
 	private Block _body;
 
-	public WithStatement (Expression expression, Block? body, SourceReference? source_reference = null) {
-		base(null, source_reference);
+	public WithStatement (Expression expression, Block body, SourceReference? source_reference = null) {
+		base (null, source_reference);
+		this.expression = expression;
 		this.body = body;
 		this.source_reference = source_reference;
-		this.expression = expression;
 	}
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_with_statement (this);
 	}
 
-	public override void accept_children(CodeVisitor visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		expression.accept (visitor);
 		if (body != null) {
 			body.accept (visitor);
@@ -75,15 +75,16 @@ public class Vala.WithStatement : Symbol, Statement {
 	}
 
 	public override bool check (CodeContext context) {
-		expression.check(context);
+		expression.check (context);
 
 		var old_symbol = context.analyzer.current_symbol;
 		owner = context.analyzer.current_symbol.scope;
 		context.analyzer.current_symbol = this;
 
-		body.check(context);
+		body.check (context);
 
 		context.analyzer.current_symbol = old_symbol;
+
 		return true;
 	}
 
