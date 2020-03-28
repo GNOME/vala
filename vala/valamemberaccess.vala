@@ -304,8 +304,10 @@ public class Vala.MemberAccess : Expression {
 
 				if (symbol_reference == null && sym is WithStatement) {
 					unowned WithStatement w = (WithStatement) sym;
-					inner = w.expression;
-					symbol_reference = inner.value_type.get_member (member_name);
+					symbol_reference = w.expression.value_type.get_member (member_name);
+					if (symbol_reference != null) {
+						inner = w.expression;
+					}
 					may_access_instance_members = true;
 					may_access_klass_members = true;
 				}
