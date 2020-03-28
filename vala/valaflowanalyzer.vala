@@ -599,6 +599,18 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
+	public override void visit_with_statement (WithStatement stmt) {
+		if (unreachable (stmt)) {
+			return;
+		}
+
+		current_block.add_node (stmt.expression);
+
+		handle_errors (stmt.expression);
+
+		stmt.body.accept_children (this);
+	}
+
 	public override void visit_if_statement (IfStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
