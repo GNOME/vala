@@ -93,7 +93,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Symbol? current_method_or_property_accessor {
 		get {
 			unowned Symbol? sym = current_symbol;
-			while (sym is Block || sym is WithStatement) {
+			while (sym is Block) {
 				sym = sym.parent_symbol;
 			}
 			if (sym is Method) {
