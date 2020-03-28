@@ -1,22 +1,18 @@
 class Foo {
 	public int field;
 	public string prop { get; set; }
-
-	//  public void print() {
-	//  	lock(field) {
-	//  		stdout.printf("Print");
-	//  	}
-	//  }
 }
 
 
 void main() {
 	var foo = new Foo();
-	//  foo.print();
-	foo.field = 0;
+	var test = 0;
+	var field = 13;
     with(foo) {
+		//this.field = 15;
 		field = 42;
 		prop = "foo";
+		test = 10;
 	};
-	stdout.printf("foo: field=%i prop=%s", foo.field, foo.prop);
+	stdout.printf("foo.field=%i foo.prop=%s field=%i test=%i\n", foo.field, foo.prop, field, test);
 } 

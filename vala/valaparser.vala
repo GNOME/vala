@@ -3709,3 +3709,4 @@ public errordomain Vala.ParseError {
 	FAILED,
 	SYNTAX
 }
+
