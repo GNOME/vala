@@ -19,19 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Authors:
- * 	Raffaele Sandrini <raffaele@sandrini.ch>
- * 	Jiří Zárevúcky <zarevucky.jiri@gmail.com>
+ * 	Nick Schrader <nick.schrader@mailbox.org>
  */
 
 using GLib;
 
-/**
- * Represents a lock statement e.g. {{{ lock (a); }}} or {{{ lock (a) { f(a); } }}}.
- *
- * If the statement is empty, the mutex remains locked until a corresponding UnlockStatement
- * occurs. Otherwise it's translated into a try/finally statement which unlocks the mutex
- * after the block is finished.
- */
 public class Vala.WithStatement : Symbol, Statement {
 	/**
 	 * Expression representing the expression to be locked.
@@ -68,12 +60,10 @@ public class Vala.WithStatement : Symbol, Statement {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		stdout.printf("Accept with\n");
 		visitor.visit_with_statement (this);
 	}
 
 	public override void accept_children(CodeVisitor visitor) {
-		stdout.printf("Accept children with\n");
 		expression.accept (visitor);
 		if (body != null) {
 			body.accept (visitor);
@@ -87,15 +77,12 @@ public class Vala.WithStatement : Symbol, Statement {
 	}
 
 	public override bool check (CodeContext context) {
-		stdout.printf("Check with\n");
-
 		expression.check(context);
 
 		var old_symbol = context.analyzer.current_symbol;
 		owner = context.analyzer.current_symbol.scope;
 		context.analyzer.current_symbol = this;
 
-		stdout.printf("With expression: %s\n", Type.from_instance(expression).name());
 		body.check(context);
 
 		context.analyzer.current_symbol = old_symbol;
