@@ -2259,11 +2259,8 @@ public class Vala.Parser : CodeVisitor {
 		var expr = parse_expression ();
 		expect (TokenType.CLOSE_PARENS);
 		var src = get_src (begin);
-		Block? stmt = null;
-		if (current () != TokenType.SEMICOLON) {
-			stmt = parse_embedded_statement ("with", false);
-		}
-		return new WithStatement (expr, stmt, src);
+		var body = parse_embedded_statement ("with", false);
+		return new WithStatement (expr, body, src);
 	}
 
 	string parse_attribute_value () throws ParseError {

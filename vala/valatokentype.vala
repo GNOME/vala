@@ -287,6 +287,7 @@ public enum Vala.TokenType {
 		case VOLATILE: return "`volatile'";
 		case WEAK: return "`weak'";
 		case WHILE: return "`while'";
+		case WITH: return "`with'";
 		case YIELD: return "`yield'";
 		default: return "unknown token";
 		}
