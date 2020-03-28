@@ -292,3 +292,4 @@ public enum Vala.TokenType {
 		}
 	}
 }
+

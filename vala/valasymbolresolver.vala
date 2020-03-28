@@ -15,7 +15,9 @@
 
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110visit
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ *
+ * Author:
  * 	Jürg Billeter <j@bitron.ch>
  * 	Raffaele Sandrini <raffaele@sandrini.ch>
  */
@@ -52,9 +54,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_class (Class cl) {
-		if (cl.name == "Foo") {
-			stdout.printf("visit %s\n", cl.name);
-		}
 		if (cl.checked) {
 			return;
 		}
@@ -482,25 +481,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_with_statement (WithStatement stmt) {
-		//  var unresolved = UnresolvedSymbol.new_from_expression (stmt.expression);
-		//  stdout.printf("Unresolved: %s\n", unresolved.to_string());
-		//  var symbol = resolve_symbol(unresolved);
-
-		//  var old_scope = current_scope;
-		//  current_scope = symbol.scope;
-
-		//  current_scope = old_scope;
-
-		//  if (stmt.checked) {
-		//  	return;
-		//  }
-
-		//  var old_scope = current_scope;
-		//  //current_scope = stmt.innerScope;
-
 		stmt.accept_children (this);
-
-		//  current_scope = old_scope;
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {

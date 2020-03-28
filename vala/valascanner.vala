@@ -1686,3 +1686,4 @@ public class Vala.Scanner {
 		return comment;
 	}
 }
+

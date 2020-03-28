@@ -57,18 +57,11 @@ public class Vala.WithStatement : Symbol, Statement {
 		}
 	}
 
-	/* public Scope scope {
-		get { 
-			stdout.printf("with scope\n");
-			return expression.symbol_reference.scope; 
-		}
-	} */
-
 	private Expression _expression;
 	private Block _body;
 
 	public WithStatement (Expression expression, Block? body, SourceReference? source_reference = null) {
-		base("with", source_reference);
+		base(null, source_reference);
 		this.body = body;
 		this.source_reference = source_reference;
 		this.expression = expression;
@@ -99,95 +92,18 @@ public class Vala.WithStatement : Symbol, Statement {
 		expression.check(context);
 
 		var old_symbol = context.analyzer.current_symbol;
-		var old_insert_block = context.analyzer.insert_block;
 		owner = context.analyzer.current_symbol.scope;
-		//owner = expression.symbol_reference.scope;
 		context.analyzer.current_symbol = this;
 
 		stdout.printf("With expression: %s\n", Type.from_instance(expression).name());
-
-		/*var sr = expression.symbol_reference;
-		var sc = sr.scope;
-		var st = sc.get_symbol_table();
-		var iter = st.map_iterator();
-		while (iter.next()) {
-			scope.add(iter.get_key(), iter.get_value());
-			stdout.printf("Symbol %s\n", iter.get_key());
-		}*/
-
-		//context.analyzer.current_symbol = expression.symbol_reference;
-		//context.analyzer.insert_block = body;
-
-		//  var cc = context.analyzer.current_class;
-		//  var cs = context.analyzer.current_symbol;
-		//  var cm = context.analyzer.current_method_or_property_accessor;
-
-		//  stdout.printf("cs %s, cc %s, cm %s\n", cc.name, cs.name, cm.name);
-
-		//body.parent_node = expression;
 		body.check(context);
 
-		//context.analyzer.current_symbol = old_symbol;
-		//context.analyzer.insert_block = old_insert_block;
 		context.analyzer.current_symbol = old_symbol;
 		return true;
-		// Ehh change context somehow...
-		//  if (body != null) {
-		//  	// if the statement isn't empty, it is converted into a try statement
-
-		//  	var fin_body = new Block (source_reference);
-		//  	fin_body.add_statement (new UnlockStatement (resource, source_reference));
-
-		//  	var block = new Block (source_reference);
-		//  	block.add_statement (new LockStatement (resource, null, source_reference));
-		//  	block.add_statement (new TryStatement (body, fin_body, source_reference));
-
-		//  	var parent_block = (Block) parent_node;
-		//  	parent_block.replace_statement (this, block);
-
-		//  	return block.check (context);
-		//  }
-
-		//  if (checked) {
-		//  	return !error;
-		//  }
-
-		//  checked = true;
-
-		//  resource.check (context);
-
-		//  /* resource must be a member access and denote a Lockable */
-		//  if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
-		//  	error = true;
-		//  	resource.error = true;
-		//  	Report.error (resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
-		//  	return false;
-		//  }
-
-		//  /* parent symbol must be the current class */
-		//  if (resource.symbol_reference.parent_symbol != context.analyzer.current_class) {
-		//  	error = true;
-		//  	resource.error = true;
-		//  	Report.error (resource.source_reference, "Only members of the current class are lockable");
-		//  	return false;
-		//  }
-
-		//  /* parent class must not be compact */
-		//  if (context.analyzer.current_class.is_compact) {
-		//  	error = true;
-		//  	resource.error = true;
-		//  	Report.error (resource.source_reference, "Only members of the non-compact classes are lockable");
-		//  	return false;
-		//  }
-
-		//  ((Lockable) resource.symbol_reference).lock_used = true;
-
-		//  return !error;
 	}
 
 	public override void emit (CodeGenerator codegen) {
 		expression.emit (codegen);
 		body.emit (codegen);
-		//codegen.visit_with_statement (this);
 	}
 }

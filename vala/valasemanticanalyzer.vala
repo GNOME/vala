@@ -318,17 +318,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return result;
 		}
 
-		/*if (sym is WithStatement) {
-			unowned WithStatement w = (WithStatement) sym;
-			var lv = w.expression;
-			var base_symbol = lv.value_type.type_symbol;
-			var symbol_reference = lv.value_type.get_member (name);
-			//  var vt = get_value_type_for_symbol(real_sym);
-			//  var vt_sym = x.symbol;
-			//  stdout.printf("Resolved with statement: %s, value type: %s, value type symbol: %s\n", Type.from_instance(real_sym).name(), Type.from_instance(vt).name(), Type.from_instance(vt_sym).name());
-			//  return symbol_lookup_inherited(vt_sym, name);
-			return symbol_reference;
-		} else */ if (sym is Class) {
+		if (sym is Class) {
 			unowned Class cl = (Class) sym;
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
