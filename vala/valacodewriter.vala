@@ -1161,6 +1161,16 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_newline ();
 	}
 
+	public override void visit_with_statement (WithStatement stmt) {
+		write_indent ();
+		write_string ("with (");
+		stmt.expression.accept (this);
+		write_string (")");
+		stmt.body.accept (this);
+		write_string (";");
+		write_newline ();
+	}
+
 	public override void visit_yield_statement (YieldStatement y) {
 		write_indent ();
 		write_string ("yield");
