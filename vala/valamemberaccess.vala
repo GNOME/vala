@@ -277,7 +277,7 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
-				
+
 				if (symbol_reference == null && sym is TypeSymbol && may_access_instance_members) {
 					// used for generated to_string methods in enums
 					symbol_reference = this_parameter.variable_type.get_member (member_name);
@@ -907,7 +907,7 @@ public class Vala.MemberAccess : Expression {
 			} else if ((symbol_reference is Field || symbol_reference is Signal)
 			    && instance && symbol_reference.parent_symbol != null) {
 				var parent_type = SemanticAnalyzer.get_data_type_for_symbol (symbol_reference.parent_symbol);
-					inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
+				inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
 			}
 		}
 
