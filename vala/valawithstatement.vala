@@ -22,7 +22,7 @@
 
 using GLib;
 
-public class Vala.WithStatement : Symbol, Statement {
+public class Vala.WithStatement : Block {
 	/**
 	 * Expression representing the type of body's dominant scope.
 	 */
@@ -51,10 +51,9 @@ public class Vala.WithStatement : Symbol, Statement {
 	private Block _body;
 
 	public WithStatement (Expression expression, Block body, SourceReference? source_reference = null) {
-		base (null, source_reference);
+		base (source_reference);
 		this.expression = expression;
 		this.body = body;
-		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {
