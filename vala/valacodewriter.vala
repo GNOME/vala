@@ -1165,6 +1165,14 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_newline ();
 	}
 
+	public override void visit_unlock_statement (UnlockStatement stmt) {
+		write_indent ();
+		write_string ("unlock (");
+		stmt.resource.accept (this);
+		write_string (");");
+		write_newline ();
+	}
+
 	public override void visit_delete_statement (DeleteStatement stmt) {
 		write_indent ();
 		write_string ("delete ");
