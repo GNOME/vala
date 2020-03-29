@@ -287,6 +287,26 @@ public class Vala.CodeWriter : CodeVisitor {
 			cl.constructor.accept (this);
 		}
 
+		if (cl.class_constructor != null) {
+			cl.class_constructor.accept (this);
+		}
+
+		if (cl.static_constructor != null) {
+			cl.static_constructor.accept (this);
+		}
+
+		if (cl.destructor != null) {
+			cl.destructor.accept (this);
+		}
+
+		if (cl.static_destructor != null) {
+			cl.static_destructor.accept (this);
+		}
+
+		if (cl.class_destructor != null) {
+			cl.class_destructor.accept (this);
+		}
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
@@ -730,8 +750,36 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		write_indent ();
+		if (c.binding == MemberBinding.STATIC) {
+			write_string ("static ");
+		} else if (c.binding == MemberBinding.CLASS) {
+			write_string ("class ");
+		}
 		write_string ("construct");
 		write_code_block (c.body);
+		write_newline ();
+	}
+
+	public override void visit_destructor (Destructor d) {
+		if (type != CodeWriterType.DUMP) {
+			return;
+		}
+
+		if (context.vapi_comments && d.comment != null) {
+			write_comment (d.comment);
+		}
+
+		write_indent ();
+		if (d.binding == MemberBinding.STATIC) {
+			write_string ("static ");
+		} else if (d.binding == MemberBinding.CLASS) {
+			write_string ("class ");
+		}
+		write_string ("~");
+		var datatype = (TypeSymbol) d.parent_symbol;
+		write_identifier (datatype.name);
+		write_string (" () ");
+		write_code_block (d.body);
 		write_newline ();
 	}
 
