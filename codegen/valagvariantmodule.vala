@@ -576,6 +576,7 @@ public class Vala.GVariantModule : GValueModule {
 
 		if (result == null) {
 			Report.error (type.source_reference, "GVariant deserialization of type `%s' is not supported".printf (type.to_string ()));
+			return new CCodeInvalidExpression ();
 		}
 
 		return result;
@@ -868,6 +869,7 @@ public class Vala.GVariantModule : GValueModule {
 
 		if (result == null) {
 			Report.error (type.source_reference, "GVariant serialization of type `%s' is not supported".printf (type.to_string ()));
+			return new CCodeInvalidExpression ();
 		}
 
 		return result;
