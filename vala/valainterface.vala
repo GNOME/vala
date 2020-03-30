@@ -151,6 +151,91 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 	}
 
+	private Method create_g_signal_override (Signal signl) {
+		var g_signal_override = new Method (signl.name, signl.return_type, null, null);
+		g_signal_override.overrides = true;
+		unowned List<Parameter> parameters = signl.get_parameters ();
+		Parameter signal_name_param = parameters.get (1);
+		Parameter params_param = parameters.get (2);
+		foreach (var param in parameters) {
+			g_signal_override.add_parameter (param);
+		}
+
+		g_signal_override.body = new Block (null);
+		var signal_name_param_access = new MemberAccess.simple (signal_name_param.name, null);
+		signal_name_param_access.value_type = signal_name_param.variable_type;
+		//Report.warning (iface.source_reference, "%s".printf (signal_name_param.name));
+
+		var switch_statement = new SwitchStatement (signal_name_param_access, null);
+		/*foreach (var iface_signl in get_signals ()) {
+			var section = new SwitchSection (null);
+			var label = new SwitchLabel (new StringLiteral (iface_signl.name, null), null);
+			section.add_label (label);
+			switch_statement.add_section (section);
+		}*/
+		g_signal_override.body.add_statement (switch_statement);
+		return g_signal_override;
+	}
+
+	private void create_dbus_proxy (CodeContext context) {
+		var proxy_class = new Vala.Class ("Proxy2", source_reference, comment);
+		context.analyzer.current_symbol = proxy_class;
+		var root_symbol = context.root;
+		var glib_ns = root_symbol.scope.lookup ("GLib");
+		var dbusproxy_class = (Vala.Class) glib_ns.scope.lookup ("DBusProxy");
+		var dbusproxy_type = new ObjectType (dbusproxy_class);
+		proxy_class.add_base_type (dbusproxy_type);
+		proxy_class.add_base_type (new ObjectType (this));
+		var g_signal = dbusproxy_type.get_member ("g_signal") as Signal;
+		if (g_signal != null) {
+			var method = create_g_signal_override (g_signal);
+			proxy_class.add_method (method);
+		}
+
+		foreach (var property in this.get_properties ()) {
+			PropertyAccessor? get_accessor = null;
+			if (property.get_accessor != null) {
+				unowned PropertyAccessor prop_get_accessor = property.get_accessor;
+				var get_cached_property_method = dbusproxy_type.get_member ("get_cached_property") as Method;
+				var this_access = new MemberAccess.simple ("this", null);
+				var get_cached_property = new MemberAccess (this_access, get_cached_property_method.name, prop_get_accessor.source_reference);
+				var call = new MethodCall (get_cached_property, prop_get_accessor.source_reference);
+				var literal = new StringLiteral (property.name, prop_get_accessor.source_reference);
+				call.add_argument (literal);
+				var get_accessor_block = new Block (prop_get_accessor.source_reference);
+				var expression_statement = new ExpressionStatement (call, prop_get_accessor.source_reference);
+				get_accessor_block.add_statement (expression_statement);
+				get_accessor = new PropertyAccessor (prop_get_accessor.readable, prop_get_accessor.writable, prop_get_accessor.construction, prop_get_accessor.value_type, get_accessor_block, prop_get_accessor.source_reference, prop_get_accessor.comment);
+			}
+
+			PropertyAccessor? set_accessor = null;
+			if (property.set_accessor != null) {
+				set_accessor = new PropertyAccessor (property.set_accessor.readable, property.set_accessor.writable, property.set_accessor.construction, property.set_accessor.value_type, new Block (property.set_accessor.source_reference), property.set_accessor.source_reference, property.set_accessor.comment);
+			}
+
+			var prop = new Property (property.name, property.property_type, get_accessor, set_accessor, property.source_reference, property.comment);
+			prop.is_abstract = false;
+			proxy_class.add_property (prop);
+		}
+
+		foreach (var method in this.get_methods ()) {
+			var meth = new Method (method.name, method.return_type, method.source_reference, method.comment);
+			meth.coroutine = method.coroutine;
+			foreach (var param in method.get_parameters ()) {
+				meth.add_parameter (param);
+			}
+
+			meth.is_abstract = false;
+			meth.body = new Block (method.source_reference);
+			// Variant call_sync (string method_name, Variant? parameters, DBusCallFlags flags, int timeout_msec, Cancellable? cancellable = null)
+			proxy_class.add_method (meth);
+		}
+
+		add_class (proxy_class);
+		proxy_class.check (context);
+		context.analyzer.current_symbol = this;
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -323,6 +408,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 					virtuals[i] = sym;
 				}
 			}
+		}
+
+		if (get_attribute ("DBus") != null) {
+			create_dbus_proxy (context);
 		}
 
 		context.analyzer.current_source_file = old_source_file;
