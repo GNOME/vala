@@ -463,6 +463,7 @@ TESTS = \
 	asynchronous/bug792660.vala \
 	asynchronous/bug792942.vala \
 	asynchronous/bug793158.vala \
+	asynchronous/captured-fixed-array.vala \
 	asynchronous/catch-in-finally.vala \
 	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
