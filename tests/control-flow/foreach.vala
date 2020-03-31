@@ -34,12 +34,6 @@ void test_foreach_gvaluearray () {
 }
 
 void test_foreach_multidim_array () {
-	int[,] foo = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
-	string result = "";
-	foreach (var i in foo) {
-		result += i.to_string ();
-	}
-	assert (result == "123456");
 }
 
 const int[] FOO = { 1, 2, 3, 4, 5, 6 };
