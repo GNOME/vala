@@ -5145,7 +5145,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					inst_ma.target_value = typed_inst;
 					store_property (p, inst_ma, init.initializer.target_value);
 					// FIXME Do not ref/copy in the first place
-					if (requires_destroy (init.initializer.target_value.value_type)) {
+					if (!p.set_accessor.value_type.value_owned && requires_destroy (init.initializer.target_value.value_type)) {
 						ccode.add_expression (destroy_value (init.initializer.target_value));
 					}
 				}
