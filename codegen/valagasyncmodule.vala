@@ -48,11 +48,11 @@ public class Vala.GAsyncModule : GtkModule {
 		foreach (Parameter param in m.get_parameters ()) {
 			var param_type = param.variable_type.copy ();
 			param_type.value_owned = true;
-			data.add_field (get_ccode_name (param_type), get_ccode_name (param));
+			data.add_field (get_ccode_name (param_type), get_ccode_name (param), 0, get_ccode_declarator_suffix (param_type));
 
 			if (param.variable_type is ArrayType) {
 				var array_type = (ArrayType) param.variable_type;
-				if (get_ccode_array_length (param)) {
+				if (get_ccode_array_length (param) && !((ArrayType) array_type).fixed_length) {
 					var length_ctype = get_ccode_array_length_type (array_type);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						data.add_field (length_ctype, get_variable_array_length_cname (param, dim));
