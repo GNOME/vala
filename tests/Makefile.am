@@ -39,6 +39,7 @@ TESTS = \
 	basic-types/gvariants.vala \
 	basic-types/gvariants-unboxing-safe.vala \
 	basic-types/null.vala \
+	basic-types/with-value-type.vala \
 	basic-types/bug570846.test \
 	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
@@ -483,6 +484,9 @@ TESTS = \
 	objects/bug795225-3.test \
 	objects/bug795225-4.test \
 	objects/bug795521.vala \
+	objects/with-expression.vala \
+	objects/with-instance.vala \
+	objects/with-nested.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
 	errors/default-gtype.vala \
@@ -895,6 +899,8 @@ TESTS = \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
+	semantic/with-no-such-member.test \
+	semantic/with-no-such-with-member.test \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
