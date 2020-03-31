@@ -182,6 +182,8 @@ TESTS = \
 	control-flow/assigned-local-variable.vala \
 	control-flow/break.vala \
 	control-flow/break-invalid.test \
+	control-flow/coalesce-as-argument.vala \
+	control-flow/conditional-as-argument.vala \
 	control-flow/continue-invalid.test \
 	control-flow/double-catch.test \
 	control-flow/expressions-conditional.vala \
