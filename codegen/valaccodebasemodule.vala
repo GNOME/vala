@@ -1999,7 +1999,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!param.variable_type.value_owned) {
 			param_type.value_owned = !no_implicit_copy (param.variable_type);
 		}
-		data.add_field (get_ccode_name (param_type), get_ccode_name (param));
+		data.add_field (get_ccode_name (param_type), get_ccode_name (param), 0, get_ccode_declarator_suffix (param_type));
 
 		// create copy if necessary as captured variables may need to be kept alive
 		param.captured = false;
@@ -2008,7 +2008,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = param.variable_type as ArrayType;
 		var deleg_type = param.variable_type as DelegateType;
 
-		if (array_type != null && get_ccode_array_length (param)) {
+		if (array_type != null && get_ccode_array_length (param) && !((ArrayType) array_type).fixed_length) {
 			var length_ctype = get_ccode_array_length_type (param);
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				data.add_field (length_ctype, get_variable_array_length_cname (param, dim));
@@ -3792,7 +3792,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public void emit_temp_var (LocalVariable local, bool on_error = false) {
 		var init = (!local.name.has_prefix ("*") && local.init);
 		if (is_in_coroutine ()) {
-			closure_struct.add_field (get_ccode_name (local.variable_type), local.name);
+			closure_struct.add_field (get_ccode_name (local.variable_type), local.name, 0, get_ccode_declarator_suffix (local.variable_type));
 
 			// even though closure struct is zerod, we need to initialize temporary variables
 			// as they might be used multiple times when declared in a loop
@@ -3804,7 +3804,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 					memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
 					memset_call.add_argument (new CCodeConstant ("0"));
-					memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (local.variable_type))));
+					CCodeExpression? size = null;
+					requires_memset_init (local, out size);
+					if (size == null) {
+						size = new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (local.variable_type)));
+					}
+					memset_call.add_argument (size);
 					ccode.add_expression (memset_call);
 				} else {
 					ccode.add_assignment (get_variable_cexpression (local.name), initializer);
@@ -5075,7 +5080,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					inst_ma.target_value = typed_inst;
 					store_property (p, inst_ma, init.initializer.target_value);
 					// FIXME Do not ref/copy in the first place
-					if (requires_destroy (init.initializer.target_value.value_type)) {
+					if (!p.set_accessor.value_type.value_owned && requires_destroy (init.initializer.target_value.value_type)) {
 						ccode.add_expression (destroy_value (init.initializer.target_value));
 					}
 				}
@@ -6285,11 +6290,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public bool requires_memset_init (Variable variable, out CCodeExpression? size) {
 		unowned ArrayType? array_type = variable.variable_type as ArrayType;
-		if (array_type != null && array_type.fixed_length && !is_constant_ccode (array_type.length)) {
+		if (array_type != null && array_type.fixed_length) {
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_ccodenode (array_type.length), sizeof_call);
-			return true;
+			return !is_constant_ccode (array_type.length);
 		}
 		size = null;
 		return false;
