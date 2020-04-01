@@ -46,6 +46,7 @@ void main () {
 		assert (baz == double.MAX);
 	}
 	{
-		manam_t manam;
+		manam_t manam = true;
+		assert (manam);
 	}
 }
