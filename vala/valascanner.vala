@@ -1035,6 +1035,19 @@ public class Vala.Scanner {
 				if (current < end && current[0] == '=') {
 					type = TokenType.OP_NE;
 					current++;
+				} else {
+					int len = 0;
+					while (current < end && is_ident_char (current[0])) {
+						current++;
+						len++;
+					}
+					if (len == 2 && matches (begin, "!in")) {
+						type = TokenType.IN_NEG;
+					} else if (len == 2 && matches (begin, "!is")) {
+						type = TokenType.IS_NEG;
+					} else {
+						current -= len;
+					}
 				}
 				break;
 			case '+':

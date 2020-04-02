@@ -667,6 +667,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/is-not-operator.vala \
 	parser/local-variable.vala \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
@@ -682,6 +683,8 @@ TESTS = \
 	parser/method-no-static-override.test \
 	parser/method-no-static-virtual.test \
 	parser/method-no-virtual-override.test \
+	parser/not-in-operator.vala \
+	parser/not-in-operator-1.test \
 	parser/namespaces.vala \
 	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \

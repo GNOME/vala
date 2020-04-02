@@ -1334,9 +1334,12 @@ public class Vala.Parser : CodeVisitor {
 			default:
 				switch (current ()) {
 				case TokenType.IS:
+				case TokenType.IS_NEG:
+					var neg = current () == TokenType.IS_NEG;
 					next ();
 					var type = parse_type (true, false);
 					left = new TypeCheck (left, type, get_src (begin));
+					if (neg) left = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, left, get_src (begin));
 					break;
 				case TokenType.AS:
 					next ();
@@ -1407,9 +1410,16 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_in_expression () throws ParseError {
 		var begin = get_location ();
 		var left = parse_inclusive_or_expression ();
-		while (accept (TokenType.IN)) {
+		while (true) {
+			var token = current ();
+			if (token != TokenType.IN && token != TokenType.IN_NEG) {
+				break;
+			}
+			next ();
+			bool neg = token == TokenType.IN_NEG;
 			var right = parse_inclusive_or_expression ();
 			left = new BinaryExpression (BinaryOperator.IN, left, right, get_src (begin));
+			if (neg) left = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, left, get_src (begin));
 		}
 		return left;
 	}

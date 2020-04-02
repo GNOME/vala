@@ -80,12 +80,14 @@ public enum Vala.TokenType {
 	IDENTIFIER,
 	IF,
 	IN,
+	IN_NEG,
 	INLINE,
 	INTEGER_LITERAL,
 	INTERFACE,
 	INTERNAL,
 	INTERR,
 	IS,
+	IS_NEG,
 	LAMBDA,
 	LOCK,
 	MINUS,
@@ -213,12 +215,14 @@ public enum Vala.TokenType {
 		case IDENTIFIER: return "identifier";
 		case IF: return "`if'";
 		case IN: return "`in'";
+		case IN_NEG: return "`!in'";
 		case INLINE: return "`inline'";
 		case INTEGER_LITERAL: return "integer literal";
 		case INTERFACE: return "`interface'";
 		case INTERNAL: return "`internal'";
 		case INTERR: return "`?'";
 		case IS: return "`is'";
+		case IS_NEG: return "`!is'";
 		case LAMBDA: return "`=>'";
 		case LOCK: return "`lock'";
 		case MINUS: return "`-'";
