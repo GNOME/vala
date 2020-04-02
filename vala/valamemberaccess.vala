@@ -280,7 +280,13 @@ public class Vala.MemberAccess : Expression {
 
 				if (symbol_reference == null && sym is WithStatement) {
 					unowned WithStatement w = (WithStatement) sym;
-					symbol_reference = w.with_variable.variable_type.get_member (member_name);
+
+					var variable_type = w.with_variable.variable_type;
+					if (variable_type is PointerType) {
+						variable_type = ((PointerType) variable_type).base_type;
+					}
+					
+					symbol_reference = variable_type.get_member (member_name);
 					if (symbol_reference != null) {
 						inner = new MemberAccess (null, w.with_variable.name, source_reference);
 						inner.check (context);

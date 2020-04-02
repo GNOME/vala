@@ -40,7 +40,6 @@ TESTS = \
 	basic-types/gvariants.vala \
 	basic-types/gvariants-unboxing-safe.vala \
 	basic-types/null.vala \
-	basic-types/with-value-type.vala \
 	basic-types/bug570846.test \
 	basic-types/bug571486.vala \
 	basic-types/bug591552.vala \
@@ -911,10 +910,21 @@ TESTS = \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
+	semantic/with-array.test \
+	semantic/with-buildin.vala \
 	semantic/with-class.test \
+	semantic/with-compact.vala \
+	semantic/with-dereferenced-pointer.vala \
+	semantic/with-enum.test \
+	semantic/with-enum-member.vala \
+	semantic/with-error.test \
+	semantic/with-error-member.test \
+	semantic/with-pointer.test \
 	semantic/with-namespace.test \
 	semantic/with-no-such-member.test \
 	semantic/with-no-such-with-member.test \
+	semantic/with-string.vala \
+	semantic/with-value.vala \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \

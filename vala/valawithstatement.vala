@@ -82,15 +82,42 @@ public class Vala.WithStatement : Block {
 		}
 	}
 
-	public override bool check (CodeContext context) {
-		expression.check (context);
+	private bool is_object_or_value_type(DataType? type) {
+		if (type == null) {
+			return false;
+		} else if (type is PointerType) {
+			var pointer_type = (PointerType) type;
+			return is_object_or_value_type(pointer_type.base_type) && expression is PointerIndirection;			
+		} else {
+			return type is ObjectType || type is ValueType;
+		}
+	}
 
+	private LocalVariable insert_local_variable_if_necessary() {
 		LocalVariable local_var = expression.symbol_reference as LocalVariable;
 		if (local_var == null) {
 			local_var = new LocalVariable (expression.value_type, "_with_local%d_".printf (next_with_id++), expression, source_reference);
 			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
 		}
-		with_variable = local_var;
+		return local_var;
+	} 
+
+	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+		
+		expression.check (context);
+
+		if (!is_object_or_value_type (expression.value_type)) {
+			error = true;
+			Report.error (expression.source_reference, "Expression must be of an object or basic type");
+			return false;
+		}
+
+		with_variable = insert_local_variable_if_necessary ();
 
 		var old_symbol = context.analyzer.current_symbol;
 		owner = context.analyzer.current_symbol.scope;
@@ -100,7 +127,7 @@ public class Vala.WithStatement : Block {
 
 		context.analyzer.current_symbol = old_symbol;
 
-		return true;
+		return !error;
 	}
 
 	public override void emit (CodeGenerator codegen) {
