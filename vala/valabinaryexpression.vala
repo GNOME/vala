@@ -569,6 +569,7 @@ public class Vala.BinaryExpression : Expression {
 				left.target_type.nullable = false;
 				right.target_type.nullable = false;
 			} else if (right.value_type is ArrayType) {
+				left.target_type.nullable = ((ArrayType) right.value_type).element_type.nullable;
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
 					error = true;
 					Report.error (source_reference, "Cannot look for `%s' in `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
