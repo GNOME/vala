@@ -1,0 +1,10 @@
+Invalid Code
+
+errordomain Err {
+    Error
+}
+
+void main() {
+    var e = new Err.Error ("msg");
+    with (e) { }
+}

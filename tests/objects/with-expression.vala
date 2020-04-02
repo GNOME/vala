@@ -13,19 +13,24 @@ class Foo {
 
 void test() {
     var foo = new Foo();
-    with(foo)
+    with (foo)
         method();
     
-    with(new Foo())
+    with (new Foo())
         method();
     
-    with(Foo.factory()) {
+    with (Foo.factory()) {
         method();
         method();
     }
 
-    assert(Foo.method_called == 4);
-    assert(Foo.factory_called == 1);
+    Foo[] arr = {foo, foo};
+    with (arr[0]) {
+        method();
+    }
+
+    assert (Foo.method_called == 5);
+    assert (Foo.factory_called == 1);
 }
 
 void main() {
