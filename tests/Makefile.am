@@ -911,6 +911,8 @@ TESTS = \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
+	semantic/with-class.test \
+	semantic/with-namespace.test \
 	semantic/with-no-such-member.test \
 	semantic/with-no-such-with-member.test \
 	semantic/yield-call-requires-async-context.test \
