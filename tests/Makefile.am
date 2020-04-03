@@ -505,6 +505,7 @@ TESTS = \
 	dbus/bug782719.test \
 	dbus/bug792277.vala \
 	dbus/rawvariants.test \
+	dbus/interface-info.test \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
