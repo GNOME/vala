@@ -5482,14 +5482,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			break;
 		case BinaryOperator.IN:
 			if (expr.right.value_type is ArrayType) {
-				var array_type = (ArrayType) expr.right.value_type;
-				var node = new CCodeFunctionCall (new CCodeIdentifier (generate_array_contains_wrapper (array_type)));
-				node.add_argument (cright);
-				node.add_argument (get_array_length_cexpression (expr.right));
-				if (array_type.element_type is StructValueType) {
-					node.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft));
+				unowned ArrayType array_type = (ArrayType) expr.right.value_type;
+				unowned DataType element_type = array_type.element_type;
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_contains_wrapper (array_type)));
+				CCodeExpression node = ccall;
+
+				ccall.add_argument (cright);
+				ccall.add_argument (get_array_length_cexpression (expr.right));
+				if (element_type is StructValueType) {
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft));
+				} else if (element_type is ValueType && !element_type.nullable
+					&& expr.left.value_type is ValueType && expr.left.value_type.nullable) {
+					// null check
+					var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cleft, new CCodeConstant ("NULL"));
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cleft));
+					node = new CCodeParenthesizedExpression (new CCodeConditionalExpression (cnull, new CCodeConstant ("FALSE"), ccall));
 				} else {
-					node.add_argument (cleft);
+					ccall.add_argument (cleft);
 				}
 				set_cvalue (expr, node);
 			} else {
