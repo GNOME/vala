@@ -96,6 +96,7 @@ TESTS = \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
 	arrays/slice-no-array.test \
+	arrays/in-operator-with-boxed-needle-issue951.vala \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \
 	chainup/base-invalid.test \
