@@ -714,6 +714,10 @@ TESTS = \
 	parser/using-ambiguous-reference.test \
 	parser/using-directive.vala \
 	parser/using-invalid-namespace.test \
+	parser/with-embedded.vala \
+	parser/with-empty.vala \
+	parser/with-no-block.test \
+	parser/with-no-expression.test \
 	parser/yield-method.test \
 	parser/yield-return.test \
 	parser/yield-return.vala \
