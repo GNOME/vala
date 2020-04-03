@@ -927,6 +927,7 @@ TESTS = \
 	semantic/with-namespace.test \
 	semantic/with-no-such-member.test \
 	semantic/with-no-such-with-member.test \
+	semantic/with-null.vala \
 	semantic/with-string.vala \
 	semantic/with-value.vala \
 	semantic/yield-call-requires-async-context.test \
@@ -942,6 +943,7 @@ NON_NULL_TESTS = \
 	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \
+	nullability/with-non-null.test \
 	$(NULL)
 
 LINUX_TESTS = \
