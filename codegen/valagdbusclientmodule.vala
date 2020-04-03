@@ -236,6 +236,16 @@ public class Vala.GDBusClientModule : GDBusModule {
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
 		proxy_instance_init.add_parameter (new CCodeParameter ("self", cname + "*"));
 		proxy_instance_init.modifiers = CCodeModifiers.STATIC;
+		push_function (proxy_instance_init);
+
+		var dbus_proxy_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_DBUS_PROXY"));
+		dbus_proxy_cast.add_argument (new CCodeIdentifier ("self"));
+		var set_interface_info = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_set_interface_info"));
+		set_interface_info.add_argument (dbus_proxy_cast);
+		set_interface_info.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_interface_info (iface)), "GDBusInterfaceInfo *"));
+		ccode.add_expression (set_interface_info);
+
+		pop_function ();
 		cfile.add_function (proxy_instance_init);
 
 		generate_proxy_interface_init (iface, iface);
@@ -257,7 +267,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		CCodeExpression proxy_type;
 		CCodeExpression dbus_iface_name;
-		CCodeExpression dbus_iface_info;
 
 		var object_type = type_arg as ObjectType;
 		if (object_type != null) {
@@ -291,15 +300,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 			dbus_iface_name = get_qdata;
 		}
-
-		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-		quark.add_argument (new CCodeConstant ("\"vala-dbus-interface-info\""));
-
-		var get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
-		get_qdata.add_argument (get_type_id_expression (type_arg));
-		get_qdata.add_argument (quark);
-
-		dbus_iface_info = get_qdata;
 
 		if (bus_get_proxy_async || conn_get_proxy_async) {
 			if (ma.member_name == "end" && ma.inner.symbol_reference == ma.symbol_reference) {
@@ -397,10 +397,6 @@ public class Vala.GDBusClientModule : GDBusModule {
 		ccall.add_argument (get_cvalue (object_path));
 		ccall.add_argument (new CCodeConstant ("\"g-interface-name\""));
 		ccall.add_argument (dbus_iface_name);
-		if (dbus_iface_info != null) {
-			ccall.add_argument (new CCodeConstant ("\"g-interface-info\""));
-			ccall.add_argument (dbus_iface_info);
-		}
 		ccall.add_argument (new CCodeConstant ("NULL"));
 
 		if (bus_get_proxy_async || conn_get_proxy_async) {
