@@ -77,6 +77,7 @@ TESTS = \
 	arrays/inline-local-variable.test \
 	arrays/inline-parameter.test \
 	arrays/inline-struct-field.test \
+	arrays/in-operator-with-boxed-needle.vala \
 	arrays/length-inline-assignment.vala \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
