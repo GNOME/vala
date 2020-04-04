@@ -639,6 +639,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/invalid-statement-delimiter.test \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
 	parser/member-access-pointer.vala \
@@ -774,6 +775,7 @@ TESTS = \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
 	semantic/interface-prerequisite-multiple.test \
+	semantic/literal-expression.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \
