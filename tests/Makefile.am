@@ -748,6 +748,11 @@ TESTS = \
 	semantic/class-compact-interface.test \
 	semantic/class-compact-method-baseaccess.test \
 	semantic/class-compact-property-baseaccess.test \
+	semantic/class-opaque.vala \
+	semantic/class-opaque-public-field.test \
+	semantic/class-opaque-abstract-method.test \
+	semantic/class-opaque-abstract-property.test \
+	semantic/class-opaque-automatic-property.vala \
 	semantic/class-missing-implement-interface-method.test \
 	semantic/class-missing-implement-interface-property.test \
 	semantic/class-missing-implement-interfaces-methods.test \

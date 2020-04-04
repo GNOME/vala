@@ -66,6 +66,19 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
+	 * Opaque compact classes hide their memory layout, only allowing private or
+	 * internal instance members.
+	 */
+	public bool is_opaque {
+		get {
+			if (_is_opaque == null) {
+				_is_opaque = get_attribute_bool ("Compact", "opaque");
+			}
+			return _is_opaque;
+		}
+	}
+
+	/**
 	 * Instances of immutable classes are immutable after construction.
 	 */
 	public bool is_immutable {
@@ -112,6 +125,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool has_class_private_fields { get; private set; }
 
 	private bool? _is_compact;
+	private bool? _is_opaque;
 	private bool? _is_immutable;
 	private bool? _is_singleton;
 
@@ -620,8 +634,12 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Field f in get_fields ()) {
 			if (is_compact && f.binding != MemberBinding.STATIC) {
 				//FIXME Should external bindings follow this too?
-				if (!external_package && f.access == SymbolAccessibility.PRIVATE) {
-					Report.error (source_reference, "private fields are not supported in compact classes");
+				if (!external_package && !is_opaque && f.access == SymbolAccessibility.PRIVATE) {
+					Report.error (source_reference, "private fields are only supported in opaque compact classes, use [Compact (opaque = true)]");
+					error = true;
+				}
+				if (!external_package && is_opaque && (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED)) {
+					Report.error (source_reference, "fields in opaque compact classes must be private or internal");
 					error = true;
 				}
 				if (f.binding == MemberBinding.CLASS) {

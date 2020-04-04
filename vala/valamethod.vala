@@ -724,6 +724,11 @@ public class Vala.Method : Subroutine, Callable {
 				Report.error (source_reference, "Abstract and virtual methods may not be declared in derived compact classes");
 				return false;
 			}
+			if (cl.is_opaque) {
+				error = true;
+				Report.error (source_reference, "Abstract and virtual methods may not be declared in opaque compact classes");
+				return false;
+			}
 		}
 
 		if (is_variadic () && (is_abstract || is_virtual)) {
