@@ -2,8 +2,8 @@ Invalid Code
 
 class Foo { }
 
-void main() {
-    with (new Foo()) {
+void main () {
+    with (new Foo ()) {
         with.field = 10;
     }
 }

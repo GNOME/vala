@@ -287,8 +287,8 @@ public class Vala.MemberAccess : Expression {
 					if (variable_type is PointerType) {
 						variable_type = ((PointerType) variable_type).base_type;
 					}
-					visited_types.add(variable_type);
-					
+					visited_types.add (variable_type);
+
 					symbol_reference = variable_type.get_member (member_name);
 					if (symbol_reference != null) {
 						inner = new MemberAccess (null, w.with_variable.name, source_reference);
@@ -525,7 +525,7 @@ public class Vala.MemberAccess : Expression {
 
 			string visited_types_string = "";
 			foreach (var type in visited_types) {
-				visited_types_string += " or `%s'".printf(type.to_string());
+				visited_types_string += " or `%s'".printf (type.to_string ());
 			}
 
 			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s".printf (member_name, base_type_name, base_type_package, visited_types_string));

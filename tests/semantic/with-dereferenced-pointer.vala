@@ -1,12 +1,12 @@
-class Foo { 
+class Foo {
     public int i;
 }
 
-void main() {
-    var f = new Foo();
+void main () {
+    var f = new Foo ();
     var p = &f;
 
-    with (*p) { 
+    with (*p) {
         i = 13;
     }
 

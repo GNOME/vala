@@ -2,7 +2,7 @@ Invalid Code
 
 class Foo { }
 
-void main() {
+void main () {
     with (new Foo()) {
         field = 100;
     }

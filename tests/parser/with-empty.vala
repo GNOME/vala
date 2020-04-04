@@ -1,3 +1,3 @@
-void main() {
-    with(10);
+void main () {
+    with (10);
 }

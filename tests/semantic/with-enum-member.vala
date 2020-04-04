@@ -2,6 +2,6 @@ enum Enumeration {
     FIRST
 }
 
-void main() {
+void main () {
     with (Enumeration.FIRST) { }
 }

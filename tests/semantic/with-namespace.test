@@ -2,6 +2,6 @@ Invalid Code
 
 namespace Foo { }
 
-void main() {
+void main () {
     with (Foo) { }
 }

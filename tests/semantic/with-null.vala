@@ -2,9 +2,9 @@ class Foo {
     public int i;
 }
 
-void main() {
+void main () {
     Foo? f = null;
-    Process.exit(0);
+    Process.exit (0);
 
     with (f) {
         i = 7;
