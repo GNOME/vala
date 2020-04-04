@@ -2,6 +2,6 @@ Invalid Code
 
 class Foo { }
 
-void main() {
+void main () {
     with (Foo) { }
 }

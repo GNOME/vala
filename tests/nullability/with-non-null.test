@@ -4,8 +4,8 @@ class Foo {
     public int i;
 }
 
-void main() {
-    Foo? f = new Foo();
+void main () {
+    Foo? f = new Foo ();
     with (f) {
         i = 7;
     }

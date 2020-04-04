@@ -9,9 +9,9 @@ class Bar {
 class Test {
     public int field;
 
-    void method_local() {
+    void method_local () {
         var field = 0;
-        var foo = new Foo();
+        var foo = new Foo ();
 
         with (foo) {
             field = 10;
@@ -24,10 +24,10 @@ class Test {
         assert (this.field == 30);
     }
 
-    void nested() {
+    void nested () {
         var field = 0;
-        var foo = new Foo();
-        var bar = new Bar();
+        var foo = new Foo ();
+        var bar = new Bar ();
 
         with (foo) {
             field = 100;
@@ -53,10 +53,10 @@ class Test {
         assert (this.field == 2000);*/
     }
 
-    void nested_useless() {
+    void nested_useless () {
         var field = 0;
-        var foo = new Foo();
-        var bar = new Bar();
+        var foo = new Foo ();
+        var bar = new Bar ();
 
         /*with (foo) {
             with.this.field = 10000;
@@ -79,10 +79,10 @@ class Test {
         assert (field == 50000);*/
     }
 
-    static int main() {
-        new Test().method_local();
-        new Test().nested();
-        new Test().nested_useless();
+    static int main () {
+        new Test ().method_local ();
+        new Test ().nested ();
+        new Test ().nested_useless ();
         return 0;
     }
 }

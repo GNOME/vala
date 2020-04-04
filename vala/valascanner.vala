@@ -386,7 +386,7 @@ public class Vala.Scanner {
 				if (matches (begin, "void")) return TokenType.VOID;
 				break;
 			case 'w':
-				switch  (begin[1]) {
+				switch (begin[1]) {
 					case 'e':
 						if (matches (begin, "weak")) return TokenType.WEAK;
 						break;

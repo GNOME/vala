@@ -1,4 +1,4 @@
-void main() {
+void main () {
     with ("string ") {
         assert (chomp () == "string");
     }

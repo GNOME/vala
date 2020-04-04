@@ -4,6 +4,6 @@ errordomain Err {
     ERROR
 }
 
-void main() {
+void main () {
     with (Err) { }
 }

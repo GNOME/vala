@@ -82,25 +82,25 @@ public class Vala.WithStatement : Block {
 		}
 	}
 
-	private bool is_object_or_value_type(DataType? type) {
+	bool is_object_or_value_type (DataType? type) {
 		if (type == null) {
 			return false;
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
-			return is_object_or_value_type(pointer_type.base_type) && expression is PointerIndirection;			
+			return is_object_or_value_type (pointer_type.base_type) && expression is PointerIndirection;
 		} else {
 			return type is ObjectType || type is ValueType;
 		}
 	}
 
-	private LocalVariable insert_local_variable_if_necessary() {
+	LocalVariable insert_local_variable_if_necessary () {
 		LocalVariable local_var = expression.symbol_reference as LocalVariable;
 		if (local_var == null) {
 			local_var = new LocalVariable (expression.value_type, "_with_local%d_".printf (next_with_id++), expression, source_reference);
 			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
 		}
 		return local_var;
-	} 
+	}
 
 	public override bool check (CodeContext context) {
 		if (checked) {
@@ -108,7 +108,7 @@ public class Vala.WithStatement : Block {
 		}
 
 		checked = true;
-		
+
 		expression.check (context);
 
 		if (!is_object_or_value_type (expression.value_type)) {

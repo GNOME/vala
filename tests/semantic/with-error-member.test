@@ -4,7 +4,7 @@ errordomain Err {
     Error
 }
 
-void main() {
+void main () {
     var e = new Err.Error ("msg");
     with (e) { }
 }
