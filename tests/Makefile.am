@@ -577,6 +577,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/invalid-statement-delimiter.test \
 	parser/member-access-pointer.vala \
 	parser/method-no-abstract-override.test \
 	parser/method-no-abstract-virtual-override.test \
@@ -700,6 +701,7 @@ TESTS = \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
 	semantic/interface-prerequisite-multiple.test \
+	semantic/literal-expression.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \

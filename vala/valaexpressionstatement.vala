@@ -78,6 +78,10 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 			// ignore inner error
 			error = true;
 			return false;
+		} else if (expression is Literal) {
+			Report.error (source_reference, "Literal expression not allowed as statement");
+			error = true;
+			return false;
 		}
 
 		add_error_types (expression.get_error_types ());

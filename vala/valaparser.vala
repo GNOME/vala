@@ -1664,6 +1664,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.DOT:
 		// pointer member access
 		case TokenType.OP_PTR:
+		// literal expression
+		case TokenType.INTEGER_LITERAL:
+		case TokenType.REAL_LITERAL:
 			rollback (begin);
 			return true;
 		default:
