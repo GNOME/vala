@@ -588,6 +588,8 @@ TESTS = \
 	dbus/bug783002.test \
 	dbus/bug792277.vala \
 	dbus/rawvariants.test \
+	dbus/plugin.vala \
+	dbus/multiple-signals.vala \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
