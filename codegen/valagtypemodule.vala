@@ -197,8 +197,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 		// Custom unref-methods need to be emitted before G_DEFINE_AUTOPTR_CLEANUP_FUNC,
 		// so we guard against that special case and handle it in generate_method_declaration.
-		if (!(base_class.is_compact && is_reference_counting (base_class))
-		    && (!context.use_header || decl_space.is_header)) {
+		if (!(base_class.is_compact && is_reference_counting (base_class)) && decl_space.is_header) {
 			string autoptr_cleanup_func;
 			if (is_reference_counting (base_class)) {
 				autoptr_cleanup_func = get_ccode_unref_function (base_class);
@@ -424,8 +423,7 @@ public class Vala.GTypeModule : GErrorModule {
 			// Custom unref-methods need to be emitted before G_DEFINE_AUTOPTR_CLEANUP_FUNC,
 			// in addition to the non-ref-countable case in generate_class_declaration.
 			unowned Class? cl = m.parent_symbol as Class;
-			if (cl != null && cl.is_compact && get_ccode_unref_function (cl) == get_ccode_name (m)
-			    && (!context.use_header || decl_space.is_header)) {
+			if (cl != null && cl.is_compact && get_ccode_unref_function (cl) == get_ccode_name (m) && decl_space.is_header) {
 				decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTOPTR_CLEANUP_FUNC (%s, %s)".printf (get_ccode_name (cl), get_ccode_name (m))));
 				decl_space.add_type_member_declaration (new CCodeNewline ());
 			}

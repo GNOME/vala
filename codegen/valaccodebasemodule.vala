@@ -589,15 +589,44 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		// generate C header file for public API
+		const string top_gobj = "G_BEGIN_DECLS";
+		const string bot_gobj = "G_END_DECLS";
+		const string top_cpp = "#ifdef __cplusplus\nextern \"C\" {\n#endif";
+		const string bot_cpp = "ifdef __cplusplus\n}\n#endif";
 		if (context.header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
-				ret = header_file.store (context.header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
+				ret = header_file.store (context.header_filename, null, context.version_header, false, top_gobj, bot_gobj);
 			} else {
-				ret = header_file.store (context.header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
+				ret = header_file.store (context.header_filename, null, context.version_header, false, top_cpp, bot_cpp);
 			}
 			if (!ret) {
 				Report.error (null, "unable to open `%s' for writing".printf (context.header_filename));
+			}
+		} else {
+			// no filename? use the source filenames
+			string real_name = "";
+			foreach (SourceFile file in source_files) {
+				if (file.file_type == SourceFileType.SOURCE) {
+					bool ret;
+					string name = Path.get_basename (file.get_cinclude_filename ());
+					if (context.includedir != null) {
+						name = Path.build_path("/", context.includedir, name);
+					}
+					if (real_name.length == 0) {
+						real_name = name;
+						if (context.profile == Profile.GOBJECT) {
+							ret = header_file.store (name, null, context.version_header, false, top_gobj, bot_gobj);
+						} else {
+							ret = header_file.store (name, null, context.version_header, false, top_cpp, bot_cpp);
+						}
+					} else {
+						ret = (0 == FileUtils.symlink (real_name, name));
+					}
+					if (!ret) {
+						Report.error (null, "unable to open `%s' for writing".printf (name));
+					}
+				}
 			}
 		}
 
@@ -605,9 +634,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.internal_header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
-				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
+				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, top_gobj, bot_gobj);
 			} else {
-				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
+				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, top_cpp, bot_cpp);
 			}
 			if (!ret) {
 				Report.error (null, "unable to open `%s' for writing".printf (context.internal_header_filename));
@@ -677,13 +706,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			sym.source_reference.file.used = true;
 		}
 		if (sym.anonymous) {
-			return !decl_space.is_header && CodeContext.get ().use_header;
+			return !decl_space.is_header;
 		}
 		// constants with initializer-list are special
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
-		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
+		if (sym.external_package || (!decl_space.is_header && !sym.is_internal_symbol ())
 		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
