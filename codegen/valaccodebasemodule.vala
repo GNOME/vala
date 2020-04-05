@@ -592,6 +592,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
+				header_file.add_include ("glib.h");
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
@@ -605,6 +606,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.internal_header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
+				internal_header_file.add_include ("glib.h");
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
