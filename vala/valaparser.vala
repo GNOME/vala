@@ -2252,15 +2252,47 @@ public class Vala.Parser : CodeVisitor {
 		return new DeleteStatement (expr, src);
 	}
 
-	Statement parse_with_statement () throws ParseError {
+	inline void expect_or_throw (TokenType type) throws ParseError {
+		// Don't continue on any minor issue as the with-syntax is a fragile left recursion
+		if (!accept (type)) {
+			throw new ParseError.SYNTAX(@"expected $(type.to_string ())");
+		}
+	}
+
+	Statement? parse_with_statement () throws ParseError {
 		var begin = get_location ();
-		expect (TokenType.WITH);
-		expect (TokenType.OPEN_PARENS);
-		var expr = parse_expression ();
-		expect (TokenType.CLOSE_PARENS);
+		expect_or_throw (TokenType.WITH);
+		expect_or_throw (TokenType.OPEN_PARENS);
+		var expr_or_decl = get_location();
+
+		DataType? variable_type = null;
+		string? variable_name = null;
+
+		// Try "with (expr)"
+		Expression expr = parse_expression ();
+		if (!accept (TokenType.CLOSE_PARENS)) {
+			// Try "with (var identifier = expr)"
+			rollback (expr_or_decl);
+			if (accept (TokenType.VAR)) {
+				variable_name = parse_identifier ();
+				expect_or_throw (TokenType.ASSIGN);
+			} else {
+				// Try "with (type identifier = expr)"
+				variable_type = parse_type (true, true);
+				variable_name = parse_identifier ();
+				if (!accept (TokenType.ASSIGN)) {
+					// Fallback to "with (expr)"
+					rollback (expr_or_decl);
+				}
+			}
+
+			expr = parse_expression ();
+			expect_or_throw (TokenType.CLOSE_PARENS);
+		}
+
 		var src = get_src (begin);
 		var body = parse_embedded_statement ("with", false);
-		return new WithStatement (expr, body, src);
+		return new WithStatement (variable_type, variable_name, expr, body, src);
 	}
 
 	string parse_attribute_value () throws ParseError {

@@ -37,6 +37,24 @@ public class Vala.WithStatement : Block {
 	}
 
 	/**
+	 * Specifies the with-variable type.
+	 */
+	public DataType? type_reference {
+		get { return _data_type; }
+		private set {
+			_data_type = value;
+			if (_data_type != null) {
+				_data_type.parent_node = this;
+			}
+		}
+	}
+
+	/**
+	 * Specifies the with-variable name.
+	 */
+	public string? with_variable_name { get; private set; }
+
+	/**
 	 * Specifies the with-variable.
 	 */
 	public LocalVariable with_variable { get; private set; }
@@ -56,11 +74,15 @@ public class Vala.WithStatement : Block {
 
 	private Expression _expression;
 	private Block _body;
+	private DataType? _data_type;
 
-	public WithStatement (Expression expression, Block body, SourceReference? source_reference = null) {
+	public WithStatement (DataType? type_reference, string? variable_name, Expression expression, 
+			Block body, SourceReference? source_reference = null) {
 		base (source_reference);
 		this.expression = expression;
 		this.body = body;
+		this.type_reference = type_reference;
+		this.with_variable_name = variable_name;
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -71,6 +93,11 @@ public class Vala.WithStatement : Block {
 		if (expression.symbol_reference == with_variable) {
 			expression.accept (visitor);
 		}
+
+		if (type_reference != null) {
+			type_reference.accept (visitor);
+		}
+
 		if (body != null) {
 			body.accept (visitor);
 		}
@@ -79,6 +106,12 @@ public class Vala.WithStatement : Block {
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (expression == old_node) {
 			expression = new_node;
+		}
+	}
+
+	public override void replace_type (DataType old_type, DataType new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
 		}
 	}
 
@@ -93,13 +126,30 @@ public class Vala.WithStatement : Block {
 		}
 	}
 
-	LocalVariable insert_local_variable_if_necessary () {
-		LocalVariable local_var = expression.symbol_reference as LocalVariable;
-		if (local_var == null) {
-			local_var = new LocalVariable (expression.value_type, "_with_local%d_".printf (next_with_id++), expression, source_reference);
+	void insert_local_variable_if_necessary () {
+		var local_var = expression.symbol_reference as LocalVariable;
+		if (with_variable_name != null || local_var == null) {
+			var n = with_variable_name ?? "_with_local%d_".printf (next_with_id++);
+			local_var = new LocalVariable (type_reference, n, expression, source_reference);
 			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
 		}
-		return local_var;
+		with_variable = local_var;
+	}
+
+	void change_scope_and_check_body (CodeContext context) {
+		var old_symbol = context.analyzer.current_symbol;
+		owner = context.analyzer.current_symbol.scope;
+		context.analyzer.current_symbol = this;
+		body.check (context);
+		context.analyzer.current_symbol = old_symbol;
+	}
+
+	bool is_type_reference_compatible () {
+		if (type_reference == null) {
+			type_reference = expression.value_type.copy();
+		}
+
+		return expression.value_type.compatible(type_reference);
 	}
 
 	public override bool check (CodeContext context) {
@@ -108,24 +158,18 @@ public class Vala.WithStatement : Block {
 		}
 
 		checked = true;
-
-		expression.check (context);
-
-		if (!is_object_or_value_type (expression.value_type)) {
-			error = true;
-			Report.error (expression.source_reference, "Expression must be of an object or basic type");
-			return false;
+		if (expression.check (context)) {
+			if (!is_object_or_value_type (expression.value_type)) {
+				error = true;
+				Report.error (expression.source_reference, "With: Expression must be of an object or basic type");
+			} else if (!is_type_reference_compatible ()) {
+				error = true;
+				Report.error (type_reference.source_reference, @"With: Cannot convert from `$(expression.value_type)' to `$(type_reference)'");
+			} else {
+				insert_local_variable_if_necessary ();
+				change_scope_and_check_body (context);
+			}
 		}
-
-		with_variable = insert_local_variable_if_necessary ();
-
-		var old_symbol = context.analyzer.current_symbol;
-		owner = context.analyzer.current_symbol.scope;
-		context.analyzer.current_symbol = this;
-
-		body.check (context);
-
-		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}
