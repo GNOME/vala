@@ -2542,6 +2542,8 @@ namespace Gst {
 		public Gst.TaskState get_state ();
 		public bool join ();
 		public bool pause ();
+		[Version (since = "1.18")]
+		public bool resume ();
 		public void set_enter_callback (owned Gst.TaskThreadFunc enter_func);
 		public void set_leave_callback (owned Gst.TaskThreadFunc leave_func);
 		public void set_lock (GLib.RecMutex mutex);
