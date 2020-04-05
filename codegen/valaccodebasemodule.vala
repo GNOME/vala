@@ -984,6 +984,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
+				if (c.value is StringLiteral && ((StringLiteral) c.value).translate) {
+					// translated string constant
+					var m = (Method) root_symbol.scope.lookup ("GLib").scope.lookup ("_");
+					add_symbol_declaration (decl_space, m, get_ccode_name (m));
+				}
+
 				var cdefine = new CCodeMacroReplacement.with_expression (get_ccode_name (c), get_cvalue (c.value));
 				decl_space.add_type_member_declaration (cdefine);
 			}
@@ -4137,10 +4143,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (expr.translate) {
 			// translated string constant
-
-			var m = (Method) root_symbol.scope.lookup ("GLib").scope.lookup ("_");
-			add_symbol_declaration (cfile, m, get_ccode_name (m));
-
 			var translate = new CCodeFunctionCall (new CCodeIdentifier ("_"));
 			translate.add_argument (get_cvalue (expr));
 			set_cvalue (expr, translate);
