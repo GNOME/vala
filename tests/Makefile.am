@@ -720,6 +720,8 @@ TESTS = \
 	parser/using-invalid-namespace.test \
 	parser/with-embedded.vala \
 	parser/with-empty.vala \
+	parser/with-invalid-declaration.test \
+	parser/with-invalid-expression.test \
 	parser/with-no-block.test \
 	parser/with-no-expression.test \
 	parser/yield-method.test \
@@ -918,6 +920,9 @@ TESTS = \
 	semantic/with-buildin.vala \
 	semantic/with-class.test \
 	semantic/with-compact.vala \
+	semantic/with-declaration-cast-type.vala \
+	semantic/with-declaration-wrong-type.test \
+	semantic/with-declaration.vala \
 	semantic/with-dereferenced-pointer.vala \
 	semantic/with-enum.test \
 	semantic/with-enum-member.vala \
@@ -925,10 +930,11 @@ TESTS = \
 	semantic/with-error-member.test \
 	semantic/with-pointer.test \
 	semantic/with-namespace.test \
+	semantic/with-no-declaration.test \
 	semantic/with-no-such-member.test \
-	semantic/with-no-such-with-member.test \
 	semantic/with-null.vala \
 	semantic/with-string.vala \
+	semantic/with-outside-declaration.test \
 	semantic/with-value.vala \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
