@@ -1,6 +1,4 @@
 namespace Gtk {
-	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
-
 	[CCode (has_type_id = false)]
 	[Compact]
 	class BindingEntry {
