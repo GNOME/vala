@@ -358,6 +358,8 @@ DataInputStream
   .read_line_finish type="string?"
   .read_line_finish.length default=null
   .read_line.length default=null
+DBusSignalCallback
+  .sender_name nullable=false
 
 // Forward upstream
 *.ref unowned
