@@ -6,8 +6,11 @@ Program: client
 [DBus (name = "org.example.Test")]
 interface Test : Object {
 	public signal void foo (int i);
+	public signal void bar (string[] baz);
+	internal signal void finish ();
 
-	public abstract void do_foo (int i) throws IOError;
+	public abstract void do_foo (int i) throws DBusError, IOError;
+	public abstract void do_bar (string[] baz) throws DBusError, IOError;
 }
 
 MainLoop main_loop;
@@ -18,10 +21,22 @@ void main () {
 
 	test.foo.connect ((i) => {
 		assert (i == 42);
+	});
+
+	test.bar.connect ((baz) => {
+		assert (baz.length == 3);
+		assert (baz[0] == "zero");
+		assert (baz[1] == "one");
+		assert (baz[2] == "two");
 		main_loop.quit ();
 	});
 
+	test.finish.connect (() => {
+		assert_not_reached ();
+	});
+
 	test.do_foo (42);
+	test.do_bar ({"zero", "one", "two"});
 
 	main_loop = new MainLoop ();
 	main_loop.run ();
@@ -32,9 +47,16 @@ Program: server
 [DBus (name = "org.example.Test")]
 class Test : Object {
 	public signal void foo (int i);
+	public signal void bar (string[] baz);
+	private signal void finish ();
 
-	public void do_foo (int i) {
+	public void do_foo (int i) throws DBusError, IOError {
 		this.foo (i);
+		finish ();
+	}
+
+	public void do_bar (string[] baz) throws DBusError, IOError {
+		this.bar (baz);
 	}
 }
 
