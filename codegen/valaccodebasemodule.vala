@@ -3556,6 +3556,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
 			}
 
+			// FIXME this breaks in our macro, so this should not happen
+			if (cvar is CCodeCastExpression) {
+				cvar = ((CCodeCastExpression) cvar).inner;
+			}
+
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (free0_func));
 			ccall.add_argument (cvar);
 			return ccall;
