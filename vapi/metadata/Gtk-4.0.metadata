@@ -2,7 +2,6 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
-*.event#parameter type="Gdk.Event"
 *.*.event#parameter type="Gdk.Event"
 
 // G-I doesn't support per-sybmol includes
@@ -13,7 +12,6 @@ IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
 // Causes vapigen issues, not sure why -- <union> without name
 
 // G-I doesn't support structs
-BindingSet struct=false
 Border struct
 FileFilterInfo struct=false
 Requisition struct
@@ -27,10 +25,6 @@ Requisition
   .new skip
 
 // Bug #636812: no support for annotating the type of a closure
-AccelGroup
-  .connect*.closure type="owned Gtk.AccelGroupActivate"
-AccelLabel
-  .set_accel_closure.accel_closure type="owned Gtk.AccelGroupActivate"
 
 // Bug #: Virtual methods without invokers
 EntryBuffer
@@ -65,11 +59,14 @@ CellRenderer
 MediaFile
   .new* symbol_type="function" name="new_(.+)" ctype="GtkMediaStream*"
   .new name="empty"
+ShortcutAction
+  .parse_string symbol_type="function"
+ShortcutTrigger
+  .parse_string symbol_type="function"
 
 // G-I cannot deprecate whole types
 
 // G-I cannot handle returning non-boxed types
-binding_set_by_class skip=false
 
 // G-I cannot handle variadic functions
 *.*_valist skip=false
@@ -238,8 +235,6 @@ CellArea
 BuildableParser skip
 
 // Backwards compatibility
-AccelGroup
-  .find type="Gtk.AccelKey*"
 CellAccessibleParent
   .get_cell_area return_void
 CssProvider
@@ -356,13 +351,8 @@ editable_delegate_set_property skip
 editable_install_properties skip
 
 // Sure
-binding_set_by_class.object_class type="GLib.ObjectClass"
 *.ref unowned
 *.unref destroys_instance=false
-
-// These delegate types don't have targets in the typedefs, but they
-// get called with a target.
-AccelGroupActivate skip
 
 // Possible TODO
 ////////////////
