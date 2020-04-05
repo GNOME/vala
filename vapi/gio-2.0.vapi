@@ -2994,14 +2994,14 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected TlsConnection ();
 		public bool emit_accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
-		public unowned GLib.TlsCertificate get_certificate ();
+		public unowned GLib.TlsCertificate? get_certificate ();
 		[Version (since = "2.30")]
-		public unowned GLib.TlsDatabase get_database ();
+		public unowned GLib.TlsDatabase? get_database ();
 		[Version (since = "2.30")]
-		public unowned GLib.TlsInteraction get_interaction ();
+		public unowned GLib.TlsInteraction? get_interaction ();
 		[Version (since = "2.60")]
 		public unowned string? get_negotiated_protocol ();
-		public unowned GLib.TlsCertificate get_peer_certificate ();
+		public unowned GLib.TlsCertificate? get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
 		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
@@ -3014,7 +3014,7 @@ namespace GLib {
 		public void set_advertised_protocols ([CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 		public void set_certificate (GLib.TlsCertificate certificate);
 		[Version (since = "2.30")]
-		public void set_database (GLib.TlsDatabase database);
+		public void set_database (GLib.TlsDatabase? database);
 		[Version (since = "2.30")]
 		public void set_interaction (GLib.TlsInteraction? interaction);
 		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
@@ -3486,12 +3486,12 @@ namespace GLib {
 		public bool close (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool emit_accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
-		public unowned GLib.TlsCertificate get_certificate ();
-		public unowned GLib.TlsDatabase get_database ();
-		public unowned GLib.TlsInteraction get_interaction ();
+		public unowned GLib.TlsCertificate? get_certificate ();
+		public unowned GLib.TlsDatabase? get_database ();
+		public unowned GLib.TlsInteraction? get_interaction ();
 		[Version (since = "2.60")]
 		public abstract unowned string? get_negotiated_protocol ();
-		public unowned GLib.TlsCertificate get_peer_certificate ();
+		public unowned GLib.TlsCertificate? get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
 		[Version (deprecated = true, deprecated_since = "2.64.", since = "2.48")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
@@ -3501,7 +3501,7 @@ namespace GLib {
 		[Version (since = "2.60")]
 		public abstract void set_advertised_protocols ([CCode (array_length = false, array_null_terminated = true)] string[]? protocols);
 		public void set_certificate (GLib.TlsCertificate certificate);
-		public void set_database (GLib.TlsDatabase database);
+		public void set_database (GLib.TlsDatabase? database);
 		public void set_interaction (GLib.TlsInteraction? interaction);
 		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.48")]
 		public void set_rehandshake_mode (GLib.TlsRehandshakeMode mode);
@@ -4844,7 +4844,7 @@ namespace GLib {
 	public delegate GLib.Type DBusProxyTypeFunc (GLib.DBusObjectManagerClient manager, string object_path, string? interface_name);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	[Version (since = "2.26")]
-	public delegate void DBusSignalCallback (GLib.DBusConnection connection, string sender_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters);
+	public delegate void DBusSignalCallback (GLib.DBusConnection connection, string? sender_name, string object_path, string interface_name, string signal_name, GLib.Variant parameters);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 6.9)]
 	[Version (since = "2.26")]
 	public delegate unowned GLib.DBusInterfaceVTable? DBusSubtreeDispatchFunc (GLib.DBusConnection connection, string sender, string object_path, string interface_name, string node, void* out_user_data);
