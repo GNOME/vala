@@ -1,0 +1,62 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	[DBus (name = "Baz")]
+	public signal void bar (string j);
+}
+
+MainLoop main_loop;
+
+void main () {
+	// client
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
+
+	unowned DBusProxy proxy = (DBusProxy) test;
+	unowned DBusInterfaceInfo? iface_info = proxy.get_interface_info ();
+	assert (iface_info != null);
+	assert (iface_info.signals != null);
+	assert (iface_info.signals[0] != null);
+	assert (iface_info.signals[0].name == "Baz");
+	assert (iface_info.signals[0].args != null);
+	assert (iface_info.signals[0].args[0] != null);
+	assert (iface_info.signals[0].args[0].signature == "s");
+
+	assert (iface_info == (DBusInterfaceInfo?) typeof (Test).get_qdata (Quark.from_string ("vala-dbus-interface-info")));
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public signal void foo (int i);
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "dbus_interface_info_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}
