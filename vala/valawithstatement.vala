@@ -76,7 +76,7 @@ public class Vala.WithStatement : Block {
 	private Block _body;
 	private DataType? _data_type;
 
-	public WithStatement (DataType? type_reference, string? variable_name, Expression expression, 
+	public WithStatement (DataType? type_reference, string? variable_name, Expression expression,
 			Block body, SourceReference? source_reference = null) {
 		base (source_reference);
 		this.expression = expression;
@@ -146,10 +146,10 @@ public class Vala.WithStatement : Block {
 
 	bool is_type_reference_compatible () {
 		if (type_reference == null) {
-			type_reference = expression.value_type.copy();
+			type_reference = expression.value_type.copy ();
 		}
 
-		return expression.value_type.compatible(type_reference);
+		return expression.value_type.compatible (type_reference);
 	}
 
 	public override bool check (CodeContext context) {
