@@ -49,6 +49,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual void update_conversion_info ();
 			[NoAccessorMethod]
+			public uint64 max_last_buffer_repeat { get; set; }
+			[NoAccessorMethod]
 			public bool repeat_after_eos { get; set; }
 			[NoAccessorMethod]
 			public uint zorder { get; set; }
@@ -669,10 +671,8 @@ namespace Gst {
 		[GIR (name = "VideoContentLightLevel")]
 		[Version (since = "1.18")]
 		public struct ContentLightLevel {
-			public uint maxCLL_n;
-			public uint maxCLL_d;
-			public uint maxFALL_n;
-			public uint maxFALL_d;
+			public uint16 max_content_light_level;
+			public uint16 max_frame_average_light_level;
 			public bool add_to_caps (Gst.Caps caps);
 			public bool from_caps (Gst.Caps caps);
 			public bool from_string (string level);
@@ -752,32 +752,23 @@ namespace Gst {
 		[GIR (name = "VideoMasteringDisplayInfo")]
 		[Version (since = "1.18")]
 		public struct MasteringDisplayInfo {
-			public uint Rx_n;
-			public uint Rx_d;
-			public uint Ry_n;
-			public uint Ry_d;
-			public uint Gx_n;
-			public uint Gx_d;
-			public uint Gy_n;
-			public uint Gy_d;
-			public uint Bx_n;
-			public uint Bx_d;
-			public uint By_n;
-			public uint By_d;
-			public uint Wx_n;
-			public uint Wx_d;
-			public uint Wy_n;
-			public uint Wy_d;
-			public uint max_luma_n;
-			public uint max_luma_d;
-			public uint min_luma_n;
-			public uint min_luma_d;
+			[CCode (array_length = false)]
+			public weak Gst.Video.MasteringDisplayInfoCoordinates display_primaries[3];
+			public Gst.Video.MasteringDisplayInfoCoordinates white_point;
+			public uint32 max_display_mastering_luminance;
+			public uint32 min_display_mastering_luminance;
 			public bool add_to_caps (Gst.Caps caps);
 			public bool from_caps (Gst.Caps caps);
 			public void init ();
 			public bool is_equal (Gst.Video.MasteringDisplayInfo other);
-			public bool is_valid ();
-			public string? to_string ();
+			public string to_string ();
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoMasteringDisplayInfoCoordinates")]
+		[Version (since = "1.18")]
+		public struct MasteringDisplayInfoCoordinates {
+			public uint16 x;
+			public uint16 y;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoMeta")]
@@ -1175,7 +1166,11 @@ namespace Gst {
 			P016_BE,
 			P016_LE,
 			P012_BE,
-			P012_LE
+			P012_LE,
+			Y212_BE,
+			Y212_LE,
+			Y412_BE,
+			Y412_LE
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1598,9 +1593,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_META_TAG_VIDEO_STR")]
 		[Version (since = "1.2")]
 		public const string META_TAG_VIDEO_STR;
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS")]
-		[Version (since = "1.2")]
-		public const string OVERLAY_COMPOSITION_BLEND_FORMATS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RESAMPLER_OPT_CUBIC_B")]
 		public const string RESAMPLER_OPT_CUBIC_B;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_RESAMPLER_OPT_CUBIC_C")]

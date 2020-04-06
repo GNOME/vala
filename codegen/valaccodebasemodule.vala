@@ -557,10 +557,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gtk_widget_type = (Class) gtk_ns.scope.lookup ("Widget");
 		}
 
-		header_file = new CCodeFile ();
-		header_file.is_header = true;
-		internal_header_file = new CCodeFile ();
-		internal_header_file.is_header = true;
+		header_file = new CCodeFile (CCodeFileType.PUBLIC_HEADER);
+		internal_header_file = new CCodeFile (CCodeFileType.INTERNAL_HEADER);
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -592,6 +590,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
+				header_file.add_include ("glib.h");
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
 				ret = header_file.store (context.header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
@@ -605,6 +604,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (context.internal_header_filename != null) {
 			bool ret;
 			if (context.profile == Profile.GOBJECT) {
+				internal_header_file.add_include ("glib.h");
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "G_BEGIN_DECLS", "G_END_DECLS");
 			} else {
 				ret = internal_header_file.store (context.internal_header_filename, null, context.version_header, false, "#ifdef  __cplusplus\nextern \"C\" {\n#endif", "#ifdef  __cplusplus\n}\n#endif");
@@ -670,6 +670,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public bool add_symbol_declaration (CCodeFile decl_space, Symbol sym, string name) {
+		bool in_generated_header = context.header_filename != null
+		                           && (decl_space.file_type != CCodeFileType.PUBLIC_HEADER && !sym.is_internal_symbol ());
 		if (decl_space.add_declaration (name)) {
 			return true;
 		}
@@ -677,13 +679,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			sym.source_reference.file.used = true;
 		}
 		if (sym.anonymous) {
-			return !decl_space.is_header && CodeContext.get ().use_header;
+			return in_generated_header;
 		}
 		// constants with initializer-list are special
 		if (sym is Constant && ((Constant) sym).value is InitializerList) {
 			return false;
 		}
-		if (sym.external_package || (!decl_space.is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())
+		if (sym.external_package || in_generated_header
 		    || (sym.is_extern && get_ccode_header_filenames (sym).length > 0)) {
 			// add feature test macros
 			foreach (unowned string feature_test_macro in get_ccode_feature_test_macros (sym).split (",")) {
@@ -751,7 +753,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		cfile = new CCodeFile (source_file);
+		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 
@@ -992,6 +994,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				decl_space.add_constant_declaration (cdecl);
 			} else {
+				if (c.value is StringLiteral && ((StringLiteral) c.value).translate) {
+					// translated string constant
+					var m = (Method) root_symbol.scope.lookup ("GLib").scope.lookup ("_");
+					add_symbol_declaration (decl_space, m, get_ccode_name (m));
+				}
+
 				var cdefine = new CCodeMacroReplacement.with_expression (get_ccode_name (c), get_cvalue (c.value));
 				decl_space.add_type_member_declaration (cdefine);
 			}
@@ -3670,6 +3678,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
 			}
 
+			// FIXME this breaks in our macro, so this should not happen
+			if (cvar is CCodeCastExpression) {
+				cvar = ((CCodeCastExpression) cvar).inner;
+			}
+
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (free0_func));
 			ccall.add_argument (cvar);
 			return ccall;
@@ -4267,10 +4280,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		if (expr.translate) {
 			// translated string constant
-
-			var m = (Method) root_symbol.scope.lookup ("GLib").scope.lookup ("_");
-			add_symbol_declaration (cfile, m, get_ccode_name (m));
-
 			var translate = new CCodeFunctionCall (new CCodeIdentifier ("_"));
 			translate.add_argument (get_cvalue (expr));
 			set_cvalue (expr, translate);

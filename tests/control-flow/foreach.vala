@@ -43,6 +43,7 @@ void test_foreach_multidim_array () {
 }
 
 const int[] FOO = { 1, 2, 3, 4, 5, 6 };
+const int BAR[] = { 6, 5, 4, 3, 2, 1 };
 
 void test_foreach_const_array () {
 	string result = "";
@@ -50,6 +51,12 @@ void test_foreach_const_array () {
 		result += i.to_string ();
 	}
 	assert (result == "123456");
+
+	string result2 = "";
+	foreach (var i in BAR) {
+		result2 += i.to_string ();
+	}
+	assert (result2 == "654321");
 }
 
 void test_foreach_slice_array () {

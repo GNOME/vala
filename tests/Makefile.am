@@ -376,6 +376,7 @@ TESTS = \
 	objects/interface-base-access.vala \
 	objects/interface-inner-types.vala \
 	objects/interfaces.vala \
+	objects/interface-abstract-async-override.vala \
 	objects/interface-generics.vala \
 	objects/interface-property-base-access.vala \
 	objects/interface-property-base-impl.vala \
@@ -383,6 +384,7 @@ TESTS = \
 	objects/interface-property-override.vala \
 	objects/interface-virtual-override.vala \
 	objects/member-initializer-base-properties.vala \
+	objects/member-initializer-property.vala \
 	objects/member-initializer-property-owned-setter.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
@@ -591,6 +593,7 @@ TESTS = \
 	dbus/bug783002.test \
 	dbus/bug792277.vala \
 	dbus/rawvariants.test \
+	dbus/interface-info.test \
 	gir/bug651773.test \
 	gir/bug667751.test \
 	gir/bug742012.test \
@@ -670,6 +673,7 @@ TESTS = \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
+	parser/invalid-statement-delimiter.test \
 	parser/local-variable.vala \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
@@ -812,6 +816,7 @@ TESTS = \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
 	semantic/interface-prerequisite-multiple.test \
+	semantic/literal-expression.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-static-access-instance-field.test \
 	semantic/localvariable-var-static-access-instance-method.test \

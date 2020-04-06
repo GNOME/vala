@@ -5,12 +5,8 @@ Program: client
 
 [DBus (name = "org.example.Test")]
 interface Test : Object {
-	public signal void foo (int i);
-	public signal void bar (string[] baz);
-	internal signal void finish ();
-
-	public abstract void do_foo (int i) throws DBusError, IOError;
-	public abstract void do_bar (string[] baz) throws DBusError, IOError;
+	[DBus (name = "Baz")]
+	public signal void bar (string j);
 }
 
 MainLoop main_loop;
@@ -19,27 +15,17 @@ void main () {
 	// client
 	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test");
 
-	test.foo.connect ((i) => {
-		assert (i == 42);
-	});
+	unowned DBusProxy proxy = (DBusProxy) test;
+	unowned DBusInterfaceInfo? iface_info = proxy.get_interface_info ();
+	assert (iface_info != null);
+	assert (iface_info.signals != null);
+	assert (iface_info.signals[0] != null);
+	assert (iface_info.signals[0].name == "Baz");
+	assert (iface_info.signals[0].args != null);
+	assert (iface_info.signals[0].args[0] != null);
+	assert (iface_info.signals[0].args[0].signature == "s");
 
-	test.bar.connect ((baz) => {
-		assert (baz.length == 3);
-		assert (baz[0] == "zero");
-		assert (baz[1] == "one");
-		assert (baz[2] == "two");
-		main_loop.quit ();
-	});
-
-	test.finish.connect (() => {
-		assert_not_reached ();
-	});
-
-	test.do_foo (42);
-	test.do_bar ({"zero", "one", "two"});
-
-	main_loop = new MainLoop ();
-	main_loop.run ();
+	assert (iface_info == (DBusInterfaceInfo?) typeof (Test).get_qdata (Quark.from_string ("vala-dbus-interface-info")));
 }
 
 Program: server
@@ -47,17 +33,6 @@ Program: server
 [DBus (name = "org.example.Test")]
 class Test : Object {
 	public signal void foo (int i);
-	public signal void bar (string[] baz);
-	private signal void finish ();
-
-	public void do_foo (int i) throws DBusError, IOError {
-		this.foo (i);
-		finish ();
-	}
-
-	public void do_bar (string[] baz) throws DBusError, IOError {
-		this.bar (baz);
-	}
 }
 
 MainLoop main_loop;
@@ -79,7 +54,7 @@ void main () {
 
 	// server ready, spawn client
 	Pid client_pid;
-	Process.spawn_async (null, { "dbus_signals_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	Process.spawn_async (null, { "dbus_interface_info_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
 	ChildWatch.add (client_pid, client_exit);
 
 	main_loop = new MainLoop ();
