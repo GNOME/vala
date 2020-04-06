@@ -2255,7 +2255,7 @@ public class Vala.Parser : CodeVisitor {
 	inline void expect_or_throw (TokenType type) throws ParseError {
 		// Don't continue on any minor issue as the with-syntax is a fragile left recursion
 		if (!accept (type)) {
-			throw new ParseError.SYNTAX(@"expected $(type.to_string ())");
+			throw new ParseError.SYNTAX (@"expected $(type.to_string ())");
 		}
 	}
 
@@ -2263,7 +2263,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect_or_throw (TokenType.WITH);
 		expect_or_throw (TokenType.OPEN_PARENS);
-		var expr_or_decl = get_location();
+		var expr_or_decl = get_location ();
 
 		DataType? variable_type = null;
 		string? variable_name = null;
