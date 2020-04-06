@@ -1,3 +1,27 @@
+Vala 0.48.3
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Append initializer for "_*_size_" of array field in internal struct
+    + Avoid critical trying to serialize an unsupported type to Variant [#952]
+    + Don't free value if property setter takes ownership [#953]
+    + Correct field declaration for captured inline-allocated array [#954]
+    + Include "glib.h" for G_BEGIN_DECLS/G_END_DECLS usage
+    + Correctly handle transformation of translated string-literal constants
+    + Don't pass CCodeCastExpression to NULL-aware free macro [#953]
+  - vala:
+    + Support struct initializer list in non-constant array [#949]
+    + Handle unlock() statement in CodeWriter
+    + Handle all ctors and dtors in CodeWriter
+    + Consider boolean types are compatible with each other
+    + Parse standalone integer/real literals as expression statement [#961]
+    + Warn about usage of override to implement abstract interface methods
+
+ * Bindings:
+  - gio-2.0: Update to 2.65.0~a136776e
+  - gstreamer: Update from 1.17.0+ git master
+  - gtk4: Update to 3.98.2+11495027
+
 Vala 0.48.2
 ===========
  * Various improvements and bug fixes:
