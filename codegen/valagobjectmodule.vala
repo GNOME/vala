@@ -245,60 +245,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
-			if (prop.property_type.is_real_struct_type ()) {
-				ccode.open_block ();
-				ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("boxed"));
-
-				ccall = new CCodeFunctionCall (cfunc);
-				ccall.add_argument (cself);
-				if (prop.property_type.nullable) {
-					ccode.add_assignment (new CCodeIdentifier ("boxed"), ccall);
-				} else {
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
-					ccode.add_expression (ccall);
-				}
-
-				var csetcall = new CCodeFunctionCall ();
-				csetcall.call = get_value_setter_function (prop.property_type);
-				csetcall.add_argument (new CCodeIdentifier ("value"));
-				if (prop.property_type.nullable) {
-					csetcall.add_argument (new CCodeIdentifier ("boxed"));
-				} else {
-					csetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
-				}
-				add_guarded_expression (prop, csetcall);
-
-				if (requires_destroy (prop.get_accessor.value_type)) {
-					ccode.add_expression (destroy_value (new GLibValue (prop.get_accessor.value_type, new CCodeIdentifier ("boxed"), true)));
-				}
-				ccode.close ();
-			} else {
-				ccall = new CCodeFunctionCall (cfunc);
-				ccall.add_argument (cself);
-				var array_type = prop.property_type as ArrayType;
-				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
-					// G_TYPE_STRV
-					ccode.open_block ();
-					ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("length")));
-				}
-				var csetcall = new CCodeFunctionCall ();
-				if (prop.get_accessor.value_type.value_owned) {
-					csetcall.call = get_value_taker_function (prop.property_type);
-				} else {
-					csetcall.call = get_value_setter_function (prop.property_type);
-				}
-				csetcall.add_argument (new CCodeIdentifier ("value"));
-				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
-					csetcall.add_argument (convert_from_generic_pointer (ccall, prop.property_type));
-				} else {
-					csetcall.add_argument (ccall);
-				}
-				add_guarded_expression (prop, csetcall);
-				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
-					ccode.close ();
-				}
-			}
+			property_to_value (prop, cfunc, cself, base_prop);
 			ccode.add_break ();
 		}
 
@@ -350,6 +297,63 @@ public class Vala.GObjectModule : GTypeModule {
 		cfile.add_function (get_prop);
 	}
 
+	protected void property_to_value (Property prop, CCodeExpression get_prop_func, CCodeExpression cself, Property? base_prop) {
+		if (prop.property_type.is_real_struct_type ()) {
+			ccode.open_block ();
+			ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("boxed"));
+
+			var ccall = new CCodeFunctionCall (get_prop_func);
+			ccall.add_argument (cself);
+			if (prop.property_type.nullable) {
+				ccode.add_assignment (new CCodeIdentifier ("boxed"), ccall);
+			} else {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
+				ccode.add_expression (ccall);
+			}
+
+			var csetcall = new CCodeFunctionCall ();
+			csetcall.call = get_value_setter_function (prop.property_type);
+			csetcall.add_argument (new CCodeIdentifier ("value"));
+			if (prop.property_type.nullable) {
+				csetcall.add_argument (new CCodeIdentifier ("boxed"));
+			} else {
+				csetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("boxed")));
+			}
+			add_guarded_expression (prop, csetcall);
+
+			if (requires_destroy (prop.get_accessor.value_type)) {
+				ccode.add_expression (destroy_value (new GLibValue (prop.get_accessor.value_type, new CCodeIdentifier ("boxed"), true)));
+			}
+			ccode.close ();
+		} else {
+			var ccall = new CCodeFunctionCall (get_prop_func);
+			ccall.add_argument (cself);
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
+				// G_TYPE_STRV
+				ccode.open_block ();
+				ccode.add_declaration ("int", new CCodeVariableDeclarator ("length"));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("length")));
+			}
+			var csetcall = new CCodeFunctionCall ();
+			if (prop.get_accessor.value_type.value_owned) {
+				csetcall.call = get_value_taker_function (prop.property_type);
+			} else {
+				csetcall.call = get_value_setter_function (prop.property_type);
+			}
+			csetcall.add_argument (new CCodeIdentifier ("value"));
+			if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+				csetcall.add_argument (convert_from_generic_pointer (ccall, prop.property_type));
+			} else {
+				csetcall.add_argument (ccall);
+			}
+			add_guarded_expression (prop, csetcall);
+			if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
+				ccode.close ();
+			}
+		}
+	}
+
 	private void add_set_property_function (Class cl) {
 		var set_prop = new CCodeFunction ("_vala_%s_set_property".printf (get_ccode_lower_case_name (cl, null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
@@ -398,42 +402,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			ccode.add_case (new CCodeIdentifier ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
-			ccall = new CCodeFunctionCall (cfunc);
-			ccall.add_argument (cself);
-			if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.type_symbol == string_type.type_symbol) {
-				ccode.open_block ();
-				ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("boxed"));
-
-				var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_boxed"));
-				cgetcall.add_argument (new CCodeIdentifier ("value"));
-				ccode.add_assignment (new CCodeIdentifier ("boxed"), cgetcall);
-				ccall.add_argument (new CCodeIdentifier ("boxed"));
-
-				if (get_ccode_array_length (prop)) {
-					var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("boxed"), new CCodeConstant ("NULL"));
-					var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-					cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
-					var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cstrvlen);
-
-					ccall.add_argument (ccond);
-				}
-				add_guarded_expression (prop, ccall);
-				ccode.close ();
-			} else {
-				var cgetcall = new CCodeFunctionCall ();
-				if (prop.property_type.type_symbol != null) {
-					cgetcall.call = new CCodeIdentifier (get_ccode_get_value_function (prop.property_type.type_symbol));
-				} else {
-					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
-				}
-				cgetcall.add_argument (new CCodeIdentifier ("value"));
-				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
-					ccall.add_argument (convert_to_generic_pointer (cgetcall, prop.property_type));
-				} else {
-					ccall.add_argument (cgetcall);
-				}
-				add_guarded_expression (prop, ccall);
-			}
+			property_from_value (prop, cfunc, cself, base_prop);
 			ccode.add_break ();
 		}
 
@@ -480,6 +449,45 @@ public class Vala.GObjectModule : GTypeModule {
 
 		cfile.add_function_declaration (set_prop);
 		cfile.add_function (set_prop);
+	}
+
+	protected void property_from_value (Property prop, CCodeExpression set_prop_func, CCodeExpression cself, Property? base_prop) {
+		var ccall = new CCodeFunctionCall (set_prop_func);
+		ccall.add_argument (cself);
+		if (prop.property_type is ArrayType && ((ArrayType)prop.property_type).element_type.type_symbol == string_type.type_symbol) {
+			ccode.open_block ();
+			ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("boxed"));
+
+			var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_boxed"));
+			cgetcall.add_argument (new CCodeIdentifier ("value"));
+			ccode.add_assignment (new CCodeIdentifier ("boxed"), cgetcall);
+			ccall.add_argument (new CCodeIdentifier ("boxed"));
+
+			if (get_ccode_array_length (prop)) {
+				var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("boxed"), new CCodeConstant ("NULL"));
+				var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+				cstrvlen.add_argument (new CCodeIdentifier ("boxed"));
+				var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cstrvlen);
+
+				ccall.add_argument (ccond);
+			}
+			add_guarded_expression (prop, ccall);
+			ccode.close ();
+		} else {
+			var cgetcall = new CCodeFunctionCall ();
+			if (prop.property_type.type_symbol != null) {
+				cgetcall.call = new CCodeIdentifier (get_ccode_get_value_function (prop.property_type.type_symbol));
+			} else {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
+			}
+			cgetcall.add_argument (new CCodeIdentifier ("value"));
+			if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+				ccall.add_argument (convert_to_generic_pointer (cgetcall, prop.property_type));
+			} else {
+				ccall.add_argument (cgetcall);
+			}
+			add_guarded_expression (prop, ccall);
+		}
 	}
 
 	private void emit_invalid_property_id_warn () {
