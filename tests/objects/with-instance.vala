@@ -1,5 +1,5 @@
 class Foo {
-	public int field;
+    public int field;
     public string prop { get; set; }
 
     public bool method_called = false;
@@ -11,7 +11,8 @@ class Foo {
 class Bar : Foo { }
 
 class TestFoo {
-    public int class_field;
+    public static int class_field;
+    public int instance_field;
 
     public void test () {
         var foo = new Foo ();
@@ -24,6 +25,7 @@ class TestFoo {
 
             local_field = 20;
             class_field = 30;
+            instance_field = 40;
         }
 
         assert (foo.field == 10);
@@ -32,12 +34,14 @@ class TestFoo {
 
         assert (local_field == 20);
         assert (class_field == 30);
+        assert (instance_field == 40);
     }
 }
 
 // Copy and paste TestFoo, change Foo to Bar
-class TestBar {
-    public int class_field;
+class TestFoo {
+    public static int class_field;
+    public int instance_field;
 
     public void test () {
         var foo = new Bar ();
@@ -50,6 +54,7 @@ class TestBar {
 
             local_field = 20;
             class_field = 30;
+            instance_field = 40;
         }
 
         assert (foo.field == 10);
@@ -58,6 +63,7 @@ class TestBar {
 
         assert (local_field == 20);
         assert (class_field == 30);
+        assert (instance_field == 40);
     }
 }
 
