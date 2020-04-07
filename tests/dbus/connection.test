@@ -1,0 +1,52 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract int get_test () throws DBusError, IOError;
+}
+
+void main () {
+	// client
+	var conn = Bus.get_sync (BusType.SESSION);
+	Test test = conn.get_proxy_sync<Test> ("org.example.Test", "/org/example/test");
+
+	assert (test.get_test () == 4711);
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public int get_test () throws DBusError, IOError {
+		return 4711;
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "dbus_connection_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}
