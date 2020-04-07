@@ -25,6 +25,12 @@ public class Vala.GDBusModule : GVariantModule {
 		return symbol.get_attribute_string ("DBus", "name");
 	}
 
+	protected CCodeFunctionCall generate_type_cast (CCodeExpression expr, ObjectTypeSymbol sym) {
+		var result = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_cast_function (sym)));
+		result.add_argument (expr);
+		return result;
+	}
+
 	public static string get_dbus_name_for_member (Symbol symbol) {
 		var dbus_name = symbol.get_attribute_string ("DBus", "name");
 		if (dbus_name != null) {

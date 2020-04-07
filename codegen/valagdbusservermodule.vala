@@ -742,6 +742,270 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 	}
 
+	string generate_properties_changed_emitter (ObjectTypeSymbol sym) {
+		string func_name = "_%semit_properties_changed".printf (get_ccode_lower_case_prefix (sym));
+		if (!add_wrapper (func_name)) {
+			return func_name;
+		}
+
+		var cfunc = new CCodeFunction (func_name, "void");
+		cfunc.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (sym))));
+		cfunc.add_parameter (new CCodeParameter ("data", "gpointer *"));
+		cfunc.add_parameter (new CCodeParameter ("n_pspecs", "guint"));
+		cfunc.add_parameter (new CCodeParameter ("pspecs", "GParamSpec **"));
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		push_function (cfunc);
+
+		ccode.add_declaration ("guint", new CCodeVariableDeclarator ("i"));
+		ccode.add_declaration ("gboolean", new CCodeVariableDeclarator.zero ("has_changes", new CCodeConstant ("FALSE")));
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("changed_builder"));
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("invalidated_builder"));
+
+		var builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		builder_init.add_argument (new CCodeConstant ("G_VARIANT_TYPE_VARDICT"));
+		ccode.add_expression (builder_init);
+
+		builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+		builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+		builder_init.add_argument (new CCodeConstant ("G_VARIANT_TYPE_STRING_ARRAY"));
+		ccode.add_expression (builder_init);
+
+		ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
+		                new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("n_pspecs")),
+		                new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access != SymbolAccessibility.PUBLIC || prop.get_accessor == null || prop.get_accessor.access == SymbolAccessibility.PRIVATE || !is_dbus_visible (prop) || !context.analyzer.is_gobject_property (prop)) {
+				continue;
+			}
+
+			var compare = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+			compare.add_argument (new CCodeMemberAccess.pointer (new CCodeElementAccess (new CCodeIdentifier ("pspecs"), new CCodeIdentifier ("i")), "name"));
+			compare.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_ccode_name (prop))));
+			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, compare, new CCodeConstant ("0")));
+
+			var get_property = new CCodeFunctionCall (new CCodeIdentifier ("_dbus_%s".printf (get_ccode_name (prop.get_accessor))));
+			get_property.add_argument (new CCodeIdentifier ("self"));
+
+			var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
+			builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+			builder_add.add_argument (new CCodeConstant.string ("\"{sv}\""));
+			builder_add.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+			builder_add.add_argument (get_property);
+			ccode.add_expression (builder_add);
+			ccode.add_assignment (new CCodeIdentifier ("has_changes"), new CCodeConstant ("TRUE"));
+
+			ccode.close ();
+		}
+
+		ccode.close ();
+
+		ccode.open_if (new CCodeIdentifier ("has_changes"));
+
+		var variant_new = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_new"));
+		variant_new.add_argument (new CCodeConstant.string ("\"(sa{sv}as)\""));
+		variant_new.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name (sym))));
+		variant_new.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		variant_new.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+
+		var emit = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_emit_signal"));
+		emit.add_argument (new CCodeCastExpression (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("1")), "GDBusConnection *"));
+		emit.add_argument (new CCodeConstant ("NULL"));
+		emit.add_argument (new CCodeCastExpression (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("2")), "const gchar *"));
+		emit.add_argument (new CCodeConstant.string ("\"org.freedesktop.DBus.Properties\""));
+		emit.add_argument (new CCodeConstant.string ("\"PropertiesChanged\""));
+		emit.add_argument (variant_new);
+		emit.add_argument (new CCodeConstant ("NULL"));
+		ccode.add_expression (emit);
+
+		ccode.add_else ();
+
+		var builder_clear = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_clear"));
+		builder_clear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		ccode.add_expression (builder_clear);
+
+		builder_clear = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_clear"));
+		builder_clear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+		ccode.add_expression (builder_clear);
+
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
+		cfile.add_function (cfunc);
+
+		return func_name;
+	}
+
+	// Classes batch their property changes in a single PropertiesChanged signal
+	// by overriding GObjectClass.dispatch_properties_changed
+	bool uses_dispatch_properties_changed (ObjectTypeSymbol sym) {
+		return sym.scope.lookup ("_dbus_registrations") is Field;
+	}
+
+	public override void emit (CodeContext context) {
+		add_registrations_fields (context, context.root);
+		base.emit (context);
+	}
+
+	void add_registrations_fields (CodeContext context, Namespace ns) {
+		foreach (Class cl in ns.get_classes ()) {
+			add_registrations_field (context, cl);
+		}
+		foreach (Namespace child in ns.get_namespaces ()) {
+			add_registrations_fields (context, child);
+		}
+	}
+
+	void add_registrations_field (CodeContext context, Class cl) {
+		foreach (Class nested in cl.get_classes ()) {
+			add_registrations_field (context, nested);
+		}
+
+		if (cl.source_reference == null || cl.source_reference.file.file_type != SourceFileType.SOURCE
+		    || get_dbus_name (cl) == null || !cl.is_subtype_of (context.analyzer.object_type) || !has_dbus_properties (cl, context)) {
+			return;
+		}
+
+		var field = new Field ("_dbus_registrations", new PointerType (new VoidType ()), null, cl.source_reference);
+		field.access = SymbolAccessibility.PRIVATE;
+		cl.add_field (field);
+		field.check (context);
+	}
+
+	CCodeExpression declare_self_for_registrations (Class cl, CCodeExpression object) {
+		ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
+		ccode.add_assignment (new CCodeIdentifier ("self"), generate_type_cast (object, cl));
+
+		return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), "_dbus_registrations");
+	}
+
+	bool has_dbus_properties (ObjectTypeSymbol sym, CodeContext context) {
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access == SymbolAccessibility.PUBLIC && is_dbus_visible (prop) && context.analyzer.is_gobject_property (prop)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public override void generate_class_init (Class cl) {
+		base.generate_class_init (cl);
+
+		if (!uses_dispatch_properties_changed (cl)) {
+			return;
+		}
+
+		string emitter = generate_properties_changed_emitter (cl);
+		string func_name = "_%sdispatch_properties_changed".printf (get_ccode_lower_case_prefix (cl));
+
+		var cfunc = new CCodeFunction (func_name, "void");
+		cfunc.add_parameter (new CCodeParameter ("gobject", "GObject *"));
+		cfunc.add_parameter (new CCodeParameter ("n_pspecs", "guint"));
+		cfunc.add_parameter (new CCodeParameter ("pspecs", "GParamSpec **"));
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		push_function (cfunc);
+
+		ccode.add_declaration ("GSList*", new CCodeVariableDeclarator ("registration"));
+
+		var parent_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		parent_class.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))));
+		var chain_up = new CCodeFunctionCall (new CCodeMemberAccess.pointer (parent_class, "dispatch_properties_changed"));
+		chain_up.add_argument (new CCodeIdentifier ("gobject"));
+		chain_up.add_argument (new CCodeIdentifier ("n_pspecs"));
+		chain_up.add_argument (new CCodeIdentifier ("pspecs"));
+		ccode.add_expression (chain_up);
+
+		ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("registration"), declare_self_for_registrations (cl, new CCodeIdentifier ("gobject"))),
+		                new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("registration"), new CCodeConstant ("NULL")),
+		                new CCodeAssignment (new CCodeIdentifier ("registration"), new CCodeMemberAccess.pointer (new CCodeIdentifier ("registration"), "next")));
+
+		var emit = new CCodeFunctionCall (new CCodeIdentifier (emitter));
+		emit.add_argument (new CCodeIdentifier ("self"));
+		emit.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("registration"), "data"));
+		emit.add_argument (new CCodeIdentifier ("n_pspecs"));
+		emit.add_argument (new CCodeIdentifier ("pspecs"));
+		ccode.add_expression (emit);
+
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
+		cfile.add_function (cfunc);
+
+		var klass = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		klass.add_argument (new CCodeIdentifier ("klass"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (klass, "dispatch_properties_changed"), new CCodeIdentifier (func_name));
+	}
+
+	// Interfaces cannot override dispatch_properties_changed, so they emit on each notification
+	void generate_property_notify (ObjectTypeSymbol sym, string notify_name) {
+		string emitter = generate_properties_changed_emitter (sym);
+
+		var cfunc = new CCodeFunction (notify_name, "void");
+		cfunc.add_parameter (new CCodeParameter ("gobject", "GObject *"));
+		cfunc.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		push_function (cfunc);
+
+		var emit = new CCodeFunctionCall (new CCodeIdentifier (emitter));
+		emit.add_argument (generate_type_cast (new CCodeIdentifier ("gobject"), sym));
+		emit.add_argument (new CCodeIdentifier ("user_data"));
+		emit.add_argument (new CCodeConstant ("1"));
+		emit.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("pspec")));
+		ccode.add_expression (emit);
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
+		cfile.add_function (cfunc);
+	}
+
+	void handle_properties (ObjectTypeSymbol sym, bool connect) {
+		if (get_dbus_name (sym) == null || !has_dbus_properties (sym, context)) {
+			return;
+		}
+
+		if (uses_dispatch_properties_changed (sym)) {
+			// keep track of the registrations so that dispatch_properties_changed can emit on each of them
+			CCodeExpression object = new CCodeIdentifier ("object");
+			if (!connect) {
+				object = new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"));
+			}
+			var registrations = declare_self_for_registrations ((Class) sym, object);
+
+			var update_list = new CCodeFunctionCall (new CCodeIdentifier (connect ? "g_slist_prepend" : "g_slist_remove"));
+			update_list.add_argument (registrations);
+			update_list.add_argument (new CCodeIdentifier ("data"));
+			ccode.add_assignment (registrations, update_list);
+			return;
+		}
+
+		string notify_name = "_%snotify".printf (get_ccode_lower_case_prefix (sym));
+		if (connect) {
+			generate_property_notify (sym, notify_name);
+			var connect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
+			connect_call.add_argument (new CCodeIdentifier ("object"));
+			connect_call.add_argument (new CCodeConstant.string ("\"notify\""));
+			connect_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (notify_name), "GCallback"));
+			connect_call.add_argument (new CCodeIdentifier ("data"));
+			ccode.add_expression (connect_call);
+		} else {
+			var disconnect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_handlers_disconnect_by_func"));
+			disconnect_call.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
+			disconnect_call.add_argument (new CCodeIdentifier (notify_name));
+			disconnect_call.add_argument (new CCodeIdentifier ("data"));
+			ccode.add_expression (disconnect_call);
+		}
+	}
+
 	void generate_interface_method_call_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "dbus_interface_method_call", "void");
 		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
@@ -1199,6 +1463,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.close ();
 
 		handle_signals (sym, true);
+		handle_properties (sym, true);
 
 		ccode.add_return (new CCodeIdentifier ("result"));
 
@@ -1215,6 +1480,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
 
 		handle_signals (sym, false);
+		handle_properties (sym, false);
 
 		var unref_object = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_unref_function (sym)));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));

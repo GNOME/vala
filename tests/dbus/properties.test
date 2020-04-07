@@ -1,0 +1,110 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract string test_property { owned get; set; }
+	public abstract int test_int_property { get; set; }
+	public abstract void change_everything () throws GLib.Error;
+	public abstract void check_everything () throws GLib.Error;
+}
+
+class Test2 : Object {
+	public string test_property { get; set; }
+	public int test_int_property { get; set; }
+}
+
+void main () {
+	// client
+	Test test = Bus.get_proxy_sync (BusType.SESSION, "org.example.Test", "/org/example/test", DBusProxyFlags.NONE);
+	assert (test.test_property == "foo");
+	assert (test.test_int_property == 17);
+
+	Test2 test2 = new Test2 ();
+	test.bind_property ("test-property", test2, "test-property", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+	test.bind_property ("test-int-property", test2, "test-int-property", BindingFlags.SYNC_CREATE | BindingFlags.BIDIRECTIONAL);
+
+	{
+		MainLoop main_loop = new MainLoop ();
+
+		assert (test2.test_property == "foo");
+		assert (test2.test_int_property == 17);
+
+		test2.notify["test-int-property"].connect ((p) => {
+			assert (((ParamSpecInt) p).name == "test-int-property");
+			main_loop.quit ();
+		});
+
+		test.change_everything ();
+		main_loop.run ();
+
+		assert (test.test_property == "bar");
+		assert (test.test_int_property == 53);
+	}
+	{
+		MainLoop main_loop2 = new MainLoop ();
+
+		assert (test2.test_property == "bar");
+		assert (test2.test_int_property == 53);
+
+		test.notify["test-property"].connect ((p) => {
+			assert (((ParamSpecString) p).name == "test-property");
+			main_loop2.quit ();
+		});
+
+		test2.test_property = "baz";
+		test2.test_int_property = 765;
+		main_loop2.run ();
+
+		assert (test2.test_property == "baz");
+		assert (test2.test_int_property == 765);
+
+		test.check_everything ();
+	}
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	public string test_property { owned get; set; default = "foo";}
+	public int test_int_property { get; set; default = 17; }
+
+	public void change_everything () throws GLib.Error {
+		test_property = "bar";
+		test_int_property = 53;
+	}
+
+	public void check_everything () throws GLib.Error {
+		assert (test_property == "baz");
+		assert (test_int_property == 765);
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	// client finished, terminate server
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/test", new Test ());
+
+	// try to register service in session bus
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "dbus_properties_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}

@@ -473,11 +473,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 
-		if (type_sym is Interface && type_sym.has_attribute ("DBus")) {
-			// GObject properties not currently supported in D-Bus interfaces
-			return false;
-		}
-
 		return true;
 	}
 

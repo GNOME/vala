@@ -6,6 +6,7 @@ Program: client
 [DBus (name = "org.example.Test")]
 interface Test : Object {
 	public abstract string[] test_property { owned get; set; }
+	public abstract int[] test_int_property { owned get; set; }
 
 	public abstract int[] test_int (int[] i, out int[] j) throws IOError;
 	public abstract string[] test_string (string[] s, out string[] t) throws IOError;
@@ -28,6 +29,10 @@ void main () {
 	test.test_property = { "hello" };
 	t = test.test_property;
 	assert (t.length == 1 && t[0] == "hello");
+
+	test.test_int_property = { 42 };
+	j = test.test_int_property;
+	assert (j.length == 1 && j[0] == 42);
 }
 
 Program: server
@@ -35,6 +40,11 @@ Program: server
 [DBus (name = "org.example.Test")]
 class Test : Object {
 	public string[] test_property { owned get; set; }
+	private int[] _test_int_property = { 23 };
+	public int[] test_int_property {
+		owned get { return _test_int_property; }
+		set { _test_int_property = value; }
+	}
 
 	public int[] test_int (int[] i, out int[] j) {
 		assert (i.length == 1 && i[0] == 42);
