@@ -551,7 +551,10 @@ TESTS = \
 	dbus/structs.test \
 	dbus/errors.test \
 	dbus/async.test \
+	dbus/async-bus.test \
+	dbus/async-connection.test \
 	dbus/async-errors.test \
+	dbus/connection.test \
 	dbus/dynamic-method.test \
 	dbus/enum-string-marshalling.vala \
 	dbus/signals.test \
