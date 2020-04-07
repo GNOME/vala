@@ -210,17 +210,51 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cfile.add_type_member_definition (define_type);
 
+		generate_properties_enums (iface);
+
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeParameter ("klass", cname + "Class*"));
 		proxy_class_init.modifiers = CCodeModifiers.STATIC;
 		push_function (proxy_class_init);
 		var proxy_class = new CCodeFunctionCall (new CCodeIdentifier ("G_DBUS_PROXY_CLASS"));
 		proxy_class.add_argument (new CCodeIdentifier ("klass"));
-		ccode.add_assignment (new CCodeMemberAccess.pointer (proxy_class, "g_signal"), new CCodeIdentifier (lower_cname + "_g_signal"));
+		ccode.add_declaration ("GDBusProxyClass *", new CCodeVariableDeclarator.zero ("proxy_class", proxy_class));
+		var proxy_class_identifier = new CCodeIdentifier ("proxy_class");
+
+		var object_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		object_class.add_argument (new CCodeIdentifier ("klass"));
+		ccode.add_declaration ("GObjectClass *", new CCodeVariableDeclarator.zero ("object_class", object_class));
+		var object_class_identifier = new CCodeIdentifier ("object_class");
+
+		ccode.add_assignment (new CCodeMemberAccess.pointer (proxy_class_identifier, "g_signal"), new CCodeIdentifier (lower_cname + "_g_signal"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (proxy_class_identifier, "g_properties_changed"), new CCodeIdentifier (lower_cname + "_g_properties_changed"));
+
+		ccode.add_assignment (new CCodeMemberAccess.pointer (object_class_identifier, "get_property"), new CCodeIdentifier (lower_cname + "_get_property"));
+		ccode.add_assignment (new CCodeMemberAccess.pointer (object_class_identifier, "set_property"), new CCodeIdentifier (lower_cname + "_set_property"));
+
+		var sym_name = get_ccode_upper_case_name (iface) + "_PROXY";
+		var pspecs = new CCodeIdentifier ("%s_proxy_properties".printf (get_ccode_lower_case_name (iface)));
+		foreach (Property prop in iface.get_properties ()) {
+			var upper_identifier = new CCodeIdentifier ("%s_%s_PROPERTY".printf (sym_name, Symbol.camel_case_to_lower_case (prop.name).ascii_up ()));
+			var override_func = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
+			override_func.add_argument (object_class_identifier);
+			override_func.add_argument (upper_identifier);
+			override_func.add_argument (get_property_canonical_cconstant (prop));
+			ccode.add_expression (override_func);
+			var find_prop = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_find_property"));
+			find_prop.add_argument (object_class_identifier);
+			find_prop.add_argument (get_property_canonical_cconstant (prop));
+			ccode.add_assignment (new CCodeElementAccess (pspecs, upper_identifier), find_prop);
+		}
+
 		pop_function ();
 		cfile.add_function (proxy_class_init);
 
+		generate_pspec_from_dbus_property (iface);
+		generate_get_property_function (iface);
+		generate_set_property_function (iface);
 		generate_signal_handler_function (iface);
+		generate_properties_changed_handler_function (iface);
 
 		if (in_plugin) {
 			var proxy_class_finalize = new CCodeFunction (lower_cname + "_class_finalize", "void");
@@ -506,6 +540,117 @@ public class Vala.GDBusClientModule : GDBusModule {
 		return wrapper_name;
 	}
 
+	void generate_properties_enums (ObjectTypeSymbol sym) {
+		var prop_enum = new CCodeEnum ();
+		var sym_name = get_ccode_upper_case_name (sym) + "_PROXY";
+		prop_enum.add_value (new CCodeEnumValue ("%s_0_PROPERTY".printf (sym_name)));
+		var properties = sym.get_properties ();
+		foreach (Property prop in properties) {
+			   prop_enum.add_value (new CCodeEnumValue ("%s_%s_PROPERTY".printf (sym_name, Symbol.camel_case_to_lower_case (prop.name).ascii_up ())));
+		}
+
+		var last_prop = "%s_NUM_PROPERTIES".printf (sym_name);
+		prop_enum.add_value (new CCodeEnumValue (last_prop));
+		cfile.add_type_declaration (prop_enum);
+
+		var prop_array_decl = new CCodeDeclaration ("GParamSpec*");
+		prop_array_decl.modifiers |= CCodeModifiers.STATIC;
+		prop_array_decl.add_declarator (new CCodeVariableDeclarator ("%s_proxy_properties".printf (get_ccode_lower_case_name (sym)), null, new CCodeDeclaratorSuffix.with_array (new CCodeIdentifier (last_prop))));
+		cfile.add_type_declaration (prop_array_decl);
+	}
+
+	void generate_get_property_function (ObjectTypeSymbol sym) {
+		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "proxy_get_property", "void");
+		cfunc.add_parameter (new CCodeParameter ("object", "GObject*"));
+		cfunc.add_parameter (new CCodeParameter ("property_id", "guint"));
+		cfunc.add_parameter (new CCodeParameter ("value", "GValue*"));
+		cfunc.add_parameter (new CCodeParameter ("pspec", "GParamSpec*"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		cfile.add_function_declaration (cfunc);
+
+		push_function (cfunc);
+
+		ccode.add_declaration ("%s *".printf (get_ccode_name (sym)), new CCodeVariableDeclarator ("self"));
+		ccode.add_declaration ("GVariant *", new CCodeVariableDeclarator ("variant", null));
+		ccode.add_declaration ("const gchar *", new CCodeVariableDeclarator.zero ("dbus_property_name", new CCodeConstant ("NULL")));
+
+		var cast_call = generate_instance_cast (new CCodeIdentifier ("object"), sym);
+		ccode.add_assignment (new CCodeIdentifier ("self"), cast_call);
+
+		ccode.open_switch (new CCodeIdentifier ("property_id"));
+
+		var sym_name = get_ccode_upper_case_name (sym) + "_PROXY";
+		var dbus_proxy_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_DBUS_PROXY"));
+		dbus_proxy_cast.add_argument (new CCodeIdentifier ("object"));
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+
+			var upper_identifier = new CCodeIdentifier ("%s_%s_PROPERTY".printf (sym_name, Symbol.camel_case_to_lower_case (prop.name).ascii_up ()));
+			ccode.add_case (upper_identifier);
+
+			string proxy_name = "%sdbus_proxy_get_%s".printf (get_ccode_lower_case_prefix (sym), prop.name);
+			property_to_value (prop, new CCodeIdentifier (proxy_name), new CCodeIdentifier ("self"), null);
+
+			ccode.add_break ();
+		}
+
+		ccode.add_default ();
+		ccode.add_statement (new CCodeReturnStatement (null));
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function (cfunc);
+	}
+
+	void generate_set_property_function (ObjectTypeSymbol sym) {
+		// Create the function
+		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "proxy_set_property", "void");
+		cfunc.add_parameter (new CCodeParameter ("object", "GObject*"));
+		cfunc.add_parameter (new CCodeParameter ("property_id", "guint"));
+		cfunc.add_parameter (new CCodeParameter ("value", "const GValue*"));
+		cfunc.add_parameter (new CCodeParameter ("pspec", "GParamSpec*"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		cfile.add_function_declaration (cfunc);
+
+		push_function (cfunc);
+
+		var cast_call = generate_instance_cast (new CCodeIdentifier ("object"), sym);
+		ccode.add_declaration ("%s *".printf (get_ccode_name (sym)), new CCodeVariableDeclarator ("self"));
+		ccode.add_assignment (new CCodeIdentifier ("self"), cast_call);
+
+		ccode.open_switch (new CCodeIdentifier ("property_id"));
+
+		var sym_name = get_ccode_upper_case_name (sym) + "_PROXY";
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+
+			var upper_identifier = new CCodeIdentifier ("%s_%s_PROPERTY".printf (sym_name, Symbol.camel_case_to_lower_case (prop.name).ascii_up ()));
+			ccode.add_case (upper_identifier);
+
+			string proxy_name = "%sdbus_proxy_set_%s".printf (get_ccode_lower_case_prefix (sym), prop.name);
+			property_from_value (prop, new CCodeIdentifier (proxy_name), new CCodeIdentifier ("self"), null);
+
+			ccode.add_break ();
+		}
+
+		ccode.add_default ();
+		ccode.add_statement (new CCodeReturnStatement (null));
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function (cfunc);
+	}
+
 	void generate_signal_handler_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "proxy_g_signal", "void");
 		cfunc.add_parameter (new CCodeParameter ("proxy", "GDBusProxy*"));
@@ -554,6 +699,118 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		cfile.add_function (cfunc);
 	}
+
+	void generate_pspec_from_dbus_property (ObjectTypeSymbol sym) {
+		var cfunc = new CCodeFunction ("_vala_%sfind_property_from_dbus_name".printf (get_ccode_lower_case_prefix (sym)), "GParamSpec *");
+		cfunc.add_parameter (new CCodeParameter ("dbus_property_name", "const gchar *"));
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+		
+		cfile.add_function_declaration (cfunc);
+		
+		push_function (cfunc);
+		
+		bool firstif = true;
+
+		var pspecs = new CCodeIdentifier ("%s_proxy_properties".printf (get_ccode_lower_case_name (sym)));
+		var sym_name = get_ccode_upper_case_name (sym) + "_PROXY";
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+
+			var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+			ccheck.add_argument (new CCodeIdentifier ("dbus_property_name"));
+			ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccheck, new CCodeConstant ("0"));
+			if (firstif) {
+				ccode.open_if (cond);
+				firstif = false;
+			} else {
+				ccode.else_if (cond);
+			}
+
+			var upper_identifier = new CCodeIdentifier ("%s_%s_PROPERTY".printf (sym_name, Symbol.camel_case_to_lower_case (prop.name).ascii_up ()));
+			ccode.add_statement (new CCodeReturnStatement (new CCodeElementAccess (pspecs, upper_identifier)));
+		}
+
+		if (!firstif) {
+			ccode.close ();
+		}
+
+		ccode.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		
+		pop_function ();
+		cfile.add_function (cfunc);
+	}
+
+	void generate_properties_changed_handler_function (ObjectTypeSymbol sym) {
+		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "proxy_g_properties_changed", "void");
+		cfunc.add_parameter (new CCodeParameter ("proxy", "GDBusProxy*"));
+		cfunc.add_parameter (new CCodeParameter ("changed_properties", "GVariant*"));
+		cfunc.add_parameter (new CCodeParameter ("invalidated_properties", "const gchar* const*"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		cfile.add_function_declaration (cfunc);
+
+		push_function (cfunc);
+
+		ccode.add_declaration ("GVariantIter *", new CCodeVariableDeclarator ("iter", null));
+		ccode.add_declaration ("const gchar *", new CCodeVariableDeclarator ("key", null));
+		ccode.add_declaration ("GParamSpec *", new CCodeVariableDeclarator ("pspec", null));
+		ccode.add_declaration ("guint", new CCodeVariableDeclarator ("n", null));
+		var pspec_identifier = new CCodeIdentifier ("pspec");
+		var n_identifier = new CCodeIdentifier ("n");
+		var variant_get = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_get"));
+		variant_get.add_argument (new CCodeIdentifier ("changed_properties"));
+		variant_get.add_argument (new CCodeConstant.string ("\"a{sv}\""));
+		variant_get.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		ccode.add_expression (variant_get);
+
+		var variant_iter_next = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_next"));
+		variant_iter_next.add_argument (new CCodeIdentifier ("iter"));
+		variant_iter_next.add_argument (new CCodeConstant.string ("\"{&sv}\""));
+		variant_iter_next.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("key")));
+		variant_iter_next.add_argument (new CCodeConstant ("NULL"));
+
+		ccode.open_while (variant_iter_next);
+		var find_property_from_dbus_name = new CCodeFunctionCall (new CCodeIdentifier ("_vala_%sfind_property_from_dbus_name".printf (get_ccode_lower_case_prefix (sym))));
+		find_property_from_dbus_name.add_argument (new CCodeIdentifier ("key"));
+		ccode.add_assignment (pspec_identifier, find_property_from_dbus_name);
+
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, pspec_identifier, new CCodeConstant ("NULL")));
+
+		var notify_by_pspec = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify_by_pspec"));
+		notify_by_pspec.add_argument (new CCodeCastExpression (new CCodeIdentifier ("proxy"), "GObject *"));
+		notify_by_pspec.add_argument (pspec_identifier);
+		ccode.add_expression (notify_by_pspec);
+
+		ccode.close ();
+		ccode.close ();
+
+		var variant_iter_free = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_iter_free"));
+		variant_iter_free.add_argument (new CCodeIdentifier ("iter"));
+		ccode.add_expression (variant_iter_free);
+
+		var for_init = new CCodeAssignment (n_identifier, new CCodeConstant ("0"));
+		var for_increment = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, n_identifier);
+		var for_condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier ("invalidated_properties"), n_identifier), new CCodeConstant ("NULL"));
+		ccode.open_for (for_init, for_condition, for_increment);
+		var find_invalidated_property_from_dbus_name = new CCodeFunctionCall (new CCodeIdentifier ("_vala_%sfind_property_from_dbus_name".printf (get_ccode_lower_case_prefix (sym))));
+		find_invalidated_property_from_dbus_name.add_argument (new CCodeElementAccess (new CCodeIdentifier ("invalidated_properties"), n_identifier));
+		ccode.add_assignment (pspec_identifier, find_invalidated_property_from_dbus_name);
+
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, pspec_identifier, new CCodeConstant ("NULL")));
+		ccode.add_expression (notify_by_pspec);
+		ccode.close ();
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function (cfunc);
+	}
+
 
 	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name, int method_timeout) {
 		var gdbusproxy = new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *");
