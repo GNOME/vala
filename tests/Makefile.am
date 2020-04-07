@@ -872,6 +872,7 @@ TESTS = \
 	dbus/enum-string-marshalling.vala \
 	dbus/generics.test \
 	dbus/no-reply.test \
+	dbus/properties.test \
 	dbus/signals.test \
 	dbus/filedescriptor.test \
 	dbus/filedescriptor-async.test \

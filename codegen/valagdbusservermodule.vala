@@ -704,6 +704,105 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		}
 	}
 
+	void generate_property_notify (ObjectTypeSymbol sym, Property prop) {
+		var cfunc = new CCodeFunction ("_%snotify_%s".printf (get_ccode_lower_case_prefix (sym), prop.name), "void");
+		cfunc.add_parameter (new CCodeParameter ("gobject", "GObject *"));
+		cfunc.add_parameter (new CCodeParameter ("pspec", "GParamSpec *"));
+		cfunc.add_parameter (new CCodeParameter ("user_data", "gpointer"));
+
+		cfunc.modifiers |= CCodeModifiers.STATIC;
+
+		push_function (cfunc);
+
+		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator.zero ("data", new CCodeIdentifier ("user_data")));
+		ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("error", new CCodeConstant ("NULL")));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator.zero ("parameters", new CCodeConstant ("NULL")));
+		ccode.add_declaration ("GVariant*", new CCodeVariableDeclarator.zero ("variant", new CCodeConstant ("NULL")));
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("changed_builder", null));
+		ccode.add_declaration ("GVariantBuilder", new CCodeVariableDeclarator ("invalidated_builder", null));
+
+		var variant_builder_init = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+		variant_builder_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		variant_builder_init.add_argument (new CCodeConstant ("G_VARIANT_TYPE_VARDICT"));
+		ccode.add_expression (variant_builder_init);
+
+		var variant_builder_init2 = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_init"));
+		variant_builder_init2.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+		variant_builder_init2.add_argument (new CCodeConstant ("G_VARIANT_TYPE_STRING_ARRAY"));
+		ccode.add_expression (variant_builder_init2);
+
+		var cast_call = generate_instance_cast (new CCodeIdentifier ("gobject"), sym);
+		ccode.add_declaration ("%s *".printf (get_ccode_name (sym)), new CCodeVariableDeclarator ("self"));
+		ccode.add_assignment (new CCodeIdentifier ("self"), cast_call);
+
+		var dbus_get_property = new CCodeFunctionCall (new CCodeIdentifier ("_dbus_%s".printf (get_ccode_name (prop.get_accessor))));
+		dbus_get_property.add_argument (new CCodeIdentifier ("self"));
+		ccode.add_assignment (new CCodeIdentifier ("variant"), dbus_get_property);
+
+		var variant_builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
+		variant_builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		variant_builder_add.add_argument (new CCodeConstant.string ("\"{sv}\""));
+		variant_builder_add.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+		variant_builder_add.add_argument (new CCodeIdentifier ("variant"));
+		ccode.add_expression (variant_builder_add);
+
+		var variant_new = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_new"));
+		variant_new.add_argument (new CCodeConstant.string ("\"(sa{sv}as)\""));
+		variant_new.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name (sym))));
+		variant_new.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+		variant_new.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+		ccode.add_assignment (new CCodeIdentifier ("parameters"), variant_new);
+
+		var disconnect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_emit_signal"));
+		disconnect_call.add_argument (new CCodeCastExpression (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("1")), "GDBusConnection *"));
+		disconnect_call.add_argument (new CCodeConstant ("NULL"));
+		disconnect_call.add_argument (new CCodeCastExpression (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("2")), "const gchar *"));
+		disconnect_call.add_argument (new CCodeConstant.string ("\"org.freedesktop.DBus.Properties\""));
+		disconnect_call.add_argument (new CCodeConstant.string ("\"PropertiesChanged\""));
+		disconnect_call.add_argument (new CCodeIdentifier ("parameters"));
+		disconnect_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
+		ccode.add_expression (disconnect_call);
+
+		pop_function ();
+
+		cfile.add_function_declaration (cfunc);
+		cfile.add_function (cfunc);
+	}
+
+	void handle_properties (ObjectTypeSymbol sym, bool connect) {
+		string dbus_iface_name = get_dbus_name (sym);
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+
+			var notify_name = "_%snotify_%s".printf (get_ccode_lower_case_prefix (sym), prop.name);
+			if (connect) {
+				generate_property_notify (sym, prop);
+				var connect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
+				connect_call.add_argument (new CCodeIdentifier ("object"));
+				connect_call.add_argument (new CCodeConstant.string ("\"notify::%s\"".printf (get_ccode_name (prop))));
+				connect_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (notify_name), "GCallback"));
+				connect_call.add_argument (new CCodeIdentifier ("data"));
+				ccode.add_expression (connect_call);
+			} else {
+				// disconnect the signals
+				var disconnect_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_handlers_disconnect_by_func"));
+				disconnect_call.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
+				disconnect_call.add_argument (new CCodeIdentifier (notify_name));
+				disconnect_call.add_argument (new CCodeIdentifier ("data"));
+				ccode.add_expression (disconnect_call);
+			}
+		}
+	}
+
 	void generate_interface_method_call_function (ObjectTypeSymbol sym) {
 		var cfunc = new CCodeFunction (get_ccode_lower_case_prefix (sym) + "dbus_interface_method_call", "void");
 		cfunc.add_parameter (new CCodeParameter ("connection", "GDBusConnection*"));
@@ -1157,6 +1256,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.close ();
 
 		handle_signals (sym, true);
+		handle_properties (sym, true);
 
 		ccode.add_return (new CCodeIdentifier ("result"));
 
@@ -1173,6 +1273,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
 
 		handle_signals (sym, false);
+		handle_properties (sym, false);
 
 		var unref_object = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_unref_function (sym)));
 		unref_object.add_argument (new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0")));
