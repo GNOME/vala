@@ -252,6 +252,8 @@ namespace GLib {
 		public unowned GLib.ParamSpec get_redirect_target ();
 		[CCode (cname = "g_param_spec_internal")]
 		public ParamSpec.@internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
+		[Version (since = "2.66")]
+		public static bool is_valid_name (string name);
 		public unowned GLib.ParamSpec @ref ();
 		public unowned GLib.ParamSpec ref_sink ();
 		public void set_qdata (GLib.Quark quark, void* data);
@@ -569,6 +571,8 @@ namespace GLib {
 		public static void emit_by_name (void* instance, string detailed_signal, ...);
 		public static unowned GLib.SignalInvocationHint? get_invocation_hint (void* instance);
 		public static bool has_handler_pending (void* instance, uint signal_id, GLib.Quark detail, bool may_be_blocked);
+		[Version (since = "2.66")]
+		public static bool is_valid_name (string name);
 		[CCode (array_length_type = "guint")]
 		public static uint[] list_ids (GLib.Type itype);
 		public static uint lookup (string name, GLib.Type itype);
