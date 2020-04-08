@@ -77,6 +77,10 @@ class FindSymbol : Vala.CodeVisitor {
     public override void visit_source_file (Vala.SourceFile source_file) {
         source_file.accept_children (this);
     }
+
+    public override void visit_try_statement (Vala.TryStatement stmt) {
+        stmt.accept_children (this);
+    }
 }
 
 string? location_str = null;
