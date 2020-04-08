@@ -32,6 +32,11 @@ public class Vala.SourceReference {
 	public weak SourceFile file { get; set; }
 
 	/**
+	 * The code node of the referenced source code.
+	 */
+	public weak CodeNode? node { get; set; }
+
+	/**
 	 * The begin of the referenced source code.
 	 */
 	public SourceLocation begin { get; set; }

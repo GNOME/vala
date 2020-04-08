@@ -38,7 +38,18 @@ public abstract class Vala.CodeNode {
 	 * References the location in the source file where this code node has
 	 * been written.
 	 */
-	public SourceReference? source_reference { get; set; }
+	public SourceReference? source_reference {
+		get {
+			return _source_reference;
+		}
+		set {
+			_source_reference = value;
+			// source references are re-used in transformed nodes, keep original node reference
+			if (_source_reference != null && _source_reference.node == null) {
+				_source_reference.node = this;
+			}
+		}
+	}
 
 	public bool unreachable { get; set; }
 
@@ -70,6 +81,7 @@ public abstract class Vala.CodeNode {
 	}
 
 	private AttributeCache[] attributes_cache;
+	SourceReference? _source_reference;
 
 	static int last_temp_nr = 0;
 	static int next_attribute_cache_index = 0;
