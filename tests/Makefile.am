@@ -4,6 +4,7 @@ SUBDIRS = \
 	fastvapi \
 	girwriter \
 	gtktemplate \
+	parser \
 	$(NULL)
 
 AM_CPPFLAGS = \
