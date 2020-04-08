@@ -10,6 +10,10 @@ check-keep-going: $(top_builddir)/compiler/valac
 		-l "7:6" \
 		-t "ValaMemberAccess" \
 		$(srcdir)/incomplete-member-access-end-of-scope.vala || exit 1;
+	G_DEBUG=fatal-warnings $(top_builddir)/tests/parser/keep-going-checker \
+		-l "7:10" \
+		-t "ValaMemberAccess" \
+		$(srcdir)/incomplete-member-access-before-try.vala || exit 1;
 
 
 check: check-keep-going
@@ -17,6 +21,7 @@ check: check-keep-going
 
 EXTRA_DIST = \
 	incomplete-member-access-end-of-scope.vala \
+	incomplete-member-access-before-try.vala \
 	$(NULL)
 
 CLEANFILES = \
