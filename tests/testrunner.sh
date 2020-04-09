@@ -40,6 +40,7 @@ VALAFLAGS="$VALAFLAGS \
 	-X -DGETTEXT_PACKAGE=\\\"valac\\\""
 VAPIGEN=$topbuilddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
+PRINTER=$topbuilddir/vala/tests/printer$EXEEXT
 
 # Incorporate the TEST_CFLAGS.
 for cflag in ${TEST_CFLAGS}; do
@@ -68,6 +69,8 @@ function testheader() {
 		run_prefix="dbus-run-session -- $run_prefix"
 	elif [ "$1" = "GIR" ]; then
 		GIRTEST=1
+	elif [ "$1" = "AST" ]; then
+		ASTTEST=1
 	fi
 }
 
@@ -107,6 +110,18 @@ EOF
 			ns=${ns//-/_}
 			SOURCEFILE=$ns.vapi.ref
 		fi
+	elif [ $ASTTEST -eq 1 ]; then
+		if [ "$1" = "Input:" ]; then
+			testpath=${testfile/.test/}
+			ns=${testpath//\//_}
+			ns=${ns//-/_}
+			SOURCEFILE=$ns.vala
+		elif [ "$1" = "Output:" ]; then
+			testpath=${testfile/.test/}
+			ns=${testpath//\//_}
+			ns=${ns//-/_}
+			SOURCEFILE=$ns.ast.ref
+		fi
 	fi
 }
 
@@ -125,6 +140,8 @@ function sourceend() {
 				echo "</repository>" >> $SOURCEFILE
 			fi
 			echo "G_DEBUG=fatal-warnings $VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
+		elif [ $ASTTEST -eq 1 ]; then
+			echo "G_DEBUG=fatal-warnings $PRINTER $ns.vala > $ns.ast && cat $ns.ast|diff -wu $ns.ast.ref -" > check
 		else
 			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
@@ -186,6 +203,7 @@ for testfile in "$@"; do
 		PART=0
 		INHEADER=1
 		INVALIDCODE=0
+		ASTTEST=0
 		GIRTEST=0
 		DBUSTEST=0
 		ISSERVER=0
