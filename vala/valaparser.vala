@@ -39,6 +39,8 @@ public class Vala.Parser : CodeVisitor {
 
 	Comment comment;
 
+	weak SourceReference? previous_reference;
+
 	const int BUFFER_SIZE = 32;
 
 	static List<TypeParameter> _empty_type_parameter_list;
@@ -177,6 +179,32 @@ public class Vala.Parser : CodeVisitor {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
 		var token = tokens[last_index];
 		return new SourceReference (scanner.source_file, token.begin, token.end);
+	}
+
+	void link_src (CodeNode node, SourceReference? insert_at = null) {
+		unowned SourceReference src = node.source_reference;
+		assert (src != null);
+
+		// FIXME never ever
+		if (src == previous_reference) {
+			return;
+		}
+
+		if (previous_reference != insert_at && insert_at != null) {
+			unowned SourceReference? next = insert_at.next;
+			insert_at.next = src;
+			src.prev = insert_at;
+			src.next = next;
+			return;
+		}
+
+		if (previous_reference == null) {
+			src.file.first = src;
+		} else {
+			previous_reference.next = src;
+			src.prev = previous_reference;
+		}
+		previous_reference = src;
 	}
 
 	void rollback (SourceLocation location) {
@@ -359,6 +387,7 @@ public class Vala.Parser : CodeVisitor {
 		scanner = new Scanner (source_file);
 		parse_file_comments ();
 
+		previous_reference = null;
 		index = -1;
 		size = 0;
 
@@ -376,6 +405,10 @@ public class Vala.Parser : CodeVisitor {
 			}
 		} catch (ParseError e) {
 			report_parse_error (e);
+		}
+
+		if (previous_reference != null) {
+			source_file.last = previous_reference;
 		}
 
 		scanner = null;
@@ -639,6 +672,8 @@ public class Vala.Parser : CodeVisitor {
 
 		Expression expr;
 
+		unowned SourceReference? current_reference = previous_reference;
+
 		switch (current ()) {
 		case TokenType.TRUE:
 		case TokenType.FALSE:
@@ -717,6 +752,8 @@ public class Vala.Parser : CodeVisitor {
 				break;
 			}
 		}
+
+		link_src (expr, current_reference);
 
 		return expr;
 	}
@@ -1562,6 +1599,7 @@ public class Vala.Parser : CodeVisitor {
 			try {
 				Statement stmt = null;
 				bool is_decl = false;
+				unowned SourceReference? current_reference = previous_reference;
 
 				comment = scanner.pop_comment ();
 				switch (current ()) {
@@ -1644,6 +1682,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 
 				if (!is_decl) {
+					link_src (stmt, current_reference);
 					block.add_statement (stmt);
 				}
 			} catch (ParseError e) {
@@ -1748,15 +1787,19 @@ public class Vala.Parser : CodeVisitor {
 	Block parse_embedded_statement (string statement_name, bool accept_empty_body = true) throws ParseError {
 		if (current () == TokenType.OPEN_BRACE) {
 			var block = parse_block ();
+			link_src (block);
 			return block;
 		}
 
 		comment = scanner.pop_comment ();
 
 		var block = new Block (get_src (get_location ()));
+		link_src (block);
 
 		try {
+			unowned SourceReference? current_reference = previous_reference;
 			var stmt = parse_embedded_statement_without_block (statement_name, accept_empty_body);
+			link_src (stmt, current_reference);
 			block.add_statement (stmt);
 		} catch (ParseError e) {
 			if (context.keep_going) {
@@ -1817,6 +1860,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.OPEN_BRACE);
 		var block = new Block (get_src (begin));
+		link_src (block);
 		parse_statements (block);
 		if (!accept (TokenType.CLOSE_BRACE)) {
 			// only report error if it's not a secondary error
@@ -1864,14 +1908,18 @@ public class Vala.Parser : CodeVisitor {
 				expect (TokenType.ASSIGN);
 				var tuple = parse_expression ();
 				var tuple_local = new LocalVariable (null, CodeNode.get_temp_name (), tuple, get_src (begin));
-				block.add_statement (new DeclarationStatement (tuple_local, tuple_local.source_reference));
+				var tuple_stmt = new DeclarationStatement (tuple_local, tuple_local.source_reference);
+				link_src (tuple_stmt);
+				block.add_statement (tuple_stmt);
 
 				for (int i = 0; i < identifiers.length; i++) {
 					var temp_access = new MemberAccess.simple (tuple_local.name, tuple_local.source_reference);
 					var ea = new ElementAccess (temp_access, tuple_local.source_reference);
 					ea.append_index (new IntegerLiteral (i.to_string ()));
 					var local = new LocalVariable (null, identifiers[i], ea, tuple_local.source_reference);
-					block.add_statement (new DeclarationStatement (local, local.source_reference));
+					var stmt = new DeclarationStatement (local, local.source_reference);
+					link_src (stmt);
+					block.add_statement (stmt);
 				}
 
 				continue;
@@ -1887,8 +1935,11 @@ public class Vala.Parser : CodeVisitor {
 			if (variable_type != null) {
 				type_copy = variable_type.copy ();
 			}
+			unowned SourceReference? current_reference = previous_reference;
 			var local = parse_local_variable (type_copy);
-			block.add_statement (new DeclarationStatement (local, get_src (begin)));
+			var stmt = new DeclarationStatement (local, get_src (begin));
+			link_src (stmt, current_reference);
+			block.add_statement (stmt);
 		} while (accept (TokenType.COMMA));
 		expect (TokenType.SEMICOLON);
 	}
@@ -1926,8 +1977,11 @@ public class Vala.Parser : CodeVisitor {
 			}
 
 			DataType type_copy = constant_type.copy ();
+			unowned SourceReference? current_reference = previous_reference;
 			var local = parse_local_constant (type_copy);
-			block.add_statement (new DeclarationStatement (local, get_src (begin)));
+			var stmt = new DeclarationStatement (local, get_src (begin));
+			link_src (stmt, current_reference);
+			block.add_statement (stmt);
 			block.add_local_constant (local);
 			local.active = false;
 		} while (accept (TokenType.COMMA));
@@ -2089,6 +2143,7 @@ public class Vala.Parser : CodeVisitor {
 			stmt.add_iterator (iter);
 		}
 		if (block != null) {
+			link_src (stmt);
 			block.add_statement (stmt);
 			return block;
 		} else {
@@ -2319,6 +2374,7 @@ public class Vala.Parser : CodeVisitor {
 		method.access = SymbolAccessibility.PUBLIC;
 		method.binding = MemberBinding.STATIC;
 		method.body = new Block (get_src (begin));
+		link_src (method.body);
 		parse_statements (method.body);
 		if (current () != TokenType.EOF) {
 			Report.error (get_current_src (), "expected end of file");
@@ -2577,6 +2633,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
 		var ns = new Namespace (sym.name, get_src (begin));
+		link_src (ns);
 		if (comment != null) {
 			ns.add_comment (comment);
 			comment = null;
@@ -2616,6 +2673,7 @@ public class Vala.Parser : CodeVisitor {
 				var begin = get_location ();
 				var sym = parse_symbol_name ();
 				var ns_ref = new UsingDirective (sym, get_src (begin));
+				link_src (ns_ref);
 				scanner.source_file.add_using_directive (ns_ref);
 				ns.add_using_directive (ns_ref);
 			} while (accept (TokenType.COMMA));
@@ -2638,6 +2696,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		var cl = new Class (sym.name, get_src (begin), comment);
+		link_src (cl);
 		cl.access = access;
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
@@ -2689,6 +2748,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		var c = new Constant (id, type, null, get_src (begin), comment);
+		link_src (c);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			c.is_extern = true;
@@ -2723,6 +2783,7 @@ public class Vala.Parser : CodeVisitor {
 		type = parse_inline_array_type (type);
 
 		var f = new Field (id, type, null, get_src (begin), comment);
+		link_src (f);
 		f.access = access;
 
 		set_attributes (f, attrs);
@@ -2796,6 +2857,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var method = new Method (sym.name, type, get_src (begin), comment);
+		link_src (method);
 		if (sym.inner != null) {
 			method.base_interface_type = new UnresolvedType.from_symbol (sym.inner, sym.inner.source_reference);
 		}
@@ -2888,6 +2950,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type (true, true);
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src (begin), comment);
+		link_src (prop);
 		prop.access = access;
 		set_attributes (prop, attrs);
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
@@ -2935,6 +2998,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 				expect (TokenType.ASSIGN);
 				prop.initializer = parse_expression ();
+				link_src (prop.initializer);
 				expect (TokenType.SEMICOLON);
 			} else {
 				comment = scanner.pop_comment ();
@@ -2964,6 +3028,7 @@ public class Vala.Parser : CodeVisitor {
 						prop.external = false;
 					}
 					prop.get_accessor = new PropertyAccessor (true, false, false, value_type, block, get_src (accessor_begin), comment);
+					link_src (prop.get_accessor);
 					set_attributes (prop.get_accessor, accessor_attrs);
 					prop.get_accessor.access = accessor_access;
 				} else {
@@ -2986,6 +3051,7 @@ public class Vala.Parser : CodeVisitor {
 						prop.external = false;
 					}
 					prop.set_accessor = new PropertyAccessor (false, writable, _construct, value_type, block, get_src (accessor_begin), comment);
+					link_src (prop.set_accessor);
 					set_attributes (prop.set_accessor, accessor_attrs);
 					prop.set_accessor.access = accessor_access;
 				}
@@ -3004,6 +3070,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type (true, false);
 		string id = parse_identifier ();
 		var sig = new Signal (id, type, get_src (begin), comment);
+		link_src (sig);
 		sig.access = access;
 		set_attributes (sig, attrs);
 		if (ModifierFlags.STATIC in flags) {
@@ -3040,6 +3107,7 @@ public class Vala.Parser : CodeVisitor {
 			throw new ParseError.SYNTAX ("`new' modifier not allowed on constructor");
 		}
 		var c = new Constructor (get_src (begin));
+		link_src (c);
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
 			Report.error (c.source_reference, "only one of `static' or `class' may be specified");
 		} else if (ModifierFlags.STATIC in flags) {
@@ -3063,6 +3131,7 @@ public class Vala.Parser : CodeVisitor {
 			throw new ParseError.SYNTAX ("`new' modifier not allowed on destructor");
 		}
 		var d = new Destructor (get_src (begin));
+		link_src (d);
 		if (identifier != parent.name) {
 			Report.error (d.source_reference, "destructor and parent symbol name do not match");
 		}
@@ -3090,6 +3159,7 @@ public class Vala.Parser : CodeVisitor {
 			base_type = parse_type (true, false);
 		}
 		var st = new Struct (sym.name, get_src (begin), comment);
+		link_src (st);
 		st.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			st.is_extern = true;
@@ -3133,6 +3203,7 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		var iface = new Interface (sym.name, get_src (begin), comment);
+		link_src (iface);
 		iface.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			iface.is_extern = true;
@@ -3168,6 +3239,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.ENUM);
 		var sym = parse_symbol_name ();
 		var en = new Enum (sym.name, get_src (begin), comment);
+		link_src (en);
 		en.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			en.is_extern = true;
@@ -3201,6 +3273,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 
 			var ev = new EnumValue (id, value, get_src (value_begin), comment);
+			link_src (ev);
 			ev.access = SymbolAccessibility.PUBLIC;
 			set_attributes (ev, value_attrs);
 			en.add_value (ev);
@@ -3235,6 +3308,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.ERRORDOMAIN);
 		var sym = parse_symbol_name ();
 		var ed = new ErrorDomain (sym.name, get_src (begin), comment);
+		link_src (ed);
 		ed.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			ed.is_extern = true;
@@ -3263,6 +3337,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 
 			var ec = new ErrorCode (id, get_src (code_begin), comment);
+			link_src (ec);
 			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
@@ -3388,7 +3463,9 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		if (accept (TokenType.ELLIPSIS)) {
 			// varargs
-			return new Parameter.with_ellipsis (get_src (begin));
+			var param = new Parameter.with_ellipsis (get_src (begin));
+			link_src (param);
+			return param;
 		}
 		bool params_array = accept (TokenType.PARAMS);
 		var direction = ParameterDirection.IN;
@@ -3414,6 +3491,7 @@ public class Vala.Parser : CodeVisitor {
 		type = parse_inline_array_type (type);
 
 		var param = new Parameter (id, type, get_src (begin));
+		link_src (param);
 		set_attributes (param, attrs);
 		param.direction = direction;
 		param.params_array = params_array;
@@ -3437,6 +3515,7 @@ public class Vala.Parser : CodeVisitor {
 		} else {
 			method = new CreationMethod (sym.inner.name, sym.name, get_src (begin), comment);
 		}
+		link_src (method);
 		if (ModifierFlags.EXTERN in flags) {
 			method.is_extern = true;
 		}
@@ -3493,6 +3572,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var d = new Delegate (sym.name, type, get_src (begin), comment);
+		link_src (d);
 		d.access = access;
 		set_attributes (d, attrs);
 		if (ModifierFlags.STATIC in flags) {
@@ -3637,6 +3717,7 @@ public class Vala.Parser : CodeVisitor {
 
 			List<DataType> type_arg_list = parse_type_argument_list (false);
 			expr = new MemberAccess (expr != null ? expr : base_expr, id, get_src (begin));
+			link_src (expr);
 			expr.qualified = qualified;
 			if (type_arg_list != null) {
 				foreach (DataType type_arg in type_arg_list) {

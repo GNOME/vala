@@ -46,6 +46,16 @@ public class Vala.SourceReference {
 	 */
 	public SourceLocation end { get; set; }
 
+	/**
+	 * The previous source reference.
+	 */
+	public weak SourceReference? prev { get; set; }
+
+	/**
+	 * The next source reference.
+	 */
+	public weak SourceReference? next { get; set; }
+
 	public List<UsingDirective> using_directives { get; private set; }
 
 	/**

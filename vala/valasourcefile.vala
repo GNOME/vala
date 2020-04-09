@@ -89,6 +89,16 @@ public class Vala.SourceFile {
 	public SourceFileType file_type { get; set; }
 
 	/**
+	 * The first source reference.
+	 */
+	public weak SourceReference? first { get; set; }
+
+	/**
+	 * The last source reference.
+	 */
+	public weak SourceReference? last { get; set; }
+
+	/**
 	 * Specifies whether this file came from the command line directly.
 	 */
 	public bool from_commandline { get; set; }
