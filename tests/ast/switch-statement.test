@@ -1,0 +1,36 @@
+AST
+
+Input:
+
+void case_with_list () {
+	int i = 1;
+	switch (i) {
+	case 0, 1, 2:
+		break;
+	default:
+		assert_not_reached ();
+	}
+}
+
+void main () {
+	case_with_list ();
+}
+
+Output:
+
+1.1 | 1.19 | ValaMethod
+1.24 | 9.1 | ValaBlock
+2.2 | 2.10 | ValaDeclarationStatement
+2.10 | 2.10 | ValaIntegerLiteral
+3.2 | 3.11 | ValaSwitchStatement
+3.10 | 3.10 | ValaMemberAccess
+4.7 | 4.7 | ValaIntegerLiteral
+4.10 | 4.10 | ValaIntegerLiteral
+4.13 | 4.13 | ValaIntegerLiteral
+5.3 | 5.7 | ValaBreakStatement
+7.3 | 7.23 | ValaExpressionStatement
+7.3 | 7.23 | ValaMethodCall
+11.1 | 11.9 | ValaMethod
+11.14 | 13.1 | ValaBlock
+12.2 | 12.18 | ValaExpressionStatement
+12.2 | 12.18 | ValaMethodCall
