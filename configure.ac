@@ -220,6 +220,7 @@ AC_CONFIG_FILES([Makefile
            gee/Makefile
            ccode/Makefile
            vala/Makefile
+           vala/tests/Makefile
            codegen/Makefile
            compiler/Makefile
            vapi/Makefile

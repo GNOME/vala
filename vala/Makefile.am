@@ -2,6 +2,10 @@ include $(top_srcdir)/Makefile.common
 
 NULL =
 
+SUBDIRS = \
+	tests \
+	$(NULL)
+
 AM_CPPFLAGS = \
 	-DG_LOG_DOMAIN=\"vala\" \
 	$(COVERAGE_CFLAGS) \
