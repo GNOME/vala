@@ -1,0 +1,24 @@
+AST
+
+Input:
+
+class Thing {
+	public int property;
+}
+
+void main () {
+	var thing = new Thing ();
+	thing.
+}
+
+Output:
+
+1.1 | 1.11 | ValaClass
+2.2 | 2.20 | ValaField
+5.1 | 5.9 | ValaMethod
+5.14 | 8.1 | ValaBlock
+6.2 | 6.25 | ValaDeclarationStatement
+6.14 | 6.25 | ValaObjectCreationExpression
+6.18 | 6.22 | ValaMemberAccess
+7.2 | 7.7 | ValaExpressionStatement
+7.2 | 7.7 | ValaMemberAccess

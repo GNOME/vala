@@ -637,6 +637,7 @@ TESTS = \
 	scanner/string-escape-x-digit-length.test \
 	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
+	ast/incomplete-member-access-end-of-scope.test \
 	ast/switch-statement.test \
 	parser/array-creation-invalid.test \
 	parser/assignment.vala \
