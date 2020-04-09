@@ -1,2 +1,5 @@
 * parent="Gst.App"
 App* name="App(.+)"
+AppSrc
+  .push_buffer#signal name="on_push_buffer"
+  .push_buffer_list#signal name="on_push_buffer_list"

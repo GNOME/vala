@@ -60,6 +60,9 @@ namespace Gst {
 			public uint64 get_max_bytes ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
+			public virtual Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
+			[Version (since = "1.14")]
+			public virtual Gst.FlowReturn push_buffer_list (owned Gst.BufferList buffer_list);
 			public void set_caps (Gst.Caps caps);
 			[Version (since = "1.10")]
 			public void set_duration (Gst.ClockTime duration);
@@ -91,11 +94,11 @@ namespace Gst {
 			public virtual signal Gst.FlowReturn end_of_stream ();
 			public virtual signal void enough_data ();
 			public virtual signal void need_data (uint length);
-			[HasEmitter]
-			public virtual signal Gst.FlowReturn push_buffer (Gst.Buffer buffer);
-			[HasEmitter]
+			[CCode (cname = "push-buffer")]
+			public signal Gst.FlowReturn on_push_buffer (Gst.Buffer buffer);
+			[CCode (cname = "push-buffer-list")]
 			[Version (since = "1.14")]
-			public virtual signal Gst.FlowReturn push_buffer_list (Gst.BufferList buffer_list);
+			public signal Gst.FlowReturn on_push_buffer_list (Gst.BufferList buffer_list);
 			[HasEmitter]
 			[Version (since = "1.6")]
 			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
