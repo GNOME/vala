@@ -4698,9 +4698,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {
 	}
 
-	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false, List<TypeParameter>? type_parameters = null) {
+	public void add_generic_type_arguments (Method m, Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false, List<TypeParameter>? type_parameters = null) {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
+			if (get_ccode_simple_generics (m)) {
+				if (requires_copy (type_arg)) {
+					arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg, is_chainup));
+				} else {
+					arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
+				}
+				type_param_index++;
+				continue;
+			}
+
 			if (type_parameters != null) {
 				var type_param_name = type_parameters.get (type_param_index).name.down ().replace ("_", "-");
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name)));
@@ -4852,18 +4862,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
 
-			if (cl != null && !cl.is_compact) {
-				add_generic_type_arguments (in_arg_map, expr.type_reference.get_type_arguments (), expr);
-			} else if (cl != null && get_ccode_simple_generics (m)) {
-				int type_param_index = 0;
-				foreach (var type_arg in expr.type_reference.get_type_arguments ()) {
-					if (requires_copy (type_arg)) {
-						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), get_destroy0_func_expression (type_arg));
-					} else {
-						in_arg_map.set (get_param_pos (-1 + 0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
-					}
-					type_param_index++;
-				}
+			if (cl != null && (!cl.is_compact || get_ccode_simple_generics (m))) {
+				add_generic_type_arguments (m, in_arg_map, expr.type_reference.get_type_arguments (), expr);
 			}
 
 			bool ellipsis = false;

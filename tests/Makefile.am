@@ -414,6 +414,7 @@ TESTS = \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
 	objects/signals-lambda-delegate.vala \
+	objects/simple-generics-chainup.vala \
 	objects/singleton.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
