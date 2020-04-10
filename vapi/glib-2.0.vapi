@@ -2807,7 +2807,8 @@ namespace GLib {
 		public static string display_name (string filename);
 		[Version (since = "2.6")]
 		public static string display_basename (string filename);
-		[Version (cname = "g_canonicalize_filename", since = "2.58")]
+		[CCode (cname = "g_canonicalize_filename")]
+		[Version (since = "2.58")]
 		public static string canonicalize (string filename, string? relative_to = null);
 	}
 
