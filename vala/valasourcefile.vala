@@ -70,7 +70,7 @@ public class Vala.SourceFile {
 
 			_version_requested = true;
 
-			if (_package_name != null) {
+			if (package_name != null) {
 				_installed_version = context.pkg_config_modversion (package_name);
 			}
 
