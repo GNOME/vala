@@ -4036,6 +4036,8 @@ namespace Gst {
 	public const int64 FORMAT_PERCENT_MAX;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FORMAT_PERCENT_SCALE")]
 	public const int64 FORMAT_PERCENT_SCALE;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_FOURCC_FORMAT")]
+	public const string FOURCC_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_GROUP_ID_INVALID")]
 	[Version (since = "1.14")]
 	public const int GROUP_ID_INVALID;
@@ -4070,17 +4072,26 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PROTECTION_UNSPECIFIED_SYSTEM_ID")]
 	[Version (since = "1.16")]
 	public const string PROTECTION_UNSPECIFIED_SYSTEM_ID;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PTR_FORMAT")]
+	public const string PTR_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_NUM_SHIFT")]
 	public const int QUERY_NUM_SHIFT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_QUERY_TYPE_BOTH")]
 	public const Gst.QueryTypeFlags QUERY_TYPE_BOTH;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SECOND")]
 	public const Gst.ClockTimeDiff SECOND;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_FORMAT")]
+	public const string SEGMENT_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEGMENT_INSTANT_FLAGS")]
 	public const int SEGMENT_INSTANT_FLAGS;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
 	[Version (since = "1.14")]
 	public const int SEQNUM_INVALID;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
+	[Version (since = "1.6")]
+	public const string STIME_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_FORMAT")]
+	public const string TIME_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TOC_REPEAT_COUNT_INFINITE")]
 	[Version (since = "1.4")]
 	public const int TOC_REPEAT_COUNT_INFINITE;
