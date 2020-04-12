@@ -126,24 +126,6 @@ public class Vala.WithStatement : Block {
 		}
 	}
 
-	void insert_local_variable_if_necessary () {
-		var local_var = expression.symbol_reference as LocalVariable;
-		if (with_variable_name != null || local_var == null) {
-			var n = with_variable_name ?? "_with_local%d_".printf (next_with_id++);
-			local_var = new LocalVariable (type_reference, n, expression, source_reference);
-			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
-		}
-		with_variable = local_var;
-	}
-
-	void change_scope_and_check_body (CodeContext context) {
-		var old_symbol = context.analyzer.current_symbol;
-		owner = context.analyzer.current_symbol.scope;
-		context.analyzer.current_symbol = this;
-		body.check (context);
-		context.analyzer.current_symbol = old_symbol;
-	}
-
 	bool is_type_reference_compatible () {
 		if (type_reference == null) {
 			type_reference = expression.value_type.copy ();
@@ -164,11 +146,24 @@ public class Vala.WithStatement : Block {
 				Report.error (expression.source_reference, "With: Expression must be of an object or basic type");
 			} else if (!is_type_reference_compatible ()) {
 				error = true;
-				Report.error (type_reference.source_reference, @"With: Cannot convert from `$(expression.value_type)' to `$(type_reference)'");
+				Report.error (type_reference.source_reference, "With: Cannot convert from %s to %s".printf(expression.value_type.to_string(), type_reference.to_string()));
 			} else {
-				insert_local_variable_if_necessary ();
-				change_scope_and_check_body (context);
+				var local_var = expression.symbol_reference as LocalVariable;
+				if (with_variable_name != null || local_var == null) {
+					var n = with_variable_name ?? "_with_local%d_".printf (next_with_id++);
+					local_var = new LocalVariable (type_reference, n, expression, source_reference);
+					body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
+				}
+				with_variable = local_var;
+
+				var old_symbol = context.analyzer.current_symbol;
+				owner = context.analyzer.current_symbol.scope;
+				context.analyzer.current_symbol = this;
+				error |= !body.check (context);
+				context.analyzer.current_symbol = old_symbol;
 			}
+		} else {
+			error |= true;
 		}
 
 		return !error;
