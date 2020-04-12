@@ -392,6 +392,8 @@ TESTS = \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
+	objects/signals-fundamental-return.vala \
+	objects/signals-gobject-return.vala \
 	objects/signals-lambda-delegate.vala \
 	objects/singleton.vala \
 	objects/test-025.vala \

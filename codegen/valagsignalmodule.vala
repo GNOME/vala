@@ -261,27 +261,14 @@ public class Vala.GSignalModule : GObjectModule {
 		fc.add_argument (new CCodeIdentifier ("data1"));
 		i = 1;
 		foreach (Parameter p in params) {
-			string get_value_function;
+			CCodeFunctionCall inner_fc;
 			if (p.direction != ParameterDirection.IN) {
-				get_value_function = "g_value_get_pointer";
-			} else if (p.variable_type is ArrayType) {
-				if (((ArrayType) p.variable_type).element_type.data_type == string_type.data_type) {
-					get_value_function = "g_value_get_boxed";
-				} else {
-					get_value_function = "g_value_get_pointer";
-				}
-			} else if (p.variable_type is DelegateType) {
-				get_value_function = "g_value_get_pointer";
-			} else if (p.variable_type is PointerType || p.variable_type is GenericType) {
-				get_value_function = "g_value_get_pointer";
-			} else if (p.variable_type is ErrorType) {
-				get_value_function = "g_value_get_pointer";
+				inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 			} else if (p.variable_type is ValueType && p.variable_type.nullable) {
-				get_value_function = "g_value_get_pointer";
+				inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 			} else {
-				get_value_function = get_ccode_get_value_function (p.variable_type.data_type);
+				inner_fc = new CCodeFunctionCall (get_value_getter_function (p.variable_type));
 			}
-			var inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 			fc.add_argument (inner_fc);
 			i++;
@@ -298,12 +285,12 @@ public class Vala.GSignalModule : GObjectModule {
 			} else if (p.variable_type is DelegateType) {
 				unowned DelegateType delegate_type = (DelegateType) p.variable_type;
 				if (delegate_type.delegate_symbol.has_target) {
-					inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
+					inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 					inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 					fc.add_argument (inner_fc);
 					i++;
 					if (delegate_type.is_disposable ()) {
-						inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
+						inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 						inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 						fc.add_argument (inner_fc);
 						i++;
@@ -317,24 +304,14 @@ public class Vala.GSignalModule : GObjectModule {
 			ccode.add_assignment (new CCodeIdentifier ("v_return"), fc);
 
 			CCodeFunctionCall set_fc;
-			if (return_type is ArrayType) {
-				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
-					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
-				} else {
+			if (return_type is ValueType) {
+				if (return_type.nullable) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+				} else {
+					set_fc = new CCodeFunctionCall (get_value_setter_function (return_type));
 				}
-			} else if (return_type is GenericType) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (return_type is ErrorType) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (return_type.data_type == string_type.data_type) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
-			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
-			} else if (return_type is ValueType && return_type.nullable) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_set_value_function (return_type.data_type)));
+				set_fc = new CCodeFunctionCall (get_value_taker_function (return_type));
 			}
 			set_fc.add_argument (new CCodeIdentifier ("return_value"));
 			set_fc.add_argument (new CCodeIdentifier ("v_return"));

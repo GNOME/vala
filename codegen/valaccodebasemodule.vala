@@ -708,7 +708,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	CCodeIdentifier get_value_getter_function (DataType type_reference) {
+	public CCodeIdentifier get_value_getter_function (DataType type_reference) {
 		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (get_ccode_get_value_function (type_reference.data_type));
