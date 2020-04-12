@@ -39,7 +39,7 @@ class TestFoo {
 }
 
 // Copy and paste TestFoo, change Foo to Bar
-class TestFoo {
+class TestBar {
     public static int class_field;
     public int instance_field;
 
