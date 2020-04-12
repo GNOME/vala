@@ -346,6 +346,7 @@ TESTS = \
 	objects/signals-delegate-parameter.vala \
 	objects/signals-fundamental-return.vala \
 	objects/signals-gobject-return.vala \
+	objects/signals-struct-return.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \
