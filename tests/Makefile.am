@@ -395,6 +395,7 @@ TESTS = \
 	objects/signals-fundamental-return.vala \
 	objects/signals-gobject-return.vala \
 	objects/signals-lambda-delegate.vala \
+	objects/signals-struct-return.vala \
 	objects/singleton.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
