@@ -37,17 +37,30 @@ public class Vala.CCodeElementAccess : CCodeExpression {
 	 * Expression representing the index we want to access inside the
 	 * container.
 	 */
-	public CCodeExpression index { get; set; }
+	public List<CCodeExpression> indices { get; set; }
 
 	public CCodeElementAccess (CCodeExpression cont, CCodeExpression i) {
 		container = cont;
-		index = i;
+		indices = new ArrayList<CCodeExpression> ();
+		indices.add (i);
+	}
+
+	public CCodeElementAccess.with_indices (CCodeExpression cont, List<CCodeExpression> i) {
+		container = cont;
+		indices = i;
 	}
 
 	public override void write (CCodeWriter writer) {
 		container.write_inner (writer);
 		writer.write_string ("[");
-		index.write (writer);
+		bool first = true;
+		foreach (var index in indices) {
+			if (!first) {
+				writer.write_string ("][");
+			}
+			index.write (writer);
+			first = false;
+		}
 		writer.write_string ("]");
 	}
 }
