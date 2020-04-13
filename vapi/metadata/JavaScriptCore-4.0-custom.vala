@@ -3,7 +3,8 @@
  *   Copyright 2011 Jiří Janoušek <janousek.jiri@gmail.com>
  *   Copyright 2017 Michael Gratton <mike@vee.net>
  */
-[CCode (cprefix = "JS", gir_namespace = "JavaScriptCore", gir_version = "4.0", lower_case_cprefix = "JS_")]
+[CCode (cprefix = "JS", gir_namespace = "JavaScript", gir_version = "4.0", lower_case_cprefix = "JS_")]
+[Version (deprecated = true, deprecated_since = "2.22")]
 namespace JS {
 	[CCode (cheader_filename = "JavaScriptCore/JavaScript.h", cname = "void", free_function = "JSClassRelease", has_type_id = false)]
 	[Compact]
@@ -155,4 +156,11 @@ namespace JS {
 		[CCode (cname = "kJSTypedArrayTypeNone")]
 		NONE
 	}
+}
+
+namespace JSC {
+	[CCode (type_cname = "GCallback", instance_pos = 1.9)]
+	public delegate T ClassConstructorCb<T> (GLib.GenericArray<JSC.Value> values);
+	[CCode (type_cname = "GCallback", instance_pos = 2.9)]
+	public delegate T ClassMethodCb<T> (JSC.Class instance, GLib.GenericArray<JSC.Value> values);
 }

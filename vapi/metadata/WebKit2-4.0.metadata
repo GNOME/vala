@@ -1,9 +1,13 @@
+*.cancellable#parameter nullable default=null
+*.*.cancellable#parameter nullable default=null
+
 //Forward upstream
 Download
   .failed#signal.error type="WebKit.DownloadError"
 JavascriptResult
-  .get_global_context unowned
-  .get_value unowned
+  .get_global_context type="unowned JS.GlobalContext" skip=false
+  .get_value type="unowned JS.Value" skip=false
+  .get_js_value type="unowned JSC.Value"
 PrintOperation
   .failed#signal.error type="WebKit.PrintError"
 WebContext
@@ -11,8 +15,8 @@ WebContext
 WebResource
   .failed#signal.error type="GLib.Error"
 WebView
-  .get_javascript_global_context unowned
+  .get_javascript_global_context type="unowned JS.GlobalContext" skip=false
   .load_failed#signal.error type="GLib.Error"
-  .show_option_menu#signal name="on_show_option_menu"
+  .show_option_menu#signal name="on_show_option_menu" since="2.18"
 
 *.ref unowned

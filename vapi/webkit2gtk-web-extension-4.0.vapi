@@ -8,16 +8,21 @@ namespace WebKit {
 		public class Attr : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected Attr ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_local_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_namespace_uri ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_owner_element ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_prefix ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_specified ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value) throws GLib.Error;
 			public string local_name { owned get; }
 			public string name { owned get; }
@@ -33,6 +38,7 @@ namespace WebKit {
 		public class Blob : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected Blob ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public uint64 get_size ();
 			public uint64 size { get; }
 		}
@@ -47,10 +53,15 @@ namespace WebKit {
 		public class CSSRule : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected CSSRule ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_css_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRule get_parent_rule ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSStyleSheet get_parent_style_sheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_rule_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_css_text (string value) throws GLib.Error;
 			[NoAccessorMethod]
 			public string css_text { owned get; set; }
@@ -64,7 +75,9 @@ namespace WebKit {
 		public class CSSRuleList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected CSSRuleList ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRule item (ulong index);
 			public ulong length { get; }
 		}
@@ -73,16 +86,27 @@ namespace WebKit {
 		public class CSSStyleDeclaration : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected CSSStyleDeclaration ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_css_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRule get_parent_rule ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_property_priority (string propertyName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_property_shorthand (string propertyName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_property_value (string propertyName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_property_implicit (string propertyName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string item (ulong index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string remove_property (string propertyName) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_css_text (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_property (string propertyName, string value, string priority) throws GLib.Error;
 			[NoAccessorMethod]
 			public string css_text { owned get; set; }
@@ -94,12 +118,19 @@ namespace WebKit {
 		public class CSSStyleSheet : WebKit.DOM.StyleSheet {
 			[CCode (has_construct_function = false)]
 			protected CSSStyleSheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long add_rule (string selector, string style, ulong index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_rule (ulong index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRuleList get_css_rules ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRule get_owner_rule ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSRuleList get_rules ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong insert_rule (string rule, ulong index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void remove_rule (ulong index) throws GLib.Error;
 			public WebKit.DOM.CSSRuleList css_rules { owned get; }
 			public WebKit.DOM.CSSRule owner_rule { owned get; }
@@ -110,8 +141,11 @@ namespace WebKit {
 		public class CSSValue : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected CSSValue ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_css_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_css_value_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_css_text (string value) throws GLib.Error;
 			[NoAccessorMethod]
 			public string css_text { owned get; set; }
@@ -122,13 +156,21 @@ namespace WebKit {
 		public class CharacterData : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected CharacterData ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void append_data (string data) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_data (ulong offset, ulong length) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_data ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void insert_data (ulong offset, string data) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void replace_data (ulong offset, ulong length, string data) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_data (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string substring_data (ulong offset, ulong length) throws GLib.Error;
 			[NoAccessorMethod]
 			public string data { owned get; set; }
@@ -139,17 +181,17 @@ namespace WebKit {
 		public class ClientRect : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected ClientRect ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_bottom ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_height ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_left ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_right ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_top ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public float get_width ();
 			public float bottom { get; }
 			public float height { get; }
@@ -163,9 +205,9 @@ namespace WebKit {
 		public class ClientRectList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected ClientRectList ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public ulong get_length ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public WebKit.DOM.ClientRect item (ulong index);
 			public ulong length { get; }
 		}
@@ -180,10 +222,15 @@ namespace WebKit {
 		public class DOMImplementation : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected DOMImplementation ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSStyleSheet create_css_style_sheet (string title, string media) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Document create_document (string? namespaceURI, string qualifiedName, WebKit.DOM.DocumentType? doctype) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentType create_document_type (string qualifiedName, string publicId, string systemId) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLDocument create_html_document (string title);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_feature (string feature, string version);
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_dom_selection_get_type ()")]
@@ -191,55 +238,55 @@ namespace WebKit {
 		public class DOMSelection : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected DOMSelection ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void add_range (WebKit.DOM.Range range);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void collapse (WebKit.DOM.Node node, ulong offset);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void collapse_to_end () throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void collapse_to_start () throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool contains_node (WebKit.DOM.Node node, bool allowPartial);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void delete_from_document ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void empty ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void extend (WebKit.DOM.Node node, ulong offset) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Node get_anchor_node ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_anchor_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Node get_base_node ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_base_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Node get_extent_node ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_extent_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Node get_focus_node ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_focus_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_is_collapsed ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.Range get_range_at (ulong index) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_range_count ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_selection_type ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void modify (string alter, string direction, string granularity);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void remove_all_ranges ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void select_all_children (WebKit.DOM.Node node);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_base_and_extent (WebKit.DOM.Node baseNode, ulong baseOffset, WebKit.DOM.Node extentNode, ulong extentOffset);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_position (WebKit.DOM.Node node, ulong offset);
 			public WebKit.DOM.Node anchor_node { get; }
 			public ulong anchor_offset { get; }
@@ -259,19 +306,19 @@ namespace WebKit {
 		public class DOMTokenList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected DOMTokenList ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool contains (string token);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_length ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_value ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string item (ulong index);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void replace (string token, string newToken) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_value (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool toggle (string token, bool force) throws GLib.Error;
 			public ulong length { get; }
 			public string value { owned get; set; }
@@ -281,105 +328,105 @@ namespace WebKit {
 		public class DOMWindow : WebKit.DOM.Object, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected DOMWindow ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void alert (string message);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void blur ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void capture_events ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void close ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool confirm (string message);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool find (string string, bool caseSensitive, bool backwards, bool wrap, bool wholeWord, bool searchInFrames, bool showDialog);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void focus ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_closed ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.CSSStyleDeclaration get_computed_style (WebKit.DOM.Element element, string? pseudoElement);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_default_status ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public double get_device_pixel_ratio ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Document get_document ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_frame_element ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_frames ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_inner_height ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_inner_width ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_length ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_name ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_offscreen_buffering ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_opener ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_orientation ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_outer_height ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_outer_width ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_page_x_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_page_y_offset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_parent ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_screen_left ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_screen_top ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_screen_x ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_screen_y ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_scroll_x ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public long get_scroll_y ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMSelection get_selection ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_self ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_status ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_top ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMWindow get_window ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void move_by (float x, float y);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void move_to (float x, float y);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void print ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string prompt (string message, string defaultValue);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void release_events ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void resize_by (float x, float y);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void resize_to (float width, float height);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void scroll_by (double x, double y);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void scroll_to (double x, double y);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_default_status (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_name (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_status (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void stop ();
 			public bool webkit_message_handlers_post_message (string handler, string message);
 			public bool closed { get; }
@@ -416,146 +463,215 @@ namespace WebKit {
 		public class Document : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected Document ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node adopt_node (WebKit.DOM.Node source) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.Range caret_range_from_point (long x, long y);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr create_attribute (string name) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr create_attribute_ns (string? namespaceURI, string qualifiedName) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.CDATASection create_cdata_section (string data) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Comment create_comment (string data);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSStyleDeclaration create_css_style_declaration ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentFragment create_document_fragment ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element create_element (string tagName) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element create_element_ns (string? namespaceURI, string qualifiedName) throws GLib.Error;
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public unowned WebKit.DOM.EntityReference create_entity_reference (string? name) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.Event create_event (string eventType) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.XPathExpression create_expression (string expression, WebKit.DOM.XPathNSResolver resolver) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeIterator create_node_iterator (WebKit.DOM.Node root, ulong whatToShow, WebKit.DOM.NodeFilter? filter, bool expandEntityReferences) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.XPathNSResolver create_ns_resolver (WebKit.DOM.Node nodeResolver);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.ProcessingInstruction create_processing_instruction (string target, string data) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.Range create_range ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Text create_text_node (string data);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.TreeWalker create_tree_walker (WebKit.DOM.Node root, ulong whatToShow, WebKit.DOM.NodeFilter? filter, bool expandEntityReferences) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element element_from_point (long x, long y);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.XPathResult evaluate (string expression, WebKit.DOM.Node contextNode, WebKit.DOM.XPathNSResolver? resolver, ushort type, WebKit.DOM.XPathResult? inResult) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool exec_command (string command, bool userInterface, string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void exit_pointer_lock ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_active_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_anchors ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_applets ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement get_body ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_character_set ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_charset ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_child_element_count ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.HTMLCollection get_children ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_compat_mode ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_content_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cookie () throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.HTMLScriptElement get_current_script ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_default_charset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.DOMWindow get_default_view ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_design_mode ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_dir ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentType get_doctype ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_document_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_document_uri ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_domain ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_element_by_id (string elementId);
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_class_name (string class_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_class_name_as_html_collection (string classNames);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeList get_elements_by_name (string elementName);
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_tag_name (string tag_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_as_html_collection (string tagname);
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespace_uri, string tag_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_ns_as_html_collection (string namespaceURI, string localName);
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_embeds ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_first_element_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_forms ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLHeadElement get_head ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_hidden ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_images ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.DOMImplementation get_implementation ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_input_encoding ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_last_element_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_last_modified ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_links ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_origin ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSStyleDeclaration get_override_style (WebKit.DOM.Element element, string? pseudoElement);
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_plugins ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_pointer_lock_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_preferred_stylesheet_set ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ready_state ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_referrer ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_scripts ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_scrolling_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_selected_stylesheet_set ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.StyleSheetList get_style_sheets ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_title ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_url ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_visibility_state ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_webkit_current_fullscreen_element ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_webkit_fullscreen_element ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_webkit_fullscreen_enabled ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_webkit_fullscreen_keyboard_input_allowed ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_webkit_is_fullscreen ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_xml_encoding ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_xml_standalone ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_xml_version ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_focus ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node import_node (WebKit.DOM.Node importedNode, bool deep) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool query_command_enabled (string command);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool query_command_indeterm (string command);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool query_command_state (string command);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool query_command_supported (string command);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string query_command_value (string command);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element query_selector (string selectors) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeList query_selector_all (string selectors) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_body (WebKit.DOM.HTMLElement value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_charset (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cookie (string value) throws GLib.Error;
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public void set_design_mode (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_dir (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_document_uri (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selected_stylesheet_set (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_title (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_xml_standalone (bool value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_xml_version (string value) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void webkit_cancel_fullscreen ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void webkit_exit_fullscreen ();
 			public WebKit.DOM.Element active_element { get; }
 			public WebKit.DOM.HTMLCollection anchors { owned get; }
@@ -620,19 +736,19 @@ namespace WebKit {
 		public class DocumentFragment : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected DocumentFragment ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public ulong get_child_element_count ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.HTMLCollection get_children ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_element_by_id (string elementId);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_first_element_child ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element get_last_element_child ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element query_selector (string selectors) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.NodeList query_selector_all (string selectors) throws GLib.Error;
 			public ulong child_element_count { get; }
 			public WebKit.DOM.HTMLCollection children { owned get; }
@@ -644,11 +760,17 @@ namespace WebKit {
 		public class DocumentType : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected DocumentType ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NamedNodeMap get_entities ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_internal_subset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NamedNodeMap get_notations ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_public_id ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_system_id ();
 			public WebKit.DOM.NamedNodeMap entities { owned get; }
 			public string internal_subset { owned get; }
@@ -662,108 +784,164 @@ namespace WebKit {
 		public class Element : WebKit.DOM.Node, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected Element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void blur ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element closest (string selectors) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void focus ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_attribute (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr get_attribute_node (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr get_attribute_node_ns (string namespaceURI, string localName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_attribute_ns (string namespaceURI, string localName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NamedNodeMap get_attributes ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public WebKit.DOM.ClientRect get_bounding_client_rect ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_child_element_count ();
-			[Version (since = "2.10")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.10")]
 			public WebKit.DOM.HTMLCollection get_children ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMTokenList get_class_list ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_class_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_client_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_client_left ();
-			[Version (since = "2.18")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.18")]
 			public WebKit.DOM.ClientRectList get_client_rects ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_client_top ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_client_width ();
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_class_name (string class_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_class_name_as_html_collection (string name);
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_tag_name (string tag_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_as_html_collection (string name);
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public WebKit.DOM.NodeList get_elements_by_tag_name_ns (string namespace_uri, string tag_name);
-			[Version (since = "2.12")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.12")]
 			public WebKit.DOM.HTMLCollection get_elements_by_tag_name_ns_as_html_collection (string namespaceURI, string localName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_first_element_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_id ();
-			[Version (since = "2.8")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.8")]
 			public string get_inner_html ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_last_element_child ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_local_name ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_namespace_uri ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_next_element_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_offset_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_offset_left ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_offset_parent ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_offset_top ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_offset_width ();
-			[Version (since = "2.8")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.8")]
 			public string get_outer_html ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_prefix ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_previous_element_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_scroll_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_scroll_left ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_scroll_top ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_scroll_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.CSSStyleDeclaration get_style ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_tag_name ();
 			[Version (deprecated = true, deprecated_since = "2.20")]
 			public string get_webkit_region_overset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_attribute (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_attribute_ns (string namespaceURI, string localName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_attributes ();
-			[Version (since = "2.16")]
+			public bool html_input_element_get_auto_filled ();
+			[Version (since = "2.22")]
+			public bool html_input_element_is_user_edited ();
+			[Version (since = "2.22")]
+			public void html_input_element_set_auto_filled (bool auto_filled);
+			[Version (since = "2.22")]
+			public void html_input_element_set_editing_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element insert_adjacent_element (string where, WebKit.DOM.Element element) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void insert_adjacent_html (string where, string html) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void insert_adjacent_text (string where, string text) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool matches (string selectors) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element query_selector (string selectors) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeList query_selector_all (string selectors) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void remove () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void remove_attribute (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr remove_attribute_node (WebKit.DOM.Attr oldAttr) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void remove_attribute_ns (string namespaceURI, string localName);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void request_pointer_lock ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void scroll_by_lines (long lines);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void scroll_by_pages (long pages);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void scroll_into_view (bool alignWithTop);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void scroll_into_view_if_needed (bool centerIfNeeded);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_attribute (string name, string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr set_attribute_node (WebKit.DOM.Attr newAttr) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Attr set_attribute_node_ns (WebKit.DOM.Attr newAttr) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_attribute_ns (string? namespaceURI, string qualifiedName, string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_class_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_id (string value);
-			[Version (since = "2.8")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.8")]
 			public void set_inner_html (string value) throws GLib.Error;
-			[Version (since = "2.8")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.8")]
 			public void set_outer_html (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scroll_left (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scroll_top (long value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool webkit_matches_selector (string selectors) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void webkit_request_fullscreen ();
 			public WebKit.DOM.NamedNodeMap attributes { owned get; }
 			public ulong child_element_count { get; }
@@ -810,20 +988,35 @@ namespace WebKit {
 		public class Event : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected Event ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_bubbles ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_cancel_bubble ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_cancelable ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.EventTarget get_current_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_event_phase ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_event_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_return_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.EventTarget get_src_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.EventTarget get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public uint32 get_time_stamp ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void init_event (string eventTypeArg, bool canBubbleArg, bool cancelableArg);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void prevent_default ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cancel_bubble (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_return_value (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void stop_propagation ();
 			public bool bubbles { get; }
 			public bool cancel_bubble { get; set; }
@@ -842,6 +1035,7 @@ namespace WebKit {
 		public class File : WebKit.DOM.Blob {
 			[CCode (has_construct_function = false)]
 			protected File ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
 			public string name { owned get; }
 		}
@@ -850,7 +1044,9 @@ namespace WebKit {
 		public class FileList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected FileList ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.File item (ulong index);
 			public ulong length { get; }
 		}
@@ -859,42 +1055,77 @@ namespace WebKit {
 		public class HTMLAnchorElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLAnchorElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_charset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_coords ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hash ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_host ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hostname ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hreflang ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_pathname ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_port ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_protocol ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rel ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rev ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_search ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_shape ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_charset (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_coords (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hash (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_host (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hostname (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_href (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hreflang (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_pathname (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_port (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_protocol (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rel (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rev (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_search (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_shape (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_target (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_text (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public string charset { owned get; set; }
 			public string coords { owned get; set; }
@@ -921,27 +1152,49 @@ namespace WebKit {
 		public class HTMLAppletElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLAppletElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_alt ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_archive ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_code ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_code_base ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_hspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_object ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_vspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_alt (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_archive (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_code (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_code_base (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_object (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_vspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public string alt { owned get; set; }
@@ -960,37 +1213,57 @@ namespace WebKit {
 		public class HTMLAreaElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLAreaElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_alt ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_coords ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hash ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_host ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hostname ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_no_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_pathname ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_port ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_protocol ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_search ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_shape ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_alt (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_coords (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hash (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_host (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_hostname (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_href (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_no_href (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_pathname (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_port (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_protocol (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_search (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_shape (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_target (string value);
 			public string alt { owned get; set; }
 			public string coords { owned get; set; }
@@ -1011,7 +1284,9 @@ namespace WebKit {
 		public class HTMLBRElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLBRElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_clear ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_clear (string value);
 			public string clear { owned get; set; }
 		}
@@ -1020,9 +1295,13 @@ namespace WebKit {
 		public class HTMLBaseElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLBaseElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_href (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_target (string value);
 			public string href { owned get; set; }
 			public string target { owned get; set; }
@@ -1050,17 +1329,29 @@ namespace WebKit {
 		public class HTMLBodyElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLBodyElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_a_link ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_background ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_bg_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_link ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_v_link ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_a_link (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_background (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_bg_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_link (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_text (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_v_link (string value);
 			public string a_link { owned get; set; }
 			public string background { owned get; set; }
@@ -1074,17 +1365,29 @@ namespace WebKit {
 		public class HTMLButtonElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLButtonElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_autofocus ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_button_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_will_validate ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_autofocus (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_button_type (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
 			public bool autofocus { get; set; }
 			public bool disabled { get; set; }
@@ -1100,9 +1403,13 @@ namespace WebKit {
 		public class HTMLCanvasElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLCanvasElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (long value);
 			public long height { get; set; }
 			public long width { get; set; }
@@ -1112,8 +1419,11 @@ namespace WebKit {
 		public class HTMLCollection : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected HTMLCollection ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node item (ulong index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node named_item (string name);
 			public ulong length { get; }
 		}
@@ -1122,7 +1432,9 @@ namespace WebKit {
 		public class HTMLDListElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLDListElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_compact ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_compact (bool value);
 			public bool compact { get; set; }
 		}
@@ -1131,7 +1443,9 @@ namespace WebKit {
 		public class HTMLDirectoryElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLDirectoryElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_compact ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_compact (bool value);
 			public bool compact { get; set; }
 		}
@@ -1140,7 +1454,9 @@ namespace WebKit {
 		public class HTMLDivElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLDivElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
 			public string align { owned get; set; }
 		}
@@ -1149,35 +1465,53 @@ namespace WebKit {
 		public class HTMLDocument : WebKit.DOM.Document, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLDocument ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void capture_events ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void clear ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void close ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_alink_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_bg_color ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_compat_mode ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_design_mode ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_dir ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_embeds ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_fg_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_link_color ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_plugins ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public WebKit.DOM.HTMLCollection get_scripts ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_vlink_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void release_events ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_alink_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_bg_color (string value);
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public void set_design_mode (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_dir (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_fg_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_link_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_vlink_color (string value);
 			public string alink_color { owned get; set; }
 			public string bg_color { owned get; set; }
@@ -1193,53 +1527,71 @@ namespace WebKit {
 		public class HTMLElement : WebKit.DOM.Element, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void click ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_access_key ();
 			[Version (deprecated = true, deprecated_since = "2.10")]
 			public WebKit.DOM.HTMLCollection get_children ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_content_editable ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_dir ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_draggable ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_hidden ();
 			[Version (deprecated = true, deprecated_since = "2.8")]
 			public string get_inner_html ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_inner_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_is_content_editable ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_lang ();
 			[Version (deprecated = true, deprecated_since = "2.8")]
 			public string get_outer_html ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_outer_text ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_spellcheck ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_tab_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_title ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_translate ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public string get_webkitdropzone ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_access_key (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_content_editable (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_dir (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_draggable (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_hidden (bool value);
 			[Version (deprecated = true, deprecated_since = "2.8")]
 			public void set_inner_html (string contents) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_inner_text (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_lang (string value);
 			[Version (deprecated = true, deprecated_since = "2.8")]
 			public void set_outer_html (string contents) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_outer_text (string value) throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_spellcheck (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_tab_index (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_title (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_translate (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_webkitdropzone (string value);
 			public string access_key { owned get; set; }
 			[NoAccessorMethod]
@@ -1264,17 +1616,29 @@ namespace WebKit {
 		public class HTMLEmbedElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLEmbedElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (long value);
 			public string align { owned get; set; }
 			public long height { get; set; }
@@ -1289,6 +1653,7 @@ namespace WebKit {
 		public class HTMLFieldSetElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLFieldSetElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
 			public WebKit.DOM.HTMLFormElement form { get; }
 		}
@@ -1297,11 +1662,17 @@ namespace WebKit {
 		public class HTMLFontElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLFontElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_face ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_size ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_face (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_size (string value);
 			public string color { owned get; set; }
 			public string face { owned get; set; }
@@ -1312,23 +1683,41 @@ namespace WebKit {
 		public class HTMLFormElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLFormElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_accept_charset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_action ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_elements ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_encoding ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_enctype ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_method ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void reset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_accept_charset (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_action (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_encoding (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_enctype (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_method (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_target (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void submit ();
 			public string accept_charset { owned get; set; }
 			public string action { owned get; set; }
@@ -1345,25 +1734,45 @@ namespace WebKit {
 		public class HTMLFrameElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLFrameElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Document get_content_document ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.DOMWindow get_content_window ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_frame_border ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_long_desc ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_margin_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_margin_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_no_resize ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_scrolling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_frame_border (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_long_desc (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_margin_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_margin_width (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_no_resize (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scrolling (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
 			public WebKit.DOM.Document content_document { get; }
 			public WebKit.DOM.DOMWindow content_window { owned get; }
@@ -1383,9 +1792,13 @@ namespace WebKit {
 		public class HTMLFrameSetElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLFrameSetElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cols ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rows ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cols (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rows (string value);
 			public string cols { owned get; set; }
 			public string rows { owned get; set; }
@@ -1395,13 +1808,21 @@ namespace WebKit {
 		public class HTMLHRElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLHRElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_no_shade ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_size ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_no_shade (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_size (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public bool no_shade { get; set; }
@@ -1413,7 +1834,9 @@ namespace WebKit {
 		public class HTMLHeadElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLHeadElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_profile ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_profile (string value);
 			public string profile { owned get; set; }
 		}
@@ -1422,7 +1845,9 @@ namespace WebKit {
 		public class HTMLHeadingElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLHeadingElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
 			public string align { owned get; set; }
 		}
@@ -1431,7 +1856,9 @@ namespace WebKit {
 		public class HTMLHtmlElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLHtmlElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_version ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_version (string value);
 			public string version { owned get; set; }
 		}
@@ -1440,27 +1867,49 @@ namespace WebKit {
 		public class HTMLIFrameElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLIFrameElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Document get_content_document ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.DOMWindow get_content_window ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_frame_border ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_long_desc ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_margin_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_margin_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_scrolling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_frame_border (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_long_desc (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_margin_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_margin_width (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scrolling (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public WebKit.DOM.Document content_document { get; }
@@ -1480,36 +1929,67 @@ namespace WebKit {
 		public class HTMLImageElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLImageElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_alt ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_border ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_complete ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_hspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_is_map ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_long_desc ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_lowsrc ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_natural_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_natural_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_use_map ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_vspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_alt (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_border (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_is_map (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_long_desc (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_lowsrc (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_use_map (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_vspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (long value);
 			public string align { owned get; set; }
 			public string alt { owned get; set; }
@@ -1535,65 +2015,109 @@ namespace WebKit {
 		public class HTMLInputElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLInputElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_accept ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_alt ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_auto_filled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_autofocus ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public bool get_capture ();
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public string get_capture_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_checked ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_default_checked ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_default_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.FileList get_files ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_indeterminate ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_input_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_max_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_multiple ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public bool get_read_only ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_size ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_use_map ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_will_validate ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_edited ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void select ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_accept (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_alt (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_auto_filled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_autofocus (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_capture_type (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_checked (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_default_checked (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_default_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_editing_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_files (WebKit.DOM.FileList value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (ulong value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_indeterminate (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_input_type (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_max_length (long value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_multiple (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_read_only (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_size (ulong value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_use_map (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (ulong value);
 			public string accept { owned get; set; }
 			public string align { owned get; set; }
@@ -1629,9 +2153,13 @@ namespace WebKit {
 		public class HTMLLIElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLLIElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (long value);
 			[NoAccessorMethod]
 			public string type { owned get; set; }
@@ -1642,8 +2170,11 @@ namespace WebKit {
 		public class HTMLLabelElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLLabelElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_html_for ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_html_for (string value);
 			public WebKit.DOM.HTMLFormElement form { get; }
 			public string html_for { owned get; set; }
@@ -1653,8 +2184,11 @@ namespace WebKit {
 		public class HTMLLegendElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLLegendElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
 			public string align { owned get; set; }
 			public WebKit.DOM.HTMLFormElement form { get; }
@@ -1664,28 +2198,47 @@ namespace WebKit {
 		public class HTMLLinkElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLLinkElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_charset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_hreflang ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_media ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rel ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rev ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.StyleSheet get_sheet ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public WebKit.DOM.DOMTokenList get_sizes ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_charset (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_href (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hreflang (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_media (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rel (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rev (string value);
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_sizes (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_target (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public string charset { owned get; set; }
 			public bool disabled { get; set; }
@@ -1705,8 +2258,11 @@ namespace WebKit {
 		public class HTMLMapElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLMapElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_areas ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
 			public WebKit.DOM.HTMLCollection areas { owned get; }
 			public string name { owned get; set; }
@@ -1716,7 +2272,9 @@ namespace WebKit {
 		public class HTMLMarqueeElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLMarqueeElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void start ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void stop ();
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_html_menu_element_get_type ()")]
@@ -1724,7 +2282,9 @@ namespace WebKit {
 		public class HTMLMenuElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLMenuElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_compact ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_compact (bool value);
 			public bool compact { get; set; }
 		}
@@ -1733,13 +2293,21 @@ namespace WebKit {
 		public class HTMLMetaElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLMetaElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_content ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_http_equiv ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_scheme ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_content (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_http_equiv (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scheme (string value);
 			public string content { owned get; set; }
 			public string http_equiv { owned get; set; }
@@ -1751,9 +2319,13 @@ namespace WebKit {
 		public class HTMLModElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLModElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cite ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_date_time ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cite (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_date_time (string value);
 			public string cite { owned get; set; }
 			public string date_time { owned get; set; }
@@ -1763,11 +2335,17 @@ namespace WebKit {
 		public class HTMLOListElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLOListElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_compact ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_start ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_compact (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_start (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public bool compact { get; set; }
 			public long start { get; set; }
@@ -1779,39 +2357,73 @@ namespace WebKit {
 		public class HTMLObjectElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLObjectElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_archive ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_border ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_code ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_code_base ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_code_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Document get_content_document ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_data ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_declare ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_hspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_standby ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_use_map ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_vspace ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_archive (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_border (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_code (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_code_base (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_code_type (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_data (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_declare (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_hspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_standby (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_use_map (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_vspace (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public string archive { owned get; set; }
@@ -1838,9 +2450,13 @@ namespace WebKit {
 		public class HTMLOptGroupElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLOptGroupElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_label ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_label (string value);
 			public bool disabled { get; set; }
 			public string label { owned get; set; }
@@ -1850,18 +2466,31 @@ namespace WebKit {
 		public class HTMLOptionElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLOptionElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_default_selected ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_label ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_selected ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_default_selected (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_label (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selected (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
 			public bool default_selected { get; set; }
 			public bool disabled { get; set; }
@@ -1877,9 +2506,13 @@ namespace WebKit {
 		public class HTMLOptionsCollection : WebKit.DOM.HTMLCollection {
 			[CCode (has_construct_function = false)]
 			protected HTMLOptionsCollection ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_selected_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node named_item (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selected_index (long value);
 			public ulong length { get; }
 			public long selected_index { get; set; }
@@ -1889,7 +2522,9 @@ namespace WebKit {
 		public class HTMLParagraphElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLParagraphElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
 			public string align { owned get; set; }
 		}
@@ -1898,13 +2533,21 @@ namespace WebKit {
 		public class HTMLParamElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLParamElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value_type (string value);
 			public string name { owned get; set; }
 			[NoAccessorMethod]
@@ -1917,9 +2560,13 @@ namespace WebKit {
 		public class HTMLPreElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLPreElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_wrap ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_wrap (bool value);
 			public long width { get; set; }
 			public bool wrap { get; set; }
@@ -1929,7 +2576,9 @@ namespace WebKit {
 		public class HTMLQuoteElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLQuoteElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cite ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cite (string value);
 			public string cite { owned get; set; }
 		}
@@ -1938,20 +2587,33 @@ namespace WebKit {
 		public class HTMLScriptElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLScriptElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_charset ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_defer ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_event ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_html_for ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_src ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void set_charset (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_defer (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_event (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_html_for (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_src (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_text (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public string charset { owned get; set; }
 			public bool defer { get; set; }
@@ -1967,29 +2629,53 @@ namespace WebKit {
 		public class HTMLSelectElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLSelectElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void add (WebKit.DOM.HTMLElement element, WebKit.DOM.HTMLElement before) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_autofocus ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_multiple ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLOptionsCollection get_options ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_select_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_selected_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_size ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_will_validate ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node item (ulong index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node named_item (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void remove (long index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_autofocus (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_length (ulong value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_multiple (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selected_index (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_size (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
 			public bool autofocus { get; set; }
 			public bool disabled { get; set; }
@@ -2011,12 +2697,19 @@ namespace WebKit {
 		public class HTMLStyleElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLStyleElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_media ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.StyleSheet get_sheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_media (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public bool disabled { get; set; }
 			public string media { owned get; set; }
@@ -2029,7 +2722,9 @@ namespace WebKit {
 		public class HTMLTableCaptionElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableCaptionElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
 			public string align { owned get; set; }
 		}
@@ -2038,34 +2733,63 @@ namespace WebKit {
 		public class HTMLTableCellElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableCellElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_abbr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_axis ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_bg_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_cell_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch_off ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_col_span ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_headers ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_height ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_no_wrap ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_row_span ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_scope ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_v_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_abbr (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_axis (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_bg_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch_off (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_col_span (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_headers (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_height (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_no_wrap (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_row_span (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_scope (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_v_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string abbr { owned get; set; }
 			public string align { owned get; set; }
@@ -2088,17 +2812,29 @@ namespace WebKit {
 		public class HTMLTableColElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableColElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch_off ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_span ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_v_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch_off (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_span (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_v_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public string ch { owned get; set; }
@@ -2112,37 +2848,69 @@ namespace WebKit {
 		public class HTMLTableElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement create_caption ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement create_t_foot ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement create_t_head ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_caption ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_row (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_t_foot ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_t_head ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_bg_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_border ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLTableCaptionElement get_caption ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cell_padding ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_cell_spacing ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_rows ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_rules ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_summary ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_t_bodies ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLTableSectionElement get_t_foot ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLTableSectionElement get_t_head ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_width ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement insert_row (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_bg_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_border (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_caption (WebKit.DOM.HTMLTableCaptionElement value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cell_padding (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cell_spacing (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rules (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_summary (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_t_foot (WebKit.DOM.HTMLTableSectionElement value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_t_head (WebKit.DOM.HTMLTableSectionElement value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_width (string value);
 			public string align { owned get; set; }
 			public string bg_color { owned get; set; }
@@ -2163,20 +2931,35 @@ namespace WebKit {
 		public class HTMLTableRowElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableRowElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_cell (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_bg_color ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_cells ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch_off ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_row_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_section_row_index ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_v_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement insert_cell (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_bg_color (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch_off (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_v_align (string value);
 			public string align { owned get; set; }
 			public string bg_color { owned get; set; }
@@ -2192,16 +2975,27 @@ namespace WebKit {
 		public class HTMLTableSectionElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTableSectionElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_row (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_ch_off ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.HTMLCollection get_rows ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_v_align ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLElement insert_row (long index) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_align (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_ch_off (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_v_align (string value);
 			public string align { owned get; set; }
 			public string ch { owned get; set; }
@@ -2214,31 +3008,57 @@ namespace WebKit {
 		public class HTMLTextAreaElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTextAreaElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_area_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_autofocus ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_cols ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_default_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.HTMLFormElement get_form ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_read_only ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_rows ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_selection_end ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_selection_start ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_will_validate ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_edited ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void select ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_autofocus (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_cols (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_default_value (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_name (string value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_read_only (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_rows (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selection_end (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selection_range (long start, long end, string direction);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_selection_start (long value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_value (string value);
 			public bool autofocus { get; set; }
 			public long cols { get; set; }
@@ -2260,7 +3080,9 @@ namespace WebKit {
 		public class HTMLTitleElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLTitleElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_text (string value);
 			public string text { owned get; set; }
 		}
@@ -2269,9 +3091,13 @@ namespace WebKit {
 		public class HTMLUListElement : WebKit.DOM.HTMLElement, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected HTMLUListElement ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_compact ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_type_attr ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_compact (bool value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_type_attr (string value);
 			public bool compact { get; set; }
 			[NoAccessorMethod]
@@ -2282,14 +3108,23 @@ namespace WebKit {
 		public class KeyboardEvent : WebKit.DOM.UIEvent {
 			[CCode (has_construct_function = false)]
 			protected KeyboardEvent ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_alt_graph_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_alt_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_ctrl_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_key_identifier ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_key_location ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_meta_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_modifier_state (string keyIdentifierArg);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_shift_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void init_keyboard_event (string type, bool canBubble, bool cancelable, WebKit.DOM.DOMWindow view, string keyIdentifier, ulong location, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, bool altGraphKey);
 			public bool alt_graph_key { get; }
 			public bool alt_key { get; }
@@ -2304,11 +3139,17 @@ namespace WebKit {
 		public class MediaList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected MediaList ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void append_medium (string newMedium) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_medium (string oldMedium) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_media_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string item (ulong index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_media_text (string value) throws GLib.Error;
 			public ulong length { get; }
 			[NoAccessorMethod]
@@ -2319,22 +3160,39 @@ namespace WebKit {
 		public class MouseEvent : WebKit.DOM.UIEvent {
 			[CCode (has_construct_function = false)]
 			protected MouseEvent ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_alt_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_button ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_client_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_client_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_ctrl_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_from_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_meta_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_offset_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_offset_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.EventTarget get_related_target ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_screen_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_screen_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_shift_key ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_to_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void init_mouse_event (string type, bool canBubble, bool cancelable, WebKit.DOM.DOMWindow view, long detail, long screenX, long screenY, long clientX, long clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey, ushort button, WebKit.DOM.EventTarget relatedTarget);
 			public bool alt_key { get; }
 			public uint button { get; }
@@ -2358,13 +3216,21 @@ namespace WebKit {
 		public class NamedNodeMap : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected NamedNodeMap ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_named_item (string name);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_named_item_ns (string namespaceURI, string localName);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node item (ulong index);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node remove_named_item (string name) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node remove_named_item_ns (string namespaceURI, string localName) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node set_named_item (WebKit.DOM.Node node) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node set_named_item_ns (WebKit.DOM.Node node) throws GLib.Error;
 			public ulong length { get; }
 		}
@@ -2373,46 +3239,77 @@ namespace WebKit {
 		public class Node : WebKit.DOM.Object, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected Node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node append_child (WebKit.DOM.Node newChild) throws GLib.Error;
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public unowned WebKit.DOM.Node clone_node (bool deep) throws GLib.Error;
-			[Version (since = "2.14")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.14")]
 			public unowned WebKit.DOM.Node clone_node_with_error (bool deep) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort compare_document_position (WebKit.DOM.Node other);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool contains (WebKit.DOM.Node other);
+			[Version (since = "2.22")]
+			public static unowned WebKit.DOM.Node for_js_value ([CCode (type = "JSCValue*")] JSC.Value value);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_base_uri ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeList get_child_nodes ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_first_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_last_child ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_local_name ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_namespace_uri ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_next_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_node_name ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_node_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_node_value ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Document get_owner_document ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Element get_parent_element ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_parent_node ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public string get_prefix ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_previous_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text_content ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_child_nodes ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node insert_before (WebKit.DOM.Node newChild, WebKit.DOM.Node? refChild) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_default_namespace (string namespaceURI);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_equal_node (WebKit.DOM.Node other);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_same_node (WebKit.DOM.Node other);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_supported (string feature, string version);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string lookup_namespace_uri (string prefix);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string lookup_prefix (string namespaceURI);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void normalize ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node remove_child (WebKit.DOM.Node oldChild) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node replace_child (WebKit.DOM.Node newChild, WebKit.DOM.Node oldChild) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_node_value (string value) throws GLib.Error;
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public void set_prefix (string value) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_text_content (string value) throws GLib.Error;
 			public string base_uri { owned get; }
 			public WebKit.DOM.NodeList child_nodes { owned get; }
@@ -2435,15 +3332,23 @@ namespace WebKit {
 		public class NodeIterator : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected NodeIterator ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void detach ();
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public bool get_expand_entity_references ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeFilter get_filter ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_pointer_before_reference_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_reference_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_root ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_what_to_show ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node next_node () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node previous_node () throws GLib.Error;
 			public WebKit.DOM.NodeFilter filter { owned get; }
 			public bool pointer_before_reference_node { get; }
@@ -2456,7 +3361,9 @@ namespace WebKit {
 		public class NodeList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected NodeList ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node item (ulong index);
 			public ulong length { get; }
 		}
@@ -2474,7 +3381,9 @@ namespace WebKit {
 		public class ProcessingInstruction : WebKit.DOM.CharacterData, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected ProcessingInstruction ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.StyleSheet get_sheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_target ();
 			public WebKit.DOM.StyleSheet sheet { owned get; }
 			public string target { owned get; }
@@ -2484,37 +3393,67 @@ namespace WebKit {
 		public class Range : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected Range ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentFragment clone_contents () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.Range clone_range () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void collapse (bool toStart) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public short compare_boundary_points (ushort how, WebKit.DOM.Range sourceRange) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public short compare_node (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public short compare_point (WebKit.DOM.Node refNode, long offset) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentFragment create_contextual_fragment (string html) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void delete_contents () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void detach () throws GLib.Error;
-			[Version (since = "2.16")]
+			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public void expand (string unit) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.DocumentFragment extract_contents () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_collapsed () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_common_ancestor_container () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_end_container () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_end_offset () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_start_container () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_start_offset () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void insert_node (WebKit.DOM.Node newNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool intersects_node (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool is_point_in_range (WebKit.DOM.Node refNode, long offset) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void select_node (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void select_node_contents (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_end (WebKit.DOM.Node refNode, long offset) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_end_after (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_end_before (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_start (WebKit.DOM.Node refNode, long offset) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_start_after (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_start_before (WebKit.DOM.Node refNode) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void surround_contents (WebKit.DOM.Node newParent) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string to_string () throws GLib.Error;
 			[NoAccessorMethod]
 			public bool collapsed { get; }
@@ -2535,13 +3474,21 @@ namespace WebKit {
 		public class StyleSheet : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected StyleSheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_content_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_disabled ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_href ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.MediaList get_media ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_owner_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.StyleSheet get_parent_style_sheet ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_title ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_disabled (bool value);
 			public bool disabled { get; set; }
 			public string href { owned get; }
@@ -2557,7 +3504,9 @@ namespace WebKit {
 		public class StyleSheetList : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected StyleSheetList ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_length ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.StyleSheet item (ulong index);
 			public ulong length { get; }
 		}
@@ -2566,9 +3515,11 @@ namespace WebKit {
 		public class Text : WebKit.DOM.CharacterData, WebKit.DOM.EventTarget {
 			[CCode (has_construct_function = false)]
 			protected Text ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_whole_text ();
 			[Version (deprecated = true, deprecated_since = "2.14")]
 			public unowned WebKit.DOM.Text replace_whole_text (string content) throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Text split_text (ulong offset) throws GLib.Error;
 			public string whole_text { owned get; }
 		}
@@ -2577,19 +3528,31 @@ namespace WebKit {
 		public class TreeWalker : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected TreeWalker ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node first_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_current_node ();
 			[Version (deprecated = true, deprecated_since = "2.12")]
 			public bool get_expand_entity_references ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.NodeFilter get_filter ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_root ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_what_to_show ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node last_child ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node next_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node next_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node parent_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node previous_node ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node previous_sibling ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void set_current_node (WebKit.DOM.Node value) throws GLib.Error;
 			public WebKit.DOM.Node current_node { get; }
 			public WebKit.DOM.NodeFilter filter { owned get; }
@@ -2601,14 +3564,23 @@ namespace WebKit {
 		public class UIEvent : WebKit.DOM.Event {
 			[CCode (has_construct_function = false)]
 			protected UIEvent ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_char_code ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_detail ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_key_code ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_layer_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_layer_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_page_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_page_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.DOMWindow get_view ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void init_ui_event (string type, bool canBubble, bool cancelable, WebKit.DOM.DOMWindow view, long detail);
 			public long char_code { get; }
 			public long detail { get; }
@@ -2624,9 +3596,13 @@ namespace WebKit {
 		public class WheelEvent : WebKit.DOM.MouseEvent {
 			[CCode (has_construct_function = false)]
 			protected WheelEvent ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_wheel_delta ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_wheel_delta_x ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public long get_wheel_delta_y ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public void init_wheel_event (long wheelDeltaX, long wheelDeltaY, WebKit.DOM.DOMWindow view, long screenX, long screenY, long clientX, long clientY, bool ctrlKey, bool altKey, bool shiftKey, bool metaKey);
 			public long wheel_delta { get; }
 			public long wheel_delta_x { get; }
@@ -2637,6 +3613,7 @@ namespace WebKit {
 		public class XPathExpression : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected XPathExpression ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public WebKit.DOM.XPathResult evaluate (WebKit.DOM.Node contextNode, ushort type, WebKit.DOM.XPathResult inResult) throws GLib.Error;
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_xpath_result_get_type ()")]
@@ -2644,14 +3621,23 @@ namespace WebKit {
 		public class XPathResult : WebKit.DOM.Object {
 			[CCode (has_construct_function = false)]
 			protected XPathResult ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_boolean_value () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool get_invalid_iterator_state ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public double get_number_value () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ushort get_result_type ();
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node get_single_node_value () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public ulong get_snapshot_length () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_string_value () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node iterate_next () throws GLib.Error;
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public unowned WebKit.DOM.Node snapshot_item (ulong index) throws GLib.Error;
 			[NoAccessorMethod]
 			public bool boolean_value { get; }
@@ -2670,212 +3656,288 @@ namespace WebKit {
 		[GIR (name = "DOMEventTarget")]
 		public interface EventTarget : GLib.Object {
 			[CCode (vfunc_name = "add_event_listener")]
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract bool add_event_listener_with_closure (string event_name, [CCode (type = "GClosure*")] owned WebKit.DOM.EventTargetFunc handler, bool use_capture);
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract bool dispatch_event (WebKit.DOM.Event event) throws GLib.Error;
 			[CCode (vfunc_name = "remove_event_listener")]
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract bool remove_event_listener_with_closure (string event_name, [CCode (type = "GClosure*")] owned WebKit.DOM.EventTargetFunc handler, bool use_capture);
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_node_filter_get_type ()")]
 		[GIR (name = "DOMNodeFilter")]
 		public interface NodeFilter : GLib.Object {
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract short accept_node (WebKit.DOM.Node node);
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_dom_xpath_ns_resolver_get_type ()")]
 		[GIR (name = "DOMXPathNSResolver")]
 		public interface XPathNSResolver : GLib.Object {
+			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract string lookup_namespace_uri (string prefix);
 		}
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h")]
 		public delegate void EventTargetFunc (WebKit.DOM.EventTarget target, WebKit.DOM.Event event);
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_CHARSET_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_CHARSET_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_FONT_FACE_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_FONT_FACE_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_IMPORT_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_IMPORT_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_MEDIA_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_MEDIA_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_PAGE_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_PAGE_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_STYLE_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_STYLE_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_UNKNOWN_RULE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_RULE_UNKNOWN_RULE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_VALUE_CSS_CUSTOM")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_VALUE_CSS_CUSTOM;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_VALUE_CSS_INHERIT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_VALUE_CSS_INHERIT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_VALUE_CSS_PRIMITIVE_VALUE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_VALUE_CSS_PRIMITIVE_VALUE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_VALUE_CSS_VALUE_LIST")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _CSS_VALUE_CSS_VALUE_LIST;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_ELEMENT_ALLOW_KEYBOARD_INPUT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _ELEMENT_ALLOW_KEYBOARD_INPUT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_AT_TARGET")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_AT_TARGET;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_BLUR")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_BLUR;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_BUBBLING_PHASE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_BUBBLING_PHASE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_CAPTURING_PHASE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_CAPTURING_PHASE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_CHANGE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_CHANGE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_CLICK")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_CLICK;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_DBLCLICK")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_DBLCLICK;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_DRAGDROP")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_DRAGDROP;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_FOCUS")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_FOCUS;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_KEYDOWN")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_KEYDOWN;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_KEYPRESS")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_KEYPRESS;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_KEYUP")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_KEYUP;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEDOWN")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEDOWN;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEDRAG")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEDRAG;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEMOVE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEMOVE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEOUT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEOUT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEOVER")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEOVER;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_MOUSEUP")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_MOUSEUP;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_NONE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_NONE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_EVENT_SELECT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _EVENT_SELECT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_KEYBOARD_EVENT_KEY_LOCATION_LEFT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _KEYBOARD_EVENT_KEY_LOCATION_LEFT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_KEYBOARD_EVENT_KEY_LOCATION_NUMPAD")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _KEYBOARD_EVENT_KEY_LOCATION_NUMPAD;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_KEYBOARD_EVENT_KEY_LOCATION_RIGHT")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _KEYBOARD_EVENT_KEY_LOCATION_RIGHT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_KEYBOARD_EVENT_KEY_LOCATION_STANDARD")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _KEYBOARD_EVENT_KEY_LOCATION_STANDARD;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_ATTRIBUTE_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_ATTRIBUTE_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_CDATA_SECTION_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_CDATA_SECTION_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_COMMENT_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_COMMENT_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_FRAGMENT_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_FRAGMENT_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_CONTAINED_BY")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_CONTAINED_BY;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_CONTAINS")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_CONTAINS;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_DISCONNECTED")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_DISCONNECTED;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_FOLLOWING")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_FOLLOWING;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_POSITION_PRECEDING")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_POSITION_PRECEDING;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_DOCUMENT_TYPE_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_DOCUMENT_TYPE_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_ELEMENT_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_ELEMENT_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_ENTITY_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_ENTITY_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_ENTITY_REFERENCE_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_ENTITY_REFERENCE_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_ACCEPT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_ACCEPT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_REJECT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_REJECT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_ALL")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_ALL;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_ATTRIBUTE")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_ATTRIBUTE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_CDATA_SECTION")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_CDATA_SECTION;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_COMMENT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_COMMENT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_DOCUMENT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_DOCUMENT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_DOCUMENT_FRAGMENT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_DOCUMENT_FRAGMENT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_DOCUMENT_TYPE")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_DOCUMENT_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_ELEMENT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_ELEMENT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_ENTITY")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_ENTITY;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_ENTITY_REFERENCE")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_ENTITY_REFERENCE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_NOTATION")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_NOTATION;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_PROCESSING_INSTRUCTION")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_PROCESSING_INSTRUCTION;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SHOW_TEXT")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SHOW_TEXT;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_FILTER_SKIP")]
-		[Version (since = "2.6")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.6")]
 		public const int _NODE_FILTER_SKIP;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_PROCESSING_INSTRUCTION_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_PROCESSING_INSTRUCTION_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_NODE_TEXT_NODE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _NODE_TEXT_NODE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_END_TO_END")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_END_TO_END;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_END_TO_START")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_END_TO_START;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_NODE_AFTER")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_NODE_AFTER;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_NODE_BEFORE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_NODE_BEFORE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_NODE_BEFORE_AND_AFTER")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_NODE_BEFORE_AND_AFTER;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_NODE_INSIDE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_NODE_INSIDE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_START_TO_END")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_START_TO_END;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_RANGE_START_TO_START")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _RANGE_START_TO_START;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_ANY_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_ANY_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_ANY_UNORDERED_NODE_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_ANY_UNORDERED_NODE_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_BOOLEAN_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_BOOLEAN_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_FIRST_ORDERED_NODE_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_FIRST_ORDERED_NODE_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_NUMBER_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_NUMBER_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_ORDERED_NODE_ITERATOR_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_ORDERED_NODE_ITERATOR_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_ORDERED_NODE_SNAPSHOT_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_ORDERED_NODE_SNAPSHOT_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_STRING_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_STRING_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_UNORDERED_NODE_ITERATOR_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_UNORDERED_NODE_ITERATOR_TYPE;
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE")]
+		[Version (deprecated = true, deprecated_since = "2.22")]
 		public const int _XPATH_RESULT_UNORDERED_NODE_SNAPSHOT_TYPE;
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_console_message_get_type ()")]
@@ -2947,10 +4009,20 @@ namespace WebKit {
 	public class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
-		[Version (since = "2.2")]
+		[Version (since = "2.26")]
+		public uint64 get_id ();
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.2")]
 		public unowned JS.GlobalContext get_javascript_context_for_script_world (WebKit.ScriptWorld world);
-		[Version (since = "2.2")]
+		[Version (deprecated = true, deprecated_since = "2.22", since = "2.2")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
+		[Version (since = "2.22")]
+		public JSC.Context get_js_context ();
+		[Version (since = "2.22")]
+		public JSC.Context get_js_context_for_script_world (WebKit.ScriptWorld world);
+		[Version (since = "2.22")]
+		public JSC.Value get_js_value_for_dom_object (WebKit.DOM.Object dom_object);
+		[Version (since = "2.22")]
+		public JSC.Value get_js_value_for_dom_object_in_script_world (WebKit.DOM.Object dom_object, WebKit.ScriptWorld world);
 		[Version (since = "2.2")]
 		public unowned string get_uri ();
 		[Version (since = "2.2")]
@@ -3025,6 +4097,30 @@ namespace WebKit {
 		public string suggested_filename { get; }
 		public string uri { get; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_user_message_get_type ()")]
+	public class UserMessage : GLib.InitiallyUnowned {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage (string name, GLib.Variant? parameters);
+		public static GLib.Quark error_quark ();
+		[Version (since = "2.28")]
+		public unowned GLib.UnixFDList get_fd_list ();
+		[Version (since = "2.28")]
+		public unowned string get_name ();
+		[Version (since = "2.28")]
+		public unowned GLib.Variant get_parameters ();
+		[Version (since = "2.28")]
+		public void send_reply (WebKit.UserMessage reply);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.28")]
+		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
+		[Version (since = "2.28")]
+		public GLib.UnixFDList fd_list { get; construct; }
+		[Version (since = "2.28")]
+		public string name { get; construct; }
+		[Version (since = "2.28")]
+		public GLib.Variant parameters { get; construct; }
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_editor_get_type ()")]
 	public class WebEditor : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -3039,7 +4135,11 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		protected WebExtension ();
 		public unowned WebKit.WebPage get_page (uint64 page_id);
+		[Version (since = "2.28")]
+		public async WebKit.UserMessage send_message_to_context (WebKit.UserMessage message, GLib.Cancellable? cancellable) throws GLib.Error;
 		public signal void page_created (WebKit.WebPage web_page);
+		[Version (since = "2.28")]
+		public signal void user_message_received (WebKit.UserMessage message);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
 	public class WebHitTestResult : WebKit.HitTestResult {
@@ -3060,15 +4160,21 @@ namespace WebKit {
 		[Version (since = "2.2")]
 		public unowned WebKit.Frame get_main_frame ();
 		public unowned string get_uri ();
+		[Version (since = "2.28")]
+		public async WebKit.UserMessage send_message_to_view (WebKit.UserMessage message, GLib.Cancellable? cancellable) throws GLib.Error;
 		public string uri { get; }
 		[Version (since = "2.12")]
 		public signal void console_message_sent (WebKit.ConsoleMessage console_message);
 		[Version (since = "2.8")]
 		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
-		[Version (since = "2.16")]
+		[Version (deprecated = true, deprecated_since = "2.26", since = "2.16")]
 		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
+		[Version (since = "2.26")]
+		public signal void form_controls_associated_for_frame (GLib.GenericArray<WebKit.DOM.Element> elements, WebKit.Frame frame);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
+		[Version (since = "2.28")]
+		public signal bool user_message_received (WebKit.UserMessage message);
 		[Version (since = "2.20")]
 		public signal void will_submit_form (WebKit.DOM.Element form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
 	}
@@ -3136,6 +4242,7 @@ namespace WebKit {
 		MEDIA_MUTE,
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
+		INSERT_EMOJI,
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_FORM_SUBMISSION_WILL_", type_id = "webkit_form_submission_step_get_type ()")]
@@ -3154,6 +4261,12 @@ namespace WebKit {
 		EDITABLE,
 		SCROLLBAR,
 		SELECTION
+	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_USER_MESSAGE_UNHANDLED_", has_type_id = false)]
+	[Version (since = "2.28")]
+	public enum UserMessageError {
+		[CCode (cname = "WEBKIT_USER_MESSAGE_UNHANDLED_MESSAGE")]
+		USER_MESSAGE_UNHANDLED_MESSAGE
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", has_target = false)]
 	public delegate void WebExtensionInitializeFunction (WebKit.WebExtension extension);
