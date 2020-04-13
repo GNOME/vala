@@ -162,6 +162,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else {
 				Report.error (expr.source_reference, "internal error: only integer literals supported as index");
 			}
+		} else if (expr.container.symbol_reference is Constant && rank > 1) {
+			// access to element in a multi-dimensional array constant
+			var cindices = new ArrayList<CCodeExpression> ();
+			cindices.add (cindex);
+			for (int i = 1; i < rank; i++) {
+				cindices.add (get_cvalue (indices[i]));
+			}
+			set_cvalue (expr, new CCodeElementAccess.with_indices (ccontainer, cindices));
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
