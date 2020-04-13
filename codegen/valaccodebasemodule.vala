@@ -1482,7 +1482,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return is_pure_ccode_expression (cma.inner);
 		} else if (cexpr is CCodeElementAccess) {
 			var cea = (CCodeElementAccess) cexpr;
-			return is_pure_ccode_expression (cea.container) && is_pure_ccode_expression (cea.index);
+			return is_pure_ccode_expression (cea.container) && is_pure_ccode_expression (cea.indices[0]);
 		} else if (cexpr is CCodeCastExpression) {
 			var ccast = (CCodeCastExpression) cexpr;
 			return is_pure_ccode_expression (ccast.inner);
