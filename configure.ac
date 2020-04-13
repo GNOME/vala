@@ -136,6 +136,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=maybe-uninitialized \
 -Werror=missing-prototypes \
 -Werror=strict-prototypes \
+-Werror=array-bounds \
 -Werror=enum-conversion"
 
 TEST_CFLAGS=
