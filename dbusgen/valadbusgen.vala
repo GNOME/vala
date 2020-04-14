@@ -57,7 +57,6 @@ public class Vala.DBusGen {
 	static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] packages;
-	static bool nostdpkg;
 	static int dbus_timeout = 120000;
 	static string root_namespace;
 	[CCode (array_length = false, array_null_terminated = true)]
@@ -69,7 +68,6 @@ public class Vala.DBusGen {
 
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "nostdpkg", 0, 0, OptionArg.NONE, ref nostdpkg, "Do not include standard packages", null },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
@@ -105,12 +103,9 @@ public class Vala.DBusGen {
 		context.report.set_verbose_errors (!quiet_mode);
 		CodeContext.push (context);
 
-		context.profile = Profile.GOBJECT;
-		context.add_define ("GOBJECT");
+		context.set_target_profile (Profile.GOBJECT, false);
 		context.vapi_comments = true;
 
-		context.add_external_package ("glib-2.0");
-		context.add_external_package ("gobject-2.0");
 		context.add_external_package ("gio-2.0");
 
 		if (packages != null) {
