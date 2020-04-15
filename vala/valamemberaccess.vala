@@ -426,6 +426,11 @@ public class Vala.MemberAccess : Expression {
 						// the first argument is the handler
 						if (mcall.get_argument_list().size > 0) {
 							s.handler = mcall.get_argument_list()[0];
+							unowned MemberAccess? arg = s.handler as MemberAccess;
+							if (arg == null || !arg.check (context) || !(arg.symbol_reference is Method)) {
+								error = true;
+								Report.error (s.handler.source_reference, "Invalid handler for `%s'".printf (s.get_full_name ()));
+							}
 						}
 						s.access = SymbolAccessibility.PUBLIC;
 						dynamic_object_type.type_symbol.scope.add (null, s);
