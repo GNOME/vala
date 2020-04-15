@@ -6245,14 +6245,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void store_property (Property prop, Expression? instance, TargetValue value) {
-		if (instance is BaseAccess) {
+		unowned Property base_prop = prop;
+		if (prop.base_property != null) {
+			base_prop = prop.base_property;
+		} else if (prop.base_interface_property != null) {
+			base_prop = prop.base_interface_property;
+		}
+		if (instance is BaseAccess && (base_prop.is_abstract || base_prop.is_virtual)) {
 			CCodeExpression? vcast = null;
-			if (prop.base_property != null) {
-				unowned Class base_class = (Class) prop.base_property.parent_symbol;
+			if (base_prop.parent_symbol is Class) {
+				unowned Class base_class = (Class) base_prop.parent_symbol;
 				vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_class)));
 				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
-			} else if (prop.base_interface_property != null) {
-				unowned Interface base_iface = (Interface) prop.base_interface_property.parent_symbol;
+			} else if (base_prop.parent_symbol is Interface) {
+				unowned Interface base_iface = (Interface) base_prop.parent_symbol;
 				vcast = get_this_interface_cexpression (base_iface);
 			}
 			if (vcast != null) {
@@ -6265,25 +6271,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument (cexpr);
 
 				ccode.add_expression (ccall);
+			} else {
+				Report.error (instance.source_reference, "internal: Invalid assignment to `%s'".printf (base_prop.get_full_name ()));
 			}
 			return;
 		}
 
 		var set_func = "g_object_set";
 
-		var base_property = prop;
 		if (!get_ccode_no_accessor_method (prop)) {
-			if (prop.base_property != null) {
-				base_property = prop.base_property;
-			} else if (prop.base_interface_property != null) {
-				base_property = prop.base_interface_property;
-			}
-
 			if (prop is DynamicProperty) {
 				set_func = get_dynamic_property_setter_cname ((DynamicProperty) prop);
 			} else {
-				generate_property_accessor_declaration (base_property.set_accessor, cfile);
-				set_func = get_ccode_name (base_property.set_accessor);
+				generate_property_accessor_declaration (base_prop.set_accessor, cfile);
+				set_func = get_ccode_name (base_prop.set_accessor);
 
 				if (!prop.external && prop.external_package) {
 					// internal VAPI properties
@@ -6336,7 +6337,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var delegate_type = (DelegateType) prop.property_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				ccall.add_argument (get_delegate_target_cvalue (value));
-				if (base_property.set_accessor.value_type.value_owned) {
+				if (base_prop.set_accessor.value_type.value_owned) {
 					ccall.add_argument (get_delegate_target_destroy_notify_cvalue (value));
 				}
 			}
