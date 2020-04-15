@@ -1068,15 +1068,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		CCodeExpression vcast;
 		if (m.parent_symbol is Interface) {
-			var iface = (Interface) m.parent_symbol;
-
-			vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
-			((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+			vcast = new CCodeIdentifier ("_iface_");
 		} else {
 			var cl = (Class) m.parent_symbol;
 			if (!cl.is_compact) {
-				vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
-				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+				vcast = new CCodeIdentifier ("_klass_");
 			} else {
 				vcast = new CCodeIdentifier ("self");
 			}
@@ -1095,7 +1091,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		push_function (vfunc);
 
-		if (context.assert && m.return_type.type_symbol is Struct && ((Struct) m.return_type.type_symbol).is_simple_type () && default_value_for_type (m.return_type, false) == null) {
+		if (m.return_type.is_non_null_simple_type () && default_value_for_type (m.return_type, false) == null) {
 			// the type check will use the result variable
 			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
 			vardecl.init0 = true;
@@ -1108,6 +1104,26 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		foreach (Expression precondition in m.get_preconditions ()) {
 			create_precondition_statement (m, return_type, precondition);
 		}
+
+		if (m.parent_symbol is Interface) {
+			var iface = (Interface) m.parent_symbol;
+
+			var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+			((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
+			ccode.add_declaration ("%s*".printf (get_ccode_type_name (iface)), new CCodeVariableDeclarator ("_iface_"));
+			ccode.add_assignment (vcast, vcastcall);
+		} else {
+			var cl = (Class) m.parent_symbol;
+			if (!cl.is_compact) {
+				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+				((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
+				ccode.add_declaration ("%sClass*".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("_klass_"));
+				ccode.add_assignment (vcast, vcastcall);
+			}
+		}
+
+		// check if vfunc pointer is properly set
+		ccode.open_if (vcall.call);
 
 		if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
 			ccode.add_expression (vcall);
@@ -1128,6 +1144,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (!(return_type is VoidType)) {
 				ccode.add_return (new CCodeIdentifier ("result"));
 			}
+		}
+
+		ccode.close ();
+
+		if (m.return_type.is_non_null_simple_type () && default_value_for_type (m.return_type, false) == null) {
+			ccode.add_return (new CCodeIdentifier ("result"));
+		} else if (!(return_type is VoidType)) {
+			ccode.add_return (default_value_for_type (return_type, false, true));
 		}
 
 		if (m.printf_format) {
