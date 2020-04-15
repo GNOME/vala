@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	dynamic Object? foo = null;
+	foo.on_bar.connect (non_existent);
+}

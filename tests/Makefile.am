@@ -346,6 +346,7 @@ TESTS = \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
+	objects/signals-dymanic-invalid-handler.test \
 	objects/signals-fundamental-return.vala \
 	objects/signals-gobject-return.vala \
 	objects/signals-struct-return.vala \
