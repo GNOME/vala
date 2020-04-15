@@ -203,13 +203,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				return;
 			}
 
-			if (expr.inner is BaseAccess) {
-				var base_prop = prop;
-				if (prop.base_property != null) {
-					base_prop = prop.base_property;
-				} else if (prop.base_interface_property != null) {
-					base_prop = prop.base_interface_property;
-				}
+			unowned Property base_prop = prop;
+			if (prop.base_property != null) {
+				base_prop = prop.base_property;
+			} else if (prop.base_interface_property != null) {
+				base_prop = prop.base_interface_property;
+			}
+			if (expr.inner is BaseAccess && (base_prop.is_abstract || base_prop.is_virtual)) {
 				CCodeExpression? vcast = null;
 				if (base_prop.parent_symbol is Class) {
 					unowned Class base_class = (Class) base_prop.parent_symbol;
@@ -231,6 +231,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					} else {
 						set_cvalue (expr, ccall);
 					}
+				} else {
+					Report.error (expr.source_reference, "internal: Invalid access to `%s'".printf (base_prop.get_full_name ()));
 				}
 			} else if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
