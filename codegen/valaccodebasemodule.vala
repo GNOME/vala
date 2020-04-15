@@ -1757,6 +1757,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			push_function (function);
 
+			if (acc.value_type.is_non_null_simple_type () && default_value_for_type (acc.value_type, false) == null) {
+				var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (acc.value_type, true));
+				vardecl.init0 = true;
+				ccode.add_declaration (get_ccode_name (acc.value_type), vardecl);
+			}
+
 			if (prop.binding == MemberBinding.INSTANCE) {
 				if (!acc.readable || returns_real_struct) {
 					create_property_type_check_statement (prop, false, t, true, "self");
@@ -1769,13 +1775,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (prop.parent_symbol is Interface) {
 				var iface = (Interface) prop.parent_symbol;
 
-				vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
-				((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+				vcast = new CCodeIdentifier ("_iface_");
+				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+				((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
+				ccode.add_declaration ("%s*".printf (get_ccode_type_name (iface)), new CCodeVariableDeclarator ("_iface_"));
+				ccode.add_assignment (vcast, vcastcall);
 			} else {
 				var cl = (Class) prop.parent_symbol;
 				if (!cl.is_compact) {
-					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
-					((CCodeFunctionCall) vcast).add_argument (new CCodeIdentifier ("self"));
+					vcast = new CCodeIdentifier ("_klass_");
+					var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+					((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
+					ccode.add_declaration ("%sClass*".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("_klass_"));
+					ccode.add_assignment (vcast, vcastcall);
 				} else {
 					vcast = new CCodeIdentifier ("self");
 				}
@@ -1784,6 +1796,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (acc.readable) {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
+
+				// check if vfunc pointer is properly set
+				ccode.open_if (vcall.call);
+
 				if (returns_real_struct) {
 					vcall.add_argument (new CCodeIdentifier ("result"));
 					ccode.add_expression (vcall);
@@ -1801,10 +1817,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 					ccode.add_return (vcall);
 				}
+				ccode.close ();
+
+				if (acc.value_type.is_non_null_simple_type () && default_value_for_type (acc.value_type, false) == null) {
+					ccode.add_return (new CCodeIdentifier ("result"));
+				} else if (!(acc.value_type is VoidType)) {
+					ccode.add_return (default_value_for_type (acc.value_type, false, true));
+				}
 			} else {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
+
+				// check if vfunc pointer is properly set
+				ccode.open_if (vcall.call);
 
 				if (acc.value_type is ArrayType && get_ccode_array_length (prop)) {
 					var array_type = (ArrayType) acc.value_type;
@@ -1821,6 +1847,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 
 				ccode.add_expression (vcall);
+				ccode.close ();
 			}
 
 			pop_function ();
