@@ -1030,8 +1030,8 @@ if HAVE_LINUX
 endif
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		VALAFLAGS="PKG_CONFIG_PATH=$(srcdir)/version" $(srcdir)/testrunner.sh $(VERSION_CHECK_TESTS)
+	@export PKG_CONFIG_PATH=$(abs_srcdir)/version; EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' \
+		TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(VERSION_CHECK_TESTS)
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		$(srcdir)/testrunner.sh $(GENIE_TESTS)
 
