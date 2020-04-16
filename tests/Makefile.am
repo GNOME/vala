@@ -828,6 +828,14 @@ LINUX_TESTS = \
 	linux/bug793444.vala \
 	$(NULL)
 
+VERSION_CHECK_TESTS = \
+	version/since-constant.test \
+	version/since-field.test \
+	version/since-local-variable.test \
+	version/since-method.test \
+	version/since-parameter.test \
+	$(NULL)
+
 check-TESTS: $(TESTS) $(NON_NULL_TESTS)
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' CC='$(CC)' \
 		$(srcdir)/testrunner.sh $(TESTS)
@@ -837,9 +845,12 @@ if HAVE_LINUX
 endif
 	@EXEEXT=$(EXEEXT) EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' CC='$(CC)' \
 		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
+	@export PKG_CONFIG_PATH=$(abs_srcdir)/version; EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' \
+		TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(VERSION_CHECK_TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
+	version/glib-2.0.pc \
 	$(TESTS) \
 	$(NON_NULL_TESTS) \
 	$(LINUX_TESTS) \
