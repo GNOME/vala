@@ -160,6 +160,13 @@ public class Vala.LocalVariable : Variable {
 			variable_type.check (context);
 		}
 
+		if (!external_package) {
+			// check symbol availability
+			if (variable_type.type_symbol != null) {
+				variable_type.type_symbol.version.check (source_reference);
+			}
+		}
+
 		unowned ArrayType? variable_array_type = variable_type as ArrayType;
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && initializer is ArrayCreationExpression && ((ArrayCreationExpression) initializer).initializer_list == null) {
