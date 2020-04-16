@@ -288,7 +288,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				// track usage for flow analyzer
 				symbol_reference.used = true;
-				symbol_reference.version.check (source_reference);
+				symbol_reference.version.check (context, source_reference);
 			}
 
 			if (symbol_reference != null

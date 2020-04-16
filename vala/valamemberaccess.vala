@@ -787,7 +787,7 @@ public class Vala.MemberAccess : Expression {
 		if (parent != member) {
 			member.used = true;
 		}
-		member.version.check (source_reference);
+		member.version.check (context, source_reference);
 
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
 			unowned TypeSymbol target_type = (TypeSymbol) member.parent_symbol;

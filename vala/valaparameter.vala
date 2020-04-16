@@ -202,7 +202,7 @@ public class Vala.Parameter : Variable {
 
 				// check symbol availability
 				if ((parent_symbol == null || !parent_symbol.external_package) && variable_type.type_symbol != null) {
-					variable_type.type_symbol.version.check (source_reference);
+					variable_type.type_symbol.version.check (context, source_reference);
 				}
 			}
 

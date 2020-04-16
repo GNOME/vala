@@ -145,14 +145,14 @@ public class Vala.VersionAttribute {
 	 * Check to see if the symbol is experimental, deprecated or not available
 	 * and emit a warning if it is.
 	 */
-	public bool check (SourceReference? source_ref = null) {
+	public bool check (CodeContext context, SourceReference? source_ref = null) {
 		bool result = false;
 
 		// deprecation:
 		if (symbol.external_package && deprecated) {
 			string? package_version = symbol.source_reference.file.installed_version;
 
-			if (!CodeContext.get ().deprecated && (package_version == null || deprecated_since == null || VersionAttribute.cmp_versions (package_version, deprecated_since) >= 0)) {
+			if (!context.deprecated && (package_version == null || deprecated_since == null || VersionAttribute.cmp_versions (package_version, deprecated_since) >= 0)) {
 				Report.deprecated (source_ref, "`%s' %s%s".printf (symbol.get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
 			}
 			result = true;
@@ -162,7 +162,7 @@ public class Vala.VersionAttribute {
 		if (symbol.external_package && since != null) {
 			string? package_version = symbol.source_reference.file.installed_version;
 
-			if (CodeContext.get ().since_check && package_version != null && VersionAttribute.cmp_versions (package_version, since) < 0) {
+			if (context.since_check && package_version != null && VersionAttribute.cmp_versions (package_version, since) < 0) {
 				unowned string filename = symbol.source_reference.file.filename;
 				string pkg = Path.get_basename (filename[0:filename.last_index_of_char ('.')]);
 				Report.error (source_ref, "`%s' is not available in %s %s. Use %s >= %s".printf (symbol.get_full_name (), pkg, package_version, pkg, since));
@@ -172,7 +172,7 @@ public class Vala.VersionAttribute {
 
 		// experimental:
 		if (symbol.external_package && experimental) {
-			if (!CodeContext.get ().experimental) {
+			if (!context.experimental) {
 				string? package_version = symbol.source_reference.file.installed_version;
 				string? experimental_until = this.experimental_until;
 

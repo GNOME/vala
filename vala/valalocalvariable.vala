@@ -163,7 +163,7 @@ public class Vala.LocalVariable : Variable {
 		if (!external_package) {
 			// check symbol availability
 			if (variable_type.type_symbol != null) {
-				variable_type.type_symbol.version.check (source_reference);
+				variable_type.type_symbol.version.check (context, source_reference);
 			}
 		}
 

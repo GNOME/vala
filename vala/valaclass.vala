@@ -774,7 +774,7 @@ public class Vala.Class : ObjectTypeSymbol {
 									    && (impl.base_interface_type == null || impl.base_interface_type.type_symbol == iface)
 									    && impl.compatible_no_error (m))) {
 										// method is used as interface implementation, so it is not unused
-										impl.version.check (source_reference);
+										impl.version.check (context, source_reference);
 										impl.used = true;
 										implemented = true;
 										if (impl.base_interface_method == null) {
@@ -810,7 +810,7 @@ public class Vala.Class : ObjectTypeSymbol {
 									Report.error (source_reference, "Type and/or accessors of inherited properties `%s' and `%s' do not match: %s.".printf (prop.get_full_name (), base_prop.get_full_name (), invalid_match));
 								}
 								// property is used as interface implementation, so it is not unused
-								sym.version.check (source_reference);
+								sym.version.check (context, source_reference);
 								sym.used = true;
 							} else {
 								error = true;
