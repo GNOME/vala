@@ -944,6 +944,14 @@ POSIX_TESTS = \
 	enums/enum_only.vala \
 	$(NULL)
 
+VERSION_CHECK_TESTS = \
+	version/since-constant.test \
+	version/since-field.test \
+	version/since-local-variable.test \
+	version/since-method.test \
+	version/since-parameter.test \
+	$(NULL)
+
 GENIE_TESTS = \
 	genie/class.gs \
 	genie/control-flow-if-do.gs \
@@ -1022,11 +1030,14 @@ if HAVE_LINUX
 endif
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
+	@export PKG_CONFIG_PATH=$(abs_srcdir)/version; EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' \
+		TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(VERSION_CHECK_TESTS)
 	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
 		$(srcdir)/testrunner.sh $(GENIE_TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \
+	version/glib-2.0.pc \
 	$(TESTS) \
 	$(NON_NULL_TESTS) \
 	$(LINUX_TESTS) \

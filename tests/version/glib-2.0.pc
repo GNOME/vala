@@ -1,0 +1,3 @@
+Name: GLib
+Description: C Utility Library
+Version: 2.48.0
