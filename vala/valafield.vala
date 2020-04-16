@@ -107,6 +107,11 @@ public class Vala.Field : Variable, Lockable {
 		variable_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (variable_type);
+
+			// check symbol availability
+			if (variable_type.type_symbol != null) {
+				variable_type.type_symbol.version.check (source_reference);
+			}
 		}
 
 		// check whether field type is at least as accessible as the field

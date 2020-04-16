@@ -199,6 +199,11 @@ public class Vala.Parameter : Variable {
 		if (!ellipsis) {
 			if (!external_package) {
 				context.analyzer.check_type (variable_type);
+
+				// check symbol availability
+				if ((parent_symbol == null || !parent_symbol.external_package) && variable_type.type_symbol != null) {
+					variable_type.type_symbol.version.check (source_reference);
+				}
 			}
 
 			// check whether parameter type is at least as accessible as the method
