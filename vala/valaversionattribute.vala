@@ -153,7 +153,7 @@ public class Vala.VersionAttribute {
 			string? package_version = symbol.source_reference.file.installed_version;
 
 			if (!CodeContext.get ().deprecated && (package_version == null || deprecated_since == null || VersionAttribute.cmp_versions (package_version, deprecated_since) >= 0)) {
-				Report.deprecated (source_ref, "%s %s%s".printf (symbol.get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
+				Report.deprecated (source_ref, "`%s' %s%s".printf (symbol.get_full_name (), (deprecated_since == null) ? "is deprecated" : "has been deprecated since %s".printf (deprecated_since), (replacement == null) ? "" : ". Use %s".printf (replacement)));
 			}
 			result = true;
 		}
@@ -165,7 +165,7 @@ public class Vala.VersionAttribute {
 			if (CodeContext.get ().since_check && package_version != null && VersionAttribute.cmp_versions (package_version, since) < 0) {
 				unowned string filename = symbol.source_reference.file.filename;
 				string pkg = Path.get_basename (filename[0:filename.last_index_of_char ('.')]);
-				Report.error (source_ref, "%s is not available in %s %s. Use %s >= %s".printf (symbol.get_full_name (), pkg, package_version, pkg, since));
+				Report.error (source_ref, "`%s' is not available in %s %s. Use %s >= %s".printf (symbol.get_full_name (), pkg, package_version, pkg, since));
 			}
 			result = true;
 		}
@@ -177,7 +177,7 @@ public class Vala.VersionAttribute {
 				string? experimental_until = this.experimental_until;
 
 				if (experimental_until == null || package_version == null || VersionAttribute.cmp_versions (package_version, experimental_until) < 0) {
-					Report.experimental (source_ref, "%s is experimental%s".printf (symbol.get_full_name (), (experimental_until != null) ? " until %s".printf (experimental_until) : ""));
+					Report.experimental (source_ref, "`%s' is experimental%s".printf (symbol.get_full_name (), (experimental_until != null) ? " until %s".printf (experimental_until) : ""));
 				}
 			}
 			result = true;
