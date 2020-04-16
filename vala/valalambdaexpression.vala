@@ -135,7 +135,6 @@ public class Vala.LambdaExpression : Expression {
 		method = new Method ("_lambda%d_".printf (next_lambda_id++), return_type, source_reference);
 		// track usage for flow analyzer
 		method.used = true;
-		method.version.check (source_reference);
 
 		if (return_type is ArrayType) {
 			method.copy_attribute_bool (cb, "CCode", "array_length");
