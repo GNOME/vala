@@ -880,7 +880,10 @@ public class Vala.CodeContext {
 		try {
 			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
 			if (exit_status != 0) {
-				output = null;
+				output = output[0:-1];
+				if (output == "") {
+					output = null;
+				}
 			}
 		} catch (SpawnError e) {
 			output = null;
