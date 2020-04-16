@@ -1891,8 +1891,10 @@ namespace GLib {
 		[Version (since = "2.50")]
 		public const string FORMAT;
 
+#if GLIB_2_50
 		[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 		public string to_string (string format = "%" + FORMAT);
+#endif
 	}
 
 	public delegate void ChildWatchFunc (Pid pid, int status);
