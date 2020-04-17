@@ -511,8 +511,7 @@ public class Vala.MethodCall : Expression {
 
 			unowned Signal? sig = m.parent_symbol as Signal;
 			if (sig != null && m.name == "disconnect") {
-				var param = get_argument_list ()[0];
-				if (param is LambdaExpression) {
+				if (!argument_list.is_empty && argument_list[0] is LambdaExpression) {
 					error = true;
 					Report.error (source_reference, "Cannot disconnect lambda expression from signal");
 					return false;
