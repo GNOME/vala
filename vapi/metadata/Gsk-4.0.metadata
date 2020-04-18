@@ -4,65 +4,7 @@
 Renderer
 	// Factory method
 	.new_for_surface symbol_type="function" name="for_surface"
-
-blend_node_* parent="Gsk.BlendNode" symbol_type="method" instance_idx=0 name="blend_node_(.+)"
-blend_node_new parent="Gsk.BlendNode" symbol_type="constructor" name="blend_node_(.+)"
-
-blur_node_* parent="Gsk.BlurNode" symbol_type="method" instance_idx=0 name="blur_node_(.+)"
-blur_node_new parent="Gsk.BlurNode" symbol_type="constructor" name="blur_node_(.+)"
-
-border_node_* parent="Gsk.BorderNode" symbol_type="method" instance_idx=0 name="border_node_(.+)"
-border_node_new* parent="Gsk.BorderNode" symbol_type="constructor" name="border_node_(.+)"
-
-cairo_node_* parent="Gsk.CairoNode" symbol_type="method" instance_idx=0 name="cairo_node_(.+)"
-cairo_node_new* parent="Gsk.CairoNode" symbol_type="constructor" name="cairo_node_(.+)"
-
-clip_node_* parent="Gsk.ClipNode" symbol_type="method" instance_idx=0 name="clip_node_(.+)"
-clip_node_new* parent="Gsk.ClipNode" symbol_type="constructor" name="clip_node_(.+)"
-
-color_node_* parent="Gsk.ColorNode" symbol_type="method" instance_idx=0 name="color_node_(.+)"
-color_node_new* parent="Gsk.ColorNode" symbol_type="constructor" name="color_node_(.+)"
-
-color_matrix_node_* parent="Gsk.ColorMatrixNode" symbol_type="method" instance_idx=0 name="color_matrix_node_(.+)"
-color_matrix_node_new* parent="Gsk.ColorMatrixNode" symbol_type="constructor" name="color_matrix_node_(.+)"
-
-container_node_* parent="Gsk.ContainerNode" symbol_type="method" instance_idx=0 name="container_node_(.+)"
-container_node_new* parent="Gsk.ContainerNode" symbol_type="constructor" name="container_node_(.+)"
-
-cross_fade_node_* parent="Gsk.CrossFadeNode" symbol_type="method" instance_idx=0 name="cross_fade_node_(.+)"
-cross_fade_node_new* parent="Gsk.CrossFadeNode" symbol_type="constructor" name="cross_fade_node_(.+)"
-
-debug_node_* parent="Gsk.DebugNode" symbol_type="method" instance_idx=0 name="debug_node_(.+)"
-debug_node_new* parent="Gsk.DebugNode" symbol_type="constructor" name="debug_node_(.+)"
-
-inset_shadow_node_* parent="Gsk.InsetShadowNode" symbol_type="method" instance_idx=0 name="inset_shadow_node_(.+)"
-inset_shadow_node_new* parent="Gsk.InsetShadowNode" symbol_type="constructor" name="inset_shadow_node_(.+)"
-
-linear_gradient_node_* parent="Gsk.LinearGradientNode" symbol_type="method" instance_idx=0 name="linear_gradient_node_(.+)"
-linear_gradient_node_new* parent="Gsk.LinearGradientNode" symbol_type="constructor" name="linear_gradient_node_(.+)"
-
-opacity_node_* parent="Gsk.OpacityNode" symbol_type="method" instance_idx=0 name="opacity_node_(.+)"
-opacity_node_new* parent="Gsk.OpacityNode" symbol_type="constructor" name="opacity_node_(.+)"
-
-outset_shadow_node_* parent="Gsk.OutsetShadowNode" symbol_type="method" instance_idx=0 name="outset_shadow_node_(.+)"
-outset_shadow_node_new* parent="Gsk.OutsetShadowNode" symbol_type="constructor" name="outset_shadow_node_(.+)"
-
-repeat_node_* parent="Gsk.RepeatNode" symbol_type="method" instance_idx=0 name="repeat_node_(.+)"
-repeat_node_new* parent="Gsk.RepeatNode" symbol_type="constructor" name="repeat_node_(.+)"
-
-repeating_linear_gradient_node_new* parent="Gsk.RepeatingLinearGradientNode" symbol_type="constructor" name="repeating_linear_gradient_node_(.+)"
-
-rounded_clip_node_* parent="Gsk.RoundedClipNode" symbol_type="method" instance_idx=0 name="rounded_clip_node_(.+)"
-rounded_clip_node_new* parent="Gsk.RoundedClipNode" symbol_type="constructor" name="rounded_clip_node_(.+)"
-
-shadow_node_* parent="Gsk.ShadowNode" symbol_type="method" instance_idx=0 name="shadow_node_(.+)"
-shadow_node_new* parent="Gsk.ShadowNode" symbol_type="constructor" name="shadow_node_(.+)"
-
-text_node_* parent="Gsk.TextNode" symbol_type="method" instance_idx=0 name="text_node_(.+)"
-text_node_new* parent="Gsk.TextNode" symbol_type="constructor" name="text_node_(.+)"
-
-texture_node_* parent="Gsk.TextureNode" symbol_type="method" instance_idx=0 name="texture_node_(.+)"
-texture_node_new* parent="Gsk.TextureNode" symbol_type="constructor" name="texture_node_(.+)"
-
-transform_node_* parent="Gsk.TransformNode" symbol_type="method" instance_idx=0 name="transform_node_(.+)"
-transform_node_new* parent="Gsk.TransformNode" symbol_type="constructor" name="transform_node_(.+)"
+BorderNode
+	.peek_colors symbol_type="method" instance_idx=0
+	.peek_outline symbol_type="method" instance_idx=0
+	.peek_widths symbol_type="method" instance_idx=0 array
