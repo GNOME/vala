@@ -6293,7 +6293,13 @@ namespace GLib {
 		ELYMAIC,                /* Elym */
 		NANDINAGARI,            /* Nand */
 		NYIAKENG_PUACHUE_HMONG, /* Rohg */
-		WANCHO;                 /* Wcho */
+		WANCHO,                 /* Wcho */
+
+		/* Unicode 13.0 additions */
+		CHORASMIAN,             /* Chrs */
+		DIVES_AKURU,            /* Diak */
+		KHITAN_SMALL_SCRIPT,    /* Kits */
+		YEZIDI;                 /* Yezi */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
