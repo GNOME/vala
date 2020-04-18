@@ -93,6 +93,7 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected Clip ();
 		public unowned GES.TrackElement? add_asset (GES.Asset asset);
+		public unowned GES.TrackElement add_child_to_track (GES.TrackElement child, GES.Track track) throws GLib.Error;
 		[NoWrapper]
 		public virtual unowned GES.TrackElement? create_track_element (GES.TrackType type);
 		[NoWrapper]
