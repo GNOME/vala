@@ -265,7 +265,6 @@ namespace HarfBuzz {
 		public static void get_scale (HarfBuzz.Font font, out int x_scale, out int y_scale);
 		[Version (since = "1.1.3")]
 		public static HarfBuzz.Bool get_v_extents (HarfBuzz.Font font, out HarfBuzz.FontExtents extents);
-		public static float get_var_coords_design (HarfBuzz.Font font, uint length);
 		[Version (since = "1.4.2")]
 		public static int get_var_coords_normalized (HarfBuzz.Font font, uint length);
 		[Version (since = "1.2.3")]
@@ -1631,6 +1630,7 @@ namespace HarfBuzz {
 	[Version (since = "1.0.5")]
 	public static void ft_font_set_load_flags (HarfBuzz.Font font, int load_flags);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.6.5")]
 	public static void ft_font_unlock_face (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.38")]
@@ -1668,10 +1668,6 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.28")]
 	public static void ot_font_set_funcs (HarfBuzz.Font font);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	public static void ot_layout_closure_features (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Map lookup_indexes, out unowned HarfBuzz.Set feature_indexes);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	public static void ot_layout_closure_lookups (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Set glyphs, ref HarfBuzz.Set lookup_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.8.5")]
 	public static void ot_layout_collect_features (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Tag scripts, HarfBuzz.Tag languages, HarfBuzz.Tag features, out unowned HarfBuzz.Set feature_indexes);
