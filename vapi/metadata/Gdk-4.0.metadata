@@ -4,19 +4,6 @@ KEY_* name="KEY_(.+)" type="uint" parent="Gdk.Key"
 *.unref destroys_instance=false
 
 // Event API
-button_event_* parent="Gdk.ButtonEvent" symbol_type="method" instance_idx=0 name="button_event_(.+)"
-configure_event_* parent="Gdk.ConfigureEvent" symbol_type="method" instance_idx=0 name="configure_event_(.+)"
-crossing_event_* parent="Gdk.CrossingEvent" symbol_type="method" instance_idx=0 name="crossing_event_(.+)"
-focus_event_* parent="Gdk.FocusEvent" symbol_type="method" instance_idx=0 name="focus_event_(.+)"
-grab_broken_event_* parent="Gdk.GrabBrokenEvent" symbol_type="method" instance_idx=0 name="grab_broken_event_(.+)"
-key_event_* parent="Gdk.KeyEvent" symbol_type="method" instance_idx=0 name="key_event_(.+)"
-pad_axis_event_* parent="Gdk.PadAxisEvent" symbol_type="method" instance_idx=0 name="pad_axis_event_(.+)"
-pad_button_event_* parent="Gdk.PadButtonEvent" symbol_type="method" instance_idx=0 name="pad_button_event_(.+)"
-pad_event_* parent="Gdk.PadEvent" symbol_type="method" instance_idx=0 name="pad_event_(.+)"
-scroll_event_* parent="Gdk.ScrollEvent" symbol_type="method" instance_idx=0 name="scroll_event_(.+)"
-touch_event_* parent="Gdk.TouchEvent" symbol_type="method" instance_idx=0 name="touch_event_(.+)"
-touchpad_event_* parent="Gdk.TouchpadEvent" symbol_type="method" instance_idx=0 name="touchpad_event_(.+)"
-touchpad_pinch_event_* parent="Gdk.TouchpadPinchEvent" symbol_type="method" instance_idx=0 name="touchpad_pinch_event_(.+)"
 events_*#function parent="Gdk.Event" name="events_(.+)"
 
 Cursor	abstract=false
@@ -40,8 +27,6 @@ Rectangle struct
         .width skip
         .height skip
 RGBA struct
-ModifierType
-        .modifier_reserved_*_mask skip
 pango_layout_get_clip_region skip=false
 Texture
         // Factory method
