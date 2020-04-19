@@ -2662,11 +2662,6 @@ public class Vala.GirParser : CodeVisitor {
 
 		next ();
 
-		if (type_name == "GLib.PtrArray"
-		    && current_token == MarkupTokenType.START_ELEMENT) {
-			type_name = "GLib.GenericArray";
-		}
-
 		if (type_name == null) {
 			type_name = ctype;
 		}
@@ -2777,14 +2772,10 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "intptr";
 			} else if (type_name == "GType") {
 				type_name = "GLib.Type";
-			} else if (type_name == "GLib.String") {
-				type_name = "GLib.StringBuilder";
 			} else if (type_name == "GObject.Class") {
 				type_name = "GLib.ObjectClass";
 			} else if (type_name == "gunichar") {
 				type_name = "unichar";
-			} else if (type_name == "GLib.Data") {
-				type_name = "GLib.Datalist";
 			} else if (type_name == "Atk.ImplementorIface") {
 				type_name = "Atk.Implementor";
 			} else {
