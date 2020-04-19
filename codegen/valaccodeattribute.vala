@@ -422,7 +422,17 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					unowned Parameter param = (Parameter) node;
 					unowned Callable? callable = param.parent_symbol as Callable;
-					if (callable != null) {
+					unowned Method? method = param.parent_symbol as Method;
+					if (method != null && method.coroutine) {
+						int index = method.get_async_begin_parameters ().index_of (param);
+						if (index < 0) {
+							index = method.get_async_end_parameters ().index_of (param);
+						}
+						if (index < 0) {
+							Report.error (param.source_reference, "internal: Parameter `%s' not found in `%s'".printf (param.name, method.get_full_name ()));
+						}
+						_pos = index + 1.0;
+					} else if (callable != null) {
 						_pos = callable.get_parameters ().index_of (param) + 1.0;
 					} else {
 						_pos = 0.0;
