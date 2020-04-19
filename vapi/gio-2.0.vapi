@@ -653,6 +653,7 @@ namespace GLib {
 		public uint add_filter (owned GLib.DBusMessageFilterFunction filter_function);
 		public async GLib.Variant call (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		[Version (since = "2.30")]
 		public async GLib.Variant call_with_unix_fd_list (string? bus_name, string object_path, string interface_name, string method_name, GLib.Variant? parameters, GLib.VariantType? reply_type, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list = null) throws GLib.Error;
 		[Version (since = "2.30")]
@@ -1014,6 +1015,7 @@ namespace GLib {
 		public async DBusProxy (GLib.DBusConnection connection, GLib.DBusProxyFlags flags, GLib.DBusInterfaceInfo? info, string? name, string object_path, string interface_name, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Variant call (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Variant call_sync (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (async_result_pos = 2.1)]
 		[Version (since = "2.30")]
 		public async GLib.Variant call_with_unix_fd_list (string method_name, GLib.Variant? parameters, GLib.DBusCallFlags flags, int timeout_msec, GLib.UnixFDList? fd_list = null, GLib.Cancellable? cancellable = null, out GLib.UnixFDList? out_fd_list = null) throws GLib.Error;
 		[Version (since = "2.30")]
