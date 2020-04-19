@@ -5342,6 +5342,7 @@ namespace GLib {
 	/* Keyed Data Lists */
 
 	[CCode (cname = "GData*", has_type_id = false)]
+	[GIR (name = "Data")]
 	public struct Datalist<G> {
 		public Datalist ();
 		public void clear ();
