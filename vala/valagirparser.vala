@@ -3125,6 +3125,7 @@ public class Vala.GirParser : CodeVisitor {
 		public int destroy_idx;
 		public bool keep;
 		public bool is_async;
+		public bool is_async_result;
 		public bool is_error;
 	}
 
@@ -3905,11 +3906,26 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			// Check and mark GAsync-style methods
-			if (info.is_async && s is Method) {
+			if (s is Method) {
+				string? type_name = null;
 				unowned UnresolvedType? unresolved_type = type as UnresolvedType;
-				if (unresolved_type != null && unresolved_type.unresolved_symbol.name == "AsyncReadyCallback") {
-					((Method) s).coroutine = true;
-					info.keep = false;
+				if (unresolved_type != null) {
+					type_name = unresolved_type.unresolved_symbol.name;
+				} else if (type != null) {
+					type_name = type.to_string ();
+				}
+				if (info.is_async) {
+					if ((unresolved_type != null && type_name == "AsyncReadyCallback")
+					    || type_name == "GLib.AsyncReadyCallback" || type_name == "Gio.AsyncReadyCallback"
+					    || type_name == "GLib.AsyncReadyCallback?" || type_name == "Gio.AsyncReadyCallback?") {
+						((Method) s).coroutine = true;
+						info.keep = false;
+					}
+				}
+				if ((unresolved_type != null && type_name == "AsyncResult")
+				    || type_name == "GLib.AsyncResult" || type_name == "Gio.AsyncResult"
+				    || type_name == "GLib.AsyncResult?" || type_name == "Gio.AsyncResult?") {
+					info.is_async_result = true;
 				}
 			}
 
@@ -3984,12 +4000,9 @@ public class Vala.GirParser : CodeVisitor {
 			if (first_out < 0 && info.param.direction == ParameterDirection.OUT) {
 				first_out = i;
 			}
-			if (s is Method && first_out >= 0 && info.param.variable_type != null) {
-				var type_name = info.param.variable_type.to_string ();
-				if (type_name == "GLib.AsyncResult" || type_name == "Gio.AsyncResult") {
-					var shift = ((Method) s).binding == MemberBinding.INSTANCE ? 1.1 : 0.1;
-					s.set_attribute_double ("CCode", "async_result_pos", i + shift);
-				}
+			if (first_out >= 0 && info.is_async_result && s is Method) {
+				var shift = ((Method) s).binding == MemberBinding.INSTANCE ? 1.1 : 0.1;
+				s.set_attribute_double ("CCode", "async_result_pos", i + shift);
 			}
 			if (s is Delegate && info.is_error) {
 				if (!s.has_attribute_argument ("CCode", "instance_pos")) {
