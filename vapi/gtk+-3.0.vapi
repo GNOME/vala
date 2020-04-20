@@ -10240,6 +10240,7 @@ namespace Gtk {
 		public virtual signal bool enable_debugging (bool toggle);
 		public virtual signal void keys_changed ();
 		[HasEmitter]
+		[Version (since = "2.24")]
 		public virtual signal void set_focus (Gtk.Widget? focus);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_window_accessible_get_type ()")]
@@ -11539,7 +11540,10 @@ namespace Gtk {
 		LGPL_2_1_ONLY,
 		LGPL_3_0_ONLY,
 		AGPL_3_0,
-		AGPL_3_0_ONLY
+		AGPL_3_0_ONLY,
+		BSD_3,
+		APACHE_2_0,
+		MPL_2_0
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_", type_id = "gtk_menu_direction_type_get_type ()")]
 	public enum MenuDirectionType {
