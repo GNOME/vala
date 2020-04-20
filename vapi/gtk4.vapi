@@ -5293,7 +5293,6 @@ namespace Gdk {
 		public void beep ();
 		public void begin_move_drag (Gdk.Device device, int button, int x, int y, uint32 timestamp);
 		public void begin_resize_drag (Gdk.SurfaceEdge edge, Gdk.Device device, int button, int x, int y, uint32 timestamp);
-		public static void constrain_size (Gdk.Geometry geometry, Gdk.SurfaceHints flags, int width, int height, out int new_width, out int new_height);
 		public Gdk.CairoContext create_cairo_context ();
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
@@ -5476,20 +5475,6 @@ namespace Gdk {
 		public abstract string title { owned get; set; }
 		[NoAccessorMethod]
 		public abstract Gdk.Surface transient_for { owned get; set; }
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	public struct Geometry {
-		public int min_width;
-		public int min_height;
-		public int max_width;
-		public int max_height;
-		public int base_width;
-		public int base_height;
-		public int width_inc;
-		public int height_inc;
-		public double min_aspect;
-		public double max_aspect;
-		public Gdk.Gravity win_gravity;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct KeymapKey {
@@ -5816,19 +5801,6 @@ namespace Gdk {
 		SOUTH_WEST,
 		SOUTH,
 		SOUTH_EAST
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_HINT_", type_id = "gdk_surface_hints_get_type ()")]
-	[Flags]
-	public enum SurfaceHints {
-		POS,
-		MIN_SIZE,
-		MAX_SIZE,
-		BASE_SIZE,
-		ASPECT,
-		RESIZE_INC,
-		WIN_GRAVITY,
-		USER_POS,
-		USER_SIZE
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_STATE_", type_id = "gdk_surface_state_get_type ()")]
 	[Flags]
@@ -7448,12 +7420,8 @@ namespace Gtk {
 		public virtual void forall (Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		public GLib.List<weak Gtk.Widget> get_children ();
-		public unowned Gtk.Adjustment? get_focus_hadjustment ();
-		public unowned Gtk.Adjustment? get_focus_vadjustment ();
 		[NoWrapper]
 		public virtual void set_focus_child (Gtk.Widget child);
-		public void set_focus_hadjustment (Gtk.Adjustment adjustment);
-		public void set_focus_vadjustment (Gtk.Adjustment adjustment);
 		[HasEmitter]
 		public virtual signal void add (Gtk.Widget widget);
 		[HasEmitter]
@@ -9560,7 +9528,7 @@ namespace Gtk {
 		public void popdown ();
 		public void popup ();
 		public void set_autohide (bool autohide);
-		public void set_default_widget (Gtk.Widget widget);
+		public void set_default_widget (Gtk.Widget? widget);
 		public void set_has_arrow (bool has_arrow);
 		public void set_mnemonics_visible (bool mnemonics_visible);
 		public void set_pointing_to (Gdk.Rectangle rect);
@@ -9590,7 +9558,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenu.from_model_full (GLib.MenuModel model, Gtk.PopoverMenuFlags flags);
 		public unowned GLib.MenuModel get_menu_model ();
-		public void set_menu_model (GLib.MenuModel model);
+		public void set_menu_model (GLib.MenuModel? model);
 		public GLib.MenuModel menu_model { get; set; }
 		[NoAccessorMethod]
 		public string visible_submenu { owned get; set; }
@@ -10228,13 +10196,13 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Shortcut (owned Gtk.ShortcutTrigger? trigger, owned Gtk.ShortcutAction? action);
 		public unowned Gtk.ShortcutAction get_action ();
-		public GLib.Variant get_arguments ();
+		public unowned GLib.Variant? get_arguments ();
 		public unowned Gtk.ShortcutTrigger get_trigger ();
 		public void set_action (owned Gtk.ShortcutAction? action);
-		public void set_arguments (GLib.Variant args);
+		public void set_arguments (GLib.Variant? args);
 		public void set_trigger (owned Gtk.ShortcutTrigger? trigger);
 		public Gtk.ShortcutAction action { get; owned set; }
-		public GLib.Variant arguments { owned get; set; }
+		public GLib.Variant arguments { get; set; }
 		public Gtk.ShortcutTrigger trigger { get; owned set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcut_action_get_type ()")]
@@ -11678,6 +11646,9 @@ namespace Gtk {
 	public class Viewport : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
+		public bool get_scroll_to_focus ();
+		public void set_scroll_to_focus (bool scroll_to_focus);
+		public bool scroll_to_focus { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_volume_button_get_type ()")]
 	public class VolumeButton : Gtk.ScaleButton, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
@@ -11705,7 +11676,6 @@ namespace Gtk {
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
 		public class void bind_template_child_full (string name, bool internal_child, ssize_t struct_offset);
-		public virtual bool can_activate_accel (uint signal_id);
 		public bool child_focus (Gtk.DirectionType direction);
 		public bool compute_bounds (Gtk.Widget target, out Graphene.Rect out_bounds);
 		public bool compute_expand (Gtk.Orientation orientation);

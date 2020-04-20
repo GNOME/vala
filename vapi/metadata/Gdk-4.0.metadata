@@ -43,3 +43,4 @@ Device
 Rectangle.union return_void
 
 DrawingContext skip
+Geometry skip
