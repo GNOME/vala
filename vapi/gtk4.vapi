@@ -7420,8 +7420,6 @@ namespace Gtk {
 		public virtual void forall (Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		public GLib.List<weak Gtk.Widget> get_children ();
-		[NoWrapper]
-		public virtual void set_focus_child (Gtk.Widget child);
 		[HasEmitter]
 		public virtual signal void add (Gtk.Widget widget);
 		[HasEmitter]
@@ -11805,7 +11803,7 @@ namespace Gtk {
 		public void set_cursor_from_name (string? name);
 		public static void set_default_direction (Gtk.TextDirection dir);
 		public void set_direction (Gtk.TextDirection dir);
-		public void set_focus_child (Gtk.Widget? child);
+		public virtual void set_focus_child (Gtk.Widget? child);
 		public void set_focus_on_click (bool focus_on_click);
 		public void set_font_map (Pango.FontMap? font_map);
 		public void set_font_options (Cairo.FontOptions? options);
