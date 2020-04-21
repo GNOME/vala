@@ -1,3 +1,40 @@
+Vala 0.48.4
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Fix binary 'in' operator on array with boxed value-typed needle [#951]
+    + Use get_value_*_function() in GSignalModule.generate_marshaller() [#468]
+    + Correctly handle signals returning real non-nullable struct [#466]
+    + Use specified indices to access multidimensional array constants [#905]
+    + Fix base-access to non-abstract/non-virtual properties [#204]
+    + Fix default of CCode.pos for parameters in async methods
+  - vala:
+    + Set default_construction_method in semantic-analyzer check if required
+    + Fix cleaning of output in CodeContext.pkg_config_modversion()
+    + Don't use possibly uninitialized backing field of package_name [#971]
+    + Add SourceReference.contains() and SourceLocation.to_string()
+    + Check assigned handler of dynamic signal before proceeding further
+    + Don't perform version check on internal lambda method
+    + Perform version check for types of non-external variable declarations
+    + Quote symbol on report by version attribute check
+    + Ensure non-empty argument list for "disconnect" before accessing it
+  - girparser
+    + Move special handling for certain parameters to process_callable()
+    + Drop special handling of GLib.Data, GLib.PtrArray and GLib.String
+    + Improve detection of AsyncReadyCallback/AsyncResult parameters [#340]
+  - parser: Handle incomplete expression statements
+
+ * Bindings:
+  - gio-2.0: Add "async_result_pos" attributes to *.call_with_unix_fd_list()
+    [#340]
+  - glib-2.0: Fix Filename.canonicalize() binding of g_canonicalize_filename
+  - glib-2.0: Guard Pid.to_string() with GLIB_2_50 to deal with G_PID_FORMAT
+  - gstreamer-app-1.0: Don't merge Src.push_buffer_*() signal with its method
+    [#968]
+  - gstreamer-1.0: Don't skip GST_*_FORMAT strings [#970]
+  - gtk4: Update to 3.98.3
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.3
 ===========
  * Various improvements and bug fixes:
