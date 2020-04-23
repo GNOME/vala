@@ -543,15 +543,6 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		checked = true;
 
-		// ensure there is always a default construction method
-		if (default_construction_method == null
-		    && source_reference.file.file_type == SourceFileType.SOURCE) {
-			var m = new CreationMethod (name, null, source_reference);
-			m.access = (is_abstract ? SymbolAccessibility.PROTECTED : SymbolAccessibility.PUBLIC);
-			m.body = new Block (source_reference);
-			add_method (m);
-		}
-
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;
 
