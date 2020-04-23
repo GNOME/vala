@@ -1,3 +1,10 @@
+Vala 0.48.5
+===========
+ * Regression and bug fixes:
+  - Revert "vala: Set default_construction_method in semantic-analyzer check
+    if required" [#982]
+  - tests: Fix make dist
+
 Vala 0.48.4
 ===========
  * Various improvements and bug fixes:
