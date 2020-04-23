@@ -9,15 +9,25 @@ namespace FastVapi {
 		[Source (filename = "fastvapitest.vala", line = 28, column = 3)]
 		public weak Test weak_field;
 		[Source (filename = "fastvapitest.vala", line = 34, column = 3)]
-		public Test ();
+		public Test.sub ();
 		[Source (filename = "fastvapitest.vala", line = 37, column = 3)]
 		public void method ();
+		[Source (filename = "fastvapitest.vala", line = 23, column = 2)]
+		public Test ();
 		[Source (filename = "fastvapitest.vala", line = 30, column = 3)]
 		public string property { get; set construct; }
 		[Source (filename = "fastvapitest.vala", line = 32, column = 3)]
 		public weak Test weak_property { get; private set; }
 		[Source (filename = "fastvapitest.vala", line = 24, column = 3)]
 		public signal void some_signal (int param);
+	}
+	[Source (filename = "fastvapitest.vala", line = 52, column = 2)]
+	public class TestFundamental {
+	}
+	[Source (filename = "fastvapitest.vala", line = 57, column = 2)]
+	public abstract class AbstractTest {
+		[Source (filename = "fastvapitest.vala", line = 57, column = 2)]
+		protected AbstractTest ();
 	}
 	[Source (filename = "fastvapitest.vala", line = 16, column = 2)]
 	public interface InterfaceTest : Object {
