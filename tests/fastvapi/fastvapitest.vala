@@ -31,7 +31,7 @@ namespace FastVapi {
 
 		public weak Test weak_property { get; private set; }
 
-		public Test () {
+		public Test.sub () {
 		}
 
 		public void method () {
@@ -47,5 +47,13 @@ namespace FastVapi {
 	public enum EnumTestTwo {
 		VALUE = 3,
 		VALUE_TWO = VALUE,
+	}
+
+	public class TestFundamental {
+		private TestFundamental () {
+		}
+	}
+
+	public abstract class AbstractTest {
 	}
 }
