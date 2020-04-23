@@ -1,3 +1,9 @@
+Vala 0.40.22
+============
+ * Regression and bug fixes:
+  - Revert "vala: Set default_construction_method in semantic-analyzer check
+    if required" [#982]
+
 Vala 0.40.21
 ============
  * Various improvements and bug fixes:
