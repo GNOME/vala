@@ -220,6 +220,8 @@ public class Vala.MemberAccess : Expression {
 		bool may_access_instance_members = false;
 		bool may_access_klass_members = false;
 
+		var visited_types = new ArrayList<DataType> ();
+
 		symbol_reference = null;
 
 		if (qualified) {
@@ -277,6 +279,23 @@ public class Vala.MemberAccess : Expression {
 				}
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
+
+				if (symbol_reference == null && sym is WithStatement) {
+					unowned WithStatement w = (WithStatement) sym;
+
+					var variable_type = w.with_variable.variable_type;
+					if (variable_type is PointerType) {
+						variable_type = ((PointerType) variable_type).base_type;
+					}
+					visited_types.add (variable_type);
+
+					symbol_reference = variable_type.get_member (member_name);
+					if (symbol_reference != null) {
+						inner = new MemberAccess (null, w.with_variable.name, source_reference);
+						inner.check (context);
+						may_access_instance_members = true;
+					}
+				}
 
 				if (symbol_reference == null && sym is TypeSymbol && may_access_instance_members) {
 					// used for generated to_string methods in enums
@@ -509,7 +528,12 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
-			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s".printf (member_name, base_type_name, base_type_package));
+			string visited_types_string = "";
+			foreach (var type in visited_types) {
+				visited_types_string += " or `%s'".printf (type.to_string ());
+			}
+
+			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s".printf (member_name, base_type_name, base_type_package, visited_types_string));
 			return false;
 		} else if (symbol_reference.error) {
 			//ignore previous error

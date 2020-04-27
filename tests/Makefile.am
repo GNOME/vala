@@ -499,6 +499,9 @@ TESTS = \
 	objects/bug795225-3.test \
 	objects/bug795225-4.test \
 	objects/bug795521.vala \
+	objects/with-expression.vala \
+	objects/with-instance.vala \
+	objects/with-nested.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
 	errors/default-gtype.vala \
@@ -726,6 +729,12 @@ TESTS = \
 	parser/using-ambiguous-reference.test \
 	parser/using-directive.vala \
 	parser/using-invalid-namespace.test \
+	parser/with-embedded.vala \
+	parser/with-empty.vala \
+	parser/with-invalid-declaration.test \
+	parser/with-invalid-expression.test \
+	parser/with-no-block.test \
+	parser/with-no-expression.test \
 	parser/yield-method.test \
 	parser/yield-return.test \
 	parser/yield-return.vala \
@@ -919,6 +928,26 @@ TESTS = \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
+	semantic/with-array.test \
+	semantic/with-buildin.vala \
+	semantic/with-class.test \
+	semantic/with-compact.vala \
+	semantic/with-declaration-cast-type.vala \
+	semantic/with-declaration-wrong-type.test \
+	semantic/with-declaration.vala \
+	semantic/with-dereferenced-pointer.vala \
+	semantic/with-enum.test \
+	semantic/with-enum-member.vala \
+	semantic/with-error.test \
+	semantic/with-error-member.test \
+	semantic/with-pointer.test \
+	semantic/with-namespace.test \
+	semantic/with-no-declaration.test \
+	semantic/with-no-such-member.test \
+	semantic/with-null.vala \
+	semantic/with-string.vala \
+	semantic/with-outside-declaration.test \
+	semantic/with-value.vala \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
 	semantic/yield-creation-requires-async-context.test \
@@ -932,6 +961,7 @@ NON_NULL_TESTS = \
 	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \
+	nullability/with-non-null.test \
 	$(NULL)
 
 LINUX_TESTS = \

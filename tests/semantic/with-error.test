@@ -1,0 +1,9 @@
+Invalid Code
+
+errordomain Err { 
+    ERROR
+}
+
+void main () {
+    with (Err) { }
+}
