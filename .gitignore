@@ -12,34 +12,28 @@ Makefile
 .libs
 libvala-*.vapi
 
+build-aux
 config.*
 aclocal.m4
 autom4te.cache
 ChangeLog
 configure
-depcomp
 INSTALL
-install-sh
 libtool
 m4
-missing
-ltmain.sh
-ylwrap
-compile
 stamp-h1
 *.pc
 .tarball-version
 .version
-.DS_Store
 
 *.gcda
 *.gcno
 coverage
 lcov.info
 
-*~
-
-build-aux/test-driver
-
 tests/_test
 
+*~
+.DS_Store
+.vscode
+Makecache
