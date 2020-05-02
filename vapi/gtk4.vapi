@@ -7479,8 +7479,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_layout_get_type ()")]
 	public class CustomLayout : Gtk.LayoutManager {
-		[CCode (has_construct_function = false)]
-		protected CustomLayout ();
+		[CCode (has_construct_function = false, type = "GtkLayoutManager*")]
+		public CustomLayout (Gtk.CustomRequestModeFunc? request_mode, Gtk.CustomMeasureFunc measure, Gtk.CustomAllocateFunc allocate);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_dialog_get_type ()")]
 	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
@@ -7505,7 +7505,7 @@ namespace Gtk {
 		public virtual signal void response (int response_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drag_icon_get_type ()")]
-	public class DragIcon : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
+	public class DragIcon : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
 		[CCode (has_construct_function = false)]
 		protected DragIcon ();
 		public static Gtk.Widget? create_widget_for_value (GLib.Value value);
@@ -8405,28 +8405,17 @@ namespace Gtk {
 	public class HeaderBar : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public HeaderBar ();
-		public unowned Gtk.Widget? get_custom_title ();
 		public unowned string get_decoration_layout ();
-		public bool get_has_subtitle ();
 		public bool get_show_title_buttons ();
-		public unowned string? get_subtitle ();
-		public unowned string? get_title ();
+		public unowned Gtk.Widget? get_title_widget ();
 		public void pack_end (Gtk.Widget child);
 		public void pack_start (Gtk.Widget child);
-		public void set_custom_title (Gtk.Widget? title_widget);
 		public void set_decoration_layout (string? layout);
-		public void set_has_subtitle (bool setting);
 		public void set_show_title_buttons (bool setting);
-		public void set_subtitle (string? subtitle);
-		public void set_title (string? title);
-		public Gtk.Widget custom_title { get; set; }
+		public void set_title_widget (Gtk.Widget? title_widget);
 		public string decoration_layout { get; set; }
-		[NoAccessorMethod]
-		public bool decoration_layout_set { get; set; }
-		public bool has_subtitle { get; set; }
 		public bool show_title_buttons { get; set; }
-		public string subtitle { get; set; }
-		public string title { get; set; }
+		public Gtk.Widget title_widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h", type_id = "gtk_im_context_get_type ()")]
 	public abstract class IMContext : GLib.Object {
@@ -10531,7 +10520,6 @@ namespace Gtk {
 		public void set_visible_child_full (string name, Gtk.StackTransitionType transition);
 		public void set_visible_child_name (string name);
 		public bool hhomogeneous { get; set; }
-		public bool homogeneous { get; set; }
 		public bool interpolate_size { get; set; }
 		public Gtk.SelectionModel pages { owned get; }
 		public uint transition_duration { get; set; }
@@ -10562,6 +10550,8 @@ namespace Gtk {
 		public bool needs_attention { get; set; }
 		[NoAccessorMethod]
 		public string title { owned get; set; }
+		[NoAccessorMethod]
+		public bool use_underline { get; set; }
 		public bool visible { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_sidebar_get_type ()")]
@@ -11760,13 +11750,14 @@ namespace Gtk {
 		public int get_width ();
 		public virtual bool grab_focus ();
 		public bool has_css_class (string css_class);
-		public bool has_grab ();
 		public bool has_visible_focus ();
 		public bool in_destruction ();
 		public void init_template ();
 		public void insert_action_group (string name, GLib.ActionGroup? group);
 		public void insert_after (Gtk.Widget parent, Gtk.Widget? previous_sibling);
 		public void insert_before (Gtk.Widget parent, Gtk.Widget? next_sibling);
+		[CCode (cname = "gtk_widget_class_install_action")]
+		public class void install_action (string action_name, string? parameter_type, Gtk.WidgetActionActivateFunc activate);
 		[CCode (cname = "gtk_widget_class_install_property_action")]
 		public class void install_property_action (string action_name, string property_name);
 		public bool is_ancestor (Gtk.Widget ancestor);
@@ -11788,7 +11779,6 @@ namespace Gtk {
 		public void remove_css_class (string css_class);
 		public void remove_mnemonic_label (Gtk.Widget label);
 		public void remove_tick_callback (uint id);
-		public void reset_style ();
 		[CCode (cname = "gtk_widget_class_set_accessible_role")]
 		public class void set_accessible_role (Atk.Role role);
 		[CCode (cname = "gtk_widget_class_set_accessible_type")]
@@ -11844,6 +11834,8 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void snapshot (Gtk.Snapshot snapshot);
 		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
+		[NoWrapper]
+		public virtual void system_setting_changed (Gtk.SystemSetting settings);
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		public void trigger_tooltip_query ();
 		public void unparent ();
@@ -12024,6 +12016,19 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected WindowAccessible ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_controls_get_type ()")]
+	public class WindowControls : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public WindowControls (Gtk.PackType side);
+		public unowned string get_decoration_layout ();
+		public bool get_empty ();
+		public Gtk.PackType get_side ();
+		public void set_decoration_layout (string? layout);
+		public void set_side (Gtk.PackType side);
+		public string decoration_layout { get; set; }
+		public bool empty { get; }
+		public Gtk.PackType side { get; set; }
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class WindowGeometryInfo {
@@ -12184,7 +12189,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_get_type ()")]
 	public interface FileChooser : GLib.Object {
 		public void add_choice (string id, string label, [CCode (array_length = false, array_null_terminated = true)] string[]? options, [CCode (array_length = false, array_null_terminated = true)] string[]? option_labels);
-		public void add_filter (owned Gtk.FileFilter filter);
+		public void add_filter (Gtk.FileFilter filter);
 		public bool add_shortcut_folder (GLib.File folder) throws GLib.Error;
 		public Gtk.FileChooserAction get_action ();
 		public unowned string get_choice (string id);
@@ -13275,6 +13280,14 @@ namespace Gtk {
 		RECURSE,
 		SHOW_STYLE,
 		SHOW_CHANGE
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYSTEM_SETTING_", type_id = "gtk_system_setting_get_type ()")]
+	public enum SystemSetting {
+		DPI,
+		FONT_NAME,
+		FONT_CONFIG,
+		DISPLAY,
+		ICON_THEME
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_", type_id = "gtk_text_buffer_target_info_get_type ()")]
 	public enum TextBufferTargetInfo {
