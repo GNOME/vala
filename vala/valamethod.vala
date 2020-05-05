@@ -248,7 +248,7 @@ public class Vala.Method : Subroutine, Callable {
 
 	public bool is_variadic () {
 		foreach (Parameter param in parameters) {
-			if (param.ellipsis) {
+			if (param.ellipsis || param.params_array) {
 				return true;
 			}
 		}
@@ -728,7 +728,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (is_variadic () && (is_abstract || is_virtual)) {
 			error = true;
-			Report.error (source_reference, "Abstract and virtual methods may not be variadic. Use a `va_list' parameter instead of `...'.");
+			Report.error (source_reference, "Abstract and virtual methods may not be variadic. Use a `va_list' parameter instead of `...' or params-array.");
 			return false;
 		}
 

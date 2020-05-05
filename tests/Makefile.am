@@ -176,6 +176,7 @@ TESTS = \
 	methods/delegate-target.vala \
 	methods/generics.vala \
 	methods/params-array.vala \
+	methods/params-array-abstract.test \
 	methods/print-attribute.vala \
 	methods/print-attribute-invalid.test \
 	methods/printf-invalid.test \
