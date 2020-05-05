@@ -1,0 +1,8 @@
+Invalid Code
+
+abstract class Foo {
+    public abstract void bar (params int[] a);
+}
+
+void main () {
+}
