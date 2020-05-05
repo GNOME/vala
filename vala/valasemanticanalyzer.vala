@@ -849,7 +849,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
+	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode? node_reference) {
 		// construct a new type reference for the base type with correctly linked type arguments
 		DataType instance_base_type;
 		if (base_type.type_symbol is ObjectTypeSymbol) {
