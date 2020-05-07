@@ -49,18 +49,19 @@ public class Vala.Parser : CodeVisitor {
 		public SourceLocation end;
 	}
 
+	[Flags]
 	enum ModifierFlags {
-		NONE,
-		ABSTRACT = 1 << 0,
-		CLASS = 1 << 1,
-		EXTERN = 1 << 2,
-		INLINE = 1 << 3,
-		NEW = 1 << 4,
-		OVERRIDE = 1 << 5,
-		STATIC = 1 << 6,
-		VIRTUAL = 1 << 7,
-		ASYNC = 1 << 8,
-		SEALED = 1 << 9
+		NONE = 0,
+		ABSTRACT,
+		CLASS,
+		EXTERN,
+		INLINE,
+		NEW,
+		OVERRIDE,
+		STATIC,
+		VIRTUAL,
+		ASYNC,
+		SEALED
 	}
 
 	public Parser () {
