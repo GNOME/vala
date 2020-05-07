@@ -321,6 +321,27 @@ public abstract class Vala.Symbol : CodeNode {
 		return result_builder.str;
 	}
 
+	/**
+	 * Implementation of GLib.EqualFunc to use with e.g. HashMap
+	 *
+	 * @param a a symbol
+	 * @param b a symbol
+	 * @return whether the given instances represent the same symbol
+	 */
+	public static bool equal_func (Symbol a, Symbol b) {
+		return str_equal (a.get_full_name (), b.get_full_name ());
+	}
+
+	/**
+	 * Implementation of GLib.HashFunc to use with e.g. HashMap
+	 *
+	 * @param s a symbol
+	 * @return a hash value
+	 */
+	public static uint hash_func (Symbol s) {
+		return str_hash (s.get_full_name ());
+	}
+
 	// get the top scope from where this symbol is still accessible
 	public Scope? get_top_accessible_scope (bool is_internal = false) {
 		if (access == SymbolAccessibility.PRIVATE) {
