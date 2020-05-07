@@ -1949,7 +1949,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	void parse_local_variable_declarations (Block block) throws ParseError {
-		var id_list = new ArrayList<string> ();
+		var id_list = new ArrayList<string> (str_equal);
 		id_list.add (parse_identifier ());
 		// Allow multiple declarations
 		while (accept (TokenType.COMMA)) {

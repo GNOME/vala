@@ -714,7 +714,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 		/* check whether all prerequisites are met */
-		List<string> missing_prereqs = new ArrayList<string> ();
+		List<string> missing_prereqs = new ArrayList<string> (str_equal);
 		foreach (TypeSymbol prereq in prerequisites) {
 			if (!is_a ((ObjectTypeSymbol) prereq)) {
 				missing_prereqs.insert (0, prereq.get_full_name ());

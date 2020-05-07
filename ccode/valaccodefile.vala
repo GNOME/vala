@@ -107,7 +107,7 @@ public class Vala.CCodeFile {
 	}
 
 	public List<string> get_symbols () {
-		var symbols = new ArrayList<string> ();
+		var symbols = new ArrayList<string> (str_equal);
 		get_symbols_from_fragment (symbols, type_member_declaration);
 		return symbols;
 	}
