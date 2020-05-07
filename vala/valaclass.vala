@@ -110,7 +110,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private bool? _is_singleton;
 
 	private List<DataType> base_types = new ArrayList<DataType> ();
-	private HashMap<Method,Method> implicit_implementations = new HashMap<Method,Method> ();
+	private HashMap<Method,Method> implicit_implementations = new HashMap<Method,Method> (Symbol.hash_func, Symbol.equal_func);
 
 	/**
 	 * Specifies the default construction method.
