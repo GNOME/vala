@@ -489,7 +489,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			context.directory = context.basedir;
 		}
 
-		context.set_target_profile (settings.profile, true);
+		context.set_target_profile (settings.profile, false);
 
 		if (settings.target_glib != null) {
 			context.set_target_glib_version (settings.target_glib);
@@ -499,6 +499,19 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			foreach (string define in settings.defines) {
 				context.add_define (define);
 			}
+		}
+
+		// FIXME Let CodeContext.set_target_profile() do this and correctly
+		// handle default-packages as given source
+		switch (context.profile) {
+		default:
+		case Vala.Profile.GOBJECT:
+			add_package (context, "glib-2.0");
+			add_package (context, "gobject-2.0");
+			break;
+		case Vala.Profile.POSIX:
+			add_package (context, "posix");
+			break;
 		}
 
 		// add user defined files:
