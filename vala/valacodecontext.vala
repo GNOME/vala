@@ -205,7 +205,7 @@ public class Vala.CodeContext {
 
 	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Map<string,unowned SourceFile> source_files_map = new HashMap<string,unowned SourceFile> (str_hash, str_equal);
-	private List<string> c_source_files = new ArrayList<string> ();
+	private List<string> c_source_files = new ArrayList<string> (str_equal);
 	private Namespace _root = new Namespace (null);
 
 	private List<string> packages = new ArrayList<string> (str_equal);
