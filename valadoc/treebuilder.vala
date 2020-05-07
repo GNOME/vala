@@ -435,7 +435,12 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 
 					register_source_file (source_package, source_file);
 
-					if (context.profile == Vala.Profile.GOBJECT) {
+					if (context.profile == Vala.Profile.POSIX) {
+						// import the Posix namespace by default (namespace of backend-specific standard library)
+						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "Posix", null));
+						source_file.add_using_directive (ns_ref);
+						context.root.add_using_directive (ns_ref);
+					} else if (context.profile == Vala.Profile.GOBJECT) {
 						// import the GLib namespace by default (namespace of backend-specific standard library)
 						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null));
 						source_file.add_using_directive (ns_ref);
