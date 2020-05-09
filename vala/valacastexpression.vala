@@ -172,6 +172,27 @@ public class Vala.CastExpression : Expression {
 			}
 		}
 
+		// Implicit transformation of stack-allocated floating-type to boxed-type
+		if (!(is_silent_cast || is_non_null_cast) && inner.value_type is FloatingType && !inner.value_type.nullable) {
+			if (type_reference is PointerType || (type_reference is ValueType && type_reference.nullable)) {
+				var local = new LocalVariable (type_reference, get_temp_name (), null, inner.source_reference);
+				var decl = new DeclarationStatement (local, source_reference);
+
+				insert_statement (context.analyzer.insert_block, decl);
+
+				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
+				temp_access.formal_target_type = formal_target_type;
+
+				// don't set initializer earlier as this changes parent_node and parent_statement
+				local.initializer = inner;
+				decl.check (context);
+
+				context.analyzer.replaced_nodes.add (this);
+				parent_node.replace_expression (this, temp_access);
+				return temp_access.check (context);
+			}
+		}
+
 		value_type = type_reference;
 		value_type.value_owned = inner.value_type.value_owned;
 		value_type.floating_reference = inner.value_type.floating_reference;
