@@ -492,6 +492,7 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'".printf (member_name, base_type_name));
+			value_type = new InvalidType ();
 			return false;
 		} else if (symbol_reference.error) {
 			//ignore previous error
