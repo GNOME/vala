@@ -798,6 +798,7 @@ TESTS = \
 	semantic/member-access-async-callback-invalid.test \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-protected-invalid.test \
+	semantic/member-access-undefined.test \
 	semantic/method-abstract.test \
 	semantic/method-abstract-body.test \
 	semantic/method-async-ref-parameter.test \
