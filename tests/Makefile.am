@@ -24,6 +24,7 @@ TESTS = \
 	basic-types/integers.vala \
 	basic-types/escape-chars.vala \
 	basic-types/floats.vala \
+	basic-types/floats-boxed-cast.vala \
 	basic-types/boolean.vala \
 	basic-types/custom-types.vala \
 	basic-types/default-gtype.vala \
@@ -570,6 +571,7 @@ TESTS = \
 	asynchronous/yield.vala \
 	generics/arrays-not-supported.test \
 	generics/constructor-chain-up.vala \
+	generics/floating-type-cast.vala \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \
