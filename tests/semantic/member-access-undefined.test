@@ -1,0 +1,8 @@
+Invalid Code
+
+void foo<T> (T actual) {
+}
+
+void main () {
+	foo (undefined);
+}
