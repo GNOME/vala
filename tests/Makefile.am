@@ -256,6 +256,7 @@ TESTS = \
 	enums/bug780050.vala \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
+	structs/struct-boxed-cast.vala \
 	structs/struct-empty-still.test \
 	structs/struct-initializer-list-in-array.vala \
 	structs/struct-no-gtype.vala \
