@@ -532,6 +532,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		context.analyzer.current_symbol = this;
 
+		bool has_type_arguments = false;
+
 		foreach (DataType base_type_reference in get_base_types ()) {
 			if (!base_type_reference.check (context)) {
 				error = true;
@@ -562,6 +564,8 @@ public class Vala.Class : ObjectTypeSymbol {
 				Report.error (base_type_reference.source_reference, "too many type arguments");
 				return false;
 			}
+
+			has_type_arguments = (n_type_args > 0);
 		}
 
 		foreach (DataType type in base_types) {
@@ -583,7 +587,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		/* singleton classes require an instance construtor */
-		if (is_singleton && constructor == null) {
+		if (constructor == null
+		    && (is_singleton || (is_subtype_of (context.analyzer.object_type) && has_type_arguments))) {
 			var c = new Constructor (source_reference);
 			c.body = new Block (source_reference);
 			add_constructor (c);

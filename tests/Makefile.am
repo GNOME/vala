@@ -569,6 +569,8 @@ TESTS = \
 	asynchronous/yield.vala \
 	generics/arrays-not-supported.test \
 	generics/constructor-chain-up.vala \
+	generics/gobject-construction-class.vala \
+	generics/gobject-construction-interface.vala \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
 	generics/parameter-sizeof-initializer.vala \

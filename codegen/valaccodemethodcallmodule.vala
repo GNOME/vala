@@ -141,7 +141,21 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccall.add_argument (get_this_cexpression ());
 			}
 
-			if (!current_class.is_compact) {
+			if (current_class.is_subtype_of (gobject_type) && get_ccode_real_name (m) == "g_object_new") {
+				// gobject-style creation
+				int type_param_index = 0;
+				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+					var type_param_name = type_param.name.down ();
+					var type_param_name_canon = type_param_name.replace ("_", "-");
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name_canon)));
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s-dup-func\"".printf (type_param_name_canon)));
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s-destroy-func\"".printf (type_param_name_canon)));
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_type".printf (type_param_name)));
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeIdentifier ("%s_dup_func".printf (type_param_name)));
+					in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeIdentifier ("%s_destroy_func".printf (type_param_name)));
+					type_param_index++;
+				}
+			} else if (!current_class.is_compact) {
 				if (current_class != m.parent_symbol) {
 					// chain up to base class
 					foreach (DataType base_type in current_class.get_base_types ()) {
@@ -333,7 +347,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
 
-			if (!current_class.is_compact && current_class.has_type_parameters ()) {
+			if (!current_class.is_compact && current_class.has_type_parameters () && !current_class.is_subtype_of (gobject_type)) {
 				/* type, dup func, and destroy func fields for generic types */
 				var suffices = new string[] {"type", "dup_func", "destroy_func"};
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {

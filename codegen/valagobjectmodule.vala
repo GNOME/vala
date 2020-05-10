@@ -559,6 +559,119 @@ public class Vala.GObjectModule : GTypeModule {
 			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (cl, null))));
 			ccode.add_assignment (new CCodeIdentifier ("parent_class"), ccast);
 
+
+			// Set values of generic type properties with available information
+			bool entered = false;
+			foreach (DataType base_type in cl.get_base_types ()) {
+				unowned ObjectTypeSymbol? base_sym = base_type.type_symbol as ObjectTypeSymbol;
+				if (base_sym == null || !base_sym.has_type_parameters ()) {
+					continue;
+				}
+
+				var type_parameters = base_sym.get_type_parameters ();
+				int type_param_index = 0;
+				foreach (var type_arg in base_type.get_type_arguments ()) {
+					if (type_arg is GenericType) {
+						type_param_index++;
+						continue;
+					}
+
+					var type_param_name = type_parameters.get (type_param_index).name.down ().replace ("_", "-");
+
+					var cmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+					cmp.add_argument (new CCodeIdentifier ("_property_name"));
+					cmp.add_argument (new CCodeIdentifier ("\"%s-type\"".printf (type_param_name)));
+					var cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cmp, new CCodeConstant ("0"));
+
+					if (!entered) {
+						ccode.add_declaration ("guint", new CCodeVariableDeclarator ("_n_properties"));
+						ccode.add_declaration ("GObjectConstructParam *", new CCodeVariableDeclarator ("_properties"));
+
+						ccode.add_assignment (new CCodeIdentifier ("_n_properties"), new CCodeIdentifier ("n_construct_properties"));
+						ccode.add_assignment (new CCodeIdentifier ("_properties"), new CCodeIdentifier ("construct_properties"));
+						ccode.open_if (new CCodeIdentifier ("_n_properties"));
+						ccode.open_while (new CCodeIdentifier ("_n_properties--"));
+
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("_properties->pspec->owner_type"), get_type_id_expression ((base_sym is Class) ? base_type : new ClassType (cl))));
+
+						ccode.add_declaration ("const gchar *", new CCodeVariableDeclarator ("_property_name"));
+						ccode.add_assignment (new CCodeIdentifier ("_property_name"), new CCodeIdentifier ("_properties->pspec->name"));
+
+						ccode.open_if (cond);
+						entered = true;
+					} else {
+						ccode.else_if (cond);
+					}
+
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_gtype"));
+					ccall.add_argument (new CCodeIdentifier ("_properties->value"));
+					ccall.add_argument (get_type_id_expression (type_arg));
+					ccode.add_statement (new CCodeExpressionStatement (ccall));
+
+					if (requires_copy (type_arg)) {
+						var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference);
+						if (dup_func == null) {
+							assert_not_reached ();
+						}
+
+						cmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+						cmp.add_argument (new CCodeIdentifier ("_property_name"));
+						cmp.add_argument (new CCodeIdentifier ("\"%s-dup-func\"".printf (type_param_name)));
+						cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cmp, new CCodeConstant ("0"));
+						ccode.else_if (cond);
+
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+						ccall.add_argument (new CCodeIdentifier ("_properties->value"));
+						ccall.add_argument (dup_func);
+						ccode.add_statement (new CCodeExpressionStatement (ccall));
+
+						cmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+						cmp.add_argument (new CCodeIdentifier ("_property_name"));
+						cmp.add_argument (new CCodeIdentifier ("\"%s-destroy-func\"".printf (type_param_name)));
+						cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cmp, new CCodeConstant ("0"));
+						ccode.else_if (cond);
+
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+						ccall.add_argument (new CCodeIdentifier ("_properties->value"));
+						ccall.add_argument (get_destroy_func_expression (type_arg));
+						ccode.add_statement (new CCodeExpressionStatement (ccall));
+					} else {
+						cmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+						cmp.add_argument (new CCodeIdentifier ("_property_name"));
+						cmp.add_argument (new CCodeIdentifier ("\"%s-dup-func\"".printf (type_param_name)));
+						cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cmp, new CCodeConstant ("0"));
+						ccode.else_if (cond);
+
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+						ccall.add_argument (new CCodeIdentifier ("_properties->value"));
+						ccall.add_argument (new CCodeConstant ("NULL"));
+						ccode.add_statement (new CCodeExpressionStatement (ccall));
+
+						cmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+						cmp.add_argument (new CCodeIdentifier ("_property_name"));
+						cmp.add_argument (new CCodeIdentifier ("\"%s-destroy-func\"".printf (type_param_name)));
+						cond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cmp, new CCodeConstant ("0"));
+						ccode.else_if (cond);
+
+						ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+						ccall.add_argument (new CCodeIdentifier ("_properties->value"));
+						ccall.add_argument (new CCodeConstant ("NULL"));
+						ccode.add_statement (new CCodeExpressionStatement (ccall));
+					}
+
+					type_param_index++;
+				}
+			}
+			if (entered) {
+				ccode.close ();
+				ccode.close ();
+
+				ccode.add_statement (new CCodeExpressionStatement (new CCodeIdentifier ("_properties++")));
+				ccode.close ();
+				ccode.close ();
+			}
+
+
 			var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
 			ccall.add_argument (new CCodeIdentifier ("type"));
 			ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
@@ -570,6 +683,51 @@ public class Vala.GObjectModule : GTypeModule {
 
 			ccode.add_declaration ("%s *".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("self"));
 			ccode.add_assignment (new CCodeIdentifier ("self"), ccall);
+
+			// Initialize private type-parameter fields from construct properties
+			foreach (DataType base_type in cl.get_base_types ()) {
+				unowned ObjectTypeSymbol? base_sym = base_type.type_symbol as ObjectTypeSymbol;
+				if (base_sym == null || !base_sym.has_type_parameters ()) {
+					continue;
+				}
+
+				var base_type_parameters = base_sym.get_type_parameters ();
+				int type_param_index = 0;
+				foreach (var type_arg in base_type.get_type_arguments ()) {
+					if (!(type_arg is GenericType)) {
+						type_param_index++;
+						continue;
+					}
+
+					var type_param = ((GenericType) type_arg).type_parameter;
+					var base_type_param_name = base_type_parameters.get (type_param_index).name.down ().replace ("_", "-");
+					var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+
+					CCodeMemberAccess cfield;
+					string field_name;
+					field_name = "%s_type".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("self"));
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-type\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					field_name = "%s_dup_func".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-dup-func\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					field_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
+					cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), field_name);
+					cgetcall.add_argument (new CCodeIdentifier ("\"%s-destroy-func\"".printf (base_type_param_name)));
+					cgetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cfield));
+
+					cgetcall.add_argument (new CCodeConstant ("NULL"));
+
+					ccode.add_expression (cgetcall);
+
+					type_param_index++;
+				}
+			}
 
 			c.body.emit (this);
 
