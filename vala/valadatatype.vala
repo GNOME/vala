@@ -431,6 +431,14 @@ public abstract class Vala.DataType : CodeNode {
 		return is_real_struct_type () && !nullable;
 	}
 
+	public bool is_non_null_simple_type () {
+		unowned Struct s = data_type as Struct;
+		if (s != null && s.is_simple_type ()) {
+			return !nullable;
+		}
+		return false;
+	}
+
 	/**
 	 * Returns whether the value needs to be disposed, i.e. whether
 	 * allocated memory or other resources need to be released when
