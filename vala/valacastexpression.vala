@@ -175,8 +175,7 @@ public class Vala.CastExpression : Expression {
 		// Implicit transformation of stack-allocated value to heap-allocated boxed-type
 		if (!(is_silent_cast || is_non_null_cast)
 		    && (type_reference is ValueType && type_reference.nullable)
-		    && !inner.value_type.nullable
-		    && inner.value_type is FloatingType) {
+		    && inner.value_type.is_non_null_simple_type ()) {
 			var local = new LocalVariable (type_reference, get_temp_name (), null, inner.source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 
