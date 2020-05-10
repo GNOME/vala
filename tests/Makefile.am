@@ -22,6 +22,7 @@ TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' L
 
 TESTS = \
 	basic-types/integers.vala \
+	basic-types/integers-boxed-cast.vala \
 	basic-types/escape-chars.vala \
 	basic-types/floats.vala \
 	basic-types/floats-boxed-cast.vala \
@@ -549,6 +550,7 @@ TESTS = \
 	generics/floating-type-cast.vala \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
+	generics/integer-type-cast.vala \
 	generics/parameter-sizeof-initializer.vala \
 	generics/type-parameter-properties.vala \
 	generics/bug640330.test \
