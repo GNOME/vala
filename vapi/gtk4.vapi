@@ -5222,7 +5222,8 @@ namespace Gdk {
 	public class MotionEvent : Gdk.Event {
 		[CCode (has_construct_function = false)]
 		protected MotionEvent ();
-		public GLib.List<weak Gdk.TimeCoord?>? get_history ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public Gdk.TimeCoord[]? get_history ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_pad_event_get_type ()")]
 	public class PadEvent : Gdk.Event {
@@ -6549,17 +6550,20 @@ namespace Gtk {
 		public bool show_menubar { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_aspect_frame_get_type ()")]
-	public class AspectFrame : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class AspectFrame : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AspectFrame (float xalign, float yalign, float ratio, bool obey_child);
+		public unowned Gtk.Widget? get_child ();
 		public bool get_obey_child ();
 		public float get_ratio ();
 		public float get_xalign ();
 		public float get_yalign ();
+		public void set_child (Gtk.Widget? child);
 		public void set_obey_child (bool obey_child);
 		public void set_ratio (float ratio);
 		public void set_xalign (float xalign);
 		public void set_yalign (float yalign);
+		public Gtk.Widget child { get; set; }
 		public bool obey_child { get; set; }
 		public float ratio { get; set; }
 		public float xalign { get; set; }
@@ -6613,12 +6617,6 @@ namespace Gtk {
 		public Gtk.AssistantPageType page_type { get; set; }
 		[NoAccessorMethod]
 		public string title { owned get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bin_get_type ()")]
-	public abstract class Bin : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
-		[CCode (has_construct_function = false)]
-		protected Bin ();
-		public unowned Gtk.Widget? get_child ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bin_layout_get_type ()")]
 	public class BinLayout : Gtk.LayoutManager {
@@ -6716,15 +6714,17 @@ namespace Gtk {
 		public static Gtk.BuilderScope @new ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_button_get_type ()")]
-	public class Button : Gtk.Bin, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class Button : Gtk.Widget, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.from_icon_name (string? icon_name);
+		public unowned Gtk.Widget? get_child ();
 		public bool get_has_frame ();
 		public unowned string? get_icon_name ();
 		public unowned string? get_label ();
 		public bool get_use_underline ();
+		public void set_child (Gtk.Widget? child);
 		public void set_has_frame (bool has_frame);
 		public void set_icon_name (string icon_name);
 		public void set_label (string? label);
@@ -6733,6 +6733,7 @@ namespace Gtk {
 		public Button.with_label (string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Button.with_mnemonic (string label);
+		public Gtk.Widget child { get; set; }
 		public bool has_frame { get; set; }
 		public string icon_name { get; set; }
 		public string? label { get; set; }
@@ -6741,7 +6742,7 @@ namespace Gtk {
 		public virtual signal void clicked ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_button_accessible_get_type ()")]
-	public class ButtonAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component, Atk.Image {
+	public class ButtonAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component, Atk.Image {
 		[CCode (has_construct_function = false)]
 		protected ButtonAccessible ();
 	}
@@ -7263,13 +7264,14 @@ namespace Gtk {
 		public bool show_editor { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_combo_box_get_type ()")]
-	public class ComboBox : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.CellLayout, Gtk.ConstraintTarget {
+	public class ComboBox : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.CellLayout, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ComboBox ();
 		public int get_active ();
 		public unowned string? get_active_id ();
 		public bool get_active_iter (out Gtk.TreeIter iter);
 		public Gtk.SensitivityType get_button_sensitivity ();
+		public unowned Gtk.Widget? get_child ();
 		public int get_entry_text_column ();
 		public bool get_has_entry ();
 		public int get_id_column ();
@@ -7282,6 +7284,7 @@ namespace Gtk {
 		public bool set_active_id (string? active_id);
 		public void set_active_iter (Gtk.TreeIter? iter);
 		public void set_button_sensitivity (Gtk.SensitivityType sensitivity);
+		public void set_child (Gtk.Widget? child);
 		public void set_entry_text_column (int text_column);
 		public void set_id_column (int id_column);
 		public void set_model (Gtk.TreeModel? model);
@@ -7296,6 +7299,7 @@ namespace Gtk {
 		public int active { get; set; }
 		public string? active_id { get; set; }
 		public Gtk.SensitivityType button_sensitivity { get; set; }
+		public Gtk.Widget child { get; set; }
 		public int entry_text_column { get; set; }
 		public bool has_entry { get; construct; }
 		[NoAccessorMethod]
@@ -7314,7 +7318,7 @@ namespace Gtk {
 		public signal void popup ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_combo_box_accessible_get_type ()")]
-	public class ComboBoxAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component, Atk.Selection {
+	public class ComboBoxAccessible : Gtk.WidgetAccessible, Atk.Action, Atk.Component, Atk.Selection {
 		[CCode (has_construct_function = false)]
 		protected ComboBoxAccessible ();
 	}
@@ -7544,6 +7548,7 @@ namespace Gtk {
 		public void set_draw_func (owned Gtk.DrawingAreaDrawFunc? draw_func);
 		public int content_height { get; set; }
 		public int content_width { get; set; }
+		public virtual signal void resize (int width, int height);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_controller_motion_get_type ()")]
 	public class DropControllerMotion : Gtk.EventController {
@@ -8116,16 +8121,19 @@ namespace Gtk {
 		protected FlowBoxAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flow_box_child_get_type ()")]
-	public class FlowBoxChild : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class FlowBoxChild : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FlowBoxChild ();
 		public void changed ();
+		public unowned Gtk.Widget? get_child ();
 		public int get_index ();
 		public bool is_selected ();
+		public void set_child (Gtk.Widget? child);
+		public Gtk.Widget child { get; set; }
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_flow_box_child_accessible_get_type ()")]
-	public class FlowBoxChildAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class FlowBoxChildAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FlowBoxChildAccessible ();
 	}
@@ -8162,24 +8170,27 @@ namespace Gtk {
 		public GLib.Action tweak_action { owned get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_frame_get_type ()")]
-	public class Frame : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class Frame : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Frame (string? label);
 		[NoWrapper]
 		public virtual void compute_child_allocation (Gtk.Allocation allocation);
+		public unowned Gtk.Widget? get_child ();
 		public unowned string? get_label ();
 		public float get_label_align ();
 		public unowned Gtk.Widget? get_label_widget ();
+		public void set_child (Gtk.Widget? child);
 		public void set_label (string? label);
 		public void set_label_align (float xalign);
 		public void set_label_widget (Gtk.Widget? label_widget);
+		public Gtk.Widget child { get; set; }
 		public string label { get; set; }
 		public Gtk.Widget label_widget { get; set; }
 		[NoAccessorMethod]
 		public float label_xalign { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_frame_accessible_get_type ()")]
-	public class FrameAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class FrameAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FrameAccessible ();
 	}
@@ -8245,8 +8256,6 @@ namespace Gtk {
 	public class GestureClick : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		public GestureClick ();
-		public bool get_area (out Gdk.Rectangle rect);
-		public void set_area (Gdk.Rectangle? rect);
 		public signal void pressed (int n_press, double x, double y);
 		public signal void released (int n_press, double x, double y);
 		public signal void stopped ();
@@ -8900,24 +8909,27 @@ namespace Gtk {
 		protected ListBoxAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_box_row_get_type ()")]
-	public class ListBoxRow : Gtk.Bin, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class ListBoxRow : Gtk.Widget, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBoxRow ();
 		public void changed ();
 		public bool get_activatable ();
+		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Widget? get_header ();
 		public int get_index ();
 		public bool get_selectable ();
 		public bool is_selected ();
 		public void set_activatable (bool activatable);
+		public void set_child (Gtk.Widget? child);
 		public void set_header (Gtk.Widget? header);
 		public void set_selectable (bool selectable);
 		public bool activatable { get; set; }
+		public Gtk.Widget child { get; set; }
 		public bool selectable { get; set; }
 		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_list_box_row_accessible_get_type ()")]
-	public class ListBoxRowAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class ListBoxRowAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected ListBoxRowAccessible ();
 	}
@@ -9318,14 +9330,18 @@ namespace Gtk {
 		public static unowned Gtk.ShortcutAction @get ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_overlay_get_type ()")]
-	public class Overlay : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class Overlay : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Overlay ();
 		public void add_overlay (Gtk.Widget widget);
+		public unowned Gtk.Widget? get_child ();
 		public bool get_clip_overlay (Gtk.Widget widget);
 		public bool get_measure_overlay (Gtk.Widget widget);
+		public void remove_overlay (Gtk.Widget widget);
+		public void set_child (Gtk.Widget? child);
 		public void set_clip_overlay (Gtk.Widget widget, bool clip_overlay);
 		public void set_measure_overlay (Gtk.Widget widget, bool measure);
+		public Gtk.Widget child { get; set; }
 		public signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_pad_controller_get_type ()")]
@@ -9504,10 +9520,11 @@ namespace Gtk {
 		public Gdk.Paintable paintable { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
-	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager {
+	public class Popover : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover ();
 		public bool get_autohide ();
+		public unowned Gtk.Widget? get_child ();
 		public bool get_has_arrow ();
 		public bool get_mnemonics_visible ();
 		public bool get_pointing_to (out Gdk.Rectangle rect);
@@ -9515,12 +9532,14 @@ namespace Gtk {
 		public void popdown ();
 		public void popup ();
 		public void set_autohide (bool autohide);
+		public void set_child (Gtk.Widget? child);
 		public void set_default_widget (Gtk.Widget? widget);
 		public void set_has_arrow (bool has_arrow);
 		public void set_mnemonics_visible (bool mnemonics_visible);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public bool autohide { get; set; }
+		public Gtk.Widget child { get; set; }
 		[NoAccessorMethod]
 		public Gtk.Widget default_widget { owned get; set; }
 		public bool has_arrow { get; set; }
@@ -9890,16 +9909,19 @@ namespace Gtk {
 		public Gtk.CellRenderer renderer { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_revealer_get_type ()")]
-	public class Revealer : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class Revealer : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Revealer ();
+		public unowned Gtk.Widget? get_child ();
 		public bool get_child_revealed ();
 		public bool get_reveal_child ();
 		public uint get_transition_duration ();
 		public Gtk.RevealerTransitionType get_transition_type ();
+		public void set_child (Gtk.Widget? child);
 		public void set_reveal_child (bool reveal_child);
 		public void set_transition_duration (uint duration);
 		public void set_transition_type (Gtk.RevealerTransitionType transition);
+		public Gtk.Widget child { get; set; }
 		public bool child_revealed { get; }
 		public bool reveal_child { get; set construct; }
 		public uint transition_duration { get; set construct; }
@@ -9974,10 +9996,11 @@ namespace Gtk {
 		protected ScrollbarAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scrolled_window_get_type ()")]
-	public class ScrolledWindow : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class ScrolledWindow : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ScrolledWindow (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public bool get_capture_button_press ();
+		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public bool get_has_frame ();
 		public unowned Gtk.Widget get_hscrollbar ();
@@ -9994,6 +10017,7 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
 		public void set_capture_button_press (bool capture_button_press);
+		public void set_child (Gtk.Widget? child);
 		public void set_hadjustment (Gtk.Adjustment? hadjustment);
 		public void set_has_frame (bool has_frame);
 		public void set_kinetic_scrolling (bool kinetic_scrolling);
@@ -10008,6 +10032,7 @@ namespace Gtk {
 		public void set_propagate_natural_width (bool propagate);
 		public void set_vadjustment (Gtk.Adjustment? vadjustment);
 		public void unset_placement ();
+		public Gtk.Widget child { get; set; }
 		public Gtk.Adjustment hadjustment { get; set construct; }
 		public bool has_frame { get; set; }
 		[NoAccessorMethod]
@@ -10031,21 +10056,24 @@ namespace Gtk {
 		public signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_scrolled_window_accessible_get_type ()")]
-	public class ScrolledWindowAccessible : Gtk.ContainerAccessible, Atk.Component {
+	public class ScrolledWindowAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected ScrolledWindowAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_search_bar_get_type ()")]
-	public class SearchBar : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class SearchBar : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchBar ();
 		public void connect_entry (Gtk.Editable entry);
+		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Widget get_key_capture_widget ();
 		public bool get_search_mode ();
 		public bool get_show_close_button ();
+		public void set_child (Gtk.Widget? child);
 		public void set_key_capture_widget (Gtk.Widget? widget);
 		public void set_search_mode (bool search_mode);
 		public void set_show_close_button (bool visible);
+		public Gtk.Widget child { get; set construct; }
 		[NoAccessorMethod]
 		public bool search_mode_enabled { get; set; }
 		public bool show_close_button { get; set construct; }
@@ -10604,7 +10632,6 @@ namespace Gtk {
 		public int get_scale ();
 		public Gtk.StateFlags get_state ();
 		public bool has_class (string class_name);
-		public GLib.List<weak string> list_classes ();
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public void remove_class (string class_name);
 		public void remove_provider (Gtk.StyleProvider provider);
@@ -10854,7 +10881,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TextChildAnchor ();
 		public bool get_deleted ();
-		public GLib.List<weak Gtk.Widget> get_widgets ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public (unowned Gtk.Widget)[] get_widgets ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_mark_get_type ()")]
 	public class TextMark : GLib.Object {
@@ -11631,11 +11659,14 @@ namespace Gtk {
 		public Gtk.MediaStream media_stream { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_viewport_get_type ()")]
-	public class Viewport : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Scrollable {
+	public class Viewport : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
+		public unowned Gtk.Widget? get_child ();
 		public bool get_scroll_to_focus ();
+		public void set_child (Gtk.Widget? child);
 		public void set_scroll_to_focus (bool scroll_to_focus);
+		public Gtk.Widget child { get; set; }
 		public bool scroll_to_focus { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_volume_button_get_type ()")]
@@ -11829,6 +11860,8 @@ namespace Gtk {
 		public void set_vexpand_set (bool @set);
 		public void set_visible (bool visible);
 		public bool should_layout ();
+		[NoWrapper]
+		public virtual void size_allocate (int width, int height, int baseline);
 		[CCode (cname = "gtk_widget_size_allocate")]
 		public void size_allocate_emit (Gtk.Allocation allocation, int baseline);
 		[NoWrapper]
@@ -11881,7 +11914,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int width_request { get; set; }
 		[HasEmitter]
-		public virtual signal void destroy ();
+		public signal void destroy ();
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
 		public virtual signal void grab_notify (bool was_grabbed);
 		[HasEmitter]
@@ -11898,7 +11931,6 @@ namespace Gtk {
 		public virtual signal void realize ();
 		[HasEmitter]
 		public virtual signal void show ();
-		public virtual signal void size_allocate (int width, int height, int baseline);
 		public virtual signal void state_flags_changed (Gtk.StateFlags previous_state_flags);
 		[HasEmitter]
 		public virtual signal void unmap ();
@@ -11921,13 +11953,14 @@ namespace Gtk {
 		public Gtk.Widget widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_get_type ()")]
-	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
+	public class Window : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Window ();
 		public void close ();
 		public void fullscreen ();
 		public void fullscreen_on_monitor (Gdk.Monitor monitor);
 		public unowned Gtk.Application? get_application ();
+		public unowned Gtk.Widget? get_child ();
 		public bool get_decorated ();
 		public static unowned string get_default_icon_name ();
 		public void get_default_size (out int width, out int height);
@@ -11956,6 +11989,7 @@ namespace Gtk {
 		public void resize (int width, int height);
 		public void set_application (Gtk.Application? application);
 		public static void set_auto_startup_notification (bool setting);
+		public void set_child (Gtk.Widget? child);
 		public void set_decorated (bool setting);
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
@@ -11980,6 +12014,7 @@ namespace Gtk {
 		public void unmaximize ();
 		public void unminimize ();
 		public Gtk.Application application { get; set; }
+		public Gtk.Widget child { get; set; }
 		public bool decorated { get; set; }
 		[NoAccessorMethod]
 		public int default_height { get; set; }
@@ -12012,7 +12047,7 @@ namespace Gtk {
 		public virtual signal void keys_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_window_accessible_get_type ()")]
-	public class WindowAccessible : Gtk.ContainerAccessible, Atk.Component, Atk.Window {
+	public class WindowAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Window {
 		[CCode (has_construct_function = false)]
 		protected WindowAccessible ();
 	}
