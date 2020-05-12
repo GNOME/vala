@@ -1783,6 +1783,26 @@ namespace GLib {
 	}
 
 	[Version (since = "2.4")]
+	namespace AtomicUint {
+		[CCode (cname = "g_atomic_int_get")]
+		public static uint get ([CCode (type = "volatile guint *")] ref uint atomic);
+		[CCode (cname = "g_atomic_int_set")]
+		public static void set ([CCode (type = "volatile guint *")] ref uint atomic, uint newval);
+		[Version (since = "2.30")]
+		[CCode (cname = "g_atomic_int_add")]
+		public static uint add ([CCode (type = "volatile guint *")] ref uint atomic, uint val);
+		[Version (deprecated_since = "2.30", replacement = "add")]
+		[CCode (cname = "g_atomic_int_exchange_and_add")]
+		public static uint exchange_and_add ([CCode (type = "volatile guint *")] ref uint atomic, uint val);
+		[CCode (cname = "g_atomic_int_compare_and_exchange")]
+		public static bool compare_and_exchange ([CCode (type = "volatile guint *")] ref uint atomic, uint oldval, uint newval);
+		[CCode (cname = "g_atomic_int_inc")]
+		public static void inc ([CCode (type = "volatile guint *")] ref uint atomic);
+		[CCode (cname = "g_atomic_int_dec_and_test")]
+		public static bool dec_and_test ([CCode (type = "volatile guint *")] ref uint atomic);
+	}
+
+	[Version (since = "2.4")]
 	namespace AtomicPointer {
 		public static void* get ([CCode (type = "volatile gpointer *")] void** atomic);
 		public static void set ([CCode (type = "volatile gpointer *")] void** atomic, void* newval);
