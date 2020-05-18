@@ -355,6 +355,7 @@ TESTS = \
 	objects/class_only.vala \
 	objects/class-destroysinstance.vala \
 	objects/class-inner-types.vala \
+	objects/class-new-no-override.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \
 	objects/classes-interfaces-virtuals.vala \

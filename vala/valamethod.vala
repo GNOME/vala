@@ -687,7 +687,7 @@ public class Vala.Method : Subroutine, Callable {
 			_base_interface_method = base_match;
 			copy_attribute_double (base_match, "CCode", "instance_pos");
 			return;
-		} else if (invalid_base_match != null) {
+		} else if (!hides && invalid_base_match != null) {
 			error = true;
 			var base_method_type = new MethodType (invalid_base_match);
 			Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_error));
