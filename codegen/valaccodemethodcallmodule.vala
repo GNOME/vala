@@ -484,7 +484,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 
-			arg_pos = get_param_pos (param != null ? get_ccode_pos (param) : i, ellipsis);
+			arg_pos = get_param_pos (param != null && !ellipsis ? get_ccode_pos (param) : i, ellipsis);
 			carg_map.set (arg_pos, cexpr);
 
 			if (arg is NamedArgument && ellipsis) {
