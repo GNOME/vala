@@ -41,6 +41,7 @@ public class Vala.GirParser : CodeVisitor {
 	enum ArgumentType {
 		SKIP,
 		HIDDEN,
+		NEW,
 		TYPE,
 		TYPE_ARGUMENTS,
 		CHEADER_FILENAME,
@@ -3239,6 +3240,9 @@ public class Vala.GirParser : CodeVisitor {
 			if (metadata.has_argument (ArgumentType.FLOATING)) {
 				m.returns_floating_reference = metadata.get_bool (ArgumentType.FLOATING);
 				m.return_type.value_owned = true;
+			}
+			if (metadata.has_argument (ArgumentType.NEW)) {
+				m.hides = metadata.get_bool (ArgumentType.NEW);
 			}
 		}
 
