@@ -11,14 +11,6 @@ namespace Gtk {
 		public static unowned BindingSet @new (string name);
 	}
 
-	[CCode (type_id = "gtk_container_accessible_get_type ()")]
-	public class ContainerAccessible : Gtk.WidgetAccessible {
-		[NoWrapper]
-		public virtual int add_gtk (Gtk.Widget widget, void* data);
-		[NoWrapper]
-		public virtual int remove_gtk (Gtk.Widget widget, void* data);
-	}
-
 	[CCode (cheader_filename = "gtk/gtk.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
 	public struct RecentData {
 	}

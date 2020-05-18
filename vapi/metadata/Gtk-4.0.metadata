@@ -203,6 +203,8 @@ Constraint
   .new_constant name="const"
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
+InfoBar
+  .add_child new
 Notebook
   .insert_page_menu skip
 TreeView
