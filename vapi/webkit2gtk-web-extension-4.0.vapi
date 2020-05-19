@@ -4243,6 +4243,7 @@ namespace WebKit {
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
 		INSERT_EMOJI,
+		PASTE_AS_PLAIN_TEXT,
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_FORM_SUBMISSION_WILL_", type_id = "webkit_form_submission_step_get_type ()")]
