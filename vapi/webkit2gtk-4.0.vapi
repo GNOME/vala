@@ -1129,6 +1129,8 @@ namespace WebKit {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
+		[Version (since = "2.30")]
+		public bool get_use_system_appearance_for_scrollbars ();
 		[Version (deprecated = true, deprecated_since = "2.26", since = "2.10")]
 		public uint get_web_process_count_limit ();
 		[Version (since = "2.10")]
@@ -1161,6 +1163,8 @@ namespace WebKit {
 		public void set_spell_checking_enabled (bool enabled);
 		public void set_spell_checking_languages ([CCode (array_length = false, array_null_terminated = true)] string[] languages);
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
+		[Version (since = "2.30")]
+		public void set_use_system_appearance_for_scrollbars (bool enabled);
 		public void set_web_extensions_directory (string directory);
 		[Version (since = "2.4")]
 		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
@@ -1175,6 +1179,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.28")]
 		public bool process_swap_on_cross_site_navigation_enabled { get; construct; }
+		[Version (since = "2.30")]
+		public bool use_system_appearance_for_scrollbars { get; set construct; }
 		[Version (since = "2.10")]
 		public WebKit.WebsiteDataManager website_data_manager { get; construct; }
 		[Version (since = "2.18")]
@@ -1569,6 +1575,7 @@ namespace WebKit {
 		DOWNLOAD_VIDEO_TO_DISK,
 		DOWNLOAD_AUDIO_TO_DISK,
 		INSERT_EMOJI,
+		PASTE_AS_PLAIN_TEXT,
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_COOKIE_POLICY_ACCEPT_", type_id = "webkit_cookie_accept_policy_get_type ()")]
