@@ -211,6 +211,7 @@ namespace Gst {
 			public void free ();
 			public Gst.RTSP.Result get_port (out uint16 port);
 			public string get_request_uri ();
+			[Version (since = "1.18")]
 			public string get_request_uri_with_control (string control_path);
 			public Gst.RTSP.Result set_port (uint16 port);
 		}

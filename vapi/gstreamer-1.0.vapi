@@ -1403,6 +1403,8 @@ namespace Gst {
 		public uint32 get_seqnum ();
 		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
+		[Version (since = "1.18")]
+		public bool has_name_id (GLib.Quark name);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.18")]
 		public Event.instant_rate_change (double rate_multiplier, Gst.SegmentFlags new_flags);

@@ -199,6 +199,8 @@ namespace Gst {
 			public Gst.Clock? get_clock ();
 			[Version (since = "1.16")]
 			public bool get_do_retransmission ();
+			[Version (since = "1.18")]
+			public int get_dscp_qos ();
 			public Gst.Element get_element ();
 			public uint get_latency ();
 			[Version (since = "1.16")]
@@ -213,7 +215,7 @@ namespace Gst {
 			[Version (since = "1.18")]
 			public bool get_rate_control ();
 			[Version (since = "1.18")]
-			public bool get_rates (double rate, double applied_rate);
+			public bool get_rates (out double rate, out double applied_rate);
 			public Gst.ClockTime get_retransmission_time ();
 			public Gst.RTSPServer.MediaStatus get_status ();
 			public unowned Gst.RTSPServer.Stream? get_stream (uint idx);
@@ -256,6 +258,8 @@ namespace Gst {
 			public void set_clock (Gst.Clock? clock);
 			[Version (since = "1.16")]
 			public void set_do_retransmission (bool do_retransmission);
+			[Version (since = "1.18")]
+			public void set_dscp_qos (int dscp_qos);
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
 			[Version (since = "1.16")]
@@ -290,6 +294,7 @@ namespace Gst {
 			public bool bind_mcast_address { get; set; }
 			public uint buffer_size { get; set; }
 			public Gst.Clock clock { owned get; set; }
+			public int dscp_qos { get; set; }
 			public Gst.Element element { owned get; construct; }
 			[NoAccessorMethod]
 			public bool eos_shutdown { get; set; }
@@ -338,6 +343,8 @@ namespace Gst {
 			public Gst.Clock get_clock ();
 			[Version (since = "1.16")]
 			public bool get_do_retransmission ();
+			[Version (since = "1.18")]
+			public int get_dscp_qos ();
 			public uint get_latency ();
 			public string? get_launch ();
 			[Version (since = "1.16")]
@@ -366,6 +373,8 @@ namespace Gst {
 			public void set_clock (Gst.Clock? clock);
 			[Version (since = "1.16")]
 			public void set_do_retransmission (bool do_retransmission);
+			[Version (since = "1.18")]
+			public void set_dscp_qos (int dscp_qos);
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
 			public void set_launch (string launch);
@@ -388,6 +397,7 @@ namespace Gst {
 			public bool bind_mcast_address { get; set; }
 			public uint buffer_size { get; set; }
 			public Gst.Clock clock { owned get; set; }
+			public int dscp_qos { get; set; }
 			[NoAccessorMethod]
 			public bool eos_shutdown { get; set; }
 			public uint latency { get; set; }
@@ -633,7 +643,7 @@ namespace Gst {
 			[Version (since = "1.18")]
 			public bool get_rate_control ();
 			[Version (since = "1.18")]
-			public bool get_rates (double? rate, double? applied_rate);
+			public bool get_rates (out double rate, out double applied_rate);
 			public uint get_retransmission_pt ();
 			public Gst.ClockTime get_retransmission_time ();
 			[Version (since = "1.14")]
@@ -750,6 +760,8 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public void set_list_callbacks (Gst.RTSPServer.SendListFunc send_rtp_list, owned Gst.RTSPServer.SendListFunc send_rtcp_list);
 			public void set_message_sent (owned Gst.RTSPServer.MessageSentFunc message_sent);
+			[Version (since = "1.18")]
+			public void set_message_sent_full (owned Gst.RTSPServer.MessageSentFuncFull message_sent);
 			public void set_timed_out (bool timedout);
 			public void set_transport (owned Gst.RTSP.Transport tr);
 			public void set_url (Gst.RTSP.Url? url);
@@ -909,8 +921,11 @@ namespace Gst {
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]
 		public delegate void KeepAliveFunc ();
-		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 1.9)]
-		public delegate void MessageSentFunc (Gst.RTSPServer.StreamTransport trans);
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFunc", instance_pos = 0.9)]
+		public delegate void MessageSentFunc ();
+		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPMessageSentFuncFull", instance_pos = 1.9)]
+		[Version (since = "1.18")]
+		public delegate void MessageSentFuncFull (Gst.RTSPServer.StreamTransport trans);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendFunc", instance_pos = 2.9)]
 		public delegate bool SendFunc (Gst.Buffer buffer, uint8 channel);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPSendListFunc", instance_pos = 2.9)]

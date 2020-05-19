@@ -865,6 +865,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_AFD_SPEC_", type_id = "gst_video_afd_spec_get_type ()")]
 		[GIR (name = "VideoAFDSpec")]
+		[Version (since = "1.18")]
 		public enum AFDSpec {
 			DVB_ETSI,
 			ATSC_A53,

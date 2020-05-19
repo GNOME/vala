@@ -100,6 +100,7 @@ namespace GES {
 		public virtual GLib.List<weak GES.TrackElement> create_track_elements (GES.TrackType type);
 		public GES.TrackElement? find_track_element (GES.Track? track, GLib.Type type);
 		public GLib.List<GES.TrackElement> find_track_elements (GES.Track? track, GES.TrackType track_type, GLib.Type type);
+		public Gst.ClockTime get_duration_limit ();
 		public GES.Layer? get_layer ();
 		public GES.TrackType get_supported_formats ();
 		public Gst.ClockTime get_timeline_time_from_source_frame (GES.FrameNumber frame_number) throws GLib.Error;
@@ -111,6 +112,7 @@ namespace GES {
 		public bool set_top_effect_index (GES.BaseEffect effect, uint newindex);
 		public bool set_top_effect_priority (GES.BaseEffect effect, uint newpriority);
 		public unowned GES.Clip? split (uint64 position);
+		public uint64 duration_limit { get; }
 		public GES.Layer layer { owned get; }
 		public GES.TrackType supported_formats { get; set construct; }
 	}
@@ -347,7 +349,7 @@ namespace GES {
 		[NoWrapper]
 		public virtual bool loading_error (GLib.Error error, string id, GLib.Type extractable_type);
 		public bool remove_asset (GES.Asset asset);
-		public bool save (GES.Timeline timeline, string uri, GES.Asset? formatter_asset, bool overwrite) throws GLib.Error;
+		public bool save (GES.Timeline timeline, string uri, owned GES.Asset? formatter_asset, bool overwrite) throws GLib.Error;
 		public string uri { owned get; construct; }
 		public virtual signal void asset_added (GES.Asset asset);
 		[Version (since = "1.8")]
@@ -698,6 +700,7 @@ namespace GES {
 		public unowned GES.Track? get_track ();
 		public GES.TrackType get_track_type ();
 		public bool is_active ();
+		public bool is_core ();
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
 		[Version (deprecated = true)]
 		public GLib.ParamSpec[] list_children_properties ();
@@ -936,7 +939,8 @@ namespace GES {
 		TRIM,
 		[CCode (cname = "GES_EDIT_MODE_SLIDE")]
 		EDIT_SLIDE,
-		SLIDE
+		SLIDE;
+		public unowned string name ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_ERROR_", has_type_id = false)]
 	public enum Error {
