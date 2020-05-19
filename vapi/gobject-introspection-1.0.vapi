@@ -144,7 +144,7 @@ namespace GI {
 		public int get_n_properties ();
 		public int get_n_signals ();
 		public int get_n_vfuncs ();
-		public GI.ObjectInfo get_parent ();
+		public GI.ObjectInfo? get_parent ();
 		public GI.PropertyInfo get_property (int n);
 		public unowned string get_ref_function ();
 		public unowned GI.ObjectInfoRefFunction get_ref_function_pointer ();
@@ -196,7 +196,7 @@ namespace GI {
 		public void get_object_gtype_interfaces (GLib.Type gtype, [CCode (array_length_cname = "n_interfaces_out", array_length_pos = 1.5, array_length_type = "guint")] out unowned GI.InterfaceInfo[] interfaces_out);
 		public static GLib.OptionGroup get_option_group ();
 		public static unowned GLib.SList<string> get_search_path ();
-		public unowned string get_shared_library (string namespace_);
+		public unowned string? get_shared_library (string namespace_);
 		public unowned string get_typelib_path (string namespace_);
 		public unowned string get_version (string namespace_);
 		public bool is_registered (string namespace_, string? version);
@@ -231,12 +231,18 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", lower_case_csuffix = "type_info", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class TypeInfo : GI.BaseInfo {
+		[Version (since = "1.66")]
+		public void argument_from_hash_pointer (void* hash_pointer, GI.Argument arg);
 		public int get_array_fixed_size ();
 		public int get_array_length ();
 		public GI.ArrayType get_array_type ();
 		public GI.BaseInfo get_interface ();
 		public GI.TypeInfo get_param_type (int n);
+		[Version (since = "1.66")]
+		public GI.TypeTag get_storage_type ();
 		public GI.TypeTag get_tag ();
+		[Version (since = "1.66")]
+		public void* hash_pointer_from_argument (GI.Argument arg);
 		public bool is_pointer ();
 		public bool is_zero_terminated ();
 	}

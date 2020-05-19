@@ -3302,8 +3302,8 @@ namespace GLib {
 		public static GLib.List<GLib.AppInfo> get_all_for_type (string content_type);
 		[NoWrapper]
 		public abstract unowned string get_commandline ();
-		public static GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
-		public static GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
+		public static GLib.AppInfo? get_default_for_type (string content_type, bool must_support_uris);
+		public static GLib.AppInfo? get_default_for_uri_scheme (string uri_scheme);
 		public abstract unowned string get_description ();
 		[Version (since = "2.24")]
 		public abstract unowned string get_display_name ();
@@ -4117,7 +4117,8 @@ namespace GLib {
 		FREEBSD_CMSGCRED,
 		OPENBSD_SOCKPEERCRED,
 		SOLARIS_UCRED,
-		NETBSD_UNPCBID
+		NETBSD_UNPCBID,
+		APPLE_XUCRED
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
