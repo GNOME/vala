@@ -143,6 +143,12 @@ namespace GirTest {
 		VALUE3
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	public enum EnumTest2 {
+		VALUE1,
+		VALUE2,
+		VALUE3
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	[Flags]
 	public enum FlagsTest {
 		VALUE1,

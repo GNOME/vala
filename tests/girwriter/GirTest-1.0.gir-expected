@@ -26,6 +26,11 @@
 	<enumeration name="SkippedFlags" c:type="GirTestSkippedFlags" glib:type-name="GirTestSkippedFlags" glib:get-type="gir_test_skipped_flags_get_type" introspectable="0">
 		<member name="value1" c:identifier="GIR_TEST_SKIPPED_FLAGS_VALUE1" value="0"/>
 	</enumeration>
+	<enumeration name="EnumTest2" c:type="GirTestEnumTest2" glib:type-name="GirTestEnumTest2" glib:get-type="gir_test_enum_test2_get_type">
+		<member name="value1" c:identifier="GIR_TEST_ENUM_TEST2_VALUE1" value="GIR_TEST_ENUM_TEST_VALUE3"/>
+		<member name="value2" c:identifier="GIR_TEST_ENUM_TEST2_VALUE2" value="0"/>
+		<member name="value3" c:identifier="GIR_TEST_ENUM_TEST2_VALUE3" value="4711"/>
+	</enumeration>
 	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:error-domain="gir-test-error-test-quark">
 		<member name="failed" c:identifier="GIR_TEST_ERROR_TEST_FAILED" value="0"/>
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>

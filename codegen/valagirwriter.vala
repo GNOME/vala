@@ -823,7 +823,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		var en = (Enum) hierarchy[0];
 		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ev.name.down (), get_ccode_name (ev));
 		if (ev.value != null) {
-			string value = literal_expression_to_value_string (ev.value);
+			string? value = literal_expression_to_value_string (ev.value);
 			buffer.append_printf (" value=\"%s\"", value);
 		} else {
 			if (en.is_flags) {
@@ -884,7 +884,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<member name=\"%s\" c:identifier=\"%s\"", ecode.name.down (), get_ccode_name (ecode));
 		if (ecode.value != null) {
-			string value = literal_expression_to_value_string (ecode.value);
+			string? value = literal_expression_to_value_string (ecode.value);
 			buffer.append_printf (" value=\"%s\"", value);
 		} else {
 			buffer.append_printf (" value=\"%d\"", enum_value++);
@@ -917,7 +917,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		//TODO Add better constant evaluation
 		var initializer = c.value;
-		string value = literal_expression_to_value_string (initializer);
+		string? value = literal_expression_to_value_string (initializer, false);
 
 		write_indent ();
 		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, get_ccode_name (c));
@@ -1657,7 +1657,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		return get_full_gir_name (type_symbol);
 	}
 
-	private string? literal_expression_to_value_string (Expression literal) {
+	private string? literal_expression_to_value_string (Expression literal, bool cvalue_fallback = true) {
 		if (literal is StringLiteral) {
 			var lit = literal as StringLiteral;
 			if (lit != null) {
@@ -1679,6 +1679,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				} else if (unary.inner is IntegerLiteral) {
 					return "-" + ((IntegerLiteral) unary.inner).value;
 				}
+			}
+		} else if (cvalue_fallback) {
+			unowned CCodeExpression? cexpr = get_cvalue (literal);
+			if (cexpr is CCodeConstant) {
+				return ((CCodeConstant) cexpr).name;
 			}
 		}
 		return null;

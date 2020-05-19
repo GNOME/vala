@@ -306,4 +306,10 @@ namespace GirTest {
 		public void method<K> (K[] param) {
 		}
 	}
+
+	public enum EnumTest2 {
+		VALUE1 = EnumTest.VALUE3,
+		VALUE2,
+		VALUE3 = 4711
+	}
 }
