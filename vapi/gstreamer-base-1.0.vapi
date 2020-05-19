@@ -115,6 +115,8 @@ namespace Gst {
 			public uint64 min_upstream_latency { get; set; }
 			[NoAccessorMethod]
 			public uint64 start_time { get; set; }
+			[NoAccessorMethod]
+			public Gst.Base.AggregatorStartTimeSelection start_time_selection { get; set; }
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
 		[GIR (name = "AggregatorPad")]
@@ -889,6 +891,14 @@ namespace Gst {
 			public weak Gst.Segment segment;
 			[CCode (cname = "ABI.abi.dts")]
 			public int64 ABI_abi_dts;
+		}
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorStartTimeSelection", cprefix = "GST_AGGREGATOR_START_TIME_SELECTION_", type_id = "gst_aggregator_start_time_selection_get_type ()")]
+		[GIR (name = "AggregatorStartTimeSelection")]
+		[Version (since = "1.14")]
+		public enum AggregatorStartTimeSelection {
+			ZERO,
+			FIRST,
+			SET
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsStateFlags", cprefix = "GST_COLLECT_PADS_STATE_", has_type_id = false)]
 		[Flags]

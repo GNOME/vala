@@ -974,12 +974,18 @@ namespace Gst {
 		public static GLib.Type audio_format_info_get_type ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_to_string")]
 		public static unowned string audio_format_to_string (Gst.Audio.Format format);
+		[CCode (array_length_pos = 0.1, array_length_type = "guint", cheader_filename = "gst/audio/audio.h", cname = "gst_audio_formats_raw")]
+		[Version (since = "1.18")]
+		public static unowned Gst.Audio.Format[] audio_formats_raw ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_get_channel_reorder_map")]
 		public static bool audio_get_channel_reorder_map ([CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] from, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] Gst.Audio.ChannelPosition[] to, [CCode (array_length_cname = "channels", array_length_pos = 0.5)] int[] reorder_map);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_frame_size")]
 		public static uint audio_iec61937_frame_size (Gst.Audio.RingBufferSpec spec);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_payload")]
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_make_raw_caps")]
+		[Version (since = "1.18")]
+		public static Gst.Caps audio_make_raw_caps ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint")] Gst.Audio.Format[]? formats, Gst.Audio.Layout layout);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_meta_api_get_type")]
 		public static GLib.Type audio_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_meta_get_info")]

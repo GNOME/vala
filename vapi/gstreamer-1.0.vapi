@@ -1403,6 +1403,8 @@ namespace Gst {
 		public uint32 get_seqnum ();
 		public unowned Gst.Structure? get_structure ();
 		public bool has_name (string name);
+		[Version (since = "1.18")]
+		public bool has_name_id (GLib.Quark name);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.18")]
 		public Event.instant_rate_change (double rate_multiplier, Gst.SegmentFlags new_flags);
@@ -1968,6 +1970,10 @@ namespace Gst {
 		[Version (since = "1.14")]
 		public PadTemplate.from_static_pad_template_with_gtype (Gst.StaticPadTemplate pad_template, GLib.Type pad_type);
 		public Gst.Caps get_caps ();
+		[Version (since = "1.18")]
+		public Gst.Caps get_documentation_caps ();
+		[Version (since = "1.18")]
+		public void set_documentation_caps (Gst.Caps caps);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.14")]
 		public PadTemplate.with_gtype (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps, GLib.Type pad_type);
@@ -2110,9 +2116,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Promise ();
 		public void expire ();
-		public unowned Gst.Structure get_reply ();
+		public unowned Gst.Structure? get_reply ();
 		public void interrupt ();
-		public void reply (owned Gst.Structure s);
+		public void reply (owned Gst.Structure? s);
 		public Gst.PromiseResult wait ();
 		[CCode (has_construct_function = false)]
 		public Promise.with_change_func (owned Gst.PromiseChangeFunc func);
@@ -3493,6 +3499,12 @@ namespace Gst {
 		FIXED_CLOCK,
 		LAST
 	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_API_FLAG_IGNORE_ENUM_", type_id = "gst_plugin_api_flags_get_type ()")]
+	[Flags]
+	[Version (since = "1.18")]
+	public enum PluginAPIFlags {
+		MEMBERS
+	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_DEPENDENCY_FLAG_", type_id = "gst_plugin_dependency_flags_get_type ()")]
 	[Flags]
 	public enum PluginDependencyFlags {
@@ -4061,9 +4073,13 @@ namespace Gst {
 	public const Gst.ClockTimeDiff MSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_NSECOND")]
 	public const Gst.ClockTimeDiff NSECOND;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONDITIONALLY_AVAILABLE")]
+	[Version (since = "1.18")]
+	public const int PARAM_CONDITIONALLY_AVAILABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONTROLLABLE")]
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_DOC_SHOW_DEFAULT")]
+	[Version (since = "1.18")]
 	public const int PARAM_DOC_SHOW_DEFAULT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PAUSED")]
 	public const int PARAM_MUTABLE_PAUSED;
@@ -4179,6 +4195,12 @@ namespace Gst {
 	public static GLib.List<Gst.Tracer> tracing_get_active_tracers ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void tracing_register_hook (Gst.Tracer tracer, string detail, [CCode (scope = "async")] GLib.Callback func);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.18")]
+	public static bool type_is_plugin_api (GLib.Type type, out Gst.PluginAPIFlags? flags);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.18")]
+	public static void type_mark_as_plugin_api (GLib.Type type, Gst.PluginAPIFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool update_registry ();
 	[CCode (cheader_filename = "gst/gst.h")]
