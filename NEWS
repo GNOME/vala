@@ -1,3 +1,21 @@
+Vala 0.46.10
+============
+ * Regression and bug fixes:
+  - codegen:
+    + Correctly handle cast-expression of real struct to nullable struct [#991]
+    + Use loop index instead of get_ccode_pos() for ellipsis parameter [#995]
+  - vala:
+    + Allow node_ref being null in SemanticAnalyzer.get_instance_base_type()
+    + SemanticAnalyzer.get_instance_base_type() is not allowed to return null
+    + Use stable hash for methods in HashMap of implicit_implementations [#990]
+      and Use "str_equal" as equal_func for ArrayList<string> instances
+    + Set value_type of undefined member-access to avoid further criticals
+    + Transform cast from floating-type to boxed-type [#991]
+    + Transform cast from integer-type to boxed-type [#992]
+    + Explicit "new" method may be incompatible with a posssible base method
+  - valadoc: Add implicit "Posix" using-directive for POSIX profile
+  - girparser: Add support for boolean "new" argument for methods
+
 Vala 0.46.9
 ===========
  * Regression and bug fixes:
