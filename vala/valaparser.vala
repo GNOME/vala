@@ -845,15 +845,25 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_element_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OPEN_BRACKET);
-		var index_list = parse_expression_list ();
-		Expression? stop = null;
-		if (index_list.size == 1 && accept (TokenType.COLON)) {
-			// slice expression
-			stop = parse_expression ();
+		List<Expression> index_list;
+		bool is_slice_expression = false;
+		if (!accept (TokenType.COLON)) {
+			index_list = parse_expression_list ();
+		} else {
+			is_slice_expression = true;
+			index_list = new ArrayList<Expression> ();
+			index_list.add (new IntegerLiteral ("0"));
+		}
+		Expression stop = new IntegerLiteral ("0");
+		if (is_slice_expression || (index_list.size == 1 && accept (TokenType.COLON))) {
+			is_slice_expression = true;
+			if (current () != TokenType.CLOSE_BRACKET) {
+			    stop = parse_expression ();
+			}
 		}
 		expect (TokenType.CLOSE_BRACKET);
 
-		if (stop == null) {
+		if (!is_slice_expression) {
 			var expr = new ElementAccess (inner, get_src (begin));
 			foreach (Expression index in index_list) {
 				expr.append_index (index);
