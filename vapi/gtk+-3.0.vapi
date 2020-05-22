@@ -1567,7 +1567,7 @@ namespace Gtk {
 		[Version (since = "2.18")]
 		public bool get_sensitive ();
 		[Version (deprecated = true, deprecated_since = "3.0", replacement = "get_preferred_size")]
-		public abstract void get_size (Gtk.Widget widget, Gdk.Rectangle? cell_area, out int x_offset, out int y_offset, out int width, out int height);
+		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle? cell_area, out int x_offset, out int y_offset, out int width, out int height);
 		[Version (since = "3.0")]
 		public Gtk.StateFlags get_state (Gtk.Widget? widget, Gtk.CellRendererState cell_state);
 		[Version (since = "2.18")]
@@ -10760,9 +10760,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_style_provider_get_type ()")]
 	public interface StyleProvider : GLib.Object {
 		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public abstract unowned Gtk.IconFactory? get_icon_factory (Gtk.WidgetPath path);
+		public virtual unowned Gtk.IconFactory? get_icon_factory (Gtk.WidgetPath path);
 		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
-		public abstract Gtk.StyleProperties? get_style (Gtk.WidgetPath path);
+		public virtual Gtk.StyleProperties? get_style (Gtk.WidgetPath path);
 		[Version (since = "3.0")]
 		public abstract bool get_style_property (Gtk.WidgetPath path, Gtk.StateFlags state, GLib.ParamSpec pspec, ref GLib.Value value);
 	}
