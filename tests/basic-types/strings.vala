@@ -33,6 +33,11 @@ void test_string () {
 	assert (t.length == 2);
 	assert (t[0] == 'l');
 	assert (t[1] == 'l');
+
+	t = s[3:];
+	assert (t.length == 2);
+	assert (t[0] == 'l');
+	assert (t[1] == 'o');
 }
 
 void test_string_joinv () {
@@ -70,6 +75,12 @@ void test_string_slice () {
 
 	r = s.slice (-7, -5);
 	assert (r == "my");
+
+	r = s.slice (-7, 0);
+	assert (r == "myworld");
+
+	r = s.slice (5, 0);
+	assert (r == "myworld");
 }
 
 void test_string_splice () {
