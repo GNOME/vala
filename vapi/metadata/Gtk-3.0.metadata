@@ -240,8 +240,10 @@ TreeModel
 
 // Abstract vs. virtual
 CellRenderer
-  .get_size#virtual_method abstract
   .render#virtual_method abstract
+StyleProvider
+  .get_icon_factory#virtual_method virtual
+  .get_style#virtual_method virtual
 TreeModel
   .iter_previous#virtual_method virtual
   .ref_node#virtual_method virtual
