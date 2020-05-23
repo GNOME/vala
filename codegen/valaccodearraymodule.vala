@@ -207,7 +207,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var cstop = get_cvalue (expr.stop);
 
 		var cstartpointer = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, ccontainer, cstart);
-		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
+
+		var cstop_equals_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cstop, new CCodeConstant ("0"));
+		var cstop_or_array_length = new CCodeConditionalExpression (cstop_equals_zero, get_array_length_cexpression (expr.container), cstop);
+		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop_or_array_length, cstart);
 
 		set_cvalue (expr, cstartpointer);
 		append_array_length (expr, splicelen);
