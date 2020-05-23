@@ -38,29 +38,34 @@ void test_integer_array () {
 	assert (c[0] == 23);
 	assert (c[1] == 11);
 
+	int[] d = a[1:];
+	assert (d.length == 2);
+	assert (d[0] == 23);
+	assert (d[1] == 11);
+
 	// in expressions
 	assert (23 in a);
 	assert (!(-1 in a));
 
 	// nullable elements
-	int?[] d = new int?[2];
-	d[0] = 10;
-	d[1] = null;
-	assert (d[0] == 10);
-	assert (d[1] == null);
+	int?[] e = new int?[2];
+	e[0] = 10;
+	e[1] = null;
+	assert (e[0] == 10);
+	assert (e[1] == null);
 
 	// element assignment
-	int[] e = { 13, 47 };
-	e[0] = 96;
-	assert (e[0] == 96);
-	e[0] /= 24;
-	assert (e[0] == 4);
-	e[0] += 2;
-	assert (e[0] == 6);
-	e[0] *= 4;
-	assert (e[0] == 24);
-	e[0] -= 23;
-	assert (e[0] == 1);
+	int[] f = { 13, 47 };
+	f[0] = 96;
+	assert (f[0] == 96);
+	f[0] /= 24;
+	assert (f[0] == 4);
+	f[0] += 2;
+	assert (f[0] == 6);
+	f[0] *= 4;
+	assert (f[0] == 24);
+	f[0] -= 23;
+	assert (f[0] == 1);
 }
 
 void test_string_array () {
