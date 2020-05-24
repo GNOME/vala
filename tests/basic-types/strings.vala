@@ -70,12 +70,6 @@ void test_string_slice () {
 
 	r = s.slice (-7, -5);
 	assert (r == "my");
-
-	r = s.slice (-7, 0);
-	assert (r == "myworld");
-
-	r = s.slice (5, 0);
-	assert (r == "myworld");
 }
 
 void test_string_splice () {
@@ -94,12 +88,6 @@ void test_string_splice () {
 	assert (s == "hellowholewideworld");
 
 	s = s.splice (-14, -5);
-	assert (s == "helloworld");
-
-	s = s.splice (-5, 0, "wide");
-	assert (s == "hellowide");
-
-	s = s.splice (5, 0, "world");
 	assert (s == "helloworld");
 }
 

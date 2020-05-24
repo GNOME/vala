@@ -1484,8 +1484,6 @@ public class string {
 		}
 		if (end < 0) {
 			end = string_length + end;
-		} else if (end == 0) {
-			end = string_length;
 		}
 		GLib.return_val_if_fail (start >= 0 && start <= string_length, null);
 		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
@@ -1500,8 +1498,6 @@ public class string {
 		}
 		if (end < 0) {
 			end = string_length + end;
-		} else if (end == 0) {
-			end = string_length;
 		}
 		GLib.return_val_if_fail (start >= 0 && start <= string_length, null);
 		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
