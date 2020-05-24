@@ -509,11 +509,19 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			gnew.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 
 			CCodeExpression length_expr = new CCodeIdentifier ("length");
+			CCodeBinaryOperator length_check_op;
 			// add extra item to have array NULL-terminated for all reference types
 			if (array_type.element_type.data_type != null && array_type.element_type.data_type.is_reference_type ()) {
 				length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, length_expr, new CCodeConstant ("1"));
+				length_check_op = CCodeBinaryOperator.GREATER_THAN_OR_EQUAL;
+			} else {
+				length_check_op = CCodeBinaryOperator.GREATER_THAN;
 			}
 			gnew.add_argument (length_expr);
+
+			// only attempt to dup if length >=/> 0, this deals with negative lengths and returns NULL
+			var length_check = new CCodeBinaryExpression (length_check_op, new CCodeIdentifier ("length"), new CCodeConstant ("0"));
+			ccode.open_if (length_check);
 
 			ccode.add_declaration (get_ccode_name (array_type), cvardecl);
 			ccode.add_assignment (new CCodeIdentifier ("result"), gnew);
@@ -528,7 +536,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccode.close ();
 
 			ccode.add_return (new CCodeIdentifier ("result"));
+
+			ccode.close ();
+			ccode.add_return (new CCodeIdentifier ("NULL"));
 		} else {
+			// only dup if length > 0, this deals with negative lengths and returns NULL
+			var length_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("length"), new CCodeConstant ("0"));
+			ccode.open_if (length_check);
+
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
 			dup_call.add_argument (new CCodeIdentifier ("self"));
 
@@ -537,6 +552,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("length"), sizeof_call));
 
 			ccode.add_return (dup_call);
+
+			ccode.close ();
+			ccode.add_return (new CCodeIdentifier ("NULL"));
 		}
 
 		// append to file
