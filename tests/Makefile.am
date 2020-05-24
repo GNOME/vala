@@ -79,6 +79,7 @@ TESTS = \
 	arrays/cast-silent-invalid.test \
 	arrays/class-field-length-cname.vala \
 	arrays/constant-element-access.vala \
+	arrays/empty-length-0.vala \
 	arrays/expression-bracket.test \
 	arrays/fixed-length-init0-not-allowed.vala \
 	arrays/field-global-length-cname.vala \
@@ -948,6 +949,7 @@ LINUX_TESTS = \
 
 POSIX_TESTS = \
 	basic-types/arrays.vala \
+	arrays/empty-length-0.vala \
 	structs/struct_only.vala \
 	delegates/delegate_only.vala \
 	enums/enum_only.vala \
