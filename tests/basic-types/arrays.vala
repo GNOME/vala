@@ -38,6 +38,10 @@ void test_integer_array () {
 	assert (c[0] == 23);
 	assert (c[1] == 11);
 
+	int[]? c0 = a[0:0];
+	assert (c0 == null);
+	assert (c0.length == 0);
+
 	// in expressions
 	assert (23 in a);
 	assert (!(-1 in a));
