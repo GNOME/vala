@@ -38,6 +38,22 @@ void test_integer_array () {
 	assert (c[0] == 23);
 	assert (c[1] == 11);
 
+	int[] c1 = a[1:];
+	assert (c1.length == 2);
+	assert (c1[0] == 23);
+	assert (c1[1] == 11);
+
+	int[] c2 = a[:2];
+	assert (c2.length == 2);
+	assert (c2[0] == 42);
+	assert (c2[1] == 23);
+
+	int[] c3 = a[:];
+	assert (c3.length == 3);
+	assert (c3[0] == 42);
+	assert (c3[1] == 23);
+	assert (c3[2] == 11);
+
 	// in expressions
 	assert (23 in a);
 	assert (!(-1 in a));

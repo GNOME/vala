@@ -33,6 +33,19 @@ void test_string () {
 	assert (t.length == 2);
 	assert (t[0] == 'l');
 	assert (t[1] == 'l');
+
+	t = s[-2:];
+	assert (t.length == 2);
+	assert (t[0] == 'l');
+	assert (t[1] == 'o');
+
+	t = s[:2];
+	assert (t.length == 2);
+	assert (t[0] == 'h');
+	assert (t[1] == 'e');
+
+	t = s[:];
+	assert (t == s);
 }
 
 void test_string_joinv () {
