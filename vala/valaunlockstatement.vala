@@ -22,7 +22,9 @@
  */
 
 /**
- * Represents an unlock statement e.g. {{{ unlock (a); }}}.
+ * Represents an unlock statement.
+ *
+ * {{{ unlock (foo); }}}
  */
 public class Vala.UnlockStatement : CodeNode, Statement {
 	/**

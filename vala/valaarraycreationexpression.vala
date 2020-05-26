@@ -25,7 +25,9 @@
 using GLib;
 
 /**
- * Represents an array creation expression e.g. {{{ new int[] {1,2,3} }}}.
+ * Represents an array creation expression.
+ *
+ * {{{ new int[] { 1, 2, 3 } }}}
  */
 public class Vala.ArrayCreationExpression : Expression {
 	/**

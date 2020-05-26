@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents an enum member in the source code.
+ * Represents an enum value member in the source code.
  */
 public class Vala.EnumValue : Constant {
 	/**

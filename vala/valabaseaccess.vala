@@ -22,7 +22,7 @@
 
 
 /**
- * Represents an access to base class members in the source code.
+ * Represents an access to base type member in the source code.
  */
 public class Vala.BaseAccess : Expression {
 	/**

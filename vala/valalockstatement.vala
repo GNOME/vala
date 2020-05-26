@@ -26,11 +26,13 @@
 using GLib;
 
 /**
- * Represents a lock statement e.g. {{{ lock (a); }}} or {{{ lock (a) { f(a); } }}}.
+ * Represents a lock statement.
  *
- * If the statement is empty, the mutex remains locked until a corresponding UnlockStatement
- * occurs. Otherwise it's translated into a try/finally statement which unlocks the mutex
- * after the block is finished.
+ * {{{ lock (foo); }}} or {{{ lock (foo) { ... } }}}
+ *
+ * If the statement is empty, the mutex remains locked until a corresponding
+ * {@link Vala.UnlockStatement} occurs. Otherwise it's translated into a
+ * try/finally statement which unlocks the mutex after the block is finished.
  */
 public class Vala.LockStatement : CodeNode, Statement {
 	/**

@@ -25,7 +25,9 @@
 using GLib;
 
 /**
- * Represents an array access expression e.g. "a[1,2]".
+ * Represents an array access expression.
+ *
+ * {{{ foo[1,2] }}}
  */
 public class Vala.ElementAccess : Expression {
 	/**
