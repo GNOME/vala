@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents an enum member in the source code.
+ * Represents an error value member in the source code.
  */
 public class Vala.ErrorCode : TypeSymbol {
 	/**

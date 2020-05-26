@@ -25,7 +25,9 @@
 using GLib;
 
 /**
- * Represents an array slice expression e.g "a[1:5]".
+ * Represents an array slice expression.
+ *
+ * {{{ foo[1:5] }}}
  */
 public class Vala.SliceExpression : Expression {
 	public Expression container {
