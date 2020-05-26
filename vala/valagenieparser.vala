@@ -963,12 +963,25 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	Expression parse_element_access (SourceLocation begin, Expression inner) throws ParseError {
-		expect (TokenType.OPEN_BRACKET);
-		var index_list = parse_expression_list ();
 		Expression? stop = null;
+		List<Expression> index_list;
+
+		expect (TokenType.OPEN_BRACKET);
+		if (current () == TokenType.COLON) {
+			// slice expression
+			index_list = new ArrayList<Expression> ();
+			index_list.add (new IntegerLiteral ("0", get_src (begin)));
+		} else {
+			index_list = parse_expression_list ();
+		}
+
 		if (index_list.size == 1 && accept (TokenType.COLON)) {
 			// slice expression
-			stop = parse_expression ();
+			if (current () == TokenType.CLOSE_BRACKET) {
+				stop = new MemberAccess (inner, "length", get_src (begin));
+			} else {
+				stop = parse_expression ();
+			}
 		}
 		expect (TokenType.CLOSE_BRACKET);
 
