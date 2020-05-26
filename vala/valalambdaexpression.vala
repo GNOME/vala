@@ -23,8 +23,9 @@
 using GLib;
 
 /**
- * Represents a lambda expression in the source code. Lambda expressions are
- * anonymous methods with implicitly typed parameters.
+ * Represents a lambda expression in the source code.
+ *
+ * Lambda expressions are anonymous methods with implicitly typed parameters.
  */
 public class Vala.LambdaExpression : Expression {
 	private static int next_lambda_id = 0;

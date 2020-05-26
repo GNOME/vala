@@ -22,8 +22,9 @@
 
 
 /**
- * Represents a foreach statement in the source code. Foreach statements iterate
- * over the elements of a collection.
+ * Represents a foreach statement in the source code.
+ *
+ * Foreach statements iterate over the elements of a collection.
  */
 public class Vala.ForeachStatement : Block {
 	/**

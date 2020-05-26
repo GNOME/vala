@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents a class declaration in the source code.
+ * Represents an interface declaration in the source code.
  */
 public class Vala.Interface : ObjectTypeSymbol {
 	private List<DataType> prerequisites = new ArrayList<DataType> ();

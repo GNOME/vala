@@ -21,7 +21,9 @@
  */
 
 /**
- * Represents a delete statement e.g. "delete a".
+ * Represents a delete statement.
+ *
+ * {{{ delete foo; }}}
  */
 public class Vala.DeleteStatement : CodeNode, Statement {
 	/**

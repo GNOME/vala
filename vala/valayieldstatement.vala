@@ -27,7 +27,6 @@ public class Vala.YieldStatement : CodeNode, Statement {
 	/**
 	 * Creates a new yield statement.
 	 *
-	 * @param yield_expression the yield expression
 	 * @param source_reference reference to source code
 	 * @return                 newly created yield statement
 	 */
