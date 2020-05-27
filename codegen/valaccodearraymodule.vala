@@ -529,10 +529,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		push_context (new EmitContext ());
 		push_function (function);
 
-		// only attempt to dup if length > 0, this consistently returns NULL
-		var clengthcheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("length"), new CCodeConstant ("0"));
-		ccode.open_if (clengthcheck);
-
 		if (requires_copy (array_type.element_type)) {
 			var cvardecl = new CCodeVariableDeclarator ("result");
 			CCodeFunctionCall gnew;
@@ -602,9 +598,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				ccode.add_return (dup_call);
 			}
 		}
-
-		ccode.close ();
-		ccode.add_return (new CCodeIdentifier ("NULL"));
 
 		// append to file
 
