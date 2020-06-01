@@ -129,13 +129,11 @@ public class Vala.Parser : CodeVisitor {
 
 		switch (type) {
 		case TokenType.CLOSE_BRACE:
-			prev ();
 			report_parse_error (new ParseError.SYNTAX ("following block delimiter %s missing", type.to_string ()));
 			return true;
 		case TokenType.CLOSE_BRACKET:
 		case TokenType.CLOSE_PARENS:
 		case TokenType.SEMICOLON:
-			prev ();
 			report_parse_error (new ParseError.SYNTAX ("following expression/statement delimiter %s missing", type.to_string ()));
 			return true;
 		default:
