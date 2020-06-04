@@ -4964,7 +4964,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			}
 
-			if (m != null && m.parent_symbol is Class) {
+			if (m != null && m.coroutine && m.parent_symbol is Class) {
 				if (get_ccode_finish_instance (m)) {
 					var tmp = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_source_object_");
 					out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), tmp);
