@@ -155,7 +155,7 @@ public class Vala.Namespace : Symbol {
 	 * @param cl a class
 	 */
 	public override void add_class (Class cl) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			cl.access = SymbolAccessibility.INTERNAL;
 		}
@@ -174,7 +174,7 @@ public class Vala.Namespace : Symbol {
 	 * @param iface an interface
 	 */
 	public override void add_interface (Interface iface) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (iface.access == SymbolAccessibility.PRIVATE) {
 			iface.access = SymbolAccessibility.INTERNAL;
 		}
@@ -194,7 +194,7 @@ public class Vala.Namespace : Symbol {
 	 * @param st a struct
 	 */
 	public override void add_struct (Struct st) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (st.access == SymbolAccessibility.PRIVATE) {
 			st.access = SymbolAccessibility.INTERNAL;
 		}
@@ -223,7 +223,7 @@ public class Vala.Namespace : Symbol {
 	 * @param en an enum
 	 */
 	public override void add_enum (Enum en) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (en.access == SymbolAccessibility.PRIVATE) {
 			en.access = SymbolAccessibility.INTERNAL;
 		}
@@ -242,7 +242,7 @@ public class Vala.Namespace : Symbol {
 	 * @param edomain an error domain
 	 */
 	public override void add_error_domain (ErrorDomain edomain) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (edomain.access == SymbolAccessibility.PRIVATE) {
 			edomain.access = SymbolAccessibility.INTERNAL;
 		}
@@ -261,7 +261,7 @@ public class Vala.Namespace : Symbol {
 	 * @param d a delegate
 	 */
 	public override void add_delegate (Delegate d) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (d.access == SymbolAccessibility.PRIVATE) {
 			d.access = SymbolAccessibility.INTERNAL;
 		}
@@ -361,7 +361,7 @@ public class Vala.Namespace : Symbol {
 	 * @param constant a constant
 	 */
 	public override void add_constant (Constant constant) {
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (constant.access == SymbolAccessibility.PRIVATE) {
 			constant.access = SymbolAccessibility.INTERNAL;
 		}
@@ -385,7 +385,7 @@ public class Vala.Namespace : Symbol {
 			f.binding = MemberBinding.STATIC;
 		}
 
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (f.access == SymbolAccessibility.PRIVATE) {
 			f.access = SymbolAccessibility.INTERNAL;
 		}
@@ -419,7 +419,7 @@ public class Vala.Namespace : Symbol {
 			m.binding = MemberBinding.STATIC;
 		}
 
-		// namespaces do not support private memebers
+		// namespaces do not support private members
 		if (m.access == SymbolAccessibility.PRIVATE) {
 			m.access = SymbolAccessibility.INTERNAL;
 		}
