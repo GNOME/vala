@@ -97,6 +97,7 @@ TESTS = \
 	arrays/length-type-include.vala \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
+	arrays/struct-namespaced-initializer.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
