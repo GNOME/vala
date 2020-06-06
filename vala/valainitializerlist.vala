@@ -196,9 +196,17 @@ public class Vala.InitializerList : Expression {
 			var in_array_creation_initializer = parent_node is InitializerList && parent_node.parent_node is ArrayCreationExpression;
 			ObjectCreationExpression? struct_creation = null;
 			if (in_array_creation_initializer) {
-				var ma = new MemberAccess.simple (st.name, source_reference);
+				unowned Symbol? sym = st;
+				var ma = new MemberAccess.simple (sym.name, source_reference);
 				ma.creation_member = true;
-				ma.symbol_reference = st;
+				ma.symbol_reference = sym;
+				MemberAccess inner = ma;
+				while (sym.parent_symbol != null && sym.parent_symbol != context.root) {
+					sym = sym.parent_symbol;
+					var ma_inner = new MemberAccess.simple (sym.name, source_reference);
+					inner.inner = ma_inner;
+					inner = ma_inner;
+				}
 				struct_creation = new ObjectCreationExpression (ma, source_reference);
 				struct_creation.target_type = target_type.copy ();
 				struct_creation.struct_creation = true;

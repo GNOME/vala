@@ -85,6 +85,7 @@ TESTS = \
 	arrays/length-inline-assignment.vala \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
+	arrays/struct-namespaced-initializer.vala \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
 	arrays/slice-no-array.test \
