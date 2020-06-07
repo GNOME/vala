@@ -243,6 +243,8 @@ namespace Gst {
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 			[Version (since = "1.14")]
 			public Gst.ClockTimeDiff get_max_encode_time (Gst.Video.CodecFrame frame);
+			[Version (since = "1.18")]
+			public Gst.ClockTime get_min_force_key_unit_interval ();
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
 			[NoWrapper]
@@ -266,6 +268,8 @@ namespace Gst {
 			public virtual bool set_format (Gst.Video.CodecState state);
 			public void set_headers (owned GLib.List<Gst.Buffer> headers);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
+			[Version (since = "1.18")]
+			public void set_min_force_key_unit_interval (Gst.ClockTime interval);
 			[Version (since = "1.6")]
 			public void set_min_pts (Gst.ClockTime min_pts);
 			public Gst.Video.CodecState set_output_state (owned Gst.Caps caps, Gst.Video.CodecState? reference);
@@ -285,6 +289,8 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[Version (since = "1.18")]
+			public uint64 min_force_key_unit_interval { get; set; }
 			[NoAccessorMethod]
 			public bool qos { get; set; }
 		}
@@ -1765,6 +1771,9 @@ namespace Gst {
 		public static uint32 format_to_fourcc (Gst.Video.Format format);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned string format_to_string (Gst.Video.Format format);
+		[CCode (array_length_pos = 0.1, array_length_type = "guint", cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static unowned Gst.Video.Format[] formats_raw ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type gl_texture_upload_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -1780,6 +1789,12 @@ namespace Gst {
 		public static unowned string interlace_mode_to_string (Gst.Video.InterlaceMode mode);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_is_video_overlay_prepare_window_handle_message")]
 		public static bool is_video_overlay_prepare_window_handle_message (Gst.Message msg);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Caps make_raw_caps ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] Gst.Video.Format[]? formats);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Caps make_raw_caps_with_features ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint")] Gst.Video.Format[]? formats, owned Gst.CapsFeatures? features);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
 		public static bool mastering_display_info_from_string (out Gst.Video.MasteringDisplayInfo minfo, string mastering);

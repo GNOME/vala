@@ -27,6 +27,55 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.WebRTCICETransport transport { owned get; }
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_data_channel", type_id = "gst_webrtc_data_channel_get_type ()")]
+	[Version (since = "1.18")]
+	public abstract class WebRTCDataChannel : GLib.Object {
+		[CCode (array_length = false)]
+		public weak void* _padding[4];
+		public GLib.Mutex @lock;
+		[CCode (has_construct_function = false)]
+		protected WebRTCDataChannel ();
+		[NoAccessorMethod]
+		public uint64 buffered_amount { get; }
+		[NoAccessorMethod]
+		public uint64 buffered_amount_low_threshold { get; set; }
+		[NoAccessorMethod]
+		public int id { get; construct; }
+		[NoAccessorMethod]
+		public string label { owned get; construct; }
+		[NoAccessorMethod]
+		public int max_packet_lifetime { get; construct; }
+		[NoAccessorMethod]
+		public int max_retransmits { get; construct; }
+		[NoAccessorMethod]
+		public bool negotiated { get; construct; }
+		[NoAccessorMethod]
+		public bool ordered { get; construct; }
+		[NoAccessorMethod]
+		public Gst.WebRTCPriorityType priority { get; construct; }
+		[NoAccessorMethod]
+		public string protocol { owned get; construct; }
+		[NoAccessorMethod]
+		public Gst.WebRTCDataChannelState ready_state { get; }
+		[HasEmitter]
+		public virtual signal void close ();
+		[HasEmitter]
+		public signal void on_buffered_amount_low ();
+		[HasEmitter]
+		public signal void on_close ();
+		[HasEmitter]
+		public signal void on_error (GLib.Error error);
+		[HasEmitter]
+		public signal void on_message_data (GLib.Bytes? data);
+		[HasEmitter]
+		public signal void on_message_string (string? str);
+		[HasEmitter]
+		public signal void on_open ();
+		[HasEmitter]
+		public virtual signal void send_data (GLib.Bytes? data);
+		[HasEmitter]
+		public virtual signal void send_string (string? str);
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice_transport", type_id = "gst_webrtc_ice_transport_get_type ()")]
 	public abstract class WebRTCICETransport : Gst.Object {
 		[CCode (array_length = false)]
