@@ -776,6 +776,8 @@ namespace GLib {
 		public void set_instance (void* instance);
 		public void set_int (int v_int);
 		public void set_int64 (int64 v_int64);
+		[Version (since = "2.66")]
+		public void set_interned_string (string? v_string);
 		public void set_long (long v_long);
 		public void set_object (GLib.Object? v_object);
 		public void set_param (GLib.ParamSpec? param);

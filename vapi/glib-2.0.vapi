@@ -4491,24 +4491,48 @@ namespace GLib {
 		public string get_mime_type (string uri) throws BookmarkFileError;
 		public bool get_is_private (string uri) throws BookmarkFileError;
 		public bool get_icon (string uri, out string href, out string mime_type) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_added_date_time")]
 		public time_t get_added (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_added_date_time (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_modified_date_time")]
 		public time_t get_modified (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_modified_date_time (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_visited_date_time")]
 		public time_t get_visited (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_visited_date_time (string uri) throws BookmarkFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_groups (string uri) throws BookmarkFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_applications (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_application_info")]
 		public bool get_app_info (string uri, string name, out string exec, out uint count, out time_t stamp) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public bool get_application_info (string uri, string name, out string exec, out uint count, out unowned DateTime? stamp) throws BookmarkFileError;
 		public void set_title (string uri, string title);
 		public void set_description (string uri, string description);
 		public void set_mime_type (string uri, string mime_type);
 		public void set_is_private (string uri, bool is_private);
 		public void set_icon (string uri, string href, string mime_type);
+		[Version (deprecated_since = "2.66", replacement = "set_added_date_time")]
 		public void set_added (string uri, time_t added);
+		[Version (since = "2.66")]
+		public void set_added_date_time (string uri, DateTime added);
 		public void set_groups (string uri, string[] groups);
+		[Version (deprecated_since = "2.66", replacement = "set_modified_date_time")]
 		public void set_modified (string uri, time_t modified);
+		[Version (since = "2.66")]
+		public void set_modified_date_time (string uri, DateTime modified);
+		[Version (deprecated_since = "2.66", replacement = "set_visited_date_time")]
 		public void set_visited (string uri, time_t visited);
+		[Version (since = "2.66")]
+		public void set_visited_date_time (string uri, DateTime visited);
+		[Version (deprecated_since = "2.66", replacement = "set_application_info")]
 		public bool set_app_info (string uri, string name, string exec, int count, time_t stamp) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public bool set_application_info (string uri, string name, string exec, int count, DateTime? stamp) throws BookmarkFileError;
 		public void add_group (string uri, string group);
 		public void add_application (string uri, string name, string exec);
 		public bool remove_group (string uri, string group) throws BookmarkFileError;
