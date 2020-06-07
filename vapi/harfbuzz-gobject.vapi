@@ -1401,6 +1401,10 @@ namespace HarfBuzz {
 		NANDINAGARI,
 		NYIAKENG_PUACHUE_HMONG,
 		WANCHO,
+		CHORASMIAN,
+		DIVES_AKURU,
+		KHITAN_SMALL_SCRIPT,
+		YEZIDI,
 		INVALID;
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Script from_iso15924_tag (HarfBuzz.Tag tag);
@@ -1625,6 +1629,7 @@ namespace HarfBuzz {
 	[Version (since = "1.0.5")]
 	public static int ft_font_get_load_flags (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "1.0.5")]
 	public static void ft_font_set_funcs (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.0.5")]
@@ -1636,10 +1641,13 @@ namespace HarfBuzz {
 	[Version (since = "0.9.38")]
 	public static HarfBuzz.Blob glib_blob_create (GLib.Bytes gbytes);
 	[CCode (cheader_filename = "hb-gobject.h")]
-	public static HarfBuzz.UnicodeFuncs glib_get_unicode_funcs ();
+	[Version (since = "0.9.38")]
+	public static unowned HarfBuzz.UnicodeFuncs glib_get_unicode_funcs ();
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.38")]
 	public static GLib.UnicodeScript glib_script_from_script (HarfBuzz.Script script);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.38")]
 	public static HarfBuzz.Script glib_script_to_script (GLib.UnicodeScript script);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.5.0")]
