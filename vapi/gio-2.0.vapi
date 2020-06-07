@@ -1206,7 +1206,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public FileAttributeMatcher (string attributes);
 		public bool enumerate_namespace (string ns);
-		public unowned string enumerate_next ();
+		public unowned string? enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
 		public unowned GLib.FileAttributeMatcher @ref ();
@@ -1272,22 +1272,22 @@ namespace GLib {
 		public GLib.FileInfo dup ();
 		public string? get_attribute_as_string (string attribute);
 		public bool get_attribute_boolean (string attribute);
-		public unowned string get_attribute_byte_string (string attribute);
+		public unowned string? get_attribute_byte_string (string attribute);
 		public bool get_attribute_data (string attribute, out GLib.FileAttributeType type, out void* value_pp, out GLib.FileAttributeStatus status);
 		public int32 get_attribute_int32 (string attribute);
 		public int64 get_attribute_int64 (string attribute);
-		public unowned GLib.Object get_attribute_object (string attribute);
+		public unowned GLib.Object? get_attribute_object (string attribute);
 		public GLib.FileAttributeStatus get_attribute_status (string attribute);
-		public unowned string get_attribute_string (string attribute);
+		public unowned string? get_attribute_string (string attribute);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.22")]
-		public unowned string[] get_attribute_stringv (string attribute);
+		public unowned string[]? get_attribute_stringv (string attribute);
 		public GLib.FileAttributeType get_attribute_type (string attribute);
 		public uint32 get_attribute_uint32 (string attribute);
 		public uint64 get_attribute_uint64 (string attribute);
-		public unowned string get_content_type ();
+		public unowned string? get_content_type ();
 		[Version (since = "2.36")]
-		public GLib.DateTime get_deletion_date ();
+		public GLib.DateTime? get_deletion_date ();
 		public unowned string get_display_name ();
 		public unowned string get_edit_name ();
 		public unowned string get_etag ();
@@ -2962,7 +2962,7 @@ namespace GLib {
 		public ThreadedSocketService (int max_threads);
 		[NoAccessorMethod]
 		public int max_threads { get; construct; }
-		public virtual signal bool run (GLib.SocketConnection connection, GLib.Object source_object);
+		public virtual signal bool run (GLib.SocketConnection connection, GLib.Object? source_object);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_certificate_get_type ()")]
 	[Version (since = "2.28")]
