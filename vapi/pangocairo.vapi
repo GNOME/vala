@@ -3,13 +3,11 @@
 [CCode (cprefix = "Pango", gir_namespace = "PangoCairo", gir_version = "1.0", lower_case_cprefix = "pango_")]
 namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_get_type ()")]
-	[GIR (name = "Font")]
 	[Version (since = "1.18")]
 	public interface CairoFont : Pango.Font {
 		public unowned Cairo.ScaledFont? get_scaled_font ();
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_map_get_type ()")]
-	[GIR (name = "FontMap")]
 	[Version (since = "1.10")]
 	public interface CairoFontMap : Pango.FontMap {
 		[Version (deprecated = true, deprecated_since = "1.22", since = "1.10")]

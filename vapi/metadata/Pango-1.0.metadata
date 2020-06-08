@@ -25,8 +25,6 @@ AttrColor
 GlyphString
   .glyphs unowned=false array_length_field="num_glyphs"
   .log_clusters array unowned=false array_length_field="num_glyphs"
-LayoutLine
-  .runs type_arguments="Pango.LayoutRun"
 
 // G-I doesn't support non-GObject, non-GBoxed return values
 AttrIterator
@@ -41,16 +39,6 @@ Coverage
 Font
   .find_shaper skip=false
   .get_coverage skip=false
-
-// Nullability of return values
-AttrIterator
-  .get nullable
-AttrList
-  .filter nullable
-Font
-  .get_font_map nullable
-Layout
-  .get_font_description nullable
 
 // Variadic
 TabArray
