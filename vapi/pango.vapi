@@ -84,6 +84,8 @@ namespace Pango {
 		public AttrList ();
 		public void change (owned Pango.Attribute attr);
 		public Pango.AttrList? copy ();
+		[Version (since = "1.46")]
+		public bool equal (Pango.AttrList other_list);
 		[Version (since = "1.2")]
 		public Pango.AttrList? filter (Pango.AttrFilterFunc func);
 		[Version (since = "1.44")]
@@ -311,7 +313,7 @@ namespace Pango {
 		[CCode (has_construct_function = false)]
 		protected FontFamily ();
 		[Version (since = "1.46")]
-		public virtual unowned Pango.FontFace? get_face (string name);
+		public virtual unowned Pango.FontFace? get_face (string? name);
 		public virtual unowned string get_name ();
 		[Version (since = "1.4")]
 		public virtual bool is_monospace ();
@@ -450,7 +452,7 @@ namespace Pango {
 		public void context_changed ();
 		public Pango.Layout copy ();
 		public Pango.Alignment get_alignment ();
-		public unowned Pango.AttrList get_attributes ();
+		public unowned Pango.AttrList? get_attributes ();
 		[Version (since = "1.4")]
 		public bool get_auto_dir ();
 		[Version (since = "1.22")]

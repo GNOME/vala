@@ -1,12 +1,9 @@
 * name="(.+)/Cairo\\1"
 *#function name="(.+)/cairo_\\1" skip=false
 PangoCairo name="Pango" cprefix="Pango" lower_case_cprefix="pango_"
+* skip=false
+*.* skip=false
 
 // Report upstream
-PangoCairo cheader_filename="pango/pangocairo.h"
-*.* skip=false
-ShapeRendererFunc.data closure=3
 context_get_shape_renderer.context closure=1
-create_* unowned=false
-Font.get_scaled_font unowned
 FontMap.set_default symbol_type="function"
