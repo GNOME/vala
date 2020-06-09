@@ -441,8 +441,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_sink_get_type ()")]
 		[GIR (name = "AudioSink")]
 		public class Sink : Gst.Audio.BaseSink {
+			public class Gst.Audio.SinkClassExtension? extension;
 			[CCode (has_construct_function = false)]
 			protected Sink ();
+			[CCode (vfunc_name = "extension->clear_all")]
 			[NoWrapper]
 			public virtual void clear_all ();
 			[NoWrapper]
@@ -595,6 +597,11 @@ namespace Gst {
 			public int segsize;
 			public int segtotal;
 			public int seglatency;
+		}
+		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
+		[GIR (name = "AudioSinkClassExtension")]
+		public struct SinkClassExtension {
+			public GLib.Callback clear_all;
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_BASE_SINK_DISCONT_REASON_", type_id = "gst_audio_base_sink_discont_reason_get_type ()")]
 		[GIR (name = "AudioBaseSinkDiscontReason")]

@@ -524,7 +524,7 @@ gstreamer-app-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-app-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstApp-1.0.gir
 
 gstreamer-audio-1.0:
-	$(GENVAPI) --library $(srcdir)/gstreamer-audio-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstAudio-1.0.gir
+	$(GENVAPI) --library $(srcdir)/gstreamer-audio-1.0 --pkg gstreamer-base-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GstAudio-1.0-custom.vala $(GIRDIR)/GstAudio-1.0.gir
 
 gstreamer-bad-allocators-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-bad-allocators-1.0 --pkg gstreamer-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstBadAllocators-1.0.gir
