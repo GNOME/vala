@@ -15,3 +15,8 @@ buffer_add_audio_downmix_meta skip=false
 // No way to annotate virtual methods without invokers
 AudioSink.write.data type="uint8[]" array_length_idx=1
 AudioSrc.read.data type="uint8[]" array_length_idx=1
+
+// Keep track of new function pointers
+// https://gitlab.freedesktop.org/gstreamer/gst-plugins-base/issues/716
+AudioSinkClassExtension
+  .clear_all type="GLib.Callback"
