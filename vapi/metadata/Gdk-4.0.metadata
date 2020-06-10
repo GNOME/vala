@@ -8,10 +8,8 @@ events_*#function parent="Gdk.Event" name="events_(.+)"
 
 Cursor	abstract=false
 Device
-        .free_history skip=false
         .get_axis skip=false
         .get_axis_value skip=false
-        .get_history skip=false
         .get_state skip=false
         .get_surface_at_position skip=false
 Event
@@ -43,4 +41,3 @@ Device
 Rectangle.union return_void
 
 DrawingContext skip
-Geometry skip
