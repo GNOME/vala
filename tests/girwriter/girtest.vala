@@ -71,6 +71,11 @@ namespace GirTest {
 		}
 		public virtual async void coroutine_async () {
 		}
+		public virtual void method_valist (int param, va_list vargs) {
+		}
+		[GIR (visible = false)]
+		public virtual async void skipped_coroutine_method (int param) {
+		}
 	}
 
 	[GIR (visible = false)]
@@ -268,6 +273,11 @@ namespace GirTest {
 		public abstract void method_int8_out (out int8 param);
 
 		public abstract void method_throw () throws ErrorTest;
+
+		public abstract void method_valist (int param, va_list vargs);
+
+		[GIR (visible = false)]
+		public abstract async void skipped_coroutine_method (int param);
 	}
 
 	public interface PrerequisiteTest : InterfaceTest {
