@@ -499,25 +499,31 @@ public class Vala.GIRWriter : CodeVisitor {
 						finish_name += "_finish";
 
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\">\n", m.name);
+						buffer.append_printf("<field name=\"%s\"", m.name);
+						write_symbol_attributes (m);
+						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false);
+						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
 
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\">\n", finish_name);
+						buffer.append_printf("<field name=\"%s\"", finish_name);
+						write_symbol_attributes (m);
+						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
+						do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
 					} else {
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\">\n", m.name);
+						buffer.append_printf("<field name=\"%s\"", m.name);
+						write_symbol_attributes (m);
+						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -528,9 +534,11 @@ public class Vala.GIRWriter : CodeVisitor {
 			foreach (Signal sig in cl.get_signals ()) {
 				if (sig.default_handler != null) {
 					write_indent ();
-					buffer.append_printf ("<field name=\"%s\">\n", get_ccode_lower_case_name (sig));
+					buffer.append_printf ("<field name=\"%s\"", get_ccode_lower_case_name (sig));
+					write_symbol_attributes (sig);
+					buffer.append_printf (">\n");
 					indent++;
-					write_signature (sig.default_handler, "callback", false, true);
+					write_signature (sig.default_handler, "callback", false, true, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -670,25 +678,31 @@ public class Vala.GIRWriter : CodeVisitor {
 					finish_name += "_finish";
 
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					buffer.append_printf("<field name=\"%s\"", m.name);
+					write_symbol_attributes (m);
+					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
 
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", finish_name);
+					buffer.append_printf("<field name=\"%s\"", finish_name);
+					write_symbol_attributes (m);
+					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
+					do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
 				} else {
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					buffer.append_printf("<field name=\"%s\"", m.name);
+					write_symbol_attributes (m);
+					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -701,9 +715,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				if (prop.get_accessor != null) {
 					var m = prop.get_accessor.get_method ();
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					buffer.append_printf("<field name=\"%s\"", m.name);
+					write_symbol_attributes (m);
+					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -712,9 +728,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				if (prop.set_accessor != null && prop.set_accessor.writable) {
 					var m = prop.set_accessor.get_method ();
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\">\n", m.name);
+					buffer.append_printf("<field name=\"%s\"", m.name);
+					write_symbol_attributes (m);
+					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -1225,7 +1243,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		return is_visibility (sym);
 	}
 
-	private void write_signature (Method m, string tag_name, bool write_doc, bool instance = false) {
+	private void write_signature (Method m, string tag_name, bool write_doc, bool instance = false, bool write_attributes = true) {
 		var parent = this.hierarchy.get (0);
 		string name;
 		if (m.parent_symbol != parent) {
@@ -1245,14 +1263,14 @@ public class Vala.GIRWriter : CodeVisitor {
 				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
 			}
 			finish_name += "_finish";
-			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, true);
-			do_write_signature (m, tag_name, instance, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false);
+			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, true, write_attributes);
+			do_write_signature (m, tag_name, instance, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, write_attributes);
 		} else {
-			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, true);
+			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, true, write_attributes);
 		}
 	}
 
-	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.Parameter> params, DataType return_type, bool can_fail, bool write_comment) {
+	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.Parameter> params, DataType return_type, bool can_fail, bool write_comment, bool write_attributes = true) {
 		write_indent ();
 		buffer.append_printf ("<%s name=\"%s\"", tag_name, name);
 		if (tag_name == "virtual-method") {
@@ -1266,7 +1284,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (can_fail) {
 			buffer.append_printf (" throws=\"1\"");
 		}
-		write_symbol_attributes (m);
+		if (write_attributes) {
+			write_symbol_attributes (m);
+		}
 		buffer.append_printf (">\n");
 		indent++;
 
