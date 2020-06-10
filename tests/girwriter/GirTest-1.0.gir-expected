@@ -938,6 +938,84 @@
 				<type name="none"/>
 			</return-value>
 		</virtual-method>
+		<method name="method_valist" c:identifier="gir_test_abstract_object_test_method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="skipped_coroutine_method" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 	</class>
 	<record name="AbstractObjectTestClass" c:type="GirTestAbstractObjectTestClass" glib:is-gtype-struct-for="AbstractObjectTest">
 		<field name="parent_class" readable="0" private="1">
@@ -996,6 +1074,60 @@
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_valist" introspectable="0">
+			<callback name="method_valist" c:type="method_valist">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="vargs" transfer-ownership="none">
+						<type name="va_list" c:type="va_list"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method" introspectable="0">
+			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
+				<return-value transfer-ownership="none">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method_finish" introspectable="0">
+			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
 				</parameters>
 			</callback>
@@ -1323,6 +1455,84 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="method_valist" c:identifier="gir_test_interface_test_method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="skipped_coroutine_method" c:identifier="gir_test_interface_test_skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_interface_test_skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<property name="property" writable="1" construct="1">
 			<type name="gint" c:type="gint"/>
 		</property>
@@ -1396,6 +1606,60 @@
 		</field>
 		<field name="coroutine_finish">
 			<callback name="coroutine_finish" c:type="coroutine_finish">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_valist" introspectable="0">
+			<callback name="method_valist" c:type="method_valist">
+				<return-value transfer-ownership="full">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="vargs" transfer-ownership="none">
+						<type name="va_list" c:type="va_list"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method" introspectable="0">
+			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
+				<return-value transfer-ownership="none">
+					<type name="none"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method_finish" introspectable="0">
+			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
 				<return-value transfer-ownership="full">
 					<type name="none"/>
 				</return-value>
