@@ -205,6 +205,9 @@ fi
 AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 AM_CONDITIONAL(ENABLE_VALADOC, test x$enable_valadoc = xyes)
 
+AC_PATH_PROG([G_IR_COMPILER], [g-ir-compiler], :)
+AM_CONDITIONAL(HAVE_G_IR_COMPILER, test "$G_IR_COMPILER" != :)
+
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 
