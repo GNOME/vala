@@ -69,7 +69,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 		this.unref_function_name = Vala.get_ccode_unref_function (data);
 		this.ref_function_name = Vala.get_ccode_ref_function (data);
-		this.finalize_function_name = (data.is_fundamental () ? "%s_finalize".printf (Vala.get_ccode_lower_case_name (data, null)) : null);
+		this.finalize_function_name = (data.is_fundamental () ? "%sfinalize".printf (Vala.get_ccode_lower_case_prefix (data)) : null);
 		this.free_function_name = (data.is_compact ? Vala.get_ccode_free_function (data) : null);
 
 		this.take_value_function_cname = Vala.get_ccode_take_value_function (data);
