@@ -36,7 +36,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 	private string? unref_function_name;
 	private string? ref_function_name;
 	private string? free_function_name;
-	private string? finalize_function_name;
 	private string? param_spec_function_name;
 	private string? type_id;
 	private string? is_class_type_macro_name;
@@ -69,7 +68,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 		this.unref_function_name = Vala.get_ccode_unref_function (data);
 		this.ref_function_name = Vala.get_ccode_ref_function (data);
-		this.finalize_function_name = (data.is_fundamental () ? "%sfinalize".printf (Vala.get_ccode_lower_case_prefix (data)) : null);
 		this.free_function_name = (data.is_compact ? Vala.get_ccode_free_function (data) : null);
 
 		this.take_value_function_cname = Vala.get_ccode_take_value_function (data);
@@ -149,16 +147,6 @@ public class Valadoc.Api.Class : TypeSymbol {
 	 */
 	public string? get_free_function_name () {
 		return free_function_name;
-	}
-
-	/**
-	 * Returns the C function name that finalizes the
-	 * instances of this data type.
-	 *
-	 * @return the name of the C function or null
-	 */
-	public string? get_finalize_function_name () {
-		return finalize_function_name;
 	}
 
 	/**
