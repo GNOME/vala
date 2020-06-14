@@ -297,7 +297,7 @@ public class Valadoc.Drivers.TreeBuilder : Vala.CodeVisitor {
 			return null;
 		}
 
-		return "%s_finalize".printf (Vala.get_ccode_lower_case_name (element, null));
+		return "%sfinalize".printf (Vala.get_ccode_lower_case_prefix (element));
 	}
 
 	private string? get_free_function_name (Vala.Class element) {
