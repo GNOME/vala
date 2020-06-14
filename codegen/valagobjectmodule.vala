@@ -63,14 +63,14 @@ public class Vala.GObjectModule : GTypeModule {
 		if (cl.constructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (get_ccode_lower_case_name (cl, null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%sconstructor".printf (get_ccode_lower_case_prefix (cl))));
 		}
 
 		/* set finalize function */
 		if (cl.get_fields ().size > 0 || cl.destructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (get_ccode_lower_case_name (cl, null))));
+			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%sfinalize".printf (get_ccode_lower_case_prefix (cl))));
 		}
 
 		/* create type, dup_func, and destroy_func properties for generic types */
@@ -482,7 +482,7 @@ public class Vala.GObjectModule : GTypeModule {
 
 			push_context (new EmitContext (c));
 
-			var function = new CCodeFunction ("%s_constructor".printf (get_ccode_lower_case_name (cl, null)), "GObject *");
+			var function = new CCodeFunction ("%sconstructor".printf (get_ccode_lower_case_prefix (cl)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 
 			function.add_parameter (new CCodeParameter ("type", "GType"));
