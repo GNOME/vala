@@ -325,6 +325,10 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		value_type = new ArrayType (element_type, rank, source_reference);
 		((ArrayType) value_type).length_type = length_type.copy ();
+		if (formal_target_type is ArrayType) {
+			((ArrayType) value_type).fixed_length = ((ArrayType) formal_target_type).fixed_length;
+			((ArrayType) value_type).inline_allocated = ((ArrayType) formal_target_type).inline_allocated;
+		}
 		value_type.value_owned = true;
 
 		if (!value_type.check (context)) {
