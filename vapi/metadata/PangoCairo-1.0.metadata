@@ -1,6 +1,9 @@
+* name="(.+)/Cairo\\1"
+*#function name="(.+)/cairo_\\1" skip=false
+PangoCairo name="Pango" cprefix="Pango" lower_case_cprefix="pango_"
 * skip=false
 *.* skip=false
 
 // Report upstream
-cairo_context_get_shape_renderer.context closure=1
-CairoFontMap.set_default symbol_type="function"
+context_get_shape_renderer.context closure=1
+FontMap.set_default symbol_type="function"
