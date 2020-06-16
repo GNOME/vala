@@ -4073,9 +4073,13 @@ namespace Gst {
 	public const Gst.ClockTimeDiff MSECOND;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_NSECOND")]
 	public const Gst.ClockTimeDiff NSECOND;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONDITIONALLY_AVAILABLE")]
+	[Version (since = "1.18")]
+	public const int PARAM_CONDITIONALLY_AVAILABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_CONTROLLABLE")]
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_DOC_SHOW_DEFAULT")]
+	[Version (since = "1.18")]
 	public const int PARAM_DOC_SHOW_DEFAULT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_PARAM_MUTABLE_PAUSED")]
 	public const int PARAM_MUTABLE_PAUSED;

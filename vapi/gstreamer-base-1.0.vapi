@@ -892,15 +892,12 @@ namespace Gst {
 			[CCode (cname = "ABI.abi.dts")]
 			public int64 ABI_abi_dts;
 		}
-		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorStartTimeSelection", cprefix = "", type_id = "gst_aggregator_start_time_selection_get_type ()")]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorStartTimeSelection", cprefix = "GST_AGGREGATOR_START_TIME_SELECTION_", type_id = "gst_aggregator_start_time_selection_get_type ()")]
 		[GIR (name = "AggregatorStartTimeSelection")]
 		[Version (since = "1.14")]
 		public enum AggregatorStartTimeSelection {
-			[CCode (cname = "Start at 0 running time (default)")]
 			ZERO,
-			[CCode (cname = "Start at first observed input running time")]
 			FIRST,
-			[CCode (cname = "Set start time with start-time property")]
 			SET
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPadsStateFlags", cprefix = "GST_COLLECT_PADS_STATE_", has_type_id = false)]
