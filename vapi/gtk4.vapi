@@ -4867,21 +4867,16 @@ namespace Gdk {
 		public unowned Gdk.Device? get_associated_device ();
 		public Gdk.AxisFlags get_axes ();
 		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
-		[CCode (array_length = false, array_null_terminated = true)]
-		public string[]? get_axis_names ();
 		public Gdk.AxisUse get_axis_use (uint index_);
-		public bool get_axis_value ([CCode (array_length = false)] double[] axes, string axis_label, out double value);
 		public bool get_caps_lock_state ();
 		public unowned Gdk.DeviceTool get_device_tool ();
 		public Gdk.DeviceType get_device_type ();
 		public Pango.Direction get_direction ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
-		public bool get_key (uint index_, out uint keyval, out Gdk.ModifierType modifiers);
 		public unowned Gdk.Surface? get_last_event_surface ();
 		public Gdk.ModifierType get_modifier_state ();
 		public int get_n_axes ();
-		public int get_n_keys ();
 		public unowned string get_name ();
 		public bool get_num_lock_state ();
 		public uint get_num_touches ();
@@ -4893,8 +4888,6 @@ namespace Gdk {
 		public unowned Gdk.Surface? get_surface_at_position (out double win_x, out double win_y);
 		public unowned string? get_vendor_id ();
 		public GLib.List<weak Gdk.Device>? list_slave_devices ();
-		public void set_axis_use (uint index_, Gdk.AxisUse use);
-		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
 		public Gdk.Device? associated_device { get; }
 		public Gdk.AxisFlags axes { get; }
 		public bool caps_lock_state { get; }
@@ -5068,6 +5061,8 @@ namespace Gdk {
 		public static bool get_distance (Gdk.Event event1, Gdk.Event event2, out double distance);
 		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public Gdk.TimeCoord[]? get_history ();
 		public Gdk.ModifierType get_modifier_state ();
 		public bool get_pointer_emulated ();
 		public bool get_position (out double x, out double y);
@@ -5214,8 +5209,6 @@ namespace Gdk {
 	public class MotionEvent : Gdk.Event {
 		[CCode (has_construct_function = false)]
 		protected MotionEvent ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public Gdk.TimeCoord[]? get_history ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_pad_event_get_type ()")]
 	public class PadEvent : Gdk.Event {
@@ -5504,8 +5497,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct TimeCoord {
 		public uint32 time;
+		public Gdk.AxisFlags flags;
 		[CCode (array_length = false)]
-		public weak double axes[128];
+		public weak double[] axes;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ANCHOR_", type_id = "gdk_anchor_hints_get_type ()")]
 	[Flags]
@@ -5525,6 +5519,8 @@ namespace Gdk {
 	public enum AxisFlags {
 		X,
 		Y,
+		DELTA_X,
+		DELTA_Y,
 		PRESSURE,
 		XTILT,
 		YTILT,
@@ -5538,6 +5534,8 @@ namespace Gdk {
 		IGNORE,
 		X,
 		Y,
+		DELTA_X,
+		DELTA_Y,
 		PRESSURE,
 		XTILT,
 		YTILT,
@@ -5822,8 +5820,6 @@ namespace Gdk {
 	public const bool EVENT_PROPAGATE;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_EVENT_STOP")]
 	public const bool EVENT_STOP;
-	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MAX_TIMECOORD_AXES")]
-	public const int MAX_TIMECOORD_AXES;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_MODIFIER_MASK")]
 	public const int MODIFIER_MASK;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_PRIORITY_REDRAW")]
@@ -6567,6 +6563,22 @@ namespace Gtk {
 	[Compact]
 	public class BindingSet {
 		public static unowned Gtk.BindingSet @new (string name);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bookmark_list_get_type ()")]
+	public class BookmarkList : GLib.Object, GLib.ListModel {
+		[CCode (has_construct_function = false)]
+		public BookmarkList (string? filename, string? attributes);
+		public unowned string? get_attributes ();
+		public unowned string get_filename ();
+		public int get_io_priority ();
+		public bool is_loading ();
+		public void set_attributes (string? attributes);
+		public void set_io_priority (int io_priority);
+		public string attributes { get; set; }
+		public string filename { get; construct; }
+		public int io_priority { get; set; }
+		[NoAccessorMethod]
+		public bool loading { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_boolean_cell_accessible_get_type ()")]
 	public class BooleanCellAccessible : Gtk.RendererCellAccessible, Atk.Action, Atk.Component, Atk.TableCell {
@@ -7680,6 +7692,15 @@ namespace Gtk {
 		public signal void drag_leave (Gdk.Drop drop);
 		public signal Gdk.DragAction drag_motion (Gdk.Drop drop, double x, double y);
 		public signal bool drop (Gdk.Drop drop, double x, double y);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_editable_label_get_type ()")]
+	public class EditableLabel : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Editable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public EditableLabel (string str);
+		public bool get_editing ();
+		public void start_editing ();
+		public void stop_editing (bool commit);
+		public bool editing { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_emoji_chooser_get_type ()")]
 	public class EmojiChooser : Gtk.Popover, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager {
@@ -10063,10 +10084,10 @@ namespace Gtk {
 	public class PropertySelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
 		[CCode (has_construct_function = false, type = "GListModel*")]
 		public PropertySelection (GLib.ListModel model, string property);
-		[NoAccessorMethod]
-		public GLib.ListModel model { owned get; construct; }
-		[NoAccessorMethod]
-		public string property { owned get; construct; }
+		public unowned GLib.ListModel get_model ();
+		public unowned string get_property ();
+		public GLib.ListModel model { get; construct; }
+		public string property { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_button_get_type ()")]
 	public class RadioButton : Gtk.CheckButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
