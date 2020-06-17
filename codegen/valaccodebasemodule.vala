@@ -2764,7 +2764,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 
-				set_cvalue (list, clist);
+				if (list.parent_node is Constant
+				    || (list.parent_node is Expression && ((Expression) list.parent_node).value_type is ArrayType)) {
+					set_cvalue (list, clist);
+				} else {
+					set_cvalue (list, new CCodeCastExpression (clist, get_ccode_name (list.target_type.type_symbol)));
+				}
 			} else {
 				// used as expression
 				var instance = create_temp_value (list.value_type, true, list);

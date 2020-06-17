@@ -275,6 +275,7 @@ TESTS = \
 	structs/struct-boxed-cast.vala \
 	structs/struct-empty-still.test \
 	structs/struct-initializer-list-in-array.vala \
+	structs/struct-initializer-list-nested.vala \
 	structs/struct-no-gtype.vala \
 	structs/struct-no-gtype-inherit.vala \
 	structs/struct-static-field-initializer.vala \
