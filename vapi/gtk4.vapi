@@ -5713,11 +5713,11 @@ namespace Gdk {
 		NONLINEAR_VIRTUAL,
 		UNKNOWN
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_PAINTABLE_STATIC_", type_id = "gdk_paintable_flags_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_PAINTABLE_", type_id = "gdk_paintable_flags_get_type ()")]
 	[Flags]
 	public enum PaintableFlags {
-		SIZE,
-		CONTENTS
+		STATIC_SIZE,
+		STATIC_CONTENTS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SCROLL_", type_id = "gdk_scroll_direction_get_type ()")]
 	public enum ScrollDirection {
