@@ -244,6 +244,7 @@ TESTS = \
 	structs/struct-base-types.vala \
 	structs/struct-boxed-cast.vala \
 	structs/struct-initializer-list-in-array.vala \
+	structs/struct-initializer-list-nested.vala \
 	structs/structs.vala \
 	structs/constructor-wrong-name.test \
 	structs/gmutex.vala \
