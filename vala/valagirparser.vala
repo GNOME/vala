@@ -2374,7 +2374,12 @@ public class Vala.GirParser : CodeVisitor {
 		sym.external = true;
 		sym.access = SymbolAccessibility.PUBLIC;
 
-		string common_prefix = null;
+		string? common_prefix = null;
+		bool explicit_prefix = false;
+		if (metadata.has_argument (ArgumentType.CPREFIX)) {
+			sym.set_attribute_string ("CCode", "cprefix", metadata.get_string (ArgumentType.CPREFIX));
+			explicit_prefix = true;
+		}
 		bool has_member = false;
 
 		next ();
@@ -2391,9 +2396,10 @@ public class Vala.GirParser : CodeVisitor {
 				has_member = true;
 				if (error_domain) {
 					parse_error_member ();
-					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				} else {
 					parse_enumeration_member ();
+				}
+				if (!explicit_prefix) {
 					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				}
 			} else if (reader.name == "function") {
