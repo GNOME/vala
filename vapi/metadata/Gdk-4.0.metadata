@@ -18,6 +18,9 @@ Event
         ._get_distance skip
 Paintable
         .new_empty name="empty"
+PaintableFlags cprefix="GDK_PAINTABLE_"
+        .size name="STATIC_SIZE"
+        .contents name="STATIC_CONTENTS"
 Surface abstract=false
 Rectangle struct
         .x skip
