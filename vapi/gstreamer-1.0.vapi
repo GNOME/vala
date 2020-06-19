@@ -3788,7 +3788,7 @@ namespace Gst {
 		SINK,
 		SRC
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_CORE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_CORE_ERROR_", type_id = "gst_core_error_get_type ()")]
 	public errordomain CoreError {
 		FAILED,
 		TOO_LAZY,
@@ -3807,7 +3807,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_LIBRARY_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_LIBRARY_ERROR_", type_id = "gst_library_error_get_type ()")]
 	public errordomain LibraryError {
 		FAILED,
 		TOO_LAZY,
@@ -3818,7 +3818,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PARSE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PARSE_ERROR_", type_id = "gst_parse_error_get_type ()")]
 	public errordomain ParseError {
 		SYNTAX,
 		NO_SUCH_ELEMENT,
@@ -3830,14 +3830,14 @@ namespace Gst {
 		DELAYED_LINK;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_PLUGIN_ERROR_", type_id = "gst_plugin_error_get_type ()")]
 	public errordomain PluginError {
 		MODULE,
 		DEPENDENCIES,
 		NAME_MISMATCH;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_RESOURCE_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_RESOURCE_ERROR_", type_id = "gst_resource_error_get_type ()")]
 	public errordomain ResourceError {
 		FAILED,
 		TOO_LAZY,
@@ -3857,7 +3857,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STREAM_ERROR_", type_id = "gst_stream_error_get_type ()")]
 	public errordomain StreamError {
 		FAILED,
 		TOO_LAZY,
@@ -3875,7 +3875,7 @@ namespace Gst {
 		NUM_ERRORS;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_URI_ERROR_")]
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_URI_ERROR_", type_id = "gst_uri_error_get_type ()")]
 	public errordomain URIError {
 		UNSUPPORTED_PROTOCOL,
 		BAD_URI,

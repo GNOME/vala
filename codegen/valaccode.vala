@@ -230,7 +230,7 @@ namespace Vala {
 	}
 
 	public static string get_ccode_type_function (TypeSymbol sym) {
-		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is ErrorDomain || sym is Delegate));
+		assert (!((sym is Class && ((Class) sym).is_compact) || sym is ErrorCode || sym is Delegate));
 		return "%s_get_type".printf (get_ccode_lower_case_name (sym));
 	}
 
@@ -443,7 +443,11 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {
-		return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		if (sym is ErrorDomain && sym.external_package) {
+			return sym.get_attribute_bool ("CCode", "has_type_id", false);
+		} else {
+			return sym.get_attribute_bool ("CCode", "has_type_id", true);
+		}
 	}
 
 	public static bool get_ccode_has_new_function (Method m) {

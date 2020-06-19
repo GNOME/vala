@@ -206,12 +206,12 @@ namespace Rest {
 		PLAINTEXT,
 		HMAC_SHA1
 	}
-	[CCode (cheader_filename = "rest/rest-proxy-call.h", cprefix = "REST_PROXY_CALL_")]
+	[CCode (cheader_filename = "rest/rest-proxy-call.h", cprefix = "REST_PROXY_CALL_", type_id = "rest_proxy_call_error_get_type ()")]
 	public errordomain ProxyCallError {
 		FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "rest/rest-proxy.h", cprefix = "REST_PROXY_ERROR_")]
+	[CCode (cheader_filename = "rest/rest-proxy.h", cprefix = "REST_PROXY_ERROR_", type_id = "rest_proxy_error_get_type ()")]
 	public errordomain ProxyError {
 		CANCELLED,
 		RESOLUTION,

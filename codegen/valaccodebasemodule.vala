@@ -5222,7 +5222,26 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_typeof_expression (TypeofExpression expr) {
 		cfile.add_include ("glib-object.h");
 
-		set_cvalue (expr, get_type_id_expression (expr.type_reference));
+		CCodeExpression type_id_expression;
+		if (expr.type_reference is ErrorType) {
+			unowned ErrorType error_type = expr.type_reference as ErrorType;
+			string type_id;
+			if (error_type.error_domain != null && get_ccode_has_type_id (error_type.error_domain)) {
+				type_id = get_ccode_type_id (error_type);
+				if (type_id == "") {
+					type_id = "G_TYPE_INVALID";
+				} else {
+					generate_type_declaration (error_type, cfile);
+				}
+			} else {
+				type_id = "G_TYPE_ERROR";
+			}
+			type_id_expression = new CCodeIdentifier (type_id);
+		} else {
+			type_id_expression = get_type_id_expression (expr.type_reference);
+		}
+
+		set_cvalue (expr, type_id_expression);
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {

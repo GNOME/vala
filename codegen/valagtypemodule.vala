@@ -2274,6 +2274,18 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
+	public override void visit_error_domain (ErrorDomain edomain) {
+		base.visit_error_domain (edomain);
+
+		if (get_ccode_has_type_id (edomain)) {
+			push_line (edomain.source_reference);
+			var type_fun = new ErrorDomainRegisterFunction (edomain);
+			type_fun.init_from_type (context, false, false);
+			cfile.add_type_member_definition (type_fun.get_definition ());
+			pop_line ();
+		}
+	}
+
 	public override void visit_method_call (MethodCall expr) {
 		var ma = expr.call as MemberAccess;
 		var mtype = expr.call.value_type as MethodType;

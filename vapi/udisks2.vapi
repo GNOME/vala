@@ -901,7 +901,7 @@ namespace UDisks {
 		CREATE_ONLY,
 		SYSTEM
 	}
-	[CCode (cheader_filename = "udisks/udisks.h", cprefix = "UDISKS_ERROR_")]
+	[CCode (cheader_filename = "udisks/udisks.h", cprefix = "UDISKS_ERROR_", type_id = "udisks_error_get_type ()")]
 	public errordomain Error {
 		FAILED,
 		CANCELLED,

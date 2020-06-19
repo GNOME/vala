@@ -65,6 +65,13 @@ namespace GirTest {
 		FISHY = 23
 	}
 
+	[CCode (has_type_id = false)]
+	public errordomain PlainErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY = 23
+	}
+
 	public interface InterfaceTest : Object {
 		public abstract int property { get; construct set; }
 		public virtual void int8_in (int8 param) {

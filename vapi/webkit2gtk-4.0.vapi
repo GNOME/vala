@@ -1771,26 +1771,26 @@ namespace WebKit {
 		HSTS_CACHE,
 		ALL
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_", type_id = "webkit_download_error_get_type ()")]
 	public errordomain DownloadError {
 		NETWORK,
 		CANCELLED_BY_USER,
 		DESTINATION;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_FAVICON_DATABASE_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_FAVICON_DATABASE_ERROR_", type_id = "webkit_favicon_database_error_get_type ()")]
 	public errordomain FaviconDatabaseError {
 		NOT_INITIALIZED,
 		FAVICON_NOT_FOUND,
 		FAVICON_UNKNOWN;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_JAVASCRIPT_ERROR_SCRIPT_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_JAVASCRIPT_ERROR_SCRIPT_", type_id = "webkit_javascript_error_get_type ()")]
 	public errordomain JavascriptError {
 		FAILED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NETWORK_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NETWORK_ERROR_", type_id = "webkit_network_error_get_type ()")]
 	public errordomain NetworkError {
 		FAILED,
 		TRANSPORT,
@@ -1799,7 +1799,7 @@ namespace WebKit {
 		FILE_DOES_NOT_EXIST;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_PLUGIN_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_PLUGIN_ERROR_", type_id = "webkit_plugin_error_get_type ()")]
 	public errordomain PluginError {
 		FAILED,
 		CANNOT_FIND_PLUGIN,
@@ -1809,7 +1809,7 @@ namespace WebKit {
 		WILL_HANDLE_LOAD;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_POLICY_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_POLICY_ERROR_", type_id = "webkit_policy_error_get_type ()")]
 	public errordomain PolicyError {
 		FAILED,
 		CANNOT_SHOW_MIME_TYPE,
@@ -1818,26 +1818,26 @@ namespace WebKit {
 		CANNOT_USE_RESTRICTED_PORT;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_PRINT_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_PRINT_ERROR_", type_id = "webkit_print_error_get_type ()")]
 	public errordomain PrintError {
 		GENERAL,
 		PRINTER_NOT_FOUND,
 		INVALID_PAGE_RANGE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SNAPSHOT_ERROR_FAILED_TO_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SNAPSHOT_ERROR_FAILED_TO_", type_id = "webkit_snapshot_error_get_type ()")]
 	public errordomain SnapshotError {
 		CREATE;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_CONTENT_FILTER_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_CONTENT_FILTER_ERROR_", type_id = "webkit_user_content_filter_error_get_type ()")]
 	[Version (since = "2.24")]
 	public errordomain UserContentFilterError {
 		INVALID_SOURCE,
 		NOT_FOUND;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_MESSAGE_UNHANDLED_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_USER_MESSAGE_UNHANDLED_", type_id = "webkit_user_message_error_get_type ()")]
 	[Version (since = "2.28")]
 	public errordomain UserMessageError {
 		MESSAGE;

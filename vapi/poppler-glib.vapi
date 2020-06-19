@@ -1437,7 +1437,7 @@ namespace Poppler {
 		DISPLAY_DOC_TITLE,
 		DIRECTION_RTL
 	}
-	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ERROR_")]
+	[CCode (cheader_filename = "poppler.h", cprefix = "POPPLER_ERROR_", type_id = "poppler_error_get_type ()")]
 	public errordomain Error {
 		INVALID,
 		ENCRYPTED,

@@ -41,7 +41,7 @@ namespace GtkClutter {
 		public Window ();
 		public unowned Clutter.Actor get_stage ();
 	}
-	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_")]
+	[CCode (cheader_filename = "clutter-gtk/clutter-gtk.h", cprefix = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_", has_type_id = false)]
 	[Version (since = "1.0")]
 	public errordomain TextureError {
 		[CCode (cname = "GTK_CLUTTER_TEXTURE_ERROR_INVALID_STOCK_ID")]
