@@ -2048,8 +2048,17 @@ public class Vala.GirParser : CodeVisitor {
 		return null;
 	}
 
-	Symbol? resolve_symbol (Node parent_scope, UnresolvedSymbol unresolved_sym) {
-		var node = resolve_node (parent_scope, unresolved_sym);
+	/**
+	 * Find the symbol for `unresolved_sym`.
+	 *
+	 * @param parent_scope		the node to search in, and its parents
+	 * @param unresolved_sym	the unresolved symbol
+	 * @param node			the node containing the resolved symbol, if found, or null otherwise
+	 *
+	 * @return			the resolved symbol, or null if not found
+	 */
+	Symbol? resolve_symbol (Node parent_scope, UnresolvedSymbol unresolved_sym, out Node? node = null) {
+		node = resolve_node (parent_scope, unresolved_sym);
 		if (node != null) {
 			return node.symbol;
 		}
@@ -4062,8 +4071,9 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (info.is_async) {
 				var resolved_type = info.param.variable_type;
+				Node? resolved_symbol_node = null;
 				if (resolved_type is UnresolvedType) {
-					var resolved_symbol = resolve_symbol (node.parent, ((UnresolvedType) resolved_type).unresolved_symbol);
+					var resolved_symbol = resolve_symbol (node.parent, ((UnresolvedType) resolved_type).unresolved_symbol, out resolved_symbol_node);
 					if (resolved_symbol is Delegate) {
 						resolved_type = new DelegateType ((Delegate) resolved_symbol);
 					}
@@ -4071,7 +4081,11 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (resolved_type is DelegateType) {
 					var d = ((DelegateType) resolved_type).delegate_symbol;
-					if (!(d.name == "DestroyNotify" && d.parent_symbol.name == "GLib")) {
+					// if we're parsing GLib-2.0.gir, symbol parent-child relationships haven't been setup yet,
+					// so we look at the nodes instead
+					if (!(d.name == "DestroyNotify" && (d.parent_symbol != null && d.parent_symbol.name == "GLib" ||
+									    resolved_symbol_node != null && d == resolved_symbol_node.symbol &&
+									    resolved_symbol_node.parent != null && resolved_symbol_node.parent.name == "G"))) {
 						info.param.set_attribute_string ("CCode", "scope", "async");
 						info.param.variable_type.value_owned = (info.closure_idx != -1 && info.destroy_idx != -1);
 					}
