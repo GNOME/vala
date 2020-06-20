@@ -2194,6 +2194,20 @@ public class Vala.GirParser : CodeVisitor {
 			context.add_source_file (metadata_file);
 			metadata = metadata_parser.parse_metadata (metadata_file);
 			metadata_roots.add (metadata);
+		} else if (Path.get_basename (current_source_file.filename) == "GLib-2.0.gir") {
+			var metadata_parser = new MetadataParser ();
+			var metadata_file = new SourceFile (context, current_source_file.file_type, "GLib-2.0.metadata",
+				"* skip=false\n");
+			context.add_source_file (metadata_file);
+			metadata = metadata_parser.parse_metadata (metadata_file);
+			metadata_roots.add (metadata);
+		} else if (Path.get_basename (current_source_file.filename) == "GObject-2.0.gir") {
+			var metadata_parser = new MetadataParser ();
+			var metadata_file = new SourceFile (context, current_source_file.file_type, "GObject-2.0.metadata",
+				"GObject name=\"GLib\"\n* skip=false\nValue struct\n");
+			context.add_source_file (metadata_file);
+			metadata = metadata_parser.parse_metadata (metadata_file);
+			metadata_roots.add (metadata);
 		}
 
 		var ns_metadata = metadata.match_child (gir_namespace);
