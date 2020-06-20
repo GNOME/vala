@@ -1360,11 +1360,15 @@ public class Vala.GirParser : CodeVisitor {
 		/* Temporarily workaround G-I bug not adding GLib.Object prerequisite:
 		   ensure we have at least one instantiable prerequisite */
 		var glib_ns = context.root.scope.lookup ("GLib") as Namespace;
-		if (glib_ns != null) {
-			var object_type = (Class) glib_ns.scope.lookup ("Object");
-			foreach (var iface in ifaces_needing_object_prereq) {
-				iface.add_prerequisite (new ObjectType (object_type));
-			}
+		var object_symbol = glib_ns != null ? glib_ns.scope.lookup ("Object") as Class : null;
+		DataType object_type;
+		if (object_symbol != null) {
+			object_type = new ObjectType (object_symbol);
+		} else {
+			object_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Object"));
+		}
+		foreach (var iface in ifaces_needing_object_prereq) {
+			iface.add_prerequisite (object_type);
 		}
 
 		foreach (var metadata in metadata_roots) {
