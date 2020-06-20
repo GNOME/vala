@@ -104,8 +104,23 @@ public class Vala.Parser : CodeVisitor {
 		assert (size <= BUFFER_SIZE);
 	}
 
+	inline void safe_prev () {
+		switch (previous ()) {
+		case TokenType.DOT:
+		case TokenType.DOUBLE_COLON:
+			break;
+		default:
+			prev ();
+			break;
+		}
+	}
+
 	inline TokenType current () {
 		return tokens[index].type;
+	}
+
+	inline TokenType previous () {
+		return tokens[(index - 1 + BUFFER_SIZE) % BUFFER_SIZE].type;
 	}
 
 	inline bool accept (TokenType type) {
@@ -129,13 +144,13 @@ public class Vala.Parser : CodeVisitor {
 
 		switch (type) {
 		case TokenType.CLOSE_BRACE:
-			prev ();
+			safe_prev ();
 			report_parse_error (new ParseError.SYNTAX ("following block delimiter %s missing", type.to_string ()));
 			return true;
 		case TokenType.CLOSE_BRACKET:
 		case TokenType.CLOSE_PARENS:
 		case TokenType.SEMICOLON:
-			prev ();
+			safe_prev ();
 			report_parse_error (new ParseError.SYNTAX ("following expression/statement delimiter %s missing", type.to_string ()));
 			return true;
 		default:
@@ -1686,9 +1701,7 @@ public class Vala.Parser : CodeVisitor {
 		try {
 			skip_type ();
 		} catch (ParseError e) {
-			prev ();
-			var token = current ();
-			next ();
+			var token = previous ();
 			if (token == TokenType.DOT || token == TokenType.DOUBLE_COLON) {
 				rollback (begin);
 				return true;
