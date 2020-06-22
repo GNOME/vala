@@ -68,7 +68,7 @@ $(top_srcdir)/.version: gen-version
 	@true
 .PHONY: gen-version
 gen-version:
-	@V=`$(top_srcdir)/build-aux/git-version-gen $(top_srcdir)/.tarball-version` &&			\
+	@V=`$(top_srcdir)/build-aux/git-version-gen --prefix '' $(top_srcdir)/.tarball-version` &&	\
 	if [ -e $(top_srcdir)/.version ] && [ "x`cat $(top_srcdir)/.version`" = "x$$V" ]; then		\
 	  true;												\
 	else												\

@@ -1,5 +1,5 @@
 AC_PREREQ([2.65])
-AC_INIT([vala], m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+AC_INIT([vala], m4_esyscmd([build-aux/git-version-gen --prefix '' .tarball-version]),
 	[https://gitlab.gnome.org/GNOME/vala/issues],
 	[vala],
 	[https://wiki.gnome.org/Projects/Vala])
