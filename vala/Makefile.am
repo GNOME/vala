@@ -209,6 +209,7 @@ vala.vapi vala.vala.stamp: $(libvala_la_VALASOURCES)
 		--use-header \
 		-H vala.h \
 		--library vala \
+		--vapi-comments \
 		$^
 	@touch $@
 
