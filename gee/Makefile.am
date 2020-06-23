@@ -48,6 +48,7 @@ gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
 		--use-header \
 		-H valagee.h \
 		--library gee \
+		--vapi-comments \
 		$^
 	@touch $@
 
