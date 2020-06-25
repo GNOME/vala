@@ -5328,7 +5328,7 @@ namespace GLib {
 		public static Bytes new_with_owner<T> ([CCode (array_length_type = "gsize")] uint8[] data, [CCode (destroy_notify_pos = 1.9)] owned T? owner = null);
 
 		[CCode (array_length_type = "gsize")]
-		public unowned uint8[] get_data ();
+		public unowned uint8[]? get_data ();
 		public size_t get_size ();
 		public uint hash ();
 		public int compare (GLib.Bytes bytes2);
