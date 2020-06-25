@@ -5318,17 +5318,17 @@ namespace GLib {
 	[Version (since = "2.32")]
 	[CCode (cprefix = "g_bytes_", ref_function = "g_bytes_ref", unref_function = "g_bytes_unref", type_id = "G_TYPE_BYTES")]
 	public class Bytes {
-		public Bytes ([CCode (array_length_type = "gsize")] uint8[] data);
-		public Bytes.take ([CCode (array_length_type = "gsize")] owned uint8[] data);
-		public Bytes.static ([CCode (array_length_type = "gsize")] uint8[] data);
-		public Bytes.with_free_func ([CCode (array_length_type = "gsize")] owned uint8[] data, GLib.DestroyNotify? free_func, void* user_data);
+		public Bytes ([CCode (array_length_type = "gsize")] uint8[]? data);
+		public Bytes.take ([CCode (array_length_type = "gsize")] owned uint8[]? data);
+		public Bytes.static ([CCode (array_length_type = "gsize")] uint8[]? data);
+		public Bytes.with_free_func ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.DestroyNotify? free_func, void* user_data);
 		public Bytes.from_bytes (GLib.Bytes bytes, size_t offset, size_t length);
 
 		[CCode (cname = "g_bytes_new_with_free_func", simple_generics = true)]
-		public static Bytes new_with_owner<T> ([CCode (array_length_type = "gsize")] uint8[] data, [CCode (destroy_notify_pos = 1.9)] owned T? owner = null);
+		public static Bytes new_with_owner<T> ([CCode (array_length_type = "gsize")] uint8[]? data, [CCode (destroy_notify_pos = 1.9)] owned T? owner = null);
 
 		[CCode (array_length_type = "gsize")]
-		public unowned uint8[] get_data ();
+		public unowned uint8[]? get_data ();
 		public size_t get_size ();
 		public uint hash ();
 		public int compare (GLib.Bytes bytes2);
@@ -5338,7 +5338,8 @@ namespace GLib {
 
 		[CCode (cname = "_vala_g_bytes_get")]
 		public uint8 get (int index) {
-			unowned uint8[] data = this.get_data ();
+			assert (index >= 0 && index < (int) this.get_size ());
+			unowned uint8[]? data = this.get_data ();
 			return data[index];
 		}
 
