@@ -4874,7 +4874,6 @@ namespace Gdk {
 		public Pango.Direction get_direction ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
-		public unowned Gdk.Surface? get_last_event_surface ();
 		public Gdk.ModifierType get_modifier_state ();
 		public int get_n_axes ();
 		public unowned string get_name ();
@@ -4887,7 +4886,7 @@ namespace Gdk {
 		public void get_state (Gdk.Surface surface, [CCode (array_length = false)] double[]? axes, out Gdk.ModifierType mask);
 		public unowned Gdk.Surface? get_surface_at_position (out double win_x, out double win_y);
 		public unowned string? get_vendor_id ();
-		public GLib.List<weak Gdk.Device>? list_slave_devices ();
+		public GLib.List<weak Gdk.Device>? list_physical_devices ();
 		public Gdk.Device? associated_device { get; }
 		public Gdk.AxisFlags axes { get; }
 		public bool caps_lock_state { get; }
@@ -5066,6 +5065,7 @@ namespace Gdk {
 		public Gdk.ModifierType get_modifier_state ();
 		public bool get_pointer_emulated ();
 		public bool get_position (out double x, out double y);
+		public unowned Gdk.Seat? get_seat ();
 		public unowned Gdk.Device? get_source_device ();
 		public unowned Gdk.Surface get_surface ();
 		public uint32 get_time ();
@@ -5258,9 +5258,8 @@ namespace Gdk {
 		public Gdk.SeatCapabilities get_capabilities ();
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.Device? get_keyboard ();
-		public GLib.List<weak Gdk.Device> get_master_pointers (Gdk.SeatCapabilities capabilities);
+		public GLib.List<weak Gdk.Device> get_physical_devices (Gdk.SeatCapabilities capabilities);
 		public unowned Gdk.Device? get_pointer ();
-		public GLib.List<weak Gdk.Device> get_slaves (Gdk.SeatCapabilities capabilities);
 		public Gdk.Display display { get; construct; }
 		public signal void device_added (Gdk.Device device);
 		public signal void device_removed (Gdk.Device device);
@@ -5292,7 +5291,6 @@ namespace Gdk {
 		public int get_height ();
 		public bool get_mapped ();
 		public int get_scale_factor ();
-		public bool get_support_multidevice ();
 		public int get_width ();
 		public void hide ();
 		public bool is_destroyed ();
@@ -5304,7 +5302,6 @@ namespace Gdk {
 		public void set_input_region (Cairo.Region region);
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_shadow_width (int left, int right, int top, int bottom);
-		public void set_support_multidevice (bool support_multidevice);
 		public void thaw_updates ();
 		[CCode (has_construct_function = false)]
 		public Surface.toplevel (Gdk.Display display, int width, int height);
@@ -5576,8 +5573,8 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_DEVICE_TYPE_", type_id = "gdk_device_type_get_type ()")]
 	public enum DeviceType {
-		MASTER,
-		SLAVE,
+		LOGICAL,
+		PHYSICAL,
 		FLOATING
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ACTION_", type_id = "gdk_drag_action_get_type ()")]
@@ -5662,7 +5659,6 @@ namespace Gdk {
 	public enum InputSource {
 		MOUSE,
 		PEN,
-		ERASER,
 		CURSOR,
 		KEYBOARD,
 		TOUCHSCREEN,
@@ -7637,6 +7633,7 @@ namespace Gtk {
 		public unowned Gtk.ListItemFactory? get_list_factory ();
 		public unowned GLib.ListModel? get_model ();
 		public uint get_selected ();
+		public void* get_selected_item ();
 		public void set_enable_search (bool enable_search);
 		public void set_expression (Gtk.Expression? expression);
 		public void set_factory (Gtk.ListItemFactory? factory);
@@ -7650,6 +7647,7 @@ namespace Gtk {
 		public Gtk.ListItemFactory list_factory { get; set; }
 		public GLib.ListModel model { get; set; }
 		public uint selected { get; set; }
+		public GLib.Object selected_item { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_get_type ()")]
 	public class DropTarget : Gtk.EventController {
@@ -7871,7 +7869,6 @@ namespace Gtk {
 		public EntryCompletion ();
 		public void complete ();
 		public string? compute_prefix (string key);
-		public void delete_action (int index_);
 		public unowned string get_completion_prefix ();
 		public unowned Gtk.Widget get_entry ();
 		public bool get_inline_completion ();
@@ -7882,8 +7879,6 @@ namespace Gtk {
 		public bool get_popup_set_width ();
 		public bool get_popup_single_match ();
 		public int get_text_column ();
-		public void insert_action_markup (int index_, string markup);
-		public void insert_action_text (int index_, string text);
 		[CCode (cname = "gtk_entry_completion_insert_prefix")]
 		public void request_prefix_insertion ();
 		public void set_inline_completion (bool inline_completion);
@@ -7907,7 +7902,6 @@ namespace Gtk {
 		public bool popup_set_width { get; set; }
 		public bool popup_single_match { get; set; }
 		public int text_column { get; set; }
-		public signal void action_activated (int index);
 		public signal bool cursor_on_match (Gtk.TreeModel model, Gtk.TreeIter iter);
 		public signal bool insert_prefix (string prefix);
 		public signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
@@ -10306,7 +10300,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scrolled_window_get_type ()")]
 	public class ScrolledWindow : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ScrolledWindow (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
+		public ScrolledWindow ();
 		public bool get_capture_button_press ();
 		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Adjustment get_hadjustment ();
@@ -10898,18 +10892,23 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected StackPage ();
 		public unowned Gtk.Widget get_child ();
+		public unowned string? get_icon_name ();
+		public unowned string? get_name ();
+		public bool get_needs_attention ();
+		public unowned string? get_title ();
+		public bool get_use_underline ();
 		public bool get_visible ();
+		public void set_icon_name (string setting);
+		public void set_name (string setting);
+		public void set_needs_attention (bool setting);
+		public void set_title (string setting);
+		public void set_use_underline (bool setting);
 		public void set_visible (bool visible);
 		public Gtk.Widget child { get; construct; }
-		[NoAccessorMethod]
-		public string icon_name { owned get; set; }
-		[NoAccessorMethod]
-		public string name { owned get; construct; }
-		[NoAccessorMethod]
+		public string icon_name { get; set; }
+		public string name { get; construct; }
 		public bool needs_attention { get; set; }
-		[NoAccessorMethod]
-		public string title { owned get; set; }
-		[NoAccessorMethod]
+		public string title { get; set; }
 		public bool use_underline { get; set; }
 		public bool visible { get; set; }
 	}
@@ -10962,6 +10961,23 @@ namespace Gtk {
 		public bool ignore_case { get; set; }
 		public Gtk.StringFilterMatchMode match_mode { get; set; }
 		public string search { get; set; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_list_get_type ()")]
+	public class StringList : GLib.Object, GLib.ListModel, Gtk.Buildable {
+		[CCode (has_construct_function = false)]
+		public StringList ([CCode (array_length = false)] string[]? strings);
+		public void append (string str);
+		public unowned string get_string (uint position);
+		public void remove (uint position);
+		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] string[] additions);
+		public void take (owned string str);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_object_get_type ()")]
+	public class StringObject : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected StringObject ();
+		public unowned global::string get_string ();
+		public global::string string { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_sorter_get_type ()")]
 	public class StringSorter : Gtk.Sorter {
@@ -12089,7 +12105,6 @@ namespace Gtk {
 		public Pango.Layout create_pango_layout (string? text);
 		[NoWrapper]
 		public virtual void css_changed (Gtk.CssStyleChange change);
-		public bool device_is_shadowed (Gdk.Device device);
 		public void error_bell ();
 		[NoWrapper]
 		public virtual bool focus (Gtk.DirectionType direction);
@@ -12152,7 +12167,6 @@ namespace Gtk {
 		public void get_size_request (out int width, out int height);
 		public Gtk.StateFlags get_state_flags ();
 		public unowned Gtk.StyleContext get_style_context ();
-		public bool get_support_multidevice ();
 		public unowned GLib.Object get_template_child (GLib.Type widget_type, string name);
 		public unowned string? get_tooltip_markup ();
 		public unowned string? get_tooltip_text ();
@@ -12229,7 +12243,6 @@ namespace Gtk {
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);
 		public void set_state_flags (Gtk.StateFlags flags, bool clear);
-		public void set_support_multidevice (bool support_multidevice);
 		[CCode (cname = "gtk_widget_class_set_template")]
 		public class void set_template (GLib.Bytes template_bytes);
 		[CCode (cname = "gtk_widget_class_set_template_from_resource")]
@@ -12299,7 +12312,6 @@ namespace Gtk {
 		public int width_request { get; set; }
 		public signal void destroy ();
 		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
-		public virtual signal void grab_notify (bool was_grabbed);
 		[HasEmitter]
 		public virtual signal void hide ();
 		[HasEmitter]
