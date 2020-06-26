@@ -821,6 +821,7 @@ TESTS = \
 	semantic/field-valist.test \
 	semantic/field-void.test \
 	semantic/floating-reference.vala \
+	semantic/floating-reference-error.vala \
 	semantic/foreach-iterator-args.test \
 	semantic/foreach-iterator-element-owned.test \
 	semantic/foreach-iterator-void.test \

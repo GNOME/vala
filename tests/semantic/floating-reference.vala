@@ -3,6 +3,11 @@ Variant get_floating_variant () {
 	return new Variant.string ("foo");
 }
 
+[CCode (returns_floating_reference = true)]
+Variant? get_floating_variant_with_error () throws Error {
+	return new Variant.string ("bar");
+}
+
 void test_variant () {
 	{
 		string? @value = "bar";
@@ -44,6 +49,18 @@ void test_variant () {
 	{
 		Variant? variant = get_floating_variant ();
 		assert (!variant.is_floating ());
+	}
+	{
+		Variant? variant = get_floating_variant_with_error ();
+		assert (!variant.is_floating ());
+	}
+	{
+		try {
+			Variant? variant = get_floating_variant_with_error ();
+			assert (!variant.is_floating ());
+		} catch {
+			assert_not_reached ();
+		}
 	}
 }
 

@@ -664,6 +664,11 @@ public class Vala.MethodCall : Expression {
 				var local = new LocalVariable (value_type.copy (), get_temp_name (), null, source_reference);
 				var decl = new DeclarationStatement (local, source_reference);
 
+				// don't carry floating reference any further if the target-type is unknown
+				if (target_type == null) {
+					local.variable_type.floating_reference = false;
+				}
+
 				insert_statement (context.analyzer.insert_block, decl);
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
