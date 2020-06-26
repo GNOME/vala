@@ -197,7 +197,7 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 		unowned List<Parameter> parameters = get_method.get_parameters ();
-		if (parameters.size != 1 || !parameters[0].variable_type.compatible (context.analyzer.int_type)) {
+		if (parameters.size != 1 || !(parameters[0].variable_type is IntegerType)) {
 			return false;
 		}
 		var size_property = collection_type.get_member ("size") as Property;
