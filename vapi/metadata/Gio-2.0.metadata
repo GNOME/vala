@@ -369,6 +369,8 @@ Application
 Converter
   .convert.inbuf nullable=false
 DBusSubtreeVTable.enumerate skip=false
+DtlsConnection
+  .get_channel_binding_data#method virtual vfunc_name="get_binding_data" throws="GLib.TlsChannelBindingError"
 File
   .measure_disk_usage* skip=false
   .measure_disk_usage*.* default=()
@@ -388,5 +390,7 @@ TlsBackend
   .get_client_connection_type abstract
   .get_file_database_type abstract
   .get_server_connection_type abstract
+TlsConnection
+  .get_channel_binding_data#method virtual vfunc_name="get_binding_data" throws="GLib.TlsChannelBindingError"
 IOStream
   .splice_async finish_instance=false
