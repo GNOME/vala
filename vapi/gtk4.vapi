@@ -7633,7 +7633,7 @@ namespace Gtk {
 		public unowned Gtk.ListItemFactory? get_list_factory ();
 		public unowned GLib.ListModel? get_model ();
 		public uint get_selected ();
-		public void* get_selected_item ();
+		public unowned GLib.Object? get_selected_item ();
 		public void set_enable_search (bool enable_search);
 		public void set_expression (Gtk.Expression? expression);
 		public void set_factory (Gtk.ListItemFactory? factory);
@@ -10965,7 +10965,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_list_get_type ()")]
 	public class StringList : GLib.Object, GLib.ListModel, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
-		public StringList ([CCode (array_length = false)] string[]? strings);
+		public StringList ([CCode (array_length = false, array_null_terminated = true)] string[]? strings);
 		public void append (string str);
 		public unowned string get_string (uint position);
 		public void remove (uint position);
