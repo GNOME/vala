@@ -47,6 +47,43 @@ class FooCollection3 {
 	}
 }
 
+class FooEntry4<K,V> {
+	public K key { get; private set; }
+	public V value { get; private set; }
+
+	public FooEntry4 (K _key, V _value) {
+		key = _key;
+		value = _value;
+	}
+}
+
+class FooIterator4<G> {
+	bool called = false;
+
+	public bool next () {
+		return !called;
+	}
+
+	public G @get () {
+		assert (!called);
+		called = true;
+		return new FooEntry4<string,Foo> ("foo", foo_instance);
+	}
+}
+
+class FooCollection4<K,V> {
+	public int size { get { return 1; } }
+
+	public V @get (K key) {
+		assert (key == "foo");
+		return foo_instance;
+	}
+
+	public FooIterator4<FooEntry4<K,V>> iterator () {
+		return new FooIterator4<FooEntry4<K,V>> ();
+	}
+}
+
 Foo foo_instance;
 
 void main () {
@@ -69,6 +106,14 @@ void main () {
 	foreach (var foo3 in collection3) {
 		assert (foo3 == foo_instance);
 	}
+
+	// Uses iterator() and get()
+	var collection4 = new FooCollection4<string,Foo> ();
+	foreach (var fooentry4 in collection4) {
+		assert (fooentry4.key == "foo");
+		assert (fooentry4.value == foo_instance);
+	}
+	assert (collection4["foo"] == foo_instance);
 
 	// GLib.List
 	var list = new List<Foo> ();

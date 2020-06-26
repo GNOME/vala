@@ -196,7 +196,8 @@ public class Vala.ForeachStatement : Block {
 		if (get_method == null) {
 			return false;
 		}
-		if (get_method.get_parameters ().size != 1) {
+		var parameters = get_method.get_parameters ();
+		if (parameters.size != 1 || !(parameters[0].variable_type is IntegerType)) {
 			return false;
 		}
 		var size_property = collection_type.get_member ("size") as Property;
