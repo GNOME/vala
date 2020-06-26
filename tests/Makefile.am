@@ -162,6 +162,7 @@ TESTS = \
 	methods/bug791215.vala \
 	methods/bug791283.vala \
 	methods/argument-array-initilizer.vala \
+	methods/argument-named.vala \
 	methods/generics.vala \
 	methods/print-attribute.vala \
 	methods/print-attribute-invalid.test \
