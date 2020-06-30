@@ -75,6 +75,7 @@ namespace Atspi {
 		public Atspi.Value get_value ();
 		public Atspi.Value get_value_iface ();
 		public void set_cache_mask (Atspi.Cache mask);
+		public virtual signal void mode_changed (int enabled, string why);
 		public virtual signal void region_changed (int current_offset, int last_offset);
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_application_get_type ()")]

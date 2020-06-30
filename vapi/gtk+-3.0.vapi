@@ -6779,6 +6779,8 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.8", since = "2.10")]
 		public string gtk_color_scheme { owned get; set; }
 		[NoAccessorMethod]
+		public float gtk_cursor_aspect_ratio { get; set; }
+		[NoAccessorMethod]
 		public bool gtk_cursor_blink { get; set; }
 		[NoAccessorMethod]
 		public int gtk_cursor_blink_time { get; set; }

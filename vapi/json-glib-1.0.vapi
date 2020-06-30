@@ -258,6 +258,8 @@ namespace Json {
 		public Parser.immutable_new ();
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
+		[Version (since = "1.6")]
+		public bool load_from_mapped_file (string filename) throws GLib.Error;
 		[Version (since = "0.12")]
 		public bool load_from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "0.12")]

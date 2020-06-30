@@ -1990,6 +1990,8 @@ namespace Soup {
 	[Version (since = "2.42")]
 	public static uint get_minor_version ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static GLib.Resource get_resource ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool header_contains (string header, string token);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_param_list (GLib.HashTable<string,string> param_list);
