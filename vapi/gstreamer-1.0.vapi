@@ -713,6 +713,7 @@ namespace Gst {
 		public size_t get_size ();
 		public size_t get_sizes (out size_t offset, out size_t maxsize);
 		public size_t get_sizes_range (uint idx, int length, out size_t offset, out size_t maxsize);
+		[Version (since = "1.10")]
 		public bool has_flags (Gst.BufferFlags flags);
 		public void insert_memory (int idx, owned Gst.Memory mem);
 		[Version (since = "1.4")]
@@ -1205,6 +1206,7 @@ namespace Gst {
 		protected DoubleRange ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_dynamic_type_factory_get_type ()")]
+	[Version (since = "1.12")]
 	public class DynamicTypeFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected DynamicTypeFactory ();
@@ -1519,6 +1521,7 @@ namespace Gst {
 		[CCode (has_construct_function = false, returns_floating_reference = true, type = "GstPad*")]
 		public GhostPad (string? name, Gst.Pad target);
 		public static bool activate_mode_default (Gst.Pad pad, Gst.Object? parent, Gst.PadMode mode, bool active);
+		[Version (deprecated = true)]
 		public bool @construct ();
 		[CCode (has_construct_function = false, type = "GstPad*")]
 		public GhostPad.from_template (string? name, Gst.Pad target, Gst.PadTemplate templ);
@@ -1991,6 +1994,7 @@ namespace Gst {
 		public virtual signal void pad_created (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "param_spec_array", type_id = "gst_param_spec_array_get_type ()")]
+	[Version (since = "1.12")]
 	public class ParamArray : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamArray ();
@@ -2005,6 +2009,7 @@ namespace Gst {
 	public class ParseContext {
 		[CCode (has_construct_function = false)]
 		public ParseContext ();
+		[Version (since = "1.12.1")]
 		public Gst.ParseContext? copy ();
 		[DestroysInstance]
 		public void free ();
@@ -2405,6 +2410,7 @@ namespace Gst {
 		[CCode (cname = "gst_structure_from_string", has_construct_function = false)]
 		public Structure.from_string (string string, out unowned string end);
 		public bool @get (...);
+		[Version (since = "1.12")]
 		public bool get_array (string fieldname, out GLib.ValueArray array);
 		public bool get_boolean (string fieldname, out bool value);
 		public bool get_clock_time (string fieldname, out Gst.ClockTime value);
@@ -2619,6 +2625,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected TracerFactory ();
 		public static GLib.List<Gst.TracerFactory> get_list ();
+		[Version (since = "1.14")]
 		public GLib.Type get_tracer_type ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_record_get_type ()")]
@@ -4110,9 +4117,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_SEQNUM_INVALID")]
 	[Version (since = "1.14")]
 	public const int SEQNUM_INVALID;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIMEP_FORMAT")]
+	[Version (since = "1.18")]
+	public const string STIMEP_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_STIME_FORMAT")]
 	[Version (since = "1.6")]
 	public const string STIME_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIMEP_FORMAT")]
+	[Version (since = "1.18")]
+	public const string TIMEP_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_FORMAT")]
 	public const string TIME_FORMAT;
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TOC_REPEAT_COUNT_INFINITE")]
@@ -4145,6 +4158,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.12")]
 	public static bool dynamic_type_register (Gst.Plugin plugin, GLib.Type type);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static string error_get_message (GLib.Quark domain, int code);
@@ -4194,6 +4208,7 @@ namespace Gst {
 	[Version (since = "1.18")]
 	public static GLib.List<Gst.Tracer> tracing_get_active_tracers ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (since = "1.8")]
 	public static void tracing_register_hook (Gst.Tracer tracer, string detail, [CCode (scope = "async")] GLib.Callback func);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.18")]

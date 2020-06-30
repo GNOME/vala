@@ -376,6 +376,7 @@ namespace Gst {
 			public weak Gst.RTPC.Buffer rtcp;
 			public uint offset;
 			[CCode (cname = "gst_rtcp_packet_add_profile_specific_ext")]
+			[Version (since = "1.10")]
 			public bool add_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_rtcp_packet_add_rb")]
 			public bool add_rb (uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
@@ -421,6 +422,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_bye_set_reason")]
 			public bool bye_set_reason (string reason);
 			[CCode (cname = "gst_rtcp_packet_copy_profile_specific_ext")]
+			[Version (since = "1.10")]
 			public bool copy_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
 			[CCode (cname = "gst_rtcp_packet_fb_get_fci")]
 			public uint8 fb_get_fci ();
@@ -447,8 +449,10 @@ namespace Gst {
 			[CCode (cname = "gst_rtcp_packet_get_padding")]
 			public bool get_padding ();
 			[CCode (cname = "gst_rtcp_packet_get_profile_specific_ext")]
+			[Version (since = "1.10")]
 			public bool get_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
 			[CCode (cname = "gst_rtcp_packet_get_profile_specific_ext_length")]
+			[Version (since = "1.10")]
 			public uint16 get_profile_specific_ext_length ();
 			[CCode (cname = "gst_rtcp_packet_get_rb")]
 			public void get_rb (uint nth, out uint32 ssrc, out uint8 fractionlost, out int32 packetslost, out uint32 exthighestseq, out uint32 jitter, out uint32 lsr, out uint32 dlsr);

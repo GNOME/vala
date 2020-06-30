@@ -14,6 +14,7 @@ namespace Gst {
 			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
 			[Version (since = "1.4")]
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
+			[Version (since = "1.10")]
 			public uint64 distance_from_discont ();
 			[Version (since = "1.10")]
 			public Gst.ClockTime dts_at_discont ();
@@ -554,6 +555,7 @@ namespace Gst {
 			public int overhead;
 			[CCode (has_construct_function = false)]
 			public ParseFrame (Gst.Buffer buffer, Gst.Base.ParseFrameFlags flags, int overhead);
+			[Version (since = "1.12.1")]
 			public Gst.Base.ParseFrame copy ();
 			public void free ();
 			public void init ();
@@ -894,7 +896,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorStartTimeSelection", cprefix = "GST_AGGREGATOR_START_TIME_SELECTION_", type_id = "gst_aggregator_start_time_selection_get_type ()")]
 		[GIR (name = "AggregatorStartTimeSelection")]
-		[Version (since = "1.14")]
+		[Version (since = "1.18")]
 		public enum AggregatorStartTimeSelection {
 			ZERO,
 			FIRST,
