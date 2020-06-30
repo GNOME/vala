@@ -1730,6 +1730,9 @@ namespace HarfBuzz {
 	[Version (since = "0.9.7")]
 	public static void ot_layout_lookup_collect_glyphs (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint lookup_index, out unowned HarfBuzz.Set glyphs_before, out unowned HarfBuzz.Set glyphs_input, out unowned HarfBuzz.Set glyphs_after, out unowned HarfBuzz.Set glyphs_output);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.6.8")]
+	public static uint ot_layout_lookup_get_glyph_alternates (HarfBuzz.Face face, uint lookup_index, HarfBuzz.Codepoint glyph, uint start_offset, [CCode (array_length_cname = "alternate_count", array_length_pos = 4.5, array_length_type = "guint")] out unowned HarfBuzz.Codepoint[] alternate_glyphs);
+	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]
 	public static void ot_layout_lookup_substitute_closure (HarfBuzz.Face face, uint lookup_index, out unowned HarfBuzz.Set glyphs);
 	[CCode (cheader_filename = "hb-gobject.h")]
@@ -1790,7 +1793,8 @@ namespace HarfBuzz {
 	[Version (since = "1.3.3")]
 	public static HarfBuzz.Bool ot_math_is_glyph_extended_shape (HarfBuzz.Face face, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h")]
-	public static uint ot_meta_get_entry_tags (HarfBuzz.Face face, uint start_offset, uint entries_count, HarfBuzz.OtMetaTag entries);
+	[Version (since = "2.6.0")]
+	public static uint ot_meta_get_entry_tags (HarfBuzz.Face face, uint start_offset, [CCode (array_length_cname = "entries_count", array_length_pos = 2.5, array_length_type = "guint")] out unowned HarfBuzz.OtMetaTag[] entries);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.6.0")]
 	public static HarfBuzz.Blob ot_meta_reference_entry (HarfBuzz.Face face, HarfBuzz.OtMetaTag meta_tag);
