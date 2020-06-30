@@ -1,3 +1,37 @@
+Vala 0.48.7
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Improve array-dup-wrapper for empty arrays [#999]
+    + Don't call get_ccode_finish_instance() with non-async methods
+    + Cast initializer-list to struct for non-constant/-array assignment [#1013]
+    + Consistently use get_ccode_lower_case_prefix() for function names [#1008]
+  - vala:
+    + Correctly handle qualified struct type in initializer list [#1004]
+    + Reduce calls of CodeContext.get()
+    + Fix value-type for ArrayCreationExpression used as argument [#1009]
+    + Improve parameter check of "get" method used for foreach [#1017]
+    + Don't carry floating reference into unknown target type expression [#1018]
+  - girparser: Actually respect given cprefix metadata for enumerations
+  - girwriter: Append symbol-attributes to callback field [#1006]
+  - parser: Avoid mitigation for missing token if it follows DOT or
+    DOUBLE_COLON [#987]
+  - libvaladoc/girimporter: Skip "function-macro" elements
+  - build: Update git-version-gen to latest upstream
+  - tests: Build typelib if g-ir-compiler is available
+
+ * Bindings:
+  - gstreamer-audio-1.0: Adjustments for Gst.Audio.Sink class extension
+  - gstreamer: Update from 1.17.1+ git master
+  - gtk+-3.0: Deprecated abstract methods are not required to be implemented
+  - gtk4: Prefix value names of PaintableFlags with "STATIC_" [#1011]
+  - gtk4: Mark optional methods of Gdk.Paintable interface as virtual [#1021]
+  - gtk4: Update to 3.98.5+fca2ba96
+  - harfbuzz-gobject: Update to 2.6.8
+  - pango: Update from 1.45.2
+  - webkit2gtk-4.0: Update to 2.29.2
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.6
 ===========
  * Regression and bug fixes:
