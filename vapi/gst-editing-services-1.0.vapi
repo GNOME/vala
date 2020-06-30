@@ -99,6 +99,7 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected Clip ();
 		public unowned GES.TrackElement? add_asset (GES.Asset asset);
+		[Version (since = "1.18")]
 		public unowned GES.TrackElement add_child_to_track (GES.TrackElement child, GES.Track track) throws GLib.Error;
 		[Version (since = "1.18")]
 		public bool add_top_effect (GES.BaseEffect effect, int index) throws GLib.Error;
@@ -114,6 +115,7 @@ namespace GES {
 		public Gst.ClockTime get_internal_time_from_timeline_time (GES.TrackElement child, Gst.ClockTime timeline_time) throws GLib.Error;
 		public GES.Layer? get_layer ();
 		public GES.TrackType get_supported_formats ();
+		[Version (since = "1.18")]
 		public Gst.ClockTime get_timeline_time_from_internal_time (GES.TrackElement child, Gst.ClockTime internal_time) throws GLib.Error;
 		[Version (since = "1.18")]
 		public Gst.ClockTime get_timeline_time_from_source_frame (GES.FrameNumber frame_number) throws GLib.Error;
@@ -133,6 +135,7 @@ namespace GES {
 		public unowned GES.Clip? split (uint64 position);
 		[Version (since = "1.18")]
 		public unowned GES.Clip? split_full (uint64 position) throws GLib.Error;
+		[Version (since = "1.18")]
 		public uint64 duration_limit { get; }
 		public GES.Layer layer { owned get; }
 		public GES.TrackType supported_formats { get; set construct; }
@@ -141,7 +144,9 @@ namespace GES {
 	public class ClipAsset : GES.Asset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected ClipAsset ();
+		[Version (since = "1.18")]
 		public Gst.ClockTime get_frame_time (GES.FrameNumber frame_number);
+		[Version (since = "1.18")]
 		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
 		public GES.TrackType get_supported_formats ();
 		public void set_supported_formats (GES.TrackType supportedformats);
@@ -251,6 +256,7 @@ namespace GES {
 		public bool add_clip (GES.Clip clip);
 		[Version (since = "1.18")]
 		public bool add_clip_full (GES.Clip clip) throws GLib.Error;
+		[Version (since = "1.18")]
 		public bool get_active_for_track (GES.Track track);
 		public bool get_auto_transition ();
 		public GLib.List<GES.Clip> get_clips ();
@@ -264,6 +270,7 @@ namespace GES {
 		[NoWrapper]
 		public virtual void object_removed (GES.Clip object);
 		public bool remove_clip (GES.Clip clip);
+		[Version (since = "1.18")]
 		public bool set_active_for_tracks (bool active, GLib.List<GES.Track>? tracks);
 		public void set_auto_transition (bool auto_transition);
 		[Version (deprecated = true, deprecated_since = "1.16.0")]
@@ -272,11 +279,13 @@ namespace GES {
 		public bool auto_transition { get; set; }
 		[Version (deprecated = true, deprecated_since = "1.16.0")]
 		public uint priority { get; set; }
+		[Version (since = "1.18")]
 		public signal void active_changed (bool active, GLib.GenericArray<GES.Track> tracks);
 		public signal void clip_added (GES.Clip clip);
 		public signal void clip_removed (GES.Clip clip);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_marker_get_type ()")]
+	[Version (since = "1.18")]
 	public class Marker : GLib.Object, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		protected Marker ();
@@ -402,6 +411,7 @@ namespace GES {
 		public SourceClip.time_overlay ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_source_clip_asset_get_type ()")]
+	[Version (since = "1.18")]
 	public class SourceClipAsset : GES.ClipAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected SourceClipAsset ();
@@ -494,7 +504,9 @@ namespace GES {
 		public bool get_auto_transition ();
 		public Gst.ClockTime get_duration ();
 		public GES.TimelineElement? get_element (string name);
+		[Version (since = "1.18")]
 		public GES.FrameNumber get_frame_at (Gst.ClockTime timestamp);
+		[Version (since = "1.18")]
 		public Gst.ClockTime get_frame_time (GES.FrameNumber frame_number);
 		public unowned GLib.List<GES.Group> get_groups ();
 		public GES.Layer? get_layer (uint priority);
@@ -570,9 +582,11 @@ namespace GES {
 		public virtual bool roll_end (uint64 end);
 		public virtual bool roll_start (uint64 start);
 		[NoWrapper]
+		[Version (since = "1.16")]
 		public virtual void set_child_property (GLib.Object child, GLib.ParamSpec pspec, GLib.Value value);
 		public void set_child_property_by_pspec (GLib.ParamSpec pspec, GLib.Value value);
 		[NoWrapper]
+		[Version (since = "1.18")]
 		public virtual bool set_child_property_full (GLib.Object child, GLib.ParamSpec pspec, GLib.Value value) throws GLib.Error;
 		public virtual bool set_duration (Gst.ClockTime duration);
 		public virtual bool set_inpoint (Gst.ClockTime inpoint);
@@ -596,7 +610,9 @@ namespace GES {
 		public bool serialize { get; set; }
 		public uint64 start { get; set; }
 		public GES.Timeline timeline { owned get; set; }
+		[Version (since = "1.18")]
 		public signal void child_property_added (GLib.Object prop_object, GLib.ParamSpec prop);
+		[Version (since = "1.18")]
 		public signal void child_property_removed (GLib.Object prop_object, GLib.ParamSpec prop);
 		public signal void deep_notify (GLib.Object prop_object, GLib.ParamSpec prop);
 	}
@@ -752,12 +768,15 @@ namespace GES {
 		[Version (since = "1.18")]
 		public void set_auto_clamp_control_sources (bool auto_clamp);
 		public bool set_control_source (Gst.ControlSource source, string property_name, string binding_type);
-		public void set_has_internal_source (bool has_internal_source);
+		[Version (since = "1.18")]
+		public bool set_has_internal_source (bool has_internal_source);
 		public void set_track_type (GES.TrackType type);
 		[NoAccessorMethod]
 		public bool active { get; set; }
+		[Version (since = "1.18")]
 		public bool auto_clamp_control_sources { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "1.18")]
 		public bool has_internal_source { get; set; }
 		public GES.Track track { get; }
 		public GES.TrackType track_type { get; set construct; }
@@ -768,6 +787,7 @@ namespace GES {
 	public class TrackElementAsset : GES.Asset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected TrackElementAsset ();
+		[Version (since = "1.18")]
 		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
 		public GES.TrackType get_track_type ();
 		public void set_track_type (GES.TrackType type);
@@ -814,6 +834,7 @@ namespace GES {
 		[Version (since = "1.18")]
 		public Gst.ClockTime get_max_duration ();
 		public unowned GLib.List<GES.UriSourceAsset> get_stream_assets ();
+		[Version (since = "1.18")]
 		public bool is_image ();
 		[CCode (cname = "ges_uri_clip_asset_request_sync", has_construct_function = false)]
 		public UriClipAsset.request_sync (string uri) throws GLib.Error;
@@ -832,12 +853,14 @@ namespace GES {
 		public unowned GES.UriClipAsset get_filesource_asset ();
 		public unowned Gst.PbUtils.DiscovererStreamInfo get_stream_info ();
 		public unowned string get_stream_uri ();
+		[Version (since = "1.18")]
 		public bool is_image ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_video_source_get_type ()")]
 	public abstract class VideoSource : GES.Source, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		protected VideoSource ();
+		[Version (since = "1.18")]
 		public bool get_natural_size (out int width, out int height);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_video_test_source_get_type ()")]
@@ -918,6 +941,7 @@ namespace GES {
 		public bool register_meta_string (GES.MetaFlag flags, string meta_item, string value);
 		public bool register_meta_uint (GES.MetaFlag flags, string meta_item, uint value);
 		public bool register_meta_uint64 (GES.MetaFlag flags, string meta_item, uint64 value);
+		[Version (since = "1.18")]
 		public bool register_static_meta (GES.MetaFlag flags, string meta_item, GLib.Type type);
 		public bool set_boolean (string meta_item, bool value);
 		public bool set_date (string meta_item, GLib.Date value);
@@ -963,6 +987,7 @@ namespace GES {
 		[CCode (cname = "GES_EDGE_NONE")]
 		EDGE_NONE,
 		NONE;
+		[Version (since = "1.16")]
 		public unowned string name ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_EDIT_MODE_", type_id = "ges_edit_mode_get_type ()")]
@@ -994,7 +1019,8 @@ namespace GES {
 		NEGATIVE_LAYER,
 		NEGATIVE_TIME,
 		NOT_ENOUGH_INTERNAL_CONTENT,
-		INVALID_OVERLAP_IN_TRACK
+		INVALID_OVERLAP_IN_TRACK,
+		INVALID_EFFECT_BIN_DESCRIPTION
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_META_", type_id = "ges_meta_flag_get_type ()")]
 	[Flags]

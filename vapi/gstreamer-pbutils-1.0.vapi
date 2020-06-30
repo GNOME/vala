@@ -233,6 +233,8 @@ namespace Gst {
 			public unowned string get_category ();
 			public unowned string get_description ();
 			public unowned string get_name ();
+			[Version (since = "1.18")]
+			public unowned string get_path ();
 			public Gst.PbUtils.EncodingProfile get_profile (string name);
 			public unowned GLib.List<Gst.PbUtils.EncodingProfile> get_profiles ();
 			public static Gst.PbUtils.EncodingTarget load (string name, string? category) throws GLib.Error;
@@ -256,6 +258,7 @@ namespace Gst {
 		public class InstallPluginsContext {
 			[CCode (has_construct_function = false)]
 			public InstallPluginsContext ();
+			[Version (since = "1.12.1")]
 			public Gst.PbUtils.InstallPluginsContext copy ();
 			public void free ();
 			[Version (since = "1.6")]

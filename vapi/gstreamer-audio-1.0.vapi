@@ -149,6 +149,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_audio_converter_get_type ()")]
 		[Compact]
 		[GIR (name = "AudioConverter")]
+		[Version (since = "1.8")]
 		public class Converter {
 			[CCode (has_construct_function = false)]
 			public Converter (Gst.Audio.ConverterFlags flags, Gst.Audio.Info in_info, Gst.Audio.Info out_info, owned Gst.Structure? config);
@@ -163,6 +164,7 @@ namespace Gst {
 			public bool is_passthrough ();
 			public void reset ();
 			public bool samples (Gst.Audio.ConverterFlags flags, void* @in, size_t in_frames, void* @out, size_t out_frames);
+			[Version (since = "1.12")]
 			public bool supports_inplace ();
 			public bool update_config (int in_rate, int out_rate, owned Gst.Structure? config);
 		}
@@ -247,6 +249,8 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Buffer outbuf, Gst.Meta meta, Gst.Buffer inbuf);
+			[Version (since = "1.18")]
+			public int max_errors { get; set; }
 			public int64 min_latency { get; set; }
 			public bool plc { get; set; }
 			public int64 tolerance { get; set; }
@@ -375,10 +379,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "AudioResampler")]
+		[Version (since = "1.10")]
 		public class Resampler {
 			[CCode (has_construct_function = false)]
 			public Resampler (Gst.Audio.ResamplerMethod method, Gst.Audio.ResamplerFlags flags, Gst.Audio.Format format, int channels, int in_rate, int out_rate, Gst.Structure options);
-			[Version (since = "1.6")]
 			public void free ();
 			public size_t get_in_frames (size_t out_frames);
 			public size_t get_max_latency ();
@@ -795,6 +799,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FILTER_INTERPOLATION_", type_id = "gst_audio_resampler_filter_interpolation_get_type ()")]
 		[GIR (name = "AudioResamplerFilterInterpolation")]
+		[Version (since = "1.10")]
 		public enum ResamplerFilterInterpolation {
 			NONE,
 			LINEAR,
@@ -802,6 +807,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FILTER_MODE_", type_id = "gst_audio_resampler_filter_mode_get_type ()")]
 		[GIR (name = "AudioResamplerFilterMode")]
+		[Version (since = "1.10")]
 		public enum ResamplerFilterMode {
 			INTERPOLATED,
 			FULL,
@@ -810,6 +816,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_FLAG_", type_id = "gst_audio_resampler_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "AudioResamplerFlags")]
+		[Version (since = "1.10")]
 		public enum ResamplerFlags {
 			NONE,
 			NON_INTERLEAVED_IN,
@@ -818,7 +825,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", cprefix = "GST_AUDIO_RESAMPLER_METHOD_", type_id = "gst_audio_resampler_method_get_type ()")]
 		[GIR (name = "AudioResamplerMethod")]
-		[Version (since = "1.6")]
+		[Version (since = "1.10")]
 		public enum ResamplerMethod {
 			NEAREST,
 			LINEAR,

@@ -208,6 +208,8 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[Version (since = "1.18")]
+			public int max_errors { get; set; }
 			[NoAccessorMethod]
 			[Version (since = "1.18")]
 			public bool qos { get; set; }
