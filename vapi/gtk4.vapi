@@ -6560,6 +6560,36 @@ namespace Gtk {
 	public class BindingSet {
 		public static unowned Gtk.BindingSet @new (string name);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_bitset_ref", type_id = "gtk_bitset_get_type ()", unref_function = "gtk_bitset_unref")]
+	[Compact]
+	public class Bitset {
+		public bool add (uint value);
+		public void add_range (uint start, uint n_items);
+		public void add_range_closed (uint first, uint last);
+		public void add_rectangle (uint start, uint width, uint height, uint stride);
+		public bool contains (uint value);
+		public Gtk.Bitset copy ();
+		public void difference (Gtk.Bitset other);
+		[CCode (has_construct_function = false)]
+		public Bitset.empty ();
+		public bool equals (Gtk.Bitset other);
+		public uint get_maximum ();
+		public uint get_minimum ();
+		public void intersect (Gtk.Bitset other);
+		public bool is_empty ();
+		public unowned Gtk.Bitset @ref ();
+		public bool remove (uint value);
+		public void remove_all ();
+		public void remove_range (uint start, uint n_items);
+		public void remove_range_closed (uint first, uint last);
+		public void remove_rectangle (uint start, uint width, uint height, uint stride);
+		public void shift_left (uint amount);
+		public void shift_right (uint amount);
+		public void slice (uint position, uint removed, uint added);
+		public void subtract (Gtk.Bitset other);
+		public void union (Gtk.Bitset other);
+		public void unref ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bookmark_list_get_type ()")]
 	public class BookmarkList : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
@@ -8031,7 +8061,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected Expression ();
 		[DestroysInstance]
-		public unowned Gtk.ExpressionWatch bind (GLib.Object target, string property, GLib.Object this_);
+		public unowned Gtk.ExpressionWatch bind (GLib.Object target, string property, GLib.Object? this_);
 		public bool evaluate (GLib.Object? this_, GLib.Value value);
 		public GLib.Type get_value_type ();
 		public bool is_static ();
@@ -8322,11 +8352,6 @@ namespace Gtk {
 	public class FrameAccessible : Gtk.WidgetAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FrameAccessible ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_functions_list_item_factory_get_type ()")]
-	public class FunctionsListItemFactory : Gtk.ListItemFactory {
-		[CCode (has_construct_function = false)]
-		protected FunctionsListItemFactory ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gl_area_get_type ()")]
 	public class GLArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10074,15 +10099,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public PropertyExpression.for_pspec (owned Gtk.Expression? expression, GLib.ParamSpec pspec);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_property_selection_get_type ()")]
-	public class PropertySelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
-		[CCode (has_construct_function = false, type = "GListModel*")]
-		public PropertySelection (GLib.ListModel model, string property);
-		public unowned GLib.ListModel get_model ();
-		public unowned string get_property ();
-		public GLib.ListModel model { get; construct; }
-		public string property { get; construct; }
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_button_get_type ()")]
 	public class RadioButton : Gtk.CheckButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -10852,7 +10868,6 @@ namespace Gtk {
 		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string name, string title);
 		public unowned Gtk.Widget? get_child_by_name (string name);
 		public bool get_hhomogeneous ();
-		public bool get_homogeneous ();
 		public bool get_interpolate_size ();
 		public unowned Gtk.StackPage get_page (Gtk.Widget child);
 		public Gtk.SelectionModel get_pages ();
@@ -10864,7 +10879,6 @@ namespace Gtk {
 		public unowned string? get_visible_child_name ();
 		public void remove (Gtk.Widget child);
 		public void set_hhomogeneous (bool hhomogeneous);
-		public void set_homogeneous (bool homogeneous);
 		public void set_interpolate_size (bool interpolate_size);
 		public void set_transition_duration (uint duration);
 		public void set_transition_type (Gtk.StackTransitionType transition);
@@ -12755,14 +12769,14 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSelectionModelInterface", type_id = "gtk_selection_model_get_type ()")]
 	public interface SelectionModel : GLib.ListModel, GLib.Object {
+		public Gtk.Bitset get_selection ();
+		public abstract Gtk.Bitset get_selection_in_range (uint position, uint n_items);
 		public abstract bool is_selected (uint position);
-		public abstract void query_range (uint position, out uint start_range, out uint n_items, out bool selected);
 		public abstract bool select_all ();
-		public abstract bool select_callback (bool unselect_rest, Gtk.SelectionCallback callback);
 		public abstract bool select_item (uint position, bool unselect_rest);
 		public abstract bool select_range (uint position, uint n_items, bool unselect_rest);
+		public abstract bool set_selection (Gtk.Bitset selected, Gtk.Bitset mask);
 		public abstract bool unselect_all ();
-		public abstract bool unselect_callback (Gtk.SelectionCallback callback);
 		public abstract bool unselect_item (uint position);
 		public abstract bool unselect_range (uint position, uint n_items);
 		[HasEmitter]
@@ -12847,6 +12861,21 @@ namespace Gtk {
 		public double double_data;
 		[CCode (cname = "d.string_data")]
 		public weak string string_data;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
+	public struct BitsetIter {
+		[CCode (array_length = false)]
+		public weak void* private_data[10];
+		public uint get_value ();
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static bool init_at (out Gtk.BitsetIter iter, Gtk.Bitset @set, uint target, out uint value);
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static bool init_first (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static bool init_last (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
+		public bool is_valid ();
+		public bool next (out uint value);
+		public bool previous (out uint value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_border_get_type ()")]
 	public struct Border {
@@ -13164,14 +13193,14 @@ namespace Gtk {
 		BUILDER,
 		SIZE_REQUEST,
 		NO_CSS_CACHE,
-		SHORTCUTS,
 		INTERACTIVE,
 		TOUCHSCREEN,
 		ACTIONS,
 		RESIZE,
 		LAYOUT,
 		SNAPSHOT,
-		CONSTRAINTS
+		CONSTRAINTS,
+		BUILDER_OBJECTS
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_", type_id = "gtk_delete_type_get_type ()")]
 	public enum DeleteType {
@@ -13979,10 +14008,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate void ListBoxUpdateHeaderFunc (Gtk.ListBoxRow row, Gtk.ListBoxRow? before);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
-	public delegate void ListItemBindFunc (Gtk.ListItem item);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
-	public delegate void ListItemSetupFunc (Gtk.ListItem item);
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate GLib.Object MapListModelMapFunc (owned GLib.Object item);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate void MenuButtonCreatePopupFunc (Gtk.MenuButton menu_button);
@@ -13992,8 +14017,6 @@ namespace Gtk {
 	public delegate void PrintSettingsFunc (string key, string value);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate string ScaleFormatValueFunc (Gtk.Scale scale, double value);
-	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void SelectionCallback (uint position, out uint start_range, out uint n_items, out bool selected, void* data);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate bool ShortcutFunc (Gtk.Widget widget, GLib.Variant args);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
