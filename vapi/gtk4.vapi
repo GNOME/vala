@@ -5391,11 +5391,11 @@ namespace Gdk {
 		public void compute_concrete_size (double specified_width, double specified_height, double default_width, double default_height, out double concrete_width, out double concrete_height);
 		[CCode (cname = "gdk_paintable_new_empty")]
 		public static Gdk.Paintable empty (int intrinsic_width, int intrinsic_height);
-		public abstract Gdk.Paintable get_current_image ();
-		public abstract Gdk.PaintableFlags get_flags ();
-		public abstract double get_intrinsic_aspect_ratio ();
-		public abstract int get_intrinsic_height ();
-		public abstract int get_intrinsic_width ();
+		public virtual Gdk.Paintable get_current_image ();
+		public virtual Gdk.PaintableFlags get_flags ();
+		public virtual double get_intrinsic_aspect_ratio ();
+		public virtual int get_intrinsic_height ();
+		public virtual int get_intrinsic_width ();
 		public static Gdk.Paintable new_empty (int intrinsic_width, int intrinsic_height);
 		public abstract void snapshot (Gdk.Snapshot snapshot, double width, double height);
 		[HasEmitter]
