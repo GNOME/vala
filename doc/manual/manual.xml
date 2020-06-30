@@ -773,7 +773,9 @@
 <para> return-statement</para>
 <para> throw-statement</para>
 <para> try-statement</para>
-<para> lock-statement</para></listitem></itemizedlist>
+<para> lock-statement</para>
+<para> unlock-statement</para>
+<para> with-statement</para></listitem></itemizedlist>
 <para> embedded-statement:</para><itemizedlist><listitem override="none">
 <para>statement</para></listitem></itemizedlist></listitem></itemizedlist>
 
@@ -911,10 +913,25 @@
 
 <section>
 <title>Lock Statement</title>
-<para>Lock statements are the main part of Vala's resource control mechanism. </para>
+<para><code>lock</code> statements are the main part of Vala's resource control mechanism. </para>
 <para>FIXME: Haven't actually written anything here about resource control. </para><itemizedlist><listitem override="none">
 <para>lock-statement:</para><itemizedlist><listitem override="none">
-<para><emphasis role="strong">lock</emphasis> <emphasis role="strong">(</emphasis> identifier <emphasis role="strong">)</emphasis> embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
+<para><emphasis role="strong">lock</emphasis> <emphasis role="strong">(</emphasis> identifier <emphasis role="strong">)</emphasis> [ embedded-statement ] <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
+</section>
+
+<section>
+<title>Unlock Statement</title>
+<para><code>unlock</code> statements are the main part of Vala's resource control mechanism. </para>
+<para>FIXME: Haven't actually written anything here about resource control. </para><itemizedlist><listitem override="none">
+<para>unlock-statement:</para><itemizedlist><listitem override="none">
+<para><emphasis role="strong">unlock</emphasis> <emphasis role="strong">(</emphasis> identifier <emphasis role="strong">)</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
+</section>
+
+<section>
+<title>With Statement</title>
+<para>The <code>with</code> statement creates data type scoped blocks which allow implicit member access to the given expression or declaration statement. </para><itemizedlist><listitem override="none">
+<para>with_statement:</para><itemizedlist><listitem override="none">
+<para><emphasis role="strong">with</emphasis> <emphasis role="strong">(</emphasis> [ var | unowned var | type-name) identifier <emphasis role="strong">=</emphasis> ] expression <emphasis role="strong">)</emphasis> embedded_statement</para></listitem></itemizedlist></listitem></itemizedlist>
 </section>
 </section>
 <para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
