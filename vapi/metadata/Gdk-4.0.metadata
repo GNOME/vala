@@ -17,6 +17,11 @@ Event
         ._get_distance skip
 Paintable
         .new_empty name="empty"
+        .get_current_image#virtual_method virtual
+        .get_flags#virtual_method virtual
+        .get_intrinsic_width#virtual_method virtual
+        .get_intrinsic_height#virtual_method virtual
+        .get_intrinsic_aspect_ratio#virtual_method virtual
 PaintableFlags cprefix="GDK_PAINTABLE_"
         .size name="STATIC_SIZE"
         .contents name="STATIC_CONTENTS"
