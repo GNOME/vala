@@ -1,3 +1,27 @@
+Vala 0.46.11
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Improve array-dup-wrapper for empty arrays [#999]
+    + Don't call get_ccode_finish_instance() with non-async methods
+    + Cast initializer-list to struct for non-constant/-array assignment [#1013]
+    + Consistently use get_ccode_lower_case_prefix() for function names [#1008]
+  - vala:
+    + Correctly handle qualified struct type in initializer list [#1004]
+    + Fix value-type for ArrayCreationExpression used as argument [#1009]
+    + Improve parameter check of "get" method used for foreach [#1017]
+    + Don't carry floating reference into unknown target type expression [#1018]
+  - girparser: Actually respect given cprefix metadata for enumerations
+  - girwriter: Append symbol-attributes to callback field [#1006]
+  - libvaladoc/girimporter: Skip "function-macro" elements
+  - build: Update git-version-gen to latest upstream
+  - tests: Build typelib if g-ir-compiler is available
+
+ * Bindings:
+  - gtk+-3.0: Deprecated abstract methods are not required to be implemented
+  - harfbuzz-gobject: Update to 2.6.8
+  - webkit2gtk-4.0: Update to 2.29.2
+
 Vala 0.46.10
 ============
  * Regression and bug fixes:
