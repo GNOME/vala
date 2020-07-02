@@ -1839,6 +1839,8 @@ public class Vala.GTypeModule : GErrorModule {
 			} else if (param_spec_name == "g_param_spec_variant") {
 				cspec.add_argument (new CCodeConstant ("G_VARIANT_TYPE_ANY"));
 				cspec.add_argument (new CCodeConstant ("NULL"));
+			} else if (param_spec_name == "gtk_param_spec_expression") {
+				// No additional parameter required
 			} else if (get_ccode_type_id (type_symbol) != "G_TYPE_POINTER") {
 				cspec.add_argument (new CCodeIdentifier (get_ccode_type_id (type_symbol)));
 			}
