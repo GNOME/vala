@@ -9773,8 +9773,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", lower_case_csuffix = "param_expression", type_id = "gtk_param_expression_get_type ()")]
 	public class ParamSpecExpression : GLib.ParamSpec {
-		[CCode (has_construct_function = false)]
-		protected ParamSpecExpression ();
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_param_spec_expression", has_construct_function = false, type = "GParamSpec*")]
+		public ParamSpecExpression (string name, string nick, string blurb, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_password_entry_get_type ()")]
 	public class PasswordEntry : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Editable {
@@ -14386,8 +14386,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Widget native_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static GLib.ParamSpec param_spec_expression (string name, string nick, string blurb, GLib.ParamFlags flags);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void print_run_page_setup_dialog_async (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings, [CCode (scope = "async")] Gtk.PageSetupDoneFunc done_cb);
@@ -14416,9 +14414,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.Expression? value_dup_expression (GLib.Value value);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Expression? value_get_expression (GLib.Value value);
+	public static unowned Gtk.Expression? value_get_expression (ref GLib.Value value);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void value_set_expression (GLib.Value value, Gtk.Expression expression);
+	public static void value_set_expression (ref GLib.Value value, Gtk.Expression expression);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void value_take_expression (GLib.Value value, owned Gtk.Expression? expression);
+	public static void value_take_expression (ref GLib.Value value, owned Gtk.Expression? expression);
 }

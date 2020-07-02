@@ -233,6 +233,11 @@ CellArea
   .cell_get_property.value ref
   .get_cell_property.value ref
 
+param_spec_expression parent="Gtk.ParamSpecExpression" name="new" symbol_type="constructor"
+value_get_expression.value ref
+value_set_expression.value ref
+value_take_expression.value ref
+
 // Implementation in -custom.vala
 BuildableParser skip
 
