@@ -1830,20 +1830,20 @@ public class Vala.GTypeModule : GErrorModule {
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 
-
-		if (prop.property_type.type_symbol is Class || prop.property_type.type_symbol is Interface) {
-			string param_spec_name = get_ccode_param_spec_function (prop.property_type.type_symbol);
+		unowned TypeSymbol? type_symbol = prop.property_type.type_symbol;
+		if (type_symbol is Class || type_symbol is Interface) {
+			string param_spec_name = get_ccode_param_spec_function (type_symbol);
 			cspec.call = new CCodeIdentifier (param_spec_name);
 			if (param_spec_name == "g_param_spec_string") {
 				cspec.add_argument (new CCodeConstant ("NULL"));
 			} else if (param_spec_name == "g_param_spec_variant") {
 				cspec.add_argument (new CCodeConstant ("G_VARIANT_TYPE_ANY"));
 				cspec.add_argument (new CCodeConstant ("NULL"));
-			} else if (get_ccode_type_id (prop.property_type.type_symbol) != "G_TYPE_POINTER") {
-				cspec.add_argument (new CCodeIdentifier (get_ccode_type_id (prop.property_type.type_symbol)));
+			} else if (get_ccode_type_id (type_symbol) != "G_TYPE_POINTER") {
+				cspec.add_argument (new CCodeIdentifier (get_ccode_type_id (type_symbol)));
 			}
-		} else if (prop.property_type.type_symbol is Enum) {
-			unowned Enum e = (Enum) prop.property_type.type_symbol;
+		} else if (type_symbol is Enum) {
+			unowned Enum e = (Enum) type_symbol;
 			if (get_ccode_has_type_id (e)) {
 				if (e.is_flags) {
 					cspec.call = new CCodeIdentifier ("g_param_spec_flags");
@@ -1866,10 +1866,10 @@ public class Vala.GTypeModule : GErrorModule {
 			if (prop.initializer != null) {
 				cspec.add_argument ((CCodeExpression) get_ccodenode (prop.initializer));
 			} else {
-				cspec.add_argument (new CCodeConstant (get_ccode_default_value (prop.property_type.type_symbol)));
+				cspec.add_argument (new CCodeConstant (get_ccode_default_value (type_symbol)));
 			}
-		} else if (prop.property_type.type_symbol is Struct) {
-			unowned Struct st = (Struct) prop.property_type.type_symbol;
+		} else if (type_symbol is Struct) {
+			unowned Struct st = (Struct) type_symbol;
 			var type_id = get_ccode_type_id (st);
 			if (type_id == "G_TYPE_INT") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_int");
