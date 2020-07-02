@@ -700,6 +700,7 @@ TESTS = \
 	parser/invalid-brace.test \
 	parser/invalid-statement-delimiter.test \
 	parser/local-variable.vala \
+	parser/local-variable-array-type-invalid.test \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
 	parser/member-access-pointer.vala \

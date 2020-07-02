@@ -188,6 +188,8 @@ public class Vala.ArrayType : ReferenceType {
 			result.length = length;
 		}
 
+		result.invalid_syntax = invalid_syntax;
+
 		return result;
 	}
 
