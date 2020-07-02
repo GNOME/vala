@@ -141,6 +141,9 @@ public class Vala.InitializerList : Expression {
 			error = true;
 			Report.error (source_reference, "initializer list used for unknown type");
 			return false;
+		} else if (target_type.error) {
+			error = true;
+			return false;
 		} else if (target_type is ArrayType) {
 			/* initializer is used as array initializer */
 			unowned ArrayType array_type = (ArrayType) target_type;
