@@ -254,10 +254,15 @@ public class Vala.InitializerList : Expression {
 		}
 
 		foreach (Expression expr in initializers) {
-			expr.check (context);
+			if (!expr.check (context)) {
+				error = true;
+			}
 		}
 
-		bool error = false;
+		if (error) {
+			return false;
+		}
+
 		foreach (Expression e in get_initializers ()) {
 			if (e.value_type == null) {
 				error = true;
