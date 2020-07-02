@@ -1,0 +1,6 @@
+Invalid Code
+
+const int[,4] FOO = { { 23 }, { 42 } };
+
+void main() {
+}

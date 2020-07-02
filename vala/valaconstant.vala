@@ -141,7 +141,7 @@ public class Vala.Constant : Symbol, Lockable {
 			} else {
 				value.target_type = type_reference;
 
-				if (!value.check (context)) {
+				if (!value.check (context) || type_reference.error) {
 					error = true;
 					return false;
 				}
