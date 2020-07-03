@@ -1,0 +1,10 @@
+Invalid Code
+
+void bar (string[] foo) {
+	foo.resize (42);
+}
+
+void main () {
+	var foo = new string[23];
+	bar (foo);
+}
