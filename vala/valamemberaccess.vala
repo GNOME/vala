@@ -458,10 +458,14 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
-			if (symbol_reference is ArrayResizeMethod && inner.value_type is ArrayType) {
-				unowned ArrayType? value_array_type = inner.value_type as ArrayType;
-				if (value_array_type != null && value_array_type.inline_allocated) {
+			if (symbol_reference is ArrayResizeMethod && inner.symbol_reference is Variable) {
+				// require the real type with its original value_owned attritubte
+				var inner_type = context.analyzer.get_value_type_for_symbol (inner.symbol_reference, true) as ArrayType;
+				if (inner_type != null && inner_type.inline_allocated) {
 					Report.error (source_reference, "`resize' is not supported for arrays with fixed length");
+					error = true;
+				} else if (inner_type != null && !inner_type.value_owned) {
+					Report.error (source_reference, "`resize' is not allowed for unowned array references");
 					error = true;
 				}
 			}
