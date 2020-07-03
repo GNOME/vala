@@ -1,0 +1,9 @@
+Invalid Code
+
+unowned string[] foo;
+
+void main () {
+	var bar = new string[23];
+	foo = bar;
+	foo.resize (42);
+}
