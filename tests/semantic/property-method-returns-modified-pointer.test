@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	public List<string> bar { get; }
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.bar.append ("foo");
+}
