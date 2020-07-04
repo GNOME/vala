@@ -6746,7 +6746,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cclosure_expression_get_type ()")]
 	public class CClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params, owned GLib.Callback callback_func);
+		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params, GLib.Callback callback_func, void* user_data, GLib.ClosureNotify? user_destroy);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_calendar_get_type ()")]
 	public class Calendar : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
