@@ -911,6 +911,7 @@ TESTS = \
 	semantic/property-accessibility.test \
 	semantic/property-construct.test \
 	semantic/property-initializer-type.test \
+	semantic/property-method-returns-modified-pointer.test \
 	semantic/property-override.test \
 	semantic/property-override-class.test \
 	semantic/property-override-interface.test \
