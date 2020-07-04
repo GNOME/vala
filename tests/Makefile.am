@@ -763,6 +763,8 @@ TESTS = \
 	semantic/class-too-many-type-arguments.test \
 	semantic/constant-extern.test \
 	semantic/constant-pointer.test \
+	semantic/constant-reassignment-element.test \
+	semantic/constant-reassignment-member.test \
 	semantic/constant-value.test \
 	semantic/constant-value-missing.test \
 	semantic/constant-value-type.test \

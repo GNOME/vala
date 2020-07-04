@@ -158,11 +158,7 @@ public class Vala.Assignment : Expression {
 		if (left is MemberAccess) {
 			var ma = (MemberAccess) left;
 
-			if (ma.symbol_reference is Constant) {
-				error = true;
-				Report.error (source_reference, "Assignment to constant after initialization");
-				return false;
-			}
+			check_constant_assignment (ma);
 
 			if ((!(ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
 			    (ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ())) {
@@ -190,6 +186,8 @@ public class Vala.Assignment : Expression {
 			}
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
+
+			check_constant_assignment (ea.container as MemberAccess);
 
 			if (ea.container.value_type.data_type == context.analyzer.string_type.data_type) {
 				error = true;
@@ -438,6 +436,23 @@ public class Vala.Assignment : Expression {
 		}
 
 		return false;
+	}
+
+	void check_constant_assignment (MemberAccess? inner) {
+		while (inner != null) {
+			if (inner.symbol_reference is Constant) {
+				error = true;
+				Report.error (source_reference, "Assignment to constant after initialization");
+				break;
+			}
+			if (inner.inner is MemberAccess) {
+				inner = (MemberAccess) inner.inner;
+			} else if (inner.inner is ElementAccess) {
+				inner = ((ElementAccess) inner.inner).container as MemberAccess;
+			} else {
+				inner = null;
+			}
+		}
 	}
 
 	public override void emit (CodeGenerator codegen) {

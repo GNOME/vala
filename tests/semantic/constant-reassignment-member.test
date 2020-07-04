@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Foo {
+	int i;
+}
+
+void main () {
+	const Foo foo = { 23 };
+	foo.i = 42;
+}
