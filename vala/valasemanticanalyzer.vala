@@ -278,7 +278,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Constant) {
 			unowned Constant c = (Constant) sym;
-			return c.type_reference;
+			return c.type_reference.copy ();
 		} else if (sym is Property) {
 			unowned Property prop = (Property) sym;
 			if (lvalue) {
