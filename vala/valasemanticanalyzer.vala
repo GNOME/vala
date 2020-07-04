@@ -249,7 +249,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Constant) {
 			var c = (Constant) sym;
-			return c.type_reference;
+			return c.type_reference.copy ();
 		} else if (sym is Property) {
 			var prop = (Property) sym;
 			if (lvalue) {
