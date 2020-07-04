@@ -506,7 +506,13 @@ public class Vala.MethodCall : Expression {
 				value_type.floating_reference = true;
 			}
 			if (m.returns_modified_pointer) {
-				((MemberAccess) call).inner.lvalue = true;
+				unowned Expression inner = ((MemberAccess) call).inner;
+				inner.lvalue = true;
+				unowned Property? prop = inner.symbol_reference as Property;
+				if (prop != null && (prop.set_accessor == null || !prop.set_accessor.writable)) {
+					error = true;
+					Report.error (inner.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+				}
 			}
 
 			unowned Signal? sig = m.parent_symbol as Signal;
