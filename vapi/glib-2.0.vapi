@@ -1872,7 +1872,7 @@ namespace GLib {
 	/* The Main Event Loop */
 
 	[Compact]
-	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref")]
+	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref", type_id = "G_TYPE_MAIN_LOOP")]
 	public class MainLoop {
 		public MainLoop (MainContext? context = null, bool is_running = false);
 		public void run ();
@@ -1890,7 +1890,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (ref_function = "g_main_context_ref", unref_function = "g_main_context_unref")]
+	[CCode (ref_function = "g_main_context_ref", unref_function = "g_main_context_unref", type_id = "G_TYPE_MAIN_CONTEXT")]
 	public class MainContext {
 		public MainContext ();
 		public static unowned MainContext @default ();
@@ -2021,7 +2021,7 @@ namespace GLib {
 	}
 
 	[Compact]
-	[CCode (ref_function = "g_source_ref", unref_function = "g_source_unref")]
+	[CCode (ref_function = "g_source_ref", unref_function = "g_source_unref", type_id = "G_TYPE_SOURCE")]
 	public abstract class Source {
 		protected Source ();
 		[Version (since = "2.12")]
@@ -2142,7 +2142,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.32")]
-	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref")]
+	[CCode (ref_function = "g_thread_ref", unref_function = "g_thread_unref", type_id = "G_TYPE_THREAD")]
 	public class Thread<T> {
 		[Version (since = "2.32")]
 		public Thread (string? name, owned ThreadFunc<T> func);
@@ -2474,7 +2474,7 @@ namespace GLib {
 	/* IO Channels */
 
 	[Compact]
-	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
+	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref", type_id = "G_TYPE_IO_CHANNEL")]
 	public class IOChannel {
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
@@ -2560,7 +2560,7 @@ namespace GLib {
 	}
 
 	[Flags]
-	[CCode (cprefix = "G_IO_")]
+	[CCode (cprefix = "G_IO_", type_id = "G_TYPE_IO_CONDITION")]
 	public enum IOCondition {
 		IN,
 		OUT,
@@ -2590,7 +2590,7 @@ namespace GLib {
 
 	[Compact]
 	[ErrorBase]
-	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
+	[CCode (copy_function = "g_error_copy", free_function = "g_error_free", type_id = "G_TYPE_ERROR")]
 	public class Error {
 		[PrintfFormat]
 		public Error (Quark domain, int code, string format, ...);
@@ -2874,7 +2874,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.16")]
-	[CCode (free_function = "g_checksum_free")]
+	[CCode (free_function = "g_checksum_free", type_id = "G_TYPE_CHECKSUM")]
 	public class Checksum {
 		public Checksum (ChecksumType checksum_type);
 		public Checksum copy ();
@@ -3192,7 +3192,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.26")]
-	[CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref")]
+	[CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref", type_id = "G_TYPE_TIME_ZONE")]
 	public class TimeZone {
 		public TimeZone (string identifier);
 		public TimeZone.utc ();
@@ -3945,7 +3945,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.22")]
-	[CCode (ref_function = "g_mapped_file_ref", unref_function = "g_mapped_file_unref")]
+	[CCode (ref_function = "g_mapped_file_ref", unref_function = "g_mapped_file_unref", type_id = "G_TYPE_MAPPED_FILE")]
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
 		[Version (since = "2.32")]
@@ -6175,7 +6175,7 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.24")]
-	[CCode (ref_function = "g_variant_builder_ref", unref_function = "g_variant_builder_unref")]
+	[CCode (ref_function = "g_variant_builder_ref", unref_function = "g_variant_builder_unref", type_id = "G_TYPE_VARIANT_BUILDER")]
 	public class VariantBuilder {
 		public VariantBuilder (VariantType type);
 		public void open (VariantType type);
@@ -6187,7 +6187,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.40")]
-	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref")]
+	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref", type_id = "G_TYPE_VARIANT_DICT")]
 	public class VariantDict {
 		public VariantDict (GLib.Variant? from_asv = null);
 		public bool lookup (string key, string format_string, ...);
