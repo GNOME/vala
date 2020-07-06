@@ -6575,8 +6575,13 @@ namespace Gtk {
 		public bool equals (Gtk.Bitset other);
 		public uint get_maximum ();
 		public uint get_minimum ();
+		public uint get_nth (uint nth);
+		public uint64 get_size ();
+		public uint64 get_size_in_range (uint first, uint last);
 		public void intersect (Gtk.Bitset other);
 		public bool is_empty ();
+		[CCode (has_construct_function = false)]
+		public Bitset.range (uint start, uint n_items);
 		public unowned Gtk.Bitset @ref ();
 		public bool remove (uint value);
 		public void remove_all ();
@@ -6746,7 +6751,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cclosure_expression_get_type ()")]
 	public class CClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params, GLib.Callback callback_func, void* user_data, GLib.ClosureNotify? user_destroy);
+		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal? marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params, GLib.Callback callback_func, void* user_data, GLib.ClosureNotify? user_destroy);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_calendar_get_type ()")]
 	public class Calendar : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -8134,34 +8139,24 @@ namespace Gtk {
 		public signal void up_folder ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_filter_get_type ()")]
-	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
+	public class FileFilter : Gtk.Filter, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public FileFilter ();
-		public void add_custom (Gtk.FileFilterFlags needed, owned Gtk.FileFilterFunc func);
 		public void add_mime_type (string mime_type);
 		public void add_pattern (string pattern);
 		public void add_pixbuf_formats ();
-		public bool filter (Gtk.FileFilterInfo filter_info);
 		[CCode (has_construct_function = false)]
 		public FileFilter.from_gvariant (GLib.Variant variant);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_attributes ();
 		[CCode (cname = "gtk_file_filter_get_name")]
 		public unowned string? get_filter_name ();
-		public Gtk.FileFilterFlags get_needed ();
 		[CCode (cname = "gtk_file_filter_set_name")]
 		public void set_filter_name (string? name);
 		[CCode (returns_floating_reference = true)]
 		public GLib.Variant to_gvariant ();
 		[NoAccessorMethod]
 		public string name { owned get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class FileFilterInfo {
-		public Gtk.FileFilterFlags contains;
-		public weak string display_name;
-		public weak string filename;
-		public weak string mime_type;
-		public weak string uri;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_filter_get_type ()")]
 	public class Filter : GLib.Object {
@@ -8175,17 +8170,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_filter_list_model_get_type ()")]
 	public class FilterListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
-		public FilterListModel (GLib.ListModel model, Gtk.Filter? filter);
-		[CCode (has_construct_function = false)]
-		public FilterListModel.for_type (GLib.Type item_type);
+		public FilterListModel (GLib.ListModel? model, Gtk.Filter? filter);
 		public unowned Gtk.Filter? get_filter ();
 		public unowned GLib.ListModel? get_model ();
 		public void set_filter (Gtk.Filter? filter);
 		public void set_model (GLib.ListModel? model);
 		public Gtk.Filter filter { get; set; }
-		[NoAccessorMethod]
-		public GLib.Type item_type { get; construct; }
-		public GLib.ListModel model { get; construct; }
+		public GLib.ListModel model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_fixed_get_type ()")]
 	public class Fixed : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -8214,12 +8205,10 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flatten_list_model_get_type ()")]
 	public class FlattenListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
-		public FlattenListModel (GLib.Type item_type, GLib.ListModel? model);
+		public FlattenListModel (GLib.ListModel? model);
 		public unowned GLib.ListModel? get_model ();
 		public unowned GLib.ListModel get_model_for_item (uint position);
 		public void set_model (GLib.ListModel? model);
-		[NoAccessorMethod]
-		public GLib.Type item_type { get; construct; }
 		public GLib.ListModel model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flow_box_get_type ()")]
@@ -9232,14 +9221,12 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_map_list_model_get_type ()")]
 	public class MapListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
-		public MapListModel (GLib.Type item_type, GLib.ListModel? model, owned Gtk.MapListModelMapFunc? map_func);
+		public MapListModel (GLib.ListModel? model, owned Gtk.MapListModelMapFunc? map_func);
 		public unowned GLib.ListModel? get_model ();
 		public void set_map_func (owned Gtk.MapListModelMapFunc? map_func);
 		public void set_model (GLib.ListModel? model);
 		[NoAccessorMethod]
 		public bool has_map { get; }
-		[NoAccessorMethod]
-		public GLib.Type item_type { get; construct; }
 		public GLib.ListModel model { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_media_controls_get_type ()")]
@@ -9432,8 +9419,9 @@ namespace Gtk {
 	public class MultiSelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
 		[CCode (has_construct_function = false, type = "GListModel*")]
 		public MultiSelection (GLib.ListModel model);
-		[NoAccessorMethod]
-		public GLib.ListModel model { owned get; construct; }
+		public unowned GLib.ListModel get_model ();
+		public void set_model (GLib.ListModel? model);
+		public GLib.ListModel model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_sorter_get_type ()")]
 	public class MultiSorter : Gtk.Sorter, GLib.ListModel, Gtk.Buildable {
@@ -9481,7 +9469,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public NoSelection (GLib.ListModel model);
 		public unowned GLib.ListModel get_model ();
-		public GLib.ListModel model { get; construct; }
+		public void set_model (GLib.ListModel? model);
+		public GLib.ListModel model { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_notebook_get_type ()")]
 	public class Notebook : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10418,6 +10407,18 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected SearchEntryAccessible ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_selection_filter_model_get_type ()")]
+	public class SelectionFilterModel : GLib.Object, GLib.ListModel {
+		[CCode (has_construct_function = false)]
+		public SelectionFilterModel (Gtk.SelectionModel model);
+		[CCode (has_construct_function = false)]
+		public SelectionFilterModel.for_type (GLib.Type item_type);
+		public unowned Gtk.SelectionModel? get_model ();
+		public void set_model (Gtk.SelectionModel? model);
+		[NoAccessorMethod]
+		public GLib.Type item_type { get; construct; }
+		public Gtk.SelectionModel model { get; set; }
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_separator_get_type ()")]
 	public class Separator : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -10689,10 +10690,11 @@ namespace Gtk {
 		public void* get_selected_item ();
 		public void set_autoselect (bool autoselect);
 		public void set_can_unselect (bool can_unselect);
+		public void set_model (GLib.ListModel? model);
 		public void set_selected (uint position);
 		public bool autoselect { get; set; }
 		public bool can_unselect { get; set; }
-		public GLib.ListModel model { get; construct; }
+		public GLib.ListModel model { get; set; }
 		public uint selected { get; set; }
 		public GLib.Object selected_item { get; }
 	}
@@ -10710,17 +10712,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_slice_list_model_get_type ()")]
 	public class SliceListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
-		public SliceListModel (GLib.ListModel model, uint offset, uint size);
-		[CCode (has_construct_function = false)]
-		public SliceListModel.for_type (GLib.Type item_type);
+		public SliceListModel (GLib.ListModel? model, uint offset, uint size);
 		public unowned GLib.ListModel? get_model ();
 		public uint get_offset ();
 		public uint get_size ();
 		public void set_model (GLib.ListModel? model);
 		public void set_offset (uint offset);
 		public void set_size (uint size);
-		[NoAccessorMethod]
-		public GLib.Type item_type { get; construct; }
 		public GLib.ListModel model { get; set; }
 		public uint offset { get; set; }
 		public uint size { get; set; }
@@ -10776,15 +10774,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_sort_list_model_get_type ()")]
 	public class SortListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
-		public SortListModel (GLib.ListModel model, Gtk.Sorter? sorter);
-		[CCode (has_construct_function = false)]
-		public SortListModel.for_type (GLib.Type item_type);
+		public SortListModel (GLib.ListModel? model, Gtk.Sorter? sorter);
 		public unowned GLib.ListModel? get_model ();
 		public unowned Gtk.Sorter? get_sorter ();
 		public void set_model (GLib.ListModel? model);
 		public void set_sorter (Gtk.Sorter? sorter);
-		[NoAccessorMethod]
-		public GLib.Type item_type { get; construct; }
 		public GLib.ListModel model { get; construct; }
 		public Gtk.Sorter sorter { get; set; }
 	}
@@ -10983,15 +10977,15 @@ namespace Gtk {
 		public void append (string str);
 		public unowned string get_string (uint position);
 		public void remove (uint position);
-		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] string[] additions);
+		public void splice (uint position, uint n_removals, [CCode (array_length = false, array_null_terminated = true)] string[]? additions);
 		public void take (owned string str);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_object_get_type ()")]
 	public class StringObject : GLib.Object {
 		[CCode (has_construct_function = false)]
-		protected StringObject ();
+		public StringObject (global::string str);
 		public unowned global::string get_string ();
-		public global::string string { get; construct; }
+		public global::string string { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_sorter_get_type ()")]
 	public class StringSorter : Gtk.Sorter {
@@ -13268,14 +13262,6 @@ namespace Gtk {
 		SAVE,
 		SELECT_FOLDER
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_FILTER_", type_id = "gtk_file_filter_flags_get_type ()")]
-	[Flags]
-	public enum FileFilterFlags {
-		FILENAME,
-		URI,
-		DISPLAY_NAME,
-		MIME_TYPE
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILTER_CHANGE_", type_id = "gtk_filter_change_get_type ()")]
 	public enum FilterChange {
 		DIFFERENT,
@@ -13983,8 +13969,6 @@ namespace Gtk {
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 0.9)]
 	public delegate void ExpressionNotify ();
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
-	public delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate Gtk.Widget FlowBoxCreateWidgetFunc ([CCode (type = "gpointer")] GLib.Object item);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]

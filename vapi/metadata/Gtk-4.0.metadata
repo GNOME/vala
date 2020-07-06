@@ -13,7 +13,6 @@ IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
 
 // G-I doesn't support structs
 Border struct
-FileFilterInfo struct=false
 Requisition struct
 TextIter struct
 TreeIter struct
