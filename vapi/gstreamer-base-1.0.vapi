@@ -68,6 +68,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			public virtual Gst.FlowReturn finish_buffer (owned Gst.Buffer buffer);
+			[Version (since = "1.18")]
+			public virtual Gst.FlowReturn finish_buffer_list (owned Gst.BufferList bufferlist);
 			[NoWrapper]
 			public virtual Gst.Caps fixate_src_caps (Gst.Caps caps);
 			[NoWrapper]
@@ -731,7 +733,10 @@ namespace Gst {
 			public virtual bool is_seekable ();
 			[Version (since = "1.18")]
 			public virtual bool negotiate ();
+			[Version (deprecated = true, deprecated_since = "1.18")]
 			public bool new_seamless_segment (int64 start, int64 stop, int64 time);
+			[Version (since = "1.18")]
+			public bool new_segment (Gst.Segment segment);
 			[NoWrapper]
 			public virtual bool prepare_seek_segment (Gst.Event seek, Gst.Segment segment);
 			[NoWrapper]

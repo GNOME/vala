@@ -2493,6 +2493,7 @@ namespace Gst {
 		public void add_valist_values (Gst.TagMergeMode mode, string tag, va_list var_args);
 		public void add_value (Gst.TagMergeMode mode, string tag, GLib.Value value);
 		public void add_values (Gst.TagMergeMode mode, string tag, ...);
+		public Gst.TagList copy ();
 		[CCode (has_construct_function = false)]
 		public TagList.empty ();
 		public void @foreach (Gst.TagForeachFunc func);
