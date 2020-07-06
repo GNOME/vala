@@ -1454,7 +1454,8 @@ namespace Gst {
 			ADOBERGB,
 			BT2020_10,
 			SMPTE2084,
-			ARIB_STD_B67
+			ARIB_STD_B67,
+			BT601
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_VBI_PARSER_RESULT_", type_id = "gst_video_vbi_parser_result_get_type ()")]
 		[GIR (name = "VideoVBIParserResult")]
@@ -1727,6 +1728,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
 		public static Gst.Video.TransferFunction color_transfer_from_iso (uint value);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static bool color_transfer_is_equivalent (Gst.Video.TransferFunction from_func, uint from_bpp, Gst.Video.TransferFunction to_func, uint to_bpp);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
 		public static uint color_transfer_to_iso (Gst.Video.TransferFunction func);
