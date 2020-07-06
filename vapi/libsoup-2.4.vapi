@@ -1350,7 +1350,8 @@ namespace Soup {
 	public enum CookieJarAcceptPolicy {
 		ALWAYS,
 		NEVER,
-		NO_THIRD_PARTY
+		NO_THIRD_PARTY,
+		GRANDFATHERED_THIRD_PARTY
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_DATE_", type_id = "soup_date_format_get_type ()")]
 	public enum DateFormat {
