@@ -622,6 +622,11 @@ class Vala.Compiler {
 		// initialize locale
 		Intl.setlocale (LocaleCategory.ALL, "");
 
+		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
+			stderr.printf ("Integrity check failed (libvala %s doesn't match valac %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			return 1;
+		}
+
 		if (Path.get_basename (args[0]) == "vala" || Path.get_basename (args[0]) == "vala" + Config.PACKAGE_SUFFIX) {
 			return run_source (args);
 		}

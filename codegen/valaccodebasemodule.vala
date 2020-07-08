@@ -373,6 +373,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public static int ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
 
 	protected CCodeBaseModule () {
+		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
+			Report.error (null, "Integrity check failed (libvala %s doesn't match ccodegen %s)".printf (Vala.get_build_version (), Vala.BUILD_VERSION));
+		}
+
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
 		predefined_marshal_set.add ("VOID:BOOLEAN");

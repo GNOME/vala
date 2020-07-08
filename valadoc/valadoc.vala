@@ -398,6 +398,11 @@ public class ValaDoc : Object {
 	static int main (string[] args) {
 		Intl.setlocale (LocaleCategory.ALL, "");
 
+		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
+			stderr.printf ("Integrity check failed (libvala %s doesn't match valadoc %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			return 1;
+		}
+
 		try {
 			var opt_context = new OptionContext ("- Vala Documentation Tool");
 			opt_context.set_help_enabled (true);

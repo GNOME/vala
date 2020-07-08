@@ -211,6 +211,12 @@ class Vala.VAPIGen {
 	
 	static int main (string[] args) {
 		Intl.setlocale (LocaleCategory.ALL, "");
+
+		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
+			stderr.printf ("Integrity check failed (libvala %s doesn't match vapigen %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			return 1;
+		}
+
 		try {
 			var opt_context = new OptionContext ("- Vala API Generator");
 			opt_context.set_help_enabled (true);
