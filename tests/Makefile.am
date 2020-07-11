@@ -565,6 +565,7 @@ TESTS = \
 	generics/inference-static-function.vala \
 	generics/integer-type-cast.vala \
 	generics/parameter-sizeof-initializer.vala \
+	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
