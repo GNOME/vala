@@ -1,0 +1,8 @@
+Invalid Code
+
+class Class<G> {
+    public Class (Type type = G);
+}
+
+void main () {
+}
