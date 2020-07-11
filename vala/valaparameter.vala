@@ -166,6 +166,9 @@ public class Vala.Parameter : Variable {
 			if (initializer != null) {
 				initializer.target_type = variable_type.copy ();
 				initializer.check (context);
+				if (initializer.value_type == null) {
+					initializer.value_type = new InvalidType ();
+				}
 			}
 
 			unowned ArrayType? variable_array_type = variable_type as ArrayType;
