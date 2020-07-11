@@ -5663,10 +5663,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (!(expr.left.value_type is NullType)
-		    && expr.left.value_type.compatible (string_type)
-		    && !(expr.right.value_type is NullType)
-		    && expr.right.value_type.compatible (string_type)) {
+		bool is_string_comparison = !(expr.left.value_type is NullType) && expr.left.value_type.compatible (string_type)
+			&& !(expr.right.value_type is NullType) && expr.right.value_type.compatible (string_type);
+		bool has_string_literal = (expr.left is StringLiteral || expr.right is StringLiteral);
+
+		if (is_string_comparison || (has_string_literal && expr.operator != BinaryOperator.PLUS)) {
 			if (expr.operator == BinaryOperator.PLUS) {
 				// string concatenation
 				if (expr.left.is_constant () && expr.right.is_constant ()) {
