@@ -1880,6 +1880,12 @@ namespace Xml {
 
 	[CCode (cname = "xmlResetLastError", cheader_filename = "libxml/xmlerror.h")]
 	public static void reset_last_error ();
+	
+	[CCode (cname = "xmlStructuredErrorFunc", cheader_filename = "libxml/xmlerror.h", instance_pos = 0.9)]
+	public delegate void StructuredErrorFunc (Error* e);
+	
+	[CCode (cname = "xmlSetStructuredErrorFunc", cheader_filename = "libxml/xmlerror.h")]
+	public static void set_structured_error_func ([CCode (delegate_target_pos = 0.9)] StructuredErrorFunc func);
 }
 
 namespace Html {
