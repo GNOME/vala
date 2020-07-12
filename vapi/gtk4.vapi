@@ -6590,7 +6590,7 @@ namespace Gtk {
 		public void remove_rectangle (uint start, uint width, uint height, uint stride);
 		public void shift_left (uint amount);
 		public void shift_right (uint amount);
-		public void slice (uint position, uint removed, uint added);
+		public void splice (uint position, uint removed, uint added);
 		public void subtract (Gtk.Bitset other);
 		public void union (Gtk.Bitset other);
 		public void unref ();
@@ -7589,10 +7589,12 @@ namespace Gtk {
 		public unowned GLib.Error? get_error ();
 		public unowned GLib.File? get_file ();
 		public int get_io_priority ();
+		public bool get_monitored ();
 		public bool is_loading ();
 		public void set_attributes (string? attributes);
 		public void set_file (GLib.File? file);
 		public void set_io_priority (int io_priority);
+		public void set_monitored (bool monitored);
 		public string attributes { get; set; }
 		public GLib.Error error { get; }
 		public GLib.File file { get; set; }
@@ -7601,6 +7603,7 @@ namespace Gtk {
 		public GLib.Type item_type { get; }
 		[NoAccessorMethod]
 		public bool loading { get; }
+		public bool monitored { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drag_icon_get_type ()")]
 	public class DragIcon : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root {
@@ -7672,7 +7675,7 @@ namespace Gtk {
 		public void set_enable_search (bool enable_search);
 		public void set_expression (Gtk.Expression? expression);
 		public void set_factory (Gtk.ListItemFactory? factory);
-		public void set_from_strings (string texts);
+		public void set_from_strings ([CCode (array_length = false, array_null_terminated = true)] string[] texts);
 		public void set_list_factory (Gtk.ListItemFactory? factory);
 		public void set_model (GLib.ListModel? model);
 		public void set_selected (uint position);
@@ -8172,11 +8175,16 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public FilterListModel (GLib.ListModel? model, Gtk.Filter? filter);
 		public unowned Gtk.Filter? get_filter ();
+		public bool get_incremental ();
 		public unowned GLib.ListModel? get_model ();
+		public uint get_pending ();
 		public void set_filter (Gtk.Filter? filter);
+		public void set_incremental (bool incremental);
 		public void set_model (GLib.ListModel? model);
 		public Gtk.Filter filter { get; set; }
+		public bool incremental { get; set; }
 		public GLib.ListModel model { get; set; }
+		public uint pending { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_fixed_get_type ()")]
 	public class Fixed : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -12643,16 +12651,14 @@ namespace Gtk {
 		public GLib.File get_current_folder ();
 		public string get_current_name ();
 		public GLib.File get_file ();
-		public GLib.SList<GLib.File> get_files ();
+		public GLib.ListModel get_files ();
 		public unowned Gtk.FileFilter? get_filter ();
+		public GLib.ListModel get_filters ();
 		public bool get_select_multiple ();
-		public GLib.SList<weak Gtk.FileFilter> list_filters ();
-		public GLib.SList<GLib.File>? list_shortcut_folders ();
+		public GLib.ListModel get_shortcut_folders ();
 		public void remove_choice (string id);
 		public void remove_filter (Gtk.FileFilter filter);
 		public bool remove_shortcut_folder (GLib.File folder) throws GLib.Error;
-		public void select_all ();
-		public bool select_file (GLib.File file) throws GLib.Error;
 		public void set_action (Gtk.FileChooserAction action);
 		public void set_choice (string id, string option);
 		public void set_create_folders (bool create_folders);
@@ -12661,8 +12667,6 @@ namespace Gtk {
 		public bool set_file (GLib.File file) throws GLib.Error;
 		public void set_filter (Gtk.FileFilter filter);
 		public void set_select_multiple (bool select_multiple);
-		public void unselect_all ();
-		public void unselect_file (GLib.File file);
 		[ConcreteAccessor]
 		public abstract Gtk.FileChooserAction action { get; set; }
 		[ConcreteAccessor]
@@ -12670,10 +12674,11 @@ namespace Gtk {
 		[ConcreteAccessor]
 		public abstract Gtk.FileFilter filter { get; set; }
 		[ConcreteAccessor]
+		public abstract GLib.ListModel filters { owned get; }
+		[ConcreteAccessor]
 		public abstract bool select_multiple { get; set; }
-		public signal void current_folder_changed ();
-		public signal void file_activated ();
-		public signal void selection_changed ();
+		[ConcreteAccessor]
+		public abstract GLib.ListModel shortcut_folders { owned get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_font_chooser_get_type ()")]
 	public interface FontChooser : GLib.Object {
