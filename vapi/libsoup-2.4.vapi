@@ -596,6 +596,8 @@ namespace Soup {
 		[Version (since = "2.42")]
 		public unowned Soup.Request get_soup_request ();
 		public unowned Soup.URI get_uri ();
+		[Version (since = "2.72")]
+		public bool is_feature_disabled (GLib.Type feature_type);
 		public bool is_keepalive ();
 		[Version (deprecated = true)]
 		public void set_chunk_allocator (owned Soup.ChunkAllocator allocator);

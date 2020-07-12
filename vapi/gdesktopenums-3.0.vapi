@@ -164,6 +164,12 @@ namespace GDesktop {
 		LEFT,
 		MOUSE
 	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_TOUCHPAD_BUTTON_TAP_MAP_", has_type_id = false)]
+	public enum TouchpadTapButtonMap {
+		DEFAULT,
+		LRM,
+		LMR
+	}
 	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_USB_PROTECTION_", has_type_id = false)]
 	public enum UsbProtection {
 		LOCKSCREEN,
