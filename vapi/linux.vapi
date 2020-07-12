@@ -3299,6 +3299,78 @@ namespace Linux {
     }
 
     /*
+     * Connector
+     */
+    [CCode (cheader_filename = "linux/connector.h")]
+    namespace Connector {
+        [CCode (cname = "CONNECTOR_MAX_MSG_SIZE")]
+        public const int MAX_MSG_SIZE;
+        [CCode (cname = "CN_NETLINK_USERS")]
+        public const int NETLINK_USERS;
+
+        [CCode (cname = "struct cb_id", has_type_id = false)]
+        public struct CbId {
+            public Linux.Connector.Idx idx;
+            public Linux.Connector.Val val;
+        }
+
+        [CCode (cname = "struct cn_msg", has_type_id = false)]
+        public struct Message {
+            public Linux.Connector.CbId id;
+
+            public uint32 seq;
+            public uint32 ack;
+
+            public uint16 len;
+            public uint16 flags;
+
+            // FIXME Make this work
+            //[CCode (array_length_cname = "len", array_length_type = "uint16")]
+            //public uint8 data[0];
+        }
+
+        [CCode (cheader_filename = "linux/cn_proc.h", cname = "enum proc_cn_mcast_op", cprefix = "PROC_CN_MCAST_", has_type_id = false)]
+        public enum ProcMcastOp {
+            LISTEN,
+            IGNORE
+        }
+
+        [CCode (cname = "__u32", cprefix = "CN_IDX_", has_type_id = false)]
+        public enum Idx {
+            PROC,
+            CIFS,
+            [CCode (cname = "CN_W1_IDX")]
+            W1,
+            V86D,
+            BB,
+            [CCode (cname = "CN_DST_IDX")]
+            DST,
+            DM,
+            DRBD,
+            [CCode (cname = "CN_KVP_IDX")]
+            KVP,
+            [CCode (cname = "CN_VSS_IDX")]
+            VSS
+        }
+
+        [CCode (cname = "__u32", cprefix = "CN_VAL_", has_type_id = false)]
+        public enum Val {
+            PROC,
+            CIFS,
+            [CCode (cname = "CN_W1_VAL")]
+            W1,
+            V86D_UVESAFB,
+            [CCode (cname = "CN_DST_VAL")]
+            DST,
+            DM_USERSPACE_LOG,
+            [CCode (cname = "CN_KVP_VAL")]
+            KVP,
+            [CCode (cname = "CN_VSS_VAL")]
+            VSS
+        }
+    }
+
+    /*
      * Netlink subsystem
      */
     [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "linux/netlink.h")]
@@ -3651,6 +3723,58 @@ namespace Linux {
         public const int SOCK_NONBLOCK;
         [CCode (cheader_filename = "sys/socket.h")]
         public const int SOCK_CLOEXEC;
+
+        [CCode (cname = "__u32", has_type_id = false, cprefix = "PF_", cheader_filename = "sys/socket.h")]
+        public enum ProtocolFamily {
+            UNSPEC,
+            LOCAL,
+            UNIX,
+            FILE,
+            INET,
+            AX25,
+            IPX,
+            APPLETALK,
+            NETROM,
+            BRIDGE,
+            ATMPVC,
+            X25,
+            INET6,
+            ROSE,
+            DECnet,
+            NETBEUI,
+            SECURITY,
+            KEY,
+            NETLINK,
+            ROUTE,
+            PACKET,
+            ASH,
+            ECONET,
+            ATMSVC,
+            RDS,
+            SNA,
+            IRDA,
+            PPPOX,
+            WANPIPE,
+            LLC,
+            IB,
+            MPLS,
+            CAN,
+            TIPC,
+            BLUETOOTH,
+            IUCV,
+            RXRPC,
+            ISDN,
+            PHONET,
+            IEEE802154,
+            CAIF,
+            ALG,
+            NFC,
+            VSOCK,
+            KCM,
+            QIPCRTR,
+            SMC,
+            MAX
+        }
 
         [CCode (cname = "struct ucred", has_type_id = false, cheader_filename = "linux/socket.h", destroy_function = "")]
         public struct ucred {
