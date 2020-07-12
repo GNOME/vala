@@ -162,7 +162,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	void report_parse_error (ParseError e) {
 		var begin = get_location ();
 		next ();
-		Report.error (get_src (begin), "syntax error, " + e.message);
+		Report.error (get_src (begin), e.message);
 	}
 
 	inline bool expect (TokenType type) throws ParseError {
@@ -1192,7 +1192,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		unowned MethodCall? call = expr as MethodCall;
 		unowned ObjectCreationExpression? object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
-			Report.error (expr.source_reference, "syntax error, expected method call");
 			throw new ParseError.SYNTAX ("expected method call");
 		}
 
