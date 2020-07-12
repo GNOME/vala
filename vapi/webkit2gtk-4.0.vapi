@@ -41,6 +41,8 @@ namespace WebKit {
 		public unowned string get_realm ();
 		[Version (since = "2.2")]
 		public WebKit.AuthenticationScheme get_scheme ();
+		[Version (since = "2.30")]
+		public WebKit.SecurityOrigin get_security_origin ();
 		[Version (since = "2.2")]
 		public bool is_for_proxy ();
 		[Version (since = "2.2")]
