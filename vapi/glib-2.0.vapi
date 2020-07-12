@@ -1339,34 +1339,34 @@ public class string {
 	public string locale_to_utf8 (ssize_t len, out size_t bytes_read, out size_t bytes_written, out GLib.Error error = null);
 
 	[CCode (cname = "g_strchomp")]
-	public unowned string _chomp();
+	private static unowned string _chomp([CCode (type = "gchar*")] string data);
 	public string chomp () {
 		string result = this.dup ();
-		result._chomp ();
+		string._chomp (result);
 		return result;
 	}
 
 	[CCode (cname = "g_strchug")]
-	public unowned string _chug();
+	private static unowned string _chug([CCode (type = "gchar*")] string data);
 	public string chug () {
 		string result = this.dup ();
-		result._chug ();
+		string._chug (result);
 		return result;
 	}
 
 	[CCode (cname = "g_strstrip")]
-	public unowned string _strip ();
+	private static unowned string _strip ([CCode (type = "gchar*")] string data);
 	public string strip () {
 		string result = this.dup ();
-		result._strip ();
+		string._strip (result);
 		return result;
 	}
 
 	[CCode (cname = "g_strdelimit")]
-	public unowned string _delimit (string delimiters, char new_delimiter);
+	private static unowned string _delimit ([CCode (type = "gchar*")] string data, string delimiters, char new_delimiter);
 	public string delimit (string delimiters, char new_delimiter) {
 		string result = this.dup ();
-		result._delimit (delimiters, new_delimiter);
+		string._delimit (result, delimiters, new_delimiter);
 		return result;
 	}
 
