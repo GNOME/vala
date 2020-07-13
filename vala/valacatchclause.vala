@@ -65,11 +65,6 @@ public class Vala.CatchClause : CodeNode {
 		}
 	}
 
-	/**
-	 * Specifies the label used for this catch clause in the C code.
-	 */
-	public string? clabel_name { get; set; }
-
 	private DataType _data_type;
 
 	private Block _body;

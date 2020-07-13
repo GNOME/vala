@@ -218,7 +218,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 					if (clause.error_type.equals (gerror_type)) {
 						// general catch clause, this should be the last one
 						has_general_catch_clause = true;
-						ccode.add_goto (clause.clabel_name);
+						ccode.add_goto (clause.get_attribute_string ("CCode", "cname"));
 						break;
 					} else {
 						var catch_type = clause.error_type as ErrorType;
@@ -241,7 +241,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 						}
 
 						// go to catch clause if error domain matches
-						ccode.add_goto (clause.clabel_name);
+						ccode.add_goto (clause.get_attribute_string ("CCode", "cname"));
 						ccode.close ();
 					}
 				}
@@ -316,7 +316,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.clabel_name = "__catch%d_%s".printf (this_try_id, get_ccode_lower_case_name (clause.error_type));
+			clause.set_attribute_string ("CCode", "cname", "__catch%d_%s".printf (this_try_id, get_ccode_lower_case_name (clause.error_type)));
 		}
 
 		is_in_catch = false;
@@ -356,7 +356,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			generate_error_domain_declaration (error_type.error_domain, cfile);
 		}
 
-		ccode.add_label (clause.clabel_name);
+		ccode.add_label (clause.get_attribute_string ("CCode", "cname"));
 
 		ccode.open_block ();
 
