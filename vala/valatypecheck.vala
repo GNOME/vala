@@ -31,7 +31,7 @@ public class Vala.TypeCheck : Expression {
 	 */
 	public Expression expression {
 		get { return _expression; }
-		set {
+		private set {
 			_expression = value;
 			_expression.parent_node = this;
 		}
@@ -42,7 +42,7 @@ public class Vala.TypeCheck : Expression {
 	 */
 	public DataType type_reference {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			_data_type.parent_node = this;
 		}

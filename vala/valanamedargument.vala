@@ -21,13 +21,13 @@
  */
 
 public class Vala.NamedArgument : Expression {
-	public string name { get; set; }
+	public string name { get; private set; }
 
 	public Expression inner {
 		get {
 			return _inner;
 		}
-		set {
+		private set {
 			_inner = value;
 			_inner.parent_node = this;
 		}

@@ -31,7 +31,7 @@ public class Vala.MethodCall : Expression {
 	 */
 	public Expression call {
 		get { return _call; }
-		set {
+		private set {
 			_call = value;
 			_call.parent_node = this;
 		}

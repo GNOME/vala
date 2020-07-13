@@ -30,14 +30,14 @@ public class Vala.MemberInitializer : CodeNode {
 	/**
 	 * Member name.
 	 */
-	public string name { get; set; }
+	public string name { get; private set; }
 
 	/**
 	 * Initializer expression.
 	 */
 	public Expression initializer {
 		get { return _initializer; }
-		set {
+		private set {
 			_initializer = value;
 			_initializer.parent_node = this;
 		}

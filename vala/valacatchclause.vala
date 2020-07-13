@@ -30,7 +30,7 @@ public class Vala.CatchClause : CodeNode {
 	 */
 	public DataType? error_type {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			if (_data_type != null) {
 				_data_type.parent_node = this;
@@ -41,14 +41,14 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error variable name.
 	 */
-	public string? variable_name { get; set; }
+	public string? variable_name { get; private set; }
 
 	/**
 	 * Specifies the error handler body.
 	 */
 	public Block body {
 		get { return _body; }
-		set {
+		private set {
 			_body = value;
 			_body.parent_node = this;
 		}
@@ -59,7 +59,7 @@ public class Vala.CatchClause : CodeNode {
 	 */
 	public LocalVariable error_variable {
 		get { return _error_variable; }
-		set {
+		private set {
 			_error_variable = value;
 			_error_variable.parent_node = this;
 		}

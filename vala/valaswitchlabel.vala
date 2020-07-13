@@ -31,7 +31,7 @@ public class Vala.SwitchLabel : CodeNode {
 	 */
 	public Expression expression {
 		get { return _expression; }
-		set {
+		private set {
 			_expression = value;
 			_expression.parent_node = this;
 		}
