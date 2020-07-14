@@ -195,6 +195,7 @@ TESTS = \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
+	control-flow/pre-post-increment.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
