@@ -140,6 +140,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=missing-declarations \
 -Werror=missing-prototypes \
 -Werror=strict-prototypes \
+-Werror=tautological-pointer-compare \
 -Werror=address \
 -Werror=array-bounds \
 -Werror=enum-conversion"
