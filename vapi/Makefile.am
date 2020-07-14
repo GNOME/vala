@@ -4,7 +4,7 @@ check: $(top_builddir)/compiler/valac
 	echo "void main () {}" > test.vala; \
 	for vapi in `ls *.vapi | sed -e "s/\.vapi//g"`; do \
 		echo "Checking $$vapi..."; \
-		$(top_builddir)/compiler/valac -C --pkg=$$vapi --vapidir=. test.vala || exit 1; \
+		$(top_builddir)/compiler/valac -C --enable-deprecated --pkg=$$vapi --vapidir=. test.vala || exit 1; \
 	done; \
 	rm -f test.vala test.c
 
