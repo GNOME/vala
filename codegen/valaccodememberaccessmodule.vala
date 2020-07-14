@@ -157,6 +157,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					append_array_length (expr, ccall);
 					sub += "[0]";
 				}
+				((GLibValue) expr.target_value).non_null = true;
 			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
@@ -735,6 +736,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				result.lvalue = false;
 			}
 			result.array_size_cvalue = null;
+			result.non_null = array_type.inline_allocated;
 		} else if (delegate_type != null) {
 			if (!delegate_type.delegate_symbol.has_target || !get_ccode_delegate_target (variable)) {
 				result.delegate_target_cvalue = new CCodeConstant ("NULL");
