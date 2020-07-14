@@ -4628,8 +4628,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccode.add_expression (ccall);
 				ccode.close ();
 			} else {
-				var ccond = new CCodeConditionalExpression (cnotnull, ccall, cifnull);
-				result.cvalue = ccond;
+				if (get_non_null (value)) {
+					result.cvalue = ccall;
+				} else {
+					var ccond = new CCodeConditionalExpression (cnotnull, ccall, cifnull);
+					result.cvalue = ccond;
+				}
 				result = (GLibValue) store_temp_value (result, node, true);
 			}
 			return result;
