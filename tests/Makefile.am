@@ -722,6 +722,9 @@ TESTS = \
 	parser/method-no-static-override.test \
 	parser/method-no-static-virtual.test \
 	parser/method-no-virtual-override.test \
+	parser/namespaced-decls.vala \
+	parser/namespaced-const-in-type.test \
+	parser/namespaced-field-in-type.test \
 	parser/namespaces.vala \
 	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \

@@ -2768,7 +2768,7 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONST);
 		var type = parse_type (false, false);
-		string id = parse_identifier ();
+		var sym = parse_symbol_name ();
 
 		type = parse_inline_array_type (type);
 
@@ -2778,7 +2778,7 @@ public class Vala.Parser : CodeVisitor {
 			array_type.element_type.value_owned = false;
 		}
 
-		var c = new Constant (id, type, null, get_src (begin), comment);
+		var c = new Constant (sym.name, type, null, get_src (begin), comment);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			c.is_extern = true;
@@ -2801,7 +2801,24 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.SEMICOLON);
 
-		parent.add_constant (c);
+		if (parent is Namespace) {
+			Symbol result = c;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, c.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_constant ((Constant) result);
+				}
+				result = next;
+			}
+		} else if (sym.inner != null) {
+			Report.error (c.source_reference, "Specifying namespace is not allowed on constants inside types");
+		} else {
+			parent.add_constant (c);
+		}
 	}
 
 	void parse_field_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
@@ -2809,10 +2826,10 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ((parent is Struct) ? SymbolAccessibility.PUBLIC : SymbolAccessibility.PRIVATE);
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, true);
-		string id = parse_identifier ();
+		var sym = parse_symbol_name ();
 		type = parse_inline_array_type (type);
 
-		var f = new Field (id, type, null, get_src (begin), comment);
+		var f = new Field (sym.name, type, null, get_src (begin), comment);
 		f.access = access;
 
 		set_attributes (f, attrs);
@@ -2848,7 +2865,24 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.SEMICOLON);
 
-		parent.add_field (f);
+		if (parent is Namespace) {
+			Symbol result = f;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, f.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_field ((Field) result);
+				}
+				result = next;
+			}
+		} else if (sym.inner != null) {
+			Report.error (f.source_reference, "Specifying namespace is not allowed on fields inside types");
+		} else {
+			parent.add_field (f);
+		}
 	}
 
 	InitializerList parse_initializer () throws ParseError {
@@ -2886,7 +2920,7 @@ public class Vala.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var method = new Method (sym.name, type, get_src (begin), comment);
-		if (sym.inner != null) {
+		if (sym.inner != null && !(parent is Namespace)) {
 			method.base_interface_type = new UnresolvedType.from_symbol (sym.inner, sym.inner.source_reference);
 		}
 		method.access = access;
@@ -2968,7 +3002,22 @@ public class Vala.Parser : CodeVisitor {
 			method.external = false;
 		}
 
-		parent.add_method (method);
+		if (parent is Namespace) {
+			Symbol result = method;
+			while (sym != null) {
+				sym = sym.inner;
+
+				Symbol next = (sym != null ? new Namespace (sym.name, method.source_reference) : parent);
+				if (result is Namespace) {
+					next.add_namespace ((Namespace) result);
+				} else {
+					next.add_method ((Method) result);
+				}
+				result = next;
+			}
+		} else {
+			parent.add_method (method);
+		}
 	}
 
 	void parse_property_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {

@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {}
+
+class Foo {
+    public static const int Bar.BAR = 3;
+}
