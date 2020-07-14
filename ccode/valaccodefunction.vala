@@ -186,12 +186,11 @@ public class Vala.CCodeFunction : CCodeNode {
 			}
 
 			writer.write_string (";");
+			writer.write_newline ();
 		} else {
 			writer.write_newline ();
 			block.write (writer);
-			writer.write_newline ();
 		}
-		writer.write_newline ();
 	}
 
 	public void add_statement (CCodeNode stmt) {
@@ -204,6 +203,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		var parent_block = current_block;
 
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		parent_block.add_statement (current_block);
 	}
@@ -213,6 +213,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		var parent_block = current_block;
 
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		var cif = new CCodeIfStatement (condition, current_block);
 		cif.line = current_line;
@@ -223,6 +224,7 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	public void add_else () {
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		var cif = (CCodeIfStatement) statement_stack[statement_stack.size - 1];
 		cif.line = current_line;
@@ -235,6 +237,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		assert (parent_if.false_statement == null);
 
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		var cif = new CCodeIfStatement (condition, current_block);
 		cif.line = current_line;
@@ -247,6 +250,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		var parent_block = current_block;
 
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		var cwhile = new CCodeWhileStatement (condition, current_block);
 		cwhile.line = current_line;
@@ -258,6 +262,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		var parent_block = current_block;
 
 		current_block = new CCodeBlock ();
+		current_block.line = current_line;
 
 		var cfor = new CCodeForStatement (condition, current_block);
 		cfor.line = current_line;

@@ -45,6 +45,9 @@ public class Vala.CCodeBlock : CCodeStatement {
 	 * Append the specified statement to the list of statements.
 	 */
 	public void add_statement (CCodeNode statement) {
+		if (statement is CCodeDeclaration) {
+			statement.line = line;
+		}
 		/* allow generic nodes to include comments */
 		statements.add (statement);
 	}
@@ -53,7 +56,7 @@ public class Vala.CCodeBlock : CCodeStatement {
 		// the last reachable statement
 		CCodeNode last_statement = null;
 
-		writer.write_begin_block ();
+		writer.write_begin_block (line);
 		foreach (CCodeNode statement in statements) {
 			statement.write_declaration (writer);
 
@@ -75,7 +78,8 @@ public class Vala.CCodeBlock : CCodeStatement {
 			}
 		}
 
-		writer.write_end_block ();
+		//FIXME: Should have a last_line here.
+		writer.write_end_block (line);
 
 		if (!suppress_newline) {
 			writer.write_newline ();

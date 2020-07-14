@@ -162,7 +162,7 @@ public class Vala.CCodeWriter {
 				using_line_directive = true;
 			} else if (using_line_directive) {
 				// no corresponding Vala line, emit line directive for C line
-				write_string ("#line %d \"%s\"".printf (current_line_number + 1, Path.get_basename (filename)));
+				write_string ("#line %d \"%s\"".printf (current_line_number + 1, filename));
 				write_newline ();
 				using_line_directive = false;
 			}
@@ -212,11 +212,11 @@ public class Vala.CCodeWriter {
 	/**
 	 * Opens a new block, increasing the indent level.
 	 */
-	public void write_begin_block () {
+	public void write_begin_block (CCodeLineDirective? line = null) {
 		if (!_bol) {
 			stream.putc (' ');
 		} else {
-			write_indent ();
+			write_indent (line);
 		}
 		stream.putc ('{');
 		write_newline ();
@@ -226,12 +226,22 @@ public class Vala.CCodeWriter {
 	/**
 	 * Closes the current block, decreasing the indent level.
 	 */
-	public void write_end_block () {
+	public void write_end_block (CCodeLineDirective? line = null) {
 		assert (indent > 0);
 
+		var used_line = using_line_directive;
+
 		indent--;
-		write_indent ();
+		using_line_directive = false;
+		write_indent (line);
 		stream.putc ('}');
+
+		// mark end of function by emitting #line refering back to the c file.
+		if (indent == 0) {
+			write_newline ();
+			using_line_directive = used_line;
+			write_indent ();
+		}
 	}
 
 	/**

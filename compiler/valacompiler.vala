@@ -278,9 +278,9 @@ class Vala.Compiler {
 			context.basedir = CodeContext.realpath (basedir);
 		}
 		if (directory != null) {
-			context.directory = CodeContext.realpath (directory);
+			context.directory = directory;
 		} else {
-			context.directory = context.basedir;
+			context.directory = basedir;
 		}
 		context.vapi_directories = vapi_directories;
 		context.vapi_comments = vapi_comments;
