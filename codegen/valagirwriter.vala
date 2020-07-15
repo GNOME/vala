@@ -337,6 +337,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		// Use given gir_namespace and gir_version for our top-level namespace
+		ns.set_attribute_string ("CCode", "gir_namespace", gir_namespace);
+		ns.set_attribute_string ("CCode", "gir_version", gir_version);
+
 		write_c_includes (ns);
 
 		write_indent ();

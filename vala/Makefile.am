@@ -209,6 +209,7 @@ vala.vapi vala.vala.stamp: $(libvala_la_VALASOURCES)
 		--use-header \
 		-H vala.h \
 		--library vala \
+		--gir Vala@PACKAGE_SUFFIX@.gir \
 		$^
 	@touch $@
 
@@ -236,3 +237,38 @@ MAINTAINERCLEANFILES = \
 	vala.h \
 	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+# We have to extract our own dlname from libvala-*.la.
+# This is what g-ir-scanner does.
+libvala_dlname = \
+	`$(SED) -n "s/^dlname='\([A-Za-z0-9.+-]\+\)'/\1/p" libvala@PACKAGE_SUFFIX@.la`
+
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS =
+INTROSPECTION_COMPILER_ARGS = \
+	--includedir=$(top_builddir)/gee \
+	-l $(libvala_dlname)
+
+INTROSPECTION_SCANNER_ENV = \
+	PKG_CONFIG_PATH=$(top_builddir):$${PKG_CONFIG_PATH}
+
+if HAVE_INTROSPECTION
+$(top_builddir)/gee/ValaGee$(PACKAGE_SUFFIX).gir: libvala@PACKAGE_SUFFIX@.la
+Vala$(PACKAGE_SUFFIX).gir: libvala@PACKAGE_SUFFIX@.la
+
+GIRS = \
+	$(top_builddir)/gee/ValaGee$(PACKAGE_SUFFIX).gir \
+	Vala$(PACKAGE_SUFFIX).gir \
+	$(NULL)
+
+girdir = $(datadir)/gir-1.0
+dist_gir_DATA = $(GIRS)
+
+MAINTAINERCLEANFILES += $(dist_gir_DATA)
+
+typelibdir = $(libdir)/girepository-1.0
+nodist_typelib_DATA = $(GIRS:.gir=.typelib)
+
+CLEANFILES = $(nodist_typelib_DATA)
+endif

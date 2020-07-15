@@ -152,6 +152,24 @@ done
 
 AC_SUBST(TEST_CFLAGS)
 
+GOBJECT_INTROSPECTION_CHECK([1.48.0])
+
+if test x$enable_introspection = xyes; then
+	AC_MSG_CHECKING([for sufficient GIR support])
+	#FIXME Adjust on merge, maybe 0.49.1
+	VALAC_GIR_REQUIRED=0.48.2.147
+
+	AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
+		AS_VERSION_COMPARE(["$VALAC_GIR_REQUIRED"], ["$FOUND_VALAC_VERION"],
+			[enable_gir=yes], [enable_gir=yes], [enable_gir=no])])
+
+	if test x$enable_gir = xno; then
+		AM_CONDITIONAL(HAVE_INTROSPECTION, false)
+		AC_MSG_RESULT([no (valac >= $VALAC_GIR_REQUIRED is required)])
+	else
+		AC_MSG_RESULT([yes])
+	fi
+fi
 
 GLIB_REQUIRED=2.48.0
 LIBGVC_REQUIRED=2.16
