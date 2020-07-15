@@ -1,0 +1,34 @@
+Invalid Code
+
+namespace Baz {
+	public class Foo {
+		public class Bar {
+		}
+
+		public interface IBar : Bar {
+		}
+	}
+	public interface IFoo : Foo {
+		public class Bar {
+		}
+
+		public interface IBar : Bar {
+		}
+	}
+}
+
+class Manam : Baz.Foo, Baz.IFoo {
+	public Bar? foo () {
+		return null;
+	}
+
+	public IBar? ifoo () {
+		return null;
+	}
+}
+
+void main () {
+	var manam = new Manam ();
+	manam.foo ();
+	manam.ifoo ();
+}

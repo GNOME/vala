@@ -765,6 +765,8 @@ TESTS = \
 	parser/bug749576.vala \
 	resolver/class-base-cycle.test \
 	resolver/interface-prerequisite-cycle.test \
+	resolver/peek-inner-types-ambiguous.test \
+	resolver/peek-inner-types.vala \
 	resolver/struct-base-cycle.test \
 	ordering/delegate-class.vala \
 	ordering/delegate-enum.vala \

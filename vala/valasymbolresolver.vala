@@ -286,6 +286,49 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 				scope = scope.parent_scope;
 			}
+			// Look for matches in inner types of base-types/prerequisites
+			ObjectTypeSymbol? current_symbol = null;
+			if (sym == null) {
+				scope = current_scope;
+				while (scope != null) {
+					if (scope.owner is ObjectTypeSymbol) {
+						current_symbol = (ObjectTypeSymbol) scope.owner;
+						break;
+					}
+					scope = scope.parent_scope;
+				}
+			}
+			if (current_symbol != null) {
+				unowned List<DataType> types;
+				if (current_symbol is Class) {
+					types = ((Class) current_symbol).get_base_types ();
+				} else if (current_symbol is Interface) {
+					types = ((Interface) current_symbol).get_prerequisites ();
+				} else {
+					assert_not_reached ();
+				}
+				foreach (DataType type in types) {
+					if (type.type_symbol == null) {
+						continue;
+					}
+
+					var local_sym = SemanticAnalyzer.symbol_lookup_inherited (type.type_symbol, unresolved_symbol.name);
+
+					// only look for types and type containers
+					if (!(local_sym is Namespace || local_sym is TypeSymbol)) {
+						local_sym = null;
+					}
+
+					if (local_sym != null && local_sym.access == SymbolAccessibility.PUBLIC) {
+						if (sym != null && sym != local_sym) {
+							unresolved_symbol.error = true;
+							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ()));
+							return null;
+						}
+						sym = local_sym;
+					}
+				}
+			}
 			if (sym == null && unresolved_symbol.source_reference != null) {
 				foreach (UsingDirective ns in unresolved_symbol.source_reference.using_directives) {
 					if (ns.error || ns.namespace_symbol is UnresolvedSymbol) {
