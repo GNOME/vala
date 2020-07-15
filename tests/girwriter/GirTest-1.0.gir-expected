@@ -656,6 +656,16 @@
 				<type name="none"/>
 			</return-value>
 		</virtual-method>
+		<method name="method_with_default" c:identifier="gir_test_object_test_method_with_default">
+			<return-value transfer-ownership="full">
+				<type name="none"/>
+			</return-value>
+			<parameters>
+				<parameter name="i" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
 		<method name="skipped_method" c:identifier="gir_test_object_test_skipped_method" introspectable="0">
 			<return-value transfer-ownership="full">
 				<type name="none"/>

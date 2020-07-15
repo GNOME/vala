@@ -337,6 +337,17 @@ public class Vala.MemberAccess : Expression {
 							Report.error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (member_name, symbol_reference.get_full_name (), local_sym.get_full_name ()));
 							return false;
 						}
+
+						// Transform to fully qualified member access
+						unowned Symbol? inner_sym = local_sym.parent_symbol;
+						unowned MemberAccess? inner_ma = this;
+						while (inner_sym != null && inner_sym.name != null) {
+							inner_ma.inner = new MemberAccess (null, inner_sym.name, source_reference);
+							inner_ma = (MemberAccess) inner_ma.inner;
+							inner_sym = inner_sym.parent_symbol;
+						}
+						inner.check (context);
+
 						symbol_reference = local_sym;
 					}
 				}

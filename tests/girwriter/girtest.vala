@@ -257,6 +257,9 @@ namespace GirTest {
 		public virtual void method_throw () throws ErrorTest {
 		}
 
+		public void method_with_default (int i = Priority.HIGH) {
+		}
+
 		public virtual signal void signal_with_default_handlder (int i1) {
 		}
 
