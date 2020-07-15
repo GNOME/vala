@@ -876,8 +876,10 @@ public struct float {
 
 	[CCode (cname = "FLT_EPSILON")]
 	public const float EPSILON;
-	[CCode (cname = "FLT_MIN")]
+	[CCode (cname = "-FLT_MAX")]
 	public const float MIN;
+	[CCode (cname = "FLT_MIN")]
+	public const float MIN_POSITIVE;
 	[CCode (cname = "FLT_MAX")]
 	public const float MAX;
 
@@ -950,8 +952,10 @@ public struct double {
 
 	[CCode (cname = "DBL_EPSILON")]
 	public const double EPSILON;
-	[CCode (cname = "DBL_MIN")]
+	[CCode (cname = "-DBL_MAX")]
 	public const double MIN;
+	[CCode (cname = "DBL_MIN")]
+	public const double MIN_POSITIVE;
 	[CCode (cname = "DBL_MAX")]
 	public const double MAX;
 
