@@ -1,0 +1,12 @@
+Invalid Code
+
+class Maman {
+	public static void run() {}
+}
+
+namespace Foo.Bar;
+
+void main () {
+	Maman.run ();
+}
+
