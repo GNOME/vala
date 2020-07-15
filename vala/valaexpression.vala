@@ -125,4 +125,180 @@ public abstract class Vala.Expression : CodeNode {
 	public void insert_statement (Block block, Statement stmt) {
 		block.insert_before (parent_statement, stmt);
 	}
+
+	/**
+	 * Adds null checks to a null-safe expression.
+	 * @param context code context
+	 */
+	public bool check_null_safe_access (CodeContext context) {
+		unowned MethodCall? call = this as MethodCall;
+		unowned Expression access = call != null ? call.call : this;
+		unowned MemberAccess member_access = access as MemberAccess;
+		unowned ElementAccess elem_access = access as ElementAccess;
+		unowned SliceExpression slice_expr = access as SliceExpression;
+
+		unowned Expression? inner = null;
+		if (member_access != null) {
+			inner = member_access.inner;
+		} else if (elem_access != null) {
+			inner = elem_access.container;
+		} else if (slice_expr != null) {
+			inner = slice_expr.container;
+		} else {
+			Report.error (access.source_reference, "unexpected expression type");
+			return false;
+		}
+
+		// get the type of the inner expression
+		if (!inner.check (context)) {
+			return false;
+		}
+
+		// the inner expression may have been replaced by the check, reload it
+		if (member_access != null) {
+			inner = member_access.inner;
+		} else if (elem_access != null) {
+			inner = elem_access.container;
+		} else if (slice_expr != null) {
+			inner = slice_expr.container;
+		}
+
+		if (inner.value_type == null) {
+			Report.error (inner.source_reference, "invalid inner expression");
+			return false;
+		}
+
+		// declare the inner expression as a local variable to check for null
+		var inner_type = inner.value_type.copy ();
+		if (context.experimental_non_null && !inner_type.nullable) {
+			Report.warning (inner.source_reference, "inner expression is never null");
+			// make it nullable, otherwise the null check will not compile in non-null mode
+			inner_type.nullable = true;
+		}
+		var inner_local = new LocalVariable (inner_type, get_temp_name (), inner, inner.source_reference);
+
+		var inner_decl = new DeclarationStatement (inner_local, inner.source_reference);
+		insert_statement (context.analyzer.insert_block, inner_decl);
+
+		if (!inner_decl.check (context)) {
+			return false;
+		}
+
+		// create an equivalent non null-safe expression
+		Expression? non_null_expr = null;
+
+		Expression inner_access = new MemberAccess.simple (inner_local.name, source_reference);
+
+		if (context.experimental_non_null) {
+			inner_access = new CastExpression.non_null (inner_access, source_reference);
+		}
+
+		if (member_access != null) {
+			non_null_expr = new MemberAccess (inner_access, member_access.member_name, source_reference);
+		} else if (elem_access != null) {
+			var non_null_elem_access = new ElementAccess (inner_access, source_reference);
+			foreach (Expression index in elem_access.get_indices ()) {
+				non_null_elem_access.append_index (index);
+			}
+			non_null_expr = non_null_elem_access;
+		} else if (slice_expr != null) {
+			non_null_expr = new SliceExpression (inner_access, slice_expr.start, slice_expr.stop, source_reference);
+		}
+
+		if ((member_access != null || elem_access != null)
+				&& access.parent_node is ReferenceTransferExpression) {
+			// preserve ownership transfer
+			non_null_expr = new ReferenceTransferExpression (non_null_expr, source_reference);
+		}
+
+		if (!non_null_expr.check (context)) {
+			return false;
+		}
+
+		if (non_null_expr.value_type == null) {
+			Report.error (source_reference, "invalid null-safe expression");
+			return false;
+		}
+
+		DataType result_type;
+
+		if (call != null) {
+			// if the expression is a method call, create an equivalent non-conditional method call
+			var non_null_call = new MethodCall(non_null_expr, source_reference);
+			foreach (Expression arg in call.get_argument_list ()) {
+				non_null_call.add_argument (arg);
+			}
+			result_type = non_null_expr.value_type.get_return_type ().copy ();
+			non_null_expr = non_null_call;
+		} else {
+			result_type = non_null_expr.value_type.copy ();
+		}
+
+		if (result_type is VoidType) {
+			// void result type, replace the parent expression statement by a conditional statement
+			var non_null_stmt = new ExpressionStatement (non_null_expr, source_reference);
+			var non_null_block = new Block (source_reference);
+			non_null_block.add_statement (non_null_stmt);
+
+			var non_null_safe = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
+
+			unowned ExpressionStatement? parent_stmt = parent_node as ExpressionStatement;
+			unowned Block? parent_block = parent_stmt != null ? parent_stmt.parent_node as Block : null;
+
+			if (parent_stmt == null || parent_block == null) {
+				Report.error (source_reference, "void method call not allowed here");
+				return false;
+			}
+
+			context.analyzer.replaced_nodes.add (parent_stmt);
+			parent_block.replace_statement (parent_stmt, non_null_ifstmt);
+			return non_null_ifstmt.check (context);
+		} else {
+			// non-void result type, replace the expression by an access to a local variable
+			if (!result_type.nullable) {
+				if (result_type is ValueType) {
+					// the value must be owned, otherwise the local variable may receive a stale pointer to the stack
+					result_type.value_owned = true;
+				}
+				result_type.nullable = true;
+			}
+			var result_local = new LocalVariable (result_type, get_temp_name (), new NullLiteral (source_reference), source_reference);
+
+			var result_decl = new DeclarationStatement (result_local, source_reference);
+			insert_statement (context.analyzer.insert_block, result_decl);
+
+			if (!result_decl.check (context)) {
+				return false;
+			}
+
+			// assign the non-conditional member access if the inner expression is not null
+			var non_null_safe = new BinaryExpression (BinaryOperator.INEQUALITY, new MemberAccess.simple (inner_local.name, source_reference), new NullLiteral (source_reference), source_reference);
+			var non_null_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (result_local.name, source_reference), non_null_expr, AssignmentOperator.SIMPLE, source_reference), source_reference);
+			var non_null_block = new Block (source_reference);
+			non_null_block.add_statement (non_null_stmt);
+			var non_null_ifstmt = new IfStatement (non_null_safe, non_null_block, null, source_reference);
+			insert_statement (context.analyzer.insert_block, non_null_ifstmt);
+
+			if (!non_null_ifstmt.check (context)) {
+				return false;
+			}
+
+			var result_access = SemanticAnalyzer.create_temp_access (result_local, target_type);
+			context.analyzer.replaced_nodes.add (this);
+			parent_node.replace_expression (this, result_access);
+
+			if (lvalue) {
+				if (non_null_expr is ReferenceTransferExpression) {
+					// ownership can be transferred transitively
+					result_access.lvalue = true;
+				} else {
+					Report.error (source_reference, "null-safe expression not supported as lvalue");
+					return false;
+				}
+			}
+
+			return result_access.check (context);
+		}
+	}
 }
