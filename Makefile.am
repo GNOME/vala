@@ -19,6 +19,7 @@ if ENABLE_VALADOC
 SUBDIRS += \
 	libvaladoc \
 	valadoc \
+	dbusgen \
 	$(NULL)
 endif
 
