@@ -19,7 +19,7 @@
  * Author:
  * 	Rico Tzschichholz <ricotz@ubuntu.com>
  */
-
+[CCode (gir_namespace = "Vala", gir_version = "@API_VERSION@", cheader_filename = "vala.h")]
 namespace Vala {
 	/**
 	 * Like get_major_version, but from the headers used at application compile time,
