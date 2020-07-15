@@ -1360,11 +1360,15 @@ public class Vala.GirParser : CodeVisitor {
 		/* Temporarily workaround G-I bug not adding GLib.Object prerequisite:
 		   ensure we have at least one instantiable prerequisite */
 		var glib_ns = context.root.scope.lookup ("GLib") as Namespace;
-		if (glib_ns != null) {
-			var object_type = (Class) glib_ns.scope.lookup ("Object");
-			foreach (var iface in ifaces_needing_object_prereq) {
-				iface.add_prerequisite (new ObjectType (object_type));
-			}
+		var object_symbol = glib_ns != null ? glib_ns.scope.lookup ("Object") as Class : null;
+		DataType object_type;
+		if (object_symbol != null) {
+			object_type = new ObjectType (object_symbol);
+		} else {
+			object_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Object"));
+		}
+		foreach (var iface in ifaces_needing_object_prereq) {
+			iface.add_prerequisite (object_type);
 		}
 
 		foreach (var metadata in metadata_roots) {
@@ -2048,8 +2052,17 @@ public class Vala.GirParser : CodeVisitor {
 		return null;
 	}
 
-	Symbol? resolve_symbol (Node parent_scope, UnresolvedSymbol unresolved_sym) {
-		var node = resolve_node (parent_scope, unresolved_sym);
+	/**
+	 * Find the symbol for `unresolved_sym`.
+	 *
+	 * @param parent_scope		the node to search in, and its parents
+	 * @param unresolved_sym	the unresolved symbol
+	 * @param node			the node containing the resolved symbol, if found, or null otherwise
+	 *
+	 * @return			the resolved symbol, or null if not found
+	 */
+	Symbol? resolve_symbol (Node parent_scope, UnresolvedSymbol unresolved_sym, out Node? node = null) {
+		node = resolve_node (parent_scope, unresolved_sym);
 		if (node != null) {
 			return node.symbol;
 		}
@@ -4062,8 +4075,9 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (info.is_async) {
 				var resolved_type = info.param.variable_type;
+				Node? resolved_symbol_node = null;
 				if (resolved_type is UnresolvedType) {
-					var resolved_symbol = resolve_symbol (node.parent, ((UnresolvedType) resolved_type).unresolved_symbol);
+					var resolved_symbol = resolve_symbol (node.parent, ((UnresolvedType) resolved_type).unresolved_symbol, out resolved_symbol_node);
 					if (resolved_symbol is Delegate) {
 						resolved_type = new DelegateType ((Delegate) resolved_symbol);
 					}
@@ -4071,7 +4085,11 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (resolved_type is DelegateType) {
 					var d = ((DelegateType) resolved_type).delegate_symbol;
-					if (!(d.name == "DestroyNotify" && d.parent_symbol.name == "GLib")) {
+					// if we're parsing GLib-2.0.gir, symbol parent-child relationships haven't been setup yet,
+					// so we look at the nodes instead
+					if (!(d.name == "DestroyNotify" && (d.parent_symbol != null && d.parent_symbol.name == "GLib" ||
+									    resolved_symbol_node != null && d == resolved_symbol_node.symbol &&
+									    resolved_symbol_node.parent != null && resolved_symbol_node.parent.name == "G"))) {
 						info.param.set_attribute_string ("CCode", "scope", "async");
 						info.param.variable_type.value_owned = (info.closure_idx != -1 && info.destroy_idx != -1);
 					}
