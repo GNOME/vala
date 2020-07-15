@@ -382,7 +382,7 @@ public class ValaDoc : Object {
 
 		if (gir_name != null) {
 			long gir_len = gir_name.length;
-			int last_hyphen = gir_name.last_index_of_char ('-');
+			var last_hyphen = gir_name.last_index_of_char ('-');
 
 			if (last_hyphen == -1 || !gir_name.has_suffix (".gir")) {
 				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir_name);

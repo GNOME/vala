@@ -744,7 +744,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			if (prefix == null && girdata != null && girdata["c:identifier-prefixes"] != null) {
 				prefix = girdata["c:identifier-prefixes"];
-				int idx = prefix.index_of (",");
+				var idx = prefix.index_of (",");
 				if (idx != -1) {
 					prefix = prefix.substring (0, idx);
 				}
@@ -2095,7 +2095,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
 		if (cprefix != null) {
-			int idx = cprefix.index_of (",");
+			var idx = cprefix.index_of (",");
 			if (idx != -1) {
 				cprefix = cprefix.substring (0, idx);
 			}
@@ -2107,7 +2107,7 @@ public class Vala.GirParser : CodeVisitor {
 		string gir_version = reader.get_attribute ("version");
 
 		if (lower_case_cprefix != null) {
-			int idx = lower_case_cprefix.index_of (",");
+			var idx = lower_case_cprefix.index_of (",");
 			if (idx != -1) {
 				lower_case_cprefix = lower_case_cprefix.substring (0, idx);
 			}

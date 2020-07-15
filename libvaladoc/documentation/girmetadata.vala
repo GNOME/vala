@@ -50,7 +50,7 @@ public class Valadoc.GirMetaData : Object {
 
 	private string? get_metadata_file_name (string gir_file_path) {
 		string metadata_file_name = Path.get_basename (gir_file_path);
-		int last_dot_pos = metadata_file_name.last_index_of (".");
+		var last_dot_pos = metadata_file_name.last_index_of (".");
 		if (last_dot_pos < 0) {
 			return null;
 		}

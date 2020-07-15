@@ -1130,41 +1130,41 @@ public class string {
 	[CCode (cname = "g_utf8_strrchr")]
 	static char* utf8_strrchr (char* str, ssize_t len, unichar c);
 
-	public int index_of (string needle, int start_index = 0) {
+	public long index_of (string needle, long start_index = 0) {
 		char* result = strstr ((char*) this + start_index, (char*) needle);
 
 		if (result != null) {
-			return (int) (result - (char*) this);
+			return (long) (result - (char*) this);
 		} else {
 			return -1;
 		}
 	}
 
-	public int last_index_of (string needle, int start_index = 0) {
+	public long last_index_of (string needle, long start_index = 0) {
 		char* result = strrstr ((char*) this + start_index, (char*) needle);
 
 		if (result != null) {
-			return (int) (result - (char*) this);
+			return (long) (result - (char*) this);
 		} else {
 			return -1;
 		}
 	}
 
-	public int index_of_char (unichar c, int start_index = 0) {
+	public long index_of_char (unichar c, long start_index = 0) {
 		char* result = utf8_strchr ((char*) this + start_index, -1, c);
 
 		if (result != null) {
-			return (int) (result - (char*) this);
+			return (long) (result - (char*) this);
 		} else {
 			return -1;
 		}
 	}
 
-	public int last_index_of_char (unichar c, int start_index = 0) {
+	public long last_index_of_char (unichar c, long start_index = 0) {
 		char* result = utf8_strrchr ((char*) this + start_index, -1, c);
 
 		if (result != null) {
-			return (int) (result - (char*) this);
+			return (long) (result - (char*) this);
 		} else {
 			return -1;
 		}
@@ -1235,7 +1235,7 @@ public class string {
 
 	// checks whether valid string character starts at specified index
 	// embedded NULs are not supported by the string class
-	public bool valid_char (int index) {
+	public bool valid_char (long index) {
 		uint8 c = ((uint8*) this)[index];
 		if (c == 0x00 || (c >= 0x80 && c < 0xc2) || c >= 0xf5) {
 			return false;
@@ -1248,10 +1248,10 @@ public class string {
 	public unowned string next_char ();
 	[CCode (cname = "g_utf8_next_char")]
 	static char* utf8_next_char (char* str);
-	public bool get_next_char (ref int index, out unichar c) {
+	public bool get_next_char (ref long index, out unichar c) {
 		c = utf8_get_char ((char*) this + index);
 		if (c != 0) {
-			index = (int) (utf8_next_char ((char*) this + index) - (char*) this);
+			index = (long) (utf8_next_char ((char*) this + index) - (char*) this);
 			return true;
 		} else {
 			return false;
@@ -1279,17 +1279,17 @@ public class string {
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	char* utf8_offset_to_pointer (long offset);
 
-	public int index_of_nth_char (long c) {
-		return (int) (this.utf8_offset_to_pointer (c) - (char*) this);
+	public long index_of_nth_char (long c) {
+		return (long) (this.utf8_offset_to_pointer (c) - (char*) this);
 	}
 
 	[CCode (cname = "g_utf8_prev_char")]
 	public unowned string prev_char ();
 	[CCode (cname = "g_utf8_prev_char")]
 	static char* utf8_prev_char (char* str);
-	public bool get_prev_char (ref int index, out unichar c) {
+	public bool get_prev_char (ref long index, out unichar c) {
 		if (0 < index) {
-			index = (int) (utf8_prev_char ((char*) this + index) - (char*) this);
+			index = (long) (utf8_prev_char ((char*) this + index) - (char*) this);
 			c = utf8_get_char ((char*) this + index);
 			return true;
 		} else {
@@ -1544,7 +1544,7 @@ public class string {
 	}
 
 	[CCode (cname = "g_utf8_strlen")]
-	public int char_count (ssize_t max = -1);
+	public long char_count (ssize_t max = -1);
 
 	public int length {
 		[CCode (cname = "strlen")]
