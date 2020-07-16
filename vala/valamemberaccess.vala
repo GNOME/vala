@@ -849,6 +849,16 @@ public class Vala.MemberAccess : Expression {
 					// do not warn when calling .begin or .end on static async method
 				} else {
 					Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
+
+					// Transform to static member access
+					unowned Symbol? inner_sym = symbol_reference.parent_symbol;
+					unowned MemberAccess? inner_ma = this;
+					while (inner_sym != null && inner_sym.name != null) {
+						inner_ma.inner = new MemberAccess (null, inner_sym.name, source_reference);
+						inner_ma = (MemberAccess) inner_ma.inner;
+						inner_sym = inner_sym.parent_symbol;
+					}
+					inner.check (context);
 				}
 			}
 

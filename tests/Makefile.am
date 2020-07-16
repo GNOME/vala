@@ -746,6 +746,7 @@ TESTS = \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-protected-invalid.test \
 	semantic/member-access-undefined.test \
+	semantic/member-access-static-with-instance.vala \
 	semantic/method-abstract.test \
 	semantic/method-abstract-body.test \
 	semantic/method-async-ref-parameter.test \
