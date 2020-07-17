@@ -436,8 +436,8 @@ public class Vala.BinaryExpression : Expression {
 			if (left.value_type.compatible (context.analyzer.string_type)
 			    && right.value_type.compatible (context.analyzer.string_type)) {
 				// string comparison
-				} else if (left.value_type is PointerType && right.value_type is PointerType) {
-					// pointer arithmetic
+			} else if (left.value_type is PointerType && right.value_type is PointerType) {
+				// pointer arithmetic
 			} else {
 				DataType resulting_type;
 
