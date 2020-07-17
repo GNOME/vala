@@ -143,6 +143,15 @@ public class Valadoc.Api.Method : Symbol, Callable {
 	}
 
 	/**
+	 * Specifies whether this method is a class method
+	 */
+	public bool is_class {
+		get {
+			return ((Vala.Method) data).binding == Vala.MemberBinding.CLASS;
+		}
+	}
+
+	/**
 	 * Specifies whether this method is a creation method
 	 */
 	public bool is_constructor {
@@ -178,6 +187,8 @@ public class Valadoc.Api.Method : Symbol, Callable {
 		if (!is_constructor) {
 			if (is_static) {
 				signature.append_keyword ("static");
+			} else if (is_class) {
+				signature.append_keyword ("class");
 			} else if (is_abstract) {
 				signature.append_keyword ("abstract");
 			} else if (is_override) {
