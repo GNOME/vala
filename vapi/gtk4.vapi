@@ -7711,6 +7711,8 @@ namespace Gtk {
 		public signal Gdk.DragAction enter (double x, double y);
 		public signal void leave ();
 		public signal Gdk.DragAction motion (double x, double y);
+		[CCode (cname = "drop")]
+		public signal bool on_drop (GLib.Value value, double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_async_get_type ()")]
 	public class DropTargetAsync : Gtk.EventController {
