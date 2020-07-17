@@ -36,6 +36,7 @@ public class Valadoc.Api.Field : Symbol {
 		base (parent, file, name, accessibility, comment, data);
 
 		this.is_static = !(parent is Namespace) && data.binding == Vala.MemberBinding.STATIC;
+		this.is_class = data.binding == Vala.MemberBinding.CLASS;
 		this.is_volatile = data.is_volatile;
 
 		this.cname = Vala.get_ccode_name (data);
@@ -65,6 +66,14 @@ public class Valadoc.Api.Field : Symbol {
 	}
 
 	/**
+	 * Specifies whether this field is a class field.
+	 */
+	public bool is_class {
+		private set;
+		get;
+	}
+
+	/**
 	 * Specifies whether the field is volatile.
 	 */
 	public bool is_volatile {
@@ -81,6 +90,8 @@ public class Valadoc.Api.Field : Symbol {
 		signature.append_keyword (accessibility.to_string ());
 		if (is_static) {
 			signature.append_keyword ("static");
+		} else if (is_class) {
+			signature.append_keyword ("class");
 		}
 		if (is_volatile) {
 			signature.append_keyword ("volatile");
