@@ -25,7 +25,7 @@ void main () {
 	assert ("foo" == Foo.strdup ("foo"));
 	assert ("foo" == Bar.strdup ("foo"));
 
-	assert (some_thing != null);
-	assert (Foo.some_thing != null);
-	assert (Bar.some_thing != null);
+	assert ((void*) some_thing != null);
+	assert ((void*) Foo.some_thing != null);
+	assert ((void*) Bar.some_thing != null);
 }
