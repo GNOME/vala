@@ -380,11 +380,19 @@ Container
   .set_focus_child skip
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
+HandleBox
+  .child_detached#signal name="on_child_detached"
 Notebook
   .insert_page#virtual_method name="insert_page_menu"
   .insert_page#virtual_method.tab_label nullable
   .insert_page#virtual_method.menu_label nullable
   .insert_page_menu skip
+PlacesSidebar
+  .show_connect_to_server#signal name="on_show_connect_to_server"
+  .show_enter_location#signal name="on_show_enter_location"
+  .show_starred_location#signal name="on_show_starred_location"
+Plug
+  .embedded#signal name="on_embedded"
 ToolShell
   .get_icon_size#method skip
 TreeView
@@ -648,7 +656,6 @@ RadioToolButton
   .get_group nullable
 Window
   .list_toplevels type="GLib.List<unowned Gtk.Window>"
-  .set_focus#signal.object nullable
 TreeModel
   .get_path nullable
   .iter_next.iter ref
