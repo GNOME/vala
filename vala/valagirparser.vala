@@ -981,6 +981,7 @@ public class Vala.GirParser : CodeVisitor {
 							// properties take precedence
 							node.processed = true;
 							node.merged = true;
+							Report.warning (symbol.source_reference, "Signal `%s' conflicts with property of the same name".printf (get_full_name ()));
 						} else if (node.symbol is Method) {
 							// getter in C, but not in Vala
 							node.merged = true;
