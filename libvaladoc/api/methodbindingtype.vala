@@ -27,7 +27,8 @@ public enum Valadoc.MethodBindingType {
 	ABSTRACT,
 	VIRTUAL,
 	INLINE,
-	STATIC;
+	STATIC,
+	CLASS;
 
 	public unowned string to_string () {
 		switch (this) {
@@ -45,6 +46,9 @@ public enum Valadoc.MethodBindingType {
 
 		case STATIC:
 			return "static";
+
+		case CLASS:
+			return "class";
 
 		case UNMODIFIED:
 			return "";
