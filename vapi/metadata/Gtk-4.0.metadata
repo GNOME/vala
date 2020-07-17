@@ -203,6 +203,8 @@ TreeSelection
 // Symbol name conflicts
 Constraint
   .new_constant name="const"
+DropTarget
+  .drop#signal name="on_drop"
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 InfoBar
