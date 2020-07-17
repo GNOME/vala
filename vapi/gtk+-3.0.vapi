@@ -3742,6 +3742,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool snap_edge_set { get; set; }
 		public virtual signal void child_attached (Gtk.Widget child);
+		[CCode (cname = "child-detached")]
+		public signal void on_child_detached (Gtk.Widget widget);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_header_bar_get_type ()")]
 	public class HeaderBar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -5619,6 +5621,15 @@ namespace Gtk {
 		public signal void drag_perform_drop (GLib.File dest_file, GLib.List<GLib.File> source_file_list, int action);
 		[Version (since = "3.20")]
 		public signal void mount (GLib.MountOperation mount_operation);
+		[CCode (cname = "show-connect-to-server")]
+		[Version (deprecated = true, deprecated_since = "3.18")]
+		public signal void on_show_connect_to_server ();
+		[CCode (cname = "show-enter-location")]
+		[Version (since = "3.14")]
+		public signal void on_show_enter_location ();
+		[CCode (cname = "show-starred-location")]
+		[Version (since = "3.22.26")]
+		public signal void on_show_starred_location (Gtk.PlacesOpenFlags open_flags);
 		[Version (since = "3.10")]
 		public signal void open_location (GLib.File location, Gtk.PlacesOpenFlags open_flags);
 		[Version (since = "3.10")]
@@ -5652,6 +5663,8 @@ namespace Gtk {
 		public virtual bool embedded { get; }
 		[Version (since = "2.14")]
 		public Gdk.Window socket_window { get; }
+		[CCode (cname = "embedded")]
+		public signal void on_embedded ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
 	[Version (since = "3.12")]
