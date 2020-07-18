@@ -1179,7 +1179,9 @@ namespace Gst {
 			Y212_BE,
 			Y212_LE,
 			Y412_BE,
-			Y412_LE
+			Y412_LE,
+			NV12_4L4,
+			NV12_32L32
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1420,7 +1422,8 @@ namespace Gst {
 		[GIR (name = "VideoTileMode")]
 		public enum TileMode {
 			UNKNOWN,
-			ZFLIPZ_2X2
+			ZFLIPZ_2X2,
+			LINEAR
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TILE_TYPE_", type_id = "gst_video_tile_type_get_type ()")]
 		[GIR (name = "VideoTileType")]
