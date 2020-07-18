@@ -7426,6 +7426,7 @@ namespace Gtk {
 		protected ConstantExpression ();
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public ConstantExpression.for_value (GLib.Value value);
+		public unowned GLib.Value? get_value ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_constraint_get_type ()")]
 	public class Constraint : GLib.Object {
@@ -9607,6 +9608,7 @@ namespace Gtk {
 	public class ObjectExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public ObjectExpression (GLib.Object object);
+		public unowned GLib.Object get_object ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_overlay_get_type ()")]
 	public class Overlay : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10097,6 +10099,8 @@ namespace Gtk {
 		public PropertyExpression (GLib.Type this_type, owned Gtk.Expression? expression, string property_name);
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public PropertyExpression.for_pspec (owned Gtk.Expression? expression, GLib.ParamSpec pspec);
+		public unowned Gtk.Expression get_expression ();
+		public unowned GLib.ParamSpec get_pspec ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_button_get_type ()")]
 	public class RadioButton : Gtk.CheckButton, Atk.Implementor, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10391,6 +10395,7 @@ namespace Gtk {
 		public void set_search_mode (bool search_mode);
 		public void set_show_close_button (bool visible);
 		public Gtk.Widget child { get; set construct; }
+		public Gtk.Widget key_capture_widget { get; set construct; }
 		[NoAccessorMethod]
 		public bool search_mode_enabled { get; set; }
 		public bool show_close_button { get; set construct; }
@@ -10789,7 +10794,7 @@ namespace Gtk {
 		public unowned Gtk.Sorter? get_sorter ();
 		public void set_model (GLib.ListModel? model);
 		public void set_sorter (Gtk.Sorter? sorter);
-		public GLib.ListModel model { get; construct; }
+		public GLib.ListModel model { get; set; }
 		public Gtk.Sorter sorter { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_sorter_get_type ()")]
@@ -10966,7 +10971,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_filter_get_type ()")]
 	public class StringFilter : Gtk.Filter {
 		[CCode (has_construct_function = false, type = "GtkFilter*")]
-		public StringFilter ();
+		public StringFilter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression get_expression ();
 		public bool get_ignore_case ();
 		public Gtk.StringFilterMatchMode get_match_mode ();
@@ -11950,22 +11955,22 @@ namespace Gtk {
 		public int search_column { get; set; }
 		public bool show_expanders { get; set; }
 		public int tooltip_column { get; set; }
-		public signal void columns_changed ();
-		public signal void cursor_changed ();
-		public signal bool expand_collapse_cursor_row (bool object, bool p0, bool p1);
-		public signal bool move_cursor (Gtk.MovementStep step, int direction, bool extend, bool modify);
+		public virtual signal void columns_changed ();
+		public virtual signal void cursor_changed ();
+		public virtual signal bool expand_collapse_cursor_row (bool logical, bool expand, bool open_all);
+		public virtual signal bool move_cursor (Gtk.MovementStep step, int count, bool extend, bool modify);
 		[HasEmitter]
-		public signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
-		public signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool select_all ();
-		public signal bool select_cursor_parent ();
-		public signal bool select_cursor_row (bool object);
-		public signal bool start_interactive_search ();
-		public signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool toggle_cursor_row ();
-		public signal bool unselect_all ();
+		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
+		public virtual signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool select_all ();
+		public virtual signal bool select_cursor_parent ();
+		public virtual signal bool select_cursor_row (bool start_editing);
+		public virtual signal bool start_interactive_search ();
+		public virtual signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool toggle_cursor_row ();
+		public virtual signal bool unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_tree_view_accessible_get_type ()")]
 	public class TreeViewAccessible : Gtk.WidgetAccessible, Atk.Component, Atk.Selection, Atk.Table, Gtk.CellAccessibleParent {
@@ -13197,7 +13202,6 @@ namespace Gtk {
 		INTERACTIVE,
 		TOUCHSCREEN,
 		ACTIONS,
-		RESIZE,
 		LAYOUT,
 		SNAPSHOT,
 		CONSTRAINTS,
