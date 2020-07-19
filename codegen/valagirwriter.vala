@@ -349,6 +349,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" c:prefix=\"%s\"", cprefix);
 			buffer.append_printf (" c:identifier-prefixes=\"%s\"", cprefix);
 		}
+		string? csymbol_prefix = get_ccode_lower_case_suffix (ns);
+		if (csymbol_prefix != null) {
+			buffer.append_printf (" c:symbol-prefix=\"%s\"", csymbol_prefix);
+		}
 		buffer.append_printf (">\n");
 		indent++;
 
@@ -398,7 +402,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			write_indent ();
 			buffer.append_printf ("<class name=\"%s\"", get_gir_name (cl));
-			write_gtype_attributes (cl);
+			write_gtype_attributes (cl, true);
 			buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 			if (cl.base_class == null) {
 				buffer.append_printf (" glib:fundamental=\"1\"");
@@ -595,9 +599,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<record name=\"%s\"", get_gir_name (st));
 		if (get_ccode_has_type_id (st)) {
-			write_gtype_attributes (st);
+			write_gtype_attributes (st, true);
 		} else {
-			write_ctype_attributes (st);
+			write_ctype_attributes (st, "", true);
 		}
 		write_symbol_attributes (st);
 		buffer.append_printf (">\n");
@@ -634,7 +638,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		buffer.append_printf ("<interface name=\"%s\"", get_gir_name (iface));
-		write_gtype_attributes (iface);
+		write_gtype_attributes (iface, true);
 		buffer.append_printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 		write_symbol_attributes (iface);
 		buffer.append_printf (">\n");
@@ -1528,12 +1532,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		index++;
 	}
 
-	private void write_ctype_attributes (TypeSymbol symbol, string suffix = "") {
+	private void write_ctype_attributes (TypeSymbol symbol, string suffix = "", bool symbol_prefix = false) {
 		buffer.append_printf (" c:type=\"%s%s\"", get_ccode_name (symbol), suffix);
+		if (symbol_prefix) {
+			buffer.append_printf (" c:symbol-prefix=\"%s\"", get_ccode_lower_case_suffix (symbol));
+		}
 	}
 
-	private void write_gtype_attributes (TypeSymbol symbol) {
-		write_ctype_attributes(symbol);
+	private void write_gtype_attributes (TypeSymbol symbol, bool symbol_prefix = false) {
+		write_ctype_attributes(symbol, "", symbol_prefix);
 		buffer.append_printf (" glib:type-name=\"%s\"", get_ccode_name (symbol));
 		buffer.append_printf (" glib:get-type=\"%sget_type\"", get_ccode_lower_case_prefix (symbol));
 	}
