@@ -4,7 +4,7 @@
 <include name="Gio" version="2.0"/>
 <package name="girtest"/>
 <c:include name="girtest.h"/>
-<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest">
+<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefix="gir_test">
 	<enumeration name="EnumTest" c:type="GirTestEnumTest" glib:type-name="GirTestEnumTest" glib:get-type="gir_test_enum_test_get_type">
 		<member name="value1" c:identifier="GIR_TEST_ENUM_TEST_VALUE1" value="0"/>
 		<member name="value2" c:identifier="GIR_TEST_ENUM_TEST_VALUE2" value="1"/>
@@ -31,7 +31,7 @@
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
 		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
 	</enumeration>
-	<class name="TypeTest" c:type="GirTestTypeTest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
+	<class name="TypeTest" c:type="GirTestTypeTest" c:symbol-prefix="typetest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
 		</field>
@@ -68,7 +68,7 @@
 		</field>
 	</record>
 	<record name="TypeTestPrivate" c:type="GirTestTypeTestPrivate" disguised="1"/>
-	<class name="SubTypeTest" c:type="GirTestSubTypeTest" glib:type-name="GirTestSubTypeTest" glib:get-type="gir_test_sub_type_test_get_type" glib:type-struct="SubTypeTestClass" parent="GirTest.TypeTest">
+	<class name="SubTypeTest" c:type="GirTestSubTypeTest" c:symbol-prefix="sub_type_test" glib:type-name="GirTestSubTypeTest" glib:get-type="gir_test_sub_type_test_get_type" glib:type-struct="SubTypeTestClass" parent="GirTest.TypeTest">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GirTest.TypeTest" c:type="GirTestTypeTest"/>
 		</field>
@@ -104,7 +104,7 @@
 		</field>
 	</record>
 	<record name="SubTypeTestPrivate" c:type="GirTestSubTypeTestPrivate" disguised="1"/>
-	<class name="ObjectTest" c:type="GirTestObjectTest" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
+	<class name="ObjectTest" c:type="GirTestObjectTest" c:symbol-prefix="object_test" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -871,7 +871,7 @@
 		</field>
 	</record>
 	<record name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate" disguised="1"/>
-	<class name="AbstractObjectTest" c:type="GirTestAbstractObjectTest" glib:type-name="GirTestAbstractObjectTest" glib:get-type="gir_test_abstract_object_test_get_type" glib:type-struct="AbstractObjectTestClass" parent="GObject.Object" abstract="1">
+	<class name="AbstractObjectTest" c:type="GirTestAbstractObjectTest" c:symbol-prefix="abstract_object_test" glib:type-name="GirTestAbstractObjectTest" glib:get-type="gir_test_abstract_object_test_get_type" glib:type-struct="AbstractObjectTestClass" parent="GObject.Object" abstract="1">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -1144,7 +1144,7 @@
 		</field>
 	</record>
 	<record name="AbstractObjectTestPrivate" c:type="GirTestAbstractObjectTestPrivate" disguised="1"/>
-	<class name="ImplementionTest" c:type="GirTestImplementionTest" glib:type-name="GirTestImplementionTest" glib:get-type="gir_test_implemention_test_get_type" glib:type-struct="ImplementionTestClass" parent="GObject.Object">
+	<class name="ImplementionTest" c:type="GirTestImplementionTest" c:symbol-prefix="implemention_test" glib:type-name="GirTestImplementionTest" glib:get-type="gir_test_implemention_test_get_type" glib:type-struct="ImplementionTestClass" parent="GObject.Object">
 		<implements name="GirTest.InterfaceTest"/>
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.Object" c:type="GObject"/>
@@ -1177,7 +1177,7 @@
 			</return-value>
 		</constructor>
 	</record>
-	<class name="SkippedClass" c:type="GirTestSkippedClass" glib:type-name="GirTestSkippedClass" glib:get-type="gir_test_skippedclass_get_type" glib:type-struct="SkippedClassClass" glib:fundamental="1" glib:ref-func="gir_test_skippedclass_ref" glib:unref-func="gir_test_skippedclass_unref" glib:set-value-func="gir_test_value_set_skippedclass" glib:get-value-func="gir_test_value_get_skippedclass" introspectable="0">
+	<class name="SkippedClass" c:type="GirTestSkippedClass" c:symbol-prefix="skippedclass" glib:type-name="GirTestSkippedClass" glib:get-type="gir_test_skippedclass_get_type" glib:type-struct="SkippedClassClass" glib:fundamental="1" glib:ref-func="gir_test_skippedclass_ref" glib:unref-func="gir_test_skippedclass_unref" glib:set-value-func="gir_test_value_set_skippedclass" glib:get-value-func="gir_test_value_get_skippedclass" introspectable="0">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
 		</field>
@@ -1199,7 +1199,7 @@
 		</field>
 	</record>
 	<record name="SkippedClassPrivate" c:type="GirTestSkippedClassPrivate" disguised="1"/>
-	<class name="DeprecatedClassTest" c:type="GirTestDeprecatedClassTest" glib:type-name="GirTestDeprecatedClassTest" glib:get-type="gir_test_deprecated_class_test_get_type" glib:type-struct="DeprecatedClassTestClass" glib:fundamental="1" glib:ref-func="gir_test_deprecated_class_test_ref" glib:unref-func="gir_test_deprecated_class_test_unref" glib:set-value-func="gir_test_value_set_deprecated_class_test" glib:get-value-func="gir_test_value_get_deprecated_class_test" deprecated="1" deprecated-version="0.1.2" version="0.1.0">
+	<class name="DeprecatedClassTest" c:type="GirTestDeprecatedClassTest" c:symbol-prefix="deprecated_class_test" glib:type-name="GirTestDeprecatedClassTest" glib:get-type="gir_test_deprecated_class_test_get_type" glib:type-struct="DeprecatedClassTestClass" glib:fundamental="1" glib:ref-func="gir_test_deprecated_class_test_ref" glib:unref-func="gir_test_deprecated_class_test_unref" glib:set-value-func="gir_test_value_set_deprecated_class_test" glib:get-value-func="gir_test_value_get_deprecated_class_test" deprecated="1" deprecated-version="0.1.2" version="0.1.0">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
 		</field>
@@ -1221,7 +1221,7 @@
 		</field>
 	</record>
 	<record name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate" disguised="1"/>
-	<class name="GenericsTest" c:type="GirTestGenericsTest" glib:type-name="GirTestGenericsTest" glib:get-type="gir_test_generics_test_get_type" glib:type-struct="GenericsTestClass" glib:fundamental="1" glib:ref-func="gir_test_generics_test_ref" glib:unref-func="gir_test_generics_test_unref" glib:set-value-func="gir_test_value_set_generics_test" glib:get-value-func="gir_test_value_get_generics_test">
+	<class name="GenericsTest" c:type="GirTestGenericsTest" c:symbol-prefix="generics_test" glib:type-name="GirTestGenericsTest" glib:get-type="gir_test_generics_test_get_type" glib:type-struct="GenericsTestClass" glib:fundamental="1" glib:ref-func="gir_test_generics_test_ref" glib:unref-func="gir_test_generics_test_unref" glib:set-value-func="gir_test_value_set_generics_test" glib:get-value-func="gir_test_value_get_generics_test">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
 		</field>
@@ -1322,7 +1322,7 @@
 		</field>
 	</record>
 	<record name="GenericsTestPrivate" c:type="GirTestGenericsTestPrivate" disguised="1"/>
-	<class name="GenericsObjectTest" c:type="GirTestGenericsObjectTest" glib:type-name="GirTestGenericsObjectTest" glib:get-type="gir_test_generics_object_test_get_type" glib:type-struct="GenericsObjectTestClass" parent="GObject.Object">
+	<class name="GenericsObjectTest" c:type="GirTestGenericsObjectTest" c:symbol-prefix="generics_object_test" glib:type-name="GirTestGenericsObjectTest" glib:get-type="gir_test_generics_object_test_get_type" glib:type-struct="GenericsObjectTestClass" parent="GObject.Object">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -1406,7 +1406,7 @@
 		</field>
 	</record>
 	<record name="GenericsObjectTestPrivate" c:type="GirTestGenericsObjectTestPrivate" disguised="1"/>
-	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
+	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" c:symbol-prefix="interface_test" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
 		<prerequisite name="GObject.Object"/>
 		<method name="int8_in" c:identifier="gir_test_interface_test_int8_in">
 			<return-value transfer-ownership="full">
@@ -1720,14 +1720,14 @@
 			</callback>
 		</field>
 	</record>
-	<interface name="SkippedInterface" c:type="GirTestSkippedInterface" glib:type-name="GirTestSkippedInterface" glib:get-type="gir_test_skipped_interface_get_type" glib:type-struct="SkippedInterfaceIface" introspectable="0">
+	<interface name="SkippedInterface" c:type="GirTestSkippedInterface" c:symbol-prefix="skipped_interface" glib:type-name="GirTestSkippedInterface" glib:get-type="gir_test_skipped_interface_get_type" glib:type-struct="SkippedInterfaceIface" introspectable="0">
 	</interface>
 	<record name="SkippedInterfaceIface" c:type="GirTestSkippedInterfaceIface" glib:is-gtype-struct-for="SkippedInterface">
 		<field name="parent_iface" readable="0" private="1">
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
-	<interface name="PrerequisiteTest" c:type="GirTestPrerequisiteTest" glib:type-name="GirTestPrerequisiteTest" glib:get-type="gir_test_prerequisite_test_get_type" glib:type-struct="PrerequisiteTestIface">
+	<interface name="PrerequisiteTest" c:type="GirTestPrerequisiteTest" c:symbol-prefix="prerequisite_test" glib:type-name="GirTestPrerequisiteTest" glib:get-type="gir_test_prerequisite_test_get_type" glib:type-struct="PrerequisiteTestIface">
 		<prerequisite name="GirTest.InterfaceTest"/>
 	</interface>
 	<record name="PrerequisiteTestIface" c:type="GirTestPrerequisiteTestIface" glib:is-gtype-struct-for="PrerequisiteTest">
@@ -1735,7 +1735,7 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
-	<record name="BoxedStruct" c:type="GirTestBoxedStruct" glib:type-name="GirTestBoxedStruct" glib:get-type="gir_test_boxed_struct_get_type">
+	<record name="BoxedStruct" c:type="GirTestBoxedStruct" c:symbol-prefix="boxed_struct" glib:type-name="GirTestBoxedStruct" glib:get-type="gir_test_boxed_struct_get_type">
 		<field name="field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
@@ -1755,7 +1755,7 @@
 			</return-value>
 		</method>
 	</record>
-	<record name="Struct" c:type="GirTestStruct">
+	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
 		<field name="field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
@@ -1775,7 +1775,7 @@
 			</return-value>
 		</method>
 	</record>
-	<record name="SkippedStruct" c:type="GirTestSkippedStruct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
+	<record name="SkippedStruct" c:type="GirTestSkippedStruct" c:symbol-prefix="skipped_struct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
 		<field name="field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
