@@ -4,7 +4,7 @@
 <include name="Gio" version="2.0"/>
 <package name="girtest"/>
 <c:include name="girtest.h"/>
-<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest">
+<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest">
 	<enumeration name="EnumTest" c:type="GirTestEnumTest" glib:type-name="GirTestEnumTest" glib:get-type="gir_test_enum_test_get_type">
 		<member name="value1" c:identifier="GIR_TEST_ENUM_TEST_VALUE1" value="0"/>
 		<member name="value2" c:identifier="GIR_TEST_ENUM_TEST_VALUE2" value="1"/>
