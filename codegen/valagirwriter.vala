@@ -1574,7 +1574,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</array>\n");
 		} else if (type is VoidType) {
 			write_indent ();
-			buffer.append_printf ("<type name=\"none\"/>\n");
+			buffer.append_printf ("<type name=\"none\" c:type=\"void\"/>\n");
 		} else if (type is PointerType) {
 			write_indent ();
 			buffer.append_printf ("<type name=\"gpointer\" c:type=\"%s%s\"/>\n", get_ccode_name (type), direction == ParameterDirection.IN ? "" : "*");
