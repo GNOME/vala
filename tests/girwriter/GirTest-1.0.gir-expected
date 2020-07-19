@@ -53,7 +53,7 @@
 		</method>
 		<method name="set_some_property" c:identifier="gir_test_typetest_set_some_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -175,7 +175,7 @@
 		</constructor>
 		<function name="full_inout" c:identifier="gir_test_object_test_full_inout">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="obj" direction="inout" transfer-ownership="full">
@@ -185,7 +185,7 @@
 		</function>
 		<function name="full_out" c:identifier="gir_test_object_test_full_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="obj" direction="out" transfer-ownership="full">
@@ -200,7 +200,7 @@
 		</function>
 		<function name="none_inout" c:identifier="gir_test_object_test_none_inout">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="obj" direction="inout" transfer-ownership="none">
@@ -210,7 +210,7 @@
 		</function>
 		<function name="none_out" c:identifier="gir_test_object_test_none_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="obj" direction="out" transfer-ownership="none">
@@ -225,12 +225,12 @@
 		</function>
 		<function name="static_method" c:identifier="gir_test_object_test_static_method">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</function>
 		<method name="method_with_default_impl" c:identifier="gir_test_object_test_method_with_default_impl">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -240,7 +240,7 @@
 		</method>
 		<virtual-method name="method_with_default_impl" invoker="method_with_default_impl">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -250,7 +250,7 @@
 		</virtual-method>
 		<method name="int8_in" c:identifier="gir_test_object_test_int8_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -260,7 +260,7 @@
 		</method>
 		<method name="int8_out" c:identifier="gir_test_object_test_int8_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" direction="out" transfer-ownership="full">
@@ -270,12 +270,12 @@
 		</method>
 		<method name="method" c:identifier="gir_test_object_test_method">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<method name="method_varargs" c:identifier="gir_test_object_test_method_varargs" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -288,7 +288,7 @@
 		</method>
 		<method name="method_valist" c:identifier="gir_test_object_test_method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -301,7 +301,7 @@
 		</method>
 		<method name="array_in" c:identifier="gir_test_object_test_array_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="array" transfer-ownership="none">
@@ -316,7 +316,7 @@
 		</method>
 		<method name="array_inout" c:identifier="gir_test_object_test_array_inout">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="inout" transfer-ownership="full">
@@ -331,7 +331,7 @@
 		</method>
 		<method name="array_out" c:identifier="gir_test_object_test_array_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="out" transfer-ownership="full">
@@ -358,7 +358,7 @@
 		</method>
 		<method name="int_in_int_in_array_out" c:identifier="gir_test_object_test_int_in_int_in_array_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param1" transfer-ownership="none">
@@ -397,7 +397,7 @@
 		</method>
 		<method name="string_array_out" c:identifier="gir_test_object_test_string_array_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="array" direction="out" transfer-ownership="full">
@@ -424,7 +424,7 @@
 		</method>
 		<method name="none_in" c:identifier="gir_test_object_test_none_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<method name="delegate_return" c:identifier="gir_test_object_test_delegate_return">
@@ -516,7 +516,7 @@
 		</method>
 		<method name="coroutine_async" c:identifier="gir_test_object_test_coroutine_async">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
@@ -529,7 +529,7 @@
 		</method>
 		<method name="coroutine_finish" c:identifier="gir_test_object_test_coroutine_finish">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -539,7 +539,7 @@
 		</method>
 		<method name="coroutine_virtual_async" c:identifier="gir_test_object_test_coroutine_virtual_async">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
@@ -552,7 +552,7 @@
 		</method>
 		<method name="coroutine_virtual_finish" c:identifier="gir_test_object_test_coroutine_virtual_finish">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -562,7 +562,7 @@
 		</method>
 		<virtual-method name="coroutine_virtual_async" invoker="coroutine_virtual_async">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
@@ -575,7 +575,7 @@
 		</virtual-method>
 		<virtual-method name="coroutine_virtual_finish" invoker="coroutine_virtual_finish">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -585,7 +585,7 @@
 		</virtual-method>
 		<method name="coroutine_method_throw" c:identifier="gir_test_object_test_coroutine_method_throw">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="i1" transfer-ownership="none">
@@ -601,7 +601,7 @@
 		</method>
 		<method name="coroutine_method_throw_finish" c:identifier="gir_test_object_test_coroutine_method_throw_finish" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -614,7 +614,7 @@
 		</method>
 		<virtual-method name="coroutine_method_throw" invoker="coroutine_method_throw">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="i1" transfer-ownership="none">
@@ -630,7 +630,7 @@
 		</virtual-method>
 		<virtual-method name="coroutine_method_throw_finish" invoker="coroutine_method_throw_finish" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -643,22 +643,22 @@
 		</virtual-method>
 		<method name="simple_throw" c:identifier="gir_test_object_test_simple_throw" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<method name="method_throw" c:identifier="gir_test_object_test_method_throw" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<virtual-method name="method_throw" invoker="method_throw" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</virtual-method>
 		<method name="method_with_default" c:identifier="gir_test_object_test_method_with_default">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="i" transfer-ownership="none">
@@ -668,7 +668,7 @@
 		</method>
 		<method name="skipped_method" c:identifier="gir_test_object_test_skipped_method" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<property name="some-property" writable="1" construct="1">
@@ -681,7 +681,7 @@
 		</method>
 		<method name="set_some_property" c:identifier="gir_test_object_test_set_some_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -694,7 +694,7 @@
 		</property>
 		<method name="set_write_only_property" c:identifier="gir_test_object_test_set_write_only_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -715,7 +715,7 @@
 		</method>
 		<method name="set_skipped_property" c:identifier="gir_test_object_test_set_skipped_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -725,7 +725,7 @@
 		</method>
 		<glib:signal name="some-signal">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -735,7 +735,7 @@
 		</glib:signal>
 		<glib:signal name="skipped-signal" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -745,7 +745,7 @@
 		</glib:signal>
 		<glib:signal name="signal-with-default-handlder">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="i1" transfer-ownership="none">
@@ -761,7 +761,7 @@
 		<field name="method_with_default_impl">
 			<callback name="method_with_default_impl" c:type="method_with_default_impl">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -776,7 +776,7 @@
 		<field name="coroutine_virtual_async">
 			<callback name="coroutine_virtual_async" c:type="coroutine_virtual_async">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -794,7 +794,7 @@
 		<field name="coroutine_virtual_finish">
 			<callback name="coroutine_virtual_finish" c:type="coroutine_virtual_finish">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -809,7 +809,7 @@
 		<field name="coroutine_method_throw">
 			<callback name="coroutine_method_throw" c:type="coroutine_method_throw">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -830,7 +830,7 @@
 		<field name="coroutine_method_throw_finish">
 			<callback name="coroutine_method_throw_finish" c:type="coroutine_method_throw_finish" throws="1">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -848,7 +848,7 @@
 		<field name="method_throw">
 			<callback name="method_throw" c:type="method_throw" throws="1">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -860,7 +860,7 @@
 		<field name="signal_with_default_handlder">
 			<callback name="object_test_signal_with_default_handlder" c:type="object_test_signal_with_default_handlder">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="i1" transfer-ownership="none">
@@ -880,7 +880,7 @@
 		</field>
 		<method name="method_int8_in" c:identifier="gir_test_abstract_object_test_method_int8_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -890,7 +890,7 @@
 		</method>
 		<virtual-method name="method_int8_in" invoker="method_int8_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -900,7 +900,7 @@
 		</virtual-method>
 		<method name="method_int8_inout" c:identifier="gir_test_abstract_object_test_method_int8_inout">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" direction="inout" transfer-ownership="full">
@@ -910,7 +910,7 @@
 		</method>
 		<virtual-method name="method_int8_inout" invoker="method_int8_inout">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" direction="inout" transfer-ownership="full">
@@ -920,7 +920,7 @@
 		</virtual-method>
 		<method name="method_int8_out" c:identifier="gir_test_abstract_object_test_method_int8_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" direction="out" transfer-ownership="full">
@@ -930,7 +930,7 @@
 		</method>
 		<virtual-method name="method_int8_out" invoker="method_int8_out">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" direction="out" transfer-ownership="full">
@@ -940,17 +940,17 @@
 		</virtual-method>
 		<method name="method_throw" c:identifier="gir_test_abstract_object_test_method_throw" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 		<virtual-method name="method_throw" invoker="method_throw" throws="1">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</virtual-method>
 		<method name="method_valist" c:identifier="gir_test_abstract_object_test_method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -963,7 +963,7 @@
 		</method>
 		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -976,7 +976,7 @@
 		</virtual-method>
 		<method name="skipped_coroutine_method" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method" introspectable="0">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -992,7 +992,7 @@
 		</method>
 		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method_finish" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1002,7 +1002,7 @@
 		</method>
 		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1018,7 +1018,7 @@
 		</virtual-method>
 		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1034,7 +1034,7 @@
 		<field name="method_int8_in">
 			<callback name="method_int8_in" c:type="method_int8_in">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1049,7 +1049,7 @@
 		<field name="method_int8_inout">
 			<callback name="method_int8_inout" c:type="method_int8_inout">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1064,7 +1064,7 @@
 		<field name="method_int8_out">
 			<callback name="method_int8_out" c:type="method_int8_out">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1079,7 +1079,7 @@
 		<field name="method_throw">
 			<callback name="method_throw" c:type="method_throw" throws="1">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1091,7 +1091,7 @@
 		<field name="method_valist" introspectable="0">
 			<callback name="method_valist" c:type="method_valist">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1109,7 +1109,7 @@
 		<field name="skipped_coroutine_method" introspectable="0">
 			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1130,7 +1130,7 @@
 		<field name="skipped_coroutine_method_finish" introspectable="0">
 			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1301,7 +1301,7 @@
 		</constructor>
 		<method name="method" c:identifier="gir_test_generics_test_method">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none" allow-none="1">
@@ -1343,7 +1343,7 @@
 		</property>
 		<method name="method" c:identifier="gir_test_generics_object_test_method">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="k_type" transfer-ownership="none">
@@ -1401,7 +1401,7 @@
 		<prerequisite name="GObject.Object"/>
 		<method name="int8_in" c:identifier="gir_test_interface_test_int8_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1411,7 +1411,7 @@
 		</method>
 		<virtual-method name="int8_in" invoker="int8_in">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1421,7 +1421,7 @@
 		</virtual-method>
 		<method name="coroutine_async" c:identifier="gir_test_interface_test_coroutine_async">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
@@ -1434,7 +1434,7 @@
 		</method>
 		<method name="coroutine_finish" c:identifier="gir_test_interface_test_coroutine_finish">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1444,7 +1444,7 @@
 		</method>
 		<virtual-method name="coroutine_async" invoker="coroutine_async">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
@@ -1457,7 +1457,7 @@
 		</virtual-method>
 		<virtual-method name="coroutine_finish" invoker="coroutine_finish">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1467,7 +1467,7 @@
 		</virtual-method>
 		<method name="method_valist" c:identifier="gir_test_interface_test_method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1480,7 +1480,7 @@
 		</method>
 		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1493,7 +1493,7 @@
 		</virtual-method>
 		<method name="skipped_coroutine_method" c:identifier="gir_test_interface_test_skipped_coroutine_method" introspectable="0">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1509,7 +1509,7 @@
 		</method>
 		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_interface_test_skipped_coroutine_method_finish" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1519,7 +1519,7 @@
 		</method>
 		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
@@ -1535,7 +1535,7 @@
 		</virtual-method>
 		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="_res_" transfer-ownership="none">
@@ -1558,7 +1558,7 @@
 		</virtual-method>
 		<method name="set_property" c:identifier="gir_test_interface_test_set_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -1568,7 +1568,7 @@
 		</method>
 		<virtual-method name="set_property" invoker="set_property">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="value" transfer-ownership="none">
@@ -1584,7 +1584,7 @@
 		<field name="int8_in">
 			<callback name="int8_in" c:type="int8_in">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1599,7 +1599,7 @@
 		<field name="coroutine_async">
 			<callback name="coroutine_async" c:type="coroutine_async">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1617,7 +1617,7 @@
 		<field name="coroutine_finish">
 			<callback name="coroutine_finish" c:type="coroutine_finish">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1632,7 +1632,7 @@
 		<field name="method_valist" introspectable="0">
 			<callback name="method_valist" c:type="method_valist">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1650,7 +1650,7 @@
 		<field name="skipped_coroutine_method" introspectable="0">
 			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1671,7 +1671,7 @@
 		<field name="skipped_coroutine_method_finish" introspectable="0">
 			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
 				<return-value transfer-ownership="full">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1698,7 +1698,7 @@
 		<field name="set_property">
 			<callback name="set_property" c:type="set_property">
 				<return-value transfer-ownership="none">
-					<type name="none"/>
+					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
 					<parameter name="self" transfer-ownership="none">
@@ -1732,7 +1732,7 @@
 		</field>
 		<function name="init" c:identifier="gir_test_boxed_struct_init">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
@@ -1742,7 +1742,7 @@
 		</function>
 		<method name="inv" c:identifier="gir_test_boxed_struct_inv">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 	</record>
@@ -1752,7 +1752,7 @@
 		</field>
 		<function name="init" c:identifier="gir_test_struct_init">
 			<return-value transfer-ownership="none">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
@@ -1762,7 +1762,7 @@
 		</function>
 		<method name="inv" c:identifier="gir_test_struct_inv">
 			<return-value transfer-ownership="full">
-				<type name="none"/>
+				<type name="none" c:type="void"/>
 			</return-value>
 		</method>
 	</record>
@@ -1828,7 +1828,7 @@
 	</callback>
 	<callback name="SkippedDelegate" c:type="GirTestSkippedDelegate" introspectable="0">
 		<return-value transfer-ownership="full">
-			<type name="none"/>
+			<type name="none" c:type="void"/>
 		</return-value>
 	</callback>
 	<constant name="CONSTANT_NUMBER" c:identifier="GIR_TEST_CONSTANT_NUMBER" value="42">
