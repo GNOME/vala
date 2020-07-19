@@ -1,0 +1,15 @@
+Invalid Code
+
+/*
+ * 9.9-9.33: error: Anonymous delegates cannot be dynamic types
+ * void p (dynamic delegate() => int d) {
+ *         ^^^^^^^^^^^^^^^^^^^^^^^^^
+ */
+
+void p (dynamic delegate() => int d) {
+    d ();
+}
+
+void main () {
+    p (() => 7);
+}

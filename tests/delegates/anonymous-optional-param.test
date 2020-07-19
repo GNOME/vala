@@ -1,0 +1,19 @@
+Invalid Code
+
+/*
+ * 11.21-11.21: error: Optional parameters not allowed in anonymous delegates
+ * void f (delegate(int=123) => int y) {
+ *                     ^
+ */
+
+void main () {
+    f (t);
+}
+
+void f (delegate(int=123) => int y) {
+    y (1);
+}
+
+int t (int a) {
+    return a;
+}

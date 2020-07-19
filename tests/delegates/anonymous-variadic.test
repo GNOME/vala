@@ -1,0 +1,19 @@
+Invalid Code
+
+/*
+ * 11.23-11.25: error: syntax error, expected identifier
+ * void f (delegate(int, ...) => int y) {
+ *                     ^^^
+ */
+
+void main () {
+    f (t);
+}
+
+void f (delegate(int, ...) => int y) {
+    y (1);
+}
+
+int t (int a, ...) {
+    return a;
+}

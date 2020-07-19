@@ -1,0 +1,19 @@
+Invalid Code
+
+/*
+ * 13.17-13.17: error: syntax error, expected `('
+ * void f (delegate<T>(int) => void y) {
+ *                 ^
+ */
+
+void main () {
+    f (t);
+}
+
+void f (delegate<T>(int) => void y) {
+    y (1);
+}
+
+void t (int a) {
+    assert (a == 1);
+}

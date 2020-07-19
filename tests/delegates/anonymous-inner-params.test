@@ -1,0 +1,19 @@
+Invalid Code
+
+/*
+ * 13.18-13.23: error: Params-arrays not allowed in anonymous delegates
+ * void f (delegate(params string[]) => void y) {
+ *                  ^^^^^^
+ */
+
+void main () {
+    f (t);
+}
+
+void f (delegate(params string[]) => void y) {
+    y ("1", "2", "3");
+}
+
+void t (params string[] p) {
+    assert (p.length == 3);
+}

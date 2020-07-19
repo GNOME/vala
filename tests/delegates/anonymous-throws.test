@@ -1,0 +1,21 @@
+Invalid Code
+
+/*
+ * 11.30-11.30: error: syntax error, following expression/statement delimiter `)' missing
+ * void f (delegate(int) => int y throws Error) {
+ *                              ^
+ */
+
+void main () {
+    f (t);
+}
+
+void f (delegate(int) => int y throws Error) {
+    try {
+        y (1);
+    } catch {}
+}
+
+int t (int a) throws Error {
+    return a;
+}

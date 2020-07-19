@@ -517,7 +517,7 @@ public class Vala.Parser : CodeVisitor {
 		return result;
 	}
 
-	DataType parse_type (bool owned_by_default, bool can_weak_ref, bool require_unowned = false) throws ParseError {
+	DataType parse_type (bool owned_by_default, bool can_weak_ref, bool require_unowned = false, Symbol? parent=null, Method? method=null) throws ParseError {
 		var begin = get_location ();
 
 		bool is_dynamic = accept (TokenType.DYNAMIC);
@@ -551,6 +551,19 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		DataType type;
+
+		var begin_delegate_token = get_location ();
+		var is_delegate_token = accept (TokenType.DELEGATE);
+		rollback (begin_delegate_token);
+
+		if (is_delegate_token && method == null) {
+			throw new ParseError.SYNTAX ("anonymous delegate not allowed here");
+		} else if (is_delegate_token) {
+			type = parse_anonymous_delegate (parent, method);
+			type.value_owned = value_owned;
+			type.is_dynamic = is_dynamic;
+			return type;
+		}
 
 		bool inner_type_owned = true;
 		if (accept (TokenType.OPEN_PARENS)) {
@@ -3280,7 +3293,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				var param = parse_parameter ();
+				var param = parse_parameter (parent, method);
 				method.add_parameter (param);
 			} while (accept (TokenType.COMMA));
 		}
@@ -3815,7 +3828,8 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Parameter parse_parameter () throws ParseError {
+	Parameter parse_parameter (Symbol? parent=null, Method? method=null) throws ParseError {
+		var begin_attrs = get_location ();
 		var attrs = parse_attributes ();
 		var begin = get_location ();
 		if (accept (TokenType.ELLIPSIS)) {
@@ -3831,17 +3845,44 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		DataType type;
+		string pretty_direction = null;
 		if (direction == ParameterDirection.IN) {
 			// in parameters are unowned by default
-			type = parse_type (false, false);
+			type = parse_type (false, false, false, parent, method);
 		} else if (direction == ParameterDirection.REF) {
 			// ref parameters own the value by default
-			type = parse_type (true, true);
+			type = parse_type (true, true, false, parent, method);
+			pretty_direction = "ref";
 		} else {
 			// out parameters own the value by default
-			type = parse_type (true, false);
+			type = parse_type (true, false, false, parent, method);
+			pretty_direction = "out";
 		}
+
 		string id = parse_identifier ();
+
+		var possibly_delegate = type as DelegateType;
+		if (possibly_delegate != null && possibly_delegate.delegate_symbol.anonymous) {
+			if (attrs != null) {
+				var here = get_location ();
+				rollback (begin);
+				Report.warning (get_src (begin_attrs), "Ambiguous attribute: does it belong to `%s` or parameter `%s`?"
+					.printf (possibly_delegate.to_prototype_string (), id));
+				rollback (here);
+			}
+
+			if (pretty_direction != null) {
+				Report.error (get_src (begin), "Anonymous delegates cannot be `" + pretty_direction + "` parameters");
+			}
+
+			if (possibly_delegate.is_dynamic) {
+				Report.error (get_src (begin), "Anonymous delegates cannot be dynamic types");
+			}
+
+			if (params_array) {
+				Report.error (get_src (begin), "Anonymous delegates cannot be param-arrays");
+			}
+		}
 
 		type = parse_inline_array_type (type);
 
@@ -3973,6 +4014,92 @@ public class Vala.Parser : CodeVisitor {
 			}
 			result = next;
 		}
+	}
+
+	static int next_anonymous_id = 0;
+
+	Parameter parse_anonymous_parameter (int id) throws ParseError {
+		var attrs = parse_attributes ();
+		var begin = get_location ();
+
+		if (accept (TokenType.PARAMS)) {
+			Report.error (get_last_src (), "Params-arrays not allowed in anonymous delegates");
+		}
+
+		var direction = ParameterDirection.IN;
+		if (accept (TokenType.OUT)) {
+			direction = ParameterDirection.OUT;
+		} else if (accept (TokenType.REF)) {
+			direction = ParameterDirection.REF;
+		}
+
+		DataType type;
+		var type_loc = get_location ();
+		if (direction == ParameterDirection.IN) {
+			// in parameters are unowned by default
+			type = parse_type (false, false);
+		} else if (direction == ParameterDirection.REF) {
+			// ref parameters own the value by default
+			type = parse_type (true, true);
+		} else {
+			// out parameters own the value by default
+			type = parse_type (true, false);
+		}
+
+		if (type.is_dynamic) {
+			Report.error (get_src (type_loc), "Dynamic types not allowed in anonymous delegates");
+		}
+
+		type = parse_inline_array_type (type);
+
+		if (accept (TokenType.ASSIGN)) {
+			Report.error (get_last_src (), "Optional paramters not allowed in anonymous delegates");
+		}
+
+		var param = new Parameter ("p%i".printf (id), type, get_src (begin));
+		set_attributes (param, attrs);
+		param.direction = direction;
+		return param;
+	}
+
+	DelegateType parse_anonymous_delegate (Symbol parent, Method method) throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.DELEGATE);
+
+		expect (TokenType.OPEN_PARENS);
+		var param_list = new ArrayList<Parameter> ();
+		if (current () != TokenType.CLOSE_PARENS) {
+			int next_parameter_id = 0;
+			do {
+				var param = parse_anonymous_parameter (next_parameter_id++);
+				param_list.add (param);
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_PARENS);
+
+		expect (TokenType.LAMBDA);
+		var type_loc = get_location ();
+		var type = parse_type (true, false);
+
+		if (type.is_dynamic) {
+			Report.error (get_src (type_loc), "Dynamic types not allowed in anonymous delegates");
+		}
+
+		var src = get_src (begin);
+		if (!context.experimental) {
+			Report.warning (src, "Anonymous delegates are experimental");
+		}
+
+		var d = new Delegate ("__delegate%i_".printf (next_anonymous_id++), type, get_src (begin), comment);
+		d.anonymous = true;
+		d.access = method.access;
+
+		foreach (var param in param_list) {
+			d.add_parameter (param);
+		}
+
+		parent.add_delegate (d);
+		return new DelegateType (d);
 	}
 
 	List<TypeParameter> parse_type_parameter_list () throws ParseError {

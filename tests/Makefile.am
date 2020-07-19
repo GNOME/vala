@@ -203,6 +203,8 @@ TESTS = \
 	methods/extern.vala \
 	methods/iterator.vala \
 	methods/local-functions.vala \
+	methods/parameter-anonymous-delegate.vala \
+	methods/parameter-anonymous-delegate-optional.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-out-free-on-error.vala \
 	methods/parameter-ref-array-resize.vala \
@@ -446,6 +448,24 @@ TESTS = \
 	structs/bug775761.vala \
 	structs/bug777194.vala \
 	structs/bug777194-2.vala \
+	delegates/anonymous.vala \
+	delegates/anonymous-array.vala \
+	delegates/anonymous-dynamic.test \
+	delegates/anonymous-generics.test \
+	delegates/anonymous-inner-dynamic-param.test \
+	delegates/anonymous-inner-dynamic-return.test \
+	delegates/anonymous-inner-params.test \
+	delegates/anonymous-inner-ref-out.vala \
+	delegates/anonymous-inner-owned-unowned.vala \
+	delegates/anonymous-optional-param.test \
+	delegates/anonymous-out.test \
+	delegates/anonymous-params.test \
+	delegates/anonymous-param-attrs.vala \
+	delegates/anonymous-ref.test \
+	delegates/anonymous-return-anonymous.test \
+	delegates/anonymous-throws.test \
+	delegates/anonymous-type-param.vala \
+	delegates/anonymous-variadic.test \
 	delegates/casting.vala \
 	delegates/class-field-initializer.vala \
 	delegates/compatible.vala \

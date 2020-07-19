@@ -1,0 +1,15 @@
+Invalid Code
+
+/*
+ * 9.9-9.32: error: Anonymous delegates cannot be param-arrays
+ * void p (params delegate() => int d) {
+ *         ^^^^^^^^^^^^^^^^^^^^^^^^
+ */
+
+void p (params delegate() => int d) {
+    d ();
+}
+
+void main () {
+    return;
+}

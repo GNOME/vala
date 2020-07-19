@@ -1,0 +1,15 @@
+Invalid Code
+
+/*
+ * 13.9-13.33: error: Anonymous delegates cannot be `ref` parameters
+ * void f (ref delegate(int) => void x) {
+ *         ^^^^^^^^^^^^^^^^^^^^^^^^^
+ */
+
+void main() {
+    assert (true);
+}
+
+void f (ref delegate(int) => void x) {
+    x (42);
+}

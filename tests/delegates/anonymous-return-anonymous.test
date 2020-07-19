@@ -1,0 +1,18 @@
+Invalid Code
+ 
+ /*
+  * 9.26-9.33: error: syntax error, anonymous delegate not allowed here
+  * void f (delegate(int) => delegate() => int d) {
+  *                          ^^^^^^^^
+  */
+
+void f (delegate(int) => delegate() => int d) {
+    var r = d (14);
+    stdout.printf("%d\n", r ());
+}
+
+void main () {
+    f ((a) => {
+        return () => a;
+    });
+}

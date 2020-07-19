@@ -71,7 +71,11 @@ public abstract class Vala.CallableType : DataType {
 
 		// Append name
 		builder.append_c (' ');
-		builder.append (override_name ?? this.to_string ());
+		if (symbol.anonymous) {
+			builder.append ("<anonymous>");
+		} else {
+			builder.append (override_name ?? this.to_string ());
+		}
 		builder.append_c (' ');
 
 		// Append parameter-list

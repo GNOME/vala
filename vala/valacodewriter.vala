@@ -683,7 +683,11 @@ public class Vala.CodeWriter : CodeVisitor {
 				}
 			}
 
-			write_type (param.variable_type);
+			if (param.variable_type is DelegateType && param.variable_type.type_symbol.anonymous) {
+				write_anonymous_delegate (param.variable_type as DelegateType);
+			} else {
+				write_type (param.variable_type);
+			}
 
 			write_string (" ");
 			write_identifier (param.name);
@@ -706,6 +710,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		if (!check_accessibility (cb)) {
+			return;
+		}
+
+		if (cb.anonymous) {
 			return;
 		}
 
@@ -1612,6 +1620,43 @@ public class Vala.CodeWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		stream.putc ('}');
+	}
+
+	private void write_anonymous_params (List<Parameter> params) {
+		write_string ("(");
+
+		int i = 1;
+		foreach (Parameter param in params) {
+			if (i > 1) {
+				write_string (", ");
+			}
+
+			write_attributes (param);
+
+			if (param.direction == ParameterDirection.REF) {
+				write_string ("ref ");
+			} else if (param.direction == ParameterDirection.OUT) {
+				write_string ("out ");
+			}
+
+			write_type (param.variable_type);
+			write_type_suffix (param.variable_type);
+
+			i++;
+		}
+
+		write_string (")");
+
+	}
+
+	private void write_anonymous_delegate (DelegateType cb) {
+		write_attributes (cb);
+
+		write_string ("delegate");
+		write_anonymous_params (cb.get_parameters ());
+
+		write_string (" => ");
+		write_return_type (cb.get_return_type ());
 	}
 
 	private bool check_accessibility (Symbol sym) {

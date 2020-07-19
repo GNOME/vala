@@ -1,0 +1,15 @@
+Invalid Code
+
+/*
+ * 7.18-7.28: error: Dynamic types not allowed in anonymous delegates
+ * void p (delegate(dynamic int) => void d) {
+ *                  ^^^^^^^^^^^
+ */
+
+void p (delegate(dynamic int) => void d) {
+    d (7);
+}
+
+void main () {
+    return;
+}

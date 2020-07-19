@@ -1,0 +1,15 @@
+Invalid Code
+
+/*
+ * 9.23-9.33: error: Dynamic types not allowed in anonymous delegates
+ * void p (delegate() => dynamic int d) {
+ *                       ^^^^^^^^^^^
+ */
+
+void p (delegate() => dynamic int d) {
+    var x = d ();
+}
+
+void main () {
+    return;
+}
