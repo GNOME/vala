@@ -347,6 +347,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 		if (cprefix != null) {
 			buffer.append_printf (" c:prefix=\"%s\"", cprefix);
+			buffer.append_printf (" c:identifier-prefixes=\"%s\"", cprefix);
 		}
 		buffer.append_printf (">\n");
 		indent++;
