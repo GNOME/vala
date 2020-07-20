@@ -838,6 +838,7 @@ TESTS = \
 	semantic/unary-unsupported-negation.test \
 	semantic/yield-call-requires-async-context.test \
 	semantic/yield-call-requires-async-method.test \
+	semantic/yield-call-requires-async-method-2.test \
 	semantic/yield-creation-requires-async-context.test \
 	semantic/yield-creation-requires-async-method.test \
 	$(NULL)
