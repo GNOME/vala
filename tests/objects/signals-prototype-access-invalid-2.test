@@ -1,0 +1,12 @@
+Invalid Code
+
+delegate void FooFunc ();
+
+class Foo {
+	public signal int bar ();
+}
+
+void main () {
+	var foo = new Foo ();
+	FooFunc func = Foo.bar;
+}
