@@ -436,6 +436,7 @@ TESTS = \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
 	objects/signals-dymanic-invalid-handler.test \
+	objects/signals-error-marshal.vala \
 	objects/signals-fundamental-return.vala \
 	objects/signals-gobject-return.vala \
 	objects/signals-lambda-delegate.vala \
