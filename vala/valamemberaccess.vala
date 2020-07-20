@@ -515,6 +515,28 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
+		if (symbol_reference is Signal) {
+			unowned Signal sig = (Signal) symbol_reference;
+			unowned CodeNode? ma = this;
+			while (ma.parent_node is MemberAccess) {
+				ma = ma.parent_node;
+			}
+			unowned CodeNode? parent = ma.parent_node;
+			if (parent != null && !(parent is ElementAccess) && !(((MemberAccess) ma).inner is BaseAccess)
+			    && (!(parent is MethodCall) || ((MethodCall) parent).get_argument_list ().contains (this))) {
+				if (sig.get_attribute ("HasEmitter") != null) {
+					if (!sig.check (context)) {
+						return false;
+					}
+					symbol_reference = sig.emitter;
+				} else {
+					error = true;
+					Report.error (source_reference, "Signal `%s' requires emitter in this context".printf (symbol_reference.get_full_name ()));
+					return false;
+				}
+			}
+		}
+
 		var member = symbol_reference;
 		var access = SymbolAccessibility.PUBLIC;
 		bool instance = false;

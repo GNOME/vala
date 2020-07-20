@@ -366,6 +366,9 @@ TESTS = \
 	objects/signals-dymanic-invalid-handler.test \
 	objects/signals-fundamental-return.vala \
 	objects/signals-gobject-return.vala \
+	objects/signals-prototype-access.vala \
+	objects/signals-prototype-access-invalid.test \
+	objects/signals-prototype-access-invalid-2.test \
 	objects/signals-struct-return.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
