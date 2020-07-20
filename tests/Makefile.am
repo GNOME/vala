@@ -353,6 +353,7 @@ TESTS = \
 	objects/class_only.vala \
 	objects/class-destroysinstance.vala \
 	objects/class-new-no-override.vala \
+	objects/class-vfunc-base-access.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \
 	objects/classes-interfaces-virtuals.vala \
