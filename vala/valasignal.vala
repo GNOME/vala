@@ -250,7 +250,7 @@ public class Vala.Signal : Symbol, Callable {
 			default_handler.check (context);
 		}
 
-		if (!external_package && get_attribute ("HasEmitter") != null) {
+		if (get_attribute ("HasEmitter") != null) {
 			emitter = new Method (name, return_type, source_reference);
 
 			emitter.owner = owner;
@@ -274,7 +274,9 @@ public class Vala.Signal : Symbol, Callable {
 			unowned ObjectTypeSymbol? cl = parent_symbol as ObjectTypeSymbol;
 
 			cl.add_hidden_method (emitter);
-			emitter.check (context);
+			if (!external_package) {
+				emitter.check (context);
+			}
 		}
 
 
