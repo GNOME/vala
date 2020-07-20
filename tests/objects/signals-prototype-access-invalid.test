@@ -1,0 +1,16 @@
+Invalid Code
+
+[CCode (has_target = false)]
+delegate void FooFunc (Foo foo);
+
+class Foo {
+	public signal int bar ();
+
+	public void manam (FooFunc func) {
+	}
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.manam (Foo.bar);
+}
