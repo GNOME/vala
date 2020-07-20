@@ -510,19 +510,19 @@ public class Vala.MethodCall : Expression {
 		formal_value_type = ret_type.copy ();
 		value_type = formal_value_type.get_actual_type (target_object_type, method_type_args, this);
 
+		if (is_yield_expression) {
+			if (!(mtype is MethodType) || !((MethodType) mtype).method_symbol.coroutine) {
+				error = true;
+				Report.error (source_reference, "yield expression requires async method");
+			}
+			if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
+				error = true;
+				Report.error (source_reference, "yield expression not available outside async method");
+			}
+		}
+
 		if (mtype is MethodType) {
 			unowned Method m = ((MethodType) mtype).method_symbol;
-			if (is_yield_expression) {
-				if (!m.coroutine) {
-					error = true;
-					Report.error (source_reference, "yield expression requires async method");
-				}
-				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
-					error = true;
-					Report.error (source_reference, "yield expression not available outside async method");
-				}
-			}
-
 			if (m.returns_floating_reference) {
 				value_type.floating_reference = true;
 			}
