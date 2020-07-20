@@ -319,6 +319,7 @@ TESTS = \
 	objects/chainup.vala \
 	objects/class-ccode-cprefix.vala \
 	objects/class-destroysinstance.vala \
+	objects/class-vfunc-base-access.vala \
 	objects/classes.vala \
 	objects/compact-class-destructor.vala \
 	objects/constructor-variadic.test \
