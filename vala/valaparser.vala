@@ -2326,6 +2326,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		var src = get_src (begin);
+		if (!context.experimental) {
+			Report.warning (src, "`with' statements are experimental");
+		}
 		var body = parse_embedded_statement ("with", false);
 		return new WithStatement (local, expr, body, src);
 	}
