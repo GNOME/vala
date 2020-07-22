@@ -902,7 +902,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			// update possible stale _*_size_ variable
 			if (unary != null && unary.operator == UnaryOperator.REF) {
-				if (get_ccode_array_length (param) && param.variable_type is ArrayType
+				if (param != null && get_ccode_array_length (param) && param.variable_type is ArrayType
 				    && !((ArrayType) param.variable_type).fixed_length && ((ArrayType) param.variable_type).rank == 1) {
 					unowned Symbol? array_var = unary.inner.symbol_reference;
 					unowned LocalVariable? array_local = array_var as LocalVariable;

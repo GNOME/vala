@@ -198,6 +198,7 @@ TESTS = \
 	methods/varargs-delegate-without-target.vala \
 	methods/varargs-gvalue.vala \
 	methods/varargs-out.vala \
+	methods/varargs-ref.vala \
 	methods/varargs-struct.vala \
 	control-flow/assigned-local-variable.vala \
 	control-flow/break.vala \
