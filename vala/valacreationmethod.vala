@@ -113,6 +113,13 @@ public class Vala.CreationMethod : Method {
 
 		foreach (DataType error_type in get_error_types ()) {
 			error_type.check (context);
+
+			// check whether error type is at least as accessible as the creation method
+			if (!context.analyzer.is_type_accessible (this, error_type)) {
+				error = true;
+				Report.error (source_reference, "error type `%s' is less accessible than creation method `%s'".printf (error_type.to_string (), get_full_name ()));
+				return false;
+			}
 		}
 
 		foreach (Expression precondition in get_preconditions ()) {

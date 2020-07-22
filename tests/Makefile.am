@@ -704,6 +704,8 @@ TESTS = \
 	semantic/constant-value-type.test \
 	semantic/constant-void.test \
 	semantic/construct-without-gobject.test \
+	semantic/creation-error-accessibility.test \
+	semantic/delegate-error-accessibility.test \
 	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
 	semantic/delegate-too-many-type-arguments.test \
