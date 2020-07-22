@@ -1,0 +1,10 @@
+Invalid Code
+
+errordomain FooError {
+	BAR
+}
+
+public delegate void Foo () throws FooError;
+
+void main () {
+}
