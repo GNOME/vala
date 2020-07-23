@@ -2240,6 +2240,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "constant") {
 				parse_constant ();
+			} else if (reader.name == "docsection") {
+				skip_element ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `namespace'".printf (reader.name));
