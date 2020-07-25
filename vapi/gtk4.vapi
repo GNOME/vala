@@ -503,6 +503,8 @@ namespace Gdk {
 		public const uint AudioPause;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPlay")]
 		public const uint AudioPlay;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPreset")]
+		public const uint AudioPreset;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPrev")]
 		public const uint AudioPrev;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioRaiseVolume")]
@@ -1703,6 +1705,8 @@ namespace Gdk {
 		public const uint KbdLightOnOff;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Kcedilla")]
 		public const uint Kcedilla;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Keyboard")]
+		public const uint Keyboard;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Korean_Won")]
 		public const uint Korean_Won;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_L")]
@@ -2069,6 +2073,8 @@ namespace Gdk {
 		public const uint R8;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_R9")]
 		public const uint R9;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_RFKill")]
+		public const uint RFKill;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Racute")]
 		public const uint Racute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Rcaron")]
@@ -2689,6 +2695,8 @@ namespace Gdk {
 		public const uint W;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WLAN")]
 		public const uint WLAN;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WWAN")]
+		public const uint WWAN;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WWW")]
 		public const uint WWW;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Wacute")]
@@ -3477,6 +3485,8 @@ namespace Gdk {
 		public const uint dead_abovereversedcomma;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_abovering")]
 		public const uint dead_abovering;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_aboveverticalline")]
+		public const uint dead_aboveverticalline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_acute")]
 		public const uint dead_acute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowbreve")]
@@ -3495,6 +3505,8 @@ namespace Gdk {
 		public const uint dead_belowring;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowtilde")]
 		public const uint dead_belowtilde;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowverticalline")]
+		public const uint dead_belowverticalline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_breve")]
 		public const uint dead_breve;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_capital_schwa")]
@@ -3531,6 +3543,10 @@ namespace Gdk {
 		public const uint dead_invertedbreve;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_iota")]
 		public const uint dead_iota;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_longsolidusoverlay")]
+		public const uint dead_longsolidusoverlay;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_lowline")]
+		public const uint dead_lowline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_macron")]
 		public const uint dead_macron;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_o")]
@@ -7884,10 +7900,10 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_entry_buffer_get_type ()")]
 	public class EntryBuffer : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public EntryBuffer ([CCode (array_length_cname = "n_initial_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[]? initial_chars = null);
+		public EntryBuffer ([CCode (array_length_cname = "n_initial_chars", array_length_pos = 1.1, type = "const char*")] uint8[]? initial_chars = null);
 		public virtual uint delete_text (uint position, uint n_chars);
 		public void emit_deleted_text (uint position, uint n_chars);
-		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
+		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const char*")] uint8[] chars);
 		public size_t get_bytes ();
 		public virtual uint get_length ();
 		public int get_max_length ();
@@ -7895,9 +7911,9 @@ namespace Gtk {
 		[CCode (vfunc_name = "get_text")]
 		[NoWrapper]
 		public virtual unowned string get_text_internal (out size_t n_bytes = null);
-		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
+		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const char*")] uint8[] chars);
 		public void set_max_length (int max_length);
-		public void set_text ([CCode (array_length_cname = "n_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[] chars);
+		public void set_text ([CCode (array_length_cname = "n_chars", array_length_pos = 1.1, type = "const char*")] uint8[] chars);
 		public uint length { get; }
 		public int max_length { get; set; }
 		public string text { get; set; }
@@ -9332,7 +9348,6 @@ namespace Gtk {
 	public class MenuButton : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public MenuButton ();
-		public unowned Gtk.Widget? get_align_widget ();
 		public Gtk.ArrowType get_direction ();
 		public bool get_has_frame ();
 		public unowned string get_icon_name ();
@@ -9342,7 +9357,6 @@ namespace Gtk {
 		public bool get_use_underline ();
 		public void popdown ();
 		public void popup ();
-		public void set_align_widget (Gtk.Widget? align_widget);
 		public void set_create_popup_func (owned Gtk.MenuButtonCreatePopupFunc? func);
 		public void set_direction (Gtk.ArrowType direction);
 		public void set_has_frame (bool has_frame);
@@ -9351,7 +9365,6 @@ namespace Gtk {
 		public void set_menu_model (GLib.MenuModel? menu_model);
 		public void set_popover (Gtk.Widget? popover);
 		public void set_use_underline (bool use_underline);
-		public Gtk.Widget align_widget { get; set; }
 		public Gtk.ArrowType direction { get; set; }
 		public bool has_frame { get; set; }
 		public string icon_name { get; set; }
@@ -10790,11 +10803,16 @@ namespace Gtk {
 	public class SortListModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
 		public SortListModel (GLib.ListModel? model, Gtk.Sorter? sorter);
+		public bool get_incremental ();
 		public unowned GLib.ListModel? get_model ();
+		public uint get_pending ();
 		public unowned Gtk.Sorter? get_sorter ();
+		public void set_incremental (bool incremental);
 		public void set_model (GLib.ListModel? model);
 		public void set_sorter (Gtk.Sorter? sorter);
+		public bool incremental { get; set; }
 		public GLib.ListModel model { get; set; }
+		public uint pending { get; }
 		public Gtk.Sorter sorter { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_sorter_get_type ()")]
