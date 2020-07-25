@@ -503,6 +503,8 @@ namespace Gdk {
 		public const uint AudioPause;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPlay")]
 		public const uint AudioPlay;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPreset")]
+		public const uint AudioPreset;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioPrev")]
 		public const uint AudioPrev;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_AudioRaiseVolume")]
@@ -1703,6 +1705,8 @@ namespace Gdk {
 		public const uint KbdLightOnOff;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Kcedilla")]
 		public const uint Kcedilla;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Keyboard")]
+		public const uint Keyboard;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Korean_Won")]
 		public const uint Korean_Won;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_L")]
@@ -2069,6 +2073,8 @@ namespace Gdk {
 		public const uint R8;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_R9")]
 		public const uint R9;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_RFKill")]
+		public const uint RFKill;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Racute")]
 		public const uint Racute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Rcaron")]
@@ -2689,6 +2695,8 @@ namespace Gdk {
 		public const uint W;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WLAN")]
 		public const uint WLAN;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WWAN")]
+		public const uint WWAN;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_WWW")]
 		public const uint WWW;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_Wacute")]
@@ -3477,6 +3485,8 @@ namespace Gdk {
 		public const uint dead_abovereversedcomma;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_abovering")]
 		public const uint dead_abovering;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_aboveverticalline")]
+		public const uint dead_aboveverticalline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_acute")]
 		public const uint dead_acute;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowbreve")]
@@ -3495,6 +3505,8 @@ namespace Gdk {
 		public const uint dead_belowring;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowtilde")]
 		public const uint dead_belowtilde;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_belowverticalline")]
+		public const uint dead_belowverticalline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_breve")]
 		public const uint dead_breve;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_capital_schwa")]
@@ -3531,6 +3543,10 @@ namespace Gdk {
 		public const uint dead_invertedbreve;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_iota")]
 		public const uint dead_iota;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_longsolidusoverlay")]
+		public const uint dead_longsolidusoverlay;
+		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_lowline")]
+		public const uint dead_lowline;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_macron")]
 		public const uint dead_macron;
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_dead_o")]
