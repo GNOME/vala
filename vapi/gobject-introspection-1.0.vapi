@@ -123,18 +123,18 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
 	[Compact]
 	public class ObjectInfo : GI.BaseInfo {
-		public GI.FunctionInfo find_method (string name);
-		public GI.FunctionInfo find_method_using_interfaces (string name, out GI.ObjectInfo implementor);
-		public GI.SignalInfo find_signal (string name);
-		public GI.VFuncInfo find_vfunc (string name);
-		public GI.VFuncInfo find_vfunc_using_interfaces (string name, out GI.ObjectInfo implementor);
+		public GI.FunctionInfo? find_method (string name);
+		public GI.FunctionInfo? find_method_using_interfaces (string name, out GI.ObjectInfo implementor);
+		public GI.SignalInfo? find_signal (string name);
+		public GI.VFuncInfo? find_vfunc (string name);
+		public GI.VFuncInfo? find_vfunc_using_interfaces (string name, out GI.ObjectInfo implementor);
 		public bool get_abstract ();
-		public GI.StructInfo get_class_struct ();
+		public GI.StructInfo? get_class_struct ();
 		public GI.ConstantInfo get_constant (int n);
 		public GI.FieldInfo get_field (int n);
 		public bool get_fundamental ();
-		public unowned string get_get_value_function ();
-		public unowned GI.ObjectInfoGetValueFunction get_get_value_function_pointer ();
+		public unowned string? get_get_value_function ();
+		public unowned GI.ObjectInfoGetValueFunction? get_get_value_function_pointer ();
 		public GI.InterfaceInfo get_interface (int n);
 		public GI.FunctionInfo get_method (int n);
 		public int get_n_constants ();
@@ -146,15 +146,15 @@ namespace GI {
 		public int get_n_vfuncs ();
 		public GI.ObjectInfo? get_parent ();
 		public GI.PropertyInfo get_property (int n);
-		public unowned string get_ref_function ();
-		public unowned GI.ObjectInfoRefFunction get_ref_function_pointer ();
-		public unowned string get_set_value_function ();
-		public unowned GI.ObjectInfoSetValueFunction get_set_value_function_pointer ();
+		public unowned string? get_ref_function ();
+		public unowned GI.ObjectInfoRefFunction? get_ref_function_pointer ();
+		public unowned string? get_set_value_function ();
+		public unowned GI.ObjectInfoSetValueFunction? get_set_value_function_pointer ();
 		public GI.SignalInfo get_signal (int n);
 		public unowned string get_type_init ();
 		public unowned string get_type_name ();
-		public unowned string get_unref_function ();
-		public unowned GI.ObjectInfoUnrefFunction get_unref_function_pointer ();
+		public unowned string? get_unref_function ();
+		public unowned GI.ObjectInfoUnrefFunction? get_unref_function_pointer ();
 		public GI.VFuncInfo get_vfunc (int n);
 	}
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]
