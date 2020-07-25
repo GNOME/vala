@@ -120,9 +120,6 @@ namespace Gst {
 			public uint timestamp { get; }
 			[NoAccessorMethod]
 			public uint timestamp_offset { get; set; }
-			[NoAccessorMethod]
-			[Version (since = "1.18")]
-			public uint twcc_ext_id { get; set; }
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[Compact]

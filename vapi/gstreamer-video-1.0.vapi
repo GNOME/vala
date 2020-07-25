@@ -1180,7 +1180,9 @@ namespace Gst {
 			Y212_LE,
 			Y412_BE,
 			Y412_LE,
+			[Version (since = "1.18")]
 			NV12_4L4,
+			[Version (since = "1.18")]
 			NV12_32L32
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
@@ -1423,6 +1425,7 @@ namespace Gst {
 		public enum TileMode {
 			UNKNOWN,
 			ZFLIPZ_2X2,
+			[Version (since = "1.18")]
 			LINEAR
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_TILE_TYPE_", type_id = "gst_video_tile_type_get_type ()")]
@@ -1458,6 +1461,7 @@ namespace Gst {
 			BT2020_10,
 			SMPTE2084,
 			ARIB_STD_B67,
+			[Version (since = "1.18")]
 			BT601
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_VBI_PARSER_RESULT_", type_id = "gst_video_vbi_parser_result_get_type ()")]
