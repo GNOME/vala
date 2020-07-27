@@ -3606,6 +3606,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return destroy_func;
 	}
 
+	public virtual string? append_struct_array_destroy (Struct st) {
+		return null;
+	}
+
 	public virtual string? append_struct_array_free (Struct st) {
 		return null;
 	}
