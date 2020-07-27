@@ -392,6 +392,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (cl)) {
+			return;
+		}
+
 		if (!(hierarchy[0] is Namespace)) {
 			deferred.add (cl);
 			return;
@@ -591,6 +595,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (st)) {
+			return;
+		}
+
 		if (!(hierarchy[0] is Namespace)) {
 			deferred.add (st);
 			return;
@@ -626,6 +634,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (!check_accessibility (iface)) {
+			return;
+		}
+
+		if (!has_namespace (iface)) {
 			return;
 		}
 
@@ -794,6 +806,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (en)) {
+			return;
+		}
+
 		if (!(hierarchy[0] is Namespace)) {
 			deferred.add (en);
 			return;
@@ -868,6 +884,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (edomain)) {
+			return;
+		}
+
 		write_indent ();
 		buffer.append_printf ("<enumeration name=\"%s\"", edomain.name);
 		write_ctype_attributes (edomain);
@@ -925,6 +945,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (c)) {
+			return;
+		}
+
 		//TODO Add better constant evaluation
 		var initializer = c.value;
 		string value = literal_expression_to_value_string (initializer);
@@ -951,6 +975,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (!check_accessibility (f)) {
+			return;
+		}
+
+		if (!has_namespace (f)) {
 			return;
 		}
 
@@ -1175,6 +1203,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		if (!has_namespace (cb)) {
+			return;
+		}
+
 		write_indent ();
 		buffer.append_printf ("<callback name=\"%s\"", cb.name);
 		buffer.append_printf (" c:type=\"%s\"", get_ccode_name (cb));
@@ -1201,6 +1233,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		// don't write interface implementation unless it's an abstract or virtual method
 		if (!check_accessibility (m) || m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
+			return;
+		}
+
+		if (!has_namespace (m)) {
 			return;
 		}
 
@@ -1710,5 +1746,14 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private bool is_visibility (Symbol sym) {
 		return sym.get_attribute_bool ("GIR", "visible", true);
+	}
+
+	bool has_namespace (Symbol sym) {
+		if (!(sym.parent_symbol is Namespace) || sym.parent_symbol.name != null) {
+			return true;
+		}
+
+		Report.warning (sym.source_reference, "`%s' must be part of namespace to be included in GIR".printf (sym.name));
+		return false;
 	}
 }

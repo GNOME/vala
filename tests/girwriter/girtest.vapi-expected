@@ -192,3 +192,30 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public const string CONSTANT_STRING;
 }
+[CCode (cheader_filename = "girtest.h")]
+public enum InvalidEnum {
+	VALUE
+}
+[CCode (cheader_filename = "girtest.h")]
+public errordomain InvalidError {
+	FAILED
+}
+[CCode (cheader_filename = "girtest.h")]
+public class InvalidClass {
+	public InvalidClass ();
+}
+[CCode (cheader_filename = "girtest.h")]
+public interface InvalidIface {
+}
+[CCode (cheader_filename = "girtest.h")]
+public struct InvalidStruct {
+	public int i;
+}
+[CCode (cheader_filename = "girtest.h")]
+public delegate void InvalidFunc ();
+[CCode (cheader_filename = "girtest.h")]
+public const int INVALID_CONST;
+[CCode (cheader_filename = "girtest.h")]
+public static int invalid_field;
+[CCode (cheader_filename = "girtest.h")]
+public static void invalid_method ();
