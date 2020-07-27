@@ -320,3 +320,30 @@ namespace GirTest {
 		}
 	}
 }
+
+public enum InvalidEnum {
+	VALUE
+}
+
+public errordomain InvalidError {
+	FAILED
+}
+
+public class InvalidClass {
+}
+
+public interface InvalidIface {
+}
+
+public struct InvalidStruct {
+	public int i;
+}
+
+public delegate void InvalidFunc ();
+
+public const int INVALID_CONST = 0;
+
+public int invalid_field;
+
+public void invalid_method () {
+}
