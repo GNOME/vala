@@ -263,6 +263,36 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return cname;
 	}
 
+	public override string? append_struct_array_destroy (Struct st) {
+		string cname = "_vala_%s_array_destroy".printf (get_ccode_name (st));
+
+		if (cfile.add_declaration (cname)) {
+			return cname;
+		}
+
+		var fun = new CCodeFunction (cname, "void");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (st))));
+		fun.add_parameter (new CCodeParameter ("array_length", get_ccode_name (int_type)));
+
+		push_function (fun);
+
+		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
+		ccode.open_if (ccondarr);
+
+		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
+		append_struct_array_free_loop (st);
+
+		ccode.close ();
+
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
+		cfile.add_function (fun);
+
+		return cname;
+	}
+
 	void append_vala_array_free_loop () {
 		var cforinit = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
 		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
@@ -464,20 +494,20 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override CCodeExpression destroy_value (TargetValue value, bool is_macro_definition = false) {
-		var type = value.value_type;
+		unowned ArrayType? array_type = value.value_type as ArrayType;
 
-		if (type is ArrayType) {
-			var array_type = (ArrayType) type;
-
-			if (!array_type.fixed_length) {
-				return base.destroy_value (value, is_macro_definition);
+		if (array_type != null && array_type.fixed_length) {
+			unowned Struct? st = array_type.element_type.type_symbol as Struct;
+			if (st != null && !array_type.element_type.nullable) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (append_struct_array_destroy (st)));
+				ccall.add_argument (get_cvalue_ (value));
+				ccall.add_argument (get_ccodenode (array_type.length));
+				return ccall;
 			}
 
 			requires_array_free = true;
 
-			var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
-
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_destroy"));
 			ccall.add_argument (get_cvalue_ (value));
 			ccall.add_argument (get_ccodenode (array_type.length));
 			ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));

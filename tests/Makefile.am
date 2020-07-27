@@ -93,6 +93,7 @@ TESTS = \
 	arrays/inline-local-instantiation.test \
 	arrays/inline-local-variable.test \
 	arrays/inline-parameter.test \
+	arrays/inline-struct.vala \
 	arrays/inline-struct-field.test \
 	arrays/in-operator-with-boxed-needle.vala \
 	arrays/length-inline-assignment.vala \
