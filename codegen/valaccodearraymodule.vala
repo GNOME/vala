@@ -485,7 +485,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		unowned ArrayType? array_type = value.value_type as ArrayType;
 
 		if (array_type != null && array_type.fixed_length) {
-			unowned Struct? st = array_type.element_type.type_symbol as Struct;
+			unowned Struct? st = array_type.element_type.data_type as Struct;
 			if (st != null && !array_type.element_type.nullable) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (append_struct_array_destroy (st)));
 				ccall.add_argument (get_cvalue_ (value));
