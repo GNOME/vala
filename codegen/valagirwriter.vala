@@ -1754,6 +1754,17 @@ public class Vala.GIRWriter : CodeVisitor {
 			return true;
 		}
 
+		// internal fields and function pointers in classes/interfaces are public API
+		if (sym.access == SymbolAccessibility.INTERNAL) {
+			unowned Symbol? parent = sym.parent_symbol;
+			if (parent != null
+			    && (parent is Class || parent is Interface)
+			    && ((sym is Field && ((Field) sym).binding == MemberBinding.INSTANCE)
+			    || (sym is Method && ((Method) sym).binding == MemberBinding.INSTANCE && (((Method) sym).is_abstract || ((Method) sym).is_virtual)))) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 

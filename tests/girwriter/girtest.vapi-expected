@@ -129,6 +129,7 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public struct BoxedStruct {
 		public int field_name;
+		public int internal_field_name;
 		public BoxedStruct ();
 		public void inv ();
 	}
@@ -140,6 +141,7 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
 	public struct Struct {
 		public int field_name;
+		public int internal_field_name;
 		public Struct ();
 		public void inv ();
 	}

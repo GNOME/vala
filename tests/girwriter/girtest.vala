@@ -2,6 +2,7 @@
 namespace GirTest {
 	public struct BoxedStruct {
 		public int field_name;
+		internal int internal_field_name;
 
 		public BoxedStruct () {
 		}
@@ -13,6 +14,7 @@ namespace GirTest {
 	[CCode (has_type_id = false)]
 	public struct Struct {
 		public int field_name;
+		internal int internal_field_name;
 
 		public Struct () {
 		}
@@ -67,6 +69,7 @@ namespace GirTest {
 
 	public interface InterfaceTest : Object {
 		public abstract int property { get; construct set; }
+		internal abstract string internal_property { get; set; }
 		public virtual void int8_in (int8 param) {
 		}
 		public virtual async void coroutine_async () {
@@ -75,6 +78,8 @@ namespace GirTest {
 		}
 		[GIR (visible = false)]
 		public virtual async void skipped_coroutine_method (int param) {
+		}
+		internal virtual void internal_method () {
 		}
 	}
 
@@ -103,12 +108,16 @@ namespace GirTest {
 	public class ObjectTest : Object {
 		private static ObjectTest global_instance = new ObjectTest ();
 
+		internal static int internal_global_field = 4711;
+
 		public signal void some_signal (int param);
 
 		[GIR (visible = false)]
 		public signal void skipped_signal (int param);
 
 		public int field = 42;
+
+		internal int internal_field = 23;
 
 		public int fixed_array_field[23];
 
@@ -119,6 +128,8 @@ namespace GirTest {
 		public string write_only_property { set; }
 
 		public string construct_only_property { construct; }
+
+		internal string internal_property { get; set; }
 
 		[GIR (visible = false)]
 		public string skipped_property { get; construct set; }
@@ -162,6 +173,9 @@ namespace GirTest {
 		}
 
 		public virtual void method_with_default_impl (int8 param) {
+		}
+
+		internal virtual void internal_method_with_default_impl (int8 param) {
 		}
 
 		public void int8_in (int8 param) {
@@ -281,6 +295,8 @@ namespace GirTest {
 
 		[GIR (visible = false)]
 		public abstract async void skipped_coroutine_method (int param);
+
+		internal abstract void internal_method (int8 param);
 	}
 
 	public interface PrerequisiteTest : InterfaceTest {
@@ -288,6 +304,7 @@ namespace GirTest {
 
 	public class ImplementionTest : Object, InterfaceTest {
 		public int property { get; construct set; }
+		internal string internal_property { get; set; }
 	}
 
 	[Compact]

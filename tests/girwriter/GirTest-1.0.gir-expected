@@ -114,6 +114,9 @@
 		<field name="field">
 			<type name="gint" c:type="gint"/>
 		</field>
+		<field name="internal_field">
+			<type name="gint" c:type="gint"/>
+		</field>
 		<field name="fixed_array_field">
 			<array fixed-size="23" c:type="gint*">
 				<type name="gint" c:type="gint"/>
@@ -239,6 +242,26 @@
 			</parameters>
 		</method>
 		<virtual-method name="method_with_default_impl" invoker="method_with_default_impl">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="internal_method_with_default_impl" c:identifier="gir_test_object_test_internal_method_with_default_impl">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="internal_method_with_default_impl" invoker="internal_method_with_default_impl">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
@@ -773,6 +796,21 @@
 				</parameters>
 			</callback>
 		</field>
+		<field name="internal_method_with_default_impl">
+			<callback name="internal_method_with_default_impl" c:type="internal_method_with_default_impl">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint8" c:type="gint8"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 		<field name="coroutine_virtual_async">
 			<callback name="coroutine_virtual_async" c:type="coroutine_virtual_async">
 				<return-value transfer-ownership="none">
@@ -1026,6 +1064,26 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="internal_method" c:identifier="gir_test_abstract_object_test_internal_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="internal_method" invoker="internal_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 	</class>
 	<record name="AbstractObjectTestClass" c:type="GirTestAbstractObjectTestClass" glib:is-gtype-struct-for="AbstractObjectTest">
 		<field name="parent_class" readable="0" private="1">
@@ -1138,6 +1196,21 @@
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="internal_method">
+			<callback name="internal_method" c:type="internal_method">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint8" c:type="gint8"/>
 					</parameter>
 				</parameters>
 			</callback>
@@ -1552,6 +1625,16 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="internal_method" c:identifier="gir_test_interface_test_internal_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<virtual-method name="internal_method" invoker="internal_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</virtual-method>
 		<property name="property" writable="1" construct="1">
 			<type name="gint" c:type="gint"/>
 		</property>
@@ -1692,6 +1775,18 @@
 				</parameters>
 			</callback>
 		</field>
+		<field name="internal_method">
+			<callback name="internal_method" c:type="internal_method">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 		<field name="get_property">
 			<callback name="get_property" c:type="get_property">
 				<return-value transfer-ownership="none">
@@ -1719,6 +1814,33 @@
 				</parameters>
 			</callback>
 		</field>
+		<field name="get_internal_property">
+			<callback name="get_internal_property" c:type="get_internal_property">
+				<return-value transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="set_internal_property">
+			<callback name="set_internal_property" c:type="set_internal_property">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="value" transfer-ownership="none">
+						<type name="utf8" c:type="const gchar*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
 	</record>
 	<interface name="SkippedInterface" c:type="GirTestSkippedInterface" c:symbol-prefix="skipped_interface" glib:type-name="GirTestSkippedInterface" glib:get-type="gir_test_skipped_interface_get_type" glib:type-struct="SkippedInterfaceIface" introspectable="0">
 	</interface>
@@ -1739,6 +1861,9 @@
 		<field name="field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
+		<field name="internal_field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
 		<function name="init" c:identifier="gir_test_boxed_struct_init">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
@@ -1757,6 +1882,9 @@
 	</record>
 	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
 		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<field name="internal_field_name">
 			<type name="gint" c:type="gint"/>
 		</field>
 		<function name="init" c:identifier="gir_test_struct_init">
