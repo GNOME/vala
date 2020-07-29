@@ -1,0 +1,1841 @@
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="girtest"/>
+<c:include name="girtest.h"/>
+<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefix="gir_test">
+	<enumeration name="EnumTest" c:type="GirTestEnumTest" glib:type-name="GirTestEnumTest" glib:get-type="gir_test_enum_test_get_type">
+		<member name="value1" c:identifier="GIR_TEST_ENUM_TEST_VALUE1" value="0"/>
+		<member name="value2" c:identifier="GIR_TEST_ENUM_TEST_VALUE2" value="1"/>
+		<member name="value3" c:identifier="GIR_TEST_ENUM_TEST_VALUE3" value="4711"/>
+	</enumeration>
+	<bitfield name="FlagsTest" c:type="GirTestFlagsTest" glib:type-name="GirTestFlagsTest" glib:get-type="gir_test_flags_test_get_type">
+		<member name="value1" c:identifier="GIR_TEST_FLAGS_TEST_VALUE1" value="1"/>
+		<member name="value2" c:identifier="GIR_TEST_FLAGS_TEST_VALUE2" value="2"/>
+		<member name="value3" c:identifier="GIR_TEST_FLAGS_TEST_VALUE3" value="4"/>
+	</bitfield>
+	<enumeration name="PlainEnumTest" c:type="GirTestPlainEnumTest">
+		<member name="value1" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE1" value="0"/>
+		<member name="value2" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE2" value="1"/>
+		<member name="value3" c:identifier="GIR_TEST_PLAIN_ENUM_TEST_VALUE3" value="4711"/>
+	</enumeration>
+	<enumeration name="SkippedEnum" c:type="GirTestSkippedEnum" glib:type-name="GirTestSkippedEnum" glib:get-type="gir_test_skipped_enum_get_type" introspectable="0">
+		<member name="value1" c:identifier="GIR_TEST_SKIPPED_ENUM_VALUE1" value="0"/>
+	</enumeration>
+	<enumeration name="SkippedFlags" c:type="GirTestSkippedFlags" glib:type-name="GirTestSkippedFlags" glib:get-type="gir_test_skipped_flags_get_type" introspectable="0">
+		<member name="value1" c:identifier="GIR_TEST_SKIPPED_FLAGS_VALUE1" value="0"/>
+	</enumeration>
+	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:error-domain="gir_test_error_test-quark">
+		<member name="failed" c:identifier="GIR_TEST_ERROR_TEST_FAILED" value="0"/>
+		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
+		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
+	</enumeration>
+	<class name="TypeTest" c:type="GirTestTypeTest" c:symbol-prefix="typetest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="TypeTestPrivate" c:type="GirTestTypeTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_typetest_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.TypeTest" c:type="GirTestTypeTest*"/>
+			</return-value>
+		</constructor>
+		<method name="get_some_property" c:identifier="gir_test_typetest_get_some_property">
+			<return-value transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</return-value>
+		</method>
+		<method name="set_some_property" c:identifier="gir_test_typetest_set_some_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+		</method>
+	</class>
+	<record name="TypeTestClass" c:type="GirTestTypeTestClass" glib:is-gtype-struct-for="TypeTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="TypeTestPrivate" c:type="GirTestTypeTestPrivate" disguised="1"/>
+	<class name="SubTypeTest" c:type="GirTestSubTypeTest" c:symbol-prefix="sub_type_test" glib:type-name="GirTestSubTypeTest" glib:get-type="gir_test_sub_type_test_get_type" glib:type-struct="SubTypeTestClass" parent="GirTest.TypeTest">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GirTest.TypeTest" c:type="GirTestTypeTest"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="SubTypeTestPrivate" c:type="GirTestSubTypeTestPrivate*"/>
+		</field>
+		<field name="array_field">
+			<array c:type="gchar**">
+				<type name="utf8" c:type="gchar*"/>
+			</array>
+		</field>
+		<field name="array_field_length1">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<field name="delegate_field">
+			<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+		</field>
+		<field name="delegate_field_target">
+			<type name="gpointer" c:type="gpointer"/>
+		</field>
+		<field name="delegate_field_target_destroy_notify">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_sub_type_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.SubTypeTest" c:type="GirTestSubTypeTest*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="SubTypeTestClass" c:type="GirTestSubTypeTestClass" glib:is-gtype-struct-for="SubTypeTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GirTest.TypeTestClass" c:type="GirTestTypeTestClass"/>
+		</field>
+	</record>
+	<record name="SubTypeTestPrivate" c:type="GirTestSubTypeTestPrivate" disguised="1"/>
+	<class name="ObjectTest" c:type="GirTestObjectTest" c:symbol-prefix="object_test" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate*"/>
+		</field>
+		<field name="field">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<field name="fixed_array_field">
+			<array fixed-size="23" c:type="gint*">
+				<type name="gint" c:type="gint"/>
+			</array>
+		</field>
+		<field name="nullable_field" allow-none="1">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_object_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+		</constructor>
+		<constructor name="with_int" c:identifier="gir_test_object_test_new_with_int">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<constructor name="may_fail" c:identifier="gir_test_object_test_new_may_fail" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<constructor name="newv" c:identifier="gir_test_object_test_new_newv" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="..." transfer-ownership="none">
+					<varargs/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<constructor name="new_valist" c:identifier="gir_test_object_test_new_new_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<function name="full_inout" c:identifier="gir_test_object_test_full_inout">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="obj" direction="inout" transfer-ownership="full">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest**"/>
+				</parameter>
+			</parameters>
+		</function>
+		<function name="full_out" c:identifier="gir_test_object_test_full_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="obj" direction="out" transfer-ownership="full">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest**"/>
+				</parameter>
+			</parameters>
+		</function>
+		<function name="full_return" c:identifier="gir_test_object_test_full_return">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+		</function>
+		<function name="none_inout" c:identifier="gir_test_object_test_none_inout">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="obj" direction="inout" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest**"/>
+				</parameter>
+			</parameters>
+		</function>
+		<function name="none_out" c:identifier="gir_test_object_test_none_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="obj" direction="out" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest**"/>
+				</parameter>
+			</parameters>
+		</function>
+		<function name="none_return" c:identifier="gir_test_object_test_none_return">
+			<return-value transfer-ownership="none">
+				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+			</return-value>
+		</function>
+		<function name="static_method" c:identifier="gir_test_object_test_static_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</function>
+		<method name="method_with_default_impl" c:identifier="gir_test_object_test_method_with_default_impl">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_with_default_impl" invoker="method_with_default_impl">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="int8_in" c:identifier="gir_test_object_test_int8_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="int8_out" c:identifier="gir_test_object_test_int8_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" direction="out" transfer-ownership="full">
+					<type name="gint8" c:type="gint8*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="method" c:identifier="gir_test_object_test_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<method name="method_varargs" c:identifier="gir_test_object_test_method_varargs" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="..." transfer-ownership="none">
+					<varargs/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="method_valist" c:identifier="gir_test_object_test_method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="array_in" c:identifier="gir_test_object_test_array_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="array" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="array_inout" c:identifier="gir_test_object_test_array_inout">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="array" direction="inout" transfer-ownership="full">
+					<array length="1" c:type="gint**">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" direction="inout" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="array_out" c:identifier="gir_test_object_test_array_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="array" direction="out" transfer-ownership="full">
+					<array length="1" c:type="gint**">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="array_return" c:identifier="gir_test_object_test_array_return">
+			<return-value transfer-ownership="full">
+				<array length="0" c:type="gint*">
+					<type name="gint" c:type="gint"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="int_in_int_in_array_out" c:identifier="gir_test_object_test_int_in_int_in_array_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="array" direction="out" transfer-ownership="full">
+					<array length="3" c:type="gint**">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="int_in_int_in_array_return" c:identifier="gir_test_object_test_int_in_int_in_array_return">
+			<return-value transfer-ownership="full">
+				<array length="2" c:type="gint*">
+					<type name="gint" c:type="gint"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="param1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="string_array_out" c:identifier="gir_test_object_test_string_array_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="array" direction="out" transfer-ownership="full">
+					<array length="1" c:type="gchar***">
+						<type name="utf8" c:type="gchar*"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="string_array_return" c:identifier="gir_test_object_test_string_array_return">
+			<return-value transfer-ownership="full">
+				<array length="0" c:type="gchar**">
+					<type name="utf8" c:type="gchar*"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="none_in" c:identifier="gir_test_object_test_none_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<method name="delegate_return" c:identifier="gir_test_object_test_delegate_return">
+			<return-value transfer-ownership="none" closure="0" scope="notified" destroy="1">
+				<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+			</return-value>
+			<parameters>
+				<parameter name="result_target" direction="out" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void**"/>
+				</parameter>
+				<parameter name="result_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="delegate_return_int_in_array_out" c:identifier="gir_test_object_test_delegate_return_int_in_array_out">
+			<return-value transfer-ownership="none" closure="3" scope="notified" destroy="4">
+				<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="a" direction="out" transfer-ownership="full">
+					<array length="2" c:type="gint**">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="a_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+				<parameter name="result_target" direction="out" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void**"/>
+				</parameter>
+				<parameter name="result_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="array_return_int_in_delegate_out" c:identifier="gir_test_object_test_array_return_int_in_delegate_out">
+			<return-value transfer-ownership="full">
+				<array length="4" c:type="gint*">
+					<type name="gint" c:type="gint"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="d" direction="out" transfer-ownership="none" closure="2" scope="notified" destroy="3">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest*"/>
+				</parameter>
+				<parameter name="d_target" direction="out" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void**"/>
+				</parameter>
+				<parameter name="d_target_destroy_notify" direction="out" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify*"/>
+				</parameter>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="simple_delegate_return" c:identifier="gir_test_object_test_simple_delegate_return">
+			<return-value transfer-ownership="none" scope="call">
+				<type name="GLib.EqualFunc" c:type="GEqualFunc"/>
+			</return-value>
+			<parameters>
+			</parameters>
+		</method>
+		<method name="container_return" c:identifier="gir_test_object_test_container_return">
+			<return-value transfer-ownership="container">
+				<array length="0" c:type="const gchar**">
+					<type name="utf8" c:type="const gchar*"/>
+				</array>
+			</return-value>
+			<parameters>
+				<parameter name="result_length1" direction="out" transfer-ownership="none">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="generic_array_container_return" c:identifier="gir_test_object_test_generic_array_container_return">
+			<return-value transfer-ownership="container" allow-none="1">
+				<array name="GLib.PtrArray" c:type="GPtrArray*">
+					<type name="utf8" c:type="const gchar*"/>
+				</array>
+			</return-value>
+		</method>
+		<method name="coroutine_async" c:identifier="gir_test_object_test_coroutine_async">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_finish" c:identifier="gir_test_object_test_coroutine_finish">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_virtual_async" c:identifier="gir_test_object_test_coroutine_virtual_async">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_virtual_finish" c:identifier="gir_test_object_test_coroutine_virtual_finish">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="coroutine_virtual_async" invoker="coroutine_virtual_async">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="coroutine_virtual_finish" invoker="coroutine_virtual_finish">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="coroutine_method_throw" c:identifier="gir_test_object_test_coroutine_method_throw">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_method_throw_finish" c:identifier="gir_test_object_test_coroutine_method_throw_finish" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+				<parameter name="o1" direction="out" transfer-ownership="full">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="coroutine_method_throw" invoker="coroutine_method_throw">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="coroutine_method_throw_finish" invoker="coroutine_method_throw_finish" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+				<parameter name="o1" direction="out" transfer-ownership="full">
+					<type name="gint" c:type="gint*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="simple_throw" c:identifier="gir_test_object_test_simple_throw" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<method name="method_throw" c:identifier="gir_test_object_test_method_throw" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<virtual-method name="method_throw" invoker="method_throw" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</virtual-method>
+		<method name="method_with_default" c:identifier="gir_test_object_test_method_with_default">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="i" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="skipped_method" c:identifier="gir_test_object_test_skipped_method" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<property name="some-property" writable="1" construct="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<method name="get_some_property" c:identifier="gir_test_object_test_get_some_property">
+			<return-value transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</return-value>
+		</method>
+		<method name="set_some_property" c:identifier="gir_test_object_test_set_some_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<property name="write-only-property" readable="0" writable="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<method name="set_write_only_property" c:identifier="gir_test_object_test_set_write_only_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<property name="construct-only-property" readable="0" writable="1" construct-only="1">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<property name="skipped-property" writable="1" construct="1" introspectable="0">
+			<type name="utf8" c:type="gchar*"/>
+		</property>
+		<method name="get_skipped_property" c:identifier="gir_test_object_test_get_skipped_property">
+			<return-value transfer-ownership="none">
+				<type name="utf8" c:type="const gchar*"/>
+			</return-value>
+		</method>
+		<method name="set_skipped_property" c:identifier="gir_test_object_test_set_skipped_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="utf8" c:type="const gchar*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<glib:signal name="some-signal">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</glib:signal>
+		<glib:signal name="skipped-signal" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</glib:signal>
+		<glib:signal name="signal-with-default-handlder">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</glib:signal>
+	</class>
+	<record name="ObjectTestClass" c:type="GirTestObjectTestClass" glib:is-gtype-struct-for="ObjectTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+		<field name="method_with_default_impl">
+			<callback name="method_with_default_impl" c:type="method_with_default_impl">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint8" c:type="gint8"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_virtual_async">
+			<callback name="coroutine_virtual_async" c:type="coroutine_virtual_async">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_virtual_finish">
+			<callback name="coroutine_virtual_finish" c:type="coroutine_virtual_finish">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_method_throw">
+			<callback name="coroutine_method_throw" c:type="coroutine_method_throw">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="i1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_method_throw_finish">
+			<callback name="coroutine_method_throw_finish" c:type="coroutine_method_throw_finish" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+					<parameter name="o1" direction="out" transfer-ownership="full">
+						<type name="gint" c:type="gint*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_throw">
+			<callback name="method_throw" c:type="method_throw" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="signal_with_default_handlder">
+			<callback name="signal_with_default_handlder" c:type="signal_with_default_handlder">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="i1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+	</record>
+	<record name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate" disguised="1"/>
+	<class name="AbstractObjectTest" c:type="GirTestAbstractObjectTest" c:symbol-prefix="abstract_object_test" glib:type-name="GirTestAbstractObjectTest" glib:get-type="gir_test_abstract_object_test_get_type" glib:type-struct="AbstractObjectTestClass" parent="GObject.Object" abstract="1">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="AbstractObjectTestPrivate" c:type="GirTestAbstractObjectTestPrivate*"/>
+		</field>
+		<method name="method_int8_in" c:identifier="gir_test_abstract_object_test_method_int8_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_int8_in" invoker="method_int8_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="method_int8_inout" c:identifier="gir_test_abstract_object_test_method_int8_inout">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" direction="inout" transfer-ownership="full">
+					<type name="gint8" c:type="gint8*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_int8_inout" invoker="method_int8_inout">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" direction="inout" transfer-ownership="full">
+					<type name="gint8" c:type="gint8*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="method_int8_out" c:identifier="gir_test_abstract_object_test_method_int8_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" direction="out" transfer-ownership="full">
+					<type name="gint8" c:type="gint8*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_int8_out" invoker="method_int8_out">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" direction="out" transfer-ownership="full">
+					<type name="gint8" c:type="gint8*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="method_throw" c:identifier="gir_test_abstract_object_test_method_throw" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+		<virtual-method name="method_throw" invoker="method_throw" throws="1">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</virtual-method>
+		<method name="method_valist" c:identifier="gir_test_abstract_object_test_method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="skipped_coroutine_method" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_abstract_object_test_skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+	</class>
+	<record name="AbstractObjectTestClass" c:type="GirTestAbstractObjectTestClass" glib:is-gtype-struct-for="AbstractObjectTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+		<field name="method_int8_in">
+			<callback name="method_int8_in" c:type="method_int8_in">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint8" c:type="gint8"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_int8_inout">
+			<callback name="method_int8_inout" c:type="method_int8_inout">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" direction="inout" transfer-ownership="full">
+						<type name="gint8" c:type="gint8*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_int8_out">
+			<callback name="method_int8_out" c:type="method_int8_out">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" direction="out" transfer-ownership="full">
+						<type name="gint8" c:type="gint8*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_throw">
+			<callback name="method_throw" c:type="method_throw" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_valist" introspectable="0">
+			<callback name="method_valist" c:type="method_valist">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="vargs" transfer-ownership="none">
+						<type name="va_list" c:type="va_list"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method" introspectable="0">
+			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method_finish" introspectable="0">
+			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+	</record>
+	<record name="AbstractObjectTestPrivate" c:type="GirTestAbstractObjectTestPrivate" disguised="1"/>
+	<class name="ImplementionTest" c:type="GirTestImplementionTest" c:symbol-prefix="implemention_test" glib:type-name="GirTestImplementionTest" glib:get-type="gir_test_implemention_test_get_type" glib:type-struct="ImplementionTestClass" parent="GObject.Object">
+		<implements name="GirTest.InterfaceTest"/>
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="ImplementionTestPrivate" c:type="GirTestImplementionTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_implemention_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.ImplementionTest" c:type="GirTestImplementionTest*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="ImplementionTestClass" c:type="GirTestImplementionTestClass" glib:is-gtype-struct-for="ImplementionTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="ImplementionTestPrivate" c:type="GirTestImplementionTestPrivate" disguised="1"/>
+	<record name="CompactClass">
+		<field name="s">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
+		<field name="i">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_compactclass_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.CompactClass" c:type="GirTestCompactClass*"/>
+			</return-value>
+		</constructor>
+	</record>
+	<class name="SkippedClass" c:type="GirTestSkippedClass" c:symbol-prefix="skippedclass" glib:type-name="GirTestSkippedClass" glib:get-type="gir_test_skippedclass_get_type" glib:type-struct="SkippedClassClass" glib:fundamental="1" glib:ref-func="gir_test_skippedclass_ref" glib:unref-func="gir_test_skippedclass_unref" glib:set-value-func="gir_test_value_set_skippedclass" glib:get-value-func="gir_test_value_get_skippedclass" introspectable="0">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="SkippedClassPrivate" c:type="GirTestSkippedClassPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_skippedclass_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.SkippedClass" c:type="GirTestSkippedClass*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="SkippedClassClass" c:type="GirTestSkippedClassClass" glib:is-gtype-struct-for="SkippedClass">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="SkippedClassPrivate" c:type="GirTestSkippedClassPrivate" disguised="1"/>
+	<class name="DeprecatedClassTest" c:type="GirTestDeprecatedClassTest" c:symbol-prefix="deprecated_class_test" glib:type-name="GirTestDeprecatedClassTest" glib:get-type="gir_test_deprecated_class_test_get_type" glib:type-struct="DeprecatedClassTestClass" glib:fundamental="1" glib:ref-func="gir_test_deprecated_class_test_ref" glib:unref-func="gir_test_deprecated_class_test_unref" glib:set-value-func="gir_test_value_set_deprecated_class_test" glib:get-value-func="gir_test_value_get_deprecated_class_test" deprecated="1" deprecated-version="0.1.2" version="0.1.0">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_deprecated_class_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.DeprecatedClassTest" c:type="GirTestDeprecatedClassTest*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="DeprecatedClassTestClass" c:type="GirTestDeprecatedClassTestClass" glib:is-gtype-struct-for="DeprecatedClassTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate" disguised="1"/>
+	<class name="GenericsTest" c:type="GirTestGenericsTest" c:symbol-prefix="generics_test" glib:type-name="GirTestGenericsTest" glib:get-type="gir_test_generics_test_get_type" glib:type-struct="GenericsTestClass" glib:fundamental="1" glib:ref-func="gir_test_generics_test_ref" glib:unref-func="gir_test_generics_test_unref" glib:set-value-func="gir_test_value_set_generics_test" glib:get-value-func="gir_test_value_get_generics_test">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="GenericsTestPrivate" c:type="GirTestGenericsTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_generics_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="cb" transfer-ownership="none" closure="7" scope="notified" destroy="8">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="cb_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="cb_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<constructor name="typed" c:identifier="gir_test_generics_test_new_typed">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="cb" transfer-ownership="none" closure="7" scope="notified" destroy="8">
+					<type name="GirTest.DelegateGenericsTest" c:type="GirTestDelegateGenericsTest"/>
+				</parameter>
+				<parameter name="cb_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="cb_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
+		<method name="method" c:identifier="gir_test_generics_test_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="gpointer"/>
+				</parameter>
+			</parameters>
+		</method>
+	</class>
+	<record name="GenericsTestClass" c:type="GirTestGenericsTestClass" glib:is-gtype-struct-for="GenericsTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="GenericsTestPrivate" c:type="GirTestGenericsTestPrivate" disguised="1"/>
+	<class name="GenericsObjectTest" c:type="GirTestGenericsObjectTest" c:symbol-prefix="generics_object_test" glib:type-name="GirTestGenericsObjectTest" glib:get-type="gir_test_generics_object_test_get_type" glib:type-struct="GenericsObjectTestClass" parent="GObject.Object">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="GenericsObjectTestPrivate" c:type="GirTestGenericsObjectTestPrivate*"/>
+		</field>
+		<property name="g-type" writable="1" construct-only="1">
+			<type name="GType" c:type="GType"/>
+		</property>
+		<property name="g-dup-func" writable="1" construct-only="1">
+			<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+		</property>
+		<property name="g-destroy-func" writable="1" construct-only="1">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</property>
+		<property name="t-type" writable="1" construct-only="1">
+			<type name="GType" c:type="GType"/>
+		</property>
+		<property name="t-dup-func" writable="1" construct-only="1">
+			<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+		</property>
+		<property name="t-destroy-func" writable="1" construct-only="1">
+			<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+		</property>
+		<method name="method" c:identifier="gir_test_generics_object_test_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="k_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="k_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="k_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="param" transfer-ownership="none">
+					<array length="4" c:type="gpointer*">
+						<type name="gpointer" c:type="gpointer"/>
+					</array>
+				</parameter>
+				<parameter name="param_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<constructor name="new" c:identifier="gir_test_generics_object_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.GenericsObjectTest" c:type="GirTestGenericsObjectTest*"/>
+			</return-value>
+			<parameters>
+				<parameter name="g_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="g_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="g_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+				<parameter name="t_type" transfer-ownership="none">
+					<type name="GType" c:type="GType"/>
+				</parameter>
+				<parameter name="t_dup_func" transfer-ownership="none">
+					<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+				</parameter>
+				<parameter name="t_destroy_func" transfer-ownership="none">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</constructor>
+	</class>
+	<record name="GenericsObjectTestClass" c:type="GirTestGenericsObjectTestClass" glib:is-gtype-struct-for="GenericsObjectTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="GenericsObjectTestPrivate" c:type="GirTestGenericsObjectTestPrivate" disguised="1"/>
+	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" c:symbol-prefix="interface_test" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
+		<prerequisite name="GObject.Object"/>
+		<method name="int8_in" c:identifier="gir_test_interface_test_int8_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="int8_in" invoker="int8_in">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint8" c:type="gint8"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="coroutine_async" c:identifier="gir_test_interface_test_coroutine_async">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="coroutine_finish" c:identifier="gir_test_interface_test_coroutine_finish">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="coroutine_async" invoker="coroutine_async">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="coroutine_finish" invoker="coroutine_finish">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="method_valist" c:identifier="gir_test_interface_test_method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_valist" invoker="method_valist" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="vargs" transfer-ownership="none">
+					<type name="va_list" c:type="va_list"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<method name="skipped_coroutine_method" c:identifier="gir_test_interface_test_skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="skipped_coroutine_method_finish" c:identifier="gir_test_interface_test_skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="skipped_coroutine_method" invoker="skipped_coroutine_method" introspectable="0">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+				</parameter>
+				<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<virtual-method name="skipped_coroutine_method_finish" invoker="skipped_coroutine_method_finish" introspectable="0">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="_res_" transfer-ownership="none">
+					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+		<property name="property" writable="1" construct="1">
+			<type name="gint" c:type="gint"/>
+		</property>
+		<method name="get_property" c:identifier="gir_test_interface_test_get_property">
+			<return-value transfer-ownership="none">
+				<type name="gint" c:type="gint"/>
+			</return-value>
+		</method>
+		<virtual-method name="get_property" invoker="get_property">
+			<return-value transfer-ownership="none">
+				<type name="gint" c:type="gint"/>
+			</return-value>
+		</virtual-method>
+		<method name="set_property" c:identifier="gir_test_interface_test_set_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="set_property" invoker="set_property">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="value" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
+	</interface>
+	<record name="InterfaceTestIface" c:type="GirTestInterfaceTestIface" glib:is-gtype-struct-for="InterfaceTest">
+		<field name="parent_iface" readable="0" private="1">
+			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+		<field name="int8_in">
+			<callback name="int8_in" c:type="int8_in">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint8" c:type="gint8"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_async">
+			<callback name="coroutine_async" c:type="coroutine_async">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="coroutine_finish">
+			<callback name="coroutine_finish" c:type="coroutine_finish">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_valist" introspectable="0">
+			<callback name="method_valist" c:type="method_valist">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="vargs" transfer-ownership="none">
+						<type name="va_list" c:type="va_list"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method" introspectable="0">
+			<callback name="skipped_coroutine_method" c:type="skipped_coroutine_method">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="param" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+					</parameter>
+					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="skipped_coroutine_method_finish" introspectable="0">
+			<callback name="skipped_coroutine_method_finish" c:type="skipped_coroutine_method_finish">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="_res_" transfer-ownership="none">
+						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="get_property">
+			<callback name="get_property" c:type="get_property">
+				<return-value transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="set_property">
+			<callback name="set_property" c:type="set_property">
+				<return-value transfer-ownership="none">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</parameter>
+					<parameter name="value" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+	</record>
+	<interface name="SkippedInterface" c:type="GirTestSkippedInterface" c:symbol-prefix="skipped_interface" glib:type-name="GirTestSkippedInterface" glib:get-type="gir_test_skipped_interface_get_type" glib:type-struct="SkippedInterfaceIface" introspectable="0">
+	</interface>
+	<record name="SkippedInterfaceIface" c:type="GirTestSkippedInterfaceIface" glib:is-gtype-struct-for="SkippedInterface">
+		<field name="parent_iface" readable="0" private="1">
+			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+	</record>
+	<interface name="PrerequisiteTest" c:type="GirTestPrerequisiteTest" c:symbol-prefix="prerequisite_test" glib:type-name="GirTestPrerequisiteTest" glib:get-type="gir_test_prerequisite_test_get_type" glib:type-struct="PrerequisiteTestIface">
+		<prerequisite name="GirTest.InterfaceTest"/>
+	</interface>
+	<record name="PrerequisiteTestIface" c:type="GirTestPrerequisiteTestIface" glib:is-gtype-struct-for="PrerequisiteTest">
+		<field name="parent_iface" readable="0" private="1">
+			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+	</record>
+	<record name="BoxedStruct" c:type="GirTestBoxedStruct" c:symbol-prefix="boxed_struct" glib:type-name="GirTestBoxedStruct" glib:get-type="gir_test_boxed_struct_get_type">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<function name="init" c:identifier="gir_test_boxed_struct_init">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</parameter>
+			</parameters>
+		</function>
+		<method name="inv" c:identifier="gir_test_boxed_struct_inv">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+	</record>
+	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<function name="init" c:identifier="gir_test_struct_init">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
+			</parameters>
+		</function>
+		<method name="inv" c:identifier="gir_test_struct_inv">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</method>
+	</record>
+	<record name="SkippedStruct" c:type="GirTestSkippedStruct" c:symbol-prefix="skipped_struct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+	</record>
+	<callback name="DelegateTest" c:type="GirTestDelegateTest">
+		<return-value transfer-ownership="full">
+			<type name="gboolean" c:type="gboolean"/>
+		</return-value>
+		<parameters>
+			<parameter name="a" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+			<parameter name="b" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+			<parameter name="user_data" transfer-ownership="none" closure="2">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+		</parameters>
+	</callback>
+	<callback name="DelegateErrorTest" c:type="GirTestDelegateErrorTest" throws="1">
+		<return-value transfer-ownership="full">
+			<type name="gboolean" c:type="gboolean"/>
+		</return-value>
+	</callback>
+	<callback name="DelegateGenericsTest" c:type="GirTestDelegateGenericsTest">
+		<return-value transfer-ownership="full">
+			<type name="gboolean" c:type="gboolean"/>
+		</return-value>
+		<parameters>
+			<parameter name="g_type" transfer-ownership="none">
+				<type name="GType" c:type="GType"/>
+			</parameter>
+			<parameter name="g_dup_func" transfer-ownership="none">
+				<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+			</parameter>
+			<parameter name="g_destroy_func" transfer-ownership="none">
+				<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+			</parameter>
+			<parameter name="t_type" transfer-ownership="none">
+				<type name="GType" c:type="GType"/>
+			</parameter>
+			<parameter name="t_dup_func" transfer-ownership="none">
+				<type name="GObject.BoxedCopyFunc" c:type="GBoxedCopyFunc"/>
+			</parameter>
+			<parameter name="t_destroy_func" transfer-ownership="none">
+				<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+			</parameter>
+			<parameter name="g" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</parameter>
+			<parameter name="t" transfer-ownership="none" allow-none="1">
+				<type name="gpointer" c:type="gpointer"/>
+			</parameter>
+			<parameter name="user_data" transfer-ownership="none" closure="8">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+		</parameters>
+	</callback>
+	<callback name="SkippedDelegate" c:type="GirTestSkippedDelegate" introspectable="0">
+		<return-value transfer-ownership="full">
+			<type name="none" c:type="void"/>
+		</return-value>
+	</callback>
+	<constant name="CONSTANT_NUMBER" c:identifier="GIR_TEST_CONSTANT_NUMBER" value="42">
+		<type name="gint" c:type="gint"/>
+	</constant>
+	<constant name="CONSTANT_STRING" c:identifier="GIR_TEST_CONSTANT_STRING" value="const ♥ utf8">
+		<type name="utf8" c:type="const gchar*"/>
+	</constant>
+</namespace>
+</repository>

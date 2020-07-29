@@ -142,6 +142,9 @@ LIBADD="$cgraph_tmp_LIBADD"
 CFLAGS="$cgraph_tmp_CFLAGS"
 AM_CONDITIONAL(HAVE_CGRAPH, test "$have_cgraph" = "yes")
 
+AC_PATH_PROG([G_IR_COMPILER], [g-ir-compiler], :)
+AM_CONDITIONAL(HAVE_G_IR_COMPILER, test "$G_IR_COMPILER" != :)
+
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 
@@ -162,6 +165,7 @@ AC_CONFIG_FILES([Makefile
            compiler/Makefile
            vapi/Makefile
            tests/Makefile
+           tests/girwriter/Makefile
            doc/Makefile
            doc/manual/Makefile
            doc/manual/version.xml
