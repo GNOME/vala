@@ -1,3 +1,48 @@
+Vala 0.48.8
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Handle "gtk_param_spec_expression" in get_param_spec()
+    + Properly compare string if binary-expression contains string-literal
+    + Inline allocated and constant arrays are never NULL
+    + Check param for null before using it
+    + Properly destroy elements of an inline struct array [#365]
+  - vala:
+    + Avoid subsequent critical caused by invalid array type for constant
+    + Improve error handling of nested initializer lists
+    + Don't allow "resize" invocation on variable with unowned array type [#928]
+    + Property must be writable when invoking ReturnsModifiedPointer method [#1023]
+    + Recursive check of assignment target to recognize constants [#944]
+    + Return copy of constant type in get_value_type_for_symbol()
+    + Handle parameter initializer without value-type
+    + Fully qualify member-access when using-directive was used to resolve [#57]
+    + Tranform instance member-access to a static one if possible [#270]
+    + Improve check of expression passed to yield
+    + Allow prototype access to signal with emitter
+    + Check error-type accessibility of creation methods and delegates
+  - girparser: Warn about conflicting signals and properties
+  - girparser: Skip 'docsection' elements in <namespace>
+  - girwriter:
+    + Add c:identifier-prefixes to <namespace>
+    + Write c:type="void" when name="none"
+    + Write c:symbol-prefix on supported elements
+    + Don't include symbols outside of a namespace [#241]
+    + Use appropriate get_ccode_* functions
+  - libvaladoc: Support exporting the `class` modifier on methods and fields
+  - Disable deprecation warnings when checking bindings
+  - tests: Fix "methods/extern" test with -Werror=address and gcc 5.4.0
+
+ * Bindings:
+   - glib-2.0: Add AtomicUint, an alternation of AtomicInt for uint [#915]
+   - gstreamer: Update from 1.17.2+ git master
+   - gtk+-3.0: Update to 3.24.21+ffe2df7b
+   - gtk+-3.0: Resolve conflicts of signals with properties
+   - gtk4: Resolve conflict of DropTarget.drop signal with property [#1033]
+   - gtk4: Improve Gtk.ParamSpecExpression binding
+   - gtk4: Fix binding of CClosureExpression ctor [#1024]
+   - gtk4,gtk4-unix-print: Update to 3.98.5+23dcf36e
+   - webkit2gtk-4.0: Update to 2.29.4
+
 Vala 0.48.7
 ===========
  * Various improvements and bug fixes:
