@@ -65,10 +65,11 @@
 		</flags>
 		<object name="GtkPageSetupUnixDialog" parent="GtkDialog" type-name="GtkPageSetupUnixDialog" get-type="gtk_page_setup_unix_dialog_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
+				<interface name="GtkAccessible"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkConstraintTarget"/>
 				<interface name="GtkNative"/>
+				<interface name="GtkShortcutManager"/>
 				<interface name="GtkRoot"/>
 			</implements>
 			<method name="get_page_setup" symbol="gtk_page_setup_unix_dialog_get_page_setup">
@@ -86,7 +87,7 @@
 			<constructor name="new" symbol="gtk_page_setup_unix_dialog_new">
 				<return-type type="GtkWidget*"/>
 				<parameters>
-					<parameter name="title" type="gchar*"/>
+					<parameter name="title" type="char*"/>
 					<parameter name="parent" type="GtkWindow*"/>
 				</parameters>
 			</constructor>
@@ -125,7 +126,7 @@
 				</parameters>
 			</method>
 			<method name="get_num_copies" symbol="gtk_print_job_get_num_copies">
-				<return-type type="gint"/>
+				<return-type type="int"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
 				</parameters>
@@ -134,7 +135,7 @@
 				<return-type type="GtkPageRange*"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
-					<parameter name="n_ranges" type="gint*"/>
+					<parameter name="n_ranges" type="int*"/>
 				</parameters>
 			</method>
 			<method name="get_page_set" symbol="gtk_print_job_get_page_set">
@@ -168,7 +169,7 @@
 				</parameters>
 			</method>
 			<method name="get_scale" symbol="gtk_print_job_get_scale">
-				<return-type type="gdouble"/>
+				<return-type type="double"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
 				</parameters>
@@ -193,7 +194,7 @@
 				</parameters>
 			</method>
 			<method name="get_title" symbol="gtk_print_job_get_title">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
 				</parameters>
@@ -207,7 +208,7 @@
 			<constructor name="new" symbol="gtk_print_job_new">
 				<return-type type="GtkPrintJob*"/>
 				<parameters>
-					<parameter name="title" type="gchar*"/>
+					<parameter name="title" type="char*"/>
 					<parameter name="printer" type="GtkPrinter*"/>
 					<parameter name="settings" type="GtkPrintSettings*"/>
 					<parameter name="page_setup" type="GtkPageSetup*"/>
@@ -247,7 +248,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
-					<parameter name="num_copies" type="gint"/>
+					<parameter name="num_copies" type="int"/>
 				</parameters>
 			</method>
 			<method name="set_page_ranges" symbol="gtk_print_job_set_page_ranges">
@@ -255,7 +256,7 @@
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
 					<parameter name="ranges" type="GtkPageRange*"/>
-					<parameter name="n_ranges" type="gint"/>
+					<parameter name="n_ranges" type="int"/>
 				</parameters>
 			</method>
 			<method name="set_page_set" symbol="gtk_print_job_set_page_set">
@@ -290,7 +291,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
-					<parameter name="scale" type="gdouble"/>
+					<parameter name="scale" type="double"/>
 				</parameters>
 			</method>
 			<method name="set_source_fd" symbol="gtk_print_job_set_source_fd">
@@ -305,7 +306,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="job" type="GtkPrintJob*"/>
-					<parameter name="filename" type="gchar*"/>
+					<parameter name="filename" type="char*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -330,10 +331,11 @@
 		</object>
 		<object name="GtkPrintUnixDialog" parent="GtkDialog" type-name="GtkPrintUnixDialog" get-type="gtk_print_unix_dialog_get_type">
 			<implements>
-				<interface name="AtkImplementor"/>
+				<interface name="GtkAccessible"/>
 				<interface name="GtkBuildable"/>
 				<interface name="GtkConstraintTarget"/>
 				<interface name="GtkNative"/>
+				<interface name="GtkShortcutManager"/>
 				<interface name="GtkRoot"/>
 			</implements>
 			<method name="add_custom_tab" symbol="gtk_print_unix_dialog_add_custom_tab">
@@ -345,7 +347,7 @@
 				</parameters>
 			</method>
 			<method name="get_current_page" symbol="gtk_print_unix_dialog_get_current_page">
-				<return-type type="gint"/>
+				<return-type type="int"/>
 				<parameters>
 					<parameter name="dialog" type="GtkPrintUnixDialog*"/>
 				</parameters>
@@ -401,7 +403,7 @@
 			<constructor name="new" symbol="gtk_print_unix_dialog_new">
 				<return-type type="GtkWidget*"/>
 				<parameters>
-					<parameter name="title" type="gchar*"/>
+					<parameter name="title" type="char*"/>
 					<parameter name="parent" type="GtkWindow*"/>
 				</parameters>
 			</constructor>
@@ -409,7 +411,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="dialog" type="GtkPrintUnixDialog*"/>
-					<parameter name="current_page" type="gint"/>
+					<parameter name="current_page" type="int"/>
 				</parameters>
 			</method>
 			<method name="set_embed_page_setup" symbol="gtk_print_unix_dialog_set_embed_page_setup">
@@ -477,7 +479,7 @@
 				</parameters>
 			</method>
 			<method name="compare" symbol="gtk_printer_compare">
-				<return-type type="gint"/>
+				<return-type type="int"/>
 				<parameters>
 					<parameter name="a" type="GtkPrinter*"/>
 					<parameter name="b" type="GtkPrinter*"/>
@@ -502,7 +504,7 @@
 				</parameters>
 			</method>
 			<method name="get_description" symbol="gtk_printer_get_description">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
@@ -511,10 +513,10 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
-					<parameter name="top" type="gdouble*"/>
-					<parameter name="bottom" type="gdouble*"/>
-					<parameter name="left" type="gdouble*"/>
-					<parameter name="right" type="gdouble*"/>
+					<parameter name="top" type="double*"/>
+					<parameter name="bottom" type="double*"/>
+					<parameter name="left" type="double*"/>
+					<parameter name="right" type="double*"/>
 				</parameters>
 			</method>
 			<method name="get_hard_margins_for_paper_size" symbol="gtk_printer_get_hard_margins_for_paper_size">
@@ -522,38 +524,38 @@
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 					<parameter name="paper_size" type="GtkPaperSize*"/>
-					<parameter name="top" type="gdouble*"/>
-					<parameter name="bottom" type="gdouble*"/>
-					<parameter name="left" type="gdouble*"/>
-					<parameter name="right" type="gdouble*"/>
+					<parameter name="top" type="double*"/>
+					<parameter name="bottom" type="double*"/>
+					<parameter name="left" type="double*"/>
+					<parameter name="right" type="double*"/>
 				</parameters>
 			</method>
 			<method name="get_icon_name" symbol="gtk_printer_get_icon_name">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
 			</method>
 			<method name="get_job_count" symbol="gtk_printer_get_job_count">
-				<return-type type="gint"/>
+				<return-type type="int"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
 			</method>
 			<method name="get_location" symbol="gtk_printer_get_location">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
 			</method>
 			<method name="get_name" symbol="gtk_printer_get_name">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
 			</method>
 			<method name="get_state_message" symbol="gtk_printer_get_state_message">
-				<return-type type="gchar*"/>
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="printer" type="GtkPrinter*"/>
 				</parameters>
@@ -603,7 +605,7 @@
 			<constructor name="new" symbol="gtk_printer_new">
 				<return-type type="GtkPrinter*"/>
 				<parameters>
-					<parameter name="name" type="gchar*"/>
+					<parameter name="name" type="char*"/>
 					<parameter name="backend" type="GtkPrintBackend*"/>
 					<parameter name="virtual_" type="gboolean"/>
 				</parameters>
