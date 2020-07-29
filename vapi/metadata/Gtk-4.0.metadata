@@ -6,7 +6,6 @@
 
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
-*Accessible cheader_filename="gtk/gtk.h,gtk/gtk-a11y.h"
 IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
 
 // Causes vapigen issues, not sure why -- <union> without name
@@ -55,6 +54,8 @@ CellRenderer
   .get_size replacement="get_preferred_size"
 
 // Factory method of abstract type
+ATContext
+  .create symbol_type="function"
 MediaFile
   .new* symbol_type="function" name="new_(.+)" ctype="GtkMediaStream*"
   .new name="empty"
@@ -71,6 +72,8 @@ ShortcutTrigger
 *.*_valist skip=false
 *.*_valist.args type="va_list"
 *.*_valist.var_args type="va_list"
+Accessible
+  .* skip=false
 CellArea
   .add_with_properties skip=false
   .cell_get skip=false
@@ -203,6 +206,8 @@ TreeSelection
 // Symbol name conflicts
 Constraint
   .new_constant name="const"
+DragSource
+  .drag_cancel#method name="cancel"
 DropTarget
   .drop#signal name="on_drop"
 EntryCompletion
@@ -246,8 +251,6 @@ value_take_expression.value ref
 BuildableParser skip
 
 // Backwards compatibility
-CellAccessibleParent
-  .get_cell_area return_void
 CssProvider
   .load_from_data name="load_from_buffer"
 EntryBuffer

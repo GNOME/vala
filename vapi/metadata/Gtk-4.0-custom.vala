@@ -21,12 +21,6 @@ namespace Gtk {
 		public virtual signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, [CCode (array_length = false)] int[] new_order);
 	}
 
-	[CCode (type_id = "gtk_widget_accessible_get_type ()")]
-	public class WidgetAccessible : Gtk.Accessible {
-		[NoWrapper]
-		public virtual void notify_gtk (GLib.ParamSpec pspec);
-	}
-
 	public interface Editable {
 		[NoWrapper]
 		public abstract void do_insert_text (string text, int length, ref int position);
