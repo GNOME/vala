@@ -373,6 +373,32 @@ namespace WebKit {
 		public string link_uri { get; construct; }
 		public string media_uri { get; construct; }
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_itp_first_party_ref", type_id = "webkit_itp_first_party_get_type ()", unref_function = "webkit_itp_first_party_unref")]
+	[Compact]
+	public class ITPFirstParty {
+		[Version (since = "2.30")]
+		public unowned string get_domain ();
+		[Version (since = "2.30")]
+		public unowned GLib.DateTime get_last_update_time ();
+		[Version (since = "2.30")]
+		public bool get_website_data_access_allowed ();
+		[Version (since = "2.30")]
+		public unowned WebKit.ITPFirstParty @ref ();
+		[Version (since = "2.30")]
+		public void unref ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_itp_third_party_ref", type_id = "webkit_itp_third_party_get_type ()", unref_function = "webkit_itp_third_party_unref")]
+	[Compact]
+	public class ITPThirdParty {
+		[Version (since = "2.30")]
+		public unowned string get_domain ();
+		[Version (since = "2.30")]
+		public unowned GLib.List<WebKit.ITPFirstParty> get_first_parties ();
+		[Version (since = "2.30")]
+		public unowned WebKit.ITPThirdParty @ref ();
+		[Version (since = "2.30")]
+		public void unref ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_input_method_context_get_type ()")]
 	public abstract class InputMethodContext : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -1490,6 +1516,8 @@ namespace WebKit {
 		public unowned string? get_itp_directory ();
 		[Version (since = "2.30")]
 		public bool get_itp_enabled ();
+		[Version (since = "2.30")]
+		public async GLib.List<WebKit.ITPThirdParty> get_itp_summary (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.10")]
 		public unowned string? get_local_storage_directory ();
 		[Version (since = "2.10")]
