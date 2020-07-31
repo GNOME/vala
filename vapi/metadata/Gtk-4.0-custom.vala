@@ -1,16 +1,4 @@
 namespace Gtk {
-	[CCode (has_type_id = false)]
-	[Compact]
-	class BindingEntry {
-		public static void add_signal (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, uint n_args, ...);
-	}
-
-	[CCode (has_type_id = false)]
-	[Compact]
-	public class BindingSet {
-		public static unowned BindingSet @new (string name);
-	}
-
 	[CCode (cheader_filename = "gtk/gtk.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
 	public struct RecentData {
 	}

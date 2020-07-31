@@ -2,8 +2,6 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
-*.*.event#parameter type="Gdk.Event"
-
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
 IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
@@ -50,8 +48,6 @@ TreeStore
   .reorder skip=false
 
 // Better deprecation notices
-CellRenderer
-  .get_size replacement="get_preferred_size"
 
 // Factory method of abstract type
 ATContext
@@ -74,10 +70,17 @@ ShortcutTrigger
 *.*_valist.var_args type="va_list"
 Accessible
   .* skip=false
+BuilderCScope
+  .* skip=false
 CellArea
   .add_with_properties skip=false
   .cell_get skip=false
   .cell_set skip=false
+ConstantExpression
+  .new skip=false
+ConstraintLayout
+  .add_constraints_from_description skip=false throws="GLib.Error"
+  .add_constraints_from_description.error skip
 Dialog
   .add_buttons skip=false
   .new_with_buttons skip=false
@@ -97,6 +100,8 @@ MessageDialog
   .new_with_markup skip=false printf_format
 Snapshot
   .* skip=false
+Shortcut
+  .* skip=false
 TextBuffer
   .create_tag skip=false
   .insert_with_tags skip=false
@@ -114,6 +119,9 @@ TreeViewColumn
   .new_with_attributes skip=false
 Widget abstract=false
   .new skip=false
+  .activate_action skip=false
+WidgetClass
+  .add_binding* skip=false
 Actionable
   .set_action_target skip=false
 CellLayout
@@ -122,8 +130,6 @@ TreeModel
   .get skip=false sentinel="-1"
 
 // Abstract vs. virtual
-CellRenderer
-  .get_size#virtual_method abstract
 TreeModel
   .iter_previous#virtual_method virtual
   .ref_node#virtual_method virtual
@@ -223,13 +229,6 @@ Widget
 Editable
   .delete_text#method skip
   .insert_text#method skip
-
-// time_t
-RecentInfo
-  .get_added type="time_t"
-  .get_application_info.time_ type="time_t"
-  .get_modified type="time_t"
-  .get_visited type="time_t"
 
 // Not sure what g-i was thinking
 TreeModel
