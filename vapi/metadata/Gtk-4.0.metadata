@@ -2,8 +2,6 @@
 // but may be some day.
 ////////////////////////////////////////////////////////////////////
 
-*.*.event#parameter type="Gdk.Event"
-
 // G-I doesn't support per-sybmol includes
 * cheader_filename="gtk/gtk.h"
 IMContext cheader_filename="gtk/gtk.h,gtk/gtkimmodule.h"
@@ -50,8 +48,6 @@ TreeStore
   .reorder skip=false
 
 // Better deprecation notices
-CellRenderer
-  .get_size replacement="get_preferred_size"
 
 // Factory method of abstract type
 ATContext
@@ -122,8 +118,6 @@ TreeModel
   .get skip=false sentinel="-1"
 
 // Abstract vs. virtual
-CellRenderer
-  .get_size#virtual_method abstract
 TreeModel
   .iter_previous#virtual_method virtual
   .ref_node#virtual_method virtual
@@ -223,13 +217,6 @@ Widget
 Editable
   .delete_text#method skip
   .insert_text#method skip
-
-// time_t
-RecentInfo
-  .get_added type="time_t"
-  .get_application_info.time_ type="time_t"
-  .get_modified type="time_t"
-  .get_visited type="time_t"
 
 // Not sure what g-i was thinking
 TreeModel

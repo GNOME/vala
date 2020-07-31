@@ -7,10 +7,10 @@ X11Display
 	.broadcast_startup_message skip=false
 	.xevent.xevent type="X.Event"
 
-//X11Surface
-//	.foreign_new_for_display name="foreign_for_display"
-
 x11_device_manager_lookup name="lookup_for_device_manager" parent="Gdk.X11.DeviceManagerXI2" symbol_type="method" instance_idx=0
 x11_device_get_id name="get_id" parent="Gdk.X11.DeviceXI2" symbol_type="method" instance_idx=0
 x11_free_compound_text.ctext type="uint8[]"
+x11_get_server_time name="get_server_time" parent="Gdk.X11.Surface" symbol_type="method" instance_idx=0
+x11_get_xatom_by_name_for_display name="get_xatom_by_name" parent="Gdk.X11.Display" symbol_type="method" instance_idx=0
+x11_get_xatom_name_for_display name="get_xatom_name" parent="Gdk.X11.Display" symbol_type="method" instance_idx=0
 x11_lookup_xdisplay name="lookup_for_xdisplay" parent="Gdk.X11.Display"
