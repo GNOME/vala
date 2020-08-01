@@ -533,6 +533,8 @@ namespace GES {
 		public signal void group_removed (GES.Group group, GLib.GenericArray<GES.Container> children);
 		public virtual signal void layer_added (GES.Layer layer);
 		public virtual signal void layer_removed (GES.Layer layer);
+		[Version (since = "1.18")]
+		public signal GES.Track select_element_track (GES.Clip clip, GES.TrackElement track_element);
 		public signal GLib.GenericArray<GES.Track> select_tracks_for_object (GES.Clip clip, GES.TrackElement track_element);
 		public signal void snapping_ended (GES.TrackElement obj1, GES.TrackElement obj2, uint64 position);
 		public signal void snapping_started (GES.TrackElement obj1, GES.TrackElement obj2, uint64 position);
@@ -845,6 +847,10 @@ namespace GES {
 		[NoAccessorMethod]
 		[Version (since = "1.18")]
 		public bool is_nested_timeline { get; }
+	}
+	[CCode (cheader_filename = "ges/ges.h", has_type_id = false)]
+	[Compact]
+	public class UriSource {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_uri_source_asset_get_type ()")]
 	public class UriSourceAsset : GES.TrackElementAsset, GES.MetaContainer, GLib.AsyncInitable, GLib.Initable {
