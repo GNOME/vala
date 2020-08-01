@@ -386,6 +386,9 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public static Gst.Uri? from_string (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.18")]
+		public static Gst.Uri? from_string_escaped (string uri);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static string? get_location (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static string? get_protocol (string uri);
