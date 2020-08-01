@@ -3863,6 +3863,8 @@ namespace GLib {
 		public static bool get_contents (string filename, out string contents, out size_t length = null) throws FileError;
 		[Version (since = "2.8")]
 		public static bool set_contents (string filename, string contents, ssize_t length = -1) throws FileError;
+		[Version (since = "2.66")]
+		public static bool set_contents_full (string filename, string contents, ssize_t length = -1, FileSetContentsFlags flags = 0, int mode = 0666) throws FileError;
 		[CCode (cname = "g_file_get_contents")]
 		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "size_t")] out uint8[] contents) throws FileError;
 		[CCode (cname = "g_file_set_contents")]
@@ -3902,6 +3904,16 @@ namespace GLib {
 		[Version (since = "2.36")]
 		[CCode (cname = "g_close")]
 		public static bool close_checked (int fd) throws FileError;
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_FILE_SET_CONTENTS_", has_type_id = false)]
+	public enum FileSetContentsFlags {
+		NONE,
+		CONSISTENT,
+		DURABLE,
+		ONLY_EXISTING
 	}
 
 	[CCode (cname = "GStatBuf", cheader_filename = "glib/gstdio.h", has_type_id = false)]
