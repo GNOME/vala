@@ -26,6 +26,9 @@ namespace GLib {
 	public class UnixMountEntry {
 		[CCode (cname = "g_unix_mount_at")]
 		public UnixMountEntry (string mount_path, out uint64 time_read = null);
+		[CCode (cname = "g_unix_mount_for")]
+		[Version (since = "2.52")]
+		public UnixMountEntry.@for (string file_path, out uint64 time_read = null);
 		public int compare (GLib.UnixMountEntry mount);
 		public unowned string get_device_path ();
 		public unowned string get_fs_type ();
@@ -39,9 +42,6 @@ namespace GLib {
 		public bool is_readonly ();
 		public bool is_system_internal ();
 
-		[CCode (cname = "g_unix_mounts_for")]
-		[Version (since = "2.52")]
-		public static GLib.List<UnixMountEntry> @for (string file_path, out uint64 time_read = null);
 		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
