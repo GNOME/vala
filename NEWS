@@ -1,3 +1,40 @@
+Vala 0.49.1
+===========
+ * Highlights:
+  - Use defintions of public header in internal header if available
+    and drop --use-header compiler option and enable it by default [#713]
+  - gdbus: Use GDBusProxy API to set `g-interface-info` at initialization time
+  - Check vfunc of abstract/virtual methods and property accessors for NULL
+    before using it [#153]
+  - Check coverage of switch on enum-type and issue warnings if needed [#777]
+  - Map empty start/end index to 0/length for slice expressions [#238]
+  - Add support for "with" statement (mark them experiemental) [#327]
+  - Use inheritted scopes of base-types/prerequisites to resolve symbols [#54]
+ * Various improvements and bug fixes:
+  - codegen:
+    + Add implicit parameter and instance checks in async method [#1005]
+    + Make use of CCode.cname for label name of CatchClause
+  - vala:
+    + Move setting of target profile and standard packages into CodeContext
+    + Remove some public API from expressions and statements
+    + Add Expression.is_always_true/false() helpers
+    + Add InvalidExpression as replacement for erroneous nodes instead
+    + Don't loose invalid_syntax when copying array type for variables [#942]
+  - girparser: Strip "Enum"-suffix only from enumeration
+  - girwriter: Internal fields/vfuncs in type-symbols are public in C [#513]
+  - libvaladoc: Remove unused Api.Class.get_finalize_function_name() API
+  - testrunner: Add more -Werror=* flags
+
+ * Bindings:
+  - gio-unix-2.0: Fix "g_unix_mount_for" binding [#1052]
+  - glib-2.0,gio-2.0,gobject-2.0: Updates for 2.66
+  - glib-2.0: data of GLib.Bytes is allowed to be null
+  - glib-2.0: Add more explicit type_id attributes for various symbols
+  - gstreamer: Update from 1.17.2+ git master
+  - gtk4: Update to 3.99.0+d743e757
+  - pango: Update from 1.45.2
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.8
 ===========
  * Various improvements and bug fixes:
