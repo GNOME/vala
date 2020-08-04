@@ -677,6 +677,8 @@ namespace Pango {
 		public Pango.Color? copy ();
 		public void free ();
 		public bool parse (string spec);
+		[Version (since = "1.46")]
+		public bool parse_with_alpha (out uint16 alpha, string spec);
 		[Version (since = "1.16")]
 		public string to_string ();
 	}
