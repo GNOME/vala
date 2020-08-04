@@ -364,6 +364,13 @@ public class Vala.Method : Subroutine, Callable {
 			}
 		}
 
+		var return_type = this.return_type.copy ();
+		if (has_attribute_argument ("CCode", "returns_floating_reference")) {
+			return_type.floating_reference = returns_floating_reference;
+		} else {
+			return_type.floating_reference = base_method.returns_floating_reference;
+		}
+
 		var actual_base_type = base_method.return_type.get_actual_type (object_type, method_type_args, node_reference);
 		if (!return_type.equals (actual_base_type)) {
 			invalid_match = "Base method expected return type `%s', but `%s' was provided".printf (actual_base_type.to_prototype_string (), return_type.to_prototype_string ());
@@ -625,6 +632,7 @@ public class Vala.Method : Subroutine, Callable {
 
 				_base_method = base_method;
 				copy_attribute_double (base_method, "CCode", "instance_pos");
+				copy_attribute_bool (base_method, "CCode", "returns_floating_reference");
 				return;
 			}
 		}
@@ -684,6 +692,7 @@ public class Vala.Method : Subroutine, Callable {
 		if (base_match != null) {
 			_base_interface_method = base_match;
 			copy_attribute_double (base_match, "CCode", "instance_pos");
+			copy_attribute_bool (base_match, "CCode", "returns_floating_reference");
 			return;
 		} else if (!hides && invalid_base_match != null) {
 			error = true;
