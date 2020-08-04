@@ -8443,10 +8443,10 @@ namespace Gtk {
 	public class Grid : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Grid ();
-		public void attach (Gtk.Widget child, int left, int top, int width = 1, int height = 1);
+		public void attach (Gtk.Widget child, int column, int row, int width = 1, int height = 1);
 		public void attach_next_to (Gtk.Widget child, Gtk.Widget? sibling, Gtk.PositionType side, int width = 1, int height = 1);
 		public int get_baseline_row ();
-		public unowned Gtk.Widget? get_child_at (int left, int top);
+		public unowned Gtk.Widget? get_child_at (int column, int row);
 		public bool get_column_homogeneous ();
 		public uint get_column_spacing ();
 		public Gtk.BaselinePosition get_row_baseline_position (int row);
@@ -8455,7 +8455,7 @@ namespace Gtk {
 		public void insert_column (int position);
 		public void insert_next_to (Gtk.Widget sibling, Gtk.PositionType side);
 		public void insert_row (int position);
-		public void query_child (Gtk.Widget child, out int left, out int top, out int width, out int height);
+		public void query_child (Gtk.Widget child, out int column, out int row, out int width, out int height);
 		public void remove (Gtk.Widget child);
 		public void remove_column (int position);
 		public void remove_row (int position);
@@ -8497,18 +8497,18 @@ namespace Gtk {
 	public class GridLayoutChild : Gtk.LayoutChild {
 		[CCode (has_construct_function = false)]
 		protected GridLayoutChild ();
+		public int get_column ();
 		public int get_column_span ();
-		public int get_left_attach ();
+		public int get_row ();
 		public int get_row_span ();
-		public int get_top_attach ();
+		public void set_column (int column);
 		public void set_column_span (int span);
-		public void set_left_attach (int attach);
+		public void set_row (int row);
 		public void set_row_span (int span);
-		public void set_top_attach (int attach);
+		public int column { get; set; }
 		public int column_span { get; set; }
-		public int left_attach { get; set; }
+		public int row { get; set; }
 		public int row_span { get; set; }
-		public int top_attach { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_grid_view_get_type ()")]
 	public class GridView : Gtk.ListBase, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable, Gtk.Scrollable {
@@ -8966,6 +8966,7 @@ namespace Gtk {
 	public class ListBox : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ListBox ();
+		public void append (Gtk.Widget child);
 		public void bind_model (GLib.ListModel? model, owned Gtk.ListBoxCreateWidgetFunc? create_widget_func);
 		public void drag_highlight_row (Gtk.ListBoxRow row);
 		public void drag_unhighlight_row ();
@@ -10679,8 +10680,8 @@ namespace Gtk {
 	public class Stack : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Stack ();
-		public unowned Gtk.StackPage add_named (Gtk.Widget child, string name);
-		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string name, string title);
+		public unowned Gtk.StackPage add_named (Gtk.Widget child, string? name);
+		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string? name, string title);
 		public unowned Gtk.Widget? get_child_by_name (string name);
 		public bool get_hhomogeneous ();
 		public bool get_interpolate_size ();
