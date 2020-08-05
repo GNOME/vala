@@ -1262,6 +1262,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 			// there is currently no default handler for abstract async methods
 			if (!m.is_abstract || !m.coroutine) {
+				generate_method_declaration (m.base_method, cfile);
+
 				CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (m));
 				cfunc = cast_method_pointer (m.base_method, cfunc, base_type, (m.coroutine ? 1 : 3));
 				var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (base_type)));
@@ -1280,6 +1282,8 @@ public class Vala.GTypeModule : GErrorModule {
 			if (sig.default_handler == null) {
 				continue;
 			}
+			generate_method_declaration (sig.default_handler, cfile);
+
 			var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (cl)));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (sig.default_handler)), new CCodeIdentifier (get_ccode_real_name (sig.default_handler)));
 		}
@@ -1296,10 +1300,14 @@ public class Vala.GTypeModule : GErrorModule {
 
 			if (!get_ccode_no_accessor_method (prop.base_property) && !get_ccode_concrete_accessor (prop.base_property)) {
 				if (prop.get_accessor != null) {
+					generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
+
 					string cname = get_ccode_real_name (prop.get_accessor);
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
 				}
 				if (prop.set_accessor != null) {
+					generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
+
 					string cname = get_ccode_real_name (prop.set_accessor);
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 				}
@@ -1378,6 +1386,8 @@ public class Vala.GTypeModule : GErrorModule {
 				continue;
 			}
 
+			generate_method_declaration (m.base_interface_method, cfile);
+
 			var ciface = new CCodeIdentifier ("iface");
 			CCodeExpression cfunc;
 			if (m.is_abstract || m.is_virtual) {
@@ -1451,6 +1461,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 			if (!get_ccode_no_accessor_method (prop.base_interface_property) && !get_ccode_concrete_accessor (prop.base_interface_property)) {
 				if (prop.get_accessor != null) {
+					generate_property_accessor_declaration (prop.base_interface_property.get_accessor, cfile);
+
 					string cname = get_ccode_real_name (prop.get_accessor);
 					if (prop.is_abstract || prop.is_virtual) {
 						cname = get_ccode_name (prop.get_accessor);
@@ -1463,6 +1475,8 @@ public class Vala.GTypeModule : GErrorModule {
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
 				}
 				if (prop.set_accessor != null) {
+					generate_property_accessor_declaration (prop.base_interface_property.set_accessor, cfile);
+
 					string cname = get_ccode_real_name (prop.set_accessor);
 					if (prop.is_abstract || prop.is_virtual) {
 						cname = get_ccode_name (prop.set_accessor);
@@ -1613,6 +1627,8 @@ public class Vala.GTypeModule : GErrorModule {
 
 				// there is currently no default handler for abstract async methods
 				if (!m.is_abstract || !m.coroutine) {
+					generate_method_declaration (m.base_method, cfile);
+
 					CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (m));
 					cfunc = cast_method_pointer (m.base_method, cfunc, base_type, (m.coroutine ? 1 : 3));
 					var ccast = new CCodeCastExpression (new CCodeIdentifier ("self"), "%s *".printf (get_ccode_name (base_type)));
@@ -1637,10 +1653,14 @@ public class Vala.GTypeModule : GErrorModule {
 
 				if (!get_ccode_no_accessor_method (prop.base_property) && !get_ccode_concrete_accessor (prop.base_property)) {
 					if (prop.get_accessor != null) {
+						generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
+
 						string cname = get_ccode_real_name (prop.get_accessor);
 						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
 					}
 					if (prop.set_accessor != null) {
+						generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
+
 						string cname = get_ccode_real_name (prop.set_accessor);
 						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
 					}
