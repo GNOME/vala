@@ -1444,7 +1444,7 @@ namespace GLib {
 		public const string PROXY;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_PROXY_RESOLVER_EXTENSION_POINT_NAME")]
 		public const string PROXY_RESOLVER;
-		[CCode (cheader_filename = "gio/gio.h", cname = "G_SETTINGS_BACKEND_EXTENSION_POINT_NAME")]
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", cname = "G_SETTINGS_BACKEND_EXTENSION_POINT_NAME", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		public const string SETTINGS_BACKEND;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_TLS_BACKEND_EXTENSION_POINT_NAME")]
 		public const string TLS_BACKEND;
@@ -2266,46 +2266,63 @@ namespace GLib {
 	public abstract class SettingsBackend : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SettingsBackend ();
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void changed (string key, void* origin_tag);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void changed_tree (GLib.Tree tree, void* origin_tag);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public static void flatten_tree (GLib.Tree tree, out string path, [CCode (array_length = false, array_null_terminated = true)] out (unowned string)[] keys, [CCode (array_length = false, array_null_terminated = true)] out (unowned GLib.Variant)[] values);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.28")]
 		public static GLib.SettingsBackend get_default ();
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual bool get_writable (string key);
-		[CCode (cheader_filename = "gio/gio.h", cname = "g_keyfile_settings_backend_new")]
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", cname = "g_keyfile_settings_backend_new", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		public static GLib.SettingsBackend keyfile_settings_backend_new (string filename, string root_path, string? root_group);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void keys_changed (string path, [CCode (array_length = false, array_null_terminated = true)] string[] items, void* origin_tag);
-		[CCode (cheader_filename = "gio/gio.h", cname = "g_memory_settings_backend_new")]
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", cname = "g_memory_settings_backend_new", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.28")]
 		public static GLib.SettingsBackend memory_settings_backend_new ();
-		[CCode (cheader_filename = "gio/gio.h", cname = "g_null_settings_backend_new")]
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", cname = "g_null_settings_backend_new", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.28")]
 		public static GLib.SettingsBackend null_settings_backend_new ();
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void path_changed (string path, void* origin_tag);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void path_writable_changed (string path);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual GLib.Variant read (string key, GLib.VariantType expected_type, bool default_value);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual GLib.Variant read_user_value (string key, GLib.VariantType expected_type);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual void reset (string key, void* origin_tag);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual void subscribe (string name);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual void sync ();
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual void unsubscribe (string name);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
 		public void writable_changed (string key);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual bool write (string key, GLib.Variant value, void* origin_tag);
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual bool write_tree (GLib.Tree tree, void* origin_tag);
 	}
