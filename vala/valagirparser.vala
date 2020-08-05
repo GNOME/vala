@@ -83,6 +83,7 @@ public class Vala.GirParser : CodeVisitor {
 		SYMBOL_TYPE,
 		INSTANCE_IDX,
 		EXPERIMENTAL,
+		FEATURE_TEST_MACRO,
 		FLOATING,
 		TYPE_ID,
 		RETURN_VOID,
@@ -1240,6 +1241,10 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (get_cname () != get_default_cname ()) {
 					symbol.set_attribute_string ("CCode", "cname", get_cname ());
+				}
+
+				if (metadata.has_argument (ArgumentType.FEATURE_TEST_MACRO)) {
+					symbol.set_attribute_string ("CCode", "feature_test_macro", metadata.get_string (ArgumentType.FEATURE_TEST_MACRO));
 				}
 
 				// lower_case_cprefix
