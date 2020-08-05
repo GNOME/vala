@@ -51,7 +51,10 @@ dbus_* parent="GLib.DBus" name="dbus_(.*)"
 dbus_error_* parent="GLib.DBusError" name="dbus_error_(.*)"
 dbus_address_get_for_bus_sync parent="GLib.BusType" name="get_address_sync"
 
-*_settings_backend_new parent="GLib.SettingsBackend"
+*_settings_backend_new parent="GLib.SettingsBackend" cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
+SETTINGS_BACKEND_EXTENSION_POINT_NAME cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
+SettingsBackend
+  .* cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
 
 Action
   .parameter_type nullable
