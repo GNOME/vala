@@ -20,6 +20,16 @@ class Bar : Foo {
 	}
 }
 
+class Manam : Bar {
+	construct {
+		bool b = true;
+		if (b) {
+			return;
+		}
+		assert_not_reached ();
+	}
+}
+
 void main () {
 	Bar bar;
 
@@ -28,4 +38,7 @@ void main () {
 
 	bar = new Bar.pro ();
 	assert (bar.foo == "foo.protected");
+
+	var manam = new Manam ();
+	assert (manam.foo == "foo.private");
 }
