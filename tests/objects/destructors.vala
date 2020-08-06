@@ -26,9 +26,22 @@ class Bar : Object {
 	}
 }
 
+class Manam : Object {
+	~Manam () {
+		bool b = true;
+		if (b) {
+			return;
+		}
+		assert_not_reached ();
+	}
+}
+
 void main () {
 	typeof (Foo);
 
 	var bar = new Bar ();
 	bar = null;
+
+	var manam = new Manam ();
+	manam = null;
 }
