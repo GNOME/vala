@@ -527,6 +527,7 @@ TESTS = \
 	objects/with-expression.vala \
 	objects/with-instance.vala \
 	objects/with-nested.vala \
+	objects/with-nested-method.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
 	errors/default-gtype.vala \

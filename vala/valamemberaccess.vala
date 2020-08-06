@@ -292,7 +292,14 @@ public class Vala.MemberAccess : Expression {
 					symbol_reference = variable_type.get_member (member_name);
 					if (symbol_reference != null) {
 						inner = new MemberAccess (null, w.with_variable.name, source_reference);
-						inner.check (context);
+						if (w.with_variable.parent_symbol == w.body) {
+							inner.check (context);
+						} else {
+							var old_symbol = context.analyzer.current_symbol;
+							context.analyzer.current_symbol = w.parent_symbol;
+							inner.check (context);
+							context.analyzer.current_symbol = old_symbol;
+						}
 						may_access_instance_members = true;
 					}
 				}
