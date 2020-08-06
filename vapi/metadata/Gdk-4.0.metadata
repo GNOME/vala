@@ -36,6 +36,9 @@ Texture
         .new_* symbol_type="function" name="new_(.+)"
 Surface
         .destroy destroys_instance
+Toplevel
+        .compute_size.size nullable unowned
+ToplevelSize struct
 
 // g-i doesn't support nullable fields and properties (bug #730479)
 Device

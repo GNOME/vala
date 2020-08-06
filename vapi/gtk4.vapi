@@ -5315,7 +5315,7 @@ namespace Gdk {
 		public void set_opaque_region (Cairo.Region? region);
 		public void set_shadow_width (int left, int right, int top, int bottom);
 		[CCode (has_construct_function = false)]
-		public Surface.toplevel (Gdk.Display display, int width, int height);
+		public Surface.toplevel (Gdk.Display display);
 		public bool translate_coordinates (Gdk.Surface to, double x, double y);
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
@@ -5349,14 +5349,12 @@ namespace Gdk {
 	[Compact]
 	public class ToplevelLayout {
 		[CCode (has_construct_function = false)]
-		public ToplevelLayout (int min_width, int min_height);
+		public ToplevelLayout ();
 		public Gdk.ToplevelLayout copy ();
 		public bool equal (Gdk.ToplevelLayout other);
 		public bool get_fullscreen ();
 		public unowned Gdk.Monitor? get_fullscreen_monitor ();
 		public bool get_maximized ();
-		public int get_min_height ();
-		public int get_min_width ();
 		public bool get_resizable ();
 		public unowned Gdk.ToplevelLayout @ref ();
 		public void set_fullscreen (bool fullscreen, Gdk.Monitor? monitor);
@@ -5437,7 +5435,7 @@ namespace Gdk {
 		public void inhibit_system_shortcuts (Gdk.Event? event);
 		public bool lower ();
 		public bool minimize ();
-		public bool present (int width, int height, Gdk.ToplevelLayout layout);
+		public bool present (Gdk.ToplevelLayout layout);
 		public void restore_system_shortcuts ();
 		public void set_decorated (bool decorated);
 		public void set_deletable (bool deletable);
@@ -5468,6 +5466,7 @@ namespace Gdk {
 		public abstract string title { owned get; set; }
 		[NoAccessorMethod]
 		public abstract Gdk.Surface transient_for { owned get; set; }
+		public signal void compute_size (out unowned Gdk.ToplevelSize? size);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct KeymapKey {
@@ -5508,6 +5507,14 @@ namespace Gdk {
 		public Gdk.AxisFlags flags;
 		[CCode (array_length = false)]
 		public weak double[] axes;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
+	public struct ToplevelSize {
+		public void get_bounds (out int bounds_width, out int bounds_height);
+		public static GLib.Type get_type ();
+		public void set_max_size (int max_width, int max_height);
+		public void set_min_size (int min_width, int min_height);
+		public void set_size (int width, int height);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ANCHOR_", type_id = "gdk_anchor_hints_get_type ()")]
 	[Flags]
@@ -6306,21 +6313,6 @@ namespace Gtk {
 		public bool wrap_license { get; set; }
 		public signal bool activate_link (string uri);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accel_label_get_type ()")]
-	public class AccelLabel : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public AccelLabel (string str);
-		public void get_accel (out uint accelerator_key, out Gdk.ModifierType accelerator_mods);
-		public uint get_accel_width ();
-		public unowned string get_label ();
-		public bool get_use_underline ();
-		public bool refetch ();
-		public void set_accel (uint accelerator_key, Gdk.ModifierType accelerator_mods);
-		public void set_label (string text);
-		public void set_use_underline (bool setting);
-		public string label { get; set; }
-		public bool use_underline { get; set; }
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_action_bar_get_type ()")]
 	public class ActionBar : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -6701,6 +6693,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkBuilderScope*")]
 		public BuilderCScope ();
 		public void add_callback_symbol (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
+		public void add_callback_symbols (string first_callback_name, ...);
+		public unowned GLib.Callback? lookup_callback_symbol (string callback_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_builder_list_item_factory_get_type ()")]
 	public class BuilderListItemFactory : Gtk.ListItemFactory {
@@ -7398,8 +7392,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_constant_expression_get_type ()")]
 	public class ConstantExpression : Gtk.Expression {
-		[CCode (has_construct_function = false)]
-		protected ConstantExpression ();
+		[CCode (has_construct_function = false, type = "GtkExpression*")]
+		public ConstantExpression (GLib.Type value_type, ...);
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public ConstantExpression.for_value (GLib.Value value);
 		public unowned GLib.Value? get_value ();
@@ -7464,6 +7458,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkLayoutManager*")]
 		public ConstraintLayout ();
 		public void add_constraint (owned Gtk.Constraint constraint);
+		public GLib.List<weak Gtk.Constraint> add_constraints_from_description ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5, array_length_type = "gsize")] string[] lines, int hspacing, int vspacing, ...) throws GLib.Error;
 		public GLib.List<weak Gtk.Constraint> add_constraints_from_descriptionv ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5, array_length_type = "gsize")] string[] lines, int hspacing, int vspacing, GLib.HashTable<string,Gtk.ConstraintTarget> views) throws GLib.Error;
 		public void add_guide (owned Gtk.ConstraintGuide guide);
 		public GLib.ListModel observe_constraints ();
@@ -10240,8 +10235,6 @@ namespace Gtk {
 	public class SelectionFilterModel : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
 		public SelectionFilterModel (Gtk.SelectionModel? model);
-		[CCode (has_construct_function = false)]
-		public SelectionFilterModel.for_type (GLib.Type item_type);
 		public unowned Gtk.SelectionModel? get_model ();
 		public void set_model (Gtk.SelectionModel? model);
 		public Gtk.SelectionModel model { get; set; }
@@ -10367,6 +10360,8 @@ namespace Gtk {
 		public void set_action (owned Gtk.ShortcutAction? action);
 		public void set_arguments (GLib.Variant? args);
 		public void set_trigger (owned Gtk.ShortcutTrigger? trigger);
+		[CCode (has_construct_function = false)]
+		public Shortcut.with_arguments (owned Gtk.ShortcutTrigger? trigger, owned Gtk.ShortcutAction? action, string? format_string, ...);
 		public Gtk.ShortcutAction action { get; owned set; }
 		public GLib.Variant arguments { get; set; }
 		public Gtk.ShortcutTrigger trigger { get; owned set; }
@@ -11863,8 +11858,15 @@ namespace Gtk {
 		public Widget (GLib.Type type, ...);
 		public void action_set_enabled (string action_name, bool enabled);
 		public bool activate ();
+		public bool activate_action (string name, string format_string, ...);
 		public bool activate_action_variant (string name, GLib.Variant? args);
 		public void activate_default ();
+		[CCode (cname = "gtk_widget_class_add_binding")]
+		public class void add_binding (uint keyval, Gdk.ModifierType mods, Gtk.ShortcutFunc callback, string format_string, ...);
+		[CCode (cname = "gtk_widget_class_add_binding_action")]
+		public class void add_binding_action (uint keyval, Gdk.ModifierType mods, string action_name, string format_string, ...);
+		[CCode (cname = "gtk_widget_class_add_binding_signal")]
+		public class void add_binding_signal (uint keyval, Gdk.ModifierType mods, string @signal, string format_string, ...);
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_css_class (string css_class);
 		public void add_mnemonic_label (Gtk.Widget label);
@@ -13869,8 +13871,6 @@ namespace Gtk {
 	public delegate void BuildableParserStartElementFunc (Gtk.BuildableParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", has_typedef = false)]
 	public delegate void BuildableParserTextFunc (Gtk.BuildableParseContext context, string text, size_t text_len) throws GLib.Error;
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
-	public delegate void Callback (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 3.9)]
 	public delegate bool CellAllocCallback (Gtk.CellRenderer renderer, Gdk.Rectangle cell_area, Gdk.Rectangle cell_background);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
