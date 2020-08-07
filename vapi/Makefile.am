@@ -253,17 +253,6 @@ dist_vapi_DATA = \
 	rest-0.7.vapi \
 	rest-extras-0.7.deps \
 	rest-extras-0.7.vapi \
-	sdl.vapi \
-	sdl-gfx.vapi \
-	sdl-gfx.deps \
-	sdl-image.vapi \
-	sdl-image.deps \
-	sdl-mixer.vapi \
-	sdl-mixer.deps \
-	sdl-net.vapi \
-	sdl-net.deps \
-	sdl-ttf.vapi \
-	sdl-ttf.deps \
 	sqlite3.vapi \
 	taglib_c.vapi \
 	tiff.vapi \
