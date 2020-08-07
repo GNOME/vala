@@ -253,6 +253,25 @@ dist_vapi_DATA = \
 	rest-0.7.vapi \
 	rest-extras-0.7.deps \
 	rest-extras-0.7.vapi \
+	sdl2-android.deps \
+	sdl2-android.vapi \
+	SDL2_gfx.deps \
+	SDL2_gfx.vapi \
+	SDL2_image.deps \
+	SDL2_image.vapi \
+	sdl2-ios.deps \
+	sdl2-ios.vapi \
+	SDL2_mixer.deps \
+	SDL2_mixer.vapi \
+	SDL2_net.deps \
+	SDL2_net.vapi \
+	SDL2_ttf.deps \
+	SDL2_ttf.vapi \
+	sdl2.vapi \
+	sdl2-windows.deps \
+	sdl2-windows.vapi \
+	sdl2-winrt.deps \
+	sdl2-winrt.vapi \
 	sqlite3.vapi \
 	taglib_c.vapi \
 	tiff.vapi \
