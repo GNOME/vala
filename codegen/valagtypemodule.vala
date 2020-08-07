@@ -271,7 +271,11 @@ public class Vala.GTypeModule : GErrorModule {
 				} else if (s is Signal) {
 					var sig = (Signal) s;
 					if (sig.default_handler != null) {
-						generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+						if (sig.is_virtual) {
+							generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+						} else {
+							generate_method_declaration (sig.default_handler, cfile);
+						}
 					}
 				} else if (s is Property) {
 					var prop = (Property) s;
@@ -291,7 +295,11 @@ public class Vala.GTypeModule : GErrorModule {
 
 			foreach (Signal sig in cl.get_signals ()) {
 				if (sig.default_handler != null) {
-					generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+					if (sig.is_virtual) {
+						generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+					} else {
+						generate_method_declaration (sig.default_handler, cfile);
+					}
 				}
 			}
 
@@ -1281,7 +1289,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		/* connect default signal handlers */
 		foreach (Signal sig in cl.get_signals ()) {
-			if (sig.default_handler == null) {
+			if (sig.default_handler == null || !sig.is_virtual) {
 				continue;
 			}
 			generate_method_declaration (sig.default_handler, cfile);
@@ -2118,7 +2126,11 @@ public class Vala.GTypeModule : GErrorModule {
 				generate_struct_method_declaration (iface, m, instance_struct, type_struct, decl_space, ref has_struct_member);
 			} else if ((sig = sym as Signal) != null) {
 				if (sig.default_handler != null) {
-					generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+					if (sig.is_virtual) {
+						generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+					} else {
+						generate_method_declaration (sig.default_handler, cfile);
+					}
 				}
 			} else if ((prop = sym as Property) != null) {
 				generate_struct_property_declaration (iface, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
@@ -2222,7 +2234,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		/* connect default signal handlers */
 		foreach (Signal sig in iface.get_signals ()) {
-			if (sig.default_handler == null) {
+			if (sig.default_handler == null || !sig.is_virtual) {
 				continue;
 			}
 			var cname = get_ccode_real_name (sig.default_handler);

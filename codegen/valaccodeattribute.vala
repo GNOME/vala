@@ -1437,7 +1437,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 		} else if (sym is Method) {
 			unowned Method m = (Method) sym;
-			if (m.base_method != null || m.base_interface_method != null) {
+			if (m.base_method != null || m.base_interface_method != null || m.signal_reference != null) {
 				string m_name;
 				if (m.signal_reference != null) {
 					m_name = get_ccode_lower_case_name (m.signal_reference);

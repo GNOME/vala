@@ -436,6 +436,7 @@ TESTS = \
 	objects/sealed-class.test \
 	objects/sealed-compact-class.test \
 	objects/signals.vala \
+	objects/signals-default-class-handler.vala \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \

@@ -347,7 +347,12 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
-		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
+		CCodeFunctionCall csignew;
+		if (sig.default_handler == null || sig.is_virtual) {
+			csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
+		} else {
+			csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new_class_handler"));
+		}
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (get_ccode_name (sig))));
 		csignew.add_argument (new CCodeIdentifier (get_ccode_type_id (type)));
 		string[] flags = new string[0];
@@ -383,7 +388,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		if (sig.default_handler == null) {
 			csignew.add_argument (new CCodeConstant ("0"));
-		} else {
+		} else if (sig.is_virtual) {
 			var struct_offset = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
 			if (type is Class) {
 				struct_offset.add_argument (new CCodeIdentifier ("%sClass".printf (get_ccode_name (type))));
@@ -393,6 +398,8 @@ public class Vala.GSignalModule : GObjectModule {
 			}
 			struct_offset.add_argument (new CCodeIdentifier (get_ccode_vfunc_name (sig.default_handler)));
 			csignew.add_argument (struct_offset);
+		} else {
+			csignew.add_argument (new CCodeCastExpression (new CCodeIdentifier (get_ccode_real_name (sig.default_handler)), "GCallback"));
 		}
 		csignew.add_argument (new CCodeConstant ("NULL"));
 		csignew.add_argument (new CCodeConstant ("NULL"));
