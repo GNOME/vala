@@ -21,22 +21,46 @@ CANVAS_POLYLINE_NUM_ARROW_POINTS name="NUM_ARROW_POINTS"
 
 canvas_item*_class_* skip
 
+*Data
+	.* unowned=false
+
 //Upstream
 Canvas
 	.*#field skip
 	.convert_bounds_to_item_space.bounds ref unowned=false
 	.marshal* skip
+CanvasEllipse
+	.ellipse_data nullable unowned=false
+CanvasImage
+	.image_data nullable unowned=false
 CanvasItemSimple
+	.simple_data nullable unowned=false
 	.get_path_bounds.bounds out unowned=false
 CanvasItemModel
 	.get_simple_transform.* out
 	.get_simple_transform.model out=false
 	.get_transform.transform out
+CanvasGrid
+	.grid_data nullable unowned=false
 CanvasLineDash
 	.dashes array array_length_field="num_dashes" unowned=false
 CanvasPoints
 	.coords array array_length_field="num_points" unowned=false
+CanvasPolyline
+	.polyline_data nullable unowned=false
+CanvasPolylineData
+	.arrow_data nullable unowned=false
 CanvasItemSimpleData
 	.clip_path_commands type="GLib.Array<Goo.CanvasPathCommand?>"
+CanvasPath
+	.path_data nullable unowned=false
 CanvasPathData
 	.path_commands type="GLib.Array<Goo.CanvasPathCommand?>"
+CanvasRect
+	.rect_data nullable unowned=false
+CanvasTable
+	.table_data nullable unowned=false
+CanvasTableData
+	.layout_data nullable unowned=false
+CanvasText
+	.text_data nullable unowned=false
