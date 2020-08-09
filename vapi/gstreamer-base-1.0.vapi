@@ -88,7 +88,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Base.AggregatorPad pad, Gst.Query decide_query, Gst.Query query);
 			[Version (since = "1.18")]
-			public void selected_samples ();
+			public void selected_samples (Gst.ClockTime pts, Gst.ClockTime dts, Gst.ClockTime duration, Gst.Structure? info);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_src_caps (Gst.Caps caps);
 			[Version (since = "1.16")]
@@ -128,7 +128,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.Base.AggregatorStartTimeSelection start_time_selection { get; set; }
 			[Version (since = "1.18")]
-			public signal void samples_selected ();
+			public signal void samples_selected (Gst.Segment object, uint64 p0, uint64 p1, uint64 p2, Gst.Structure p3);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
 		[GIR (name = "AggregatorPad")]
