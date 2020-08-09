@@ -4789,7 +4789,9 @@ namespace Gdk {
 		public string to_string ();
 		[DestroysInstance]
 		public Gdk.ContentFormats union (Gdk.ContentFormats second);
+		[DestroysInstance]
 		public Gdk.ContentFormats union_deserialize_gtypes ();
+		[DestroysInstance]
 		public Gdk.ContentFormats union_deserialize_mime_types ();
 		[DestroysInstance]
 		public Gdk.ContentFormats union_serialize_gtypes ();
@@ -5320,11 +5322,12 @@ namespace Gdk {
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
 		public Gdk.FrameClock frame_clock { get; construct; }
+		public int height { get; }
 		public bool mapped { get; }
+		public int width { get; }
 		public signal void enter_monitor (Gdk.Monitor monitor);
 		public signal bool event (Gdk.Event event);
 		public signal void leave_monitor (Gdk.Monitor monitor);
-		public signal void popup_layout_changed ();
 		public signal bool render (Cairo.Region region);
 		public signal void size_changed (int width, int height);
 	}
@@ -5425,6 +5428,7 @@ namespace Gdk {
 		public abstract bool autohide { get; construct; }
 		[ConcreteAccessor]
 		public abstract Gdk.Surface parent { get; construct; }
+		public signal void popup_layout_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_cname = "GdkToplevelInterface", type_id = "gdk_toplevel_get_type ()")]
 	public interface Toplevel : Gdk.Surface {
@@ -5512,7 +5516,6 @@ namespace Gdk {
 	public struct ToplevelSize {
 		public void get_bounds (out int bounds_width, out int bounds_height);
 		public static GLib.Type get_type ();
-		public void set_max_size (int max_width, int max_height);
 		public void set_min_size (int min_width, int min_height);
 		public void set_size (int width, int height);
 	}
@@ -9700,6 +9703,7 @@ namespace Gtk {
 		public unowned Gtk.Widget? get_child ();
 		public bool get_has_arrow ();
 		public bool get_mnemonics_visible ();
+		public void get_offset (out int x_offset, out int y_offset);
 		public bool get_pointing_to (out Gdk.Rectangle rect);
 		public Gtk.PositionType get_position ();
 		public void popdown ();
@@ -9709,6 +9713,7 @@ namespace Gtk {
 		public void set_default_widget (Gtk.Widget? widget);
 		public void set_has_arrow (bool has_arrow);
 		public void set_mnemonics_visible (bool mnemonics_visible);
+		public void set_offset (int x_offset, int y_offset);
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public bool autohide { get; set; }
