@@ -3561,7 +3561,7 @@ namespace Posix {
 	}
 
 	[CCode(cheader_filename = "wordexp.h")]
-	private const int WRDE_APPEND;
+	public const int WRDE_APPEND;
 	[CCode(cheader_filename = "wordexp.h")]
 	public const int WRDE_BADCHAR;
 	[CCode(cheader_filename = "wordexp.h")]
