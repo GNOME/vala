@@ -1648,7 +1648,7 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public void _exit (int status);
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void AtExitFunc ();
 
 	[CCode (cheader_filename = "stdlib.h")]
@@ -3397,8 +3397,8 @@ namespace Posix {
 		}
 	}
 
-	[CCode (has_target = false)]
-	public delegate int GlobErrorFunction (string filename, int errcode);
+	[CCode (has_target = false, has_typedef = false)]
+	public delegate int GlobErrorFunc (string filename, int errcode);
 
 	[CCode (cheader_filename = "glob.h")]
 	public const int GLOB_ERR;
@@ -3448,7 +3448,7 @@ namespace Posix {
 		public size_t offs;
 
 		[CCode (cname = "glob", instance_pos = -1)]
-		public int glob (string pattern, int flags = 0, GlobErrorFunction? errfunc = null);
+		public int glob (string pattern, int flags = 0, GlobErrorFunc? errfunc = null);
 	}
 
 	[CCode (cheader_filename = "langinfo.h", cname = "nl_item", cprefix = "", has_type_id = false)]
