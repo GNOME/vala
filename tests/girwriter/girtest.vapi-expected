@@ -1,5 +1,9 @@
 [CCode (gir_namespace = "GirTest", gir_version = "1.0")]
 namespace GirTest {
+	namespace Nested {
+		[CCode (cheader_filename = "girtest.h")]
+		public static void function ();
+	}
 	[CCode (cheader_filename = "girtest.h")]
 	public abstract class AbstractObjectTest : GLib.Object {
 		protected AbstractObjectTest ();
