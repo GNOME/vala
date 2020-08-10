@@ -1,0 +1,20 @@
+GIR
+
+Input:
+
+<union name="Foo" c:type="TestFoo">
+  <field name="bar" writable="1">
+    <type name="guint" c:type="guint"/>
+  </field>
+  <field name="manam" writable="1">
+    <type name="gint" c:type="gint"/>
+  </field>
+</union>
+
+Output:
+
+[CCode (cheader_filename = "test.h")]
+public struct Foo {
+	public uint bar;
+	public int manam;
+}

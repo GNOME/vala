@@ -1,0 +1,22 @@
+GIR
+
+Input:
+
+<constant name="FOO_CONSTANT"
+          value="foo-constant-string-value"
+          c:type="TEST_FOO_CONSTANT">
+  <type name="utf8" c:type="gchar*"/>
+</constant>
+<constant name="FOO_CONSTANT_ARRAY"
+          c:type="TEST_FOO_CONSTANT_ARRAY">
+  <array c:type="const gchar**">
+    <type name="utf8" c:type="const gchar*"/>
+  </array>
+</constant>
+
+Output:
+
+[CCode (cheader_filename = "test.h", cname = "TEST_FOO_CONSTANT")]
+public const string FOO_CONSTANT;
+[CCode (array_length = false, array_null_terminated = true, cheader_filename = "test.h", cname = "TEST_FOO_CONSTANT_ARRAY")]
+public const string[] FOO_CONSTANT_ARRAY;
