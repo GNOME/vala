@@ -641,6 +641,7 @@ TESTS = \
 	gir/async-result-pos.test \
 	gir/async-sync-out.test \
 	gir/class.test \
+	gir/constant.test \
 	gir/delegate-alias-without-target.test \
 	gir/delegate-array-length-type.test \
 	gir/delegate-closure-destroy-index-conflict.test \
@@ -653,6 +654,7 @@ TESTS = \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
 	gir/symbol-type-csuffix.test \
+	gir/union.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
