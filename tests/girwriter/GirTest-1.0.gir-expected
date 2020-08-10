@@ -858,7 +858,7 @@
 			</callback>
 		</field>
 		<field name="signal_with_default_handlder">
-			<callback name="signal_with_default_handlder" c:type="signal_with_default_handlder">
+			<callback name="object_test_signal_with_default_handlder" c:type="object_test_signal_with_default_handlder">
 				<return-value transfer-ownership="full">
 					<type name="none" c:type="void"/>
 				</return-value>
