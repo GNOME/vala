@@ -519,32 +519,38 @@ public class Vala.GIRWriter : CodeVisitor {
 			foreach (Method m in cl.get_methods ()) {
 				if (m.is_abstract || m.is_virtual) {
 					if (m.coroutine) {
+						string finish_name = m.name;
+						if (finish_name.has_suffix ("_async")) {
+							finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+						}
+						finish_name += "_finish";
+
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+						buffer.append_printf("<field name=\"%s\"", m.name);
 						write_symbol_attributes (m);
 						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
+						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
 
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\"", get_ccode_finish_vfunc_name (m));
+						buffer.append_printf("<field name=\"%s\"", finish_name);
 						write_symbol_attributes (m);
 						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, get_ccode_finish_vfunc_name (m), get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
+						do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
 					} else {
 						write_indent ();
-						buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+						buffer.append_printf("<field name=\"%s\"", m.name);
 						write_symbol_attributes (m);
 						buffer.append_printf (">\n");
 						indent++;
-						do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
+						do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 						indent--;
 						write_indent ();
 						buffer.append_printf ("</field>\n");
@@ -700,32 +706,38 @@ public class Vala.GIRWriter : CodeVisitor {
 		foreach (Method m in iface.get_methods ()) {
 			if (m.is_abstract || m.is_virtual) {
 				if (m.coroutine) {
+					string finish_name = m.name;
+					if (finish_name.has_suffix ("_async")) {
+						finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+					}
+					finish_name += "_finish";
+
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+					buffer.append_printf("<field name=\"%s\"", m.name);
 					write_symbol_attributes (m);
 					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
 
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\"", get_ccode_finish_vfunc_name (m));
+					buffer.append_printf("<field name=\"%s\"", finish_name);
 					write_symbol_attributes (m);
 					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, get_ccode_finish_vfunc_name (m), get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
+					do_write_signature (m, "callback", true, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
 				} else {
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+					buffer.append_printf("<field name=\"%s\"", m.name);
 					write_symbol_attributes (m);
 					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -738,11 +750,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				if (prop.get_accessor != null) {
 					var m = prop.get_accessor.get_method ();
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+					buffer.append_printf("<field name=\"%s\"", m.name);
 					write_symbol_attributes (m);
 					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -751,11 +763,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				if (prop.set_accessor != null && prop.set_accessor.writable) {
 					var m = prop.set_accessor.get_method ();
 					write_indent ();
-					buffer.append_printf("<field name=\"%s\"", get_ccode_vfunc_name (m));
+					buffer.append_printf("<field name=\"%s\"", m.name);
 					write_symbol_attributes (m);
 					buffer.append_printf (">\n");
 					indent++;
-					do_write_signature (m, "callback", true, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
+					do_write_signature (m, "callback", true, m.name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, false, false);
 					indent--;
 					write_indent ();
 					buffer.append_printf ("</field>\n");
@@ -1303,10 +1315,15 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (m.coroutine) {
-			do_write_signature (m, tag_name, instance, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, true, write_attributes);
-			do_write_signature (m, tag_name, instance, get_ccode_finish_vfunc_name (m), get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, write_attributes);
+			string finish_name = name;
+			if (finish_name.has_suffix ("_async")) {
+				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+			}
+			finish_name += "_finish";
+			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_async_begin_parameters (), new VoidType (), false, true, write_attributes);
+			do_write_signature (m, tag_name, instance, finish_name, get_ccode_finish_name (m), m.get_async_end_parameters (), m.return_type, m.tree_can_fail, false, write_attributes);
 		} else {
-			do_write_signature (m, tag_name, instance, get_ccode_vfunc_name (m), get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, true, write_attributes);
+			do_write_signature (m, tag_name, instance, name, get_ccode_name (m), m.get_parameters (), m.return_type, m.tree_can_fail, true, write_attributes);
 		}
 	}
 
