@@ -545,6 +545,7 @@ TESTS = \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
 	errors/bug623049.vala \
+	errors/bug627090.vala \
 	errors/bug639589.vala \
 	errors/bug651145.vala \
 	errors/bug762377.vala \
