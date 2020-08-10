@@ -1,3 +1,27 @@
+Vala 0.49.2
+===========
+ * Highlights:
+  - Support non-virtual signals with default handler [#1056]
+
+ * Various improvements and bug fixes:
+  - codegen: Include header for base-symbols when connecting vfuncs
+  - vala:
+    + Inherit CCode.returns_floating_reference attribute from base [#1053]
+    + Mark tranformed member-access as qualified [#57]
+    + Switch context if with-variable is not owned by with-statement [#1043]
+  - girparser: Add support for string "feature_test_macro" metadata
+
+ * Bindings:
+  - gio-2.0: Include "gio/gsettingsbackend.h" for GLib.SettingsBackend
+    members [#1054]
+  - goocanvas-2.0: Fix some field ownerships and types [#1057]
+  - gstreamer: Update from 1.17.2+ git master
+  - gtk4: Update to 3.99.0+358b698e
+  - pango: Update from 1.45.4+
+  - posix: Add missing "has_typedef" attribute for some delegates
+  - posix: Declare WRDE_APPEND constant as public
+  - vapi: Update GIR-based bindings
+
 Vala 0.49.1
 ===========
  * Highlights:
@@ -10,6 +34,7 @@ Vala 0.49.1
   - Map empty start/end index to 0/length for slice expressions [#238]
   - Add support for "with" statement (mark them experiemental) [#327]
   - Use inheritted scopes of base-types/prerequisites to resolve symbols [#54]
+
  * Various improvements and bug fixes:
   - codegen:
     + Add implicit parameter and instance checks in async method [#1005]
