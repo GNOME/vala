@@ -336,6 +336,11 @@ namespace GirTest {
 		public void method<K> (K[] param) {
 		}
 	}
+
+	namespace Nested {
+		public void function () {
+		}
+	}
 }
 
 public enum InvalidEnum {
