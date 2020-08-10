@@ -1,0 +1,6 @@
+Invalid Code
+
+int foo = true ? 23 : 42;
+
+void main () {
+}

@@ -702,6 +702,7 @@ TESTS = \
 	semantic/class-missing-prerequisites.test \
 	semantic/class-too-few-type-arguments.test \
 	semantic/class-too-many-type-arguments.test \
+	semantic/conditional-expression-no-block.test \
 	semantic/constant-extern.test \
 	semantic/constant-pointer.test \
 	semantic/constant-reassignment-element.test \
@@ -716,6 +717,7 @@ TESTS = \
 	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
 	semantic/delegate-too-many-type-arguments.test \
+	semantic/delete-unsupported.test \
 	semantic/element-access-index-invalid.test \
 	semantic/enum-empty.test \
 	semantic/errordomain-empty.test \
