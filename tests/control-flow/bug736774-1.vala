@@ -1,8 +1,8 @@
-bool success = false;
+int success = 0;
 
 class Foo : Object {
 	~Foo() {
-		success = true;
+		success++;
 	}
 }
 
@@ -19,5 +19,5 @@ void main() {
 	} catch {
 	}
 
-	assert (success);
+	assert (success == 1);
 }

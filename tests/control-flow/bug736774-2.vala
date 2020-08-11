@@ -1,8 +1,20 @@
-string* keep;
+int success = 0;
 
-string may_fail () throws GLib.Error {
-	string result = "test";
-	keep = result;
+[Compact]
+[Immutable]
+[CCode (free_function = "vstring_destroy")]
+public class vstring : string {
+	public vstring (string s);
+
+	[DestroysInstance]
+	public void destroy () {
+		free (this);
+		success++;
+	}
+}
+
+vstring may_fail () throws GLib.Error {
+	vstring result = (vstring) "test".dup ();
 	return (owned) result;
 }
 
@@ -12,5 +24,5 @@ void main () {
 	} catch {
 	}
 
-	assert (keep != "test");
+	assert (success == 1);
 }
