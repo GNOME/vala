@@ -134,6 +134,20 @@ archlinux-gcc-x86_64:
     - make -j4 check VERBOSE=1
   allow_failure: true
 
+alpinelinux-gcc-x86_64:
+  stage: build
+  image: alpine:edge
+  before_script:
+    - apk -U upgrade
+    - apk add automake autoconf-archive libtool bash bison gettext dbus-x11 flex git glib-dev graphviz-dev gobject-introspection-dev build-base libxslt-dev make vala
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check VERBOSE=1
+  allow_failure: true
+
 pages:
   stage: deploy
   only:
