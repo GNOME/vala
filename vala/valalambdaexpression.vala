@@ -34,13 +34,29 @@ public class Vala.LambdaExpression : Expression {
 	 * The expression body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
 	 */
-	public Expression expression_body { get; private set; }
+	public Expression expression_body {
+		get { return _expression_body; }
+		private set {
+			_expression_body = value;
+			if (_expression_body != null) {
+				_expression_body.parent_node = this;
+			}
+		}
+	}
 
 	/**
 	 * The statement body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
 	 */
-	public Block statement_body { get; private set; }
+	public Block statement_body {
+		get { return _statement_body; }
+		private set {
+			_statement_body = value;
+			if (_statement_body != null) {
+				_statement_body.parent_node = this;
+			}
+		}
+	}
 
 	/**
 	 * The generated method.
@@ -48,6 +64,8 @@ public class Vala.LambdaExpression : Expression {
 	public Method method { get; private set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
+	Block _statement_body;
+	Expression _expression_body;
 
 	/**
 	 * Creates a new lambda expression.
@@ -168,6 +186,7 @@ public class Vala.LambdaExpression : Expression {
 			}
 		}
 		method.owner = context.analyzer.current_symbol.scope;
+		method.parent_node = this;
 
 		var lambda_params = get_parameters ();
 		Iterator<Parameter> lambda_param_it = lambda_params.iterator ();
