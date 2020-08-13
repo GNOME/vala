@@ -222,6 +222,10 @@ TESTS = \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
 	control-flow/pre-post-increment.vala \
+	control-flow/pre-post-increment-field.vala \
+	control-flow/pre-post-increment-local.vala \
+	control-flow/pre-post-increment-parameter.vala \
+	control-flow/pre-post-increment-property.vala \
 	control-flow/switch.vala \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
