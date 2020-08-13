@@ -5235,6 +5235,28 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
+		if (expr.operator == UnaryOperator.INCREMENT || expr.operator == UnaryOperator.DECREMENT) {
+			// increment/decrement variable
+			var op = expr.operator == UnaryOperator.INCREMENT ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
+			var cexpr = new CCodeBinaryExpression (op, get_cvalue_ (expr.inner.target_value), new CCodeConstant ("1"));
+			ccode.add_assignment (get_cvalue (expr.inner), cexpr);
+
+			// assign new value to temp variable
+			var temp_value = store_temp_value (expr.inner.target_value, expr);
+
+			MemberAccess ma = find_property_access (expr.inner);
+			if (ma != null) {
+				// property postfix expression
+				var prop = (Property) ma.symbol_reference;
+
+				store_property (prop, ma.inner, temp_value);
+			}
+
+			// return new value
+			expr.target_value = temp_value;
+			return;
+		}
+
 		CCodeUnaryOperator op;
 		switch (expr.operator) {
 		case UnaryOperator.PLUS:
