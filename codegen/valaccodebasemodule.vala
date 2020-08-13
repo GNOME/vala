@@ -4386,7 +4386,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public abstract TargetValue get_field_cvalue (Field field, TargetValue? instance);
 
-	public abstract TargetValue load_variable (Variable variable, TargetValue value);
+	public abstract TargetValue load_variable (Variable variable, TargetValue value, Expression? expr = null);
 
 	public abstract TargetValue load_this_parameter (TypeSymbol sym);
 

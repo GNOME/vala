@@ -58,6 +58,11 @@ public class Vala.MemberAccess : Expression {
 	public bool prototype_access { get; set; }
 
 	/**
+	 * Requires indirect access due to possible side-effects of parent expression.
+	 */
+	public bool tainted_access { get; set; }
+
+	/**
 	 * Specifies whether the member is used for object creation.
 	 */
 	public bool creation_member { get; set; }
@@ -961,6 +966,11 @@ public class Vala.MemberAccess : Expression {
 			value_type.check (context);
 		}
 
+		// Provide some extra information for the code generator
+		if (!tainted_access) {
+			tainted_access = is_tainted ();
+		}
+
 		return !error;
 	}
 
@@ -1043,5 +1053,37 @@ public class Vala.MemberAccess : Expression {
 		} else if (param != null && param.direction == ParameterDirection.OUT) {
 			collection.add (param);
 		}
+	}
+
+	bool is_tainted () {
+		unowned CodeNode node = this;
+		if (node.parent_node is MemberAccess) {
+			return false;
+		}
+
+		while (node.parent_node is Expression) {
+			node = node.parent_node;
+			if (node is Assignment || node is MethodCall) {
+				break;
+			}
+		}
+
+		bool found = false;
+		var traverse = new TraverseVisitor ((n) => {
+			if (n is PostfixExpression) {
+				found = true;
+				return TraverseStatus.STOP;
+			} else if (n is UnaryExpression) {
+				unowned UnaryExpression e = (UnaryExpression) n;
+				if (e.operator == UnaryOperator.INCREMENT || e.operator == UnaryOperator.DECREMENT) {
+					found = true;
+					return TraverseStatus.STOP;
+				}
+			}
+			return TraverseStatus.CONTINUE;
+		});
+		node.accept (traverse);
+
+		return found;
 	}
 }
