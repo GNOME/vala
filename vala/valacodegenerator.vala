@@ -32,15 +32,15 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 	public virtual void emit (CodeContext context) {
 	}
 
-	public abstract TargetValue load_local (LocalVariable local);
+	public abstract TargetValue load_local (LocalVariable local, Expression? expr = null);
 
 	public abstract void store_local (LocalVariable local, TargetValue value, bool initializer, SourceReference? source_reference = null);
 
-	public abstract TargetValue load_parameter (Parameter param);
+	public abstract TargetValue load_parameter (Parameter param, Expression? expr = null);
 
 	public abstract void store_parameter (Parameter param, TargetValue value, bool capturing_parameter = false, SourceReference? source_reference = null);
 
-	public abstract TargetValue load_field (Field field, TargetValue? instance);
+	public abstract TargetValue load_field (Field field, TargetValue? instance, Expression? expr = null);
 
 	public abstract void store_field (Field field, TargetValue? instance, TargetValue value, SourceReference? source_reference = null);
 }

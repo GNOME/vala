@@ -117,7 +117,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (expr.lvalue) {
 				expr.target_value = get_field_cvalue (field, expr.inner != null ? expr.inner.target_value : null);
 			} else {
-				expr.target_value = load_field (field, expr.inner != null ? expr.inner.target_value : null);
+				expr.target_value = load_field (field, expr.inner != null ? expr.inner.target_value : null, expr);
 			}
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
@@ -345,7 +345,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (expr.lvalue) {
 					expr.target_value = get_local_cvalue (local);
 				} else {
-					expr.target_value = load_local (local);
+					expr.target_value = load_local (local, expr);
 				}
 			}
 		} else if (expr.symbol_reference is Parameter) {
@@ -353,7 +353,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (expr.lvalue) {
 				expr.target_value = get_parameter_cvalue (param);
 			} else {
-				expr.target_value = load_parameter (param);
+				expr.target_value = load_parameter (param, expr);
 			}
 		}
 	}
@@ -699,7 +699,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		return result;
 	}
 
-	public override TargetValue load_variable (Variable variable, TargetValue value) {
+	public override TargetValue load_variable (Variable variable, TargetValue value, Expression? expr = null) {
 		var result = (GLibValue) value;
 		var array_type = result.value_type as ArrayType;
 		var delegate_type = result.value_type as DelegateType;
@@ -767,6 +767,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// except for structs that are always passed by reference
 			use_temp = false;
 		}
+		// our implementation of postfix-expressions require temporary variables
+		if (expr is MemberAccess && ((MemberAccess) expr).tainted_access) {
+			use_temp = true;
+		}
+
 		var local = variable as LocalVariable;
 		if (local != null && local.name[0] == '.') {
 			// already a temporary variable generated internally
@@ -782,13 +787,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns unowned access to the given local variable */
-	public override TargetValue load_local (LocalVariable local) {
-		return load_variable (local, get_local_cvalue (local));
+	public override TargetValue load_local (LocalVariable local, Expression? expr = null) {
+		return load_variable (local, get_local_cvalue (local), expr);
 	}
 
 	/* Returns unowned access to the given parameter */
-	public override TargetValue load_parameter (Parameter param) {
-		return load_variable (param, get_parameter_cvalue (param));
+	public override TargetValue load_parameter (Parameter param, Expression? expr = null) {
+		return load_variable (param, get_parameter_cvalue (param), expr);
 	}
 
 	/* Convenience method returning access to "this" */
@@ -798,7 +803,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	/* Returns unowned access to the given field */
-	public override TargetValue load_field (Field field, TargetValue? instance) {
-		return load_variable (field, get_field_cvalue (field, instance));
+	public override TargetValue load_field (Field field, TargetValue? instance, Expression? expr = null) {
+		return load_variable (field, get_field_cvalue (field, instance), expr);
 	}
 }
