@@ -1117,10 +1117,10 @@ namespace WebKit {
 	public class UserScript {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.6")]
-		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.22")]
-		public UserScript.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		public UserScript.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[Version (since = "2.6")]
 		public unowned WebKit.UserScript @ref ();
 		[Version (since = "2.6")]
@@ -1131,10 +1131,10 @@ namespace WebKit {
 	public class UserStyleSheet {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.6")]
-		public UserStyleSheet (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		public UserStyleSheet (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.22")]
-		public UserStyleSheet.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? whitelist, [CCode (array_length = false, array_null_terminated = true)] string[]? blacklist);
+		public UserStyleSheet.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[Version (since = "2.6")]
 		public unowned WebKit.UserStyleSheet @ref ();
 		[Version (since = "2.6")]
