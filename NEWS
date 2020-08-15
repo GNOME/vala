@@ -1,3 +1,19 @@
+Vala 0.49.90
+============
+ * Regression and bug fixes:
+  - Revert "girwriter: Use appropriate get_ccode_* functions" [#1059]
+  - tests: Don't rely on undefined use-after-free behaviour of glibc
+  - Add TraverseVisitor for traversing the tree with a callback
+  - Force usage of temporary variables for "tainted" member accesses [#1061]
+  - vala: Move transformation of unary increment/decrement to codegen
+  - vala: Set parent_node for child nodes of lambda-expression [#1062]
+
+ * Bindings:
+  - gstreamer: Update from 1.17.2+ git master
+  - gtk4: Update to 3.99.0+e6e2d6b4
+  - pango: Update from 1.46.0
+  - webkit2gtk-4.0: Update to 2.29.91
+
 Vala 0.49.2
 ===========
  * Highlights:
