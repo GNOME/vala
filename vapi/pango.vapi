@@ -1210,10 +1210,10 @@ namespace Pango {
 	[Version (since = "1.6")]
 	public static Pango.Attribute attr_letter_spacing_new (int letter_spacing);
 	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (since = "1.45")]
+	[Version (since = "1.46")]
 	public static Pango.Attribute attr_overline_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
-	[Version (since = "1.45")]
+	[Version (since = "1.46")]
 	public static Pango.Attribute attr_overline_new (Pango.Overline overline);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Attribute attr_rise_new (int rise);
