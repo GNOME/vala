@@ -12481,11 +12481,11 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkNativeInterface", type_id = "gtk_native_get_type ()")]
 	public interface Native : Gtk.Widget {
-		public abstract void check_resize ();
-		public static unowned Gtk.Widget get_for_surface (Gdk.Surface surface);
-		public abstract unowned Gsk.Renderer get_renderer ();
-		public abstract unowned Gdk.Surface get_surface ();
-		public abstract void get_surface_transform (out double x, out double y);
+		public void check_resize ();
+		public static unowned Gtk.Native get_for_surface (Gdk.Surface surface);
+		public unowned Gsk.Renderer get_renderer ();
+		public unowned Gdk.Surface get_surface ();
+		public void get_surface_transform (out double x, out double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_orientable_get_type ()")]
 	public interface Orientable : GLib.Object {
@@ -14068,168 +14068,6 @@ namespace Gtk {
 	public const string PRINT_SETTINGS_WIN32_DRIVER_VERSION;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_PRIORITY_RESIZE")]
 	public const int PRIORITY_RESIZE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_ACCELERATOR")]
-	public const string STYLE_CLASS_ACCELERATOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_ARROW")]
-	public const string STYLE_CLASS_ARROW;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_BACKGROUND")]
-	public const string STYLE_CLASS_BACKGROUND;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_BOTTOM")]
-	public const string STYLE_CLASS_BOTTOM;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_BUTTON")]
-	public const string STYLE_CLASS_BUTTON;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CALENDAR")]
-	public const string STYLE_CLASS_CALENDAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CELL")]
-	public const string STYLE_CLASS_CELL;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CHECK")]
-	public const string STYLE_CLASS_CHECK;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_COMBOBOX_ENTRY")]
-	public const string STYLE_CLASS_COMBOBOX_ENTRY;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CONTEXT_MENU")]
-	public const string STYLE_CLASS_CONTEXT_MENU;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CSD")]
-	public const string STYLE_CLASS_CSD;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_CURSOR_HANDLE")]
-	public const string STYLE_CLASS_CURSOR_HANDLE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_DEFAULT")]
-	public const string STYLE_CLASS_DEFAULT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_DESTRUCTIVE_ACTION")]
-	public const string STYLE_CLASS_DESTRUCTIVE_ACTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_DIM_LABEL")]
-	public const string STYLE_CLASS_DIM_LABEL;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_DND")]
-	public const string STYLE_CLASS_DND;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_DOCK")]
-	public const string STYLE_CLASS_DOCK;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_ENTRY")]
-	public const string STYLE_CLASS_ENTRY;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_ERROR")]
-	public const string STYLE_CLASS_ERROR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_EXPANDER")]
-	public const string STYLE_CLASS_EXPANDER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_FLAT")]
-	public const string STYLE_CLASS_FLAT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_FRAME")]
-	public const string STYLE_CLASS_FRAME;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_HEADER")]
-	public const string STYLE_CLASS_HEADER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_HIGHLIGHT")]
-	public const string STYLE_CLASS_HIGHLIGHT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_HORIZONTAL")]
-	public const string STYLE_CLASS_HORIZONTAL;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_IMAGE")]
-	public const string STYLE_CLASS_IMAGE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_INFO")]
-	public const string STYLE_CLASS_INFO;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_INSERTION_CURSOR")]
-	public const string STYLE_CLASS_INSERTION_CURSOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LABEL")]
-	public const string STYLE_CLASS_LABEL;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LEFT")]
-	public const string STYLE_CLASS_LEFT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LEVEL_BAR")]
-	public const string STYLE_CLASS_LEVEL_BAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LINKED")]
-	public const string STYLE_CLASS_LINKED;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LIST")]
-	public const string STYLE_CLASS_LIST;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_LIST_ROW")]
-	public const string STYLE_CLASS_LIST_ROW;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MARK")]
-	public const string STYLE_CLASS_MARK;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MENU")]
-	public const string STYLE_CLASS_MENU;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MENUBAR")]
-	public const string STYLE_CLASS_MENUBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MENUITEM")]
-	public const string STYLE_CLASS_MENUITEM;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MESSAGE_DIALOG")]
-	public const string STYLE_CLASS_MESSAGE_DIALOG;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_MONOSPACE")]
-	public const string STYLE_CLASS_MONOSPACE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_NEEDS_ATTENTION")]
-	public const string STYLE_CLASS_NEEDS_ATTENTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_NOTEBOOK")]
-	public const string STYLE_CLASS_NOTEBOOK;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_OSD")]
-	public const string STYLE_CLASS_OSD;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_OVERSHOOT")]
-	public const string STYLE_CLASS_OVERSHOOT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_PANE_SEPARATOR")]
-	public const string STYLE_CLASS_PANE_SEPARATOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_PAPER")]
-	public const string STYLE_CLASS_PAPER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_POPOVER")]
-	public const string STYLE_CLASS_POPOVER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_POPUP")]
-	public const string STYLE_CLASS_POPUP;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_PROGRESSBAR")]
-	public const string STYLE_CLASS_PROGRESSBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_PULSE")]
-	public const string STYLE_CLASS_PULSE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_QUESTION")]
-	public const string STYLE_CLASS_QUESTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_RADIO")]
-	public const string STYLE_CLASS_RADIO;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_RAISED")]
-	public const string STYLE_CLASS_RAISED;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_READ_ONLY")]
-	public const string STYLE_CLASS_READ_ONLY;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_RIGHT")]
-	public const string STYLE_CLASS_RIGHT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_RUBBERBAND")]
-	public const string STYLE_CLASS_RUBBERBAND;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SCALE")]
-	public const string STYLE_CLASS_SCALE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SCALE_HAS_MARKS_ABOVE")]
-	public const string STYLE_CLASS_SCALE_HAS_MARKS_ABOVE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SCALE_HAS_MARKS_BELOW")]
-	public const string STYLE_CLASS_SCALE_HAS_MARKS_BELOW;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SCROLLBAR")]
-	public const string STYLE_CLASS_SCROLLBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SCROLLBARS_JUNCTION")]
-	public const string STYLE_CLASS_SCROLLBARS_JUNCTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SEPARATOR")]
-	public const string STYLE_CLASS_SEPARATOR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SIDEBAR")]
-	public const string STYLE_CLASS_SIDEBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SLIDER")]
-	public const string STYLE_CLASS_SLIDER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SPINBUTTON")]
-	public const string STYLE_CLASS_SPINBUTTON;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SPINNER")]
-	public const string STYLE_CLASS_SPINNER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_STATUSBAR")]
-	public const string STYLE_CLASS_STATUSBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SUBTITLE")]
-	public const string STYLE_CLASS_SUBTITLE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_SUGGESTED_ACTION")]
-	public const string STYLE_CLASS_SUGGESTED_ACTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TITLE")]
-	public const string STYLE_CLASS_TITLE;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TITLEBAR")]
-	public const string STYLE_CLASS_TITLEBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TOOLBAR")]
-	public const string STYLE_CLASS_TOOLBAR;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TOOLTIP")]
-	public const string STYLE_CLASS_TOOLTIP;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TOP")]
-	public const string STYLE_CLASS_TOP;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TOUCH_SELECTION")]
-	public const string STYLE_CLASS_TOUCH_SELECTION;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_TROUGH")]
-	public const string STYLE_CLASS_TROUGH;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_UNDERSHOOT")]
-	public const string STYLE_CLASS_UNDERSHOOT;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_VERTICAL")]
-	public const string STYLE_CLASS_VERTICAL;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_VIEW")]
-	public const string STYLE_CLASS_VIEW;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_WARNING")]
-	public const string STYLE_CLASS_WARNING;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_CLASS_WIDE")]
-	public const string STYLE_CLASS_WIDE;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROVIDER_PRIORITY_APPLICATION")]
 	public const int STYLE_PROVIDER_PRIORITY_APPLICATION;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROVIDER_PRIORITY_FALLBACK")]
@@ -14297,7 +14135,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Widget native_get_for_surface (Gdk.Surface surface);
+	public static unowned Gtk.Native native_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
