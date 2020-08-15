@@ -45,4 +45,4 @@ inference for local variables, generics, non-null types, assisted memory
 management, exception handling
 
 [AUTHORS]
-Jürg Billeter, Raffaele Sandrini.
+Jürg Billeter, Raffaele Sandrini, Rico Tzschichholz.
