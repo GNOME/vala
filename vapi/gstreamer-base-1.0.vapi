@@ -128,7 +128,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.Base.AggregatorStartTimeSelection start_time_selection { get; set; }
 			[Version (since = "1.18")]
-			public signal void samples_selected (Gst.Segment object, uint64 p0, uint64 p1, uint64 p2, Gst.Structure p3);
+			public signal void samples_selected (Gst.Segment segment, uint64 pts, uint64 dts, uint64 duration, Gst.Structure? info);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAggregatorPad", lower_case_cprefix = "gst_aggregator_pad_", type_id = "gst_aggregator_pad_get_type ()")]
 		[GIR (name = "AggregatorPad")]
