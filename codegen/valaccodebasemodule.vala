@@ -2389,52 +2389,58 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (unref_fun);
 		}
 
+		bool reachable_exit_block = true;
 		foreach (Statement stmt in b.get_statements ()) {
+			if (stmt is ReturnStatement) {
+				reachable_exit_block = false;
+			}
 			push_line (stmt.source_reference);
 			stmt.emit (this);
 			pop_line ();
 		}
 
-		if (b.parent_symbol is Method) {
-			unowned Method m = (Method) b.parent_symbol;
-			// check postconditions
-			foreach (var postcondition in m.get_postconditions ()) {
-				create_postcondition_statement (postcondition);
-			}
-		}
-
-		// free in reverse order
-		for (int i = local_vars.size - 1; i >= 0; i--) {
-			var local = local_vars[i];
-			local.active = false;
-			if (!local.unreachable && !local.captured && requires_destroy (local.variable_type)) {
-				ccode.add_expression (destroy_local (local));
-			}
-		}
-
-		if (b.parent_symbol is Method) {
-			var m = (Method) b.parent_symbol;
-			foreach (Parameter param in m.get_parameters ()) {
-				if (!param.captured && !param.ellipsis && !param.params_array && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
-					ccode.add_expression (destroy_parameter (param));
-				} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
-					return_out_parameter (param);
+		if (reachable_exit_block) {
+			if (b.parent_symbol is Method) {
+				unowned Method m = (Method) b.parent_symbol;
+				// check postconditions
+				foreach (var postcondition in m.get_postconditions ()) {
+					create_postcondition_statement (postcondition);
 				}
 			}
-		} else if (b.parent_symbol is PropertyAccessor) {
-			var acc = (PropertyAccessor) b.parent_symbol;
-			if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
-				ccode.add_expression (destroy_parameter (acc.value_parameter));
+
+			// free in reverse order
+			for (int i = local_vars.size - 1; i >= 0; i--) {
+				var local = local_vars[i];
+				local.active = false;
+				if (!local.unreachable && !local.captured && requires_destroy (local.variable_type)) {
+					ccode.add_expression (destroy_local (local));
+				}
 			}
-		}
 
-		if (b.captured) {
-			int block_id = get_block_id (b);
+			if (b.parent_symbol is Method) {
+				var m = (Method) b.parent_symbol;
+				foreach (Parameter param in m.get_parameters ()) {
+					if (!param.captured && !param.ellipsis && !param.params_array && requires_destroy (param.variable_type) && param.direction == ParameterDirection.IN) {
+						ccode.add_expression (destroy_parameter (param));
+					} else if (param.direction == ParameterDirection.OUT && !m.coroutine) {
+						return_out_parameter (param);
+					}
+				}
+			} else if (b.parent_symbol is PropertyAccessor) {
+				var acc = (PropertyAccessor) b.parent_symbol;
+				if (acc.value_parameter != null && !acc.value_parameter.captured && requires_destroy (acc.value_parameter.variable_type)) {
+					ccode.add_expression (destroy_parameter (acc.value_parameter));
+				}
+			}
 
-			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
-			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
-			ccode.add_expression (data_unref);
-			ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
+			if (b.captured) {
+				int block_id = get_block_id (b);
+
+				var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
+				data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
+				ccode.add_expression (data_unref);
+				ccode.add_assignment (get_variable_cexpression ("_data%d_".printf (block_id)), new CCodeConstant ("NULL"));
+			}
 		}
 
 		if (b.parent_node is Block || b.parent_node is SwitchStatement || b.parent_node is TryStatement) {
