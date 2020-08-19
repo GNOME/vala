@@ -43,7 +43,7 @@
 <section>
 <title>Vala source files</title>
 <para>There are two types of Vala input files.  Vala source files (with a &quot;.vala&quot; extension) contain compileable Vala code. VAPI files (with a &quot;.vapi&quot; extension) describe an interface to a library, which can be written in either Vala or C.  VAPI files are not compileable, and cannot contain any executable code - they are used when compiling Vala source files. </para>
-<para>There are no requirements for how Vala source files are named, although there are conventions that can be followed. VAPI files are usually named to matched the pkg-config name of the library they relate to; they are described more fully in the documention about bindings. </para>
+<para>There are no requirements for how Vala source files are named, although there are conventions that can be followed. VAPI files are usually named to matched the pkg-config name of the library they relate to; they are described more fully in the documentation about bindings. </para>
 <para>All Vala input files should be encoded in UTF-8. </para>
 </section>
 
@@ -62,7 +62,7 @@
 
 <section>
 <title>Vala syntax</title>
-<para>Vala's syntax is modelled on C#'s, and is therefore similar to all C-like languages.  Curly braces are the basic delimeter, marking the start and end of a declaration or block of code. </para>
+<para>Vala's syntax is modelled on C#'s, and is therefore similar to all C-like languages.  Curly braces are the basic delimiter, marking the start and end of a declaration or block of code. </para>
 <para>There is no whitespace requirement, though this is a standard format that is used in Vala itself, and in many Vala projects.  This format is a version of the coding style used for glib and gnome projects, but is not fully described in this document, other than being used for all examples. </para>
 <para>There is flexibility in the order of declarations in Vala.  It is not required to pre-declare anything in order to use it before its declaration. </para>
 <para>Identifiers all follow the same rules, whether for local variables or class names.  Legal identifiers must begin with one alphabetic character or underscore, followed by any number (zero or more) of alphanumerics or underscores (/[:alpha:_]([:alphanum:_])*/).  It is also possible to use language keywords as identifiers, provided they are prefixed with a &quot;@&quot; when used in this way - the &quot;@&quot; is not considered a part of the identifier, it simply informs the compiler that the token should be considered as an identifier. </para>
@@ -79,7 +79,7 @@
 <section>
 <title>Memory management</title>
 <para>Vala automatically uses the memory management system in GLib, which is a reference counting system.  In order for this to work, the types used must support reference counting, as is the case with all GObject derived types and some others. </para>
-<para>Memory is allocated and initialised by Vala when needed.  The memory management scheme means it is also freed when possible.  There is though no garbage collector, and currently reference cycles are not automatically broken.  This can lead to memory being leaked.  The main way to avoid this problem is to use weak references - these are not counted references and so cannot prevent memory being released, at the cost that they can be left refering to non existent data. </para>
+<para>Memory is allocated and initialised by Vala when needed.  The memory management scheme means it is also freed when possible.  There is though no garbage collector, and currently reference cycles are not automatically broken.  This can lead to memory being leaked.  The main way to avoid this problem is to use weak references - these are not counted references and so cannot prevent memory being released, at the cost that they can be left referring to non existent data. </para>
 <para>Vala also allows use of pointers in much the same way as C.  An instance of a pointer type refers directly to an address in memory.  Pointers are not references, and therefore the automatic memory management rules do not apply in the same way.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Pointer_types">Types/Pointer types</ulink>. </para>
 <para>There are more details about memory management elsewhere, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#">Concepts</ulink>. </para>
 </section>
@@ -118,7 +118,7 @@
 <title>Variables</title>
 <para>Within executable code in a method, an instance may be assigned to a variable.  A variable has a name and is declared to refer to an instance of a particular data type.  A typical variable declaration would be: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[;]]>
 </programlisting>
-<para>This declaration defines that &quot;a&quot; should become an expression that evaluates to an instance of the int type.  The actual value of this expression will depend on which int instance is assigned to the variable.  &quot;a&quot; can be assigned to more than once, with the most recent assigment being the only one considered when &quot;a&quot; is evaluated.  Assignment to the variable is achieved via an assignment expression. Generally, the semantics of an assignment expression depends on the type of the variable. </para>
+<para>This declaration defines that &quot;a&quot; should become an expression that evaluates to an instance of the int type.  The actual value of this expression will depend on which int instance is assigned to the variable.  &quot;a&quot; can be assigned to more than once, with the most recent assignment being the only one considered when &quot;a&quot; is evaluated.  Assignment to the variable is achieved via an assignment expression. Generally, the semantics of an assignment expression depends on the type of the variable. </para>
 <para>A variable can take ownership of an instance, the precise meaning of which depends on the data type.  In the context of reference types, it is possible to declare that a variable should not ever take ownership of an instance, this is done with the <code>unowned</code> keyword.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Reference_types">Types/Reference types</ulink>. </para>
 <para>If a type is directly instantiated in a variable declaration statement, then the variable will be created owning that new instance, for example: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[s]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[stringvalue]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[;]]>
 </programlisting>
@@ -183,7 +183,7 @@
 <token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[SubType]]></methodname><![CDATA[ : ]]><methodname><![CDATA[SuperType]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
-<para>Whenever a SuperType instance is required, a SubType instance may be used.  This is the extent of inheritence allowed to compact classes, but full classes are more featured.  All classes that are not of compact type, can have virtual methods, and can  implement interfaces. </para>
+<para>Whenever a SuperType instance is required, a SubType instance may be used.  This is the extent of inheritance allowed to compact classes, but full classes are more featured.  All classes that are not of compact type, can have virtual methods, and can  implement interfaces. </para>
 <para>To explain virtual functions, it makes sense to look at the alternative first.  In the above example, it is legal for SubType to also define a method called &quot;act&quot; - this is called overriding.  In this case, when a method called &quot;act&quot; is called on a SubType instance, which method is invoked depends on what type the invoker believed it was dealing with.  The following example demonstrates this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[SubType]]></methodname><![CDATA[ ]]><methodname><![CDATA[sub]]></methodname><![CDATA[ = ]]><token><![CDATA[new]]></token><![CDATA[ ]]><methodname><![CDATA[SubType]]></methodname><![CDATA[();]]>
 <methodname><![CDATA[SuperType]]></methodname><![CDATA[ ]]><methodname><![CDATA[super]]></methodname><![CDATA[ = ]]><methodname><![CDATA[sub]]></methodname><![CDATA[;]]>
 
@@ -317,7 +317,7 @@
 
 <section>
 <title>Reference types</title>
-<para>Instances of reference types are always stored on the heap.  Variables of reference types contain references to the instances, rather than the instances themselves.  Assinging an instance of a reference type to a variable or field will not make a copy of the data, instead only the reference to the data is copied.  This means that both variables will refer to the same data, and so changes made to that data using one of the references will be visible when using the other. </para>
+<para>Instances of reference types are always stored on the heap.  Variables of reference types contain references to the instances, rather than the instances themselves.  Assigning an instance of a reference type to a variable or field will not make a copy of the data, instead only the reference to the data is copied.  This means that both variables will refer to the same data, and so changes made to that data using one of the references will be visible when using the other. </para>
 <para>Instances of any reference type can be assigned a variable that is declared &quot;weak&quot;.  This implies that the variable must not be known to the type instance. A reference counted type does not increase its reference count after being assigned to a weak variable: a weak variable cannot take ownership of an instance. </para><itemizedlist><listitem override="none">
 <para>reference-type:</para><itemizedlist><listitem override="none">
 <para>classed-type</para>
@@ -784,11 +784,11 @@
 <para>The Empty Statement does nothing, but is a valid statement nonetheless, and so can be used wherever a statement is required. </para><itemizedlist><listitem override="none">
 <para>empty-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>A Simple Statement consists of one a subset of expressions that are considered free-standing.  Not all expressions are allowed, only those that potentially have a useful side effect - for example, arithmetic expressions cannot form simple statements on their own, but are allowed as part of an assignement expressions, which has a useful side effect. </para><itemizedlist><listitem override="none">
+<para>A Simple Statement consists of one a subset of expressions that are considered free-standing.  Not all expressions are allowed, only those that potentially have a useful side effect - for example, arithmetic expressions cannot form simple statements on their own, but are allowed as part of an assignment expressions, which has a useful side effect. </para><itemizedlist><listitem override="none">
 <para>simple-statement:</para><itemizedlist><listitem override="none">
 <para>statement-expression <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> statement-expression:</para><itemizedlist><listitem override="none">
-<para>assigment-expression</para>
+<para>assignment-expression</para>
 <para> class-instantiation-expression</para>
 <para> struct instantiation-expression</para>
 <para> invocation-expression</para></listitem></itemizedlist></listitem></itemizedlist>
@@ -890,7 +890,7 @@
 
 <section>
 <title>Jump Statements</title>
-<para>Jump statements move execution to an arbitary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_Statements">Statements/Simple statements</link>. </para>
+<para>Jump statements move execution to an arbitrary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_Statements">Statements/Simple statements</link>. </para>
 <para>A <code>break</code> statement moves execution to the first statement after the nearest enclosing <code>while</code>, <code>do</code>, <code>for</code>, or <code>foreach</code> statement. </para><itemizedlist><listitem override="none">
 <para>break-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">break</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
@@ -955,7 +955,7 @@
 <section>
 <title>The global namespace</title>
 <para>Everything not declared within a particular namespace declaration is automatically in the global namespace.  All defined namespaces are nested inside the global namespace at some depth.  This is also where the fundamental types are defined. </para>
-<para>If there is ever a need to explictly refer to an identifier in the global namespace, the identifier can be prefixed with <code>global::</code>.  This will allow you, for example, to refer to a namespace which has the same name as a local variable. </para>
+<para>If there is ever a need to explicitly refer to an identifier in the global namespace, the identifier can be prefixed with <code>global::</code>.  This will allow you, for example, to refer to a namespace which has the same name as a local variable. </para>
 </section>
 
 <section>
@@ -1133,7 +1133,7 @@
 <section>
 <title>Types of delegate</title>
 <para>All delegate types in Vala are defined to be either static or instance delegates.  This refers to whether the methods that may be considered instances of the delegate type are instance members of classes or structs, or not. </para>
-<para>To assign an instance of an instance delegate, you must give the method name qualified with an identifier that refers to a class or struct instance.  When an instance of an instance delegate is invoked, the method will act as though the method had been invoked directly: the &quot;this&quot; keyword will be usuable, instance data will be accessible, etc. </para>
+<para>To assign an instance of an instance delegate, you must give the method name qualified with an identifier that refers to a class or struct instance.  When an instance of an instance delegate is invoked, the method will act as though the method had been invoked directly: the &quot;this&quot; keyword will be usable, instance data will be accessible, etc. </para>
 <para>Instance and static delegate instances are not interchangeable. </para>
 </section>
 
@@ -1151,12 +1151,12 @@
 <para>[ qualified-namespace-name <emphasis role="strong">.</emphasis> ] delegate-name</para></listitem></itemizedlist>
 <para> delegate-name:</para><itemizedlist><listitem override="none">
 <para>identifier</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Parts of this syntax are based on the respective sections of the method decleration syntax (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> for details). </para>
+<para>Parts of this syntax are based on the respective sections of the method declaration syntax (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> for details). </para>
 </section>
 
 <section>
 <title>Using delegates</title>
-<para>A delegate declaration defines a type.  Instances of this type can then be assigned to variables (or fields, or paramaters) of this type.  Vala does not allow creating methods at runtime, and so the values of delegate-type instances will be references to methods known at compile time.  To simplify the process, inlined methods may be written (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>). </para>
+<para>A delegate declaration defines a type.  Instances of this type can then be assigned to variables (or fields, or parameters) of this type.  Vala does not allow creating methods at runtime, and so the values of delegate-type instances will be references to methods known at compile time.  To simplify the process, inlined methods may be written (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>). </para>
 <para>To call the method referenced by a delegate-type instance, use the same notation as for calling a method; instead of giving the method's name, give the identifier of the variable, as described in <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>. </para>
 </section>
 
@@ -1228,7 +1228,7 @@
 <para>qualified-error-domain <emphasis role="strong">.</emphasis> error-type</para></listitem></itemizedlist>
 <para> qualified-error-domain:</para><itemizedlist><listitem override="none">
 <para>[ qualified-namespace-name <emphasis role="strong">.</emphasis> ] error-domain-name</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>That is, throw an error that has already been created and can be identified by a name, or a new error created with a textual description.  The message-expression is any expression that evaluates to a instace of the string type. </para>
+<para>That is, throw an error that has already been created and can be identified by a name, or a new error created with a textual description.  The message-expression is any expression that evaluates to a instance of the string type. </para>
 </section>
 
 <section>
@@ -1302,7 +1302,7 @@
 <title>Types of class</title>
 <para>Vala supports three different types of class: </para><itemizedlist><listitem>
 <para>GObject subclasses are any classes derived directly or indirectly from GLib.Object.  This is the most powerful type of class, supporting all features described in this page.  This means signals, managed properties, interfaces and complex construction methods, plus all features of the simpler class types. </para></listitem><listitem>
-<para>Fundamental GType classes are those either without any superclass or that don't inherit at any level from GLib.Object.  These classes support inheritence, interfaces, virtual methods, reference counting, unmanaged properties, and private fields.  They are instantiated faster than GObject subclasses but are less powerful - it isn't recommended in general to use this form of class unless there is a specific reason to. </para></listitem><listitem>
+<para>Fundamental GType classes are those either without any superclass or that don't inherit at any level from GLib.Object.  These classes support inheritance, interfaces, virtual methods, reference counting, unmanaged properties, and private fields.  They are instantiated faster than GObject subclasses but are less powerful - it isn't recommended in general to use this form of class unless there is a specific reason to. </para></listitem><listitem>
 <para>Compact classes, so called because they use less memory per instance, are the least featured of all class types.  They are not registered with the GType system and do not support reference counting, virtual methods, or private fields.  They do support unmanaged properties.  Such classes are very fast to instantiate but not massively useful except when dealing with existing libraries.  They are declared using the Compact attribute on the class, See  </para></listitem></itemizedlist>
 <para>Any non-compact class can also be defined as abstract.  An abstract class cannot be instantiated and is used as a base class for derived classes. </para>
 </section>
@@ -1313,7 +1313,7 @@
 <para>Instance members are held per instance of the class.  That is, each instance has its own copies of the members in its own instance scope.  Changes to instance fields will only apply to that instance, calling instance methods will cause them to be executed in the scope of that instance. </para></listitem><listitem>
 <para>Class members are shared between all instances of a class.  They can be accessed without an instance of the class, and class methods will execute in the scope of the class. </para></listitem><listitem>
 <para>Static members are shared between all instances of a class and any sub-classes of it.  They can be accessed without an instance of the class, and static methods will execute in the scope of the class. </para></listitem></itemizedlist>
-<para>The distinction between class and static members is not common to other object models.  The essential difference is that a sub-class will recieve a copy of all its base classes' class members.  This is opposed to static members, of which there is only one copy - sub classes access can their base classes' static members because they are automatically imported into the class' scope. </para>
+<para>The distinction between class and static members is not common to other object models.  The essential difference is that a sub-class will receive a copy of all its base classes' class members.  This is opposed to static members, of which there is only one copy - sub classes access can their base classes' static members because they are automatically imported into the class' scope. </para>
 </section>
 
 <section>
@@ -1391,7 +1391,7 @@
 <para> inner-class-declaration:</para><itemizedlist><listitem override="none">
 <para>[ access-modifier ] <emphasis role="strong">class</emphasis> class-name [ inheritance-list ] <emphasis role="strong">{</emphasis> [ class-members ] <emphasis role="strong">}</emphasis> </para></listitem></itemizedlist></listitem></itemizedlist>
 <para>In Vala, a class must have either one or zero superclasses, where have zero superclasses has the result described in <link linkend="Types_of_class">Classes/Types of class</link> section.  A class must meet all the prerequisites defined by the interfaces it wishes to implement, by implementing prerequisite interfaces or inheriting from a particular class.  This latter requirement means it is potentially possible to have two interfaces that cannot be implemented by a single class. </para><note><itemizedlist><listitem override="none">
-<para><emphasis role="strong">Note:</emphasis> Interfaces are only supported for GType classes.  Compact classes have access only to a limited form of inheritence, whereby they may inherit from exactly one or zero other compact classes. </para></listitem></itemizedlist></note>
+<para><emphasis role="strong">Note:</emphasis> Interfaces are only supported for GType classes.  Compact classes have access only to a limited form of inheritance, whereby they may inherit from exactly one or zero other compact classes. </para></listitem></itemizedlist></note>
 <para>When declaring which class, if any, a new class subclasses, and which interfaces it implements, the names of those other classes or interfaces can be qualified relative to the class being declared.  This means that, for example, if the class is declared as &quot;class foo.Bar&quot; (class &quot;Bar&quot; in namespace &quot;foo&quot;) then it may subclass class &quot;Base&quot; in namespace &quot;foo&quot; simply with &quot;class foo.Bar : Base&quot;. </para>
 <para>If an access modifier for the class is not given, the default &quot;internal&quot; is used. </para>
 <para>It is possible to declare a class definition to be &quot;abstract.&quot;  An abstract class is one they may not be instantiated, instead it first be subclassed by a non-abstract (&quot;concrete&quot;) class.  An abstract class declaration may include abstract class instance members.  These act as templates for methods or properties that must be implemented in all concrete subclasses of the abstract class.  It is thus guaranteed that any instance of the abstract class (which must be in fact an instance of a concrete subclass) will have a method or property as described in the abstract class definition. </para><itemizedlist><listitem override="none">
@@ -1435,7 +1435,7 @@
 <title>Construction</title><note><itemizedlist><listitem override="none">
 <para><emphasis role="strong">Note:</emphasis> </para>
 <para><emphasis>Construction only follows this process in GObject derived classes.</emphasis> </para></listitem></itemizedlist></note>
-<para>During instantiaion, after construction properties have been set, a series of blocks of code are executed.  This is the process that prepares the instance for use.  There are three types of <code>construct</code> blocks that a class may define: </para><itemizedlist><listitem override="none">
+<para>During instantiation, after construction properties have been set, a series of blocks of code are executed.  This is the process that prepares the instance for use.  There are three types of <code>construct</code> blocks that a class may define: </para><itemizedlist><listitem override="none">
 <para>class-instance-constructor-declaration:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">construct</emphasis> <emphasis role="strong">{</emphasis> statement-list <emphasis role="strong">}</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
 <para>Code in this block is executed on every instance of the class that is instantiated.  It is run after construction properties have been set. </para><itemizedlist><listitem override="none">
@@ -1567,7 +1567,7 @@
 <title>Signals</title><note><itemizedlist><listitem override="none">
 <para><emphasis role="strong">Note</emphasis> </para>
 <para><emphasis>Signals are only available to GObject derived classes.</emphasis> </para></listitem></itemizedlist></note>
-<para>Signals are a system allowing a classed-type instance to emit events which can be recieved by arbitrary listeners.  Receiving these events is achieved by connecting the signal to a handler, for which Vala has a specific syntax.  Signals are integrated with the GLib <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/MainLoop#">MainLoop</ulink> system, which provides a system for queueing events (i.e. signal emissions,) when needed - though this capability is not needed non-threaded applications. </para><itemizedlist><listitem override="none">
+<para>Signals are a system allowing a classed-type instance to emit events which can be received by arbitrary listeners.  Receiving these events is achieved by connecting the signal to a handler, for which Vala has a specific syntax.  Signals are integrated with the GLib <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/MainLoop#">MainLoop</ulink> system, which provides a system for queueing events (i.e. signal emissions,) when needed - though this capability is not needed non-threaded applications. </para><itemizedlist><listitem override="none">
 <para>class-instance-signal-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] [ class-method-type-modifier ] <emphasis role="strong">signal</emphasis> return-type signal-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> signal-name:</para><itemizedlist><listitem override="none">
@@ -1585,7 +1585,7 @@
 <para> qualified-method-name</para>
 <para> lambda-expression</para></listitem></itemizedlist></listitem></itemizedlist>
 <para>This expression will request that the signal handler given be invoked whenever the signal is emitted.  In order for such a connection expression to be legal, the handler must have the correct signature.  The handler should be defined to accept as parameters the same types as the signal, but with an extra parameter before.  This parameter should have the type of the class in which the signal is declared.  When a signal is emitted all handlers are called with this parameter being the object by which the signal was emitted. </para>
-<para>The time that an arbtirary expression is acceptable in this expression is when that expression evaluates to an instance of a delegate type, i.e. to a method that is a legal handler for the signal.  For details on delegates, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>.  For details on lambda expressions see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>. </para>
+<para>The time that an arbitrary expression is acceptable in this expression is when that expression evaluates to an instance of a delegate type, i.e. to a method that is a legal handler for the signal.  For details on delegates, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>.  For details on lambda expressions see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>. </para>
 <para>Note that optional signal detail should be directly appended to the signal name, with no white space, e.g. <code>o.notify[&quot;name&quot;] += ...</code> </para>
 <para>It is also possible to disconnect a signal handler using the following expression form: </para><itemizedlist><listitem override="none">
 <para>signal-disconnection-expression:</para><itemizedlist><listitem override="none">
@@ -1705,7 +1705,7 @@
 <![CDATA[        ]]><lineannotation><![CDATA[/* This class have a default constructor that initializes]]></lineannotation>
 <lineannotation><![CDATA[         * name as the construct block on Base, and a .with_name()]]></lineannotation>
 <lineannotation><![CDATA[         * constructor where the user can set class derived name ]]></lineannotation>
-<lineannotation><![CDATA[         * roperty.]]></lineannotation>
+<lineannotation><![CDATA[         * property.]]></lineannotation>
 <lineannotation><![CDATA[        */]]></lineannotation>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><methodname><![CDATA[Subclass]]></methodname><![CDATA[.]]><methodname><![CDATA[with_name]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[name]]></methodname><![CDATA[) {]]>
 <![CDATA[            ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ (]]><methodname><![CDATA[name]]></methodname><![CDATA[:]]><methodname><![CDATA[name]]></methodname><![CDATA[);]]>
@@ -1765,7 +1765,7 @@
 <para>The simplest interface declaration looks like this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[interface]]></token><![CDATA[ ]]><methodname><![CDATA[InterfaceName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
-<para>Unlike C# or Java, Vala's interfaces may include implemented methods, and so provide premade functionality to an implementing class, similar to mixins in other languages.  All methods defined in a Vala interface are automatically considered to be virtual.  Interfaces in Vala may also have prerequisites - classes or other interfaces that implementing classes must inherit from or implement.  This is a more general form of the interface inheritence found in other languages.  It should be noted that if you want to guarantee that all implementors of an interface are GObject type classes, you should give that class as a prerequisite for the interface. </para>
+<para>Unlike C# or Java, Vala's interfaces may include implemented methods, and so provide premade functionality to an implementing class, similar to mixins in other languages.  All methods defined in a Vala interface are automatically considered to be virtual.  Interfaces in Vala may also have prerequisites - classes or other interfaces that implementing classes must inherit from or implement.  This is a more general form of the interface inheritance found in other languages.  It should be noted that if you want to guarantee that all implementors of an interface are GObject type classes, you should give that class as a prerequisite for the interface. </para>
 <para>Interfaces in Vala have a static scope, identified by the name of the interface.  This is the only scope associated with them (i.e. there is no class or instance scope created for them at any time.)  Non-instance members of the interface (static members and other declarations,) can be identified using this scope. </para>
 <para>For an overview of object oriented programming, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>. </para>
 
