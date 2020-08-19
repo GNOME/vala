@@ -84,7 +84,7 @@ public class Valadoc.Parser : ParserCallback {
 
 	public void accept_token (Token token) throws ParserError {
 		#if HARD_DEBUG
-			debug ("Incomming token: %s", token.to_pretty_string ());
+			debug ("Incoming token: %s", token.to_pretty_string ());
 		#endif
 
 		_current_token = token;
@@ -295,7 +295,7 @@ public class Valadoc.Parser : ParserCallback {
 
 #if DEBUG
 	private void log_error (string message) {
-		stderr.printf ("An error occured while parsing: %s\n", message);
+		stderr.printf ("An error occurred while parsing: %s\n", message);
 		stderr.printf ("\nDumping rule stack:\n");
 		for (int i = 0; i < rule_stack.size; i++) {
 			stderr.printf ("\t%2d: %s\n", i, rule_stack[i].to_string (rule_state_stack[i]));

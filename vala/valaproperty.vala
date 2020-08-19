@@ -80,7 +80,7 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Specifies whether this property is abstract. Abstract properties have
 	 * no accessor bodies, may only be specified within abstract classes and
-	 * interfaces, and must be overriden by derived non-abstract classes.
+	 * interfaces, and must be overridden by derived non-abstract classes.
 	 */
 	public bool is_abstract { get; set; }
 

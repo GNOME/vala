@@ -3821,7 +3821,7 @@ public class Vala.GirParser : CodeVisitor {
 			alias.merged = true;
 		}
 
-		// inherit atributes, like type_id
+		// inherit attributes, like type_id
 		if (type_sym is Class || (type_sym is Struct && !simple_type)) {
 			if (type_sym.has_attribute_argument ("CCode", "has_type_id")) {
 				alias.symbol.set_attribute_bool ("CCode", "has_type_id", type_sym.get_attribute_bool ("CCode", "has_type_id"));

@@ -4106,7 +4106,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_return (new CCodeIdentifier ("obj"));
 		} else if (is_in_destructor ()) {
 			// do not call return as member cleanup and chain up to base finalizer
-			// stil need to be executed
+			// still need to be executed
 			ccode.add_goto ("_return");
 		} else if (is_in_coroutine ()) {
 		} else if (current_method is CreationMethod) {

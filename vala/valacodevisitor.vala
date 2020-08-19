@@ -383,7 +383,7 @@ public abstract class Vala.CodeVisitor {
 	/**
 	 * Visit operation called for catch clauses.
 	 *
-	 * @param clause a catch cluase
+	 * @param clause a catch clause
 	 */
 	public virtual void visit_catch_clause (CatchClause clause) {
 	}
@@ -413,7 +413,7 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operations called for expresions.
+	 * Visit operations called for expressions.
 	 *
 	 * @param expr an expression
 	 */
@@ -421,7 +421,7 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operations called for array creation expresions.
+	 * Visit operations called for array creation expressions.
 	 *
 	 * @param expr an array creation expression
 	 */

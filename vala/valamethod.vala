@@ -54,7 +54,7 @@ public class Vala.Method : Subroutine, Callable {
 	/**
 	 * Specifies whether this method is abstract. Abstract methods have no
 	 * body, may only be specified within abstract classes, and must be
-	 * overriden by derived non-abstract classes.
+	 * overridden by derived non-abstract classes.
 	 */
 	public bool is_abstract { get; set; }
 

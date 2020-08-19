@@ -298,7 +298,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		} else {
 			if (initlist == null) {
 				error = true;
-				/* this is an internal error because it is already handeld by the parser */
+				/* this is an internal error because it is already handled by the parser */
 				Report.error (source_reference, "internal error: initializer list expected");
 			} else {
 				foreach (Expression size in calc_sizes) {

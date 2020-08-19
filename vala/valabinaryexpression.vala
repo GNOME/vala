@@ -487,7 +487,7 @@ public class Vala.BinaryExpression : Expression {
 			/* relational operation */
 
 			if (context.profile == Profile.GOBJECT) {
-				// Implicit cast for comparsion expression of GValue with other type
+				// Implicit cast for comparison expression of GValue with other type
 				var gvalue_type = context.analyzer.gvalue_type.type_symbol;
 				if ((left.target_type.type_symbol == gvalue_type && right.target_type.type_symbol != gvalue_type)
 					|| (left.target_type.type_symbol != gvalue_type && right.target_type.type_symbol == gvalue_type)) {

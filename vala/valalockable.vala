@@ -28,7 +28,7 @@ using GLib;
  */
 public interface Vala.Lockable {
 	/**
-	 * Indicates a specific lockable object beeing actually locked somewhere.
+	 * Indicates a specific lockable object being actually locked somewhere.
 	 */
 	public abstract bool lock_used { get; set; }
 }

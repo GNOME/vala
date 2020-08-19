@@ -73,7 +73,7 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool used { get; set; }
 
 	/**
-	 * Specifies whether this symbol is anonymous and has no public defintion.
+	 * Specifies whether this symbol is anonymous and has no public definition.
 	 */
 	public bool anonymous { get; set; }
 

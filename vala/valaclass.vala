@@ -582,7 +582,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			Report.error (source_reference, "SingleInstance class `%s' requires inheritance from `GLib.Object'".printf (get_full_name ()));
 		}
 
-		/* singleton classes require an instance construtor */
+		/* singleton classes require an instance constructor */
 		if (is_singleton && constructor == null) {
 			var c = new Constructor (source_reference);
 			c.body = new Block (source_reference);

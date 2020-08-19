@@ -81,7 +81,7 @@ public class Valadoc.MarkupWriter {
 	}
 
 	/**
-	 * Writes text to a desination like a {@link GLib.StringBuilder} or a {@link GLib.FileStream}
+	 * Writes text to a destination like a {@link GLib.StringBuilder} or a {@link GLib.FileStream}
 	 */
 	public delegate void WriteFunc (string text);
 
