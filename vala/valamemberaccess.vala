@@ -1063,7 +1063,7 @@ public class Vala.MemberAccess : Expression {
 
 		while (node.parent_node is Expression) {
 			node = node.parent_node;
-			if (node is Assignment || node is MethodCall) {
+			if (node is Assignment || node is MethodCall || node is ObjectCreationExpression) {
 				break;
 			}
 		}
