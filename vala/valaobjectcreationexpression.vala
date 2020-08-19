@@ -576,4 +576,30 @@ public class Vala.ObjectCreationExpression : Expression {
 			init.get_used_variables (collection);
 		}
 	}
+
+	public override string to_string () {
+		var b = new StringBuilder ();
+		if (is_yield_expression) {
+			b.append ("yield ");
+		}
+		if (!struct_creation) {
+			b.append ("new ");
+		}
+		if (member_name != null) {
+			b.append (member_name.to_string ());
+		}
+		b.append_c ('(');
+
+		bool first = true;
+		foreach (var expr in argument_list) {
+			if (!first) {
+				b.append (", ");
+			}
+			b.append (expr.to_string ());
+			first = false;
+		}
+		b.append_c (')');
+
+		return b.str;
+	}
 }

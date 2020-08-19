@@ -746,7 +746,6 @@ public class Vala.MethodCall : Expression {
 
 	public override string to_string () {
 		var b = new StringBuilder ();
-		b.append_c ('(');
 		if (is_yield_expression) {
 			b.append ("yield ");
 		}
@@ -761,7 +760,7 @@ public class Vala.MethodCall : Expression {
 			b.append (expr.to_string ());
 			first = false;
 		}
-		b.append ("))");
+		b.append_c (')');
 
 		return b.str;
 	}
