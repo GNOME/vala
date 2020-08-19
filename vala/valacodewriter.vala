@@ -51,7 +51,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	/**
 	 * Allows overriding of a specific cheader in the output
-	 * @param original orignal cheader to override
+	 * @param original original cheader to override
 	 * @param replacement cheader to replace original with
 	 */
 	public void set_cheader_override (string original, string replacement)

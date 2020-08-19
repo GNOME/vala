@@ -421,7 +421,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_paragraph (Paragraph element) {
-		//FIXME: the extra-field is just a workarround for the current codegen ...
+		//FIXME: the extra-field is just a workaround for the current codegen ...
 		switch (element.horizontal_align) {
 		case HorizontalAlign.CENTER:
 			writer.start_tag ("p", {"style", "text-align: center;"});

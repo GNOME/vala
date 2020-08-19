@@ -54,7 +54,7 @@ public abstract class Vala.Iterator<G> {
 	public abstract void remove ();
 
 	/**
-	 * Determines wheather the call to {@link get} is legal. It is false at the
+	 * Determines whether the call to {@link get} is legal. It is false at the
 	 * beginning and after {@link remove} call and true otherwise.
 	 */
 	public abstract bool valid { get; }

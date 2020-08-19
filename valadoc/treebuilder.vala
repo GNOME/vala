@@ -348,7 +348,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 	}
 
 	private bool add_package (Vala.CodeContext context, string pkg) {
-		// ignore multiple occurences of the same package
+		// ignore multiple occurrences of the same package
 		if (context.has_package (pkg)) {
 			return true;
 		}

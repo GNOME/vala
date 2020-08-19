@@ -75,7 +75,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 			}
 		}
 
-		// search relative to the current directory / absoulte path
+		// search relative to the current directory / absolute path
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			string base_name = Path.get_basename (url);
 

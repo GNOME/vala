@@ -111,7 +111,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 			}
 		}
 
-		// search relative to the current directory / absoulte path
+		// search relative to the current directory / absolute path
 		if (!FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			string node_segment = (container is Api.Package)? "" : container.get_full_name () + ": ";
 			code = "File '%s' does not exist".printf (path);

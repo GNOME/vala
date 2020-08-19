@@ -67,7 +67,7 @@ public class Vala.ErrorType : ReferenceType {
 			return true;
 		}
 
-		/* otherwhise the error_domain has to be equal */
+		/* otherwise the error_domain has to be equal */
 		if (et.error_domain != error_domain) {
 			return false;
 		}

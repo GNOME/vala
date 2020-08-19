@@ -41,7 +41,7 @@ public class Vala.InitializerList : Expression {
 	}
 
 	/**
-	 * Returns the initalizer expression list
+	 * Returns the initializer expression list
 	 *
 	 * @return expression list
 	 */

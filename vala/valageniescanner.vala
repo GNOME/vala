@@ -1453,7 +1453,7 @@ public class Vala.Genie.Scanner {
 
 		}
 
-		/* ignore comments and whitspace and other lines that contain no code */
+		/* ignore comments and whitespace and other lines that contain no code */
 
 		space ();
 

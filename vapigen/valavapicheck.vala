@@ -114,7 +114,7 @@ class Vala.VAPICheck {
 
 				case IdlNodeTypeId.VALUE:
 				case IdlNodeTypeId.VFUNC:
-					// Not appliable?
+					// Not applicable?
 					break;
 
 				default:

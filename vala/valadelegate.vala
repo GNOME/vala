@@ -113,7 +113,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 	}
 
 	/**
-	 * Appends paramater to this callback function.
+	 * Appends parameter to this callback function.
 	 *
 	 * @param param a formal parameter
 	 */

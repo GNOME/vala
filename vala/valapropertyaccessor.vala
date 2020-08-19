@@ -156,7 +156,7 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if (writable || construction) {
 			value_parameter = new Parameter ("value", value_type, source_reference);
-			// Inherit important atttributes
+			// Inherit important attributes
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_length");
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_null_terminated");
 			value_parameter.copy_attribute_bool (prop, "CCode", "delegate_target");
