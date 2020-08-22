@@ -41,6 +41,7 @@ fedora-clang-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+  allow_failure: true
 
 ubuntu-clang-x86_64:
   stage: build
