@@ -220,12 +220,17 @@ EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 InfoBar
   .add_child new
+LayoutManager
+  .get_request_mode#method name="get_size_request_mode"
+MediaStream
+  .play#method name="play_now"
 Notebook
   .insert_page_menu skip
 TreeView
   .row_expanded#method name="is_row_expanded"
 Widget
   .compute_expand#virtual_method name="compute_expand_internal"
+  .size_allocate#method name="allocate_size"
 Editable
   .delete_text#method skip
   .insert_text#method skip
@@ -307,7 +312,6 @@ TreeView
 Widget
   .drag_*#method parent="Gtk" symbol_type="function"
   .get_allocation return_void
-  .size_allocate#method name="size_allocate_emit"
 TreeModel
   .get_value return_void
   .rows_reordered skip

@@ -8907,6 +8907,8 @@ namespace Gtk {
 		public unowned Gtk.LayoutChild get_layout_child (Gtk.Widget child);
 		[NoWrapper]
 		public virtual Gtk.SizeRequestMode get_request_mode (Gtk.Widget widget);
+		[CCode (cname = "gtk_layout_manager_get_request_mode")]
+		public Gtk.SizeRequestMode get_size_request_mode ();
 		public unowned Gtk.Widget? get_widget ();
 		public void layout_changed ();
 		public virtual void measure (Gtk.Widget widget, Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline);
@@ -9190,6 +9192,8 @@ namespace Gtk {
 		public virtual void pause ();
 		[NoWrapper]
 		public virtual bool play ();
+		[CCode (cname = "gtk_media_stream_play")]
+		public void play_now ();
 		public virtual void realize (Gdk.Surface surface);
 		public virtual void seek (int64 timestamp);
 		public void seek_failed ();
@@ -11879,6 +11883,8 @@ namespace Gtk {
 		public class void add_shortcut (Gtk.Shortcut shortcut);
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
 		public void allocate (int width, int height, int baseline, owned Gsk.Transform? transform);
+		[CCode (cname = "gtk_widget_size_allocate")]
+		public void allocate_size (Gtk.Allocation allocation, int baseline);
 		[CCode (cname = "gtk_widget_class_bind_template_callback_full")]
 		public class void bind_template_callback_full (string callback_name, [CCode (scope = "async")] GLib.Callback callback_symbol);
 		[CCode (cname = "gtk_widget_class_bind_template_child_full")]
@@ -12048,8 +12054,6 @@ namespace Gtk {
 		public bool should_layout ();
 		[NoWrapper]
 		public virtual void size_allocate (int width, int height, int baseline);
-		[CCode (cname = "gtk_widget_size_allocate")]
-		public void size_allocate_emit (Gtk.Allocation allocation, int baseline);
 		[NoWrapper]
 		public virtual void snapshot (Gtk.Snapshot snapshot);
 		public void snapshot_child (Gtk.Widget child, Gtk.Snapshot snapshot);
