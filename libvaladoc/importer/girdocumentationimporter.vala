@@ -362,6 +362,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				}
 			} else if (reader.name == "source-position") {
 				skip_element ();
+			} else if (reader.name == "attribute") {
+				skip_element ();
 			} else {
 				break;
 			}
