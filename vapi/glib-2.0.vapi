@@ -4040,8 +4040,8 @@ namespace GLib {
 		[Version (since = "2.66")]
 		public UriFlags get_flags ();
 
-		[Version (since = "2.16")]
-		public static string? parse_params (string uri, size_t length, char separator, bool case_insensitive);
+		[Version (since = "2.66")]
+		public static string? parse_params (string uri, size_t length = -1, string separators = "&;", UriParamsFlags flags = 0) throws UriError;
 		[Version (since = "2.16")]
 		public static string? parse_scheme (string uri);
 		[Version (since = "2.66")]
@@ -4053,7 +4053,7 @@ namespace GLib {
 		[Version (since = "2.16")]
 		public static string? unescape_segment (string? escaped_string, string? escaped_string_end, string? illegal_characters = null);
 		[Version (since = "2.66")]
-		public static Bytes? unescape_bytes (string escaped_string, size_t length);
+		public static Bytes? unescape_bytes (string escaped_string, size_t length = -1, string? illegal_characters = null) throws UriError;
 		[Version (since = "2.66")]
 		public static string? escape_bytes ([CCode (array_length_type = "gsize")] uint8[] unescaped, string? reserved_chars_allowed = null);
 		[Version (since = "2.6")]
@@ -4063,7 +4063,7 @@ namespace GLib {
 
 	[Version (since = "2.66")]
 	public errordomain UriError {
-		MISC,
+		FAILED,
 		BAD_SCHEME,
 		BAD_USER,
 		BAD_PASSWORD,
@@ -4081,11 +4081,14 @@ namespace GLib {
 	[CCode (cprefix = "G_URI_FLAGS_", has_type_id = false)]
 	public enum UriFlags {
 		NONE,
-		PARSE_STRICT,
+		PARSE_RELAXED,
 		HAS_PASSWORD,
 		HAS_AUTH_PARAMS,
 		ENCODED,
-		NON_DNS
+		NON_DNS,
+		ENCODED_QUERY,
+		ENCODED_PATH,
+		ENCODED_FRAGMENT
 	}
 
 	[Flags]
@@ -4096,6 +4099,7 @@ namespace GLib {
 		USERINFO,
 		PASSWORD,
 		AUTH_PARAMS,
+		QUERY,
 		FRAGMENT
 	}
 
