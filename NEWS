@@ -1,3 +1,16 @@
+Vala 0.49.91
+============
+ * Various improvements and bug fixes:
+  - codegen: Don't append unreachable clean-up section of Block [#169] [#838]
+  - codegen: Always include base_struct declaration if available [#464]
+  - vala: Additionally break on ObjectCreationExpression in "tainted" check
+  - vala: Add ObjectCreationExpression.to_string()
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - gio-unix-2.0,glib-2.0: Updates for 2.66
+  - gtk4: Resolve a few conflicts of methods with virtual-methods
+
 Vala 0.49.90
 ============
  * Regression and bug fixes:
