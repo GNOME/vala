@@ -49,4 +49,15 @@ namespace GLib {
 		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
+
+	[Compact]
+	[CCode (cname = "GUnixMountPoint", cheader_filename = "gio/gunixmounts.h", lower_case_cprefix = "g_unix_mount_point_", free_function = "g_unix_mount_point_free")]
+	public class UnixMountPoint {
+		[CCode (cname = "g_unix_mount_point_at")]
+		[Version (since = "2.66")]
+		public UnixMountPoint (string mount_path, out uint64 time_read = null);
+
+		[CCode (cname = "g_unix_mount_points_get")]
+		public static GLib.List<UnixMountPoint> @get (out uint64 time_read = null);
+	}
 }

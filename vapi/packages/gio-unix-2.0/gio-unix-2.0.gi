@@ -155,6 +155,13 @@
 		<struct name="GUnixMountMonitorClass">
 		</struct>
 		<struct name="GUnixMountPoint">
+			<method name="at" symbol="g_unix_mount_point_at">
+				<return-type type="GUnixMountPoint*"/>
+				<parameters>
+					<parameter name="mount_path" type="char*"/>
+					<parameter name="time_read" type="guint64*"/>
+				</parameters>
+			</method>
 			<method name="compare" symbol="g_unix_mount_point_compare">
 				<return-type type="gint"/>
 				<parameters>
