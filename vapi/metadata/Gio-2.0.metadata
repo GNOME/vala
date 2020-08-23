@@ -221,6 +221,9 @@ Socket
   .condition_wait throws="GLib.IOError"
   .connection_factory_create_connection parent="GLib.SocketConnection" name="factory_create_connection" symbol_type="function"
   .create_source skip=false type="GLib.SocketSource"
+  .receive.buffer out=false
+  .receive_from.buffer out=false
+  .receive_with_blocking.buffer out=false
 SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
