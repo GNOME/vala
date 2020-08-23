@@ -46,6 +46,8 @@ namespace GLib {
 		public bool is_readonly ();
 		public bool is_system_internal ();
 
+		[Version (since = "2.54")]
+		public GLib.UnixMountEntry copy ();
 		[CCode (cname = "g_unix_mounts_get")]
 		public static GLib.List<UnixMountEntry> @get (out uint64 time_read = null);
 	}
@@ -57,6 +59,8 @@ namespace GLib {
 		[Version (since = "2.66")]
 		public UnixMountPoint (string mount_path, out uint64 time_read = null);
 
+		[Version (since = "2.54")]
+		public GLib.UnixMountPoint copy ();
 		[CCode (cname = "g_unix_mount_points_get")]
 		public static GLib.List<UnixMountPoint> @get (out uint64 time_read = null);
 	}

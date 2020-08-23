@@ -84,6 +84,8 @@ namespace GLib {
 		[CCode (cname = "g_unix_mount_at")]
 		public UnixMountEntry (string mount_path, out uint64 time_read = null);
 		public int compare (GLib.UnixMountEntry mount);
+		[Version (since = "2.54")]
+		public GLib.UnixMountEntry copy ();
 		[CCode (cname = "g_unix_mount_for")]
 		[Version (since = "2.52")]
 		public UnixMountEntry.@for (string file_path, out uint64 time_read = null);
@@ -126,6 +128,8 @@ namespace GLib {
 		[Version (since = "2.66")]
 		public UnixMountPoint (string mount_path, out uint64 time_read = null);
 		public int compare (GLib.UnixMountPoint mount2);
+		[Version (since = "2.54")]
+		public GLib.UnixMountPoint copy ();
 		[CCode (cname = "g_unix_mount_points_get")]
 		public static GLib.List<GLib.UnixMountPoint> @get (out uint64 time_read = null);
 		public unowned string get_device_path ();
