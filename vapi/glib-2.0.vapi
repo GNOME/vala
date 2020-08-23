@@ -4099,6 +4099,22 @@ namespace GLib {
 		FRAGMENT
 	}
 
+	[Version (since = "2.66")]
+	public struct UriParamsIter {
+		public UriParamsIter (string @params, int length = -1, string separators = "&;", UriParamsFlags flags = 0);
+		public bool next (out string attribute = null, out string @value = null) throws Error;
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_URI_PARAMS_", has_type_id = false)]
+	public enum UriParamsFlags {
+		NONE,
+		CASE_INSENSITIVE,
+		WWW_FORM,
+		PARSE_RELAXED
+	}
+
 	/* Shell-related Utilities */
 
 	public errordomain ShellError {
