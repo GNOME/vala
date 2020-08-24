@@ -314,52 +314,28 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 	private Api.GirSourceComment? parse_symbol_doc () {
 		Api.GirSourceComment? comment = null;
+		Api.SourceComment? doc_deprecated = null;
+		Api.SourceComment? doc_version = null;
+		Api.SourceComment? doc_stability = null;
 
-		if (reader.name == "doc") {
-			start_element ("doc");
-			next ();
-
-
-			if (current_token == Vala.MarkupTokenType.TEXT) {
-				comment = new Api.GirSourceComment (reader.content, file, begin.line,
-													begin.column, end.line, end.column);
+		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
+			if (reader.name == "doc") {
+				start_element ("doc");
 				next ();
-			}
 
-			end_element ("doc");
-		}
-
-		while (true) {
-			if (reader.name == "doc-deprecated") {
-				Api.SourceComment? doc_deprecated = parse_doc ("doc-deprecated");
-				if (doc_deprecated != null) {
-					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
-															begin.line, end.line);
-					}
-
-					comment.deprecated_comment = doc_deprecated;
+				if (current_token == Vala.MarkupTokenType.TEXT) {
+					comment = new Api.GirSourceComment (reader.content, file, begin.line,
+														begin.column, end.line, end.column);
+					next ();
 				}
+
+				end_element ("doc");
+			} else if (reader.name == "doc-deprecated") {
+				doc_deprecated = parse_doc ("doc-deprecated");
 			} else if (reader.name == "doc-version") {
-				Api.SourceComment? doc_version = parse_doc ("doc-version");
-				if (doc_version != null) {
-					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
-															begin.line, end.line);
-					}
-
-					comment.version_comment = doc_version;
-				}
+				doc_version = parse_doc ("doc-version");
 			} else if (reader.name == "doc-stability") {
-				Api.SourceComment? doc_stability = parse_doc ("doc-stability");
-				if (doc_stability != null) {
-					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, end.line,
-															begin.line, end.line);
-					}
-
-					comment.stability_comment = doc_stability;
-				}
+				doc_stability = parse_doc ("doc-stability");
 			} else if (reader.name == "source-position") {
 				skip_element ();
 			} else if (reader.name == "attribute") {
@@ -367,6 +343,12 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			} else {
 				break;
 			}
+		}
+
+		if (comment != null) {
+			comment.deprecated_comment = doc_deprecated;
+			comment.version_comment = doc_version;
+			comment.stability_comment = doc_stability;
 		}
 
 		return comment;
@@ -435,7 +417,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		start_element ("return-value");
 		next ();
 
-		comment = parse_doc ();
+		comment = parse_symbol_doc ();
 
 		parse_type (out array_length_ret);
 
@@ -468,7 +450,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		}
 		next ();
 
-		comment = parse_doc ();
+		comment = parse_symbol_doc ();
 
 		if (reader.name == "varargs") {
 			start_element ("varargs");
@@ -712,7 +694,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				string instance_param_name = reader.get_attribute ("name");
 				next ();
 
-				Api.SourceComment? param_comment = parse_doc ();
+				Api.SourceComment? param_comment = parse_symbol_doc ();
 				parse_type (null);
 				end_element ("instance-parameter");
 
