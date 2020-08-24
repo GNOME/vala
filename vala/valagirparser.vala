@@ -777,6 +777,9 @@ public class Vala.GirParser : CodeVisitor {
 				if (cname == null) {
 					cname = girdata["c:type"];
 				}
+				if (cname == null) {
+					cname = girdata["glib:type-name"];
+				}
 			}
 			if (cname == null) {
 				cname = get_default_cname ();
