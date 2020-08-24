@@ -486,6 +486,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private void parse_record () {
 		start_element ("record");
 		this.parent_c_identifier = reader.get_attribute ("c:type");
+		if (this.parent_c_identifier == null) {
+			this.parent_c_identifier = reader.get_attribute ("glib:type-name");
+		}
 		if (this.parent_c_identifier.has_suffix ("Private")) {
 			this.parent_c_identifier = null;
 			skip_element ();
@@ -525,6 +528,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private void parse_class () {
 		start_element ("class");
 		this.parent_c_identifier = reader.get_attribute ("c:type");
+		if (this.parent_c_identifier == null) {
+			this.parent_c_identifier = reader.get_attribute ("glib:type-name");
+		}
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
@@ -565,6 +571,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private void parse_interface () {
 		start_element ("interface");
 		this.parent_c_identifier = reader.get_attribute ("c:type");
+		if (this.parent_c_identifier == null) {
+			this.parent_c_identifier = reader.get_attribute ("glib:type-name");
+		}
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
