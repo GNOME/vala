@@ -1095,22 +1095,22 @@ namespace WebKit {
 		[Version (since = "2.28")]
 		public UserMessage (string name, GLib.Variant? parameters);
 		[Version (since = "2.28")]
-		public unowned GLib.UnixFDList get_fd_list ();
+		public unowned GLib.UnixFDList? get_fd_list ();
 		[Version (since = "2.28")]
 		public unowned string get_name ();
 		[Version (since = "2.28")]
-		public unowned GLib.Variant get_parameters ();
+		public unowned GLib.Variant? get_parameters ();
 		[Version (since = "2.28")]
 		public void send_reply (WebKit.UserMessage reply);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.28")]
 		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
 		[Version (since = "2.28")]
-		public GLib.UnixFDList fd_list { get; construct; }
+		public GLib.UnixFDList? fd_list { get; construct; }
 		[Version (since = "2.28")]
 		public string name { get; construct; }
 		[Version (since = "2.28")]
-		public GLib.Variant parameters { get; construct; }
+		public GLib.Variant? parameters { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
 	[Compact]
