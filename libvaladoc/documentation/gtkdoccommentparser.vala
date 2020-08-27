@@ -358,7 +358,12 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		}
 
 		StringBuilder builder = new StringBuilder ();
-		string url = current.attributes.get ("linkend");
+		string url;
+		if (is_internal) {
+			url = current.attributes.get ("linkend");
+		} else {
+			url = current.attributes.get ("url");
+		}
 		next ();
 
 		// TODO: check xml
