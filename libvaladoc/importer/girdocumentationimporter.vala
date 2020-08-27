@@ -655,6 +655,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 		case "callback":
 			c_identifier = reader.get_attribute ("c:type");
+			if (c_identifier == null) {
+				c_identifier = reader.get_attribute ("name");
+			}
 			break;
 
 		case "virtual-method":
