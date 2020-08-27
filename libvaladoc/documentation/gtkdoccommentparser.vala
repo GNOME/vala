@@ -235,15 +235,16 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 		var ic = parse_inline_content ();
 		parse_docbook_spaces (false);
 
-		if (current.type != TokenType.EOF) {
-			this.report_unexpected_token (current, "<EOF>");
-			return null;
-		}
-
 		BlockContent? taglet = factory.create_taglet (taglet_name) as BlockContent;
 		assert (taglet != null);
 		Paragraph paragraph = factory.create_paragraph ();
-		paragraph.content.add (ic);
+
+		if (current.type == TokenType.EOF) {
+			paragraph.content.add (ic);
+		} else {
+			this.report_unexpected_token (current, "<EOF>");
+		}
+
 		taglet.content.add (paragraph);
 		return taglet as Taglet;
 	}
