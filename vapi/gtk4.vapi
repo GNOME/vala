@@ -5299,7 +5299,7 @@ namespace Gdk {
 		public void destroy ();
 		public unowned Gdk.Cursor? get_cursor ();
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
-		public void get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
+		public bool get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public int get_height ();
@@ -6253,7 +6253,7 @@ namespace Gtk {
 		public Gtk.AccessibleRole get_accessible_role ();
 		public Gtk.Accessible accessible { get; construct; }
 		public Gtk.AccessibleRole accessible_role { get; construct; }
-		public signal void state_change (uint changed_states, uint changed_properties, uint changed_relations, void* states, void* properties, void* relations);
+		public signal void state_change ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
 	public class AboutDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
@@ -12268,11 +12268,11 @@ namespace Gtk {
 		public void reset_relation (Gtk.AccessibleRelation relation);
 		public void reset_state (Gtk.AccessibleState state);
 		public void update_property (...);
-		public void update_property_value (Gtk.AccessibleProperty property, GLib.Value value);
+		public void update_property_value ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] Gtk.AccessibleProperty[] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] GLib.Value[] values);
 		public void update_relation (...);
-		public void update_relation_value (Gtk.AccessibleRelation relation, GLib.Value value);
+		public void update_relation_value ([CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] Gtk.AccessibleRelation[] relations, [CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] GLib.Value[] values);
 		public void update_state (...);
-		public void update_state_value (Gtk.AccessibleState state, GLib.Value value);
+		public void update_state_value ([CCode (array_length_cname = "n_states", array_length_pos = 0.5)] Gtk.AccessibleState[] states, [CCode (array_length_cname = "n_states", array_length_pos = 0.5)] GLib.Value[] values);
 		[NoAccessorMethod]
 		public abstract Gtk.AccessibleRole accessible_role { get; set; }
 	}
