@@ -340,7 +340,11 @@ namespace Json {
 	[Version (since = "1.2")]
 	public struct ObjectIter {
 		public void init (Json.Object object);
+		[Version (since = "1.6")]
+		public void init_ordered (Json.Object object);
 		public bool next (out unowned string member_name, out unowned Json.Node member_node);
+		[Version (since = "1.6")]
+		public bool next_ordered (out unowned string member_name, out unowned Json.Node member_node);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", cprefix = "JSON_NODE_", type_id = "json_node_type_get_type ()")]
 	public enum NodeType {
@@ -424,7 +428,7 @@ namespace Json {
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "1.2")]
-	public static Json.Node from_string (string str) throws GLib.Error;
+	public static Json.Node? from_string (string str) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.10")]
 	public static GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
