@@ -5299,7 +5299,7 @@ namespace Gdk {
 		public void destroy ();
 		public unowned Gdk.Cursor? get_cursor ();
 		public unowned Gdk.Cursor? get_device_cursor (Gdk.Device device);
-		public void get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
+		public bool get_device_position (Gdk.Device device, out double x, out double y, out Gdk.ModifierType mask);
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.FrameClock get_frame_clock ();
 		public int get_height ();
@@ -6253,7 +6253,7 @@ namespace Gtk {
 		public Gtk.AccessibleRole get_accessible_role ();
 		public Gtk.Accessible accessible { get; construct; }
 		public Gtk.AccessibleRole accessible_role { get; construct; }
-		public signal void state_change (uint changed_states, uint changed_properties, uint changed_relations, void* states, void* properties, void* relations);
+		public signal void state_change ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
 	public class AboutDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
@@ -7206,19 +7206,28 @@ namespace Gtk {
 		public void set_start_widget (Gtk.Widget widget);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_check_button_get_type ()")]
-	public class CheckButton : Gtk.ToggleButton, Gtk.Accessible, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class CheckButton : Gtk.Widget, Gtk.Accessible, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public CheckButton ();
-		public bool get_draw_indicator ();
+		public bool get_active ();
 		public bool get_inconsistent ();
-		public void set_draw_indicator (bool draw_indicator);
+		public unowned string? get_label ();
+		public bool get_use_underline ();
+		public void set_active (bool setting);
+		public void set_group (Gtk.CheckButton? group);
 		public void set_inconsistent (bool inconsistent);
+		public void set_label (string? label);
+		public void set_use_underline (bool setting);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public CheckButton.with_label (string label);
+		public CheckButton.with_label (string? label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public CheckButton.with_mnemonic (string label);
-		public bool draw_indicator { get; set; }
+		public CheckButton.with_mnemonic (string? label);
+		public bool active { get; set; }
+		public Gtk.CheckButton group { set; }
 		public bool inconsistent { get; set; }
+		public string label { get; set; }
+		public bool use_underline { get; set; }
+		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
@@ -7262,11 +7271,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_column_view_get_type ()")]
 	public class ColumnView : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ColumnView (owned GLib.ListModel? model);
+		public ColumnView (owned Gtk.SelectionModel? model);
 		public void append_column (Gtk.ColumnViewColumn column);
 		public unowned GLib.ListModel get_columns ();
 		public bool get_enable_rubberband ();
-		public unowned GLib.ListModel? get_model ();
+		public unowned Gtk.SelectionModel? get_model ();
 		public bool get_reorderable ();
 		public bool get_show_column_separators ();
 		public bool get_show_row_separators ();
@@ -7275,7 +7284,7 @@ namespace Gtk {
 		public void insert_column (uint position, Gtk.ColumnViewColumn column);
 		public void remove_column (Gtk.ColumnViewColumn column);
 		public void set_enable_rubberband (bool enable_rubberband);
-		public void set_model (GLib.ListModel? model);
+		public void set_model (Gtk.SelectionModel? model);
 		public void set_reorderable (bool reorderable);
 		public void set_show_column_separators (bool show_column_separators);
 		public void set_show_row_separators (bool show_row_separators);
@@ -7283,7 +7292,7 @@ namespace Gtk {
 		public void sort_by_column (Gtk.ColumnViewColumn? column, Gtk.SortType direction);
 		public GLib.ListModel columns { get; }
 		public bool enable_rubberband { get; set; }
-		public GLib.ListModel model { get; set; }
+		public Gtk.SelectionModel model { get; set; }
 		public bool reorderable { get; set; }
 		public bool show_column_separators { get; set; }
 		public bool show_row_separators { get; set; }
@@ -8343,11 +8352,11 @@ namespace Gtk {
 		public void ungroup ();
 		[NoAccessorMethod]
 		public uint n_points { get; construct; }
-		public signal void begin (Gdk.EventSequence sequence);
-		public signal void cancel (Gdk.EventSequence sequence);
-		public signal void end (Gdk.EventSequence sequence);
-		public signal void sequence_state_changed (Gdk.EventSequence sequence, Gtk.EventSequenceState state);
-		public signal void update (Gdk.EventSequence sequence);
+		public signal void begin (Gdk.EventSequence? sequence);
+		public signal void cancel (Gdk.EventSequence? sequence);
+		public signal void end (Gdk.EventSequence? sequence);
+		public signal void sequence_state_changed (Gdk.EventSequence? sequence, Gtk.EventSequenceState state);
+		public signal void update (Gdk.EventSequence? sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_click_get_type ()")]
 	public class GestureClick : Gtk.GestureSingle {
@@ -8511,26 +8520,24 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_grid_view_get_type ()")]
 	public class GridView : Gtk.ListBase, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public GridView (owned GLib.ListModel? model);
+		public GridView (owned Gtk.SelectionModel? model, owned Gtk.ListItemFactory? factory);
 		public bool get_enable_rubberband ();
 		public unowned Gtk.ListItemFactory? get_factory ();
 		public uint get_max_columns ();
 		public uint get_min_columns ();
-		public unowned GLib.ListModel? get_model ();
+		public unowned Gtk.SelectionModel? get_model ();
 		public bool get_single_click_activate ();
 		public void set_enable_rubberband (bool enable_rubberband);
 		public void set_factory (Gtk.ListItemFactory? factory);
 		public void set_max_columns (uint max_columns);
 		public void set_min_columns (uint min_columns);
-		public void set_model (GLib.ListModel? model);
+		public void set_model (Gtk.SelectionModel? model);
 		public void set_single_click_activate (bool single_click_activate);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public GridView.with_factory (owned GLib.ListModel? model, owned Gtk.ListItemFactory? factory);
 		public bool enable_rubberband { get; set; }
 		public Gtk.ListItemFactory factory { get; set; }
 		public uint max_columns { get; set; }
 		public uint min_columns { get; set; }
-		public GLib.ListModel model { get; set; }
+		public Gtk.SelectionModel model { get; set; }
 		public bool single_click_activate { get; set; }
 		public signal void activate (uint position);
 	}
@@ -9087,22 +9094,20 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_list_view_get_type ()")]
 	public class ListView : Gtk.ListBase, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ListView (owned GLib.ListModel? model);
+		public ListView (owned Gtk.SelectionModel? model, owned Gtk.ListItemFactory? factory);
 		public bool get_enable_rubberband ();
 		public unowned Gtk.ListItemFactory? get_factory ();
-		public unowned GLib.ListModel? get_model ();
+		public unowned Gtk.SelectionModel? get_model ();
 		public bool get_show_separators ();
 		public bool get_single_click_activate ();
 		public void set_enable_rubberband (bool enable_rubberband);
 		public void set_factory (Gtk.ListItemFactory? factory);
-		public void set_model (GLib.ListModel? model);
+		public void set_model (Gtk.SelectionModel? model);
 		public void set_show_separators (bool show_separators);
 		public void set_single_click_activate (bool single_click_activate);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public ListView.with_factory (owned GLib.ListModel? model, owned Gtk.ListItemFactory? factory);
 		public bool enable_rubberband { get; set; }
 		public Gtk.ListItemFactory factory { get; set; }
-		public GLib.ListModel model { get; set; }
+		public Gtk.SelectionModel model { get; set; }
 		public bool show_separators { get; set; }
 		public bool single_click_activate { get; set; }
 		public signal void activate (uint position);
@@ -9962,27 +9967,6 @@ namespace Gtk {
 		public PropertyExpression.for_pspec (owned Gtk.Expression? expression, GLib.ParamSpec pspec);
 		public unowned Gtk.Expression get_expression ();
 		public unowned GLib.ParamSpec get_pspec ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_radio_button_get_type ()")]
-	public class RadioButton : Gtk.CheckButton, Gtk.Accessible, Gtk.Actionable, Gtk.Buildable, Gtk.ConstraintTarget {
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton (GLib.SList<Gtk.RadioButton>? group);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.from_widget (Gtk.RadioButton? radio_group_member);
-		public unowned GLib.SList<Gtk.RadioButton> get_group ();
-		public void join_group (Gtk.RadioButton? group_source);
-		public void set_group (GLib.SList<Gtk.RadioButton>? group);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_label (GLib.SList<Gtk.RadioButton>? group, string label);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_label_from_widget (Gtk.RadioButton? radio_group_member, string label);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_mnemonic (GLib.SList<Gtk.RadioButton>? group, string label);
-		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton? radio_group_member, string label);
-		[NoAccessorMethod]
-		public Gtk.RadioButton group { set; }
-		public signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_range_get_type ()")]
 	public class Range : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
@@ -11387,11 +11371,13 @@ namespace Gtk {
 		public ToggleButton ();
 		public bool get_active ();
 		public void set_active (bool is_active);
+		public void set_group (Gtk.ToggleButton? group);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ToggleButton.with_label (string label);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ToggleButton.with_mnemonic (string label);
 		public bool active { get; set; }
+		public Gtk.ToggleButton group { set; }
 		[HasEmitter]
 		public virtual signal void toggled ();
 	}
@@ -12268,11 +12254,11 @@ namespace Gtk {
 		public void reset_relation (Gtk.AccessibleRelation relation);
 		public void reset_state (Gtk.AccessibleState state);
 		public void update_property (...);
-		public void update_property_value (Gtk.AccessibleProperty property, GLib.Value value);
+		public void update_property_value ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] Gtk.AccessibleProperty[] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] GLib.Value[] values);
 		public void update_relation (...);
-		public void update_relation_value (Gtk.AccessibleRelation relation, GLib.Value value);
+		public void update_relation_value ([CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] Gtk.AccessibleRelation[] relations, [CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] GLib.Value[] values);
 		public void update_state (...);
-		public void update_state_value (Gtk.AccessibleState state, GLib.Value value);
+		public void update_state_value ([CCode (array_length_cname = "n_states", array_length_pos = 0.5)] Gtk.AccessibleState[] states, [CCode (array_length_cname = "n_states", array_length_pos = 0.5)] GLib.Value[] values);
 		[NoAccessorMethod]
 		public abstract Gtk.AccessibleRole accessible_role { get; set; }
 	}

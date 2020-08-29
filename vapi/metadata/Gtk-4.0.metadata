@@ -192,7 +192,6 @@ RecentData
   .description nullable
 
 // Bug #: confused girparser
-Radio*.group#property no_accessor_method
 CClosureExpression
   .new.callback_func closure=-1 destroy=-1 owned=false
   .new.user_destroy nullable
