@@ -123,7 +123,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			Valadoc.TokenType.MARKDOWN_CONSTANT.action ((token) => {
 				if (is_literal (token.value)) {
 					var _run = _factory.create_run (Run.Style.LANG_LITERAL);
-					_run.content.add (_factory.create_text (token.value.down ()));
+					_run.content.add (_factory.create_text (token.value.ascii_down ()));
 					push (_run);
 				} else {
 					add_symbol_link ("c::" + token.value, true);
@@ -359,7 +359,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 
 				unowned string source = token.value;
 				if (regex_source_lang.match (source, 0, out info)) {
-					string lang_name = info.fetch (1).down ();
+					string lang_name = info.fetch (1).ascii_down ();
 					SourceCode.Language? lang = SourceCode.Language.from_string (lang_name);
 					code.language = lang;
 

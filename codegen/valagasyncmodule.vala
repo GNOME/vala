@@ -70,9 +70,9 @@ public class Vala.GAsyncModule : GtkModule {
 		}
 
 		foreach (var type_param in m.get_type_parameters ()) {
-			data.add_field ("GType", "%s_type".printf (type_param.name.down ()));
-			data.add_field ("GBoxedCopyFunc", "%s_dup_func".printf (type_param.name.down ()));
-			data.add_field ("GDestroyNotify", "%s_destroy_func".printf (type_param.name.down ()));
+			data.add_field ("GType", "%s_type".printf (type_param.name.ascii_down ()));
+			data.add_field ("GBoxedCopyFunc", "%s_dup_func".printf (type_param.name.ascii_down ()));
+			data.add_field ("GDestroyNotify", "%s_destroy_func".printf (type_param.name.ascii_down ()));
 		}
 
 		if (!(m.return_type is VoidType)) {
@@ -313,9 +313,9 @@ public class Vala.GAsyncModule : GtkModule {
 		emit_context.pop_symbol ();
 
 		foreach (var type_param in m.get_type_parameters ()) {
-			var type = "%s_type".printf (type_param.name.down ());
-			var dup_func = "%s_dup_func".printf (type_param.name.down ());
-			var destroy_func = "%s_destroy_func".printf (type_param.name.down ());
+			var type = "%s_type".printf (type_param.name.ascii_down ());
+			var dup_func = "%s_dup_func".printf (type_param.name.ascii_down ());
+			var destroy_func = "%s_destroy_func".printf (type_param.name.ascii_down ());
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, type), new CCodeIdentifier (type));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, dup_func), new CCodeIdentifier (dup_func));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, destroy_func), new CCodeIdentifier (destroy_func));

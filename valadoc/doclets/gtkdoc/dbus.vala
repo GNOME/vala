@@ -200,7 +200,7 @@ namespace Gtkdoc.DBus {
 								docbook_id,
 								docbook_id,
 								name,
-								package_name.up (),
+								package_name.ascii_up (),
 								name,
 								purpose ?? "");
 

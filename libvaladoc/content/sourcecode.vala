@@ -180,7 +180,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline {
 				string path = start.strip ();
 				load_source_code (path, container, file_path, reporter);
 			} else {
-				string name = start._strip ().down ();
+				string name = start._strip ().ascii_down ();
 				_language = Language.from_string (name);
 				code = splitted[1] ?? "";
 				if (_language == Language.UNKNOWN && name != "none") {
