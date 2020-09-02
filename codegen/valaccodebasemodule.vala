@@ -2036,13 +2036,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					foreach (var type_param in current_method.get_type_parameters ()) {
 						string func_name;
 
-						func_name = "%s_type".printf (type_param.name.down ());
+						func_name = "%s_type".printf (type_param.name.ascii_down ());
 						data.add_field ("GType", func_name);
 
-						func_name = "%s_dup_func".printf (type_param.name.down ());
+						func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
 						data.add_field ("GBoxedCopyFunc", func_name);
 
-						func_name = "%s_destroy_func".printf (type_param.name.down ());
+						func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
 						data.add_field ("GDestroyNotify", func_name);
 					}
 				}
@@ -2108,7 +2108,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var suffices = new string[] {"type", "dup_func", "destroy_func"};
 					foreach (var type_param in current_method.get_type_parameters ()) {
 						foreach (string suffix in suffices) {
-							string func_name = "%s_%s".printf (type_param.name.down (), suffix);
+							string func_name = "%s_%s".printf (type_param.name.ascii_down (), suffix);
 							ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
 						}
 					}
@@ -2200,15 +2200,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				foreach (var type_param in current_method.get_type_parameters ()) {
 					string func_name;
 
-					func_name = "%s_type".printf (type_param.name.down ());
+					func_name = "%s_type".printf (type_param.name.ascii_down ());
 					ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
 					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
 
-					func_name = "%s_dup_func".printf (type_param.name.down ());
+					func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
 					ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
 					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
 
-					func_name = "%s_destroy_func".printf (type_param.name.down ());
+					func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
 					ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
 					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
 				}
@@ -2766,13 +2766,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string var_name = "%s_type".printf (type_parameter.name.down ());
+			string var_name = "%s_type".printf (type_parameter.name.ascii_down ());
 
 			if (type_parameter.parent_symbol is Interface) {
 				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_type".printf (type_parameter.name.down ());
+				string method_name = "get_%s_type".printf (type_parameter.name.ascii_down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -2836,13 +2836,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier (dup_function);
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string func_name = "%s_dup_func".printf (type_parameter.name.down ());
+			string func_name = "%s_dup_func".printf (type_parameter.name.ascii_down ());
 
 			if (type_parameter.parent_symbol is Interface) {
 				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_dup_func".printf (type_parameter.name.down ());
+				string method_name = "get_%s_dup_func".printf (type_parameter.name.ascii_down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -3329,13 +3329,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier (unref_function);
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string func_name = "%s_destroy_func".printf (type_parameter.name.down ());
+			string func_name = "%s_destroy_func".printf (type_parameter.name.ascii_down ());
 
 			if (type_parameter.parent_symbol is Interface) {
 				var iface = (Interface) type_parameter.parent_symbol;
 				require_generic_accessors (iface);
 
-				string method_name = "get_%s_destroy_func".printf (type_parameter.name.down ());
+				string method_name = "get_%s_destroy_func".printf (type_parameter.name.ascii_down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface))));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
@@ -4716,7 +4716,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
 			if (type_parameters != null) {
-				var type_param_name = type_parameters.get (type_param_index).name.down ().replace ("_", "-");
+				var type_param_name = type_parameters.get (type_param_index).name.ascii_down ().replace ("_", "-");
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name)));
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s-dup-func\"".printf (type_param_name)));
 				arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s-destroy-func\"".printf (type_param_name)));
@@ -6414,7 +6414,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static CCodeConstant get_enum_value_canonical_cconstant (EnumValue ev) {
-		return new CCodeConstant ("\"%s\"".printf (ev.name.down ().replace ("_", "-")));
+		return new CCodeConstant ("\"%s\"".printf (ev.name.ascii_down ().replace ("_", "-")));
 	}
 
 	public bool get_signal_has_emitter (Signal sig) {

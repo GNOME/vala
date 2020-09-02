@@ -518,15 +518,15 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					foreach (var type_param in m.get_type_parameters ()) {
 						string func_name;
 
-						func_name = "%s_type".printf (type_param.name.down ());
+						func_name = "%s_type".printf (type_param.name.ascii_down ());
 						ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
 						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 
-						func_name = "%s_dup_func".printf (type_param.name.down ());
+						func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
 						ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
 						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 
-						func_name = "%s_destroy_func".printf (type_param.name.down ());
+						func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
 						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
 						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
 					}
@@ -626,15 +626,15 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 								var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 
-								param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+								param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 								ccode.add_expression (assign);
 
-								param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+								param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 								ccode.add_expression (assign);
 
-								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ()));
 								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
 								ccode.add_expression (assign);
 							}
@@ -982,26 +982,26 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			int type_param_index = 0;
 			var cl = (Class) m.parent_symbol;
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.down ()), "GType"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.ascii_down ()), "GType"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.ascii_down ()), "GBoxedCopyFunc"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.ascii_down ()), "GDestroyNotify"));
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ())));
 				}
 				type_param_index++;
 			}
 		} else if (!m.closure && (direction & 1) == 1) {
 			int type_param_index = 0;
 			foreach (var type_param in m.get_type_parameters ()) {
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.down ()), "GType"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.ascii_down ()), "GType"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.ascii_down ()), "GBoxedCopyFunc"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.ascii_down ()), "GDestroyNotify"));
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ())));
 				}
 				type_param_index++;
 			}

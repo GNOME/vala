@@ -84,7 +84,7 @@ public class Vala.GDBusModule : GVariantModule {
 		foreach (ErrorCode ecode in edomain.get_codes ()) {
 			var ecode_dbus_name = get_dbus_name (ecode);
 			if (ecode_dbus_name == null) {
-				ecode_dbus_name = Symbol.lower_case_to_camel_case (ecode.name.down ());
+				ecode_dbus_name = Symbol.lower_case_to_camel_case (ecode.name.ascii_down ());
 			}
 
 			var error_entry = new CCodeInitializerList ();

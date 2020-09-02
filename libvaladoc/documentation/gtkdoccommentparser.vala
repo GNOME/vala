@@ -713,7 +713,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 
 		unowned string source = builder.str;
 		if (regex_source_lang.match (source, 0, out info)) {
-			string lang_name = info.fetch (1).down ();
+			string lang_name = info.fetch (1).ascii_down ();
 			SourceCode.Language? lang = SourceCode.Language.from_string (lang_name);
 			code.language = lang;
 
@@ -1486,7 +1486,7 @@ public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
 	private Inline create_type_link (string name, bool c_accept_plural = false) {
 		if (name == "TRUE" || name == "FALSE" || name == "NULL" || is_numeric (name)) {
 			var monospaced = factory.create_run (Run.Style.MONOSPACED);
-			monospaced.content.add (factory.create_text (name.down ()));
+			monospaced.content.add (factory.create_text (name.ascii_down ()));
 			return monospaced;
 		} else {
 			Taglets.Link? taglet = factory.create_taglet ("link") as Taglets.Link;

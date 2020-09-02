@@ -79,7 +79,7 @@ public class Vala.GObjectModule : GTypeModule {
 			CCodeConstant func_name_constant;
 			CCodeFunctionCall cinst, cspec;
 
-			var name_prefix = type_param.name.down ();
+			var name_prefix = type_param.name.ascii_down ();
 			var canonical_prefix = name_prefix.replace ("_", "-");
 
 			func_name = "%s_type".printf (name_prefix);

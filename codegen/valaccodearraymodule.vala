@@ -524,7 +524,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		function.add_parameter (new CCodeParameter ("length", "int"));
 		if (array_type.element_type is GenericType) {
 			// dup function array elements
-			string func_name = "%s_dup_func".printf (((GenericType) array_type.element_type).type_parameter.name.down ());
+			string func_name = "%s_dup_func".printf (((GenericType) array_type.element_type).type_parameter.name.ascii_down ());
 			function.add_parameter (new CCodeParameter (func_name, "GBoxedCopyFunc"));
 		}
 

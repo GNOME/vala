@@ -59,7 +59,7 @@ namespace Vala {
 			} else if (sym is Signal) {
 				return get_ccode_attribute (sym).name.replace ("-", "_");
 			} else if (sym is ErrorCode) {
-				return get_ccode_name (sym).down ();
+				return get_ccode_name (sym).ascii_down ();
 			} else {
 				return "%s%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), infix, get_ccode_lower_case_suffix (sym));
 			}
