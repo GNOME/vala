@@ -34,7 +34,7 @@ public class Vala.EnumValue : Constant {
 			if (_nick == null) {
 				_nick = get_attribute_string ("Description", "nick");
 				if (_nick == null) {
-					_nick = name.down ().replace ("_", "-");
+					_nick = name.ascii_down ().replace ("_", "-");
 				}
 			}
 			return _nick;

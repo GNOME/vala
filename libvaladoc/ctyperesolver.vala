@@ -41,7 +41,7 @@ public class Valadoc.CTypeResolver : Visitor {
 
 		foreach (string element in elements) {
 			builder.append_c (((char[])element)[0].toupper ());
-			builder.append (element.next_char ().down ());
+			builder.append (element.next_char ().ascii_down ());
 		}
 
 		return (owned) builder.str;
