@@ -1,3 +1,21 @@
+Vala 0.49.92
+============
+ * Various improvements and bug fixes:
+  - Don't use locale dependent string functions on syntax strings [#1067]
+  - girparser: Additionally fallback to "glib:type-name" to retrieve the cname
+  - libvaladoc/girimporter:
+    + Fallback to "name" for callback
+    + Fallback to "glib:type-name" for class, interface and record
+    + Improve parse_symbol_doc() and don't use parse_doc()
+    + Skip "attribute" elements
+  - libvaladoc/gtkdoc-importer:
+    + Correctly retrieve "url" from "ulink" elements
+    + Don't let parse_block_taglet() return null
+
+ * Bindings:
+  - gtk4: Update to 3.99.1
+  - vapi: Update GIR-based bindings
+
 Vala 0.49.91
 ============
  * Various improvements and bug fixes:
