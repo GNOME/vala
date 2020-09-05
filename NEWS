@@ -1,3 +1,34 @@
+Vala 0.48.10
+============
+ * Various improvements and bug fixes:
+  - tests: Don't rely on undefined use-after-free behaviour of glibc
+  - Add TraverseVisitor for traversing the tree with a callback
+  - Force usage of temporary variables for "tainted" member accesses [#1061]
+  - vala: Move transformation of unary increment/decrement to codegen
+  - vala: Set parent_node for child nodes of lambda-expression [#1062]
+  - codegen: Don't append unreachable clean-up section of Block [#169] [#838]
+  - codegen: Always include base_struct declaration if available [#464]
+  - vala: Additionally break on ObjectCreationExpression in "tainted" check
+  - vala: Add ObjectCreationExpression.to_string()
+  - manual: Update from wiki.gnome.org
+  - Don't use locale dependent string functions on syntax strings [#1067]
+  - girparser: Additionally fallback to "glib:type-name" to retrieve the cname
+  - libvaladoc/girimporter:
+    + Fallback to "name" for callback
+    + Fallback to "glib:type-name" for class, interface and record
+    + Improve parse_symbol_doc() and don't use parse_doc()
+    + Skip "attribute" elements
+  - libvaladoc/gtkdoc-importer:
+    + Correctly retrieve "url" from "ulink" elements
+    + Don't let parse_block_taglet() return null
+
+ * Bindings:
+  - gstreamer: Update from 1.17.2+ git master
+  - gtk4: Update to 3.99.1
+  - gtk4: Resolve a few conflicts of methods with virtual-methods
+  - pango: Update from 1.46.0
+  - webkit2gtk-4.0: Update to 2.29.91
+
 Vala 0.48.9
 ===========
  * Regression and bug fixes:
