@@ -122,6 +122,11 @@ test_cflags = [
 ]
 supported_test_cflags = cc.get_supported_arguments(test_cflags)
 
+# https://github.com/mesonbuild/meson/issues/3407
+if valac.version().version_compare('>= @0@'.format(vala_version))
+	add_project_arguments(supported_test_cflags, language: 'c')
+endif
+
 add_project_arguments([
 		'-Wno-discarded-qualifiers',
 		'-Wno-incompatible-pointer-types',
