@@ -224,6 +224,11 @@ struct Bar {
 	public int bar;
 }
 
+struct Manam {
+	Bar array[1024];
+	Bar manam;
+}
+
 void test_struct_array () {
 	assert (FOO_ARRAY_CONST[0].bar == 42);
 
@@ -231,6 +236,9 @@ void test_struct_array () {
 	var bar = new Bar[23];
 	bar[7] = b;
 	assert (b in bar);
+
+	Manam? manam = {};
+	Manam? manam_copy = manam;
 }
 
 void give_fixed_array (out int i[3]) {

@@ -197,9 +197,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		} else if (context.profile == Profile.POSIX) {
 			// calloc needs stdlib.h
 			cfile.add_include ("stdlib.h");
+
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeConstant (get_ccode_name (st)));
+
 			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
 			creation_call.add_argument (new CCodeConstant ("1"));
-			creation_call.add_argument (new CCodeIdentifier ("sizeof (%s*)".printf (get_ccode_name (st))));
+			creation_call.add_argument (sizeof_call);
 			ccode.add_assignment (new CCodeIdentifier ("dup"), creation_call);
 		}
 
