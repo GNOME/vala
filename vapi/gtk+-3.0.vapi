@@ -3462,15 +3462,15 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public Gdk.Window window { get; set; }
 		[Version (since = "3.14")]
-		public signal void begin (Gdk.EventSequence sequence);
+		public signal void begin (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void cancel (Gdk.EventSequence sequence);
+		public signal void cancel (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void end (Gdk.EventSequence sequence);
+		public signal void end (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void sequence_state_changed (Gdk.EventSequence sequence, Gtk.EventSequenceState state);
+		public signal void sequence_state_changed (Gdk.EventSequence? sequence, Gtk.EventSequenceState state);
 		[Version (since = "3.14")]
-		public signal void update (Gdk.EventSequence sequence);
+		public signal void update (Gdk.EventSequence? sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_drag_get_type ()")]
 	public class GestureDrag : Gtk.GestureSingle {

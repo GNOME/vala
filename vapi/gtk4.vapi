@@ -6374,7 +6374,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_any_filter_get_type ()")]
 	public class AnyFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public AnyFilter ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_button_get_type ()")]
@@ -6606,7 +6606,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bool_filter_get_type ()")]
 	public class BoolFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public BoolFilter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression get_expression ();
 		public bool get_invert ();
@@ -7521,7 +7521,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_filter_get_type ()")]
 	public class CustomFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public CustomFilter (owned Gtk.CustomFilterFunc? match_func);
 		public void set_filter_func (owned Gtk.CustomFilterFunc? match_func);
 	}
@@ -7532,7 +7532,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_sorter_get_type ()")]
 	public class CustomSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public CustomSorter (owned GLib.CompareDataFunc sort_func);
 		public void set_sort_func (owned GLib.CompareDataFunc? sort_func);
 	}
@@ -7997,7 +7997,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_every_filter_get_type ()")]
 	public class EveryFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public EveryFilter ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expander_get_type ()")]
@@ -9331,7 +9331,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_sorter_get_type ()")]
 	public class MultiSorter : Gtk.Sorter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public MultiSorter ();
 		public void append (owned Gtk.Sorter sorter);
 		public void remove (uint position);
@@ -9479,7 +9479,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_numeric_sorter_get_type ()")]
 	public class NumericSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public NumericSorter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression? get_expression ();
 		public Gtk.SortType get_sort_order ();
@@ -10755,7 +10755,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_filter_get_type ()")]
 	public class StringFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public StringFilter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression get_expression ();
 		public bool get_ignore_case ();
@@ -10789,7 +10789,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_sorter_get_type ()")]
 	public class StringSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public StringSorter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression? get_expression ();
 		public bool get_ignore_case ();
@@ -11442,7 +11442,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_list_row_sorter_get_type ()")]
 	public class TreeListRowSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public TreeListRowSorter (owned Gtk.Sorter? sorter);
 		public unowned Gtk.Sorter? get_sorter ();
 		public void set_sorter (Gtk.Sorter? sorter);
