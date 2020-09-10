@@ -1,3 +1,13 @@
+Vala 0.50.0
+===========
+ * Various improvements and bug fixes:
+  - codegen: The actual struct size is required for calloc (POSIX) [#1068]
+
+ * Bindings:
+  - gstreamer: Update from 1.18.0+ git master
+  - poppler-glib: Update to 20.09.0
+  - vapi: Update GIR-based bindings
+
 Vala 0.49.92
 ============
  * Various improvements and bug fixes:
