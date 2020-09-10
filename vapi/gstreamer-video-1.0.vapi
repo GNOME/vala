@@ -1733,15 +1733,6 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public static double color_transfer_encode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.18")]
-		public static Gst.Video.TransferFunction color_transfer_from_iso (uint value);
-		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.18")]
-		public static bool color_transfer_is_equivalent (Gst.Video.TransferFunction from_func, uint from_bpp, Gst.Video.TransferFunction to_func, uint to_bpp);
-		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.18")]
-		public static uint color_transfer_to_iso (Gst.Video.TransferFunction func);
-		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void convert_sample_async (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout, owned Gst.Video.ConvertSampleCallback callback);
@@ -1912,5 +1903,14 @@ namespace Gst {
 		public static GLib.Type time_code_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? time_code_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static Gst.Video.TransferFunction transfer_function_from_iso (uint value);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static bool transfer_function_is_equivalent (Gst.Video.TransferFunction from_func, uint from_bpp, Gst.Video.TransferFunction to_func, uint to_bpp);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.18")]
+		public static uint transfer_function_to_iso (Gst.Video.TransferFunction func);
 	}
 }
