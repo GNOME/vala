@@ -237,12 +237,12 @@ namespace Soup {
 		public void* auth_data { get; set; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_manager_get_type ()")]
+	[Version (since = "2.42")]
 	public class AuthManager : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected AuthManager ();
 		[Version (since = "2.58")]
 		public void clear_cached_credentials ();
-		[Version (since = "2.42")]
 		public void use_auth (Soup.URI uri, Soup.Auth auth);
 		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
 	}
@@ -334,18 +334,17 @@ namespace Soup {
 	public class Connection {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_content_decoder_get_type ()")]
+	[Version (since = "2.30")]
 	public class ContentDecoder : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected ContentDecoder ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_content_sniffer_get_type ()")]
+	[Version (since = "2.28")]
 	public class ContentSniffer : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public ContentSniffer ();
-		[Version (since = "2.28")]
 		public virtual size_t get_buffer_size ();
-		[Version (since = "2.28")]
 		public virtual string sniff (Soup.Message msg, Soup.Buffer buffer, out GLib.HashTable<string,string>? @params);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_cookie_get_type ()")]
@@ -775,20 +774,18 @@ namespace Soup {
 		public void to_message (Soup.MessageHeaders dest_headers, Soup.MessageBody dest_body);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_multipart_input_stream_get_type ()")]
+	[Version (since = "2.40")]
 	public class MultipartInputStream : GLib.FilterInputStream, GLib.PollableInputStream {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.40")]
 		public MultipartInputStream (Soup.Message msg, GLib.InputStream base_stream);
-		[Version (since = "2.40")]
 		public unowned Soup.MessageHeaders? get_headers ();
-		[Version (since = "2.40")]
 		public GLib.InputStream? next_part (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.40")]
 		public async GLib.InputStream? next_part_async (int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoAccessorMethod]
 		public Soup.Message message { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_proxy_resolver_default_get_type ()")]
+	[Version (deprecated = true, since = "2.34")]
 	public class ProxyResolverDefault : GLib.Object, Soup.ProxyURIResolver, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected ProxyResolverDefault ();
@@ -1052,6 +1049,7 @@ namespace Soup {
 		public signal void tunneling (GLib.Object connection);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_session_async_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "2.42")]
 	public class SessionAsync : Soup.Session {
 		[CCode (has_construct_function = false, type = "SoupSession*")]
 		[Version (deprecated = true)]
@@ -1061,6 +1059,7 @@ namespace Soup {
 		public SessionAsync.with_options (string optname1, ...);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_session_sync_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "2.42")]
 	public class SessionSync : Soup.Session {
 		[CCode (has_construct_function = false, type = "SoupSession*")]
 		[Version (deprecated = true)]
@@ -1233,17 +1232,14 @@ namespace Soup {
 		public virtual signal void pong (GLib.Bytes message);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_get_type ()")]
+	[Version (since = "2.68")]
 	public abstract class WebsocketExtension : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebsocketExtension ();
 		public virtual bool configure (Soup.WebsocketConnectionType connection_type, GLib.HashTable<void*,void*>? @params) throws GLib.Error;
-		[Version (since = "2.68")]
 		public virtual string? get_request_params ();
-		[Version (since = "2.68")]
 		public virtual string? get_response_params ();
-		[Version (since = "2.68")]
 		public virtual GLib.Bytes process_incoming_message (ref uint8 header, owned GLib.Bytes payload) throws GLib.Error;
-		[Version (since = "2.68")]
 		public virtual GLib.Bytes process_outgoing_message (ref uint8 header, owned GLib.Bytes payload) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_deflate_get_type ()")]
@@ -1252,6 +1248,7 @@ namespace Soup {
 		protected WebsocketExtensionDeflate ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_extension_manager_get_type ()")]
+	[Version (since = "2.68")]
 	public class WebsocketExtensionManager : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected WebsocketExtensionManager ();
@@ -1275,6 +1272,7 @@ namespace Soup {
 		public abstract uint get_proxy_sync (Soup.Message msg, GLib.Cancellable? cancellable, out unowned Soup.Address addr);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_cname = "SoupProxyURIResolverInterface", type_id = "soup_proxy_uri_resolver_get_type ()")]
+	[Version (deprecated = true)]
 	public interface ProxyURIResolver : Soup.SessionFeature, GLib.Object {
 		[Version (deprecated = true, since = "2.26.3")]
 		public abstract void get_proxy_uri_async (Soup.URI uri, GLib.MainContext? async_context, GLib.Cancellable? cancellable, [CCode (scope = "async")] Soup.ProxyURIResolverCallback callback);

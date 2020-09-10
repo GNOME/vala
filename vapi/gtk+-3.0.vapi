@@ -3462,15 +3462,15 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public Gdk.Window window { get; set; }
 		[Version (since = "3.14")]
-		public signal void begin (Gdk.EventSequence sequence);
+		public signal void begin (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void cancel (Gdk.EventSequence sequence);
+		public signal void cancel (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void end (Gdk.EventSequence sequence);
+		public signal void end (Gdk.EventSequence? sequence);
 		[Version (since = "3.14")]
-		public signal void sequence_state_changed (Gdk.EventSequence sequence, Gtk.EventSequenceState state);
+		public signal void sequence_state_changed (Gdk.EventSequence? sequence, Gtk.EventSequenceState state);
 		[Version (since = "3.14")]
-		public signal void update (Gdk.EventSequence sequence);
+		public signal void update (Gdk.EventSequence? sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_drag_get_type ()")]
 	public class GestureDrag : Gtk.GestureSingle {
@@ -13161,7 +13161,7 @@ namespace Gtk {
 	[Version (since = "2.6")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
+	[Version (deprecated = true, deprecated_since = "3.22", since = "2.14")]
 	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.22")]
