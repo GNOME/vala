@@ -2,6 +2,7 @@
 *.* skip=false
 
 Page
+  .get_bounding_box.rect out
   .get_image type="Cairo.Surface"
   .get_selected_region type="Cairo.Region"
   .get_thumbnail type="Cairo.Surface"
@@ -17,3 +18,5 @@ ANNOT_TEXT_ICON_* parent="Poppler.AnnotTextIcon" name="ANNOT_TEXT_ICON_(.+)"
 
 ActionLayer.layers type_arguments="Poppler.ActionLayer?"
 ActionOCGState.state_list type_arguments="Poppler.ActionLayer?"
+ActionResetForm.fields type_arguments="string"
+Document.reset_form.fields type_arguments="string"
