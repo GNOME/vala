@@ -152,6 +152,9 @@ namespace Gst {
 			public void set_drop_buffers (bool drop_buffers);
 			[CCode (cname = "gst_harness_set_forwarding")]
 			public void set_forwarding (bool forwarding);
+			[CCode (cname = "gst_harness_set_live")]
+			[Version (since = "1.20")]
+			public void set_live (bool is_live);
 			[CCode (cname = "gst_harness_set_propose_allocator")]
 			public void set_propose_allocator (owned Gst.Allocator? allocator, Gst.AllocationParams? @params);
 			[CCode (cname = "gst_harness_set_sink_caps")]

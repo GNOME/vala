@@ -885,14 +885,19 @@ namespace GES {
 	public class VideoTransition : GES.Transition, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		public VideoTransition ();
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public int get_border ();
 		public GES.VideoStandardTransitionType get_transition_type ();
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public bool is_inverted ();
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public void set_border (uint value);
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public void set_inverted (bool inverted);
 		public bool set_transition_type (GES.VideoStandardTransitionType type);
 		public uint border { get; set; }
 		[NoAccessorMethod]
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public bool invert { get; set; }
 		public GES.VideoStandardTransitionType transition_type { get; set; }
 	}
