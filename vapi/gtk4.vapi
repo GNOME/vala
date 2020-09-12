@@ -8911,6 +8911,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected LayoutManager ();
 		public virtual void allocate (Gtk.Widget widget, int width, int height, int baseline);
+		[NoWrapper]
+		public virtual unowned Gtk.LayoutChild create_layout_child (Gtk.Widget widget, Gtk.Widget for_child);
 		public unowned Gtk.LayoutChild get_layout_child (Gtk.Widget child);
 		[NoWrapper]
 		public virtual Gtk.SizeRequestMode get_request_mode (Gtk.Widget widget);
