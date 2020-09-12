@@ -5435,7 +5435,7 @@ namespace Gdk {
 		public void begin_move (Gdk.Device device, int button, double x, double y, uint32 timestamp);
 		public void begin_resize (Gdk.SurfaceEdge edge, Gdk.Device? device, int button, double x, double y, uint32 timestamp);
 		public void focus (uint32 timestamp);
-		public Gdk.SurfaceState get_state ();
+		public Gdk.ToplevelState get_state ();
 		public void inhibit_system_shortcuts (Gdk.Event? event);
 		public bool lower ();
 		public bool minimize ();
@@ -5465,7 +5465,7 @@ namespace Gdk {
 		[NoAccessorMethod]
 		public abstract string startup_id { owned get; set; }
 		[ConcreteAccessor]
-		public abstract Gdk.SurfaceState state { get; }
+		public abstract Gdk.ToplevelState state { get; }
 		[NoAccessorMethod]
 		public abstract string title { owned get; set; }
 		[NoAccessorMethod]
@@ -5769,9 +5769,9 @@ namespace Gdk {
 		SOUTH,
 		SOUTH_EAST
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_STATE_", type_id = "gdk_surface_state_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOPLEVEL_STATE_", type_id = "gdk_toplevel_state_get_type ()")]
 	[Flags]
-	public enum SurfaceState {
+	public enum ToplevelState {
 		WITHDRAWN,
 		MINIMIZED,
 		MAXIMIZED,
@@ -8912,7 +8912,7 @@ namespace Gtk {
 		protected LayoutManager ();
 		public virtual void allocate (Gtk.Widget widget, int width, int height, int baseline);
 		[NoWrapper]
-		public virtual unowned Gtk.LayoutChild create_layout_child (Gtk.Widget widget, Gtk.Widget for_child);
+		public virtual Gtk.LayoutChild create_layout_child (Gtk.Widget widget, Gtk.Widget for_child);
 		public unowned Gtk.LayoutChild get_layout_child (Gtk.Widget child);
 		[NoWrapper]
 		public virtual Gtk.SizeRequestMode get_request_mode (Gtk.Widget widget);

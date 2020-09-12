@@ -204,8 +204,6 @@ FlowBoxCreateWidgetFunc skip=false
   .item type="GLib.Object"
 IMContextSimple
   .add_table skip=false
-LayoutManager
-  .create_layout_child skip=false
 TreeSelection
   .get_select_function skip=false
   .get_user_data skip=false
