@@ -1836,6 +1836,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.LOCK:      return parse_lock_statement ();
 		case TokenType.UNLOCK:    return parse_unlock_statement ();
 		case TokenType.DELETE:    return parse_delete_statement ();
+		case TokenType.WITH:      return parse_with_statement ();
 		case TokenType.VAR:
 		case TokenType.CONST:
 			throw new ParseError.SYNTAX ("embedded statement cannot be declaration ");
@@ -2646,6 +2647,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.UNLOCK:
 			case TokenType.VAR:
 			case TokenType.WHILE:
+			case TokenType.WITH:
 			case TokenType.YIELD:
 				return RecoveryState.STATEMENT_BEGIN;
 			default:
