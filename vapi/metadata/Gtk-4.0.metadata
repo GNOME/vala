@@ -225,6 +225,8 @@ MediaStream
   .play#method name="play_now"
 Notebook
   .insert_page_menu skip
+Stack
+  .add_child new
 TreeView
   .row_expanded#method name="is_row_expanded"
 Widget

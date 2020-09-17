@@ -5110,6 +5110,7 @@ namespace Gdk {
 		public void begin_updating ();
 		public void end_updating ();
 		public unowned Gdk.FrameTimings? get_current_timings ();
+		public double get_fps ();
 		public int64 get_frame_counter ();
 		public int64 get_frame_time ();
 		public int64 get_history_start ();
@@ -7236,7 +7237,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]
 	public class ClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params);
+		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[]? @params);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_button_get_type ()")]
 	public class ColorButton : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ColorChooser, Gtk.ConstraintTarget {
@@ -10670,6 +10671,7 @@ namespace Gtk {
 	public class Stack : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Stack ();
+		public new unowned Gtk.StackPage add_child (Gtk.Widget child);
 		public unowned Gtk.StackPage add_named (Gtk.Widget child, string? name);
 		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string? name, string title);
 		public unowned Gtk.Widget? get_child_by_name (string name);
@@ -10847,8 +10849,6 @@ namespace Gtk {
 		public void render_line (Cairo.Context cr, double x0, double y0, double x1, double y1);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_option")]
 		public void render_option (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_slider")]
-		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 		public void restore ();
 		public void save ();
 		public void set_display (Gdk.Display display);
@@ -13095,9 +13095,9 @@ namespace Gtk {
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flag_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flags_get_type ()")]
 	[Flags]
-	public enum DebugFlag {
+	public enum DebugFlags {
 		TEXT,
 		TREE,
 		KEYBINDINGS,
@@ -14103,7 +14103,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint get_debug_flags ();
+	public static Gtk.DebugFlags get_debug_flags ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Pango.Language get_default_language ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14135,7 +14135,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (float r, float g, float b, out float h, out float s, out float v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void set_debug_flags (uint flags);
+	public static void set_debug_flags (Gtk.DebugFlags flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
