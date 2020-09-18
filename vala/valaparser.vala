@@ -1584,6 +1584,81 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
+	Statement? parse_statement (TokenType type) throws ParseError {
+		Statement? stmt = null;
+		var begin = get_location ();
+		try {
+			switch (type) {
+			case TokenType.IF:
+				stmt = parse_if_statement ();
+				break;
+			case TokenType.SWITCH:
+				stmt = parse_switch_statement ();
+				break;
+			case TokenType.WHILE:
+				stmt = parse_while_statement ();
+				break;
+			case TokenType.DO:
+				stmt = parse_do_statement ();
+				break;
+			case TokenType.FOR:
+				stmt = parse_for_statement ();
+				break;
+			case TokenType.FOREACH:
+				stmt = parse_foreach_statement ();
+				break;
+			case TokenType.BREAK:
+				stmt = parse_break_statement ();
+				break;
+			case TokenType.CONTINUE:
+				stmt = parse_continue_statement ();
+				break;
+			case TokenType.RETURN:
+				stmt = parse_return_statement ();
+				break;
+			case TokenType.YIELD:
+				stmt = parse_yield_statement ();
+				break;
+			case TokenType.THROW:
+				stmt = parse_throw_statement ();
+				break;
+			case TokenType.TRY:
+				stmt = parse_try_statement ();
+				break;
+			case TokenType.LOCK:
+				stmt = parse_lock_statement ();
+				break;
+			case TokenType.UNLOCK:
+				stmt = parse_unlock_statement ();
+				break;
+			case TokenType.DELETE:
+				stmt = parse_delete_statement ();
+				break;
+			case TokenType.WITH:
+				stmt = parse_with_statement ();
+				break;
+			default:
+				assert_not_reached ();
+			}
+		} catch (ParseError e) {
+			var e_begin = get_location ();
+			string token = ((EnumClass) typeof (TokenType).class_ref ()).get_value (type).value_nick;
+			try {
+				rollback (begin);
+				stmt = parse_expression_statement ();
+				Report.warning (get_src (begin), "`%s' is a syntax keyword, replace with `@%s'".printf (token, token));
+			} catch (ParseError e2) {
+				var e2_begin = get_location ();
+				rollback (e_begin);
+				next ();
+				Report.error (get_src (e_begin), "Possible `%s-statement' syntax error, %s".printf (token, e.message));
+				rollback (e2_begin);
+				throw e2;
+			}
+		}
+		return stmt;
+	}
+
 	void parse_statements (Block block) throws ParseError {
 		while (current () != TokenType.CLOSE_BRACE
 		       && current () != TokenType.CASE
@@ -1602,52 +1677,22 @@ public class Vala.Parser : CodeVisitor {
 					stmt = parse_empty_statement ();
 					break;
 				case TokenType.IF:
-					stmt = parse_if_statement ();
-					break;
 				case TokenType.SWITCH:
-					stmt = parse_switch_statement ();
-					break;
 				case TokenType.WHILE:
-					stmt = parse_while_statement ();
-					break;
 				case TokenType.DO:
-					stmt = parse_do_statement ();
-					break;
 				case TokenType.FOR:
-					stmt = parse_for_statement ();
-					break;
 				case TokenType.FOREACH:
-					stmt = parse_foreach_statement ();
-					break;
 				case TokenType.BREAK:
-					stmt = parse_break_statement ();
-					break;
 				case TokenType.CONTINUE:
-					stmt = parse_continue_statement ();
-					break;
 				case TokenType.RETURN:
-					stmt = parse_return_statement ();
-					break;
 				case TokenType.YIELD:
-					stmt = parse_yield_statement ();
-					break;
 				case TokenType.THROW:
-					stmt = parse_throw_statement ();
-					break;
 				case TokenType.TRY:
-					stmt = parse_try_statement ();
-					break;
 				case TokenType.LOCK:
-					stmt = parse_lock_statement ();
-					break;
 				case TokenType.UNLOCK:
-					stmt = parse_unlock_statement ();
-					break;
 				case TokenType.DELETE:
-					stmt = parse_delete_statement ();
-					break;
 				case TokenType.WITH:
-					stmt = parse_with_statement ();
+					stmt = parse_statement (current ());
 					break;
 				case TokenType.VAR:
 					is_decl = true;
@@ -1821,22 +1866,23 @@ public class Vala.Parser : CodeVisitor {
 				Report.warning (get_current_src (), "%s-statement without body".printf (statement_name));
 			}
 			return parse_empty_statement ();
-		case TokenType.IF:        return parse_if_statement ();
-		case TokenType.SWITCH:    return parse_switch_statement ();
-		case TokenType.WHILE:     return parse_while_statement ();
-		case TokenType.DO:        return parse_do_statement ();
-		case TokenType.FOR:       return parse_for_statement ();
-		case TokenType.FOREACH:   return parse_foreach_statement ();
-		case TokenType.BREAK:     return parse_break_statement ();
-		case TokenType.CONTINUE:  return parse_continue_statement ();
-		case TokenType.RETURN:    return parse_return_statement ();
-		case TokenType.YIELD:     return parse_yield_statement ();
-		case TokenType.THROW:     return parse_throw_statement ();
-		case TokenType.TRY:       return parse_try_statement ();
-		case TokenType.LOCK:      return parse_lock_statement ();
-		case TokenType.UNLOCK:    return parse_unlock_statement ();
-		case TokenType.DELETE:    return parse_delete_statement ();
-		case TokenType.WITH:      return parse_with_statement ();
+		case TokenType.IF:
+		case TokenType.SWITCH:
+		case TokenType.WHILE:
+		case TokenType.DO:
+		case TokenType.FOR:
+		case TokenType.FOREACH:
+		case TokenType.BREAK:
+		case TokenType.CONTINUE:
+		case TokenType.RETURN:
+		case TokenType.YIELD:
+		case TokenType.THROW:
+		case TokenType.TRY:
+		case TokenType.LOCK:
+		case TokenType.UNLOCK:
+		case TokenType.DELETE:
+		case TokenType.WITH:
+			return parse_statement (current ());
 		case TokenType.VAR:
 		case TokenType.CONST:
 			throw new ParseError.SYNTAX ("embedded statement cannot be declaration ");

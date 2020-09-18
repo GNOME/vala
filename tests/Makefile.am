@@ -760,6 +760,7 @@ TESTS = \
 	parser/qualified-symbol-access.vala \
 	parser/signal-no-class.test \
 	parser/signal-no-static.test \
+	parser/statement-keyword-as-identifier.vala \
 	parser/statement-outside-root.test \
 	parser/switch-statement.vala \
 	parser/template.vala \
