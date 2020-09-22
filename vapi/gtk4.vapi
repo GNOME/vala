@@ -6016,6 +6016,19 @@ namespace Gsk {
 		public unowned Gdk.RGBA? peek_color ();
 		public unowned Gsk.RoundedRect? peek_outline ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_radial_gradient_node_get_type ()")]
+	public class RadialGradientNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public float get_end ();
+		public float get_hradius ();
+		public size_t get_n_color_stops ();
+		public float get_start ();
+		public float get_vradius ();
+		public unowned Graphene.Point? peek_center ();
+		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		public unowned Gsk.ColorStop[] peek_color_stops ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_render_node_get_type ()")]
 	public abstract class RenderNode {
 		[CCode (has_construct_function = false)]
@@ -6055,6 +6068,11 @@ namespace Gsk {
 	public class RepeatingLinearGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public RepeatingLinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_radial_gradient_node_get_type ()")]
+	public class RepeatingRadialGradientNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		public RepeatingRadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_rounded_clip_node_get_type ()")]
 	public class RoundedClipNode : Gsk.RenderNode {
@@ -6202,6 +6220,8 @@ namespace Gsk {
 		COLOR_NODE,
 		LINEAR_GRADIENT_NODE,
 		REPEATING_LINEAR_GRADIENT_NODE,
+		RADIAL_GRADIENT_NODE,
+		REPEATING_RADIAL_GRADIENT_NODE,
 		BORDER_NODE,
 		TEXTURE_NODE,
 		INSET_SHADOW_NODE,
@@ -9673,6 +9693,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
 		public bool show_peek_icon { get; set; }
+		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
 	public class Picture : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10553,7 +10574,9 @@ namespace Gtk {
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_node (Gsk.RenderNode node);
 		public void append_outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
+		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
@@ -11850,9 +11873,9 @@ namespace Gtk {
 		public bool use_symbolic { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_widget_get_type ()")]
-	public class Widget : GLib.InitiallyUnowned, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
+	public abstract class Widget : GLib.InitiallyUnowned, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
-		public Widget (GLib.Type type, ...);
+		protected Widget ();
 		public void action_set_enabled (string action_name, bool enabled);
 		public bool activate ();
 		public bool activate_action (string name, string format_string, ...);

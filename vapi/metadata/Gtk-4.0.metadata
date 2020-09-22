@@ -117,8 +117,7 @@ TreeView
 TreeViewColumn
   .set_attributes skip=false
   .new_with_attributes skip=false
-Widget abstract=false
-  .new skip=false
+Widget
   .activate_action skip=false
 WidgetClass
   .add_binding* skip=false
@@ -332,6 +331,8 @@ Notebook
 PrintOperation
   .create_custom_widget skip=false
 Snapshot
+  .append*_radial_gradient.stops array
+  .append*_radial_gradient.stops array_length_idx=7
   .push_shadow.shadow array array_length_idx=1
 
 // Not completely sure
