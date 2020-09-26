@@ -533,7 +533,10 @@ TESTS = \
 	objects/with-expression.vala \
 	objects/with-instance.vala \
 	objects/with-nested.vala \
+	objects/with-nested-in-lambda.vala \
 	objects/with-nested-method.vala \
+	objects/with-nested-signal.vala \
+	objects/with-nested-unambigous-signal.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
 	errors/default-gtype.vala \

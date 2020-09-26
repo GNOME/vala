@@ -74,6 +74,7 @@ public class Vala.MemberAccess : Expression {
 
 	private Expression? _inner;
 	private List<DataType> type_argument_list = new ArrayList<DataType> ();
+	bool is_with_variable_access;
 
 	/**
 	 * Creates a new member access expression.
@@ -285,7 +286,7 @@ public class Vala.MemberAccess : Expression {
 
 				symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (sym, member_name);
 
-				if (symbol_reference == null && sym is WithStatement) {
+				if (!is_with_variable_access && symbol_reference == null && sym is WithStatement) {
 					unowned WithStatement w = (WithStatement) sym;
 
 					var variable_type = w.with_variable.variable_type;
@@ -297,14 +298,8 @@ public class Vala.MemberAccess : Expression {
 					symbol_reference = variable_type.get_member (member_name);
 					if (symbol_reference != null) {
 						inner = new MemberAccess (null, w.with_variable.name, source_reference);
-						if (w.with_variable.parent_symbol == w.body) {
-							inner.check (context);
-						} else {
-							var old_symbol = context.analyzer.current_symbol;
-							context.analyzer.current_symbol = w.parent_symbol;
-							inner.check (context);
-							context.analyzer.current_symbol = old_symbol;
-						}
+						((MemberAccess) inner).is_with_variable_access = true;
+						inner.check (context);
 						may_access_instance_members = true;
 					}
 				}
