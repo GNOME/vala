@@ -105,10 +105,10 @@ public class Vala.WithStatement : Block {
 
 		var local_var = expression.symbol_reference as LocalVariable;
 		if (with_variable != null || local_var == null) {
-			if (with_variable == null) {
-				local_var = new LocalVariable (expression.value_type.copy (), get_temp_name (), expression, source_reference);
-			} else {
+			if (with_variable != null) {
 				local_var = with_variable;
+			} else {
+				local_var = new LocalVariable (expression.value_type.copy (), get_temp_name (), expression, source_reference);
 			}
 			body.insert_statement (0, new DeclarationStatement (local_var, source_reference));
 		}
