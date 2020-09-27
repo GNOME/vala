@@ -207,7 +207,6 @@ vala.vapi vala.vala.stamp: $(libvala_la_VALASOURCES)
 		--vapidir $(top_srcdir)/vapi --pkg gmodule-2.0 --pkg gobject-2.0 \
 		--vapidir $(top_srcdir)/gee --pkg gee \
 		--pkg config \
-		--use-header \
 		-H vala.h \
 		--library vala \
 		$^

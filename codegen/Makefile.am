@@ -72,7 +72,6 @@ codegen.vapi codegen.vala.stamp: $(libvalaccodegen_la_VALASOURCES)
 		--vapidir $(top_srcdir)/gee --pkg gee \
 		--vapidir $(top_srcdir)/ccode --pkg ccode \
 		--vapidir $(top_srcdir)/vala --pkg vala \
-		--use-header \
 		-H valacodegen.h \
 		--library codegen \
 		$^
