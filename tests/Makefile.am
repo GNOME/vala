@@ -588,6 +588,7 @@ TESTS = \
 	asynchronous/catch-in-finally.vala \
 	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
+	asynchronous/constructor-argument-check.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
 	asynchronous/out-parameter-invalid.test \
