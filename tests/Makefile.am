@@ -511,6 +511,7 @@ TESTS = \
 	asynchronous/catch-in-finally.vala \
 	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
+	asynchronous/constructor-argument-check.vala \
 	asynchronous/generator.vala \
 	asynchronous/result-pos.vala \
 	asynchronous/variadic-invalid.test \
