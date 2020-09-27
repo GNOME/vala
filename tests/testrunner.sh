@@ -30,6 +30,7 @@ run_prefix=""
 VALAC=$topbuilddir/compiler/valac$EXEEXT
 VALAFLAGS="$VALAFLAGS \
 	--vapidir $vapidir \
+	--enable-checking \
 	--disable-warnings \
 	--save-temps \
 	--cc $CC \
