@@ -2410,7 +2410,7 @@ public class Vala.GTypeModule : GErrorModule {
 		cfile.add_include ("glib.h");
 
 		var cm = method_node as CreationMethod;
-		if (cm != null && cm.parent_symbol is ObjectTypeSymbol) {
+		if (cm != null && !cm.coroutine && cm.parent_symbol is ObjectTypeSymbol) {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 			ccheck.add_argument (new CCodeConstant ("NULL"));
 		} else if (ret_type is VoidType) {
