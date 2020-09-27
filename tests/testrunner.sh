@@ -60,7 +60,9 @@ VAPIGENFLAGS="--vapidir $vapidir"
 # Incorporate the user's CFLAGS. Matters if the user decided to insert
 # -m32 in CFLAGS, for example.
 for cflag in ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}; do
-    VALAFLAGS="${VALAFLAGS} -X ${cflag}"
+	if [[ ! $cflag =~ ^\-O[0-9]$ ]]; then
+		VALAFLAGS="${VALAFLAGS} -X ${cflag}"
+	fi
 done
 
 function testheader() {
