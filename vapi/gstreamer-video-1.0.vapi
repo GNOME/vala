@@ -155,6 +155,8 @@ namespace Gst {
 			public int get_max_errors ();
 			[Version (since = "1.4")]
 			public bool get_needs_format ();
+			[Version (since = "1.20")]
+			public bool get_needs_sync_point ();
 			public Gst.Video.CodecFrame get_oldest_frame ();
 			public Gst.Video.CodecState get_output_state ();
 			public bool get_packetized ();
@@ -179,6 +181,8 @@ namespace Gst {
 			public Gst.Caps proxy_getcaps (Gst.Caps? caps, Gst.Caps? filter);
 			[Version (since = "1.2.2")]
 			public void release_frame (owned Gst.Video.CodecFrame frame);
+			[Version (since = "1.20")]
+			public void request_sync_point (Gst.Video.CodecFrame frame, Gst.Video.DecoderRequestSyncPointFlags flags);
 			[NoWrapper]
 			public virtual bool reset (bool hard);
 			public void set_estimate_rate (bool enabled);
@@ -190,6 +194,8 @@ namespace Gst {
 			public void set_max_errors (int num);
 			[Version (since = "1.4")]
 			public void set_needs_format (bool enabled);
+			[Version (since = "1.20")]
+			public void set_needs_sync_point (bool enabled);
 			public Gst.Video.CodecState set_output_state (Gst.Video.Format fmt, uint width, uint height, Gst.Video.CodecState? reference);
 			public void set_packetized (bool packetized);
 			[Version (since = "1.6")]
@@ -208,8 +214,14 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool discard_corrupted_frames { get; set; }
 			[Version (since = "1.18")]
 			public int max_errors { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public uint64 min_force_key_unit_interval { get; set; }
 			[NoAccessorMethod]
 			[Version (since = "1.18")]
 			public bool qos { get; set; }
@@ -996,7 +1008,9 @@ namespace Gst {
 			DECODE_ONLY,
 			SYNC_POINT,
 			FORCE_KEYFRAME,
-			FORCE_KEYFRAME_HEADERS
+			FORCE_KEYFRAME_HEADERS,
+			[Version (since = "1.20")]
+			CORRUPTED
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstColorBalanceType", cprefix = "GST_COLOR_BALANCE_", type_id = "gst_color_balance_type_get_type ()")]
 		[GIR (name = "ColorBalanceType")]
@@ -1038,6 +1052,14 @@ namespace Gst {
 			UNKNOWN,
 			@0_255,
 			@16_235
+		}
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DECODER_REQUEST_SYNC_POINT_", has_type_id = false)]
+		[Flags]
+		[GIR (name = "VideoDecoderRequestSyncPointFlags")]
+		[Version (since = "1.20")]
+		public enum DecoderRequestSyncPointFlags {
+			DISCARD_INPUT,
+			CORRUPT_OUTPUT
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DITHER_FLAG_", type_id = "gst_video_dither_flags_get_type ()")]
 		[Flags]
@@ -1727,10 +1749,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.6")]
+		[Version (deprecated = true, since = "1.6")]
 		public static double color_transfer_decode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.6")]
+		[Version (deprecated = true, since = "1.6")]
 		public static double color_transfer_encode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
@@ -1903,6 +1925,12 @@ namespace Gst {
 		public static GLib.Type time_code_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? time_code_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static double transfer_function_decode (Gst.Video.TransferFunction func, double val);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static double transfer_function_encode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
 		public static Gst.Video.TransferFunction transfer_function_from_iso (uint value);

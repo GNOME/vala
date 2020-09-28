@@ -676,6 +676,8 @@ namespace Gst {
 		public Gst.ClockTime pts;
 		[CCode (has_construct_function = false)]
 		public Buffer ();
+		[Version (since = "1.20")]
+		public unowned Gst.CustomMeta? add_custom_meta (string name);
 		public unowned Gst.Meta? add_meta (Gst.MetaInfo info, void* @params);
 		[Version (since = "1.6")]
 		public unowned Gst.ParentBufferMeta? add_parent_buffer_meta (Gst.Buffer @ref);
@@ -702,6 +704,8 @@ namespace Gst {
 		public bool find_memory (size_t offset, size_t size, out uint idx, out uint length, out size_t skip);
 		public bool foreach_meta (Gst.BufferForeachMetaFunc func);
 		public Gst.Memory? get_all_memory ();
+		[Version (since = "1.20")]
+		public unowned Gst.CustomMeta? get_custom_meta (string name);
 		[Version (since = "1.10")]
 		public Gst.BufferFlags get_flags ();
 		[Version (since = "1.2")]
@@ -1424,6 +1428,8 @@ namespace Gst {
 		public void parse_caps (out unowned Gst.Caps caps);
 		public void parse_flush_stop (out bool reset_time);
 		public void parse_gap (out Gst.ClockTime timestamp, out Gst.ClockTime duration);
+		[Version (since = "1.20")]
+		public void parse_gap_flags (out Gst.GapFlags flags);
 		[Version (since = "1.2")]
 		public bool parse_group_id (out uint group_id);
 		[Version (since = "1.18")]
@@ -1471,6 +1477,8 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.10")]
 		public Event.select_streams (GLib.List<string> streams);
+		[Version (since = "1.20")]
+		public void set_gap_flags (Gst.GapFlags flags);
 		[Version (since = "1.2")]
 		public void set_group_id (uint group_id);
 		[Version (since = "1.4")]
@@ -2855,6 +2863,13 @@ namespace Gst {
 	public struct ClockTimeDiff : int64 {
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	[Version (since = "1.20")]
+	public struct CustomMeta {
+		public Gst.Meta meta;
+		public unowned Gst.Structure get_structure ();
+		public bool has_name (string name);
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct DebugCategory {
 		[Version (deprecated = true)]
 		public void free ();
@@ -2902,6 +2917,8 @@ namespace Gst {
 		[Version (since = "1.16")]
 		public uint64 get_seqnum ();
 		public static unowned Gst.MetaInfo? register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
+		[Version (since = "1.20")]
+		public static unowned Gst.MetaInfo? register_custom (string name, [CCode (array_length = false, array_null_terminated = true)] string[] tags, owned Gst.CustomMetaTransformFunction? transform_func);
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct MetaInfo {
@@ -2911,6 +2928,8 @@ namespace Gst {
 		public weak Gst.MetaInitFunction init_func;
 		public weak Gst.MetaFreeFunction free_func;
 		public weak Gst.MetaTransformFunction transform_func;
+		[Version (since = "1.20")]
+		public bool is_custom ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct MetaTransformCopy {
@@ -3289,6 +3308,12 @@ namespace Gst {
 		public static Gst.Iterator iterate_definitions ();
 		public static Gst.Format register (string nick, string description);
 		public GLib.Quark to_quark ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_GAP_FLAG_MISSING_", type_id = "gst_gap_flags_get_type ()")]
+	[Flags]
+	[Version (since = "1.20")]
+	public enum GapFlags {
+		DATA
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_ITERATOR_ITEM_", type_id = "gst_iterator_item_get_type ()")]
 	public enum IteratorItem {
@@ -3916,6 +3941,9 @@ namespace Gst {
 	public delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, double value);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, double values);
+	[CCode (cheader_filename = "gst/gst.h", instance_pos = 5.9)]
+	[Version (since = "1.20")]
+	public delegate bool CustomMetaTransformFunction (Gst.Buffer transbuf, Gst.CustomMeta meta, Gst.Buffer buffer, GLib.Quark type, void* data);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void DebugFuncPtr ();
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
