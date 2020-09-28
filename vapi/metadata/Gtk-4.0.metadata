@@ -208,6 +208,8 @@ TreeSelection
   .get_user_data skip=false
 
 // Symbol name conflicts
+ApplicationWindow
+  .get_id new
 Constraint
   .new_constant name="const"
 DragSource

@@ -5691,6 +5691,7 @@ namespace Gdk {
 	public enum MemoryFormat {
 		B8G8R8A8_PREMULTIPLIED,
 		A8R8G8B8_PREMULTIPLIED,
+		R8G8B8A8_PREMULTIPLIED,
 		B8G8R8A8,
 		A8R8G8B8,
 		R8G8B8A8,
@@ -5847,8 +5848,6 @@ namespace Gdk {
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6494,7 +6493,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ApplicationWindow (Gtk.Application application);
 		public unowned Gtk.ShortcutsWindow? get_help_overlay ();
-		public uint get_id ();
+		public new uint get_id ();
 		public bool get_show_menubar ();
 		public void set_help_overlay (Gtk.ShortcutsWindow? help_overlay);
 		public void set_show_menubar (bool show_menubar);
@@ -7324,7 +7323,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_column_view_column_get_type ()")]
 	public class ColumnViewColumn : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public ColumnViewColumn (string? title);
+		public ColumnViewColumn (string? title, owned Gtk.ListItemFactory? factory);
 		public unowned Gtk.ColumnView? get_column_view ();
 		public bool get_expand ();
 		public unowned Gtk.ListItemFactory? get_factory ();
@@ -7342,8 +7341,6 @@ namespace Gtk {
 		public void set_sorter (Gtk.Sorter? sorter);
 		public void set_title (string? title);
 		public void set_visible (bool visible);
-		[CCode (has_construct_function = false)]
-		public ColumnViewColumn.with_factory (string? title, owned Gtk.ListItemFactory factory);
 		public Gtk.ColumnView column_view { get; }
 		public bool expand { get; set; }
 		public Gtk.ListItemFactory factory { get; set; }
@@ -10156,7 +10153,6 @@ namespace Gtk {
 	public class ScrolledWindow : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ScrolledWindow ();
-		public bool get_capture_button_press ();
 		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public bool get_has_frame ();
@@ -10173,7 +10169,6 @@ namespace Gtk {
 		public bool get_propagate_natural_width ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
-		public void set_capture_button_press (bool capture_button_press);
 		public void set_child (Gtk.Widget? child);
 		public void set_hadjustment (Gtk.Adjustment? hadjustment);
 		public void set_has_frame (bool has_frame);
@@ -11956,6 +11951,7 @@ namespace Gtk {
 		public int get_margin_end ();
 		public int get_margin_start ();
 		public int get_margin_top ();
+		public unowned string get_name ();
 		public unowned Gtk.Native? get_native ();
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
@@ -12043,6 +12039,7 @@ namespace Gtk {
 		public void set_margin_end (int margin);
 		public void set_margin_start (int margin);
 		public void set_margin_top (int margin);
+		public void set_name (string name);
 		public void set_opacity (double opacity);
 		public void set_overflow (Gtk.Overflow overflow);
 		public void set_parent (Gtk.Widget parent);
@@ -12309,16 +12306,23 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_buildable_get_type ()")]
 	public interface Buildable : GLib.Object {
-		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string? type);
-		public abstract GLib.Object construct_child (Gtk.Builder builder, string name);
-		public abstract void custom_finished (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
-		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
-		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object? child, string tagname, out Gtk.BuildableParser parser, out void* data);
-		public abstract unowned GLib.Object get_internal_child (Gtk.Builder builder, string childname);
-		public abstract unowned string get_name ();
+		[NoWrapper]
+		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string type);
+		[NoWrapper]
+		public abstract void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		[NoWrapper]
+		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		[NoWrapper]
+		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, Gtk.BuildableParser parser, void* data);
+		public unowned string get_buildable_id ();
+		[NoWrapper]
+		public abstract unowned string get_id ();
+		[NoWrapper]
 		public abstract void parser_finished (Gtk.Builder builder);
+		[NoWrapper]
 		public abstract void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
-		public abstract void set_name (string name);
+		[NoWrapper]
+		public abstract void set_id (string id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkBuilderScopeInterface", type_id = "gtk_builder_scope_get_type ()")]
 	public interface BuilderScope : GLib.Object {
