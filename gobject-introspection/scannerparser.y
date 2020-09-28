@@ -77,7 +77,7 @@ csymbol_get_const_boolean (CSymbol * symbol)
   return (symbol->const_int_set && symbol->const_int) || symbol->const_string;
 }
 
-CType *
+static CType *
 ctype_new (CTypeType type)
 {
   CType *t = g_new0 (CType, 1);
@@ -85,13 +85,13 @@ ctype_new (CTypeType type)
   return t;
 }
 
-CType *
+static CType *
 ctype_copy (CType * type)
 {
   return g_memdup (type, sizeof (CType));
 }
 
-CType *
+static CType *
 cbasic_type_new (const char *name)
 {
   CType *basic_type = ctype_new (CTYPE_BASIC_TYPE);
@@ -99,7 +99,7 @@ cbasic_type_new (const char *name)
   return basic_type;
 }
 
-CType *
+static CType *
 ctypedef_new (const char *name)
 {
   CType *typedef_ = ctype_new (CTYPE_TYPEDEF);
@@ -107,7 +107,7 @@ ctypedef_new (const char *name)
   return typedef_;
 }
 
-CType *
+static CType *
 cstruct_new (const char *name)
 {
   CType *struct_ = ctype_new (CTYPE_STRUCT);
@@ -115,7 +115,7 @@ cstruct_new (const char *name)
   return struct_;
 }
 
-CType *
+static CType *
 cunion_new (const char *name)
 {
   CType *union_ = ctype_new (CTYPE_UNION);
@@ -123,7 +123,7 @@ cunion_new (const char *name)
   return union_;
 }
 
-CType *
+static CType *
 cenum_new (const char *name)
 {
   CType *enum_ = ctype_new (CTYPE_ENUM);
@@ -131,7 +131,7 @@ cenum_new (const char *name)
   return enum_;
 }
 
-CType *
+static CType *
 cpointer_new (CType * base_type)
 {
   CType *pointer = ctype_new (CTYPE_POINTER);
@@ -139,14 +139,14 @@ cpointer_new (CType * base_type)
   return pointer;
 }
 
-CType *
+static CType *
 carray_new (void)
 {
   CType *array = ctype_new (CTYPE_ARRAY);
   return array;
 }
 
-CType *
+static CType *
 cfunction_new (void)
 {
   CType *func = ctype_new (CTYPE_FUNCTION);
@@ -802,11 +802,13 @@ type_specifier
 struct_or_union_specifier
 	: struct_or_union identifier_or_typedef_name '{' struct_declaration_list '}'
 	  {
+		CSymbol *sym;
+
 		$$ = $1;
 		$$->name = $2;
 		$$->child_list = $4;
 
-		CSymbol *sym = csymbol_new (CSYMBOL_TYPE_INVALID);
+		sym = csymbol_new (CSYMBOL_TYPE_INVALID);
 		if ($$->type == CTYPE_STRUCT) {
 			sym->type = CSYMBOL_TYPE_STRUCT;
 		} else if ($$->type == CTYPE_UNION) {

@@ -25,6 +25,7 @@
 #include <glib.h>
 #include "gidlmodule.h"
 #include "gidlnode.h"
+#include "gidlparser.h"
 #include "gmetadata.h"
 
 typedef enum
