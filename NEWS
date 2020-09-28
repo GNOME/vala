@@ -1,3 +1,27 @@
+Vala 0.50.1
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Don't falsly use g_return_val_if_fail() for async creation method [#1077]
+    + Don't pass CCodeFunctionCall to NULL-aware free macro
+  - vala:
+    + Improve parsing of with-statement and allow it as embedded statement
+    + Prioritize the usage of an existing with-variable instance,
+      Recognize previously inserted implicit access to with-variable [#1043]
+  - parser: Allow to begin expression with statement keyword [#1073]
+  - g-i: Fix a couple of C compiler warnings
+  - libvaladoc: Fix a couple of C compiler warnings
+  - testrunner: Pass --enable-checking to increase coverage, Filter external
+    -0X flags to preserve current default -O0
+  - build: Stop passing obsolete --use-header
+
+ * Bindings:
+  - gstreamer: Update from 1.19.0+ git master
+  - gtk4: Don't skip LayoutManager.create_layout_child() [#1071]
+  - gtk4: Update to 3.99.1+15b635d7
+  - vapi: Update GIR-based bindings
+  - webkit2gtk-4.0: Update to 2.30.1
+
 Vala 0.50.0
 ===========
  * Various improvements and bug fixes:
