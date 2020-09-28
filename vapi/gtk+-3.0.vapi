@@ -13161,7 +13161,7 @@ namespace Gtk {
 	[Version (since = "2.6")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (since = "2.14")]
+	[Version (deprecated = true, deprecated_since = "3.22", since = "2.14")]
 	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.22")]

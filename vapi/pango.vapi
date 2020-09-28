@@ -436,6 +436,8 @@ namespace Pango {
 		public static unowned Pango.Language? from_string (string? language);
 		[Version (since = "1.16")]
 		public static unowned Pango.Language get_default ();
+		[Version (since = "1.48")]
+		public static unowned Pango.Language? get_preferred ();
 		public unowned string get_sample_string ();
 		[CCode (array_length_pos = 0.1)]
 		[Version (since = "1.22")]
