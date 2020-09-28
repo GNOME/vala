@@ -26,6 +26,7 @@
 #include <glib.h>
 #include "scanner.h"
 #include "gidlnode.h"
+#include "gidlwriter.h"
 
 typedef struct {
   int indent;
