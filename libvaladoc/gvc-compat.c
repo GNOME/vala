@@ -25,7 +25,16 @@
 /* Compat-layer for Graphviz with/without cgraph support */
 
 void
-valadoc_compat_gvc_init ()
+valadoc_compat_gvc_init (void);
+
+Agnode_t*
+valadoc_compat_gvc_graph_create_node (Agraph_t* graph, const char *name);
+
+Agraph_t*
+valadoc_compat_gvc_graph_new (const char *name);
+
+void
+valadoc_compat_gvc_init (void)
 {
 #ifndef WITH_CGRAPH
 	aginit ();
