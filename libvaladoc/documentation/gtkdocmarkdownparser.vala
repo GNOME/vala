@@ -443,7 +443,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			}
 		})
 		.set_reduce (() => {
-			(Content.List) pop ();
+			pop ();
 		})
 		.set_name ("UnorderedList");
 
@@ -472,7 +472,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 			}
 		})
 		.set_reduce (() => {
-			(Content.List) pop ();
+			pop ();
 		})
 		.set_name ("OrderedList");
 
