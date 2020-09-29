@@ -766,6 +766,7 @@ TESTS = \
 	semantic/localvariable-var-static-access-instance-property.test \
 	semantic/localvariable-var-without-initializer.test \
 	semantic/localvariable-void.test \
+	semantic/localvariable-void-initializer.test \
 	semantic/member-access-async-callback-invalid.test \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-protected-invalid.test \
