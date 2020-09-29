@@ -122,6 +122,9 @@ public class Vala.LocalVariable : Variable {
 
 			if (!initializer.check (context)) {
 				error = true;
+			} else if (initializer.value_type is VoidType) {
+				error = true;
+				Report.error (initializer.source_reference, "'void' not supported as initializer type");
 			}
 		}
 
