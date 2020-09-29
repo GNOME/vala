@@ -117,8 +117,7 @@ TreeView
 TreeViewColumn
   .set_attributes skip=false
   .new_with_attributes skip=false
-Widget abstract=false
-  .new skip=false
+Widget
   .activate_action skip=false
 WidgetClass
   .add_binding* skip=false
@@ -204,13 +203,13 @@ FlowBoxCreateWidgetFunc skip=false
   .item type="GLib.Object"
 IMContextSimple
   .add_table skip=false
-LayoutManager
-  .create_layout_child skip=false
 TreeSelection
   .get_select_function skip=false
   .get_user_data skip=false
 
 // Symbol name conflicts
+ApplicationWindow
+  .get_id new
 Constraint
   .new_constant name="const"
 DragSource
@@ -227,6 +226,8 @@ MediaStream
   .play#method name="play_now"
 Notebook
   .insert_page_menu skip
+Stack
+  .add_child new
 TreeView
   .row_expanded#method name="is_row_expanded"
 Widget
@@ -332,6 +333,8 @@ Notebook
 PrintOperation
   .create_custom_widget skip=false
 Snapshot
+  .append*_radial_gradient.stops array
+  .append*_radial_gradient.stops array_length_idx=7
   .push_shadow.shadow array array_length_idx=1
 
 // Not completely sure

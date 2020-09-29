@@ -5110,6 +5110,7 @@ namespace Gdk {
 		public void begin_updating ();
 		public void end_updating ();
 		public unowned Gdk.FrameTimings? get_current_timings ();
+		public double get_fps ();
 		public int64 get_frame_counter ();
 		public int64 get_frame_time ();
 		public int64 get_history_start ();
@@ -5435,7 +5436,7 @@ namespace Gdk {
 		public void begin_move (Gdk.Device device, int button, double x, double y, uint32 timestamp);
 		public void begin_resize (Gdk.SurfaceEdge edge, Gdk.Device? device, int button, double x, double y, uint32 timestamp);
 		public void focus (uint32 timestamp);
-		public Gdk.SurfaceState get_state ();
+		public Gdk.ToplevelState get_state ();
 		public void inhibit_system_shortcuts (Gdk.Event? event);
 		public bool lower ();
 		public bool minimize ();
@@ -5465,7 +5466,7 @@ namespace Gdk {
 		[NoAccessorMethod]
 		public abstract string startup_id { owned get; set; }
 		[ConcreteAccessor]
-		public abstract Gdk.SurfaceState state { get; }
+		public abstract Gdk.ToplevelState state { get; }
 		[NoAccessorMethod]
 		public abstract string title { owned get; set; }
 		[NoAccessorMethod]
@@ -5690,6 +5691,7 @@ namespace Gdk {
 	public enum MemoryFormat {
 		B8G8R8A8_PREMULTIPLIED,
 		A8R8G8B8_PREMULTIPLIED,
+		R8G8B8A8_PREMULTIPLIED,
 		B8G8R8A8,
 		A8R8G8B8,
 		R8G8B8A8,
@@ -5769,9 +5771,9 @@ namespace Gdk {
 		SOUTH,
 		SOUTH_EAST
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SURFACE_STATE_", type_id = "gdk_surface_state_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOPLEVEL_STATE_", type_id = "gdk_toplevel_state_get_type ()")]
 	[Flags]
-	public enum SurfaceState {
+	public enum ToplevelState {
 		WITHDRAWN,
 		MINIMIZED,
 		MAXIMIZED,
@@ -5846,8 +5848,6 @@ namespace Gdk {
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void cairo_surface_upload_to_gl (Cairo.Surface surface, int target, int width, int height, Gdk.GLContext? context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6015,6 +6015,19 @@ namespace Gsk {
 		public unowned Gdk.RGBA? peek_color ();
 		public unowned Gsk.RoundedRect? peek_outline ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_radial_gradient_node_get_type ()")]
+	public class RadialGradientNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public float get_end ();
+		public float get_hradius ();
+		public size_t get_n_color_stops ();
+		public float get_start ();
+		public float get_vradius ();
+		public unowned Graphene.Point? peek_center ();
+		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		public unowned Gsk.ColorStop[] peek_color_stops ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_render_node_get_type ()")]
 	public abstract class RenderNode {
 		[CCode (has_construct_function = false)]
@@ -6054,6 +6067,11 @@ namespace Gsk {
 	public class RepeatingLinearGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public RepeatingLinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_radial_gradient_node_get_type ()")]
+	public class RepeatingRadialGradientNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		public RepeatingRadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_rounded_clip_node_get_type ()")]
 	public class RoundedClipNode : Gsk.RenderNode {
@@ -6201,6 +6219,8 @@ namespace Gsk {
 		COLOR_NODE,
 		LINEAR_GRADIENT_NODE,
 		REPEATING_LINEAR_GRADIENT_NODE,
+		RADIAL_GRADIENT_NODE,
+		REPEATING_RADIAL_GRADIENT_NODE,
 		BORDER_NODE,
 		TEXTURE_NODE,
 		INSET_SHADOW_NODE,
@@ -6374,7 +6394,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_any_filter_get_type ()")]
 	public class AnyFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public AnyFilter ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_app_chooser_button_get_type ()")]
@@ -6473,7 +6493,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ApplicationWindow (Gtk.Application application);
 		public unowned Gtk.ShortcutsWindow? get_help_overlay ();
-		public uint get_id ();
+		public new uint get_id ();
 		public bool get_show_menubar ();
 		public void set_help_overlay (Gtk.ShortcutsWindow? help_overlay);
 		public void set_show_menubar (bool show_menubar);
@@ -6606,7 +6626,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bool_filter_get_type ()")]
 	public class BoolFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public BoolFilter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression get_expression ();
 		public bool get_invert ();
@@ -7236,7 +7256,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]
 	public class ClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params);
+		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[]? @params);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_button_get_type ()")]
 	public class ColorButton : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ColorChooser, Gtk.ConstraintTarget {
@@ -7303,7 +7323,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_column_view_column_get_type ()")]
 	public class ColumnViewColumn : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public ColumnViewColumn (string? title);
+		public ColumnViewColumn (string? title, owned Gtk.ListItemFactory? factory);
 		public unowned Gtk.ColumnView? get_column_view ();
 		public bool get_expand ();
 		public unowned Gtk.ListItemFactory? get_factory ();
@@ -7321,8 +7341,6 @@ namespace Gtk {
 		public void set_sorter (Gtk.Sorter? sorter);
 		public void set_title (string? title);
 		public void set_visible (bool visible);
-		[CCode (has_construct_function = false)]
-		public ColumnViewColumn.with_factory (string? title, owned Gtk.ListItemFactory factory);
 		public Gtk.ColumnView column_view { get; }
 		public bool expand { get; set; }
 		public Gtk.ListItemFactory factory { get; set; }
@@ -7521,7 +7539,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_filter_get_type ()")]
 	public class CustomFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public CustomFilter (owned Gtk.CustomFilterFunc? match_func);
 		public void set_filter_func (owned Gtk.CustomFilterFunc? match_func);
 	}
@@ -7532,7 +7550,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_custom_sorter_get_type ()")]
 	public class CustomSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public CustomSorter (owned GLib.CompareDataFunc sort_func);
 		public void set_sort_func (owned GLib.CompareDataFunc? sort_func);
 	}
@@ -7997,7 +8015,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_every_filter_get_type ()")]
 	public class EveryFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public EveryFilter ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expander_get_type ()")]
@@ -8912,7 +8930,7 @@ namespace Gtk {
 		protected LayoutManager ();
 		public virtual void allocate (Gtk.Widget widget, int width, int height, int baseline);
 		[NoWrapper]
-		public virtual unowned Gtk.LayoutChild create_layout_child (Gtk.Widget widget, Gtk.Widget for_child);
+		public virtual Gtk.LayoutChild create_layout_child (Gtk.Widget widget, Gtk.Widget for_child);
 		public unowned Gtk.LayoutChild get_layout_child (Gtk.Widget child);
 		[NoWrapper]
 		public virtual Gtk.SizeRequestMode get_request_mode (Gtk.Widget widget);
@@ -9333,7 +9351,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_sorter_get_type ()")]
 	public class MultiSorter : Gtk.Sorter, GLib.ListModel, Gtk.Buildable {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public MultiSorter ();
 		public void append (owned Gtk.Sorter sorter);
 		public void remove (uint position);
@@ -9481,7 +9499,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_numeric_sorter_get_type ()")]
 	public class NumericSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public NumericSorter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression? get_expression ();
 		public Gtk.SortType get_sort_order ();
@@ -9672,6 +9690,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
 		public bool show_peek_icon { get; set; }
+		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
 	public class Picture : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10134,7 +10153,6 @@ namespace Gtk {
 	public class ScrolledWindow : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ScrolledWindow ();
-		public bool get_capture_button_press ();
 		public unowned Gtk.Widget? get_child ();
 		public unowned Gtk.Adjustment get_hadjustment ();
 		public bool get_has_frame ();
@@ -10151,7 +10169,6 @@ namespace Gtk {
 		public bool get_propagate_natural_width ();
 		public unowned Gtk.Adjustment get_vadjustment ();
 		public unowned Gtk.Widget get_vscrollbar ();
-		public void set_capture_button_press (bool capture_button_press);
 		public void set_child (Gtk.Widget? child);
 		public void set_hadjustment (Gtk.Adjustment? hadjustment);
 		public void set_has_frame (bool has_frame);
@@ -10552,7 +10569,9 @@ namespace Gtk {
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_node (Gsk.RenderNode node);
 		public void append_outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
+		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
@@ -10670,6 +10689,7 @@ namespace Gtk {
 	public class Stack : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Stack ();
+		public new unowned Gtk.StackPage add_child (Gtk.Widget child);
 		public unowned Gtk.StackPage add_named (Gtk.Widget child, string? name);
 		public unowned Gtk.StackPage add_titled (Gtk.Widget child, string? name, string title);
 		public unowned Gtk.Widget? get_child_by_name (string name);
@@ -10757,7 +10777,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_filter_get_type ()")]
 	public class StringFilter : Gtk.Filter {
-		[CCode (has_construct_function = false, type = "GtkFilter*")]
+		[CCode (has_construct_function = false)]
 		public StringFilter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression get_expression ();
 		public bool get_ignore_case ();
@@ -10791,7 +10811,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_sorter_get_type ()")]
 	public class StringSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public StringSorter (owned Gtk.Expression? expression);
 		public unowned Gtk.Expression? get_expression ();
 		public bool get_ignore_case ();
@@ -10847,8 +10867,6 @@ namespace Gtk {
 		public void render_line (Cairo.Context cr, double x0, double y0, double x1, double y1);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_option")]
 		public void render_option (Cairo.Context cr, double x, double y, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_slider")]
-		public void render_slider (Cairo.Context cr, double x, double y, double width, double height, Gtk.Orientation orientation);
 		public void restore ();
 		public void save ();
 		public void set_display (Gdk.Display display);
@@ -11444,7 +11462,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_list_row_sorter_get_type ()")]
 	public class TreeListRowSorter : Gtk.Sorter {
-		[CCode (has_construct_function = false, type = "GtkSorter*")]
+		[CCode (has_construct_function = false)]
 		public TreeListRowSorter (owned Gtk.Sorter? sorter);
 		public unowned Gtk.Sorter? get_sorter ();
 		public void set_sorter (Gtk.Sorter? sorter);
@@ -11850,9 +11868,9 @@ namespace Gtk {
 		public bool use_symbolic { get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_widget_get_type ()")]
-	public class Widget : GLib.InitiallyUnowned, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
+	public abstract class Widget : GLib.InitiallyUnowned, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
-		public Widget (GLib.Type type, ...);
+		protected Widget ();
 		public void action_set_enabled (string action_name, bool enabled);
 		public bool activate ();
 		public bool activate_action (string name, string format_string, ...);
@@ -11933,6 +11951,7 @@ namespace Gtk {
 		public int get_margin_end ();
 		public int get_margin_start ();
 		public int get_margin_top ();
+		public unowned string get_name ();
 		public unowned Gtk.Native? get_native ();
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
@@ -12020,6 +12039,7 @@ namespace Gtk {
 		public void set_margin_end (int margin);
 		public void set_margin_start (int margin);
 		public void set_margin_top (int margin);
+		public void set_name (string name);
 		public void set_opacity (double opacity);
 		public void set_overflow (Gtk.Overflow overflow);
 		public void set_parent (Gtk.Widget parent);
@@ -12286,16 +12306,23 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_buildable_get_type ()")]
 	public interface Buildable : GLib.Object {
-		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string? type);
-		public abstract GLib.Object construct_child (Gtk.Builder builder, string name);
-		public abstract void custom_finished (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
-		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
-		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object? child, string tagname, out Gtk.BuildableParser parser, out void* data);
-		public abstract unowned GLib.Object get_internal_child (Gtk.Builder builder, string childname);
-		public abstract unowned string get_name ();
+		[NoWrapper]
+		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string type);
+		[NoWrapper]
+		public abstract void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		[NoWrapper]
+		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		[NoWrapper]
+		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, Gtk.BuildableParser parser, void* data);
+		public unowned string get_buildable_id ();
+		[NoWrapper]
+		public abstract unowned string get_id ();
+		[NoWrapper]
 		public abstract void parser_finished (Gtk.Builder builder);
+		[NoWrapper]
 		public abstract void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
-		public abstract void set_name (string name);
+		[NoWrapper]
+		public abstract void set_id (string id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkBuilderScopeInterface", type_id = "gtk_builder_scope_get_type ()")]
 	public interface BuilderScope : GLib.Object {
@@ -13095,9 +13122,9 @@ namespace Gtk {
 		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flag_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DEBUG_", type_id = "gtk_debug_flags_get_type ()")]
 	[Flags]
-	public enum DebugFlag {
+	public enum DebugFlags {
 		TEXT,
 		TREE,
 		KEYBINDINGS,
@@ -14103,7 +14130,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint get_debug_flags ();
+	public static Gtk.DebugFlags get_debug_flags ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Pango.Language get_default_language ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14135,7 +14162,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (float r, float g, float b, out float h, out float s, out float v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void set_debug_flags (uint flags);
+	public static void set_debug_flags (Gtk.DebugFlags flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
