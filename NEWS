@@ -1,3 +1,22 @@
+Vala 0.48.11
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + The actual struct size is required for calloc (POSIX) [#1068]
+    + Don't pass CCodeFunctionCall to NULL-aware free macro
+  - g-i: Fix a couple of C compiler warnings
+  - libvaladoc: Fix a couple of C compiler warnings
+  - testrunner: Pass --enable-checking to increase coverage, Filter external
+    -0X flags to preserve current default -O0
+
+ * Bindings:
+  - gstreamer: Update from 1.18.0+ git master
+  - gtk4: Don't skip LayoutManager.create_layout_child() [#1071]
+  - gtk4: Update to 3.99.1+15b635d7
+  - poppler-glib: Update to 20.09.0
+  - vapi: Update GIR-based bindings
+  - webkit2gtk-4.0: Update to 2.30.1
+
 Vala 0.48.10
 ============
  * Various improvements and bug fixes:
