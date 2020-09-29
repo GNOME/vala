@@ -3,5 +3,4 @@ void main() {
 	// functions that are agnostic with regard to the actual type arguments.
 
 	GLib.HashTable<int, string> h = (GLib.HashTable) null;
-	(void) h;
 }
