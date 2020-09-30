@@ -243,28 +243,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
 			}
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
-			var cl = (Class) m.parent_symbol;
+			assert (ma.inner is ClassAccess);
+			var klass = get_cvalue (ma.inner);
+
+			unowned Class cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (cl)));
-
-			CCodeExpression klass;
-			if (ma.inner == null) {
-				if (get_this_type () == null) {
-					// Accessing the method from a static or class constructor
-					klass = new CCodeIdentifier ("klass");
-				} else {
-					// Accessing the method from within an instance method
-					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-					k.add_argument (get_this_cexpression ());
-					klass = k;
-				}
-			} else {
-				// Accessing the method of an instance
-				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
-				k.add_argument (get_cvalue (ma.inner));
-				klass = k;
-			}
-
 			cast.add_argument (klass);
+
 			in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), cast);
 			out_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), cast);
 		}

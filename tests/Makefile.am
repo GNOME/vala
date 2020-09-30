@@ -370,6 +370,7 @@ TESTS = \
 	delegates/bug772204.test \
 	delegates/bug792077.vala \
 	objects/chainup.vala \
+	objects/class-access.vala \
 	objects/class-ccode-cprefix.vala \
 	objects/class_only.vala \
 	objects/class-destroysinstance.vala \

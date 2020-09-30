@@ -402,6 +402,22 @@ public class Vala.MemberAccess : Expression {
 						may_access_klass_members = true;
 					}
 				}
+			} else if (inner is ClassAccess) {
+				unowned Class cl = (Class) inner.symbol_reference;
+
+				while (cl != null) {
+					symbol_reference = cl.scope.lookup (member_name);
+					if (symbol_reference is Method && ((Method) symbol_reference).binding == MemberBinding.CLASS) {
+						may_access_klass_members = true;
+						break;
+					} else if (symbol_reference is Field && ((Field) symbol_reference).binding == MemberBinding.CLASS) {
+						may_access_klass_members = true;
+						break;
+					} else {
+						symbol_reference = null;
+					}
+					cl = cl.base_class;
+				}
 			}
 
 			if (inner is MemberAccess && inner.symbol_reference is TypeParameter) {
@@ -916,12 +932,15 @@ public class Vala.MemberAccess : Expression {
 				value_type.value_owned = target_type.value_owned;
 			}
 		} else {
-			// implicit this access
+			// implicit this or class access
 			if (instance && inner == null) {
 				inner = new MemberAccess (null, "this", source_reference);
 				inner.value_type = this_parameter.variable_type.copy ();
 				inner.value_type.value_owned = false;
 				inner.symbol_reference = this_parameter;
+			} else if (klass && inner == null) {
+				inner = new ClassAccess (source_reference);
+				inner.check (context);
 			} else {
 				check_lvalue_access ();
 			}

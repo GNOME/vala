@@ -48,6 +48,7 @@ libvala_la_VALASOURCES = \
 	valacatchclause.vala \
 	valacharacterliteral.vala \
 	valaclass.vala \
+	valaclassaccess.vala \
 	valaclasstype.vala \
 	valacodecontext.vala \
 	valacodegenerator.vala \

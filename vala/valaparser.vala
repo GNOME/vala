@@ -690,6 +690,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.BASE:
 			expr = parse_base_access ();
 			break;
+		case TokenType.CLASS:
+			expr = parse_class_access ();
+			break;
 		case TokenType.NEW:
 			expr = parse_object_or_array_creation_expression ();
 			break;
@@ -911,6 +914,12 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.BASE);
 		return new BaseAccess (get_src (begin));
+	}
+
+	Expression parse_class_access () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.CLASS);
+		return new ClassAccess (get_src (begin));
 	}
 
 	Expression parse_post_increment_expression (SourceLocation begin, Expression inner) throws ParseError {

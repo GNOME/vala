@@ -1345,6 +1345,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("base");
 	}
 
+	public override void visit_class_access (ClassAccess expr) {
+		write_string ("class");
+	}
+
 	public override void visit_postfix_expression (PostfixExpression expr) {
 		expr.inner.accept (this);
 		if (expr.increment) {

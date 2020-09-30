@@ -550,6 +550,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for class access expressions.
+	 *
+	 * @param expr a class access expression
+	 */
+	public virtual void visit_class_access (ClassAccess expr) {
+	}
+
+	/**
 	 * Visit operation called for postfix expressions.
 	 *
 	 * @param expr a postfix expression
