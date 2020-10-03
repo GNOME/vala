@@ -6190,6 +6190,7 @@ namespace Gsk {
 	public class ShaderArgsBuilder {
 		[CCode (has_construct_function = false)]
 		public ShaderArgsBuilder (Gsk.GLShader shader, GLib.Bytes initial_values);
+		[DestroysInstance]
 		public GLib.Bytes free_to_args ();
 		public unowned Gsk.ShaderArgsBuilder @ref ();
 		public void set_bool (int idx, bool value);

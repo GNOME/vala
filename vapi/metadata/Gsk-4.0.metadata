@@ -10,3 +10,5 @@ GLShader
 	.format_args* skip=false
 RenderNode
 	.deserialize skip=false
+ShaderArgsBuilder
+	.free_to_args destroys_instance
