@@ -4737,7 +4737,11 @@ namespace Gdk {
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		public void @set (GLib.Type type, ...);
 		public bool set_content (Gdk.ContentProvider? provider);
+		public void set_text (string text);
+		public void set_texture (Gdk.Texture texture);
+		public void set_valist (GLib.Type type, va_list args);
 		public void set_value (GLib.Value value);
 		public async bool store_async (int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public Gdk.ContentProvider content { get; }
@@ -5976,6 +5980,45 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderer*")]
 		public GLRenderer ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_get_type ()")]
+	public class GLShader : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected GLShader ();
+		public bool compile (Gsk.Renderer renderer) throws GLib.Error;
+		public int find_uniform_by_name (string name);
+		public GLib.Bytes format_args (...);
+		public GLib.Bytes format_args_va (va_list uniforms);
+		[CCode (has_construct_function = false)]
+		public GLShader.from_bytes (GLib.Bytes sourcecode);
+		[CCode (has_construct_function = false)]
+		public GLShader.from_resource (string resource_path);
+		public bool get_arg_bool (GLib.Bytes args, int idx);
+		public float get_arg_float (GLib.Bytes args, int idx);
+		public int32 get_arg_int (GLib.Bytes args, int idx);
+		public uint32 get_arg_uint (GLib.Bytes args, int idx);
+		public void get_arg_vec2 (GLib.Bytes args, int idx, Graphene.Vec2 out_value);
+		public void get_arg_vec3 (GLib.Bytes args, int idx, Graphene.Vec3 out_value);
+		public void get_arg_vec4 (GLib.Bytes args, int idx, Graphene.Vec4 out_value);
+		public size_t get_args_size ();
+		public int get_n_textures ();
+		public int get_n_uniforms ();
+		public unowned string get_resource ();
+		public unowned GLib.Bytes get_source ();
+		public unowned string get_uniform_name (int idx);
+		public int get_uniform_offset (int idx);
+		public Gsk.GLUniformType get_uniform_type (int idx);
+		public string resource { get; construct; }
+		public GLib.Bytes source { get; construct; }
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_node_get_type ()")]
+	public class GLShaderNode : Gsk.RenderNode {
+		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1, array_length_type = "guint")] Gsk.RenderNode[] children);
+		public unowned GLib.Bytes get_args ();
+		public unowned Gsk.RenderNode get_child (uint idx);
+		public uint get_n_children ();
+		public unowned Gsk.GLShader get_shader ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_inset_shadow_node_get_type ()")]
 	public class InsetShadowNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
@@ -6032,6 +6075,7 @@ namespace Gsk {
 	public abstract class RenderNode {
 		[CCode (has_construct_function = false)]
 		protected RenderNode ();
+		public static Gsk.RenderNode? deserialize (GLib.Bytes bytes, Gsk.ParseErrorFunc? error_func);
 		public void draw (Cairo.Context cr);
 		public Graphene.Rect get_bounds ();
 		public Gsk.RenderNodeType get_node_type ();
@@ -6079,6 +6123,23 @@ namespace Gsk {
 		public RoundedClipNode (Gsk.RenderNode child, Gsk.RoundedRect clip);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.RoundedRect? peek_clip ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_shader_args_builder_ref", type_id = "gsk_shader_args_builder_get_type ()", unref_function = "gsk_shader_args_builder_unref")]
+	[Compact]
+	public class ShaderArgsBuilder {
+		[CCode (has_construct_function = false)]
+		public ShaderArgsBuilder (Gsk.GLShader shader, GLib.Bytes initial_values);
+		public GLib.Bytes free_to_args ();
+		public unowned Gsk.ShaderArgsBuilder @ref ();
+		public void set_bool (int idx, bool value);
+		public void set_float (int idx, float value);
+		public void set_int (int idx, int32 value);
+		public void set_uint (int idx, uint32 value);
+		public void set_vec2 (int idx, Graphene.Vec2 value);
+		public void set_vec3 (int idx, Graphene.Vec3 value);
+		public void set_vec4 (int idx, Graphene.Vec4 value);
+		public GLib.Bytes to_args ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_shadow_node_get_type ()")]
 	public class ShadowNode : Gsk.RenderNode {
@@ -6211,6 +6272,17 @@ namespace Gsk {
 		BOTTOM_RIGHT,
 		BOTTOM_LEFT
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_GL_UNIFORM_TYPE_", type_id = "gsk_gl_uniform_type_get_type ()")]
+	public enum GLUniformType {
+		NONE,
+		FLOAT,
+		INT,
+		UINT,
+		BOOL,
+		VEC2,
+		VEC3,
+		VEC4
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_", type_id = "gsk_render_node_type_get_type ()")]
 	public enum RenderNodeType {
 		NOT_A_RENDER_NODE,
@@ -6236,7 +6308,8 @@ namespace Gsk {
 		CROSS_FADE_NODE,
 		TEXT_NODE,
 		BLUR_NODE,
-		DEBUG_NODE
+		DEBUG_NODE,
+		GL_SHADER_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	public enum ScalingFilter {
@@ -6261,6 +6334,8 @@ namespace Gsk {
 		INVALID_DATA;
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", error_pos = 1.8, instance_pos = 1.9)]
+	public delegate void ParseErrorFunc (Gtk.CssSection section) throws GLib.Error;
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
@@ -10569,14 +10644,15 @@ namespace Gtk {
 		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_node (Gsk.RenderNode node);
 		public void append_outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
-		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
+		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
-		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize", type = "const GskColorStop*")] Gsk.ColorStop[] stops);
+		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
 		[DestroysInstance]
 		public Gdk.Paintable free_to_paintable (Graphene.Size? size);
+		public void gl_shader_pop_texture ();
 		public void perspective (float depth);
 		public void pop ();
 		public void push_blend (Gsk.BlendMode blend_mode);
@@ -10585,6 +10661,7 @@ namespace Gtk {
 		public void push_color_matrix (Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
 		public void push_cross_fade (double progress);
 		public void push_debug (string message, ...);
+		public void push_gl_shader (Gsk.GLShader shader, Graphene.Rect bounds, owned GLib.Bytes take_args);
 		public void push_opacity (double opacity);
 		public void push_repeat (Graphene.Rect bounds, Graphene.Rect? child_bounds);
 		public void push_rounded_clip (Gsk.RoundedRect bounds);
@@ -12307,16 +12384,18 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_buildable_get_type ()")]
 	public interface Buildable : GLib.Object {
 		[NoWrapper]
-		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string type);
+		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string? type);
 		[NoWrapper]
-		public abstract void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		public abstract void custom_finished (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
 		[NoWrapper]
-		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
+		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
 		[NoWrapper]
-		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, Gtk.BuildableParser parser, void* data);
+		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object? child, string tagname, out Gtk.BuildableParser parser, out void* data);
 		public unowned string get_buildable_id ();
 		[NoWrapper]
 		public abstract unowned string get_id ();
+		[NoWrapper]
+		public abstract unowned GLib.Object get_internal_child (Gtk.Builder builder, string childname);
 		[NoWrapper]
 		public abstract void parser_finished (Gtk.Builder builder);
 		[NoWrapper]
@@ -13274,7 +13353,8 @@ namespace Gtk {
 		INHIBIT_OSK,
 		VERTICAL_WRITING,
 		EMOJI,
-		NO_EMOJI
+		NO_EMOJI,
+		PRIVATE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_INPUT_PURPOSE_", type_id = "gtk_input_purpose_get_type ()")]
 	public enum InputPurpose {
