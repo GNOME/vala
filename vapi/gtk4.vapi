@@ -7670,8 +7670,6 @@ namespace Gtk {
 		public GLib.File file { get; set; }
 		public int io_priority { get; set; }
 		[NoAccessorMethod]
-		public GLib.Type item_type { get; }
-		[NoAccessorMethod]
 		public bool loading { get; }
 		public bool monitored { get; set; }
 	}
@@ -8712,6 +8710,7 @@ namespace Gtk {
 		public IconTheme ();
 		public void add_resource_path (string path);
 		public void add_search_path (string path);
+		public unowned Gdk.Display? get_display ();
 		public static unowned Gtk.IconTheme get_for_display (Gdk.Display display);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_icon_names ();
@@ -10716,6 +10715,7 @@ namespace Gtk {
 		public SpinButton (Gtk.Adjustment? adjustment, double climb_rate, uint digits);
 		public void configure (Gtk.Adjustment? adjustment, double climb_rate, uint digits);
 		public unowned Gtk.Adjustment get_adjustment ();
+		public double get_climb_rate ();
 		public uint get_digits ();
 		public void get_increments (out double step, out double page);
 		public bool get_numeric ();
@@ -10726,6 +10726,7 @@ namespace Gtk {
 		public int get_value_as_int ();
 		public bool get_wrap ();
 		public void set_adjustment (Gtk.Adjustment adjustment);
+		public void set_climb_rate (double climb_rate);
 		public void set_digits (uint digits);
 		public void set_increments (double step, double page);
 		public void set_numeric (bool numeric);
@@ -10739,7 +10740,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SpinButton.with_range (double min, double max, double step);
 		public Gtk.Adjustment adjustment { get; set; }
-		[NoAccessorMethod]
 		public double climb_rate { get; set; }
 		public uint digits { get; set; }
 		public bool numeric { get; set; }
@@ -10973,6 +10973,7 @@ namespace Gtk {
 		public bool get_activates_default ();
 		public unowned Pango.AttrList? get_attributes ();
 		public unowned Gtk.EntryBuffer get_buffer ();
+		public bool get_enable_emoji_completion ();
 		public unowned GLib.MenuModel get_extra_menu ();
 		public Gtk.InputHints get_input_hints ();
 		public Gtk.InputPurpose get_input_purpose ();
@@ -10980,13 +10981,16 @@ namespace Gtk {
 		public int get_max_length ();
 		public bool get_overwrite_mode ();
 		public unowned string? get_placeholder_text ();
+		public bool get_propagate_text_width ();
 		public unowned Pango.TabArray? get_tabs ();
 		public uint16 get_text_length ();
+		public bool get_truncate_multiline ();
 		public bool get_visibility ();
 		public bool grab_focus_without_selecting ();
 		public void set_activates_default (bool activates);
 		public void set_attributes (Pango.AttrList? attrs);
 		public void set_buffer (Gtk.EntryBuffer buffer);
+		public void set_enable_emoji_completion (bool enable_emoji_completion);
 		public void set_extra_menu (GLib.MenuModel? model);
 		public void set_input_hints (Gtk.InputHints hints);
 		public void set_input_purpose (Gtk.InputPurpose purpose);
@@ -10994,7 +10998,9 @@ namespace Gtk {
 		public void set_max_length (int length);
 		public void set_overwrite_mode (bool overwrite);
 		public void set_placeholder_text (string? text);
+		public void set_propagate_text_width (bool propagate_text_width);
 		public void set_tabs (Pango.TabArray? tabs);
+		public void set_truncate_multiline (bool truncate_multiline);
 		public void set_visibility (bool visible);
 		public void unset_invisible_char ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -11002,7 +11008,6 @@ namespace Gtk {
 		public bool activates_default { get; set; }
 		public Pango.AttrList attributes { get; set; }
 		public Gtk.EntryBuffer buffer { get; set construct; }
-		[NoAccessorMethod]
 		public bool enable_emoji_completion { get; set; }
 		public GLib.MenuModel extra_menu { get; set; }
 		[NoAccessorMethod]
@@ -11015,12 +11020,10 @@ namespace Gtk {
 		public int max_length { get; set; }
 		public bool overwrite_mode { get; set; }
 		public string placeholder_text { get; set; }
-		[NoAccessorMethod]
 		public bool propagate_text_width { get; set; }
 		[NoAccessorMethod]
 		public int scroll_offset { get; }
 		public Pango.TabArray tabs { get; set; }
-		[NoAccessorMethod]
 		public bool truncate_multiline { get; set; }
 		public bool visibility { get; set; }
 		public signal void activate ();
@@ -11068,9 +11071,9 @@ namespace Gtk {
 		public bool get_has_selection ();
 		public unowned Gtk.TextMark get_insert ();
 		public void get_iter_at_child_anchor (out Gtk.TextIter iter, Gtk.TextChildAnchor anchor);
-		public void get_iter_at_line (out Gtk.TextIter iter, int line_number);
-		public void get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
-		public void get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
+		public bool get_iter_at_line (out Gtk.TextIter iter, int line_number);
+		public bool get_iter_at_line_index (out Gtk.TextIter iter, int line_number, int byte_index);
+		public bool get_iter_at_line_offset (out Gtk.TextIter iter, int line_number, int char_offset);
 		public void get_iter_at_mark (out Gtk.TextIter iter, Gtk.TextMark mark);
 		public void get_iter_at_offset (out Gtk.TextIter iter, int char_offset);
 		public int get_line_count ();
@@ -12443,7 +12446,6 @@ namespace Gtk {
 		public bool get_use_alpha ();
 		public abstract void set_rgba (Gdk.RGBA color);
 		public void set_use_alpha (bool use_alpha);
-		[ConcreteAccessor]
 		public abstract Gdk.RGBA rgba { get; set; }
 		[ConcreteAccessor]
 		public abstract bool use_alpha { get; set; }
