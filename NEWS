@@ -1,3 +1,83 @@
+Vala 0.40.24
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Improve array-dup-wrapper for empty arrays [#999]
+    + Don't call get_ccode_finish_instance() with non-async methods
+    + Cast initializer-list to struct for non-constant/-array assignment [#1013]
+    + Consistently use get_ccode_lower_case_prefix() for function names [#1008]
+    + Properly compare string if binary-expression contains string-literal
+    + Inline allocated and constant arrays are never NULL
+    + Check param for null before using it
+    + Properly destroy elements of an inline struct array [#365]
+    + Include header for base-symbols when connecting vfuncs
+    + Don't append unreachable clean-up section of Block [#169] [#838]
+    + Always include base_struct declaration if available [#464]
+    + Don't pass CCodeFunctionCall to NULL-aware free macro
+  - vala:
+    + Correctly handle qualified struct type in initializer list [#1004]
+    + Fix value-type for ArrayCreationExpression used as argument [#1009]
+    + Improve parameter check of "get" method used for foreach [#1017]
+    + Avoid subsequent critical caused by invalid array type for constant
+    + Improve error handling of nested initializer lists
+    + Don't allow "resize" invocation on variable with unowned array type [#928]
+    + Property must be writable when invoking ReturnsModifiedPointer method [#1023]
+    + Recursive check of assignment target to recognize constants [#944]
+    + Return copy of constant type in get_value_type_for_symbol()
+    + Handle parameter initializer without value-type
+    + Fully qualify member-access when using-directive was used to resolve [#57]
+    + Tranform instance member-access to a static one if possible [#270]
+    + Improve check of expression passed to yield
+    + Allow prototype access to signal with emitter
+    + Check error-type accessibility of creation methods and delegates
+    + Mark tranformed member-access as qualified [#57]
+    + Add TraverseVisitor for traversing the tree with a callback
+    + Force usage of temporary variables for "tainted" member accesses [#1061]
+    + Move transformation of unary increment/decrement to codegen
+    + Set parent_node for child nodes of lambda-expression [#1062]
+  - girparser:
+    + Actually respect given cprefix metadata for enumerations
+    + Warn about conflicting signals and properties
+    + Skip 'docsection' elements in <namespace>
+    + Add support for string "feature_test_macro" metadata
+    + Additionally fallback to "glib:type-name" to retrieve the cname
+  - girwriter:
+    + Append symbol-attributes to callback field [#1006]
+    + Add c:identifier-prefixes to <namespace>
+    + Write c:type="void" when name="none"
+    + Write c:symbol-prefix on supported elements
+    + Don't include symbols outside of a namespace [#241]
+  - libvaladoc: Support exporting the `class` modifier on methods and fields
+  - libvaladoc/girimporter:
+    + Skip "function-macro" elements
+    + Fallback to "name" for callback
+    + Fallback to "glib:type-name" for class, interface and record
+    + Improve parse_symbol_doc() and don't use parse_doc()
+    + Skip "attribute" elements
+  - libvaladoc/gtkdoc-importer:
+    + Correctly retrieve "url" from "ulink" elements
+    + Don't let parse_block_taglet() return null
+  - build: Update git-version-gen to latest upstream
+  - tests: Build typelib if g-ir-compiler is available
+  - tests: Don't rely on undefined use-after-free behaviour of glibc
+  - manual: Update from wiki.gnome.org
+  - Don't use locale dependent string functions on syntax strings [#1067]
+  - g-i: Fix a couple of C compiler warnings
+  - libvaladoc: Fix a couple of C compiler warnings
+  - testrunner: Pass --enable-checking to increase coverage, Filter external
+    -0X flags to preserve current default -O0
+
+ * Bindings:
+  - glib-2.0: Add AtomicUint, an alternation of AtomicInt for uint [#915]
+  - gio-unix-2.0: Fix "g_unix_mount_for" binding [#1052]
+  - gio-2.0: Include "gio/gsettingsbackend.h" for GLib.SettingsBackend
+    members [#1054]
+  - gtk+-3.0: Deprecated abstract methods are not required to be implemented
+  - gtk+-3.0: Update to 3.24.21+ffe2df7b
+  - gtk+-3.0: Resolve conflicts of signals with properties
+  - posix: Declare WRDE_APPEND constant as public
+  - webkit2gtk-4.0: Update to 2.30.1
+
 Vala 0.40.23
 ============
  * Regression and bug fixes:
