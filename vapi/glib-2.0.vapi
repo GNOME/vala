@@ -4041,7 +4041,7 @@ namespace GLib {
 		public UriFlags get_flags ();
 
 		[Version (since = "2.66")]
-		public static string? parse_params (string uri, size_t length = -1, string separators = "&;", UriParamsFlags flags = 0) throws UriError;
+		public static HashTable<string,string> parse_params (string uri, size_t length = -1, string separators = "&;", UriParamsFlags flags = 0) throws UriError;
 		[Version (since = "2.16")]
 		public static string? parse_scheme (string uri);
 		[Version (since = "2.66")]
