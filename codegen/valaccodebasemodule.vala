@@ -5362,13 +5362,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
 
 		if (expr.type_reference is DelegateType) {
-			if (get_delegate_target (expr.inner) != null) {
-				set_delegate_target (expr, get_delegate_target (expr.inner));
+			var target = get_delegate_target (expr.inner);
+			if (target != null) {
+				set_delegate_target (expr, target);
 			} else {
 				set_delegate_target (expr, new CCodeConstant ("NULL"));
 			}
-			if (get_delegate_target_destroy_notify (expr.inner) != null) {
-				set_delegate_target_destroy_notify (expr, get_delegate_target_destroy_notify (expr.inner));
+			var target_destroy_notify = get_delegate_target_destroy_notify (expr.inner);
+			if (target_destroy_notify != null) {
+				set_delegate_target_destroy_notify (expr, target_destroy_notify);
 			} else {
 				set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 			}
