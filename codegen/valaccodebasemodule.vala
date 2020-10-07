@@ -338,7 +338,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TypeSymbol gbytearray_type;
 	public TypeSymbol gptrarray_type;
 	public TypeSymbol gthreadpool_type;
-	public DataType gdestroynotify_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
 	public Class gvariant_type;
@@ -504,7 +503,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 			gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
-			gdestroynotify_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("DestroyNotify"));
 
 			gerror = (Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
