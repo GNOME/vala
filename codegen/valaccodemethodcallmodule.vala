@@ -447,12 +447,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						} else if (get_ccode_delegate_target (param) && param.variable_type is DelegateType) {
 							var deleg_type = (DelegateType) param.variable_type;
 							if (deleg_type.delegate_symbol.has_target) {
-								temp_var = get_temp_variable (new PointerType (new VoidType ()), true, null, true);
+								temp_var = get_temp_variable (delegate_target_type, true, null, true);
 								emit_temp_var (temp_var);
 								set_delegate_target (arg, get_variable_cexpression (temp_var.name));
 								carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target (arg)));
 								if (deleg_type.is_disposable ()) {
-									temp_var = get_temp_variable (gdestroynotify_type, true, null, true);
+									temp_var = get_temp_variable (delegate_target_destroy_type, true, null, true);
 									emit_temp_var (temp_var);
 									set_delegate_target_destroy_notify (arg, get_variable_cexpression (temp_var.name));
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
@@ -561,7 +561,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (m != null && m.return_type is DelegateType && async_call != ccall) {
 			var deleg_type = (DelegateType) m.return_type;
 			if (get_ccode_delegate_target (m) && deleg_type.delegate_symbol.has_target) {
-				var temp_var = get_temp_variable (new PointerType (new VoidType ()), true, null, true);
+				var temp_var = get_temp_variable (delegate_target_type, true, null, true);
 				var temp_ref = get_variable_cexpression (temp_var.name);
 
 				emit_temp_var (temp_var);
@@ -571,7 +571,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				set_delegate_target (expr, temp_ref);
 
 				if (deleg_type.is_disposable ()) {
-					temp_var = get_temp_variable (gdestroynotify_type, true, null, true);
+					temp_var = get_temp_variable (delegate_target_destroy_type, true, null, true);
 					temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);
@@ -626,7 +626,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (deleg != null && deleg.return_type is DelegateType && get_ccode_delegate_target (deleg)) {
 			var deleg_type = (DelegateType) deleg.return_type;
 			if (deleg_type.delegate_symbol.has_target) {
-				var temp_var = get_temp_variable (new PointerType (new VoidType ()), true, null, true);
+				var temp_var = get_temp_variable (delegate_target_type, true, null, true);
 				var temp_ref = get_variable_cexpression (temp_var.name);
 
 				emit_temp_var (temp_var);
@@ -636,7 +636,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				set_delegate_target (expr, temp_ref);
 
 				if (deleg_type.is_disposable ()) {
-					temp_var = get_temp_variable (gdestroynotify_type, true, null, true);
+					temp_var = get_temp_variable (delegate_target_type, true, null, true);
 					temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);
