@@ -93,7 +93,7 @@ namespace Rest {
 	[Compact]
 	public class ParamsIter {
 		public void init (Rest.Params @params);
-		public bool next (string name, Rest.Param param);
+		public bool next (out unowned string name, out unowned Rest.Param? param);
 	}
 	[CCode (cheader_filename = "rest/rest-proxy.h", type_id = "rest_proxy_get_type ()")]
 	public class Proxy : GLib.Object {
