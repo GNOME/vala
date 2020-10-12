@@ -27,6 +27,8 @@ Params cheader_filename="rest/rest-params.h"
 	.as_string_hash_table type_arguments="unowned string,unowned string"
 	.get unowned nullable
 ParamsIter cheader_filename="rest/rest-params.h"
+	.next.name out
+	.next.param out nullable
 XmlNode cheader_filename="rest/rest-xml-node.h"
   .ref skip=false
   .unref skip=false
