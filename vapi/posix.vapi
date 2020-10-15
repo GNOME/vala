@@ -2280,13 +2280,13 @@ namespace Posix {
 		public blkcnt_t st_blocks;
 	}
 	[CCode (cheader_filename = "sys/stat.h")]
-	int fstat( int fd, out Stat buf);
+	public int fstat (int fd, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h")]
-	int stat (string filename, out Stat buf);
+	public int stat (string filename, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h")]
-	int lstat (string filename, out Stat buf);
+	public int lstat (string filename, out Stat buf);
 	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
-	int fstatat (int dirfd, string pathname, out Stat buf, int flags);
+	public int fstatat (int dirfd, string pathname, out Stat buf, int flags);
 
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int chmod (string filename, mode_t mode);
