@@ -180,7 +180,8 @@ public class Vala.ForeachStatement : Block {
 			array_type.inline_allocated = false;
 
 			return check_without_iterator (context, collection_type, array_type.element_type);
-		} else if (context.profile == Profile.GOBJECT && (collection_type.compatible (context.analyzer.glist_type) || collection_type.compatible (context.analyzer.gslist_type))) {
+		} else if (context.profile == Profile.GOBJECT && (collection_type.compatible (context.analyzer.glist_type)
+		    || collection_type.compatible (context.analyzer.gslist_type) || collection_type.compatible (context.analyzer.genericarray_type))) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
 				Report.error (collection.source_reference, "missing type argument for collection");

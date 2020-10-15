@@ -337,7 +337,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
 	public TypeSymbol gbytearray_type;
-	public TypeSymbol gptrarray_type;
+	public TypeSymbol genericarray_type;
 	public TypeSymbol gthreadpool_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
@@ -510,7 +510,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
 			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
-			gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
+			genericarray_type = (TypeSymbol) glib_ns.scope.lookup ("GenericArray");
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
 
 			gerror = (Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Error");

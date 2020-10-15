@@ -257,6 +257,7 @@ TESTS = \
 	control-flow/for.vala \
 	control-flow/for-switch-continue.vala \
 	control-flow/foreach.vala \
+	control-flow/gptrarray-foreach-variable.test \
 	control-flow/local-clash-with-implicit-this.vala \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \

@@ -163,6 +163,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType gslist_type;
 	public DataType garray_type;
 	public DataType gvaluearray_type;
+	public DataType genericarray_type;
 	public Class gerror_type;
 	public DataType list_type;
 	public DataType tuple_type;
@@ -228,6 +229,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
 			garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
 			gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
+			genericarray_type = new ObjectType ((Class) glib_ns.scope.lookup ("GenericArray"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
