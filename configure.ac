@@ -120,6 +120,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=implicit \
 -Werror=pointer-arith \
 -Werror=redundant-decls \
+-Werror=return-local-addr \
 -Werror=return-type \
 -Werror=sequence-point \
 -Werror=uninitialized \
