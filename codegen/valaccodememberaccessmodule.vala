@@ -313,7 +313,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_cvalue (expr, ctemp);
 			}
 
-			expr.target_value.value_type = expr.value_type;
+			if (prop.get_accessor.value_type is GenericType) {
+				expr.target_value.value_type = prop.get_accessor.value_type.copy ();
+			} else {
+				expr.target_value.value_type = expr.value_type.copy ();
+			}
 			expr.target_value = store_temp_value (expr.target_value, expr);
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
