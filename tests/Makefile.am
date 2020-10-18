@@ -615,6 +615,7 @@ TESTS = \
 	generics/parameter-invalid-initializer.test \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
+	generics/property-int-cast.vala \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/bug640330.test \
