@@ -96,7 +96,7 @@ public class Valadoc.Api.Delegate : TypeSymbol, Callable {
 		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
