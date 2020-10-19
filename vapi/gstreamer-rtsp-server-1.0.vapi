@@ -362,6 +362,8 @@ namespace Gst {
 			public Gst.RTSPServer.TransportMode get_transport_mode ();
 			[Version (since = "1.16")]
 			public bool is_bind_mcast_address ();
+			[Version (since = "1.20")]
+			public bool is_enable_rtcp ();
 			public bool is_eos_shutdown ();
 			public bool is_shared ();
 			public bool is_stop_on_disonnect ();
@@ -375,6 +377,8 @@ namespace Gst {
 			public void set_do_retransmission (bool do_retransmission);
 			[Version (since = "1.18")]
 			public void set_dscp_qos (int dscp_qos);
+			[Version (since = "1.20")]
+			public void set_enable_rtcp (bool enable);
 			public void set_eos_shutdown (bool eos_shutdown);
 			public void set_latency (uint latency);
 			public void set_launch (string launch);
@@ -398,6 +402,9 @@ namespace Gst {
 			public uint buffer_size { get; set; }
 			public Gst.Clock clock { owned get; set; }
 			public int dscp_qos { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool enable_rtcp { get; set; }
 			[NoAccessorMethod]
 			public bool eos_shutdown { get; set; }
 			public uint latency { get; set; }

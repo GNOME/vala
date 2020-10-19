@@ -475,6 +475,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool deserialize (out GLib.Value dest, string src);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.20")]
+		public static bool deserialize_with_pspec (out GLib.Value dest, string src, GLib.ParamSpec? pspec);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fixate (GLib.Value dest, GLib.Value src);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fraction_multiply (GLib.Value product, GLib.Value factor1, GLib.Value factor2);
@@ -1987,7 +1990,7 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public Gst.Caps get_documentation_caps ();
 		[Version (since = "1.18")]
-		public void set_documentation_caps (Gst.Caps caps);
+		public void set_documentation_caps (owned Gst.Caps caps);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.14")]
 		public PadTemplate.with_gtype (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps, GLib.Type pad_type);
@@ -3048,6 +3051,8 @@ namespace Gst {
 		public weak Gst.ValueCompareFunc compare;
 		public weak Gst.ValueSerializeFunc serialize;
 		public weak Gst.ValueDeserializeFunc deserialize;
+		[Version (since = "1.20")]
+		public weak Gst.ValueDeserializeWithPSpecFunc deserialize_with_pspec;
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_ALLOCATOR_FLAG_", type_id = "gst_allocator_flags_get_type ()")]
 	[Flags]
@@ -4055,6 +4060,9 @@ namespace Gst {
 	public delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	[Version (since = "1.20")]
+	public delegate bool ValueDeserializeWithPSpecFunc (GLib.Value dest, string s, GLib.ParamSpec pspec);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate string ValueSerializeFunc (GLib.Value value1);
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_ALLOCATOR_SYSMEM")]
