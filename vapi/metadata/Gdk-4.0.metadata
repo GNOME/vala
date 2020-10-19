@@ -6,6 +6,8 @@ KEY_* name="KEY_(.+)" type="uint" parent="Gdk.Key"
 // Event API
 events_*#function parent="Gdk.Event" name="events_(.+)"
 
+Clipboard
+        .set* skip=false
 Cursor	abstract=false
 Device
         .get_surface_at_position skip=false
