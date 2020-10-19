@@ -586,6 +586,7 @@ gtk+-3.0:
 gtk4:
 	$(GENVAPI) --library $(srcdir)/gtk4 --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-gobject-1.0 --pkg pango --pkg x11 \
 		--metadatadir $(METADATADIR) \
+		$(METADATADIR)/GdkWayland-4.0-custom.vala $(GIRDIR)/GdkWayland-4.0.gir \
 		$(METADATADIR)/GdkX11-4.0-custom.vala $(GIRDIR)/GdkX11-4.0.gir \
 		$(METADATADIR)/Gdk-4.0-custom.vala $(GIRDIR)/Gdk-4.0.gir \
 		$(METADATADIR)/Gsk-4.0-custom.vala $(GIRDIR)/Gsk-4.0.gir \

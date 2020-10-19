@@ -6,6 +6,7 @@ Renderer
 	.new_for_surface symbol_type="function" name="for_surface"
 BorderNode
 	.peek_widths symbol_type="method" array
-RadialGradientNode
-	.*#function symbol_type="method" instance_idx=0
-	.peek_color_stops array array_length_idx=0
+GLShader
+	.format_args* skip=false
+RenderNode
+	.deserialize skip=false
