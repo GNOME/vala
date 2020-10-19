@@ -2751,9 +2751,9 @@ namespace Gtk {
 		public virtual signal void cut_clipboard ();
 		public virtual signal void delete_from_cursor (Gtk.DeleteType type, int count);
 		[Version (since = "2.16")]
-		public signal void icon_press (Gtk.EntryIconPosition icon_pos, Gdk.EventButton event);
+		public signal void icon_press (Gtk.EntryIconPosition icon_pos, Gdk.Event event);
 		[Version (since = "2.16")]
-		public signal void icon_release (Gtk.EntryIconPosition icon_pos, Gdk.EventButton event);
+		public signal void icon_release (Gtk.EntryIconPosition icon_pos, Gdk.Event event);
 		public virtual signal void insert_at_cursor (string str);
 		[Version (since = "3.22.27")]
 		public virtual signal void insert_emoji ();
@@ -5666,6 +5666,12 @@ namespace Gtk {
 		[CCode (cname = "embedded")]
 		public signal void on_embedded ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_plug_accessible_get_type ()")]
+	public class PlugAccessible : Gtk.WindowAccessible, Atk.Component, Atk.Window {
+		[CCode (has_construct_function = false)]
+		protected PlugAccessible ();
+		public string get_id ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_get_type ()")]
 	[Version (since = "3.12")]
 	public class Popover : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -7107,6 +7113,12 @@ namespace Gtk {
 		public unowned Gdk.Window? get_plug_window ();
 		public virtual signal void plug_added ();
 		public virtual signal bool plug_removed ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_socket_accessible_get_type ()")]
+	public class SocketAccessible : Gtk.ContainerAccessible, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected SocketAccessible ();
+		public void embed (string path);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_spin_button_get_type ()")]
 	public class SpinButton : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable, Gtk.Orientable {

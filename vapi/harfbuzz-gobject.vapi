@@ -54,6 +54,8 @@ namespace HarfBuzz {
 		public static HarfBuzz.Buffer create ();
 		[Version (since = "0.9.7")]
 		public static HarfBuzz.Bool deserialize_glyphs (HarfBuzz.Buffer buffer, [CCode (array_length_cname = "buf_len", array_length_pos = 2.5)] string[] buf, out string end_ptr, HarfBuzz.Font font, HarfBuzz.BufferSerializeFormat format);
+		[Version (since = "2.7.3")]
+		public static HarfBuzz.Bool deserialize_unicode (HarfBuzz.Buffer buffer, [CCode (array_length_cname = "buf_len", array_length_pos = 2.5)] string[] buf, out string end_ptr, HarfBuzz.BufferSerializeFormat format);
 		[Version (since = "1.5.0")]
 		public static HarfBuzz.BufferDiffFlags diff (HarfBuzz.Buffer buffer, HarfBuzz.Buffer reference, HarfBuzz.Codepoint dottedcircle_glyph, uint position_fuzz);
 		[Version (since = "0.9.42")]
@@ -88,6 +90,7 @@ namespace HarfBuzz {
 		public static HarfBuzz.UnicodeFuncs get_unicode_funcs (HarfBuzz.Buffer buffer);
 		[Version (since = "0.9.7")]
 		public static void guess_segment_properties (HarfBuzz.Buffer buffer);
+		public static HarfBuzz.Bool has_positions (HarfBuzz.Buffer buffer);
 		[Version (since = "0.9.2")]
 		public static void normalize_glyphs (HarfBuzz.Buffer buffer);
 		[Version (since = "0.9.2")]
@@ -100,6 +103,8 @@ namespace HarfBuzz {
 		public static void reverse_clusters (HarfBuzz.Buffer buffer);
 		[Version (since = "0.9.41")]
 		public static void reverse_range (HarfBuzz.Buffer buffer, uint start, uint end);
+		[Version (since = "2.7.3")]
+		public static uint serialize (HarfBuzz.Buffer buffer, uint start, uint end, [CCode (array_length_cname = "buf_size", array_length_pos = 4.5, array_length_type = "guint")] out uint8[] buf, out uint buf_consumed, HarfBuzz.Font? font, HarfBuzz.BufferSerializeFormat format, HarfBuzz.BufferSerializeFlags flags);
 		[Version (since = "0.9.7")]
 		public static HarfBuzz.BufferSerializeFormat serialize_format_from_string ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[] str);
 		[Version (since = "0.9.7")]
@@ -109,6 +114,8 @@ namespace HarfBuzz {
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "0.9.7")]
 		public static unowned string[] serialize_list_formats ();
+		[Version (since = "2.7.3")]
+		public static uint serialize_unicode (HarfBuzz.Buffer buffer, uint start, uint end, [CCode (array_length_cname = "buf_size", array_length_pos = 4.5, array_length_type = "guint")] out uint8[] buf, out uint buf_consumed, HarfBuzz.BufferSerializeFormat format, HarfBuzz.BufferSerializeFlags flags);
 		[Version (since = "0.9.42")]
 		public static void set_cluster_level (HarfBuzz.Buffer buffer, HarfBuzz.BufferClusterLevel cluster_level);
 		[Version (since = "0.9.5")]
