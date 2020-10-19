@@ -6917,29 +6917,48 @@ namespace Clutter {
 		public virtual signal bool rotate (Clutter.Actor actor, double angle);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_score_get_type ()")]
-	[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
+	[Version (since = "0.6")]
 	public class Score : GLib.Object {
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public Score ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public ulong append (Clutter.Timeline? parent, Clutter.Timeline timeline);
-		[Version (since = "0.8")]
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.8")]
 		public ulong append_at_marker (Clutter.Timeline parent, string marker_name, Clutter.Timeline timeline);
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public bool get_loop ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public unowned Clutter.Timeline get_timeline (ulong id_);
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public bool is_playing ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public GLib.SList<weak Clutter.Timeline> list_timelines ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void pause ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void remove (ulong id_);
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void remove_all ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void rewind ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void set_loop (bool loop);
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void start ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public void stop ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public bool loop { get; set; }
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public virtual signal void completed ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public virtual signal void paused ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public virtual signal void started ();
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public virtual signal void timeline_completed (Clutter.Timeline timeline);
+		[Version (deprecated = true, deprecated_since = "1.8", since = "0.6")]
 		public virtual signal void timeline_started (Clutter.Timeline timeline);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_script_get_type ()")]
