@@ -18,7 +18,7 @@ namespace Gst {
 			public bool is_eos ();
 			[Version (since = "1.12")]
 			public void set_buffer_list_support (bool enable_lists);
-			public void set_caps (Gst.Caps caps);
+			public void set_caps (Gst.Caps? caps);
 			public void set_drop (bool drop);
 			public void set_emit_signals (bool emit);
 			public void set_max_buffers (uint max);
@@ -63,7 +63,7 @@ namespace Gst {
 			public virtual Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
 			[Version (since = "1.14")]
 			public virtual Gst.FlowReturn push_buffer_list (owned Gst.BufferList buffer_list);
-			public void set_caps (Gst.Caps caps);
+			public void set_caps (Gst.Caps? caps);
 			[Version (since = "1.10")]
 			public void set_duration (Gst.ClockTime duration);
 			public void set_emit_signals (bool emit);
