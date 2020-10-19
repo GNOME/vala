@@ -1,0 +1,4 @@
+* cheader_filename = "gdk/gdkwayland.h"
+
+//wayland_* name="wayland_(.+)" parent="Gdk.Wayland"
+Wayland* name="Wayland(.+)" parent="Gdk.Wayland"

@@ -4560,6 +4560,67 @@ namespace Gdk {
 		[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_KEY_zstroke")]
 		public const uint zstroke;
 	}
+	namespace Wayland {
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_device_get_type ()")]
+		[GIR (name = "WaylandDevice")]
+		public class Device : Gdk.Device {
+			[CCode (has_construct_function = false)]
+			protected Device ();
+			public unowned string? get_node_path ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
+		[GIR (name = "WaylandDisplay")]
+		public class Display : Gdk.Display {
+			[CCode (has_construct_function = false)]
+			protected Display ();
+			public unowned string? get_startup_notification_id ();
+			public bool query_registry (string global);
+			public void set_cursor_theme (string theme, int size);
+			public void set_startup_notification_id (string startup_id);
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
+		[GIR (name = "WaylandGLContext")]
+		public class GLContext : Gdk.GLContext {
+			[CCode (has_construct_function = false)]
+			protected GLContext ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_monitor_get_type ()")]
+		[GIR (name = "WaylandMonitor")]
+		public class Monitor : Gdk.Monitor {
+			[CCode (has_construct_function = false)]
+			protected Monitor ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_popup_get_type ()")]
+		[GIR (name = "WaylandPopup")]
+		public class Popup : Gdk.Wayland.Surface, Gdk.Popup {
+			[CCode (has_construct_function = false)]
+			protected Popup ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_seat_get_type ()")]
+		[GIR (name = "WaylandSeat")]
+		public class Seat : Gdk.Seat {
+			[CCode (has_construct_function = false)]
+			protected Seat ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_surface_get_type ()")]
+		[GIR (name = "WaylandSurface")]
+		public class Surface : Gdk.Surface {
+			[CCode (has_construct_function = false)]
+			protected Surface ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
+		[GIR (name = "WaylandToplevel")]
+		public class Toplevel : Gdk.Wayland.Surface, Gdk.Toplevel {
+			[CCode (has_construct_function = false)]
+			protected Toplevel ();
+			public bool export_handle (owned Gdk.Wayland.ToplevelExported callback);
+			public void set_application_id (string application_id);
+			public bool set_transient_for_exported (string parent_handle_str);
+			public void unexport_handle ();
+		}
+		[CCode (cheader_filename = "gdk/gdkwayland.h", instance_pos = 2.9)]
+		public delegate void ToplevelExported (Gdk.Wayland.Toplevel toplevel, string handle);
+	}
 	namespace X11 {
 		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_app_launch_context_get_type ()")]
 		[GIR (name = "X11AppLaunchContext")]
@@ -4733,7 +4794,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public bool is_local ();
-		public async GLib.InputStream read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
+		public async GLib.InputStream? read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -4787,7 +4848,7 @@ namespace Gdk {
 		public unowned string[]? get_mime_types (out size_t n_mime_types);
 		public bool match (Gdk.ContentFormats second);
 		public GLib.Type match_gtype (Gdk.ContentFormats second);
-		public unowned string match_mime_type (Gdk.ContentFormats second);
+		public unowned string? match_mime_type (Gdk.ContentFormats second);
 		public void print (GLib.StringBuilder string);
 		public unowned Gdk.ContentFormats @ref ();
 		public string to_string ();
@@ -4965,7 +5026,7 @@ namespace Gdk {
 		public unowned string get_name ();
 		public unowned Gdk.Clipboard get_primary_clipboard ();
 		public bool get_setting (string name, GLib.Value value);
-		public unowned string get_startup_notification_id ();
+		public unowned string? get_startup_notification_id ();
 		public bool is_closed ();
 		public bool is_composited ();
 		public bool is_rgba ();
@@ -6176,7 +6237,7 @@ namespace Gsk {
 		public bool equal (Gsk.Transform second);
 		public Gsk.TransformCategory get_category ();
 		[DestroysInstance]
-		public Gsk.Transform invert ();
+		public Gsk.Transform? invert ();
 		[DestroysInstance]
 		public Gsk.Transform matrix (Graphene.Matrix matrix);
 		public static bool parse (string string, out Gsk.Transform out_transform);
@@ -6344,15 +6405,17 @@ namespace Gtk {
 	public abstract class ATContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ATContext ();
-		public static Gtk.ATContext? create (Gtk.AccessibleRole accessible_role, Gtk.Accessible accessible);
+		public static Gtk.ATContext? create (Gtk.AccessibleRole accessible_role, Gtk.Accessible accessible, Gdk.Display display);
 		public unowned Gtk.Accessible get_accessible ();
 		public Gtk.AccessibleRole get_accessible_role ();
 		public Gtk.Accessible accessible { get; construct; }
 		public Gtk.AccessibleRole accessible_role { get; construct; }
+		[NoAccessorMethod]
+		public Gdk.Display display { owned get; construct; }
 		public signal void state_change ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
-	public class AboutDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
+	public class AboutDialog : Gtk.Window, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public AboutDialog ();
 		public void add_credit_section (string section_name, [CCode (array_length = false, array_null_terminated = true)] string[] people);
@@ -6360,20 +6423,20 @@ namespace Gtk {
 		public unowned string[] get_artists ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_authors ();
-		public unowned string get_comments ();
-		public unowned string get_copyright ();
+		public unowned string? get_comments ();
+		public unowned string? get_copyright ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_documenters ();
-		public unowned string get_license ();
+		public unowned string? get_license ();
 		public Gtk.License get_license_type ();
 		public unowned Gdk.Paintable? get_logo ();
 		public unowned string? get_logo_icon_name ();
 		public unowned string get_program_name ();
-		public unowned string get_system_information ();
-		public unowned string get_translator_credits ();
-		public unowned string get_version ();
-		public unowned string get_website ();
-		public unowned string get_website_label ();
+		public unowned string? get_system_information ();
+		public unowned string? get_translator_credits ();
+		public unowned string? get_version ();
+		public unowned string? get_website ();
+		public unowned string? get_website_label ();
 		public bool get_wrap_license ();
 		public void set_artists ([CCode (array_length = false, array_null_terminated = true)] string[] artists);
 		public void set_authors ([CCode (array_length = false, array_null_terminated = true)] string[] authors);
@@ -6747,7 +6810,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class BuildableParseContext {
-		public unowned string get_element ();
+		public unowned string? get_element ();
 		public unowned GLib.GenericArray<string> get_element_stack ();
 		public void get_position (out int line_number, out int char_number);
 		public void* pop ();
@@ -7974,7 +8037,7 @@ namespace Gtk {
 		public EntryCompletion ();
 		public void complete ();
 		public string? compute_prefix (string key);
-		public unowned string get_completion_prefix ();
+		public unowned string? get_completion_prefix ();
 		public unowned Gtk.Widget get_entry ();
 		public bool get_inline_completion ();
 		public bool get_inline_selection ();
@@ -9587,7 +9650,7 @@ namespace Gtk {
 	public class ObjectExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
 		public ObjectExpression (GLib.Object object);
-		public unowned GLib.Object get_object ();
+		public unowned GLib.Object? get_object ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_overlay_get_type ()")]
 	public class Overlay : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -9805,6 +9868,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Popover ();
 		public bool get_autohide ();
+		public bool get_cascade_popdown ();
 		public unowned Gtk.Widget? get_child ();
 		public bool get_has_arrow ();
 		public bool get_mnemonics_visible ();
@@ -9814,6 +9878,7 @@ namespace Gtk {
 		public void popdown ();
 		public void popup ();
 		public void set_autohide (bool autohide);
+		public void set_cascade_popdown (bool cascade_popdown);
 		public void set_child (Gtk.Widget? child);
 		public void set_default_widget (Gtk.Widget? widget);
 		public void set_has_arrow (bool has_arrow);
@@ -9822,6 +9887,7 @@ namespace Gtk {
 		public void set_pointing_to (Gdk.Rectangle rect);
 		public void set_position (Gtk.PositionType position);
 		public bool autohide { get; set; }
+		public bool cascade_popdown { get; set; }
 		public Gtk.Widget child { get; set; }
 		[NoAccessorMethod]
 		public Gtk.Widget default_widget { owned get; set; }
@@ -10801,7 +10867,7 @@ namespace Gtk {
 		public string visible_child_name { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_page_get_type ()")]
-	public class StackPage : GLib.Object {
+	public class StackPage : GLib.Object, Gtk.Accessible {
 		[CCode (has_construct_function = false)]
 		protected StackPage ();
 		public unowned Gtk.Widget get_child ();
@@ -10937,8 +11003,6 @@ namespace Gtk {
 		public void render_handle (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_icon")]
 		public void render_icon (Cairo.Context cr, Gdk.Texture texture, double x, double y);
-		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_insertion_cursor")]
-		public void render_insertion_cursor (Cairo.Context cr, double x, double y, Pango.Layout layout, int index, Pango.Direction direction);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_layout")]
 		public void render_layout (Cairo.Context cr, double x, double y, Pango.Layout layout);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_line")]
@@ -12321,7 +12385,7 @@ namespace Gtk {
 	public class WindowControls : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WindowControls (Gtk.PackType side);
-		public unowned string get_decoration_layout ();
+		public unowned string? get_decoration_layout ();
 		public bool get_empty ();
 		public Gtk.PackType get_side ();
 		public void set_decoration_layout (string? layout);
