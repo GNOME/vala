@@ -2115,9 +2115,15 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public virtual async GLib.List<GLib.Variant> lookup_records_async (string rrname, GLib.ResolverRecordType record_type, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
-		public virtual GLib.List<GLib.SrvTarget> lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[CCode (finish_vfunc_name = "lookup_service_finish", vfunc_name = "lookup_service_async")]
-		public virtual async GLib.List<GLib.SrvTarget> lookup_service_async (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.List<GLib.SrvTarget> lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.22")]
+		public async GLib.List<GLib.SrvTarget> lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (vfunc_name = "lookup_service")]
+		[NoWrapper]
+		public virtual GLib.List<GLib.SrvTarget> lookup_service_fn (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[CCode (finish_name = "g_resolver_lookup_service_finish", vfunc_name = "lookup_service_async")]
+		[NoWrapper]
+		public virtual async GLib.List<GLib.SrvTarget> lookup_service_fn_async (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public void set_default ();
 		public virtual signal void reload ();
