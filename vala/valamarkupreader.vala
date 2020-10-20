@@ -172,10 +172,12 @@ public class Vala.MarkupReader {
 				space ();
 				while (current < end && current[0] != '>' && current[0] != '/') {
 					string attr_name = read_name ();
+					space ();
 					if (current >= end || current[0] != '=') {
 						// error
 					}
 					current++;
+					space ();
 					if (current >= end || current[0] != '"' || current[0] != '\'') {
 						// error
 					}
