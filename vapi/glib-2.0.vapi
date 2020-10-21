@@ -3800,9 +3800,9 @@ namespace GLib {
 		[CCode (cname = "vfprintf")]
 		public void vprintf (string format, va_list args);
 		[CCode (cname = "fputc", instance_pos = -1)]
-		public void putc (char c);
+		public int putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
-		public void puts (string s);
+		public int puts (string s);
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[CCode (cname = "ungetc", instance_pos = -1)]
