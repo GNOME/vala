@@ -12022,11 +12022,11 @@ namespace Gtk {
 		public bool activate_action_variant (string name, GLib.Variant? args);
 		public void activate_default ();
 		[CCode (cname = "gtk_widget_class_add_binding")]
-		public class void add_binding (uint keyval, Gdk.ModifierType mods, Gtk.ShortcutFunc callback, string format_string, ...);
+		public class void add_binding (uint keyval, Gdk.ModifierType mods, Gtk.ShortcutFunc callback, string? format_string, ...);
 		[CCode (cname = "gtk_widget_class_add_binding_action")]
-		public class void add_binding_action (uint keyval, Gdk.ModifierType mods, string action_name, string format_string, ...);
+		public class void add_binding_action (uint keyval, Gdk.ModifierType mods, string action_name, string? format_string, ...);
 		[CCode (cname = "gtk_widget_class_add_binding_signal")]
-		public class void add_binding_signal (uint keyval, Gdk.ModifierType mods, string @signal, string format_string, ...);
+		public class void add_binding_signal (uint keyval, Gdk.ModifierType mods, string @signal, string? format_string, ...);
 		public void add_controller (owned Gtk.EventController controller);
 		public void add_css_class (string css_class);
 		public void add_mnemonic_label (Gtk.Widget label);
@@ -12530,6 +12530,7 @@ namespace Gtk {
 		public void finish_delegate ();
 		public float get_alignment ();
 		public string get_chars (int start_pos = 0, int end_pos = -1);
+		public abstract unowned Gtk.Editable? get_delegate ();
 		public bool get_editable ();
 		public bool get_enable_undo ();
 		public int get_max_width_chars ();
