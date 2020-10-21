@@ -150,9 +150,12 @@ namespace Curses {
 		public int untouchwin();
 		[CCode (cname = "waddch")]
 		public int addch(ulong ch);
-		public int waddchnstr([CCode (array_length = false)] ulong[] chstr, int n);
-		public int waddchstr([CCode (array_length = false)] ulong[] chstr);
-		public int waddnstr(string str, int n);
+		[CCode (cname = "waddchnstr")]
+		public int addchnstr([CCode (array_length = false)] ulong[] chstr, int n);
+		[CCode (cname = "waddchstr")]
+		public int addchstr([CCode (array_length = false)] ulong[] chstr);
+		[CCode (name = "waddnstr")]
+		public int addnstr(string str, int n);
 		[CCode (cname = "waddstr")]
 		public int addstr(string str);
 		[CCode (cname = "wattron")]
