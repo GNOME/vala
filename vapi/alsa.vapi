@@ -536,7 +536,7 @@ namespace Alsa {
         [CCode (cname = "snd_pcm_poll_descriptors")]
         public int set_poll_descriptors( Posix.pollfd[] pfds );
         [CCode (cname = "snd_pcm_poll_descriptors_revents")]
-        public int set_poll_descriptors_revents( Posix.pollfd[] pfds, ushort[] revents );
+        public int set_poll_descriptors_revents( Posix.pollfd[] pfds, out ushort revents );
         [CCode (cname = "snd_pcm_nonblock")]
         public int set_nonblock( bool nonblock );
 
