@@ -42,6 +42,17 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkLabel" id="label0">
+            <binding name="label">
+              <closure type="gchararray" function="on_enabled_cb">
+                <constant type="gchararray">some string</constant>
+                <constant type="gint">42</constant>
+                <lookup name="boolean0">GtkTemplateTest</lookup>
+              </closure>
+            </binding>
+          </object>
+        </child>
       </object>
     </child>
   </template>
