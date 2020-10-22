@@ -103,6 +103,8 @@ TESTS = \
 	arrays/struct-namespaced-initializer.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/resize.vala \
+	arrays/resize-local-size.vala \
+	arrays/resize-local-size-captured.vala \
 	arrays/resize-unowned-invalid.test \
 	arrays/resize-unowned-invalid-2.test \
 	arrays/resize-unowned-invalid-3.test \
@@ -138,6 +140,7 @@ TESTS = \
 	methods/iterator.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-ref-array-resize.vala \
+	methods/parameter-ref-array-resize-captured.vala \
 	methods/prepostconditions.vala \
 	methods/prepostconditions-captured.vala \
 	methods/postconditions.vala \
