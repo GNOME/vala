@@ -815,9 +815,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccode.add_assignment (get_array_length_cexpression (ma.inner, 1), temp_ref);
 
 			var array_var = ma.inner.symbol_reference;
-			var array_local = array_var as LocalVariable;
 			if (array_var != null && array_var.is_internal_symbol ()
-			    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
+			    && (array_var is LocalVariable || array_var is Field)) {
 				ccode.add_assignment (get_array_size_cvalue (ma.inner.target_value), temp_ref);
 			}
 
@@ -881,9 +880,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				if (param != null && get_ccode_array_length (param) && param.variable_type is ArrayType
 				    && !((ArrayType) param.variable_type).fixed_length && ((ArrayType) param.variable_type).rank == 1) {
 					unowned Symbol? array_var = unary.inner.symbol_reference;
-					unowned LocalVariable? array_local = array_var as LocalVariable;
 					if (array_var != null && array_var.is_internal_symbol ()
-					    && ((array_local != null && !array_local.captured) || array_var is Field)) {
+					    && (array_var is LocalVariable || array_var is Field)) {
 						ccode.add_assignment (get_array_size_cvalue (unary.inner.target_value), get_array_length_cvalue (unary.inner.target_value, 1));
 					}
 				}
