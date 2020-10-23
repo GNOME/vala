@@ -636,7 +636,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				set_delegate_target (expr, temp_ref);
 
 				if (deleg_type.is_disposable ()) {
-					temp_var = get_temp_variable (delegate_target_type, true, null, true);
+					temp_var = get_temp_variable (delegate_target_destroy_type, true, null, true);
 					temp_ref = get_variable_cexpression (temp_var.name);
 
 					emit_temp_var (temp_var);
