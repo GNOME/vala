@@ -29,7 +29,7 @@ public class Vala.DelegateDestroyField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public DelegateDestroyField (SourceReference source_reference) {
+	public DelegateDestroyField (SourceReference? source_reference = null) {
 		base ("destroy", CodeContext.get ().analyzer.delegate_target_destroy_type, null, source_reference);
 		external = true;
 	}

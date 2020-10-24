@@ -74,7 +74,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 * @param false_stmt statement to be evaluated if condition is false
 	 * @return           newly created if statement
 	 */
-	public IfStatement (Expression cond, Block true_stmt, Block? false_stmt, SourceReference? source) {
+	public IfStatement (Expression cond, Block true_stmt, Block? false_stmt, SourceReference? source = null) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;

@@ -32,7 +32,7 @@ public class Vala.EmptyStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created empty statement
 	 */
-	public EmptyStatement (SourceReference source) {
+	public EmptyStatement (SourceReference? source = null) {
 		source_reference = source;
 	}
 

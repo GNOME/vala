@@ -29,7 +29,7 @@ public class Vala.GenericDupField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public GenericDupField (SourceReference source_reference) {
+	public GenericDupField (SourceReference? source_reference = null) {
 		base ("dup", CodeContext.get ().analyzer.generics_dup_func_type, null, source_reference);
 		external = true;
 	}

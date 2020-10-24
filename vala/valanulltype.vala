@@ -26,7 +26,7 @@ using GLib;
  * The type of the null literal.
  */
 public class Vala.NullType : ReferenceType {
-	public NullType (SourceReference? source_reference) {
+	public NullType (SourceReference? source_reference = null) {
 		base (null);
 		this.nullable = true;
 		this.source_reference = source_reference;

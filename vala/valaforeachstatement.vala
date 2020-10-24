@@ -103,7 +103,7 @@ public class Vala.ForeachStatement : Block {
 	 * @param source_reference  reference to source code
 	 * @return                  newly created foreach statement
 	 */
-	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
+	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference? source_reference = null) {
 		base (source_reference);
 		this.variable_name = variable_name;
 		this.collection = collection;

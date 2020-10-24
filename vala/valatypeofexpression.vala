@@ -46,7 +46,7 @@ public class Vala.TypeofExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created typeof expression
 	 */
-	public TypeofExpression (DataType type, SourceReference source) {
+	public TypeofExpression (DataType type, SourceReference? source = null) {
 		type_reference = type;
 		source_reference = source;
 	}
