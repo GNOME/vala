@@ -33,7 +33,7 @@ public class Vala.TypeParameter : Symbol {
 	 * @param source_reference  reference to source code
 	 * @return                  newly created generic type parameter
 	 */
-	public TypeParameter (string name, SourceReference source_reference) {
+	public TypeParameter (string name, SourceReference? source_reference = null) {
 		base (name, source_reference);
 	}
 

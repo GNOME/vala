@@ -31,7 +31,7 @@ public class Vala.ArrayCopyMethod : Method {
 	 *
 	 * @return newly created method
 	 */
-	public ArrayCopyMethod (SourceReference source_reference) {
+	public ArrayCopyMethod (SourceReference? source_reference = null) {
 		base ("copy", new InvalidType (), source_reference);
 		external = true;
 	}

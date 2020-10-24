@@ -29,7 +29,7 @@ public class Vala.DelegateTargetField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public DelegateTargetField (SourceReference source_reference) {
+	public DelegateTargetField (SourceReference? source_reference = null) {
 		base ("target", new PointerType (new VoidType ()), null, source_reference);
 		external = true;
 	}

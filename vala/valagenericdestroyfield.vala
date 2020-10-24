@@ -29,7 +29,7 @@ public class Vala.GenericDestroyField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public GenericDestroyField (SourceReference source_reference) {
+	public GenericDestroyField (SourceReference? source_reference = null) {
 		base ("destroy", CodeContext.get ().analyzer.delegate_target_destroy_type, null, source_reference);
 		external = true;
 	}

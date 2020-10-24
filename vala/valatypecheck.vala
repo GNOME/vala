@@ -59,7 +59,7 @@ public class Vala.TypeCheck : Expression {
 	 * @param source reference to source code
 	 * @return       newly created type check expression
 	 */
-	public TypeCheck (Expression expr, DataType type, SourceReference source) {
+	public TypeCheck (Expression expr, DataType type, SourceReference? source = null) {
 		expression = expr;
 		type_reference = type;
 		source_reference = source;
