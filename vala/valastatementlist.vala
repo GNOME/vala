@@ -28,7 +28,7 @@ public class Vala.StatementList : CodeNode, Statement {
 		get { return list.size; }
 	}
 
-	public StatementList (SourceReference source_reference) {
+	public StatementList (SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 	}
 

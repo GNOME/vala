@@ -58,8 +58,8 @@ public class Vala.ElementAccess : Expression {
 	public List<Expression> get_indices () {
 		return indices;
 	}
-	
-	public ElementAccess (Expression container, SourceReference source_reference) {
+
+	public ElementAccess (Expression container, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.container = container;
 	}

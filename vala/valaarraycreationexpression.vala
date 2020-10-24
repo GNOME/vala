@@ -84,7 +84,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		return sizes;
 	}
 	
-	public ArrayCreationExpression (DataType element_type, int rank, InitializerList? initializer_list, SourceReference source_reference) {
+	public ArrayCreationExpression (DataType element_type, int rank, InitializerList? initializer_list, SourceReference? source_reference = null) {
 		this.element_type = element_type;
 		this.rank = rank;
 		this.initializer_list = initializer_list;

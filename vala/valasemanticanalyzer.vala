@@ -597,7 +597,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	public bool check_variadic_arguments (Iterator<Expression>? arg_it, int i, SourceReference source_reference) {
+	public bool check_variadic_arguments (Iterator<Expression>? arg_it, int i, SourceReference? source_reference = null) {
 		while (arg_it != null && arg_it.next ()) {
 			var arg = arg_it.get ();
 			if (arg.error) {
@@ -625,7 +625,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	public bool check_print_format (string format, Iterator<Expression> arg_it, SourceReference source_reference) {
+	public bool check_print_format (string format, Iterator<Expression> arg_it, SourceReference? source_reference = null) {
 		bool unsupported_format = false;
 
 		weak string format_it = format;

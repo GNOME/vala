@@ -65,7 +65,7 @@ public class Vala.Constant : Symbol, Lockable {
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (string name, DataType? type_reference, Expression? value, SourceReference? source_reference, Comment? comment = null) {
+	public Constant (string name, DataType? type_reference, Expression? value, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		if (type_reference != null) {
 			this.type_reference = type_reference;

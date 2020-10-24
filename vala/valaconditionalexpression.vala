@@ -77,7 +77,7 @@ public class Vala.ConditionalExpression : Expression {
 	 * @param false_expr expression to be evaluated if condition is false
 	 * @return           newly created conditional expression
 	 */
-	public ConditionalExpression (Expression cond, Expression true_expr, Expression false_expr, SourceReference source) {
+	public ConditionalExpression (Expression cond, Expression true_expr, Expression false_expr, SourceReference? source = null) {
 		condition = cond;
 		true_expression = true_expr;
 		false_expression = false_expr;

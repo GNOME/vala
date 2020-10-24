@@ -67,7 +67,7 @@ public class Vala.CastExpression : Expression {
 	 * @param type_reference  target type
 	 * @return                newly created cast expression
 	 */
-	public CastExpression (Expression inner, DataType type_reference, SourceReference source_reference) {
+	public CastExpression (Expression inner, DataType type_reference, SourceReference? source_reference = null) {
 		this.type_reference = type_reference;
 		this.source_reference = source_reference;
 		this.is_silent_cast = false;
@@ -75,7 +75,7 @@ public class Vala.CastExpression : Expression {
 		this.inner = inner;
 	}
 
-	public CastExpression.silent (Expression inner, DataType type_reference, SourceReference source_reference) {
+	public CastExpression.silent (Expression inner, DataType type_reference, SourceReference? source_reference = null) {
 		this.type_reference = type_reference;
 		this.source_reference = source_reference;
 		this.is_silent_cast = true;
@@ -83,7 +83,7 @@ public class Vala.CastExpression : Expression {
 		this.inner = inner;
 	}
 
-	public CastExpression.non_null (Expression inner, SourceReference source_reference) {
+	public CastExpression.non_null (Expression inner, SourceReference? source_reference = null) {
 		this.inner = inner;
 		this.is_non_null_cast = true;
 		this.source_reference = source_reference;

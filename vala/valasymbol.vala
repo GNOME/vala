@@ -192,7 +192,7 @@ public abstract class Vala.Symbol : CodeNode {
 	private weak Scope _owner;
 	private Scope _scope;
 
-	protected Symbol (string? name, SourceReference? source_reference, Comment? comment = null) {
+	protected Symbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
 		this.name = name;
 		this.source_reference = source_reference;
 		this.comment = comment;

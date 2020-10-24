@@ -31,7 +31,7 @@ public class Vala.ArrayLengthField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public ArrayLengthField (SourceReference source_reference) {
+	public ArrayLengthField (SourceReference? source_reference = null) {
 		base ("length", new InvalidType (), null, source_reference);
 		external = true;
 	}

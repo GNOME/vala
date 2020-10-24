@@ -32,7 +32,7 @@ public class Vala.BreakStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created break statement
 	 */
-	public BreakStatement (SourceReference? source) {
+	public BreakStatement (SourceReference? source = null) {
 		source_reference = source;
 	}
 	
