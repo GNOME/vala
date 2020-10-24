@@ -36,7 +36,7 @@ public abstract class Vala.Subroutine : Symbol {
 
 	public abstract bool has_result { get; }
 
-	protected Subroutine (string? name, SourceReference? source_reference, Comment? comment = null) {
+	protected Subroutine (string? name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 

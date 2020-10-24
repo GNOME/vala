@@ -49,7 +49,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created switch statement
 	 */
-	public SwitchStatement (Expression expression, SourceReference? source_reference) {
+	public SwitchStatement (Expression expression, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.expression = expression;
 	}

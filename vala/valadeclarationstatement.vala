@@ -49,7 +49,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	 * @param source_reference  reference to source code
 	 * @return                  newly created declaration statement
 	 */
-	public DeclarationStatement (Symbol declaration, SourceReference? source_reference) {
+	public DeclarationStatement (Symbol declaration, SourceReference? source_reference = null) {
 		this.declaration = declaration;
 		this.source_reference = source_reference;
 	}

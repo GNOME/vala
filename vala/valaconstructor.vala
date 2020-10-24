@@ -46,7 +46,7 @@ public class Vala.Constructor : Subroutine {
 	 * @param source reference to source code
 	 * @return       newly created constructor
 	 */
-	public Constructor (SourceReference? source) {
+	public Constructor (SourceReference? source = null) {
 		base (null, source);
 	}
 

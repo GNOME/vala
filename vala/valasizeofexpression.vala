@@ -46,7 +46,7 @@ public class Vala.SizeofExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created sizeof expression
 	 */
-	public SizeofExpression (DataType type, SourceReference source) {
+	public SizeofExpression (DataType type, SourceReference? source = null) {
 		type_reference = type;
 		source_reference = source;
 	}

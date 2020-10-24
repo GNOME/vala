@@ -31,7 +31,7 @@ public class Vala.ArrayMoveMethod : Method {
 	 *
 	 * @return newly created method
 	 */
-	public ArrayMoveMethod (SourceReference source_reference) {
+	public ArrayMoveMethod (SourceReference? source_reference = null) {
 		base ("move", new VoidType (), source_reference);
 		external = true;
 	}

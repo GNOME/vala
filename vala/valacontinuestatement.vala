@@ -32,7 +32,7 @@ public class Vala.ContinueStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created continue statement
 	 */
-	public ContinueStatement (SourceReference source) {
+	public ContinueStatement (SourceReference? source = null) {
 		source_reference = source;
 	}
 
