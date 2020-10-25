@@ -125,10 +125,10 @@ namespace Curses {
 		[CCode (cname = "mvwinstr")]
 		public int mvinstr(int y, int x, string str);
 		[CCode (cname = "mvwprintw")]
-		[PrintfLike]
+		[PrintfFormat]
 		public int mvprintw(int y, int x, string str, ...);
 		[CCode (cname = "mvwscanw")]
-		[PrintfLike]
+		[PrintfFormat]
 		public int mvscanw(int y, int x, string str, ...);
 		[CCode (cname = "mvwvline")]
 		public int mvvline(int y, int x, ulong ch, int n);
@@ -230,7 +230,7 @@ namespace Curses {
 		[CCode (cname = "wnoutrefresh")]
 		public int noutrefresh();
 		[CCode (cname = "wprintw")]
-		[PrintfLike]
+		[PrintfFormat]
 		public int printw(string str, ...);
 		[CCode (cname = "vw_printw")]
 		public int vprintw(string str, va_list args);
@@ -239,7 +239,7 @@ namespace Curses {
 		[CCode (cname = "wrefresh")]
 		public int refresh();
 		[CCode (cname = "wscanw")]
-		[PrintfLike]
+		[PrintfFormat]
 		public int scanw(string str, ...);
 		[CCode (cname = "vw_scanw")]
 		public int vscanw(string str, va_list args);
@@ -371,9 +371,9 @@ namespace Curses {
 	public int mvinsnstr(int y, int x, string str, int n);
 	public int mvinsstr(int y, int x, string str);
 	public int mvinstr(int y, int x, string str);
-	[PrintfLike]
+	[PrintfFormat]
 	public int mvprintw(int y, int x, string str, ...);
-	[PrintfLike]
+	[PrintfFormat]
 	public int mvscanw(int y, int x, string str, ...);
 	public int mvvline(int y, int x, ulong ch, int n);
 	public int napms(int ms);
@@ -385,7 +385,7 @@ namespace Curses {
 	public int noraw();
 	public int pair_content(short pair, ref Color f, ref Color b);
 	public int PAIR_NUMBER(int attrs);
-	[PrintfLike]
+	[PrintfFormat]
 	public int printw(string str, ...);
 	public void qiflush();
 	public int raw();
@@ -396,7 +396,7 @@ namespace Curses {
 	public delegate int RipofflineInitFunc(Window win, int n);
 	public int ripoffline(int line, RipofflineInitFunc init);
 	public int savetty();
-	[PrintfLike]
+	[PrintfFormat]
 	public int scanw(string str, ...);
 	public int scr_dump(string str);
 	public int scr_init(string str);
