@@ -128,14 +128,18 @@ public class ValaDoc : Object {
 		return true;
 	}
 
-	private static int quit (ErrorReporter reporter) {
+	private static int quit (ErrorReporter reporter, bool pop_context = false) {
 		if (reporter.errors == 0 && (!fatal_warnings || reporter.warnings == 0)) {
 			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
-			Vala.CodeContext.pop ();
+			if (pop_context) {
+				Vala.CodeContext.pop ();
+			}
 			return 0;
 		} else {
 			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
-			Vala.CodeContext.pop ();
+			if (pop_context) {
+				Vala.CodeContext.pop ();
+			}
 			return 1;
 		}
 	}
@@ -240,7 +244,7 @@ public class ValaDoc : Object {
 		Doclet? doclet = null;
 		ModuleLoader? modules = create_module_loader (reporter, out doclet);
 		if (reporter.errors > 0 || modules == null) {
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 
 		// Create tree:
@@ -248,7 +252,7 @@ public class ValaDoc : Object {
 		Valadoc.Api.Tree doctree = builder.build (settings, reporter);
 		if (reporter.errors > 0) {
 			doclet = null;
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 		SymbolResolver resolver = new SymbolResolver (builder);
 		doctree.accept (resolver);
@@ -260,7 +264,7 @@ public class ValaDoc : Object {
 		// process documentation
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
 		if (!doctree.create_tree()) {
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 
 		DocumentationImporter[] importers = {
@@ -270,17 +274,17 @@ public class ValaDoc : Object {
 
 		doctree.parse_comments (docparser);
 		if (reporter.errors > 0) {
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 
 		doctree.import_comments (importers, import_packages, import_directories);
 		if (reporter.errors > 0) {
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 
 		doctree.check_comments (docparser);
 		if (reporter.errors > 0) {
-			return quit (reporter);
+			return quit (reporter, true);
 		}
 
 		if (ValaDoc.gir_name != null) {
@@ -292,12 +296,12 @@ public class ValaDoc : Object {
 				settings.gir_version,
 				settings.pkg_name);
 			if (reporter.errors > 0) {
-				return quit (reporter);
+				return quit (reporter, true);
 			}
 		}
 
 		doclet.process (settings, doctree, reporter);
-		return quit (reporter);
+		return quit (reporter, true);
 	}
 
 	static int main (string[] args) {
