@@ -373,20 +373,25 @@ public class Vala.Report {
 	}
 
 	/* Convenience methods calling warn and err on correct instance */
-	public static void notice (SourceReference? source, string message) {
-		CodeContext.get ().report.note (source, message);
+	[PrintfFormat]
+	public static void notice (SourceReference? source, string msg_format, ...) {
+		CodeContext.get ().report.note (source, msg_format.vprintf (va_list ()));
 	}
-	public static void deprecated (SourceReference? source, string message) {
-		CodeContext.get ().report.depr (source, message);
+	[PrintfFormat]
+	public static void deprecated (SourceReference? source, string msg_format, ...) {
+		CodeContext.get ().report.depr (source, msg_format.vprintf (va_list ()));
 	}
-	public static void experimental (SourceReference? source, string message) {
-		CodeContext.get ().report.depr (source, message);
+	[PrintfFormat]
+	public static void experimental (SourceReference? source, string msg_format, ...) {
+		CodeContext.get ().report.depr (source, msg_format.vprintf (va_list ()));
 	}
-	public static void warning (SourceReference? source, string message) {
-		CodeContext.get ().report.warn (source, message);
+	[PrintfFormat]
+	public static void warning (SourceReference? source, string msg_format, ...) {
+		CodeContext.get ().report.warn (source, msg_format.vprintf (va_list ()));
 	}
-	public static void error (SourceReference? source, string message) {
-		CodeContext.get ().report.err (source, message);
+	[PrintfFormat]
+	public static void error (SourceReference? source, string msg_format, ...) {
+		CodeContext.get ().report.err (source, msg_format.vprintf (va_list ()));
 	}
 
 
