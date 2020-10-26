@@ -171,7 +171,7 @@ public class Vala.PropertyAccessor : Subroutine {
 						// Hopefully good as is
 					} else if (!value_type.value_owned && source_reference.file.file_type == SourceFileType.SOURCE) {
 						error = true;
-						Report.error (source_reference, "unowned return value for getter of property `%s' not supported without accessor".printf (prop.get_full_name ()));
+						Report.error (source_reference, "unowned return value for getter of property `%s' not supported without accessor", prop.get_full_name ());
 					}
 				} else if (value_type.value_owned && (source_reference == null || source_reference.file == null)) {
 					if (value_type is DelegateType || value_type is PointerType || (value_type is ValueType && !value_type.nullable)) {
@@ -203,7 +203,7 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if ((prop.is_abstract || prop.is_virtual || prop.overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
-			Report.error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override".printf (prop.get_full_name ()));
+			Report.error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override", prop.get_full_name ());
 			return false;
 		}
 
@@ -228,7 +228,7 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if (body != null && prop.is_abstract) {
 			error = true;
-			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body".printf (prop.get_full_name ()));
+			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body", prop.get_full_name ());
 			return false;
 		}
 
@@ -245,7 +245,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			body.get_error_types (error_types);
 			foreach (DataType body_error_type in error_types) {
 				if (!((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string ());
 				}
 			}
 		}

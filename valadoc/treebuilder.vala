@@ -365,7 +365,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 
 		var package_path = context.get_vapi_path (pkg) ?? context.get_gir_path (pkg);
 		if (package_path == null) {
-			Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (pkg));
+			Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories", pkg);
 			return false;
 		}
 
@@ -390,12 +390,12 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 					dep = dep.strip ();
 					if (dep != "") {
 						if (!add_package (context, dep)) {
-							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg_name));
+							Vala.Report.error (null, "`%s', dependency of `%s', not found in specified Vala API directories", dep, pkg_name);
 						}
 					}
 				}
 			} catch (FileError e) {
-				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+				Vala.Report.error (null, "Unable to read dependency file: %s", e.message);
 			}
 		}
 	}
@@ -409,7 +409,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 	private void add_depencies (Vala.CodeContext context, string[] packages) {
 		foreach (string package in packages) {
 			if (!add_package (context, package)) {
-				Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
+				Vala.Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories", package);
 			}
 		}
 	}
@@ -465,10 +465,10 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 					context.add_c_source_file (rpath);
 					tree.add_external_c_files (rpath);
 				} else {
-					Vala.Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
+					Vala.Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.", source);
 				}
 			} else {
-				Vala.Report.error (null, "%s not found".printf (source));
+				Vala.Report.error (null, "%s not found", source);
 			}
 		}
 	}

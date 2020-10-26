@@ -138,7 +138,7 @@ class Vala.VAPICheck {
 
 				if (symbol.length > 0 && !_symbols.contains (symbol)) {
 					var src = new SourceReference (metadata, SourceLocation (null, lineno, 1), SourceLocation (null, lineno, (int)symbol.length));
-					Report.error (src, "Symbol `%s' not found".printf (symbol));
+					Report.error (src, "Symbol `%s' not found", symbol);
 				}
 
 				lineno += 1;
@@ -146,19 +146,19 @@ class Vala.VAPICheck {
 
 			return 0;
 		} catch (Error error) {
-			Report.error (null, "%s: %s".printf (metadata.filename, error.message));
+			Report.error (null, "%s: %s", metadata.filename, error.message);
 			return 1;
 		}
 	}
 
 	public int run () {
 		if (!FileUtils.test (gidl.filename, FileTest.IS_REGULAR)) {
-			Report.error (null, "%s not found".printf (gidl.filename));
+			Report.error (null, "%s not found", gidl.filename);
 			return 2;
 		}
 
 		if (!FileUtils.test (metadata.filename, FileTest.IS_REGULAR)) {
-			Report.error (null, "%s not found".printf (metadata.filename));
+			Report.error (null, "%s not found", metadata.filename);
 			return 2;
 		}
 

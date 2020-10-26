@@ -168,7 +168,7 @@ public class Vala.Assignment : Expression {
 			}
 			if (ma.prototype_access) {
 				error = true;
-				Report.error (source_reference, "Access to instance member `%s' denied".printf (ma.symbol_reference.get_full_name ()));
+				Report.error (source_reference, "Access to instance member `%s' denied", ma.symbol_reference.get_full_name ());
 				return false;
 			}
 
@@ -274,7 +274,7 @@ public class Vala.Assignment : Expression {
 				if (prop.set_accessor == null
 				    || (!prop.set_accessor.writable && !(context.analyzer.find_current_method () is CreationMethod || context.analyzer.is_in_constructor ()))) {
 					ma.error = true;
-					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					Report.error (ma.source_reference, "Property `%s' is read-only", prop.get_full_name ());
 					return false;
 				} else if (!context.deprecated
 				           && !prop.set_accessor.writable
@@ -282,7 +282,7 @@ public class Vala.Assignment : Expression {
 					if (ma.inner.symbol_reference != context.analyzer.find_current_method ().this_parameter) {
 						// trying to set construct-only property in creation method for foreign instance
 						error = true;
-						Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+						Report.error (ma.source_reference, "Property `%s' is read-only", prop.get_full_name ());
 						return false;
 					} else {
 						error = true;
@@ -303,7 +303,7 @@ public class Vala.Assignment : Expression {
 						unowned Method m = (Method) right.symbol_reference;
 						unowned Delegate cb = ((DelegateType) variable.variable_type).delegate_symbol;
 						error = true;
-						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'", m.get_full_name (), cb.get_full_name ());
 						return false;
 					}
 				} else {
@@ -328,7 +328,7 @@ public class Vala.Assignment : Expression {
 
 				if (!right.value_type.compatible (left.value_type)) {
 					error = true;
-					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
+					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
 					return false;
 				}
 
@@ -372,7 +372,7 @@ public class Vala.Assignment : Expression {
 
 			if (!right.value_type.compatible (left.value_type)) {
 				error = true;
-				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
+				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
 				return false;
 			}
 

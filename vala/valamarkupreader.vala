@@ -57,7 +57,7 @@ public class Vala.MarkupReader {
 			line = 1;
 			column = 1;
 		} catch (FileError e) {
-			Report.error (null, "Unable to map file `%s': %s".printf (filename, e.message));
+			Report.error (null, "Unable to map file `%s': %s", filename, e.message);
 		}
 	}
 

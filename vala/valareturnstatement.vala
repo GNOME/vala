@@ -119,7 +119,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		if (!return_expression.value_type.compatible (context.analyzer.current_return_type)) {
 			error = true;
-			Report.error (source_reference, "Return: Cannot convert from `%s' to `%s'".printf (return_expression.value_type.to_string (), context.analyzer.current_return_type.to_string ()));
+			Report.error (source_reference, "Return: Cannot convert from `%s' to `%s'", return_expression.value_type.to_string (), context.analyzer.current_return_type.to_string ());
 			return false;
 		}
 
@@ -140,7 +140,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		if (return_expression is NullLiteral
 		    && !context.analyzer.current_return_type.nullable) {
-			Report.warning (source_reference, "`null' incompatible with return type `%s'".printf (context.analyzer.current_return_type.to_string ()));
+			Report.warning (source_reference, "`null' incompatible with return type `%s'", context.analyzer.current_return_type.to_string ());
 		}
 
 		return !error;

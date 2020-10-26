@@ -162,7 +162,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	void report_parse_error (ParseError e) {
 		var begin = get_location ();
 		next ();
-		Report.error (get_src (begin), "syntax error, " + e.message);
+		Report.error (get_src (begin), "syntax error, %s", e.message);
 	}
 
 	inline bool expect (TokenType type) throws ParseError {
@@ -2402,7 +2402,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (attributes != null) {
 			foreach (Attribute attr in (List<Attribute>) attributes) {
 				if (node.get_attribute (attr.name) != null) {
-					Report.error (attr.source_reference, "duplicate attribute `%s'".printf (attr.name));
+					Report.error (attr.source_reference, "duplicate attribute `%s'", attr.name);
 				}
 				node.attributes.append (attr);
 			}

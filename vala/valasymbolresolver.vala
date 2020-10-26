@@ -67,13 +67,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (type.type_symbol is Class) {
 				if (cl.base_class != null) {
 					cl.error = true;
-					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name (), type.type_symbol.get_full_name ()));
+					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')", cl.get_full_name (), cl.base_class.get_full_name (), type.type_symbol.get_full_name ());
 					return;
 				}
 				cl.base_class = (Class) type.type_symbol;
 				if (cl.base_class.is_subtype_of (cl)) {
 					cl.error = true;
-					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name ()));
+					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')", cl.get_full_name (), cl.base_class.get_full_name ());
 					return;
 				}
 			}
@@ -96,7 +96,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (base_type != null) {
 				if (base_type.is_subtype_of (st)) {
 					st.error = true;
-					Report.error (st.source_reference, "Base struct cycle (`%s' and `%s')".printf (st.get_full_name (), base_type.get_full_name ()));
+					Report.error (st.source_reference, "Base struct cycle (`%s' and `%s')", st.get_full_name (), base_type.get_full_name ());
 					return;
 				}
 			}
@@ -117,7 +117,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		foreach (DataType type in iface.get_prerequisites ()) {
 			if (type.type_symbol != null && type.type_symbol.is_subtype_of (iface)) {
 				iface.error = true;
-				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.type_symbol.get_full_name ()));
+				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')", iface.get_full_name (), type.type_symbol.get_full_name ());
 				return;
 			}
 		}
@@ -263,7 +263,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			ns.namespace_symbol = resolve_symbol (unresolved_symbol);
 			if (!(ns.namespace_symbol is Namespace)) {
 				ns.error = true;
-				Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (unresolved_symbol.to_string ()));
+				Report.error (ns.source_reference, "The namespace name `%s' could not be found", unresolved_symbol.to_string ());
 				return;
 			}
 		}
@@ -322,7 +322,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					if (local_sym != null && local_sym.access == SymbolAccessibility.PUBLIC) {
 						if (sym != null && sym != local_sym) {
 							unresolved_symbol.error = true;
-							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ()));
+							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'", unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ());
 							return null;
 						}
 						sym = local_sym;
@@ -345,7 +345,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					if (local_sym != null) {
 						if (sym != null && sym != local_sym) {
 							unresolved_symbol.error = true;
-							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ()));
+							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'", unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ());
 							return null;
 						}
 						sym = local_sym;
@@ -357,7 +357,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			var parent_symbol = resolve_symbol (unresolved_symbol.inner);
 			if (parent_symbol == null) {
 				unresolved_symbol.error = true;
-				Report.error (unresolved_symbol.inner.source_reference, "The symbol `%s' could not be found".printf (unresolved_symbol.inner.name));
+				Report.error (unresolved_symbol.inner.source_reference, "The symbol `%s' could not be found", unresolved_symbol.inner.name);
 				return null;
 			}
 			parent_symbol.used = true;
@@ -434,7 +434,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		if (sym == null) {
 			// don't report same error twice
 			if (!unresolved_type.unresolved_symbol.error) {
-				Report.error (unresolved_type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.unresolved_symbol.to_string ()));
+				Report.error (unresolved_type.source_reference, "The type name `%s' could not be found", unresolved_type.unresolved_symbol.to_string ());
 			}
 			return new InvalidType ();
 		}
@@ -462,11 +462,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			} else if (sym is ErrorCode) {
 				type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym, unresolved_type.source_reference);
 			} else {
-				Report.error (unresolved_type.source_reference, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
+				Report.error (unresolved_type.source_reference, "internal error: `%s' is not a supported type", sym.get_full_name ());
 				return new InvalidType ();
 			}
 		} else {
-			Report.error (unresolved_type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
+			Report.error (unresolved_type.source_reference, "`%s' is not a type", sym.get_full_name ());
 			return new InvalidType ();
 		}
 

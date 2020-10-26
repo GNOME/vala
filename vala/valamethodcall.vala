@@ -192,7 +192,7 @@ public class Vala.MethodCall : Expression {
 			unowned MemberAccess ma = (MemberAccess) call;
 			if (ma.prototype_access) {
 				error = true;
-				Report.error (source_reference, "Access to instance member `%s' denied".printf (call.symbol_reference.get_full_name ()));
+				Report.error (source_reference, "Access to instance member `%s' denied", call.symbol_reference.get_full_name ());
 				return false;
 			}
 
@@ -274,18 +274,18 @@ public class Vala.MethodCall : Expression {
 				base_cm = cl.default_construction_method;
 				if (base_cm == null) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
+					Report.error (source_reference, "chain up to `%s' not supported", cl.get_full_name ());
 					return false;
 				} else if (!base_cm.has_construct_function) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					Report.error (source_reference, "chain up to `%s' not supported", base_cm.get_full_name ());
 					return false;
 				}
 			} else if (call.symbol_reference is CreationMethod && call.symbol_reference.parent_symbol is Class) {
 				base_cm = (CreationMethod) call.symbol_reference;
 				if (!base_cm.has_construct_function) {
 					error = true;
-					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					Report.error (source_reference, "chain up to `%s' not supported", base_cm.get_full_name ());
 					return false;
 				}
 			} else if (gobject_chainup) {
@@ -368,7 +368,7 @@ public class Vala.MethodCall : Expression {
 					}
 				} else if (ma.member_name == "begin" || ma.member_name == "end") {
 					error = true;
-					Report.error (ma.source_reference, "use of `%s' not allowed in yield statement".printf (ma.member_name));
+					Report.error (ma.source_reference, "use of `%s' not allowed in yield statement", ma.member_name);
 				}
 			}
 
@@ -532,7 +532,7 @@ public class Vala.MethodCall : Expression {
 				unowned Property? prop = inner.symbol_reference as Property;
 				if (prop != null && (prop.set_accessor == null || !prop.set_accessor.writable)) {
 					error = true;
-					Report.error (inner.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					Report.error (inner.source_reference, "Property `%s' is read-only", prop.get_full_name ());
 				}
 			}
 			// avoid passing possible null to ref_sink_function without checking
@@ -597,7 +597,7 @@ public class Vala.MethodCall : Expression {
 
 						if (type_arg == null) {
 							error = true;
-							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'".printf (type_param.get_full_name ()));
+							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'", type_param.get_full_name ());
 							return false;
 						}
 

@@ -437,13 +437,13 @@ class Vala.Compiler {
 					int last_hyphen = gir_base.last_index_of_char ('-');
 
 					if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
-						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
+						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir);
 					} else {
 						string gir_namespace = gir_base.substring (0, last_hyphen);
 						string gir_version = gir_base.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
 						gir_version.canon ("0123456789.", '?');
 						if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
-							Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
+							Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir", gir);
 						} else {
 							var gir_writer = new GIRWriter ();
 

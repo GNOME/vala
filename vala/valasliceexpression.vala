@@ -170,7 +170,7 @@ public class Vala.SliceExpression : Expression {
 			}
 
 			error = true;
-			Report.error (source_reference, "The expression `%s' does not denote an array".printf (container.value_type.to_string ()));
+			Report.error (source_reference, "The expression `%s' does not denote an array", container.value_type.to_string ());
 		}
 
 		return !error;

@@ -117,7 +117,7 @@ public class Vala.Constant : Symbol {
 
 		if (!check_const_type (type_reference, context)) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as type for constants".printf (type_reference.to_string ()));
+			Report.error (source_reference, "`%s' not supported as type for constants", type_reference.to_string ());
 			return false;
 		}
 
@@ -138,7 +138,7 @@ public class Vala.Constant : Symbol {
 
 				if (!value.value_type.compatible (type_reference)) {
 					error = true;
-					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (value.value_type.to_string (), type_reference.to_string ()));
+					Report.error (source_reference, "Cannot convert from `%s' to `%s'", value.value_type.to_string (), type_reference.to_string ());
 					return false;
 				}
 
@@ -171,7 +171,7 @@ public class Vala.Constant : Symbol {
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		context.analyzer.current_source_file = old_source_file;

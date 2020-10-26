@@ -207,7 +207,7 @@ public class Vala.CastExpression : Expression {
 			value_type.value_owned = true;
 			if (value_type.get_type_signature () == null) {
 				error = true;
-				Report.error (source_reference, "Casting of `GLib.Variant' to `%s' is not supported".printf (value_type.to_qualified_string ()));
+				Report.error (source_reference, "Casting of `GLib.Variant' to `%s' is not supported", value_type.to_qualified_string ());
 			}
 		}
 

@@ -216,7 +216,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				}
 				if (subsize >= 0 && subsize != size) {
 					il.error = true;
-					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d".printf (subsize, size));
+					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d", subsize, size);
 					return -1;
 				} else {
 					subsize = size;
@@ -280,7 +280,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				error = true;
 				var actual_type = new ArrayType (element_type, calc_sizes.size, source_reference);
 				((ArrayType) actual_type).length_type = length_type;
-				Report.error (initlist.source_reference, "Expected initializer for `%s' but got `%s'".printf (target_type.to_string (), actual_type.to_string ()));
+				Report.error (initlist.source_reference, "Expected initializer for `%s' but got `%s'", target_type.to_string (), actual_type.to_string ());
 			}
 		}
 

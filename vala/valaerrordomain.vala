@@ -115,7 +115,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 		checked = true;
 
 		if (codes.size <= 0) {
-			Report.error (source_reference, "Error domain `%s' requires at least one code".printf (get_full_name ()));
+			Report.error (source_reference, "Error domain `%s' requires at least one code", get_full_name ());
 			error = true;
 			return false;
 		}

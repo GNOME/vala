@@ -341,7 +341,7 @@ public class Vala.MemberAccess : Expression {
 					if (local_sym != null) {
 						if (symbol_reference != null && symbol_reference != local_sym) {
 							error = true;
-							Report.error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (member_name, symbol_reference.get_full_name (), local_sym.get_full_name ()));
+							Report.error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'", member_name, symbol_reference.get_full_name (), local_sym.get_full_name ());
 							return false;
 						}
 
@@ -381,7 +381,7 @@ public class Vala.MemberAccess : Expression {
 				unowned MemberAccess ma = (MemberAccess) inner;
 				if (ma.prototype_access) {
 					error = true;
-					Report.error (source_reference, "Access to instance member `%s' denied".printf (inner.symbol_reference.get_full_name ()));
+					Report.error (source_reference, "Access to instance member `%s' denied", inner.symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -477,7 +477,7 @@ public class Vala.MemberAccess : Expression {
 							unowned MemberAccess? arg = s.handler as MemberAccess;
 							if (arg == null || !arg.check (context) || !(arg.symbol_reference is Method)) {
 								error = true;
-								Report.error (s.handler.source_reference, "Invalid handler for `%s'".printf (s.get_full_name ()));
+								Report.error (s.handler.source_reference, "Invalid handler for `%s'", s.get_full_name ());
 							}
 						}
 						s.access = SymbolAccessibility.PUBLIC;
@@ -556,7 +556,7 @@ public class Vala.MemberAccess : Expression {
 				visited_types_string += " or `%s'".printf (type.to_string ());
 			}
 
-			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s".printf (member_name, base_type_name, base_type_package, visited_types_string));
+			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s", member_name, base_type_name, base_type_package, visited_types_string);
 			value_type = new InvalidType ();
 			return false;
 		} else if (symbol_reference.error) {
@@ -581,7 +581,7 @@ public class Vala.MemberAccess : Expression {
 					symbol_reference = sig.emitter;
 				} else {
 					error = true;
-					Report.error (source_reference, "Signal `%s' requires emitter in this context".printf (symbol_reference.get_full_name ()));
+					Report.error (source_reference, "Signal `%s' requires emitter in this context", symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -638,7 +638,7 @@ public class Vala.MemberAccess : Expression {
 
 				if (param.direction != ParameterDirection.IN) {
 					error = true;
-					Report.error (source_reference, "Cannot capture reference or output parameter `%s'".printf (param.get_full_name ()));
+					Report.error (source_reference, "Cannot capture reference or output parameter `%s'", param.get_full_name ());
 				}
 			} else {
 				unowned PropertyAccessor? acc = param.parent_symbol.parent_symbol as PropertyAccessor;
@@ -698,7 +698,7 @@ public class Vala.MemberAccess : Expression {
 				}
 				if (!is_valid_access) {
 					error = true;
-					Report.error (source_reference, "Access to async callback `%s' not allowed in this context".printf (m.get_full_name ()));
+					Report.error (source_reference, "Access to async callback `%s' not allowed in this context", m.get_full_name ());
 					return false;
 				}
 
@@ -784,7 +784,7 @@ public class Vala.MemberAccess : Expression {
 			if (lvalue) {
 				if (prop.set_accessor == null) {
 					error = true;
-					Report.error (source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					Report.error (source_reference, "Property `%s' is read-only", prop.get_full_name ());
 					return false;
 				}
 				if (prop.access == SymbolAccessibility.PUBLIC) {
@@ -796,7 +796,7 @@ public class Vala.MemberAccess : Expression {
 			} else {
 				if (prop.get_accessor == null) {
 					error = true;
-					Report.error (source_reference, "Property `%s' is write-only".printf (prop.get_full_name ()));
+					Report.error (source_reference, "Property `%s' is write-only", prop.get_full_name ());
 					return false;
 				}
 				if (prop.access == SymbolAccessibility.PUBLIC) {
@@ -855,7 +855,7 @@ public class Vala.MemberAccess : Expression {
 
 			if (!in_subtype) {
 				error = true;
-				Report.error (source_reference, "Access to protected member `%s' denied".printf (member.get_full_name ()));
+				Report.error (source_reference, "Access to protected member `%s' denied", member.get_full_name ());
 				return false;
 			}
 		} else if (access == SymbolAccessibility.PRIVATE) {
@@ -871,7 +871,7 @@ public class Vala.MemberAccess : Expression {
 
 			if (!in_target_type) {
 				error = true;
-				Report.error (source_reference, "Access to private member `%s' denied".printf (member.get_full_name ()));
+				Report.error (source_reference, "Access to private member `%s' denied", member.get_full_name ());
 				return false;
 			}
 		}
@@ -930,7 +930,7 @@ public class Vala.MemberAccess : Expression {
 				if (inner.symbol_reference is Method) {
 					// do not warn when calling .begin or .end on static async method
 				} else {
-					Report.warning (source_reference, "Access to static member `%s' with an instance reference".printf (symbol_reference.get_full_name ()));
+					Report.warning (source_reference, "Access to static member `%s' with an instance reference", symbol_reference.get_full_name ());
 
 					// Transform to static member access
 					unowned Symbol? inner_sym = symbol_reference.parent_symbol;
@@ -947,7 +947,7 @@ public class Vala.MemberAccess : Expression {
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
 			    !(inner.value_type is PointerType) && !(inner.value_type is GenericType) &&
 				!(inner.value_type is ArrayType)) {
-				Report.error (source_reference, "Access to instance member `%s' from nullable reference denied".printf (symbol_reference.get_full_name ()));
+				Report.error (source_reference, "Access to instance member `%s' from nullable reference denied", symbol_reference.get_full_name ());
 			}
 
 			unowned Method? m = symbol_reference as Method;

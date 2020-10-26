@@ -146,7 +146,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			if (!f.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
 			} else {
-				Report.warning (f.source_reference, "field `%s' never used".printf (f.get_full_name ()));
+				Report.warning (f.source_reference, "Field `%s' never used", f.get_full_name ());
 			}
 		}
 	}
@@ -175,7 +175,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			    && m.get_attribute_bool ("DBus", "visible", true)) {
 				// do not warn if internal member is a visible DBus method
 			} else {
-				Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
+				Report.warning (m.source_reference, "Method `%s' never used", m.get_full_name ());
 			}
 		}
 
@@ -422,10 +422,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				foreach (Variable variable in phi.operands) {
 					if (variable == null) {
 						if (used_var is LocalVariable) {
-							Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
+							Report.error (used_var.source_reference, "Use of possibly unassigned local variable `%s'", used_var.name);
 						} else {
 							// parameter
-							Report.warning (used_var.source_reference, "use of possibly unassigned parameter `%s'".printf (used_var.name));
+							Report.warning (used_var.source_reference, "Use of possibly unassigned parameter `%s'", used_var.name);
 						}
 						continue;
 					}
@@ -458,10 +458,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				var variable_stack = var_map.get (var_symbol);
 				if (variable_stack == null || variable_stack.size == 0) {
 					if (var_symbol is LocalVariable) {
-						Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
+						Report.error (node.source_reference, "Use of possibly unassigned local variable `%s'", var_symbol.name);
 					} else {
 						// parameter
-						Report.warning (node.source_reference, "use of possibly unassigned parameter `%s'".printf (var_symbol.name));
+						Report.warning (node.source_reference, "Use of possibly unassigned parameter `%s'", var_symbol.name);
 					}
 					continue;
 				}
@@ -561,7 +561,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		if (!stmt.declaration.used) {
-			Report.warning (stmt.declaration.source_reference, "local variable `%s' declared but never used".printf (stmt.declaration.name));
+			Report.warning (stmt.declaration.source_reference, "Local variable `%s' declared but never used", stmt.declaration.name);
 		}
 
 		current_block.add_node (stmt);
@@ -733,7 +733,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				foreach (var val in remaining_values) {
 					missing_vals += val.name;
 				}
-				Report.warning (stmt.source_reference, "switch does not handle `%s' of enum `%s'".printf (string.joinv ("', `", missing_vals), en.get_full_name ()));
+				Report.warning (stmt.source_reference, "Switch does not handle `%s' of enum `%s'", string.joinv ("', `", missing_vals), en.get_full_name ());
 			}
 		}
 

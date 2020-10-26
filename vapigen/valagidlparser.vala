@@ -132,7 +132,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					codenode_attributes_map[tokens[0]] = tokens[1];
 				}
 			} catch (FileError e) {
-				Report.error (null, "Unable to read metadata file: %s".printf (e.message));
+				Report.error (null, "Unable to read metadata file: %s", e.message);
 			}
 		}
 	
@@ -148,7 +148,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		} catch (MarkupError e) {
-			Report.error (null, "Unable to parse GIDL file: %s".printf (e.message));
+			Report.error (null, "Unable to parse GIDL file: %s", e.message);
 		}
 	}
 

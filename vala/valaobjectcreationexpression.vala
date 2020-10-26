@@ -213,7 +213,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				var constructor = (Method) constructor_sym;
 				if (!(constructor_sym is CreationMethod)) {
 					error = true;
-					Report.error (source_reference, "`%s' is not a creation method".printf (constructor.get_full_name ()));
+					Report.error (source_reference, "`%s' is not a creation method", constructor.get_full_name ());
 					return false;
 				}
 
@@ -242,7 +242,7 @@ public class Vala.ObjectCreationExpression : Expression {
 				symbol_reference = type_sym;
 			} else {
 				error = true;
-				Report.error (source_reference, "`%s' is not a class, struct, or error code".printf (type_sym.get_full_name ()));
+				Report.error (source_reference, "`%s' is not a class, struct, or error code", type_sym.get_full_name ());
 				return false;
 			}
 
@@ -273,7 +273,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			if (cl.is_abstract) {
 				value_type = null;
 				error = true;
-				Report.error (source_reference, "Can't create instance of abstract class `%s'".printf (cl.get_full_name ()));
+				Report.error (source_reference, "Can't create instance of abstract class `%s'", cl.get_full_name ());
 				return false;
 			}
 
@@ -282,7 +282,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				if (symbol_reference == null) {
 					error = true;
-					Report.error (source_reference, "`%s' does not have a default constructor".printf (cl.get_full_name ()));
+					Report.error (source_reference, "`%s' does not have a default constructor", cl.get_full_name ());
 					return false;
 				}
 
@@ -303,7 +303,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 				if (!in_target_type) {
 					error = true;
-					Report.error (source_reference, "Access to non-public constructor `%s' denied".printf (symbol_reference.get_full_name ()));
+					Report.error (source_reference, "Access to non-public constructor `%s' denied", symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -332,7 +332,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (context.profile == Profile.GOBJECT && st.is_simple_type () && symbol_reference == null && object_initializer.size == 0) {
 				error = true;
-				Report.error (source_reference, "`%s' does not have a default constructor".printf (st.get_full_name ()));
+				Report.error (source_reference, "`%s' does not have a default constructor", st.get_full_name ());
 				return false;
 			}
 		}
@@ -350,7 +350,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		if (symbol_reference == null && argument_list.size != 0) {
 			value_type = null;
 			error = true;
-			Report.error (source_reference, "No arguments allowed when constructing type `%s'".printf (type.get_full_name ()));
+			Report.error (source_reference, "No arguments allowed when constructing type `%s'", type.get_full_name ());
 			return false;
 		}
 

@@ -628,7 +628,7 @@ public class Vala.Method : Subroutine, Callable {
 				if (!compatible (base_method, out invalid_match)) {
 					error = true;
 					var base_method_type = new MethodType (base_method);
-					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_match));
+					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.", get_full_name (), base_method_type.to_prototype_string (), invalid_match);
 					return;
 				}
 
@@ -699,12 +699,12 @@ public class Vala.Method : Subroutine, Callable {
 		} else if (!hides && invalid_base_match != null) {
 			error = true;
 			var base_method_type = new MethodType (invalid_base_match);
-			Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method_type.to_prototype_string (), invalid_error));
+			Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.", get_full_name (), base_method_type.to_prototype_string (), invalid_error);
 			return;
 		}
 
 		if (base_interface_type != null) {
-			Report.error (source_reference, "`%s': no suitable interface method found to implement".printf (get_full_name ()));
+			Report.error (source_reference, "`%s': no suitable interface method found to implement", get_full_name ());
 		}
 	}
 
@@ -810,7 +810,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (return_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as return type".printf (return_type.type_symbol.get_full_name ()));
+			Report.error (source_reference, "`%s' not supported as return type", return_type.type_symbol.get_full_name ());
 			return false;
 		}
 
@@ -906,7 +906,7 @@ public class Vala.Method : Subroutine, Callable {
 				// check whether error type is at least as accessible as the method
 				if (!context.analyzer.is_type_accessible (this, error_type)) {
 					error = true;
-					Report.error (source_reference, "error type `%s' is less accessible than method `%s'".printf (error_type.to_string (), get_full_name ()));
+					Report.error (source_reference, "error type `%s' is less accessible than method `%s'", error_type.to_string (), get_full_name ());
 					return false;
 				}
 			}
@@ -935,17 +935,17 @@ public class Vala.Method : Subroutine, Callable {
 		if (context.analyzer.current_struct != null) {
 			if (is_abstract || is_virtual || overrides) {
 				error = true;
-				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract", get_full_name ());
 				return false;
 			}
 		} else if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
-			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'".printf (base_interface_method.get_full_name ()));
+			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
 			overrides = false;
 		} else if (overrides && base_method == null && base_interface_method == null) {
-			Report.error (source_reference, "`%s': no suitable method found to override".printf (get_full_name ()));
+			Report.error (source_reference, "`%s': no suitable method found to override", get_full_name ());
 		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
-			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+			Report.error (source_reference, "Private member `%s' cannot be marked as override, virtual, or abstract", get_full_name ());
 			return false;
 		}
 
@@ -956,8 +956,8 @@ public class Vala.Method : Subroutine, Callable {
 					m.checked = true;
 					m.error = true;
 					error = true;
-					Report.error (source_reference, "`%s' already contains an implementation for `%s'".printf (cl.get_full_name (), base_interface_method.get_full_name ()));
-					Report.notice (m.source_reference, "previous implementation of `%s' was here".printf (base_interface_method.get_full_name ()));
+					Report.error (source_reference, "`%s' already contains an implementation for `%s'", cl.get_full_name (), base_interface_method.get_full_name ());
+					Report.notice (m.source_reference, "previous implementation of `%s' was here", base_interface_method.get_full_name ());
 					return false;
 				}
 			}
@@ -967,13 +967,13 @@ public class Vala.Method : Subroutine, Callable {
 		context.analyzer.current_symbol = old_symbol;
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		// check whether return type is at least as accessible as the method
 		if (!context.analyzer.is_type_accessible (this, return_type)) {
 			error = true;
-			Report.error (source_reference, "return type `%s' is less accessible than method `%s'".printf (return_type.to_string (), get_full_name ()));
+			Report.error (source_reference, "return type `%s' is less accessible than method `%s'", return_type.to_string (), get_full_name ());
 			return false;
 		}
 
@@ -1020,7 +1020,7 @@ public class Vala.Method : Subroutine, Callable {
 				}
 				bool is_dynamic_error = body_error_type is ErrorType && ((ErrorType) body_error_type).dynamic_error;
 				if (!can_propagate_error && !is_dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}
 		}
@@ -1061,7 +1061,7 @@ public class Vala.Method : Subroutine, Callable {
 		if (is_possible_entry_point (context)) {
 			if (context.entry_point != null) {
 				error = true;
-				Report.error (source_reference, "program already has an entry point `%s'".printf (context.entry_point.get_full_name ()));
+				Report.error (source_reference, "program already has an entry point `%s'", context.entry_point.get_full_name ());
 				return false;
 			}
 			entry_point = true;

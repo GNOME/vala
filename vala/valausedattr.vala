@@ -137,11 +137,11 @@ public class Vala.UsedAttr : CodeVisitor {
 			foreach (unowned Attribute attr in sym.attributes) {
 				var set = marked.get (attr.name);
 				if (set == null) {
-					Report.warning (attr.source_reference, "attribute `%s' never used".printf (attr.name));
+					Report.warning (attr.source_reference, "Attribute `%s' never used", attr.name);
 				} else {
 					foreach (var arg in attr.args.get_keys()) {
 						if (!set.contains (arg)) {
-							Report.warning (attr.source_reference, "argument `%s' never used".printf (arg));
+							Report.warning (attr.source_reference, "Argument `%s' never used", arg);
 						}
 					}
 				}

@@ -100,7 +100,7 @@ public class Vala.CCodeFile {
 
 	public void add_function (CCodeFunction func) {
 		if (!definitions.add (func.name)) {
-			Report.error (null, "internal: Redefinition of `%s'".printf (func.name));
+			Report.error (null, "internal: Redefinition of `%s'", func.name);
 			return;
 		}
 

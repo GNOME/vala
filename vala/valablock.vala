@@ -91,7 +91,7 @@ public class Vala.Block : Symbol, Statement {
 		unowned Symbol? parent_block = parent_symbol;
 		while (parent_block is Block || parent_block is Method || parent_block is PropertyAccessor) {
 			if (parent_block.scope.lookup (local.name) != null) {
-				Report.error (local.source_reference, "Local variable `%s' conflicts with a local variable or constant declared in a parent scope".printf (local.name));
+				Report.error (local.source_reference, "Local variable `%s' conflicts with a local variable or constant declared in a parent scope", local.name);
 				break;
 			}
 			parent_block = parent_block.parent_symbol;
@@ -116,7 +116,7 @@ public class Vala.Block : Symbol, Statement {
 		unowned Symbol? parent_block = parent_symbol;
 		while (parent_block is Block || parent_block is Method || parent_block is PropertyAccessor) {
 			if (parent_block.scope.lookup (constant.name) != null) {
-				Report.error (constant.source_reference, "Local constant `%s' conflicts with a local variable or constant declared in a parent scope".printf (constant.name));
+				Report.error (constant.source_reference, "Local constant `%s' conflicts with a local variable or constant declared in a parent scope", constant.name);
 				break;
 			}
 			parent_block = parent_block.parent_symbol;

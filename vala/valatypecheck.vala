@@ -117,7 +117,7 @@ public class Vala.TypeCheck : Expression {
 		}
 
 		if (type_reference is ErrorType && !(expression.value_type is ErrorType)) {
-			Report.error (expression.source_reference, "`%s' must be an error".printf (expression.to_string ()));
+			Report.error (expression.source_reference, "`%s' must be an error", expression.to_string ());
 			error = true;
 			return false;
 		}

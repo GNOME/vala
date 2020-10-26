@@ -130,7 +130,7 @@ class Vala.VAPIGen {
 				source_file.from_commandline = true;
 				context.add_source_file (source_file);
 			} else {
-				Report.error (null, "%s not found".printf (source));
+				Report.error (null, "%s not found", source);
 			}
 		}
 		
@@ -193,7 +193,7 @@ class Vala.VAPIGen {
 
 		var library_name = Path.get_basename (library);
 		if (package_names.length > 0 && !(library_name in package_names)) {
-			Report.warning (null, "Given library name `%s' does not match pkg-config name `%s'".printf (library_name, string.join ("', `", package_names)));
+			Report.warning (null, "Given library name `%s' does not match pkg-config name `%s'", library_name, string.join ("', `", package_names));
 		}
 
 		var interface_writer = new CodeWriter (CodeWriterType.VAPIGEN);

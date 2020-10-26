@@ -134,7 +134,7 @@ public class Vala.Parser : CodeVisitor {
 	void report_parse_error (ParseError e) {
 		var begin = get_location ();
 		next ();
-		Report.error (get_src (begin), "syntax error, " + e.message);
+		Report.error (get_src (begin), "syntax error, %s", e.message);
 	}
 
 	inline bool expect (TokenType type) throws ParseError {
@@ -1646,12 +1646,12 @@ public class Vala.Parser : CodeVisitor {
 			try {
 				rollback (begin);
 				stmt = parse_expression_statement ();
-				Report.warning (get_src (begin), "`%s' is a syntax keyword, replace with `@%s'".printf (token, token));
+				Report.warning (get_src (begin), "`%s' is a syntax keyword, replace with `@%s'", token, token);
 			} catch (ParseError e2) {
 				var e2_begin = get_location ();
 				rollback (e_begin);
 				next ();
-				Report.error (get_src (e_begin), "Possible `%s-statement' syntax error, %s".printf (token, e.message));
+				Report.error (get_src (e_begin), "Possible `%s-statement' syntax error, %s", token, e.message);
 				rollback (e2_begin);
 				throw e2;
 			}
@@ -1863,7 +1863,7 @@ public class Vala.Parser : CodeVisitor {
 		switch (current ()) {
 		case TokenType.SEMICOLON:
 			if (!accept_empty_body) {
-				Report.warning (get_current_src (), "%s-statement without body".printf (statement_name));
+				Report.warning (get_current_src (), "%s-statement without body", statement_name);
 			}
 			return parse_empty_statement ();
 		case TokenType.IF:
@@ -2436,7 +2436,7 @@ public class Vala.Parser : CodeVisitor {
 		if (attributes != null) {
 			foreach (Attribute attr in (List<Attribute>) attributes) {
 				if (node.get_attribute (attr.name) != null) {
-					Report.error (attr.source_reference, "duplicate attribute `%s'".printf (attr.name));
+					Report.error (attr.source_reference, "duplicate attribute `%s'", attr.name);
 				}
 				node.attributes.append (attr);
 			}

@@ -313,7 +313,7 @@ public class Vala.CodeContext {
 	 */
 	public void add_source_file (SourceFile file) {
 		if (source_files_map.contains (file.filename)) {
-			Report.warning (null, "Ignoring source file `%s', which was already added to this context".printf (file.filename));
+			Report.warning (null, "Ignoring source file `%s', which was already added to this context", file.filename);
 			return;
 		}
 
@@ -389,7 +389,7 @@ public class Vala.CodeContext {
 			path = get_gir_path (pkg);
 		}
 		if (path == null) {
-			Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories".printf (pkg));
+			Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories", pkg);
 			return false;
 		}
 
@@ -431,7 +431,7 @@ public class Vala.CodeContext {
 				}
 			}
 		} catch (FileError e) {
-			Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			Report.error (null, "Unable to read dependency file: %s", e.message);
 			return false;
 		}
 
@@ -449,7 +449,7 @@ public class Vala.CodeContext {
 	 */
 	public bool add_source_filename (string filename, bool is_source = false, bool cmdline = false) {
 		if (!FileUtils.test (filename, FileTest.EXISTS)) {
-			Report.error (null, "%s not found".printf (filename));
+			Report.error (null, "%s not found", filename);
 			return false;
 		}
 
@@ -487,7 +487,7 @@ public class Vala.CodeContext {
 		} else if (filename.has_suffix (".h")) {
 			/* Ignore */
 		} else {
-			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (filename));
+			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.", filename);
 			return false;
 		}
 
@@ -541,7 +541,7 @@ public class Vala.CodeContext {
 
 	public void add_define (string define) {
 		if (is_defined (define)) {
-			Report.warning (null, "`%s' is already defined".printf (define));
+			Report.warning (null, "`%s' is already defined", define);
 			if (/VALA_0_\d+/.match_all (define)) {
 				Report.warning (null, "`VALA_0_XX' defines are automatically added up to current compiler version in use");
 			} else if (/GLIB_2_\d+/.match_all (define)) {
@@ -742,7 +742,7 @@ public class Vala.CodeContext {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			Report.error (null, "unable to open `%s' for writing", filename);
 			return;
 		}
 
@@ -759,7 +759,7 @@ public class Vala.CodeContext {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			Report.error (null, "unable to open `%s' for writing", filename);
 			return;
 		}
 
@@ -907,7 +907,7 @@ public class Vala.CodeContext {
 		try {
 			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
 			if (exit_status != 0) {
-				Report.error (null, "%s exited with status %d".printf (pkg_config_command, exit_status));
+				Report.error (null, "%s exited with status %d", pkg_config_command, exit_status);
 				return null;
 			}
 		} catch (SpawnError e) {

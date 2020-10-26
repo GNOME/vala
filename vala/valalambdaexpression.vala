@@ -142,7 +142,7 @@ public class Vala.LambdaExpression : Expression {
 		if (!(target_type is DelegateType)) {
 			error = true;
 			if (target_type != null) {
-				Report.error (source_reference, "Cannot convert lambda expression to `%s'".printf (target_type.to_string ()));
+				Report.error (source_reference, "Cannot convert lambda expression to `%s'", target_type.to_string ());
 			} else {
 				Report.error (source_reference, "lambda expression not allowed in this context");
 			}
@@ -210,7 +210,7 @@ public class Vala.LambdaExpression : Expression {
 
 			if (lambda_param.direction != cb_param.direction) {
 				error = true;
-				Report.error (lambda_param.source_reference, "direction of parameter `%s' is incompatible with the target delegate".printf (lambda_param.name));
+				Report.error (lambda_param.source_reference, "direction of parameter `%s' is incompatible with the target delegate", lambda_param.name);
 			}
 
 			lambda_param.variable_type = cb_param.variable_type.get_actual_type (target_type, null, this);

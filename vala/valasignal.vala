@@ -207,7 +207,7 @@ public class Vala.Signal : Symbol, Callable {
 
 		if (return_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as return type".printf (return_type.type_symbol.get_full_name ()));
+			Report.error (source_reference, "`%s' not supported as return type", return_type.type_symbol.get_full_name ());
 			return false;
 		}
 
@@ -274,7 +274,7 @@ public class Vala.Signal : Symbol, Callable {
 
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited signal `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+			Report.warning (source_reference, "%s hides inherited signal `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		return !error;

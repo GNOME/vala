@@ -170,7 +170,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			// check whether prerequisite is at least as accessible as the interface
 			if (!context.analyzer.is_type_accessible (this, prerequisite_reference)) {
 				error = true;
-				Report.error (source_reference, "prerequisite `%s' is less accessible than interface `%s'".printf (prerequisite_reference.to_string (), get_full_name ()));
+				Report.error (source_reference, "prerequisite `%s' is less accessible than interface `%s'", prerequisite_reference.to_string (), get_full_name ());
 				return false;
 			}
 		}
@@ -180,7 +180,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (DataType prereq in get_prerequisites ()) {
 			if (!(prereq is ObjectType)) {
 				error = true;
-				Report.error (source_reference, "Prerequisite `%s' of interface `%s' is not a class or interface".printf (prereq.to_string (), get_full_name ()));
+				Report.error (source_reference, "Prerequisite `%s' of interface `%s' is not a class or interface", prereq.to_string (), get_full_name ());
 				return false;
 			}
 
@@ -188,7 +188,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			if (prereq.type_symbol is Class) {
 				if (prereq_class != null) {
 					error = true;
-					Report.error (source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (get_full_name (), prereq.type_symbol.get_full_name (), prereq_class.get_full_name ()));
+					Report.error (source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')", get_full_name (), prereq.type_symbol.get_full_name (), prereq_class.get_full_name ());
 					return false;
 				}
 
@@ -283,7 +283,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (Symbol sym in virtuals) {
 			int ordering = sym.get_attribute_integer ("CCode", "ordering", -1);
 			if (ordering < -1) {
-				Report.error (sym.source_reference, "%s: Invalid ordering".printf (sym.get_full_name ()));
+				Report.error (sym.source_reference, "%s: Invalid ordering", sym.get_full_name ());
 				// Mark state as invalid
 				error = true;
 				ordered_seen = true;
@@ -292,12 +292,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 			}
 			bool ordered = ordering != -1;
 			if (ordered && unordered_seen && !ordered_seen) {
-				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals".printf (sym.get_full_name ()));
+				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals", sym.get_full_name ());
 				error = true;
 			}
 			ordered_seen = ordered_seen || ordered;
 			if (!ordered && !unordered_seen && ordered_seen) {
-				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals".printf (sym.get_full_name ()));
+				Report.error (sym.source_reference, "%s: Cannot mix ordered and unordered virtuals", sym.get_full_name ());
 				error = true;
 			}
 			unordered_seen = unordered_seen || !ordered;
@@ -305,7 +305,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 				if (ordered) {
 					Symbol? prev = positions[ordering];
 					if (prev != null) {
-						Report.error (sym.source_reference, "%s: Duplicate ordering (previous virtual with the same position is %s)".printf (sym.get_full_name (), prev.name));
+						Report.error (sym.source_reference, "%s: Duplicate ordering (previous virtual with the same position is %s)", sym.get_full_name (), prev.name);
 						error = true;
 					}
 					positions[ordering] = sym;
@@ -316,7 +316,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			for (int i = 0; i < virtuals.size; i++) {
 				Symbol? sym = positions[i];
 				if (sym == null) {
-					Report.error (source_reference, "%s: Gap in ordering in position %d".printf (get_full_name (), i));
+					Report.error (source_reference, "%s: Gap in ordering in position %d", get_full_name (), i);
 					error = true;
 				}
 				if (!error) {

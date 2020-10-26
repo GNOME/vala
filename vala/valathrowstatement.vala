@@ -113,7 +113,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 			}
 
 			if (context.profile == Profile.GOBJECT && !(error_expression.value_type is ErrorType)) {
-				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
+				Report.error (error_expression.source_reference, "`%s' is not an error type", error_expression.value_type.to_string ());
 				error = true;
 				return false;
 			}
