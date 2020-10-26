@@ -101,7 +101,7 @@ public class Vala.CCodeCompiler {
 			int exit_status;
 			Process.spawn_command_line_sync (cmdline, null, null, out exit_status);
 			if (exit_status != 0) {
-				Report.error (null, "cc exited with status %d".printf (exit_status));
+				Report.error (null, "cc exited with status %d", exit_status);
 			}
 		} catch (SpawnError e) {
 			Report.error (null, e.message);

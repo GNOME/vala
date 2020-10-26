@@ -183,7 +183,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			Report.error (null, "unable to open `%s' for writing", filename);
 			this.context = null;
 			return;
 		}
@@ -235,7 +235,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		foreach (var ns in unannotated_namespaces) {
 			if (!our_namespaces.contains(ns)) {
-				Report.warning (ns.source_reference, "Namespace %s does not have a GIR namespace and version annotation".printf (ns.name));
+				Report.warning (ns.source_reference, "Namespace `%s' does not have a GIR namespace and version annotation", ns.name);
 			}
 		}
 		foreach (var ns in our_namespaces) {
@@ -333,7 +333,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (our_namespaces.size > 0) {
-			Report.error (ns.source_reference, "Secondary top-level namespace `%s' is not supported by GIR format".printf (ns.name));
+			Report.error (ns.source_reference, "Secondary top-level namespace `%s' is not supported by GIR format", ns.name);
 			return;
 		}
 
@@ -1777,7 +1777,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			return true;
 		}
 
-		Report.warning (sym.source_reference, "`%s' must be part of namespace to be included in GIR".printf (sym.name));
+		Report.warning (sym.source_reference, "`%s' must be part of namespace to be included in GIR", sym.name);
 		return false;
 	}
 }

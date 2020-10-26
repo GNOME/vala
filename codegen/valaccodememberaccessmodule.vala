@@ -199,7 +199,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			if (pub_inst == null && prop.binding == MemberBinding.INSTANCE) {
 				// FIXME Report this with proper source-reference on the vala side!
-				Report.error (prop.source_reference, "Invalid access to instance member `%s'".printf (prop.get_full_name ()));
+				Report.error (prop.source_reference, "Invalid access to instance member `%s'", prop.get_full_name ());
 				set_cvalue (expr, new CCodeInvalidExpression ());
 				return;
 			}
@@ -233,7 +233,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						set_cvalue (expr, ccall);
 					}
 				} else {
-					Report.error (expr.source_reference, "internal: Invalid access to `%s'".printf (base_prop.get_full_name ()));
+					Report.error (expr.source_reference, "internal: Invalid access to `%s'", base_prop.get_full_name ());
 				}
 			} else if (prop.binding == MemberBinding.INSTANCE &&
 			    prop.get_accessor.automatic_body &&
@@ -339,7 +339,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var owned_value_type = prop.get_accessor.value_type.copy ();
 					owned_value_type.value_owned = true;
 					if (requires_copy (owned_value_type)) {
-						Report.error (prop.get_accessor.source_reference, "unowned return value for getter of property `%s' not supported without accessor".printf (prop.get_full_name ()));
+						Report.error (prop.get_accessor.source_reference, "unowned return value for getter of property `%s' not supported without accessor", prop.get_full_name ());
 					}
 				}
 
@@ -632,7 +632,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			if (inst == null) {
 				// FIXME Report this with proper source-reference on the vala side!
-				Report.error (field.source_reference, "Invalid access to instance member `%s'".printf (field.get_full_name ()));
+				Report.error (field.source_reference, "Invalid access to instance member `%s'", field.get_full_name ());
 				result.cvalue = new CCodeInvalidExpression ();
 				return result;
 			}

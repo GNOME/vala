@@ -136,7 +136,7 @@ public class Vala.GObjectModule : GTypeModule {
 		foreach (Property prop in props) {
 			if (!context.analyzer.is_gobject_property (prop)) {
 				if (!context.analyzer.is_gobject_property_type (prop.property_type)) {
-					Report.warning (prop.source_reference, "Type `%s' can not be used for a GLib.Object property".printf (prop.property_type.to_qualified_string ()));
+					Report.warning (prop.source_reference, "Type `%s' can not be used for a GLib.Object property", prop.property_type.to_qualified_string ());
 				}
 				continue;
 			}
@@ -839,15 +839,15 @@ public class Vala.GObjectModule : GTypeModule {
 					}
 					var prop = SemanticAnalyzer.symbol_lookup_inherited (current_class, named_argument.name) as Property;
 					if (prop == null) {
-						Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
+						Report.error (arg.source_reference, "Property `%s' not found in `%s'", named_argument.name, current_class.get_full_name ());
 						break;
 					}
 					if (!context.analyzer.is_gobject_property (prop)) {
-						Report.error (arg.source_reference, "Property `%s' not supported in Object (property: value) constructor chain up".printf (named_argument.name));
+						Report.error (arg.source_reference, "Property `%s' not supported in Object (property: value) constructor chain up", named_argument.name);
 						break;
 					}
 					if (!arg.value_type.compatible (prop.property_type)) {
-						Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
+						Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'", arg.value_type.to_string (), prop.property_type.to_string ());
 						break;
 					}
 				}

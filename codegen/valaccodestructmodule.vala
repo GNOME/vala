@@ -135,7 +135,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 
 		if (get_ccode_has_type_id (st) && get_ccode_name (st).length < 3) {
 			st.error = true;
-			Report.error (st.source_reference, "Name `%s' is too short for struct using GType".printf (get_ccode_name (st)));
+			Report.error (st.source_reference, "Name `%s' is too short for struct using GType", get_ccode_name (st));
 			return;
 		}
 

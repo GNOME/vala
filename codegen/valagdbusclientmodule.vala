@@ -55,7 +55,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		if (method.dynamic_type.type_symbol == dbus_proxy_type) {
 			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
 		} else {
-			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (method.dynamic_type.to_string ()));
+			Report.error (method.source_reference, "dynamic methods are not supported for `%s'", method.dynamic_type.to_string ());
 		}
 
 		pop_function ();
@@ -274,7 +274,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 			var iface = (Interface) object_type.type_symbol;
 
 			if (get_dbus_name (iface) == null) {
-				Report.error (expr.source_reference, "`%s' is not a D-Bus interface".printf (iface.get_full_name ()));
+				Report.error (expr.source_reference, "`%s' is not a D-Bus interface", iface.get_full_name ());
 				return;
 			}
 

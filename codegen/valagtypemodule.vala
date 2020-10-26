@@ -595,7 +595,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (get_ccode_name (cl).length < 3) {
 			cl.error = true;
-			Report.error (cl.source_reference, "Class name `%s' is too short".printf (get_ccode_name (cl)));
+			Report.error (cl.source_reference, "Class name `%s' is too short", get_ccode_name (cl));
 			return;
 		}
 
@@ -2154,7 +2154,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (get_ccode_name (iface).length < 3) {
 			iface.error = true;
-			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (get_ccode_name (iface)));
+			Report.error (iface.source_reference, "Interface name `%s' is too short", get_ccode_name (iface));
 			return;
 		}
 

@@ -1125,7 +1125,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		var ref_function = get_ccode_ref_function (sym);
 		if (sym is Interface && ref_function == null) {
-			Report.error (sym.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (sym.get_full_name ()));
+			Report.error (sym.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure", sym.get_full_name ());
 			return;
 		}
 
