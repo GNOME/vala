@@ -289,6 +289,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_union ();
 			} else if (reader.name == "constant") {
 				parse_constant ();
+			} else if (reader.name == "docsection") {
+				// TODO Add docs to namespace
+				skip_element ();
 			} else {
 				// error
 				error ("unknown child element `%s' in `namespace'".printf (reader.name));
