@@ -478,7 +478,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		context.experimental = settings.experimental;
 		context.experimental_non_null = settings.experimental || settings.experimental_non_null;
 		context.vapi_directories = settings.vapi_directories;
-		context.report.enable_warnings = settings.verbose;
+		context.verbose_mode = settings.verbose;
 		context.metadata_directories = settings.metadata_directories;
 		context.gir_directories = settings.gir_directories;
 
