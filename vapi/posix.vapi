@@ -3,6 +3,7 @@
  * Copyright (C) 2008-2009  Jürg Billeter
  * Copyright (C) 2010 Marco Trevisan (Treviño)
  * Copyright (C) 2013 Nikolay Orliuk
+ * Copyright (C) 2020 Reuben Thomas
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3583,4 +3584,225 @@ namespace Posix {
 	public const int WRDE_SYNTAX;
 	[CCode(cheader_filename = "wordexp.h")]
 	public const int WRDE_UNDEF;
+
+
+	/* Regular expressions - regex.h */
+
+	[SimpleType]
+#if _REGEX_LARGE_OFFSETS
+	[IntegerType (rank = 9)]
+#else
+	[IntegerType (rank = 7)]
+#endif
+	[CCode(cheader_filename = "regex.h")]
+	public struct __re_size_t {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode(cheader_filename = "regex.h")]
+	public struct __re_long_size_t {
+	}
+
+	/* GNU APIs. */
+	[Flags]
+	[CCode (cname = "reg_syntax_t", cprefix = "RE_", has_type_id = false, cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	[IntegerType (rank = 9)]
+	public enum RegexSyntax {
+		BACKSLASH_ESCAPE_IN_LISTS,
+		BK_PLUS_QM,
+		CHAR_CLASSES,
+		CONTEXT_INDEP_ANCHORS,
+		CONTEXT_INDEP_OPS,
+		CONTEXT_INVALID_OPS,
+		DOT_NEWLINE,
+		DOT_NOT_NULL,
+		HAT_LISTS_NOT_NEWLINE,
+		INTERVALS,
+		LIMITED_OPS,
+		NEWLINE_ALT,
+		NO_BK_BRACES,
+		NO_BK_PARENS,
+		NO_BK_REFS,
+		NO_BK_VBAR,
+		NO_EMPTY_RANGES,
+		UNMATCHED_RIGHT_PAREN_ORD,
+		NO_POSIX_BACKTRACKING,
+		NO_GNU_OPS,
+		DEBUG,
+		INVALID_INTERVAL_ORD,
+		ICASE,
+		CARET_ANCHORS_HERE,
+		CONTEXT_INVALID_DUP,
+		NO_SUB;
+
+		[CCode (cname = "re_set_syntax", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public static RegexSyntax set_syntax (RegexSyntax syntax);
+	}
+
+	[CCode (cname = "re_syntax_options", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	public RegexSyntax syntax_options;
+
+	[CCode (cprefix = "RE_SYNTAX_", lower_case_cprefix = "RE_SYNTAX_", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	namespace RegexSyntaxType {
+		public const RegexSyntax EMACS;
+		public const RegexSyntax AWK;
+		public const RegexSyntax GNU_AWK;
+		public const RegexSyntax POSIX_AWK;
+		public const RegexSyntax GREP;
+		public const RegexSyntax EGREP;
+		public const RegexSyntax POSIX_EGREP;
+		public const RegexSyntax ED;
+		public const RegexSyntax SED;
+		public const RegexSyntax _POSIX_COMMON;
+		public const RegexSyntax POSIX_BASIC;
+		public const RegexSyntax POSIX_MINIMAL_BASIC;
+		public const RegexSyntax POSIX_EXTENDED;
+		public const RegexSyntax POSIX_MINIMAL_EXTENDED;
+	}
+
+	[CCode (cname = "RE_DUP_MAX", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	public const ulong REGEX_DUP_MAX;
+
+	/* This is defined as a private enumeration in regex.h. */
+	[CCode (cname = "reg_errcode_t", cprefix = "REG_", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	[SimpleType]
+	[IntegerType (rank = 7)]
+	public enum RegexError {
+		ENOSYS = -1, /* (Strictly speaking, requires _XOPEN_SOURCE) */
+		NOERROR = 0,
+		NOMATCH,
+		BAD,
+		ECOLLATE,
+		ECTYPE,
+		EESCAPE,
+		ESUBREG,
+		EBRACK,
+		EPAREN,
+		EBRACE,
+		BADBR,
+		ERANGE,
+		ESPACE,
+		BADRPT,
+		EEND,
+		ESIZE,
+		ERPAREN
+	}
+
+	[CCode (cname = "struct re_pattern_buffer", destroy_function = "regfree", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	public struct RegexPattern {
+		void *buffer;
+		__re_long_size_t allocated;
+		unowned string fastmap;
+		void *translate;
+		size_t re_nsub;
+		bool no_sub;
+		bool not_bol;
+		bool not_eol;
+
+		[CCode (cname = "re_compile_pattern", instance_pos = -1, cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public unowned string? compile (string pattern, size_t length);
+
+		[CCode (cname = "re_compile_fastmap", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public int compile_fastmap ();
+
+		[CCode (cname = "re_search", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public RegexOffset search (string String, RegexOffset length, RegexOffset start, RegexOffset range, out RegexRegisters regs);
+
+		[CCode (cname = "re_search_2", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public RegexOffset search_2 (string string1, RegexOffset length1, string string2, RegexOffset length2, RegexOffset start, RegexOffset range, out RegexRegisters regs, RegexOffset stop);
+
+		[CCode (cname = "re_match", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public RegexOffset match (string String, RegexOffset length, RegexOffset start, out RegexRegisters regs);
+
+		[CCode (cname = "re_match_2", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public RegexOffset match_2 (string string1, RegexOffset length1, string string2, RegexOffset length2, RegexOffset start, out RegexRegisters regs, RegexOffset stop);
+
+		[CCode (cname = "re_set_registers", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+		public void set_registers ([CCode (array_length_pos = 1.1)] RegexRegisters[] regs, out RegexOffset starts, out RegexOffset ends);
+	}
+
+	[CCode (cname = "int", cprefix = "REGS_", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	public enum RegexBufferRegs {
+		UNALLOCATED,
+		REALLOCATE,
+		FIXED
+	}
+
+	/* POSIX regex APIs. */
+	[Flags]
+	[CCode (cname = "int", cprefix = "REG_", has_type_id = false, cheader_filename = "regex.h")]
+	public enum RegexCompileFlags {
+		EXTENDED,
+		ICASE,
+		NEWLINE,
+		NOSUB
+	}
+
+	[Flags]
+	[CCode (cname = "int", cprefix = "REG_", has_type_id = false, cheader_filename = "regex.h")]
+	public enum RegexExecFlags {
+		NOTBOL,
+		NOTEOL,
+		STARTEND
+	}
+
+	[CCode (cname = "regex_t", destroy_function = "regfree", cheader_filename = "regex.h")]
+	public struct Regex : RegexPattern {
+		[CCode (cname = "regcomp", instance_pos = 0)]
+		public int comp (string pattern, RegexCompileFlags cflags);
+
+		[CCode (cname = "regexec")]
+		public int exec (string String, [CCode (array_length_pos = 1.1, array_length_type = "size_t")] RegexMatch[] pmatch, RegexExecFlags eflags);
+
+		[CCode (cname = "regerror", instance_pos = 1.1)]
+		size_t regerror (int errcode, char[]? errbuf);
+		public string error (int errcode) {
+			size_t errlen = regerror(errcode, null);
+			char[] errbuf = new char[errlen];
+			regerror(errcode, errbuf);
+			return (string) errbuf;
+		}
+	}
+
+	[SimpleType]
+	[CCode (cname = "regoff_t", cheader_filename = "regex.h")]
+#if _REGEX_LARGE_OFFSETS
+	[IntegerType (rank = 8)]
+#else
+	[IntegerType (rank = 6)]
+#endif
+	public struct RegexOffset {
+	}
+
+	[CCode (cname = "struct re_registers", cheader_filename = "regex.h", destroy_function = "", feature_test_macro = "_GNU_SOURCE")]
+	public struct RegexRegisters {
+		public __re_size_t num_regs;
+		[CCode (array_length_cname = "num_regs", array_length_type = "__re_size_t")]
+		public RegexOffset[] start;
+		[CCode (array_length_cname = "num_regs", array_length_type = "__re_size_t")]
+		public RegexOffset[] end;
+
+		public void destroy () {
+			Posix.free (start);
+			Posix.free (end);
+		}
+	}
+
+	[CCode (cname = "RE_NREGS", cheader_filename = "regex.h", feature_test_macro = "_GNU_SOURCE")]
+	public const int REGEX_NREGS;
+
+	[CCode (cname = "regmatch_t")]
+	public struct RegexMatch {
+		[CCode (cname = "rm_so")]
+		public RegexOffset so;  /* Byte offset from string's start to substring's start.  */
+		[CCode (cname = "rm_eo")]
+		public RegexOffset eo;  /* Byte offset from string's start to substring's end.  */
+	}
+
+	/* BSD regex APIs. */
+	[CCode (cheader_filename = "regex.h", feature_test_macro = "_REGEX_RE_COMP")]
+	public unowned string? re_comp (string re);
+	[CCode (cheader_filename = "regex.h", feature_test_macro = "_REGEX_RE_COMP")]
+	public int re_exec (string re);
 }
