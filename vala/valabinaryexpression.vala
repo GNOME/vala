@@ -343,11 +343,11 @@ public class Vala.BinaryExpression : Expression {
 		right.target_type = right.value_type.copy ();
 		right.target_type.value_owned = false;
 
-		if (left.value_type.data_type == context.analyzer.string_type.data_type
-		    && operator == BinaryOperator.PLUS) {
+		if (operator == BinaryOperator.PLUS && !(left.value_type is PointerType)
+		    && left.value_type.compatible (context.analyzer.string_type)) {
 			// string concatenation
 
-			if (right.value_type == null || right.value_type.data_type != context.analyzer.string_type.data_type) {
+			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)) {
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
 				return false;

@@ -32,6 +32,7 @@ TESTS = \
 	basic-types/arrays-fixed-assignment.vala \
 	basic-types/array-uint8-uchar-compat.vala \
 	basic-types/pointers.vala \
+	basic-types/pointers-arithmetic.vala \
 	basic-types/sizeof.vala \
 	basic-types/garray.vala \
 	basic-types/glists.vala \
@@ -879,6 +880,7 @@ NON_NULL_TESTS = \
 	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \
+	nullability/string-concat.test \
 	$(NULL)
 
 LINUX_TESTS = \

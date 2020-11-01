@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	string? foo = null;
+	string bar = foo + "bar";
+}
