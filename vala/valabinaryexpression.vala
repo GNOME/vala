@@ -350,11 +350,11 @@ public class Vala.BinaryExpression : Expression {
 		right.target_type = right.value_type.copy ();
 		right.target_type.value_owned = false;
 
-		if (operator == BinaryOperator.PLUS
-		    && left.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
+		if (operator == BinaryOperator.PLUS && !(left.value_type is PointerType)
+		    && left.value_type.compatible (context.analyzer.string_type)) {
 			// string concatenation
 
-			if (right.value_type == null || right.value_type.type_symbol != context.analyzer.string_type.type_symbol) {
+			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)) {
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
 				return false;
