@@ -2850,6 +2850,9 @@ namespace Posix {
 
 		[CCode (cname = "fopen")]
 		public static FILE? open (string path, string mode);
+		[CCode (cname = "freopen", instance_pos = -1)]
+		[ReturnsModifiedPointer]
+		public void reopen (string filename, string mode);
 		[CCode (cname = "fdopen")]
 		public static FILE? fdopen (int fildes, string mode);
 		[CCode (cname = "popen")]
