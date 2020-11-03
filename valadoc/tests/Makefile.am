@@ -2,23 +2,32 @@ include $(top_srcdir)/Makefile.common
 
 NULL =
 
-TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) PACKAGE_SUFFIX=$(PACKAGE_SUFFIX) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) \
-	CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh
+LOG_COMPILER = $(abs_top_srcdir)/build-aux/testrunner.sh
+AM_TESTS_ENVIRONMENT = \
+	export EXEEXT=$(EXEEXT); \
+	export CFLAGS='$(CFLAGS)'; \
+	export CPPFLAGS='$(CPPFLAGS)'; \
+	export LDFLAGS='$(LDFLAGS)'; \
+	export TEST_CFLAGS='$(TEST_CFLAGS)'; \
+	export PACKAGE_SUFFIX='$(PACKAGE_SUFFIX)' \
+	export abs_top_srcdir='$(abs_top_srcdir)'; \
+	export abs_top_builddir='$(abs_top_builddir)'; \
+	export abs_srcdir='$(abs_srcdir)'; \
+	export abs_builddir='$(abs_builddir)'; \
+	export CC='$(CC)';
 
 TESTS = \
 	libvaladoc/errorreporter.vala \
 	libvaladoc/markupreader.vala \
 	libvaladoc/gtkdoc-scanner.vala \
-	libvaladoc/parser/manyrule.vala \
-	libvaladoc/parser/oneofrule.vala \
-	libvaladoc/parser/sequencerule.vala \
-	libvaladoc/parser/optionalrule.vala \
-	libvaladoc/parser/stubrule.vala \
+	libvaladoc/parser-manyrule.vala \
+	libvaladoc/parser-oneofrule.vala \
+	libvaladoc/parser-sequencerule.vala \
+	libvaladoc/parser-optionalrule.vala \
+	libvaladoc/parser-stubrule.vala \
 	$(NULL)
 
-check-TESTS: $(TESTS)
-	@EXEEXT=$(EXEEXT) PACKAGE_SUFFIX=$(PACKAGE_SUFFIX) TOPBUILDDIR=$(abs_top_builddir) TOPSRCDIR=$(abs_top_srcdir) \
-		CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(TESTS)
+check-local:
 	G_DEBUG=fatal_warnings $(builddir)/driver
 
 AM_CFLAGS = \
@@ -90,11 +99,11 @@ driver.vala.stamp: $(driver_VALASOURCES) $(top_srcdir)/vala/libvala@PACKAGE_SUFF
 EXTRA_DIST = \
 	driver.vala.stamp \
 	$(driver_SOURCES) \
-	testrunner.sh \
 	drivers/api-test.data.vapi \
 	drivers/driver-test.vala \
 	drivers/generic-api-test.vala \
-	libvaladoc/parser/generic-scanner.vala \
+	libvaladoc/parser-generic-scanner.vala \
+	libvaladoc/tests-extra-environment.sh \
 	$(TESTS) \
 	$(NULL)
 
