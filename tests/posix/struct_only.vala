@@ -1,0 +1,1 @@
+../structs/struct_only.vala
