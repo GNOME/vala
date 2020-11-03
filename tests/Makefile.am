@@ -18,7 +18,24 @@ BUILT_SOURCES = \
 noinst_PROGRAMS = \
 	$(NULL)
 
-TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh
+TEST_EXTENSIONS = .vala .gs .test
+
+TEST_RUNNER = $(abs_top_srcdir)/build-aux/testrunner.sh
+VALA_LOG_COMPILER = $(TEST_RUNNER)
+GS_LOG_COMPILER = $(TEST_RUNNER)
+TEST_LOG_COMPILER = $(TEST_RUNNER)
+
+AM_TESTS_ENVIRONMENT = \
+	export EXEEXT=$(EXEEXT); \
+	export CFLAGS='$(CFLAGS)'; \
+	export CPPFLAGS='$(CPPFLAGS)'; \
+	export LDFLAGS='$(LDFLAGS)'; \
+	export TEST_CFLAGS='$(TEST_CFLAGS)'; \
+	export abs_top_srcdir='$(abs_top_srcdir)'; \
+	export abs_top_builddir='$(abs_top_builddir)'; \
+	export abs_srcdir='$(abs_srcdir)'; \
+	export abs_builddir='$(abs_builddir)'; \
+	export CC='$(CC)';
 
 TESTS = \
 	basic-types/integers.vala \
@@ -987,39 +1004,17 @@ TESTS = \
 	semantic/yield-creation-requires-async-context.test \
 	semantic/yield-creation-requires-async-method.test \
 	semantic/yield-statement-requires-async-context.test \
-	$(NULL)
-
-NON_NULL_TESTS = \
 	nullability/bug611223.vala \
 	nullability/local-variable-invalid-convert.test \
 	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \
 	nullability/string-concat.test \
-	$(NULL)
-
-LINUX_TESTS = \
-	linux/bug793444.vala \
-	posix/file-commandpipe.vala \
-	$(NULL)
-
-POSIX_TESTS = \
-	basic-types/arrays.vala \
-	arrays/empty-length-0.vala \
-	structs/struct_only.vala \
-	delegates/delegate_only.vala \
-	enums/enum_only.vala \
-	$(NULL)
-
-VERSION_CHECK_TESTS = \
 	version/since-constant.test \
 	version/since-field.test \
 	version/since-local-variable.test \
 	version/since-method.test \
 	version/since-parameter.test \
-	$(NULL)
-
-GENIE_TESTS = \
 	genie/class.gs \
 	genie/control-flow-if-do.gs \
 	genie/control-flow-if-else.gs \
@@ -1084,32 +1079,29 @@ GENIE_TESTS = \
 	genie/preparser-or-expression.gs \
 	genie/struct.gs \
 	genie/struct-after-class.gs \
+	$(LINUX_TESTS) \
 	$(NULL)
 
-check-TESTS: $(TESTS) $(NON_NULL_TESTS)
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		$(srcdir)/testrunner.sh $(TESTS)
+LINUX_TESTS = $(NULL)
+
 if HAVE_LINUX
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		PACKAGES="linux" $(srcdir)/testrunner.sh $(LINUX_TESTS)
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		VALAFLAGS="--profile posix" PACKAGES="posix linux" $(srcdir)/testrunner.sh $(POSIX_TESTS)
+LINUX_TESTS += \
+	linux/bug793444.vala \
+	linux/file-commandpipe.vala \
+	posix/arrays.vala \
+	posix/empty-length-0.vala \
+	posix/struct_only.vala \
+	posix/delegate_only.vala \
+	posix/enum_only.vala \
+	$(NULL)
 endif
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		VALAFLAGS="--enable-experimental-non-null" $(srcdir)/testrunner.sh $(NON_NULL_TESTS)
-	@export PKG_CONFIG_PATH=$(abs_srcdir)/version; EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' \
-		TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' $(srcdir)/testrunner.sh $(VERSION_CHECK_TESTS)
-	@EXEEXT=$(EXEEXT) CFLAGS='$(CFLAGS)' CPPFLAGS='$(CPPFLAGS)' LDFLAGS='$(LDFLAGS)' TEST_CFLAGS='$(TEST_CFLAGS)' CC='$(CC)' \
-		$(srcdir)/testrunner.sh $(GENIE_TESTS)
 
 EXTRA_DIST = \
-	testrunner.sh \
+	linux/tests-extra-environment.sh \
+	nullability/tests-extra-environment.sh \
+	posix/tests-extra-environment.sh \
 	version/glib-2.0.pc \
+	version/tests-extra-environment.sh \
 	$(TESTS) \
-	$(NON_NULL_TESTS) \
 	$(LINUX_TESTS) \
-	$(POSIX_TESTS) \
-	$(VERSION_CHECK_TESTS) \
-	$(GENIE_TESTS) \
 	$(NULL)
-

@@ -1,0 +1,1 @@
+../delegates/delegate_only.vala
