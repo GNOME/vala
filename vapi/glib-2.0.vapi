@@ -5399,6 +5399,9 @@ namespace GLib {
 		public void** pdata;
 	}
 
+	[CCode (cname = "GEqualFunc", has_target = false)]
+	public delegate bool ArraySearchFunc<G,T> (G element, T needle);
+
 	[Compact]
 	[CCode (cname = "GPtrArray", cprefix = "g_ptr_array_", ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
 	[GIR (name = "PtrArray")]
@@ -5415,6 +5418,9 @@ namespace GLib {
 		public void extend_and_steal (owned GenericArray<G> array);
 		[Version (since = "2.54")]
 		public bool find (G needle, out uint index = null);
+		[Version (since = "2.54")]
+		[CCode (cname = "g_ptr_array_find_with_equal_func")]
+		public bool find_custom<T> (T needle, GLib.ArraySearchFunc<G,T>? equal_func, out uint index = null);
 		[Version (since = "2.54")]
 		public bool find_with_equal_func (G needle, GLib.EqualFunc<G>? equal_func, out uint index = null);
 		public void foreach (GLib.Func<G> func);
