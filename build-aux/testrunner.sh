@@ -20,10 +20,18 @@
 # Author:
 # 	Jürg Billeter <j@bitron.ch>
 
+set -e
+
+export G_DEBUG=fatal-warnings
+
 EXTRA_ENVIRONMENT_FILE=tests-extra-environment.sh
 
 testfile=$1
 testdirname="$(dirname $testfile)"
+testfile=${testfile#$srcdir/}
+testpath=${testfile/.*/}
+testpath=${testpath//\//_}
+testpath=${testpath//-/_}
 if test -f $testdirname/$EXTRA_ENVIRONMENT_FILE; then
 	source $testdirname/$EXTRA_ENVIRONMENT_FILE
 fi
@@ -42,7 +50,7 @@ VALAFLAGS="$VALAFLAGS \
 	-X -O0 \
 	-X -pipe \
 	-X -lm \
-	-X -DGETTEXT_PACKAGE=\\\"valac\\\""
+	-X -DGETTEXT_PACKAGE=\"valac\""
 VAPIGEN=$abs_top_builddir/vapigen/vapigen$EXEEXT
 VAPIGENFLAGS="--vapidir $vapidir"
 
@@ -66,10 +74,7 @@ function testheader() {
 	elif [ "$*" = "Invalid Code" ]; then
 		INVALIDCODE=1
 		INHEADER=0
-		testpath=${testfile/.test/}
-		ns=${testpath//\//_}
-		ns=${ns//-/_}\_invalid
-		SOURCEFILE=$ns.vala
+		SOURCEFILE=${testpath}_invalid.vala
 	elif [ "$1" = "D-Bus" ]; then
 		DBUSTEST=1
 		run_prefix="dbus-run-session -- $run_prefix"
@@ -83,16 +88,14 @@ function sourceheader() {
 		if [ "$2" = "server" ]; then
 			ISSERVER=1
 		fi
-		testpath=${testfile/.test/}/$2
-		ns=${testpath//\//_}
+		ns=$testpath/$2
+		ns=${ns//\//_}
 		ns=${ns//-/_}
 		SOURCEFILE=$ns.vala
 		SOURCEFILES="$SOURCEFILES $SOURCEFILE"
 	elif [ $GIRTEST -eq 1 ]; then
 		if [ "$1" = "Input:" ]; then
-			testpath=${testfile/.test/}
-			ns=${testpath//\//_}
-			ns=${ns//-/_}
+			ns=$testpath
 			SOURCEFILE=$ns.gir
 			cat <<EOF > $SOURCEFILE
 <?xml version="1.0"?>
@@ -109,153 +112,99 @@ function sourceheader() {
 			 c:symbol-prefixes="test">
 EOF
 		elif [ "$1" = "Output:" ]; then
-			testpath=${testfile/.test/}
-			ns=${testpath//\//_}
-			ns=${ns//-/_}
-			SOURCEFILE=$ns.vapi.ref
+			SOURCEFILE=$testpath.vapi.ref
 		fi
 	fi
 }
 
 function sourceend() {
-	if [ -n "$testpath" ]; then
-		if [ $INVALIDCODE -eq 1 ]; then
-			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-			echo '' > prepare
-			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
-			echo "RET=\$?" >> check
-			echo "if [ \$RET -ne 1 ]; then exit 1; fi" >> check
-			echo "exit 0" >> check
-		elif [ $GIRTEST -eq 1 ]; then
-			if [ $PART -eq 1 ]; then
-				echo "  </namespace>" >> $SOURCEFILE
-				echo "</repository>" >> $SOURCEFILE
+	if [ $INVALIDCODE -eq 1 ]; then
+		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+		echo '' > prepare
+		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -C $SOURCEFILE" > check
+		echo "RET=\$?" >> check
+		echo "if [ \$RET -ne 1 ]; then exit 1; fi" >> check
+		echo "exit 0" >> check
+	elif [ $GIRTEST -eq 1 ]; then
+		if [ $PART -eq 1 ]; then
+			echo "  </namespace>" >> $SOURCEFILE
+			echo "</repository>" >> $SOURCEFILE
+		fi
+		echo "$VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
+	else
+		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
+		if [ $DBUSTEST -eq 1 ]; then
+			if [ $ISSERVER -eq 1 ]; then
+				echo "./$ns$EXEEXT" >> check
 			fi
-			echo "G_DEBUG=fatal-warnings $VAPIGEN $VAPIGENFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
 		else
-			PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-			echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
-			if [ $DBUSTEST -eq 1 ]; then
-				if [ $ISSERVER -eq 1 ]; then
-					echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
-				fi
-			else
-				echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
-			fi
+			echo "./$ns$EXEEXT" >> check
 		fi
 	fi
 }
 
+PACKAGES=${PACKAGES:-gio-2.0}
+
+unset SOURCEFILE
+
 testdir=_test.$$
-rm -rf $testdir
+rm -rf ./$testdir
 mkdir $testdir
 cd $testdir
 
-echo -n -e "TEST: Preparing..."
-
-cat << "EOF" > checkall
-all=0
-fail=0
-EOF
-
-PACKAGES=$([ -z "$PACKAGES" ] && echo "gio-2.0" || echo $PACKAGES)
-testfile=${testfile#$srcdir/}
-rm -f prepare check
-echo 'set -e' >> prepare
-run_prefix=""
-
 case "$testfile" in
-*.vala)
-	testpath=${testfile/.vala/}
-	ns=${testpath//\//_}
-	ns=${ns//-/_}
-	SOURCEFILE=$ns.vala
-
-	cat "$abs_srcdir/$testfile" >> $SOURCEFILE
-
-	PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-	echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
-	echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
-	;;
 *.gs)
-	testpath=${testfile/.gs/}
-	ns=${testpath//\//_}
-	ns=${ns//-/_}
-	SOURCEFILE=$ns.gs
-
-	cat "$abs_srcdir/$testfile" >> $SOURCEFILE
-
+	SOURCEFILE=$testpath.gs
+	;&
+*.vala)
+	SOURCEFILE=${SOURCEFILE:-$testpath.vala}
+	cat "$abs_srcdir/$testfile" > ./$SOURCEFILE
 	PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-	echo "G_DEBUG=fatal-warnings $VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
-	echo "G_DEBUG=fatal-warnings ./$ns$EXEEXT" >> check
+	$VALAC $VALAFLAGS $PACKAGEFLAGS -o $testpath$EXEEXT $SOURCEFILE
+	./$testpath$EXEEXT
 	;;
 *.test)
+	rm -f prepare check
+	echo 'set -e' >> prepare
+	run_prefix=""
 	PART=0
 	INHEADER=1
 	INVALIDCODE=0
 	GIRTEST=0
 	DBUSTEST=0
 	ISSERVER=0
-	testpath=
 	while IFS="" read -r line; do
-		    if [ $PART -eq 0 ]; then
-			    if [ -n "$line" ]; then
-				    testheader $line
-			    else
-				    PART=1
-			    fi
-		    else
-			    if [ $INHEADER -eq 1 ]; then
-				    if [ -n "$line" ]; then
-					    sourceheader $line
-				    else
-					    INHEADER=0
-				    fi
-			    else
-				    if echo "$line" | grep -q "^[A-Za-z]\+:"; then
-					    sourceend
-					    PART=$(($PART + 1))
-					    INHEADER=1
-					    testpath=
-					    sourceheader $line
-				    else
-					    echo "$line" >> $SOURCEFILE
-				    fi
-			    fi
-		    fi
+		if [ $PART -eq 0 ]; then
+			if [ -n "$line" ]; then
+				testheader $line
+			else
+				PART=1
+			fi
+		else
+			if [ $INHEADER -eq 1 ]; then
+				if [ -n "$line" ]; then
+					sourceheader $line
+				else
+					INHEADER=0
+				fi
+			else
+				if echo "$line" | grep -q "^[A-Za-z]\+:"; then
+					sourceend
+					PART=$(($PART + 1))
+					INHEADER=1
+					sourceheader $line
+				else
+					echo "$line" >> $SOURCEFILE
+				fi
+			fi
+		fi
 	done < "$abs_srcdir/$testfile"
 	sourceend
+	cat prepare check > $ns.check
+	$run_prefix bash $ns.check
 	;;
 esac
 
-cat prepare check > $ns.check
-cat << EOF >> checkall
-echo -n -e "  $testpath: "
-((all++))
-if $run_prefix bash $ns.check &>log; then
-	echo -e "OK"
-else
-	((fail++))
-	echo -e "FAIL"
-	cat log
-fi
-EOF
-
-cat << "EOF" >> checkall
-if [ $fail -eq 0 ]; then
-	echo "All $all tests passed"
-else
-	echo "$fail of $all tests failed"
-	exit 1
-fi
-EOF
-
-echo -e "DONE"
-
-if bash checkall; then
-	cd $abs_builddir
-	rm -rf $testdir
-else
-	cd $abs_builddir
-	exit 1
-fi
+cd ..
+rm -rf ./$testdir
