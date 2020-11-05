@@ -1,1 +1,1 @@
-PKG_CONFIG_PATH=$abs_srcdir/version
+export PKG_CONFIG_PATH=$abs_srcdir/version
