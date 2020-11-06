@@ -5544,11 +5544,6 @@ namespace Gdk {
 		public int group;
 		public int level;
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	public struct Point {
-		public int x;
-		public int y;
-	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_rgba_get_type ()")]
 	public struct RGBA {
 		public float red;
@@ -6409,7 +6404,8 @@ namespace Gtk {
 		public unowned Gtk.Accessible get_accessible ();
 		public Gtk.AccessibleRole get_accessible_role ();
 		public Gtk.Accessible accessible { get; construct; }
-		public Gtk.AccessibleRole accessible_role { get; construct; }
+		[NoAccessorMethod]
+		public Gtk.AccessibleRole accessible_role { get; set construct; }
 		[NoAccessorMethod]
 		public Gdk.Display display { owned get; construct; }
 		public signal void state_change ();
@@ -9903,11 +9899,13 @@ namespace Gtk {
 	public class PopoverMenu : Gtk.Popover, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false)]
 		protected PopoverMenu ();
+		public new bool add_child (Gtk.Widget child, string id);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenu.from_model (GLib.MenuModel? model);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenu.from_model_full (GLib.MenuModel model, Gtk.PopoverMenuFlags flags);
 		public unowned GLib.MenuModel get_menu_model ();
+		public bool remove_child (Gtk.Widget child);
 		public void set_menu_model (GLib.MenuModel? model);
 		public GLib.MenuModel menu_model { get; set; }
 		[NoAccessorMethod]
@@ -9917,9 +9915,11 @@ namespace Gtk {
 	public class PopoverMenuBar : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
 		protected PopoverMenuBar ();
+		public new bool add_child (Gtk.Widget child, string id);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PopoverMenuBar.from_model (GLib.MenuModel? model);
 		public unowned GLib.MenuModel get_menu_model ();
+		public bool remove_child (Gtk.Widget child);
 		public void set_menu_model (GLib.MenuModel? model);
 		public GLib.MenuModel menu_model { get; set; }
 	}

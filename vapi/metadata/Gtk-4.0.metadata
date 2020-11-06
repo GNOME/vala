@@ -226,6 +226,10 @@ MediaStream
   .play#method name="play_now"
 Notebook
   .insert_page_menu skip
+PopoverMenu
+  .add_child new
+PopoverMenuBar
+  .add_child new
 Stack
   .add_child new
 TreeView
