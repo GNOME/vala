@@ -74,8 +74,8 @@ namespace Gst {
 			public virtual Gst.Caps fixate_src_caps (Gst.Caps caps);
 			[NoWrapper]
 			public virtual Gst.FlowReturn flush ();
-			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
-			public Gst.BufferPool get_buffer_pool ();
+			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
+			public Gst.BufferPool? get_buffer_pool ();
 			public Gst.ClockTime get_latency ();
 			[NoWrapper]
 			public virtual Gst.ClockTime get_next_time ();
@@ -84,7 +84,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool negotiated_src_caps (Gst.Caps caps);
 			[Version (since = "1.18")]
-			public virtual Gst.Sample peek_next_sample (Gst.Base.AggregatorPad aggregator_pad);
+			public virtual Gst.Sample? peek_next_sample (Gst.Base.AggregatorPad aggregator_pad);
 			[NoWrapper]
 			public virtual bool propose_allocation (Gst.Base.AggregatorPad pad, Gst.Query decide_query, Gst.Query query);
 			[Version (since = "1.18")]
@@ -143,8 +143,8 @@ namespace Gst {
 			[Version (since = "1.14.1")]
 			public bool has_buffer ();
 			public bool is_eos ();
-			public Gst.Buffer peek_buffer ();
-			public Gst.Buffer pop_buffer ();
+			public Gst.Buffer? peek_buffer ();
+			public Gst.Buffer? pop_buffer ();
 			[NoWrapper]
 			public virtual bool skip_buffer (Gst.Base.Aggregator aggregator, Gst.Buffer buffer);
 			[NoAccessorMethod]
@@ -727,9 +727,9 @@ namespace Gst {
 			public virtual Gst.FlowReturn fill (uint64 offset, uint size, Gst.Buffer buf);
 			[NoWrapper]
 			public virtual Gst.Caps fixate (Gst.Caps caps);
-			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 			public uint get_blocksize ();
-			public Gst.BufferPool get_buffer_pool ();
+			public Gst.BufferPool? get_buffer_pool ();
 			[NoWrapper]
 			public virtual Gst.Caps get_caps (Gst.Caps? filter);
 			public bool get_do_timestamp ();
@@ -804,8 +804,8 @@ namespace Gst {
 			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
 			[NoWrapper]
 			public virtual Gst.FlowReturn generate_output (out Gst.Buffer outbuf);
-			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
-			public Gst.BufferPool get_buffer_pool ();
+			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
+			public Gst.BufferPool? get_buffer_pool ();
 			[NoWrapper]
 			public virtual bool get_unit_size (Gst.Caps caps, out size_t size);
 			public bool is_in_place ();

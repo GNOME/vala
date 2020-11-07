@@ -788,15 +788,15 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn alloc_buffer (Gst.Buffer buffer, Gst.BufferPoolAcquireParams @params);
 		public static void config_add_option (Gst.Structure config, string option);
-		public static bool config_get_allocator (Gst.Structure config, out unowned Gst.Allocator allocator, out unowned Gst.AllocationParams @params);
-		public static unowned string config_get_option (Gst.Structure config, uint index);
-		public static bool config_get_params (Gst.Structure config, out unowned Gst.Caps caps, out uint size, out uint min_buffers, out uint max_buffers);
+		public static bool config_get_allocator (Gst.Structure config, out unowned Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
+		public static unowned string? config_get_option (Gst.Structure config, uint index);
+		public static bool config_get_params (Gst.Structure config, out unowned Gst.Caps? caps, out uint size, out uint min_buffers, out uint max_buffers);
 		public static bool config_has_option (Gst.Structure config, string option);
 		public static uint config_n_options (Gst.Structure config);
 		public static void config_set_allocator (Gst.Structure config, Gst.Allocator? allocator, Gst.AllocationParams? @params);
-		public static void config_set_params (Gst.Structure config, Gst.Caps caps, uint size, uint min_buffers, uint max_buffers);
+		public static void config_set_params (Gst.Structure config, Gst.Caps? caps, uint size, uint min_buffers, uint max_buffers);
 		[Version (since = "1.4")]
-		public static bool config_validate_params (Gst.Structure config, Gst.Caps caps, uint size, uint min_buffers, uint max_buffers);
+		public static bool config_validate_params (Gst.Structure config, Gst.Caps? caps, uint size, uint min_buffers, uint max_buffers);
 		[NoWrapper]
 		public virtual void flush_start ();
 		[NoWrapper]
@@ -1174,7 +1174,7 @@ namespace Gst {
 		public void device_remove (Gst.Device device);
 		public Gst.Bus get_bus ();
 		public GLib.List<Gst.Device> get_devices ();
-		public unowned Gst.DeviceProviderFactory get_factory ();
+		public unowned Gst.DeviceProviderFactory? get_factory ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.6")]
 		public string[] get_hidden_providers ();
@@ -1182,6 +1182,8 @@ namespace Gst {
 		public unowned string get_metadata (string key);
 		[Version (since = "1.6")]
 		public void hide_provider (string name);
+		[Version (since = "1.20")]
+		public bool is_started ();
 		public static bool register (Gst.Plugin? plugin, string name, uint rank, GLib.Type type);
 		[CCode (cname = "gst_device_provider_class_set_metadata")]
 		public class void set_metadata (string longname, string classification, string description, string author);
@@ -1284,7 +1286,7 @@ namespace Gst {
 		public Gst.Pad? get_compatible_pad (Gst.Pad pad, Gst.Caps? caps);
 		public unowned Gst.PadTemplate? get_compatible_pad_template (Gst.PadTemplate compattempl);
 		[Version (since = "1.8")]
-		public Gst.Context get_context (string context_type);
+		public Gst.Context? get_context (string context_type);
 		[Version (since = "1.8")]
 		public Gst.Context? get_context_unlocked (string context_type);
 		[Version (since = "1.8")]
@@ -1316,7 +1318,7 @@ namespace Gst {
 		public bool link_pads_filtered (string? srcpadname, Gst.Element dest, string? destpadname, Gst.Caps? filter);
 		public void lost_state ();
 		[CCode (returns_floating_reference = true)]
-		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
+		public static Gst.Element make_from_uri (Gst.URIType type, string uri, string? elementname) throws GLib.Error;
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line);
 		[Version (since = "1.10")]
 		public void message_full_with_details (Gst.MessageType type, GLib.Quark domain, int code, owned string? text, owned string? debug, string file, string function, int line, owned Gst.Structure structure);
@@ -2064,7 +2066,7 @@ namespace Gst {
 		public void add_dependency_simple (string? env_vars, string? paths, string? names, Gst.PluginDependencyFlags flags);
 		public unowned Gst.Structure? get_cache_data ();
 		public unowned string get_description ();
-		public unowned string get_filename ();
+		public unowned string? get_filename ();
 		public unowned string get_license ();
 		public unowned string get_name ();
 		public unowned string get_origin ();
@@ -2290,7 +2292,7 @@ namespace Gst {
 		public uint32 get_feature_list_cookie ();
 		public GLib.List<Gst.Plugin> get_plugin_list ();
 		public Gst.Plugin? lookup (string filename);
-		public Gst.PluginFeature lookup_feature (string name);
+		public Gst.PluginFeature? lookup_feature (string name);
 		public GLib.List<Gst.Plugin> plugin_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFilter filter, bool first);
 		public void remove_feature (Gst.PluginFeature feature);
 		public void remove_plugin (Gst.Plugin plugin);
@@ -2366,6 +2368,14 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public int to_stream_time_full (Gst.Format format, uint64 position, out uint64 stream_time);
 	}
+	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_shared_task_pool_get_type ()")]
+	[Version (since = "1.20")]
+	public class SharedTaskPool : Gst.TaskPool {
+		[CCode (has_construct_function = false, type = "GstTaskPool*")]
+		public SharedTaskPool ();
+		public uint get_max_threads ();
+		public void set_max_threads (uint max_threads);
+	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_stream_get_type ()")]
 	[Version (since = "1.10")]
 	public class Stream : Gst.Object {
@@ -2394,7 +2404,7 @@ namespace Gst {
 		public bool add_stream (owned Gst.Stream stream);
 		public uint get_size ();
 		public unowned Gst.Stream? get_stream (uint index);
-		public unowned string get_upstream_id ();
+		public unowned string? get_upstream_id ();
 		[NoAccessorMethod]
 		public string upstream_id { owned get; set construct; }
 		public virtual signal void stream_notify (Gst.Stream stream, GLib.ParamSpec pspec);
@@ -2584,7 +2594,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public TaskPool ();
 		public virtual void cleanup ();
-		public virtual void join (void* id);
+		[Version (since = "1.20")]
+		public virtual void dispose_handle (owned void* id);
+		public virtual void join (owned void* id);
 		public virtual void prepare () throws GLib.Error;
 		public virtual void* push ([CCode (scope = "async")] Gst.TaskPoolFunction func) throws GLib.Error;
 	}
@@ -2654,7 +2666,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected TypeFindFactory ();
 		public void call_function (Gst.TypeFind find);
-		public unowned Gst.Caps get_caps ();
+		public unowned Gst.Caps? get_caps ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_extensions ();
 		public static GLib.List<Gst.TypeFindFactory> get_list ();
@@ -3041,7 +3053,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
 		public unowned uint8[]? peek (int64 offset);
-		public static bool register (Gst.Plugin? plugin, string name, uint rank, [CCode (delegate_target_pos = 6.1, destroy_notify_pos = 6.2)] owned Gst.TypeFindFunction func, string? extensions, Gst.Caps possible_caps);
+		public static bool register (Gst.Plugin? plugin, string name, uint rank, [CCode (delegate_target_pos = 6.1, destroy_notify_pos = 6.2)] owned Gst.TypeFindFunction func, string? extensions, Gst.Caps? possible_caps);
 		public void suggest (uint probability, Gst.Caps caps);
 		public void suggest_simple (uint probability, string media_type, string? fieldname, ...);
 	}
@@ -4225,11 +4237,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec? param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full", returns_floating_reference = true)]
-	public static Gst.Element? parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
+	public static Gst.Element parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launch_full", returns_floating_reference = true)]
-	public static Gst.Element? parse_launch (string pipeline_description, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
+	public static Gst.Element parse_launch (string pipeline_description, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launchv_full", returns_floating_reference = true)]
-	public static Gst.Element? parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
+	public static Gst.Element parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned string? preset_get_app_dir ();
 	[CCode (cheader_filename = "gst/gst.h")]
