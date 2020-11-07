@@ -101,6 +101,7 @@ namespace Gst {
 		public signal void on_selected_candidate_pair_change ();
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_receiver", type_id = "gst_webrtc_rtp_receiver_get_type ()")]
+	[Version (since = "1.16")]
 	public class WebRTCRTPReceiver : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
@@ -112,6 +113,7 @@ namespace Gst {
 		public void set_transport (Gst.WebRTCDTLSTransport transport);
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_sender", type_id = "gst_webrtc_rtp_sender_get_type ()")]
+	[Version (since = "1.16")]
 	public class WebRTCRTPSender : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
@@ -120,15 +122,23 @@ namespace Gst {
 		public weak Gst.WebRTCDTLSTransport transport;
 		[CCode (has_construct_function = false)]
 		public WebRTCRTPSender ();
+		[Version (since = "1.20")]
+		public void set_priority (Gst.WebRTCPriorityType priority);
 		public void set_rtcp_transport (Gst.WebRTCDTLSTransport transport);
 		public void set_transport (Gst.WebRTCDTLSTransport transport);
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.WebRTCPriorityType priority { get; set; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_transceiver", type_id = "gst_webrtc_rtp_transceiver_get_type ()")]
+	[Version (since = "1.16")]
 	public abstract class WebRTCRTPTransceiver : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
 		public weak Gst.Caps codec_preferences;
 		public Gst.WebRTCRTPTransceiverDirection current_direction;
+		[Version (since = "1.20")]
+		public Gst.WebRTCKind kind;
 		public weak string mid;
 		public uint mline;
 		public bool stopped;
@@ -224,6 +234,13 @@ namespace Gst {
 	public enum WebRTCICETransportPolicy {
 		ALL,
 		RELAY
+	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_KIND_", type_id = "gst_webrtc_kind_get_type ()")]
+	[Version (since = "1.20")]
+	public enum WebRTCKind {
+		UNKNOWN,
+		AUDIO,
+		VIDEO
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_PEER_CONNECTION_STATE_", type_id = "gst_webrtc_peer_connection_state_get_type ()")]
 	public enum WebRTCPeerConnectionState {
