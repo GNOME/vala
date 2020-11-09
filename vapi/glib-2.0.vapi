@@ -5414,33 +5414,16 @@ namespace GLib {
 	/* Pointer Arrays */
 
 	[Compact]
-	[Version (since = "2.22", deprecated_since = "vala-0.26", replacement="GenericArray")]
+	[Version (since = "2.22")]
 	[CCode (ref_function = "g_ptr_array_ref", unref_function = "g_ptr_array_unref", type_id = "G_TYPE_PTR_ARRAY")]
-	public class PtrArray {
+	public class PtrArray : GenericArray<void*> {
 		public PtrArray ();
 		[Version (since = "2.22")]
 		public PtrArray.with_free_func (GLib.DestroyNotify? element_free_func);
 		[CCode (cname = "g_ptr_array_sized_new")]
 		public PtrArray.sized (uint reserved_size);
-		public void add (void* data);
-		[Version (since = "2.4")]
-		public void foreach (GLib.Func<void*> func);
-		[CCode (cname = "g_ptr_array_index")]
-		public void* index(uint index);
-		public bool remove (void* data);
-		public void* remove_index (uint index);
-		public bool remove_fast (void *data);
-		public void remove_index_fast (uint index);
-		[Version (since = "2.4")]
-		public void remove_range (uint index, uint length);
-		public void sort (CompareFunc<void**> compare_func);
-		public void sort_with_data (CompareDataFunc<void**> compare_func);
 		[Version (since = "2.22")]
 		public void set_free_func (GLib.DestroyNotify? element_free_function);
-		public void set_size (int length);
-
-		public uint len;
-		public void** pdata;
 	}
 
 	[CCode (cname = "GEqualFunc", has_target = false)]
