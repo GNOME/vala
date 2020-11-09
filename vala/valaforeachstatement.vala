@@ -205,7 +205,11 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 
-		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_list".printf (variable_name), collection, source_reference), source_reference));
+		var list_type = collection_type.copy ();
+		if (collection.symbol_reference is Variable) {
+			list_type.value_owned = false;
+		}
+		add_statement (new DeclarationStatement (new LocalVariable (list_type, "_%s_list".printf (variable_name), collection, source_reference), source_reference));
 		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_size".printf (variable_name), new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "size", source_reference), source_reference), source_reference));
 		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_index".printf (variable_name), new UnaryExpression (UnaryOperator.MINUS, new IntegerLiteral ("1", source_reference), source_reference), source_reference), source_reference));
 		var next = new UnaryExpression (UnaryOperator.INCREMENT, new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference), source_reference);
