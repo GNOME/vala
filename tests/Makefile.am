@@ -733,6 +733,7 @@ TESTS = \
 	parser/field-no-override.test \
 	parser/field-no-static-class.test \
 	parser/field-no-virtual.test \
+	parser/foreach.vala \
 	parser/foreach-no-type.test \
 	parser/function-syntax-error.test \
 	parser/inner-array-size.test \
