@@ -33,6 +33,41 @@ void test_foreach_gvaluearray () {
 	test_unowned (array);
 }
 
+void test_generic_array_owned (GenericArray<Value?> array) {
+	uint i = 0;
+
+	foreach (Value? item in array) {
+		i++;
+	}
+
+	assert (i == 3);
+}
+
+void test_generic_array_unowned (GenericArray<Value?> array) {
+	uint i = 0;
+
+	foreach (unowned Value? item in array) {
+		i++;
+	}
+
+	assert (i == 3);
+}
+
+void test_foreach_genericarray () {
+	Value value;
+	var array = new GenericArray<Value?> ();
+
+	value = 1;
+	array.add (value);
+	value = 2.0;
+	array.add (value);
+	value = "three";
+	array.add (value);
+
+	test_generic_array_owned (array);
+	test_generic_array_unowned (array);
+}
+
 void test_foreach_multidim_array () {
 	int[,] foo = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
 	string result = "";
@@ -70,6 +105,7 @@ void test_foreach_slice_array () {
 
 void main () {
 	test_foreach_gvaluearray ();
+	test_foreach_genericarray ();
 	test_foreach_const_array ();
 	test_foreach_multidim_array ();
 	test_foreach_slice_array ();

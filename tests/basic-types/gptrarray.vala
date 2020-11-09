@@ -26,6 +26,30 @@ void main () {
 		assert (foo3.ref_count == 2);
 		assert (array.length == 3);
 
+		int loop_size = 0;
+		foreach (weak Foo element in array) {
+			loop_size++;
+			assert (element.ref_count == 2);
+			switch (loop_size) {
+				case 1: assert (element == foo1); break;
+				case 2: assert (element == foo2); break;
+				case 3: assert (element == foo3); break;
+			}
+		}
+		assert (loop_size == 3);
+
+		loop_size = 0;
+		foreach (Foo element in array) {
+			loop_size++;
+			assert (element.ref_count == 3);
+			switch (loop_size) {
+				case 1: assert (element == foo1); break;
+				case 2: assert (element == foo2); break;
+				case 3: assert (element == foo3); break;
+			}
+		}
+		assert (loop_size == 3);
+
 		assert (foo2 == array.get (1));
 		array.set (1, foo4);
 		assert (foo4 == array.get (1));
@@ -72,6 +96,30 @@ void main () {
 		array.add (foo3);
 		assert (foo3.ref_count == 1);
 		assert (array.length == 3);
+
+		int loop_size = 0;
+		foreach (weak Foo element in array) {
+			loop_size++;
+			assert (element.ref_count == 1);
+			switch (loop_size) {
+				case 1: assert (element == foo1); break;
+				case 2: assert (element == foo2); break;
+				case 3: assert (element == foo3); break;
+			}
+		}
+		assert (loop_size == 3);
+
+		loop_size = 0;
+		foreach (Foo element in array) {
+			loop_size++;
+			assert (element.ref_count == 2);
+			switch (loop_size) {
+				case 1: assert (element == foo1); break;
+				case 2: assert (element == foo2); break;
+				case 3: assert (element == foo3); break;
+			}
+		}
+		assert (loop_size == 3);
 
 		assert (foo2 == array.get (1));
 		array.set (1, foo4);
