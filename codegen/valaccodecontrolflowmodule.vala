@@ -338,6 +338,10 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			stmt.body.emit (this);
 
 			ccode.close ();
+		} else {
+			Report.error (stmt.source_reference, "internal error: unsupported collection type");
+			stmt.error = true;
+			return;
 		}
 
 		foreach (LocalVariable local in stmt.get_local_variables ()) {
