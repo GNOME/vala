@@ -2194,12 +2194,20 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.FOREACH);
 		expect (TokenType.OPEN_PARENS);
-		DataType type = null;
-		if (!accept (TokenType.VAR)) {
-			type = parse_type (true, true);
-			if (accept (TokenType.IN)) {
-				Report.error (type.source_reference, "syntax error, expected var or type");
-				throw new ParseError.SYNTAX ("expected var or type");
+		var var_or_type = get_location ();
+		DataType type;
+		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
+			type = new VarType (false);
+		} else {
+			rollback (var_or_type);
+			if (accept (TokenType.VAR)) {
+				type = new VarType ();
+			} else {
+				type = parse_type (true, true);
+				if (accept (TokenType.IN)) {
+					Report.error (type.source_reference, "syntax error, expected `unowned var', `var' or type");
+					throw new ParseError.SYNTAX ("expected `unowned var', `var' or type");
+				}
 			}
 		}
 		string id = parse_identifier ();

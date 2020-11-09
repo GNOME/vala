@@ -155,6 +155,10 @@ public class Vala.ForeachStatement : Block {
 
 		checked = true;
 
+		if (type_reference == null) {
+			type_reference = new VarType ();
+		}
+
 		// analyze collection expression first, used for type inference
 		if (!collection.check (context)) {
 			// ignore inner error
@@ -330,9 +334,13 @@ public class Vala.ForeachStatement : Block {
 
 	bool analyze_element_type (DataType element_type) {
 		// analyze element type
-		if (type_reference == null) {
+		if (type_reference is VarType) {
 			// var type
 			type_reference = element_type.copy ();
+			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
+			if (!type_reference.value_owned) {
+				type_reference.value_owned = false;
+			}
 		} else if (!element_type.compatible (type_reference)) {
 			error = true;
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'", element_type.to_string (), type_reference.to_string ());
@@ -348,9 +356,13 @@ public class Vala.ForeachStatement : Block {
 
 	bool check_without_iterator (CodeContext context, DataType collection_type, DataType element_type) {
 		// analyze element type
-		if (type_reference == null) {
+		if (type_reference is VarType) {
 			// var type
 			type_reference = element_type.copy ();
+			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
+			if (!type_reference.value_owned) {
+				type_reference.value_owned = false;
+			}
 		} else if (!element_type.compatible (type_reference)) {
 			error = true;
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'", element_type.to_string (), type_reference.to_string ());
