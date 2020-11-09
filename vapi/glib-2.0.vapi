@@ -5306,8 +5306,10 @@ namespace GLib {
 		private void set_size (int length);
 
 		public int length {
+			[CCode (cname = "vala_g_ptr_array_get_length")]
 			get { return (int) this.len; }
-			set { this.set_size (value); }
+			[CCode (cname = "g_ptr_array_set_size")]
+			set;
 		}
 
 		[CCode (cname = "pdata", array_length_cname = "len", array_length_type = "guint")]
