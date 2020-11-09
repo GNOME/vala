@@ -206,6 +206,9 @@ public class Vala.ForeachStatement : Block {
 		}
 		var size_property = collection_type.get_member ("size") as Property;
 		if (size_property == null) {
+			size_property = collection_type.get_member ("length") as Property;
+		}
+		if (size_property == null || !(size_property.property_type is IntegerType)) {
 			return false;
 		}
 
@@ -214,7 +217,7 @@ public class Vala.ForeachStatement : Block {
 			list_type.value_owned = false;
 		}
 		add_statement (new DeclarationStatement (new LocalVariable (list_type, "_%s_list".printf (variable_name), collection, source_reference), source_reference));
-		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_size".printf (variable_name), new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), "size", source_reference), source_reference), source_reference));
+		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_size".printf (variable_name), new MemberAccess (new MemberAccess.simple ("_%s_list".printf (variable_name), source_reference), size_property.name, source_reference), source_reference), source_reference));
 		add_statement (new DeclarationStatement (new LocalVariable (null, "_%s_index".printf (variable_name), new UnaryExpression (UnaryOperator.MINUS, new IntegerLiteral ("1", source_reference), source_reference), source_reference), source_reference));
 		var next = new UnaryExpression (UnaryOperator.INCREMENT, new MemberAccess.simple ("_%s_index".printf (variable_name), source_reference), source_reference);
 		var conditional = new BinaryExpression (BinaryOperator.LESS_THAN, next, new MemberAccess.simple ("_%s_size".printf (variable_name), source_reference), source_reference);
