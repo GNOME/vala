@@ -86,6 +86,8 @@ dist_vapi_DATA = \
 	gnome-desktop-3.0.deps \
 	gnome-desktop-3.0.vapi \
 	gnome-vfs-2.0.vapi \
+	gnu.deps \
+	gnu.vapi \
 	gnutls.vapi \
 	gobject-2.0.deps \
 	gobject-2.0.vapi \
