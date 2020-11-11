@@ -463,7 +463,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		Symbol? cc = null;
 
 		foreach ( unowned string tok in path ) {
-			cc = cp.scope.lookup (tok) as Symbol;
+			cc = cp.scope.lookup (tok);
 			if ( cc == null ) {
 				cc = new Namespace (tok, current_source_reference);
 				add_symbol_to_container (cp, cc);
