@@ -45,6 +45,11 @@ public abstract class Vala.DataType : CodeNode {
 	public weak Symbol? symbol { get; private set; }
 
 	/**
+	 * The referred symbol in the current context.
+	 */
+	public weak Symbol? context_symbol { get; set; }
+
+	/**
 	 * The referred type symbol.
 	 */
 	public weak TypeSymbol? type_symbol {
@@ -428,10 +433,14 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public virtual Symbol? get_member (string member_name) {
-		if (type_symbol != null) {
-			return SemanticAnalyzer.symbol_lookup_inherited (type_symbol, member_name);
+		Symbol? member = null;
+		if (context_symbol != null) {
+			member = SemanticAnalyzer.symbol_lookup_inherited (context_symbol, member_name);
 		}
-		return null;
+		if (member == null && type_symbol != null) {
+			member = SemanticAnalyzer.symbol_lookup_inherited (type_symbol, member_name);
+		}
+		return member;
 	}
 
 	public virtual Symbol? get_pointer_member (string member_name) {

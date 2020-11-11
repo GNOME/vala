@@ -475,6 +475,8 @@ TESTS = \
 	objects/signals-prototype-access-invalid-2.test \
 	objects/signals-struct-return.vala \
 	objects/singleton.vala \
+	objects/type-narrowing.vala \
+	objects/type-narrowing-fallback.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \
 	objects/test-029.vala \
@@ -1039,6 +1041,7 @@ TESTS = \
 	semantic/yield-statement-requires-async-context.test \
 	nullability/bug611223.vala \
 	nullability/local-variable-invalid-convert.test \
+	nullability/member-access-narrowed-instance.vala \
 	nullability/member-access-nullable-instance.test \
 	nullability/method-parameter-invalid-convert.test \
 	nullability/method-return-invalid-convert.test \

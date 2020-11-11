@@ -986,6 +986,10 @@ public class Vala.MemberAccess : Expression {
 				var parent_type = SemanticAnalyzer.get_data_type_for_symbol (symbol_reference.parent_symbol);
 				inner.target_type = parent_type.get_actual_type (inner.value_type, null, this);
 			}
+
+			if (inner == null && value_type != null && context.profile == Profile.GOBJECT) {
+				check_narrowed_value_type ();
+			}
 		}
 
 		if (value_type != null) {
@@ -1111,5 +1115,50 @@ public class Vala.MemberAccess : Expression {
 		node.accept (traverse);
 
 		return found;
+	}
+
+	void check_narrowed_value_type () {
+		unowned Variable? variable = symbol_reference as Variable;
+		if (variable == null) {
+			return;
+		}
+
+		if (!(parent_node is MemberAccess)) {
+			return;
+		}
+
+		bool is_negation = false;
+		unowned CodeNode? parent = parent_node;
+		unowned IfStatement? if_statement = null;
+		while (parent != null && !(parent is Method)) {
+			if (parent is TypeCheck) {
+				parent = null;
+				break;
+			}
+			if (parent.parent_node is IfStatement) {
+				if_statement = (IfStatement) parent.parent_node;
+				is_negation = if_statement.false_statement == parent;
+				break;
+			}
+			parent = parent.parent_node;
+		}
+
+		if (if_statement != null) {
+			unowned Expression expr = if_statement.condition;
+			if (expr is UnaryExpression && ((UnaryExpression) expr).operator == UnaryOperator.LOGICAL_NEGATION) {
+				expr = ((UnaryExpression) expr).inner;
+				is_negation = !is_negation;
+			}
+			unowned TypeCheck? type_check = expr as TypeCheck;
+			if (!is_negation && type_check != null) {
+				unowned TypeSymbol? narrowed_symnol = type_check.type_reference.type_symbol;
+				if (variable == type_check.expression.symbol_reference) {
+					if (narrowed_symnol != value_type.type_symbol) {
+						value_type.context_symbol = narrowed_symnol;
+					}
+					value_type.nullable = false;
+				}
+			}
+		}
 	}
 }
