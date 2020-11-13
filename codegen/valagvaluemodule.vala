@@ -44,29 +44,41 @@ public class Vala.GValueModule : GAsyncModule {
 		}
 		ccall.add_argument (gvalue);
 
-		CCodeExpression rv = ccall;
+		CCodeExpression rv;
+		if (target_type is ArrayType) {
+			var temp_var = get_temp_variable (target_type, true, expr, false);
+			emit_temp_var (temp_var);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+			ccode.add_assignment (temp_ref, ccall);
+			rv = temp_ref;
 
-		if (expr != null && target_type is ArrayType) {
 			// null-terminated string array
 			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 			len_call.add_argument (rv);
 			append_array_length (expr, len_call);
 		} else if (target_type is StructValueType) {
-			CodeNode node = expr != null ? (CodeNode) expr : target_type;
-			var temp_value = create_temp_value (target_type, true, node, true);
+			var temp_var = get_temp_variable (new PointerType (target_type), true, expr, false);
+			emit_temp_var (temp_var);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+			ccode.add_assignment (temp_ref, ccall);
+			rv = temp_ref;
+
+			// default value to fallback to
+			var temp_value = create_temp_value (target_type, true, expr, true);
 			var ctemp = get_cvalue_ (temp_value);
 
-			rv = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (rv, get_ccode_name (new PointerType (target_type))));
 			var holds = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_HOLDS"));
 			holds.add_argument (gvalue);
 			holds.add_argument (new CCodeIdentifier (get_ccode_type_id (target_type)));
-			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.AND, holds, ccall);
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.AND, holds, rv);
 			var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
 			warn.add_argument (new CCodeConstant ("\"Invalid GValue unboxing (wrong type or NULL)\""));
 			var fail = new CCodeCommaExpression ();
 			fail.append_expression (warn);
 			fail.append_expression (ctemp);
-			rv = new CCodeConditionalExpression (cond, rv,  fail);
+			rv = new CCodeConditionalExpression (cond, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, rv), fail);
+		} else {
+			rv = ccall;
 		}
 
 		set_cvalue (expr, rv);
