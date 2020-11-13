@@ -1232,6 +1232,7 @@ public class Vala.Method : Subroutine, Callable {
 		callback_param.initializer.target_type = callback_type.copy ();
 		callback_param.set_attribute_double ("CCode", "pos", -1);
 		callback_param.set_attribute_double ("CCode", "delegate_target_pos", -0.9);
+		scope.add (null, callback_param);
 		async_begin_parameters.add (callback_param);
 
 		if (ellipsis != null) {
@@ -1255,6 +1256,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		var result_param = new Parameter ("_res_", result_type);
 		result_param.set_attribute_double ("CCode", "pos", get_attribute_double ("CCode", "async_result_pos", 0.1));
+		scope.add (null, result_param);
 		async_end_parameters.add (result_param);
 
 		foreach (var param in parameters) {
