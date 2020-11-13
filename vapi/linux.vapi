@@ -3845,7 +3845,7 @@ namespace Linux {
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace Spi {
 
-        [CCode (cname = "spi_ioc_transfer", has_type_id = false, cheader_filename = "linux/spi/spidev.h")]
+        [CCode (cname = "struct spi_ioc_transfer", has_type_id = false, cheader_filename = "linux/spi/spidev.h")]
         public struct IocTransfer {
             public uint64  tx_buf;
             public uint64  rx_buf;
