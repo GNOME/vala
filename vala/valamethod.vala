@@ -186,6 +186,8 @@ public class Vala.Method : Subroutine, Callable {
 	public bool is_async_callback { get; set; }
 
 	private List<Parameter> parameters = new ArrayList<Parameter> ();
+	private List<Parameter>? async_begin_parameters;
+	private List<Parameter>? async_end_parameters;
 	private List<Expression> preconditions;
 	private List<Expression> postconditions;
 	private DataType _return_type;
@@ -1200,18 +1202,23 @@ public class Vala.Method : Subroutine, Callable {
 		return callback_method;
 	}
 
-	public List<Parameter> get_async_begin_parameters () {
+	public unowned List<Parameter> get_async_begin_parameters () {
 		assert (this.coroutine);
+
+		if (async_begin_parameters != null) {
+			return async_begin_parameters;
+		}
+
+		async_begin_parameters = new ArrayList<Parameter> ();
 
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 
-		var params = new ArrayList<Parameter> ();
 		Parameter ellipsis = null;
 		foreach (var param in parameters) {
 			if (param.ellipsis) {
 				ellipsis = param;
 			} else if (param.direction == ParameterDirection.IN) {
-				params.add (param);
+				async_begin_parameters.add (param);
 			}
 		}
 
@@ -1225,35 +1232,38 @@ public class Vala.Method : Subroutine, Callable {
 		callback_param.initializer.target_type = callback_type.copy ();
 		callback_param.set_attribute_double ("CCode", "pos", -1);
 		callback_param.set_attribute_double ("CCode", "delegate_target_pos", -0.9);
-
-		params.add (callback_param);
+		async_begin_parameters.add (callback_param);
 
 		if (ellipsis != null) {
-			params.add (ellipsis);
+			async_begin_parameters.add (ellipsis);
 		}
 
-		return params;
+		return async_begin_parameters;
 	}
 
-	public List<Parameter> get_async_end_parameters () {
+	public unowned List<Parameter> get_async_end_parameters () {
 		assert (this.coroutine);
 
-		var params = new ArrayList<Parameter> ();
+		if (async_end_parameters != null) {
+			return async_end_parameters;
+		}
+
+		async_end_parameters = new ArrayList<Parameter> ();
 
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
 		var result_param = new Parameter ("_res_", result_type);
 		result_param.set_attribute_double ("CCode", "pos", get_attribute_double ("CCode", "async_result_pos", 0.1));
-		params.add (result_param);
+		async_end_parameters.add (result_param);
 
 		foreach (var param in parameters) {
 			if (param.direction == ParameterDirection.OUT) {
-				params.add (param);
+				async_end_parameters.add (param);
 			}
 		}
 
-		return params;
+		return async_end_parameters;
 	}
 
 	public void add_captured_variable (LocalVariable local) {
