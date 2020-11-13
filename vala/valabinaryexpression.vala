@@ -416,7 +416,7 @@ public class Vala.BinaryExpression : Expression {
 					}
 				} else if (right.value_type is PointerType) {
 					// pointer arithmetic: pointer - pointer
-					value_type = context.analyzer.size_t_type;
+					value_type = context.analyzer.size_t_type.copy ();
 				}
 			} else {
 				left.target_type.nullable = false;
@@ -480,7 +480,7 @@ public class Vala.BinaryExpression : Expression {
 				right.target_type.nullable = false;
 			}
 
-			value_type = context.analyzer.bool_type;
+			value_type = context.analyzer.bool_type.copy ();
 			break;
 		case BinaryOperator.EQUALITY:
 		case BinaryOperator.INEQUALITY:
@@ -534,7 +534,7 @@ public class Vala.BinaryExpression : Expression {
 				right.target_type.nullable = true;
 			}
 
-			value_type = context.analyzer.bool_type;
+			value_type = context.analyzer.bool_type.copy ();
 			break;
 		case BinaryOperator.BITWISE_AND:
 		case BinaryOperator.BITWISE_OR:
@@ -560,7 +560,7 @@ public class Vala.BinaryExpression : Expression {
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
 
-			value_type = context.analyzer.bool_type;
+			value_type = context.analyzer.bool_type.copy ();
 			break;
 		case BinaryOperator.IN:
 			if (left.value_type.compatible (context.analyzer.int_type)
@@ -598,7 +598,7 @@ public class Vala.BinaryExpression : Expression {
 				return contains_call.check (context);
 			}
 
-			value_type = context.analyzer.bool_type;
+			value_type = context.analyzer.bool_type.copy ();
 			break;
 		default:
 			error = true;

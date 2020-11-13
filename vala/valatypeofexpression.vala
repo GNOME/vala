@@ -80,7 +80,7 @@ public class Vala.TypeofExpression : Expression {
 
 		type_reference.check (context);
 
-		value_type = context.analyzer.type_type;
+		value_type = context.analyzer.type_type.copy ();
 
 		if (context.profile == Profile.GOBJECT && type_reference.has_type_arguments ()) {
 			Report.warning (_data_type.source_reference, "Type argument list without effect");

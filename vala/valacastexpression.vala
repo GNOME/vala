@@ -193,7 +193,7 @@ public class Vala.CastExpression : Expression {
 			return temp_access.check (context);
 		}
 
-		value_type = type_reference;
+		value_type = type_reference.copy ();
 		value_type.value_owned = inner.value_type.value_owned;
 		value_type.floating_reference = inner.value_type.floating_reference;
 

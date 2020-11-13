@@ -68,7 +68,7 @@ public class Vala.BooleanLiteral : Literal {
 
 		checked = true;
 
-		value_type = context.analyzer.bool_type;
+		value_type = context.analyzer.bool_type.copy ();
 
 		return !error;
 	}

@@ -209,7 +209,7 @@ public class Vala.ElementAccess : Expression {
 			index_int_type_check = false;
 
 			symbol_reference = container.symbol_reference;
-			value_type = container.value_type;
+			value_type = container.value_type.copy ();
 		} else {
 			if (lvalue) {
 				var set_method = container.value_type.get_member ("set") as Method;

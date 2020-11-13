@@ -84,7 +84,7 @@ public class Vala.SizeofExpression : Expression {
 
 		type_reference.check (context);
 
-		value_type = context.analyzer.ulong_type;
+		value_type = context.analyzer.ulong_type.copy ();
 
 		return !error;
 	}
