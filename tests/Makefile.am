@@ -390,6 +390,7 @@ TESTS = \
 	objects/compact-class-refcount.vala \
 	objects/compact-class-custom-ref.vala \
 	objects/constructor-abstract-public.test \
+	objects/constructor-inner-error.vala \
 	objects/constructor-variadic.test \
 	objects/constructor-wrong-name.test \
 	objects/constructors.vala \
