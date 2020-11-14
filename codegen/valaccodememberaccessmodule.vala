@@ -548,18 +548,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					(param.direction == ParameterDirection.IN && type_as_struct != null && !type_as_struct.is_simple_type () && !result.value_type.nullable)) {
 					result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (name));
 				} else {
-					// Property setters of non simple structs shall replace all occurrences
-					// of the "value" formal parameter with a dereferencing version of that
-					// parameter.
-					if (current_property_accessor != null &&
-						current_property_accessor.writable &&
-						current_property_accessor.value_parameter == param &&
-						current_property_accessor.prop.property_type.is_real_struct_type () &&
-						!current_property_accessor.prop.property_type.nullable) {
-						result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value"));
-					} else {
-						result.cvalue = get_variable_cexpression (name);
-					}
+					result.cvalue = get_variable_cexpression (name);
 				}
 				if (get_ccode_delegate_target (param) && delegate_type != null && delegate_type.delegate_symbol.has_target) {
 					var target_cname = get_ccode_delegate_target_name (param);
