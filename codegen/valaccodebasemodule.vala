@@ -2720,12 +2720,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue store_temp_value (TargetValue initializer, CodeNode node_reference, bool? value_owned = null) {
 		var lvalue = create_temp_value (initializer.value_type, false, node_reference, value_owned);
 		store_value (lvalue, initializer, node_reference.source_reference);
-		if (lvalue.value_type is ArrayType) {
-			stdout.printf ("%s tweaked\n", node_reference.to_string ());
-			/*((GLibValue) lvalue).array_length_cvalues = null;
-			((GLibValue) lvalue).array_size_cvalue = null;
-			((GLibValue) lvalue).array_length_cexpr = null;*/
-		}
 		return load_temp_value (lvalue);
 	}
 
@@ -5230,12 +5224,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
-		// FIXME
-		if (expr.value_type == null) {
-			warning ("BAD %s\n", expr.to_string ());
-			expr.value_type = context.analyzer.ulong_type.copy ();
-		}
-
 		generate_type_declaration (expr.type_reference, cfile);
 
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
@@ -5250,7 +5238,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
-		assert (expr.checked);
 		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
 			var glib_value = (GLibValue) expr.inner.target_value;
 
@@ -5343,15 +5330,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return;
 		}
 
-		unowned DataType? value_type = expr.inner.value_type;
-		unowned DataType? target_type = expr.target_type;
-
 		generate_type_declaration (expr.type_reference, cfile);
 
 		// recompute array length when casting to other array type
-		unowned ArrayType array_type = target_type as ArrayType;
-		if (array_type != null && value_type is ArrayType) {
-			if (array_type.element_type is GenericType || ((ArrayType) value_type).element_type is GenericType) {
+		var array_type = expr.type_reference as ArrayType;
+		if (array_type != null && expr.inner.value_type is ArrayType) {
+			if (array_type.element_type is GenericType || ((ArrayType) expr.inner.value_type).element_type is GenericType) {
 				// element size unknown for generic arrays, retain array length as is
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					append_array_length (expr, get_array_length_cexpression (expr.inner, dim));
@@ -5361,7 +5345,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
 
 				var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) value_type).element_type)));
+				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (((ArrayType) expr.inner.value_type).element_type)));
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					append_array_length (expr, new CCodeBinaryExpression (CCodeBinaryOperator.DIV, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, get_array_length_cexpression (expr.inner, dim), sizeof_from), sizeof_to));
@@ -5374,6 +5358,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			sizeof_to.add_argument (new CCodeConstant (get_ccode_name (array_type.element_type)));
 			var sizeof_from = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 
+			var value_type = expr.inner.value_type;
 			if (value_type is ValueType) {
 				sizeof_from.add_argument (new CCodeConstant (get_ccode_name (value_type.type_symbol)));
 				array_length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.DIV, sizeof_from, sizeof_to);
@@ -5392,22 +5377,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		var innercexpr = get_cvalue (expr.inner);
-		if (target_type is ValueType && !target_type.nullable &&
-			value_type is ValueType && value_type.nullable) {
+		if (expr.type_reference is ValueType && !expr.type_reference.nullable &&
+			expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
 			// nullable integer or float or boolean or struct or enum cast to non-nullable
 			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
-		} else if (target_type is ValueType && target_type.nullable &&
-			value_type.is_real_non_null_struct_type ()) {
+		} else if (expr.type_reference is ValueType && expr.type_reference.nullable &&
+			expr.inner.value_type.is_real_non_null_struct_type ()) {
 			// real non-null struct cast to nullable
 			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
-		} else if (target_type is ArrayType && !(expr.inner is Literal)
-		    && value_type is ValueType && !value_type.nullable) {
+		} else if (expr.type_reference is ArrayType && !(expr.inner is Literal)
+		    && expr.inner.value_type is ValueType && !expr.inner.value_type.nullable) {
 			// integer or float or boolean or struct or enum to array cast
 			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
 		}
 		set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
 
-		if (target_type is DelegateType) {
+		if (expr.type_reference is DelegateType) {
 			var target = get_delegate_target (expr.inner);
 			if (target != null) {
 				set_delegate_target (expr, target);
@@ -5858,13 +5843,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
-		assert (expr.checked);
-		// FIXME
-		if (expr.value_type == null) {
-			warning ("BAD %s\n", expr.to_string ());
-			expr.value_type = context.analyzer.bool_type.copy ();
-		}
-
 		generate_type_declaration (expr.type_reference, cfile);
 
 		var type = expr.expression.value_type;

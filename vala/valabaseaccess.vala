@@ -72,7 +72,7 @@ public class Vala.BaseAccess : Expression {
 				Report.error (source_reference, "Base access invalid without base type");
 				return false;
 			}
-			value_type = context.analyzer.current_struct.base_type.copy ();
+			value_type = context.analyzer.current_struct.base_type;
 		} else if (context.analyzer.current_class.base_class == null) {
 			error = true;
 			Report.error (source_reference, "Base access invalid without base class");

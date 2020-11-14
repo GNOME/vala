@@ -431,8 +431,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned, null, true);
 						emit_temp_var (temp_var);
 						set_cvalue (arg, get_variable_cexpression (temp_var.name));
-						stdout.printf ("%s.%s\n", param.parent_symbol.to_string (), param.name);
-						arg.target_value.value_type = arg.target_type.copy ();
+						arg.target_value.value_type = arg.target_type;
 
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));
 
@@ -477,7 +476,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					var temp_var = get_temp_variable (arg.value_type, arg.value_type.value_owned, null, true);
 					emit_temp_var (temp_var);
 					set_cvalue (arg, get_variable_cexpression (temp_var.name));
-					arg.target_value.value_type = arg.value_type.copy ();
+					arg.target_value.value_type = arg.value_type;
 
 					if (arg.value_type is DelegateType && ((DelegateType) arg.value_type).delegate_symbol.has_target) {
 						// Initialize target/destroy cvalues to allow assignment of delegates from varargs

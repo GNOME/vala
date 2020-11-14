@@ -101,7 +101,7 @@ public class Vala.PointerIndirection : Expression {
 				Report.error (source_reference, "Pointer indirection not supported for this expression");
 				return false;
 			}
-			value_type = pointer_type.base_type.copy ();
+			value_type = pointer_type.base_type;
 		} else {
 			error = true;
 			Report.error (source_reference, "Pointer indirection not supported for this expression");

@@ -23,7 +23,7 @@
 public class Vala.GValueModule : GAsyncModule {
 	public override void visit_cast_expression (CastExpression expr) {
 		unowned DataType? value_type = expr.inner.value_type;
-		unowned DataType? target_type = expr.target_type;
+		unowned DataType? target_type = expr.type_reference;
 
 		if (expr.is_non_null_cast || value_type == null || gvalue_type == null
 		    || value_type.type_symbol != gvalue_type || target_type.type_symbol == gvalue_type

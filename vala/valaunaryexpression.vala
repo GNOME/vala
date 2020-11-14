@@ -176,7 +176,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			value_type = inner.value_type.copy ();
+			value_type = inner.value_type;
 			break;
 		case UnaryOperator.LOGICAL_NEGATION:
 			// boolean type
@@ -186,7 +186,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			value_type = inner.value_type.copy ();
+			value_type = inner.value_type;
 			break;
 		case UnaryOperator.BITWISE_COMPLEMENT:
 			// integer type
@@ -196,7 +196,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			value_type = inner.value_type.copy ();
+			value_type = inner.value_type;
 			break;
 		case UnaryOperator.INCREMENT:
 		case UnaryOperator.DECREMENT:
@@ -214,7 +214,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			value_type = inner.value_type.copy ();
+			value_type = inner.value_type;
 			break;
 		case UnaryOperator.REF:
 		case UnaryOperator.OUT:
@@ -223,7 +223,7 @@ public class Vala.UnaryExpression : Expression {
 			    (ea != null && ea.container.value_type is ArrayType)) {
 				// ref and out can only be used with fields, parameters, local variables, and array element access
 				lvalue = true;
-				value_type = inner.value_type.copy ();
+				value_type = inner.value_type;
 			} else {
 				error = true;
 				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");

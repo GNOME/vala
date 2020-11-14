@@ -126,7 +126,7 @@ public class Vala.TypeCheck : Expression {
 			Report.warning (_data_type.source_reference, "Type argument list has no effect");
 		}
 
-		value_type = context.analyzer.bool_type.copy ();
+		value_type = context.analyzer.bool_type;
 
 		return !error;
 	}

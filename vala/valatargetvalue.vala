@@ -21,10 +21,10 @@
  */
 
 public abstract class Vala.TargetValue {
-	public DataType value_type { get; set; }
+	public DataType? value_type { get; set; }
 	public DataType? actual_value_type { get; set; }
 
-	protected TargetValue (DataType value_type) {
+	protected TargetValue (DataType? value_type) {
 		this.value_type = value_type;
 	}
 }

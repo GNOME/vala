@@ -36,7 +36,7 @@ public class Vala.GLibValue : TargetValue {
 	public CCodeExpression? delegate_target_cvalue;
 	public CCodeExpression? delegate_target_destroy_notify_cvalue;
 
-	public GLibValue (DataType value_type, CCodeExpression? cvalue = null, bool lvalue = false) {
+	public GLibValue (DataType? value_type = null, CCodeExpression? cvalue = null, bool lvalue = false) {
 		base (value_type);
 		this.cvalue = cvalue;
 		this.lvalue = lvalue;
