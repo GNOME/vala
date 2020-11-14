@@ -78,6 +78,7 @@ TESTS = \
 	basic-types/bug788775.vala \
 	constants/array-type-invalid.test \
 	constants/glog.vala \
+	constants/strings.vala \
 	namespace/unique.vala \
 	arrays/cast-silent-invalid.test \
 	arrays/class-field-length-cname.vala \
