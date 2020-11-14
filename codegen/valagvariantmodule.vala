@@ -104,7 +104,7 @@ public class Vala.GVariantModule : GValueModule {
 
 	public override void visit_cast_expression (CastExpression expr) {
 		var value = expr.inner.target_value;
-		var target_type = expr.type_reference;
+		unowned DataType? target_type = expr.target_type;
 
 		if (expr.is_non_null_cast || value.value_type == null || gvariant_type == null || value.value_type.type_symbol != gvariant_type) {
 			base.visit_cast_expression (expr);
