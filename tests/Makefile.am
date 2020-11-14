@@ -131,9 +131,11 @@ TESTS = \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/parameter-ref-array-resize-captured.vala \
+	methods/parameter-ref-delegate.vala \
 	methods/prepostconditions.vala \
 	methods/prepostconditions-captured.vala \
 	methods/postconditions.vala \
+	methods/return-unowned-delegate.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \
 	methods/bug540483.vala \
