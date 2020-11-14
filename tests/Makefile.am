@@ -338,6 +338,7 @@ TESTS = \
 	objects/class-vfunc-base-access.vala \
 	objects/classes.vala \
 	objects/compact-class-destructor.vala \
+	objects/constructor-inner-error.vala \
 	objects/constructor-variadic.test \
 	objects/constructor-wrong-name.test \
 	objects/constructors.vala \
