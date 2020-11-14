@@ -1129,6 +1129,7 @@ LINUX_TESTS += \
 	linux/file-commandpipe.vala \
 	posix/arrays.vala \
 	posix/empty-length-0.vala \
+	posix/string-printf.vala \
 	posix/struct_only.vala \
 	posix/delegate_only.vala \
 	posix/enum_only.vala \

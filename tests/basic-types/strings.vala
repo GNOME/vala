@@ -62,6 +62,11 @@ void test_string_joinv () {
 	assert (s == "");
 }
 
+void test_string_printf () {
+	string s = "%i %s %u %.4f".printf (42, "foo", 4711U, 3.1415);
+	assert (s == "42 foo 4711 3.1415");
+}
+
 void test_string_replace () {
 	string s = "hellomyworld";
 
@@ -132,6 +137,7 @@ void test_string_substring () {
 void main () {
 	test_string ();
 	test_string_joinv ();
+	test_string_printf ();
 	test_string_replace ();
 	test_string_slice ();
 	test_string_splice ();
