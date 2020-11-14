@@ -71,6 +71,7 @@ public class Vala.Constructor : Subroutine {
 			this_parameter.check (context);
 		}
 
+		var old_symbol = context.analyzer.current_symbol;
 		context.analyzer.current_symbol = this;
 
 		if (body != null) {
@@ -87,7 +88,7 @@ public class Vala.Constructor : Subroutine {
 			}
 		}
 
-		context.analyzer.current_symbol = parent_symbol;
+		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

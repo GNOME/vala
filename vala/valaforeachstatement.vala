@@ -378,6 +378,7 @@ public class Vala.ForeachStatement : Block {
 		element_variable.checked = true;
 
 		// analyze body
+		var old_symbol = context.analyzer.current_symbol;
 		owner = context.analyzer.current_symbol.scope;
 		context.analyzer.current_symbol = this;
 
@@ -391,7 +392,7 @@ public class Vala.ForeachStatement : Block {
 			local.active = false;
 		}
 
-		context.analyzer.current_symbol = context.analyzer.current_symbol.parent_symbol;
+		context.analyzer.current_symbol = old_symbol;
 
 		collection_variable = new LocalVariable (collection_type.copy (), "%s_collection".printf (variable_name));
 
