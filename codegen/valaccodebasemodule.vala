@@ -2720,6 +2720,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public TargetValue store_temp_value (TargetValue initializer, CodeNode node_reference, bool? value_owned = null) {
 		var lvalue = create_temp_value (initializer.value_type, false, node_reference, value_owned);
 		store_value (lvalue, initializer, node_reference.source_reference);
+		if (lvalue.value_type is ArrayType) {
+			stdout.printf ("%s tweaked\n", node_reference.to_string ());
+			/*((GLibValue) lvalue).array_length_cvalues = null;
+			((GLibValue) lvalue).array_size_cvalue = null;
+			((GLibValue) lvalue).array_length_cexpr = null;*/
+		}
 		return load_temp_value (lvalue);
 	}
 
@@ -5224,6 +5230,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
+		// FIXME
+		if (expr.value_type == null) {
+			warning ("BAD %s\n", expr.to_string ());
+			expr.value_type = context.analyzer.ulong_type.copy ();
+		}
+
 		generate_type_declaration (expr.type_reference, cfile);
 
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
@@ -5238,6 +5250,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
+		assert (expr.checked);
 		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
 			var glib_value = (GLibValue) expr.inner.target_value;
 
@@ -5845,6 +5858,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
+		assert (expr.checked);
+		// FIXME
+		if (expr.value_type == null) {
+			warning ("BAD %s\n", expr.to_string ());
+			expr.value_type = context.analyzer.bool_type.copy ();
+		}
+
 		generate_type_declaration (expr.type_reference, cfile);
 
 		var type = expr.expression.value_type;

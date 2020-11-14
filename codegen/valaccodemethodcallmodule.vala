@@ -431,6 +431,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var temp_var = get_temp_variable (param.variable_type, param.variable_type.value_owned, null, true);
 						emit_temp_var (temp_var);
 						set_cvalue (arg, get_variable_cexpression (temp_var.name));
+						stdout.printf ("%s.%s\n", param.parent_symbol.to_string (), param.name);
 						arg.target_value.value_type = arg.target_type.copy ();
 
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue (arg));

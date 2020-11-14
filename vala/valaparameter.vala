@@ -138,6 +138,11 @@ public class Vala.Parameter : Variable {
 		if (source_reference != null) {
 			context.analyzer.current_source_file = source_reference.file;
 		}
+		
+		if (parent_symbol == null) {
+			stdout.printf ("%s\n", name);
+			assert_not_reached ();
+		}
 		context.analyzer.current_symbol = parent_symbol;
 
 		if (variable_type != null) {
