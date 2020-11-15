@@ -71,7 +71,7 @@ public class Vala.CCodeEnum : CCodeNode {
 			writer.write_string (name);
 		}
 		if (CCodeModifiers.DEPRECATED in modifiers) {
-			writer.write_string (" G_GNUC_DEPRECATED");
+			writer.write_string (GNUC_DEPRECATED);
 		}
 		writer.write_string (";");
 		writer.write_newline ();

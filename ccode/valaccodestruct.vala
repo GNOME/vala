@@ -71,7 +71,7 @@ public class Vala.CCodeStruct : CCodeNode {
 
 		writer.write_end_block ();
 		if (CCodeModifiers.DEPRECATED in modifiers) {
-			writer.write_string (" G_GNUC_DEPRECATED");
+			writer.write_string (GNUC_DEPRECATED);
 		}
 		writer.write_string (";");
 		writer.write_newline ();

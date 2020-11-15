@@ -17,6 +17,7 @@ noinst_LTLIBRARIES = \
 	$(NULL)
 
 libvalaccode_la_VALASOURCES = \
+	valaccode.vala \
 	valaccodeassignment.vala \
 	valaccodebinaryexpression.vala \
 	valaccodeblock.vala \

@@ -69,7 +69,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			// combined declaration and initialization for static and extern variables
 			writer.write_indent (line);
 			if ((modifiers & CCodeModifiers.INTERNAL) != 0) {
-				writer.write_string ("G_GNUC_INTERNAL ");
+				writer.write_string (GNUC_INTERNAL);
 			}
 			if ((modifiers & CCodeModifiers.STATIC) != 0) {
 				writer.write_string ("static ");
@@ -122,7 +122,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		}
 
 		if (CCodeModifiers.DEPRECATED in modifiers) {
-			writer.write_string (" G_GNUC_DEPRECATED");
+			writer.write_string (GNUC_DEPRECATED);
 		}
 
 		writer.write_string (";");

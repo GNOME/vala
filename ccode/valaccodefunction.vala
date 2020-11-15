@@ -109,10 +109,10 @@ public class Vala.CCodeFunction : CCodeNode {
 	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		if (CCodeModifiers.INTERNAL in modifiers) {
-			writer.write_string ("G_GNUC_INTERNAL ");
+			writer.write_string (GNUC_INTERNAL);
 		}
 		if (!is_declaration && CCodeModifiers.NO_INLINE in modifiers) {
-			writer.write_string ("G_GNUC_NO_INLINE ");
+			writer.write_string (GNUC_NO_INLINE);
 		}
 		if (CCodeModifiers.STATIC in modifiers) {
 			writer.write_string ("static ");
@@ -159,24 +159,24 @@ public class Vala.CCodeFunction : CCodeNode {
 
 		if (is_declaration) {
 			if (CCodeModifiers.DEPRECATED in modifiers) {
-				writer.write_string (" G_GNUC_DEPRECATED");
+				writer.write_string (GNUC_DEPRECATED);
 			}
 
 			if (CCodeModifiers.PRINTF in modifiers) {
 				format_arg_index = (format_arg_index >= 0 ? format_arg_index + 1 : args_index);
-				writer.write_string (" G_GNUC_PRINTF(%d,%d)".printf (format_arg_index, args_index + 1));
+				writer.write_string (GNUC_PRINTF.printf (format_arg_index, args_index + 1));
 			} else if (CCodeModifiers.SCANF in modifiers) {
 				format_arg_index = (format_arg_index >= 0 ? format_arg_index + 1 : args_index);
-				writer.write_string (" G_GNUC_SCANF(%d,%d)".printf (format_arg_index, args_index + 1));
+				writer.write_string (GNUC_SCANF.printf (format_arg_index, args_index + 1));
 			} else if (format_arg_index >= 0) {
-				writer.write_string (" G_GNUC_FORMAT(%d)".printf (format_arg_index + 1));
+				writer.write_string (GNUC_FORMAT.printf (format_arg_index + 1));
 			}
 
 			if (CCodeModifiers.CONST in modifiers) {
-				writer.write_string (" G_GNUC_CONST");
+				writer.write_string (GNUC_CONST);
 			}
 			if (CCodeModifiers.UNUSED in modifiers) {
-				writer.write_string (" G_GNUC_UNUSED");
+				writer.write_string (GNUC_UNUSED);
 			}
 
 			if (CCodeModifiers.CONSTRUCTOR in modifiers) {

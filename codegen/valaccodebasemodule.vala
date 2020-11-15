@@ -463,6 +463,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void emit (CodeContext context) {
 		this.context = context;
 
+		ccode_init (context.profile);
+
 		root_symbol = context.root;
 
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));

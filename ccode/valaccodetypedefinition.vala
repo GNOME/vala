@@ -55,7 +55,7 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 		declarator.write_declaration (writer);
 
 		if (CCodeModifiers.DEPRECATED in modifiers) {
-			writer.write_string (" G_GNUC_DEPRECATED");
+			writer.write_string (GNUC_DEPRECATED);
 		}
 
 		writer.write_string (";");

@@ -46,7 +46,7 @@ public class Vala.CCodeEnumValue : CCodeNode {
 		if (CCodeModifiers.DEPRECATED in modifiers) {
 			// FIXME Requires GCC 6.0 to work at this place
 			// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47043
-			//writer.write_string (" G_GNUC_DEPRECATED");
+			//writer.write_string (GNUC_DEPRECATED);
 		}
 		if (value != null) {
 			writer.write_string (" = ");
