@@ -1003,7 +1003,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		var function = new CCodeFunction ("string_printf", "char*");
 		function.add_parameter (new CCodeParameter ("format", "const char*"));
 		function.add_parameter (new CCodeParameter.with_ellipsis ());
-		function.modifiers = CCodeModifiers.STATIC;
+		function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.PRINTF;
 
 		// definition
 		push_context (new EmitContext ());
