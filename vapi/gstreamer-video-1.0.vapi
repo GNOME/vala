@@ -189,7 +189,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool set_format (Gst.Video.CodecState state);
 			[Version (since = "1.16.")]
-			public Gst.Video.CodecState set_interlaced_output_state (Gst.Video.Format fmt, Gst.Video.InterlaceMode mode, uint width, uint height, Gst.Video.CodecState? reference);
+			public Gst.Video.CodecState set_interlaced_output_state (Gst.Video.Format fmt, Gst.Video.InterlaceMode interlace_mode, uint width, uint height, Gst.Video.CodecState? reference);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_max_errors (int num);
 			[Version (since = "1.4")]
