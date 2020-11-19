@@ -13,7 +13,7 @@
 
 <section>
 <title>Getting started</title>
-<para>The classic &quot;Hello, world&quot; example in Vala: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[[] ]]><methodname><![CDATA[args]]></methodname><![CDATA[) {]]>
+<para>The classic &quot;Hello, world&quot; example in Vala: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[[] ]]><methodname><![CDATA[args]]></methodname><![CDATA[) {]]>
 <![CDATA[        ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[ (]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[hello, world]]></phrase><![CDATA[
 ]]><phrase><![CDATA["]]></phrase><![CDATA[);]]>
 <![CDATA[        ]]><token><![CDATA[return]]></token><![CDATA[ 0;]]>
@@ -33,7 +33,7 @@
 <para> optional-section:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">literalstring3</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
 <para>Here, &quot;rule-name&quot; and &quot;optional-section&quot; describe rules, each of which can be expanded in a particular way.  Expanding a rule means substituting one of the options of the rule into the place the rule is used.  In the example, &quot;optional-section&quot; can be expanded into &quot;literalstring3&quot; or, in &quot;rule-name&quot;, &quot;optional-section&quot; can also be substituted for nothing, as it is declared optional by the square brackets.  Wherever &quot;rule-name&quot; is required, it can be substituted for either of the options declared in &quot;rule-name&quot;.  Anything highlighted, such as all <emphasis role="strong">literalstrings</emphasis> here are not rules, and thus cannot be expanded. </para>
-<para>Example code is shown as follows.  Example code will always be valid Vala code, but will not necessarily be usable out of context. </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[MyClass]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
+<para>Example code is shown as follows.  Example code will always be valid Vala code, but will not necessarily be usable out of context. </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[MyClass]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[field]]></methodname><![CDATA[ = 1;]]>
 <![CDATA[}]]>
 </programlisting>
@@ -93,7 +93,7 @@
 
 <section>
 <title>Application entry point</title>
-<para>All Vala applications are executed beginning with a method called &quot;main&quot;.  This must be a non-instance method, but may exist inside a namespace or class.  If the method takes a string array parameter, it will be passed the arguments given to the program on execution.  If it returns an int type, this value will be passed to the user on the program's normal termination.  The entry point method may not accept any other parameters, or return any other types, making the acceptable definitions: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () { ... }]]>
+<para>All Vala applications are executed beginning with a method called &quot;main&quot;.  This must be a non-instance method, but may exist inside a namespace or class.  If the method takes a string array parameter, it will be passed the arguments given to the program on execution.  If it returns an int type, this value will be passed to the user on the program's normal termination.  The entry point method may not accept any other parameters, or return any other types, making the acceptable definitions: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () { ... }]]>
 <token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () { ... }]]>
 <token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[[] ]]><methodname><![CDATA[args]]></methodname><![CDATA[) { ... }]]>
 <token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[[] ]]><methodname><![CDATA[args]]></methodname><![CDATA[) { ... }]]>
@@ -116,11 +116,11 @@
 
 <section>
 <title>Variables</title>
-<para>Within executable code in a method, an instance may be assigned to a variable.  A variable has a name and is declared to refer to an instance of a particular data type.  A typical variable declaration would be: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[;]]>
+<para>Within executable code in a method, an instance may be assigned to a variable.  A variable has a name and is declared to refer to an instance of a particular data type.  A typical variable declaration would be: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[;]]>
 </programlisting>
 <para>This declaration defines that &quot;a&quot; should become an expression that evaluates to an instance of the int type.  The actual value of this expression will depend on which int instance is assigned to the variable.  &quot;a&quot; can be assigned to more than once, with the most recent assignment being the only one considered when &quot;a&quot; is evaluated.  Assignment to the variable is achieved via an assignment expression. Generally, the semantics of an assignment expression depends on the type of the variable. </para>
 <para>A variable can take ownership of an instance, the precise meaning of which depends on the data type.  In the context of reference types, it is possible to declare that a variable should not ever take ownership of an instance, this is done with the <code>unowned</code> keyword.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Reference_types">Types/Reference types</ulink>. </para>
-<para>If a type is directly instantiated in a variable declaration statement, then the variable will be created owning that new instance, for example: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[s]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[stringvalue]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[;]]>
+<para>If a type is directly instantiated in a variable declaration statement, then the variable will be created owning that new instance, for example: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[s]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[stringvalue]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[;]]>
 </programlisting>
 <para>A variable ceases to exist when its scope is destroyed, that is when the code block it is defined in finishes.  After this, the name can no longer be used to access the instance, and no new assignment to the variable is allowed.  What happens to the instance itself is dependent on the type. </para>
 <para>For more details of the concepts in this section, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Statements#Variable_declaration">Statements/Variable declaration</ulink> and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Assignment_operations">Expressions/Assignment operations</ulink>. </para>
@@ -145,7 +145,7 @@
 
 <section>
 <title>Scope and naming</title>
-<para>A &quot;scope&quot; in Vala refers to any context in which identifiers can be valid.  Identifiers in this case refers to anything named, including class definitions, fields, variables, etc.  Within a particular scope, identifiers defined in this scope can be used directly: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () {]]>
+<para>A &quot;scope&quot; in Vala refers to any context in which identifiers can be valid.  Identifiers in this case refers to anything named, including class definitions, fields, variables, etc.  Within a particular scope, identifiers defined in this scope can be used directly: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () {]]>
 <![CDATA[        ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[ = 5;]]>
 <![CDATA[        ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[b]]></methodname><![CDATA[ = ]]><methodname><![CDATA[a]]></methodname><![CDATA[ + 1;]]>
 <![CDATA[}]]>
@@ -175,7 +175,7 @@
 <title>Object oriented programming</title>
 <para>Vala is primarily an object oriented language.  This documentation isn't going to describe object oriented programming in detail, but in order for other sections to make sense, some things need to be explained. </para>
 <para>A class in Vala is a definition of a potentially polymorphic type. A polymorphic type is one which can be viewed as more than one type.  The basic method for this is inheritance, whereby one type can be defined as a specialized version of another.  An instance of a subtype, descended from a particular supertype, has all the properties of the supertype, and can be used wherever an instance of the supertype is expected.  This sort of relationship is described as a &quot;subtype instance is-a supertype instance.&quot;  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
-<para>Vala provides inheritance functionality to any type of class (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>).  Given the following definition, every SubType instance is-a SuperType instance: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[SuperType]]></methodname><![CDATA[ {]]>
+<para>Vala provides inheritance functionality to any type of class (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>).  Given the following definition, every SubType instance is-a SuperType instance: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[SuperType]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[act]]></methodname><![CDATA[() {]]>
 <![CDATA[                ]]><token><![CDATA[return]]></token><![CDATA[ 1;]]>
 <![CDATA[        }]]>
@@ -184,7 +184,7 @@
 <![CDATA[}]]>
 </programlisting>
 <para>Whenever a SuperType instance is required, a SubType instance may be used.  This is the extent of inheritance allowed to compact classes, but full classes are more featured.  All classes that are not of compact type, can have virtual methods, and can  implement interfaces. </para>
-<para>To explain virtual functions, it makes sense to look at the alternative first.  In the above example, it is legal for SubType to also define a method called &quot;act&quot; - this is called overriding.  In this case, when a method called &quot;act&quot; is called on a SubType instance, which method is invoked depends on what type the invoker believed it was dealing with.  The following example demonstrates this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[SubType]]></methodname><![CDATA[ ]]><methodname><![CDATA[sub]]></methodname><![CDATA[ = ]]><token><![CDATA[new]]></token><![CDATA[ ]]><methodname><![CDATA[SubType]]></methodname><![CDATA[();]]>
+<para>To explain virtual functions, it makes sense to look at the alternative first.  In the above example, it is legal for SubType to also define a method called &quot;act&quot; - this is called overriding.  In this case, when a method called &quot;act&quot; is called on a SubType instance, which method is invoked depends on what type the invoker believed it was dealing with.  The following example demonstrates this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[SubType]]></methodname><![CDATA[ ]]><methodname><![CDATA[sub]]></methodname><![CDATA[ = ]]><token><![CDATA[new]]></token><![CDATA[ ]]><methodname><![CDATA[SubType]]></methodname><![CDATA[();]]>
 <methodname><![CDATA[SuperType]]></methodname><![CDATA[ ]]><methodname><![CDATA[super]]></methodname><![CDATA[ = ]]><methodname><![CDATA[sub]]></methodname><![CDATA[;]]>
 
 <methodname><![CDATA[sub]]></methodname><![CDATA[.]]><methodname><![CDATA[act]]></methodname><![CDATA[();]]>
@@ -536,10 +536,10 @@
 <para> prefix-expression:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">++</emphasis> unary-expression</para>
 <para> <emphasis role="strong">--</emphasis> unary-expression</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Postfix and prefix expressions: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[var]]></token><![CDATA[ ]]><methodname><![CDATA[postfix]]></methodname><![CDATA[ = ]]><methodname><![CDATA[i]]></methodname><![CDATA[++;]]>
+<para>Postfix and prefix expressions: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[var]]></token><![CDATA[ ]]><methodname><![CDATA[postfix]]></methodname><![CDATA[ = ]]><methodname><![CDATA[i]]></methodname><![CDATA[++;]]>
 <token><![CDATA[var]]></token><![CDATA[ ]]><methodname><![CDATA[prefix]]></methodname><![CDATA[ = --]]><methodname><![CDATA[j]]></methodname><![CDATA[;]]>
 </programlisting>
-<para>are equivalent to: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[var]]></token><![CDATA[ ]]><methodname><![CDATA[postfix]]></methodname><![CDATA[ = ]]><methodname><![CDATA[i]]></methodname><![CDATA[;]]>
+<para>are equivalent to: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[var]]></token><![CDATA[ ]]><methodname><![CDATA[postfix]]></methodname><![CDATA[ = ]]><methodname><![CDATA[i]]></methodname><![CDATA[;]]>
 <methodname><![CDATA[i]]></methodname><![CDATA[ += 1;]]>
 
 <methodname><![CDATA[j]]></methodname><![CDATA[ -= 1;]]>
@@ -600,11 +600,11 @@
 <para> conditional-expression <emphasis role="strong">^=</emphasis> expression</para>
 <para> conditional-expression <emphasis role="strong">&lt;&lt;=</emphasis> expression</para>
 <para> conditional-expression <emphasis role="strong">&gt;&gt;=</emphasis> expression</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>A simple assignment expression assigns the right handed side value to the left handed side. It is necessary that the left handed side expression is a valid lvalue. Other assignments: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[result]]></methodname><![CDATA[ += ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
+<para>A simple assignment expression assigns the right handed side value to the left handed side. It is necessary that the left handed side expression is a valid lvalue. Other assignments: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[result]]></methodname><![CDATA[ += ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
 <methodname><![CDATA[result]]></methodname><![CDATA[ <<= ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
 <![CDATA[...]]>
 </programlisting>
-<para>Are equivalent to simple assignments: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[result]]></methodname><![CDATA[ = ]]><methodname><![CDATA[result]]></methodname><![CDATA[ + ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
+<para>Are equivalent to simple assignments: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[result]]></methodname><![CDATA[ = ]]><methodname><![CDATA[result]]></methodname><![CDATA[ + ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
 <methodname><![CDATA[result]]></methodname><![CDATA[ = ]]><methodname><![CDATA[result]]></methodname><![CDATA[ << ]]><methodname><![CDATA[value]]></methodname><![CDATA[;]]>
 <![CDATA[...]]>
 </programlisting>
@@ -940,10 +940,10 @@
 <title>Namespaces</title>
 <para>Namespaces are named scopes (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>).  Definitions in different namespaces can use the same names without causing conflicts.  A namespace can be declared across any number of Vala source files, and there can be multiple namespaces defined in a single Vala source file.  Namespaces can be nested to any depth. </para>
 <para>When code needs to access definitions from other namespaces, it must either refer to them using a fully qualified name, or be written in a file with an appropriate using statement. </para>
-<para>The simplest namespace declaration looks like this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName]]></methodname><![CDATA[ {]]>
+<para>The simplest namespace declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
-<para>Namespace nesting is achieved either by nesting the declarations, or by providing multiple names in one declaration: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName1]]></methodname><![CDATA[ {]]>
+<para>Namespace nesting is achieved either by nesting the declarations, or by providing multiple names in one declaration: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName1]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName2]]></methodname><![CDATA[ {]]>
 <![CDATA[        }]]>
 <![CDATA[}]]>
@@ -1018,7 +1018,7 @@
 <para> namespace-list:</para><itemizedlist><listitem override="none">
 <para>qualified-namespace-name [ <emphasis role="strong">,</emphasis> namespace-list ]</para></listitem></itemizedlist></listitem></itemizedlist>
 <para>There can be any number of using statements in a Vala source file, but they must all appear outside any other declarations.  Note that <code>using</code> is not like import statements in other languages - it does not load anything, it just allows for automatic searching of namespace scopes, in order to allow frugal code to be written. </para>
-<para>Most code depends on members of the GLib namespace, and so many source files begin with: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[using]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[;]]>
+<para>Most code depends on members of the GLib namespace, and so many source files begin with: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[using]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[;]]>
 </programlisting>
 <para>TODO: Include examples. </para>
 </section>
@@ -1085,7 +1085,7 @@
 <para><emphasis role="strong">(</emphasis> [ lambda-params-list ] <emphasis role="strong">)</emphasis> <emphasis role="strong">=&gt;</emphasis> <emphasis role="strong">{</emphasis> statement-list <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
 <para> lambda-params-list:</para><itemizedlist><listitem override="none">
 <para>identifier [ <emphasis role="strong">,</emphasis> lambda-params-list ]</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>An example of lambda use: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[delegate]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[DelegateType]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[, ]]><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[b]]></methodname><![CDATA[);]]>
+<para>An example of lambda use: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[delegate]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[DelegateType]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[, ]]><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[b]]></methodname><![CDATA[);]]>
 
 <token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[use_delegate]]></methodname><![CDATA[ (]]><methodname><![CDATA[DelegateType]]></methodname><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[, ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[, ]]><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[b]]></methodname><![CDATA[) {]]>
 <![CDATA[        ]]><token><![CDATA[return]]></token><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[ (]]><methodname><![CDATA[a]]></methodname><![CDATA[, ]]><methodname><![CDATA[b]]></methodname><![CDATA[);]]>
@@ -1102,7 +1102,7 @@
 
 <section>
 <title>Contract programming</title>
-<para>Vala supports basic <ulink url="http://en.wikipedia.org/wiki/Contract_programming">contract programming</ulink> features.  A method may have preconditions (<code>requires</code>) and postconditions (<code>ensures</code>) that must be fulfilled at the beginning or the end of a method respectively: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[x]]></methodname><![CDATA[, ]]><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[)]]>
+<para>Vala supports basic <ulink url="http://en.wikipedia.org/wiki/Contract_programming">contract programming</ulink> features.  A method may have preconditions (<code>requires</code>) and postconditions (<code>ensures</code>) that must be fulfilled at the beginning or the end of a method respectively: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[x]]></methodname><![CDATA[, ]]><token><![CDATA[double]]></token><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[)]]>
 <![CDATA[                ]]><token><![CDATA[requires]]></token><![CDATA[ (]]><methodname><![CDATA[x]]></methodname><![CDATA[ > 0 && ]]><methodname><![CDATA[x]]></methodname><![CDATA[ < 10)]]>
 <![CDATA[                ]]><token><![CDATA[requires]]></token><![CDATA[ (]]><methodname><![CDATA[d]]></methodname><![CDATA[ >= 0.0 && ]]><methodname><![CDATA[d]]></methodname><![CDATA[ <= 1.0)]]>
 <![CDATA[                ]]><token><![CDATA[ensures]]></token><![CDATA[ (]]><methodname><![CDATA[result]]></methodname><![CDATA[ >= 0.0 && ]]><methodname><![CDATA[result]]></methodname><![CDATA[ <= 10.0) {]]>
@@ -1110,14 +1110,14 @@
 <![CDATA[}]]>
 </programlisting>
 <para><code>result</code> is a special variable representing the return value.  </para>
-<para>For example, if you call <code>method_name</code> with arguments <code>5</code> and <code>3.0</code>, it will output a CRITICAL message and return 0.  </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () {]]>
+<para>For example, if you call <code>method_name</code> with arguments <code>5</code> and <code>3.0</code>, it will output a CRITICAL message and return 0.  </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ () {]]>
 <![CDATA[        ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[ (]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%i]]></phrase><![CDATA[
 ]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (5, 3.0));]]>
 <![CDATA[}]]>
 </programlisting>
 <para>Output: </para><screen><![CDATA[CRITICAL **: 03:29:00.588: method_name: assertion 'd >= 0.0 && d <= 1.0' failed
 0]]></screen>
-<para>Vala allows you to manage the safety of issued messages at 6 levels: ERROR, CRITICAL, INFO, DEBUG, WARNING, MESSAGE. For example, the following code will cause a runtime error. </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[Log]]></methodname><![CDATA[.]]><methodname><![CDATA[set_always_fatal]]></methodname><![CDATA[ (]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_CRITICAL]]></methodname><![CDATA[ | ]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_WARNING]]></methodname><![CDATA[);]]>
+<para>Vala allows you to manage the safety of issued messages at 6 levels: ERROR, CRITICAL, INFO, DEBUG, WARNING, MESSAGE. For example, the following code will cause a runtime error. </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[Log]]></methodname><![CDATA[.]]><methodname><![CDATA[set_always_fatal]]></methodname><![CDATA[ (]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_CRITICAL]]></methodname><![CDATA[ | ]]><methodname><![CDATA[LogLevelFlags]]></methodname><![CDATA[.]]><methodname><![CDATA[LEVEL_WARNING]]></methodname><![CDATA[);]]>
 <methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[ (]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%i]]></phrase><![CDATA[
 ]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[method_name]]></methodname><![CDATA[ (5, 3.0));]]>
 </programlisting>
@@ -1162,7 +1162,7 @@
 
 <section>
 <title>Examples</title>
-<para>Defining delegates: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// Static delegate taking two ints, returning void:]]></lineannotation>
+<para>Defining delegates: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// Static delegate taking two ints, returning void:]]></lineannotation>
 <lineannotation/><token><![CDATA[static]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[DelegateName]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[, ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[b]]></methodname><![CDATA[);]]>
 
 <lineannotation><![CDATA[// Instance delegate with the same signature:]]></lineannotation>
@@ -1171,7 +1171,7 @@
 <lineannotation><![CDATA[// Static delegate which may throw an error:]]></lineannotation>
 <lineannotation/><token><![CDATA[static]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[DelegateName]]></methodname><![CDATA[ () ]]><token><![CDATA[throws]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Error]]></methodname><![CDATA[;]]>
 </programlisting>
-<para>Invoking delegates, and passing as parameters. </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[f1]]></methodname><![CDATA[(]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[) { ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%d]]></phrase><![CDATA[
+<para>Invoking delegates, and passing as parameters. </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[f1]]></methodname><![CDATA[(]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[) { ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%d]]></phrase><![CDATA[
 ]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[a]]></methodname><![CDATA[); }]]>
 <![CDATA[...]]>
 <token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[f2]]></methodname><![CDATA[(]]><methodname><![CDATA[DelegateType]]></methodname><![CDATA[ ]]><methodname><![CDATA[d]]></methodname><![CDATA[, ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[) {]]>
@@ -1180,7 +1180,7 @@
 <![CDATA[...]]>
 <methodname><![CDATA[f2]]></methodname><![CDATA[(]]><methodname><![CDATA[f1]]></methodname><![CDATA[, 5);]]>
 </programlisting>
-<para>Instance delegates: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
+<para>Instance delegates: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[private]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[data]]></methodname><![CDATA[ = 5;]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[method]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[) {]]>
 <![CDATA[                ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%d %d]]></phrase><![CDATA[
@@ -1197,7 +1197,7 @@
 <![CDATA[        ]]><methodname><![CDATA[d]]></methodname><![CDATA[(1);]]>
 <![CDATA[}]]>
 </programlisting>
-<para>With Lambda: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[f2]]></methodname><![CDATA[(]]><methodname><![CDATA[a]]></methodname><![CDATA[ => { ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%d]]></phrase><![CDATA[
+<para>With Lambda: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><methodname><![CDATA[f2]]></methodname><![CDATA[(]]><methodname><![CDATA[a]]></methodname><![CDATA[ => { ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[%d]]></phrase><![CDATA[
 ]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[a]]></methodname><![CDATA[); }, 5);]]>
 </programlisting>
 </section>
@@ -1253,7 +1253,7 @@
 
 <section>
 <title>Examples</title>
-<para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[errordomain]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType1]]></methodname><![CDATA[ {]]>
+<para>Demonstrating... </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[errordomain]]></token><![CDATA[ ]]><methodname><![CDATA[ErrorType1]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><methodname><![CDATA[CODE_1A]]></methodname>
 <![CDATA[}]]>
 
@@ -1292,7 +1292,7 @@
 <section>
 <title>Classes</title>
 <para>A class is definition of a data type.  A class can contain fields, constants, methods, properties, and signals. Class types support inheritance, a mechanism whereby a derived class can extend and specialize a base class. </para>
-<para>The simplest class declaration looks like this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ {]]>
+<para>The simplest class declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
 <para>As class types support inheritance, you can specify a base class you want to derive from.  A derived class is-a superclass.  It gets access to some of its methods etc.  It can always be used in place of a and so on.... </para>
@@ -1319,7 +1319,7 @@
 <section>
 <title>Class scope</title>
 <para>Class scope is more complicated than other scopes, but conceptually the same.  A class has a scope, which consists of its static and class members, as describe above.  When an instance of the class is created, it is given its own scope, consisting of the defined instance members, with the class' scope as its parent scope. </para>
-<para>Within the code of a class, the instance and class scopes are automatically searched as appropriate after the local scope, so no qualification is normally required.  When there is a conflict with a name in the local scope, the <code>this</code> scope can be used, for example: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ {]]>
+<para>Within the code of a class, the instance and class scopes are automatically searched as appropriate after the local scope, so no qualification is normally required.  When there is a conflict with a name in the local scope, the <code>this</code> scope can be used, for example: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[field_name]]></methodname><![CDATA[;]]>
 <![CDATA[        ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[function_name]]></methodname><![CDATA[(]]><methodname><![CDATA[field_name]]></methodname><![CDATA[) {]]>
 <![CDATA[                ]]><token><![CDATA[this]]></token><![CDATA[.]]><methodname><![CDATA[field_name]]></methodname><![CDATA[ = ]]><methodname><![CDATA[field_name]]></methodname><![CDATA[;]]>
@@ -1405,7 +1405,7 @@
 
 <section>
 <title>Controlling instantiation</title>
-<para>When a class is instantiated, data might be required from the user to set initial properties.  To define which properties should be or can be set at this stage, the class declaration should be written as: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
+<para>When a class is instantiated, data might be required from the user to set initial properties.  To define which properties should be or can be set at this stage, the class declaration should be written as: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><methodname><![CDATA[ClassName]]></methodname><![CDATA[() {]]>
 <![CDATA[        }]]>
@@ -1612,7 +1612,7 @@
 
 <section>
 <title>Examples</title>
-<para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
+<para>Demonstrating... </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
 <lineannotation/>
 </programlisting>
 
@@ -1621,7 +1621,7 @@
 <para>For more examples see: <ulink url="https://live.gnome.org/Vala/PropertiesSample">Samples for Class Properties</ulink> </para>
 
 <section>
-<title>Virtual Properties</title><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[Properties]]></methodname><![CDATA[ {]]>
+<title>Virtual Properties</title><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[Properties]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Base]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[protected]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[_number]]></methodname><![CDATA[;]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[virtual]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[number]]></methodname><![CDATA[ { ]]>
@@ -1680,7 +1680,7 @@
 </section>
 
 <section>
-<title>Abstract Properties</title><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[Properties]]></methodname><![CDATA[ {]]>
+<title>Abstract Properties</title><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[Properties]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><token><![CDATA[abstract]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Base]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[abstract]]></token><![CDATA[ ]]><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[name]]></methodname><![CDATA[ { ]]><token><![CDATA[get]]></token><![CDATA[; ]]><token><![CDATA[set]]></token><![CDATA[ ]]><token><![CDATA[construct]]></token><![CDATA[; }]]>
 <![CDATA[        ]]>
@@ -1732,7 +1732,7 @@
 </section>
 
 <section>
-<title>Using signals</title><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
+<title>Using signals</title><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Test]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[signal]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[test]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[data]]></methodname><![CDATA[);]]>
 <![CDATA[}]]>
 
@@ -1762,7 +1762,7 @@
 <section>
 <title>Interfaces</title>
 <para>An interface in Vala is a non-instantiable type.  A class may implement any number of interfaces, thereby declaring that an instance of that class should also be considered an instance of those interfaces.  Interfaces are part of the GType system, and so compact classes may not implement interfaces (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>.) </para>
-<para>The simplest interface declaration looks like this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[interface]]></token><![CDATA[ ]]><methodname><![CDATA[InterfaceName]]></methodname><![CDATA[ {]]>
+<para>The simplest interface declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[interface]]></token><![CDATA[ ]]><methodname><![CDATA[InterfaceName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
 <para>Unlike C# or Java, Vala's interfaces may include implemented methods, and so provide premade functionality to an implementing class, similar to mixins in other languages.  All methods defined in a Vala interface are automatically considered to be virtual.  Interfaces in Vala may also have prerequisites - classes or other interfaces that implementing classes must inherit from or implement.  This is a more general form of the interface inheritance found in other languages.  It should be noted that if you want to guarantee that all implementors of an interface are GObject type classes, you should give that class as a prerequisite for the interface. </para>
@@ -1845,7 +1845,7 @@
 
 <section>
 <title>Examples</title>
-<para>Here is an example implementing (and overriding) an <emphasis>abstract</emphasis> interface method,  </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[/*]]></lineannotation>
+<para>Here is an example implementing (and overriding) an <emphasis>abstract</emphasis> interface method,  </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[/*]]></lineannotation>
 <lineannotation><![CDATA[   This example gives you a simple interface, Speaker, with]]></lineannotation>
 <lineannotation><![CDATA[   - one abstract method, speak]]></lineannotation>
 <lineannotation/>
@@ -1952,7 +1952,7 @@
 <![CDATA[  ]]><token><![CDATA[return]]></token><![CDATA[ 0;]]>
 <![CDATA[}]]>
 </programlisting>
-<para>Here is an example of implementing (and inheriting) a <emphasis>virtual</emphasis> interface method.  Note that the same rules for subclasses re-implementing methods that apply to the <emphasis>abstract</emphasis> interface method above apply here. </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[/*]]></lineannotation>
+<para>Here is an example of implementing (and inheriting) a <emphasis>virtual</emphasis> interface method.  Note that the same rules for subclasses re-implementing methods that apply to the <emphasis>abstract</emphasis> interface method above apply here. </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[/*]]></lineannotation>
 <lineannotation><![CDATA[   This example gives you a simple interface, Yelper, with]]></lineannotation>
 <lineannotation><![CDATA[   - one virtual default method, yelp]]></lineannotation>
 <lineannotation/>
@@ -2072,7 +2072,7 @@
 
 <section>
 <title>Examples</title>
-<para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[using]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[;]]>
+<para>Demonstrating... </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[using]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[;]]>
 
 <token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[interface]]></token><![CDATA[ ]]><methodname><![CDATA[With]]></methodname><![CDATA[ < ]]><methodname><![CDATA[T]]></methodname><![CDATA[ > {]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[abstract]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[sett]]></methodname><![CDATA[(]]><methodname><![CDATA[T]]></methodname><![CDATA[ ]]><methodname><![CDATA[t]]></methodname><![CDATA[);]]>
@@ -2130,7 +2130,7 @@
 <section>
 <title>Structs</title>
 <para>A struct is a data type that can contain fields, constants, and methods. </para>
-<para>The simplest struct declaration looks like this: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[struct]]></token><![CDATA[ ]]><methodname><![CDATA[StructName]]></methodname><![CDATA[ {]]>
+<para>The simplest struct declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[struct]]></token><![CDATA[ ]]><methodname><![CDATA[StructName]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[some_field]]></methodname><![CDATA[;]]>
 <![CDATA[}]]>
 </programlisting>
@@ -2192,7 +2192,7 @@
 
 <section>
 <title>Examples</title>
-<para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
+<para>Demonstrating... </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
 <lineannotation/>
 </programlisting>
 </section>
@@ -2239,7 +2239,7 @@
 <section>
 <title>Flag types</title>
 <para>An enumerated type declaration can be converted into a flag type declaration by annotating the declaration with &quot;Flags&quot;.  A flag type represents a set of flags, any number of which can be combined in one instance of the flag type, in the same fashion as a bitfield in C.  For an explanation of the operations that can be performed on flag types, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Flag_operations">Expressions/Flag operations</ulink>.  For how to use attributes, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>. </para>
-<para>For example, say we want to draw the borders of a table cell: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><![CDATA[[]]><methodname><![CDATA[Flags]]></methodname><![CDATA[]]]>
+<para>For example, say we want to draw the borders of a table cell: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><![CDATA[[]]><methodname><![CDATA[Flags]]></methodname><![CDATA[]]]>
 <token><![CDATA[enum]]></token><![CDATA[ ]]><methodname><![CDATA[Borders]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><methodname><![CDATA[LEFT]]></methodname><![CDATA[,]]>
 <![CDATA[    ]]><methodname><![CDATA[RIGHT]]></methodname><![CDATA[,]]>
@@ -2268,7 +2268,7 @@
 
 <section>
 <title>Examples</title>
-<para>Demonstrating... </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
+<para>Demonstrating... </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// ...]]></lineannotation>
 <lineannotation/>
 </programlisting>
 </section>
@@ -2288,10 +2288,10 @@
 
 <section>
 <title>Applying attributes</title>
-<para>They are written as: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><![CDATA[[ ]]><methodname><![CDATA[AnnotationName]]></methodname><![CDATA[ ( ]]><methodname><![CDATA[details]]></methodname><![CDATA[-]]><methodname><![CDATA[list]]></methodname><![CDATA[ ) ]]]>
+<para>They are written as: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><![CDATA[[ ]]><methodname><![CDATA[AnnotationName]]></methodname><![CDATA[ ( ]]><methodname><![CDATA[details]]></methodname><![CDATA[-]]><methodname><![CDATA[list]]></methodname><![CDATA[ ) ]]]>
 <methodname><![CDATA[declaration]]></methodname>
 </programlisting>
-<para>For example: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><![CDATA[[ ]]><methodname><![CDATA[CCode]]></methodname><![CDATA[ ( ]]><methodname><![CDATA[cname]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[var_c_name]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[ ) ]]]>
+<para>For example: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><![CDATA[[ ]]><methodname><![CDATA[CCode]]></methodname><![CDATA[ ( ]]><methodname><![CDATA[cname]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[var_c_name]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[ ) ]]]>
 <token><![CDATA[static]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[my_var]]></methodname><![CDATA[;]]>
 </programlisting>
 </section>
@@ -2831,7 +2831,7 @@
 <title>Examples</title>
 <para>How to conditionally compile code based on a <code>valac</code> option <code>-D</code>. </para>
 <para>Sample code: </para>
-<para><remark>vala-test:examples/advanced.vala</remark> </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// Vala preprocessor example]]></lineannotation>
+<para><remark>vala-test:examples/advanced.vala</remark> </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// Vala preprocessor example]]></lineannotation>
 <lineannotation/><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[Preprocessor]]></methodname><![CDATA[ : ]]><methodname><![CDATA[Object]]></methodname><![CDATA[ {]]>
 
 <![CDATA[    ]]><token><![CDATA[public]]></token><![CDATA[ ]]><methodname><![CDATA[Preprocessor]]></methodname><![CDATA[ () {]]>
@@ -3204,7 +3204,7 @@ $ ./preprocessor-debug]]></screen>
 
 <section>
 <title>Comments</title>
-<para>Comments in the metadata have the same syntax as in Vala code: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// this is a comment]]></lineannotation>
+<para>Comments in the metadata have the same syntax as in Vala code: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><lineannotation><![CDATA[// this is a comment]]></lineannotation>
 <lineannotation/><lineannotation><![CDATA[/*]]></lineannotation>
 <lineannotation><![CDATA[ * multi-line comment]]></lineannotation>
 <lineannotation><![CDATA[ */]]></lineannotation>
@@ -3377,7 +3377,7 @@ $ ./preprocessor-debug]]></screen>
 <title>Overriding Types</title>
 <para>When you have the following expression: </para><screen><![CDATA[typedef GList MyList;]]></screen>
 <para>where <code>GList</code> will hold integers, use <code>type</code> metadata as follows: </para><screen><![CDATA[MyList type="GLib.List<int>"]]></screen>
-<para>The above metadata will generate the following code: </para><programlisting format="linespecific" language="highlight" linenumbering="numbered" startinglinenumber="1"><![CDATA[    ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[MyList]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[List]]></methodname><![CDATA[<]]><token><![CDATA[int]]></token><![CDATA[> {]]>
+<para>The above metadata will generate the following code: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><![CDATA[    ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[MyList]]></methodname><![CDATA[ : ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[List]]></methodname><![CDATA[<]]><token><![CDATA[int]]></token><![CDATA[> {]]>
 <![CDATA[        []]><methodname><![CDATA[CCode]]></methodname><![CDATA[ (]]><methodname><![CDATA[has_construct_function]]></methodname><![CDATA[ = ]]><token><![CDATA[false]]></token><![CDATA[)]]]>
 <![CDATA[        ]]><token><![CDATA[protected]]></token><![CDATA[ ]]><methodname><![CDATA[MyList]]></methodname><![CDATA[ ();]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[static]]></token><![CDATA[ ]]><methodname><![CDATA[GLib]]></methodname><![CDATA[.]]><methodname><![CDATA[Type]]></methodname><![CDATA[ ]]><methodname><![CDATA[get_type]]></methodname><![CDATA[ ();]]>
