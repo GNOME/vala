@@ -4,10 +4,9 @@
 Renderer
 	// Factory method
 	.new_for_surface symbol_type="function" name="for_surface"
-BorderNode
-	.peek_widths symbol_type="method" array
 GLShader
 	.format_args* skip=false
+ParseErrorFunc skip
 RenderNode
 	.deserialize skip=false
 ShaderArgsBuilder
