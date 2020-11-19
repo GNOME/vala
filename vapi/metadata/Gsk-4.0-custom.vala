@@ -1,4 +1,4 @@
 namespace Gsk {
-	[CCode (error_pos = 1.8, instance_pos = 1.9)]
-	public delegate void ParseErrorFunc (Gtk.CssSection section) throws GLib.Error;
+	[CCode (cheader_filename = "gsk/gsk.h", error_pos = 2.8, instance_pos = 2.9)]
+	public delegate void ParseErrorFunc (Gsk.ParseLocation start, Gsk.ParseLocation end) throws GLib.Error;
 }
