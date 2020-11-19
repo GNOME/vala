@@ -4575,7 +4575,7 @@ namespace Gdk {
 			protected Display ();
 			public unowned string? get_startup_notification_id ();
 			public bool query_registry (string global);
-			public void set_cursor_theme (string theme, int size);
+			public void set_cursor_theme (string name, int size);
 			public void set_startup_notification_id (string startup_id);
 		}
 		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
@@ -5307,7 +5307,7 @@ namespace Gdk {
 		public bool equal (Gdk.PopupLayout other);
 		public Gdk.AnchorHints get_anchor_hints ();
 		public unowned Gdk.Rectangle? get_anchor_rect ();
-		public void get_offset (int dx, int dy);
+		public void get_offset (out int dx, out int dy);
 		public Gdk.Gravity get_rect_anchor ();
 		public Gdk.Gravity get_surface_anchor ();
 		public unowned Gdk.PopupLayout @ref ();
@@ -5571,7 +5571,7 @@ namespace Gdk {
 		public uint32 time;
 		public Gdk.AxisFlags flags;
 		[CCode (array_length = false)]
-		public weak double[] axes;
+		public weak double axes[12];
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct ToplevelSize {
@@ -5966,10 +5966,10 @@ namespace Gsk {
 	public class BorderNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public BorderNode (Gsk.RoundedRect outline, [CCode (array_length = false)] float border_width[4], [CCode (array_length = false)] Gdk.RGBA border_color[4]);
-		public unowned Gdk.RGBA? peek_colors ();
-		public unowned Gsk.RoundedRect? peek_outline ();
-		[CCode (array_length = false)]
-		public unowned float[] peek_widths ();
+		public unowned Gdk.RGBA? get_colors ();
+		public unowned Gsk.RoundedRect? get_outline ();
+		[CCode (array_length = false, array_length_cexpr = "4")]
+		public unowned float[] get_widths ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_broadway_renderer_get_type ()")]
 	public class BroadwayRenderer : Gsk.Renderer {
@@ -5981,7 +5981,7 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public CairoNode (Graphene.Rect bounds);
 		public Cairo.Context get_draw_context ();
-		public unowned Cairo.Surface peek_surface ();
+		public unowned Cairo.Surface get_surface ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cairo_renderer_get_type ()")]
 	public class CairoRenderer : Gsk.Renderer {
@@ -5993,21 +5993,21 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ClipNode (Gsk.RenderNode child, Graphene.Rect clip);
 		public unowned Gsk.RenderNode get_child ();
-		public unowned Graphene.Rect? peek_clip ();
+		public unowned Graphene.Rect? get_clip ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_color_matrix_node_get_type ()")]
 	public class ColorMatrixNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ColorMatrixNode (Gsk.RenderNode child, Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
 		public unowned Gsk.RenderNode get_child ();
-		public unowned Graphene.Matrix? peek_color_matrix ();
-		public unowned Graphene.Vec4? peek_color_offset ();
+		public unowned Graphene.Matrix? get_color_matrix ();
+		public unowned Graphene.Vec4? get_color_offset ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_color_node_get_type ()")]
 	public class ColorNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ColorNode (Gdk.RGBA rgba, Graphene.Rect bounds);
-		public unowned Gdk.RGBA? peek_color ();
+		public unowned Gdk.RGBA? get_color ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_container_node_get_type ()")]
 	public class ContainerNode : Gsk.RenderNode {
@@ -6080,21 +6080,21 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public InsetShadowNode (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public float get_blur_radius ();
+		public unowned Gdk.RGBA? get_color ();
 		public float get_dx ();
 		public float get_dy ();
+		public unowned Gsk.RoundedRect? get_outline ();
 		public float get_spread ();
-		public unowned Gdk.RGBA? peek_color ();
-		public unowned Gsk.RoundedRect? peek_outline ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_linear_gradient_node_get_type ()")]
 	public class LinearGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public LinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
-		public size_t get_n_color_stops ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned Gsk.ColorStop[] peek_color_stops ();
-		public unowned Graphene.Point? peek_end ();
-		public unowned Graphene.Point? peek_start ();
+		public unowned Gsk.ColorStop[] get_color_stops ();
+		public unowned Graphene.Point? get_end ();
+		public size_t get_n_color_stops ();
+		public unowned Graphene.Point? get_start ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
 	public class OpacityNode : Gsk.RenderNode {
@@ -6108,24 +6108,24 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public OutsetShadowNode (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public float get_blur_radius ();
+		public unowned Gdk.RGBA? get_color ();
 		public float get_dx ();
 		public float get_dy ();
+		public unowned Gsk.RoundedRect? get_outline ();
 		public float get_spread ();
-		public unowned Gdk.RGBA? peek_color ();
-		public unowned Gsk.RoundedRect? peek_outline ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_radial_gradient_node_get_type ()")]
 	public class RadialGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public unowned Graphene.Point? get_center ();
+		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		public unowned Gsk.ColorStop[] get_color_stops ();
 		public float get_end ();
 		public float get_hradius ();
 		public size_t get_n_color_stops ();
 		public float get_start ();
 		public float get_vradius ();
-		public unowned Graphene.Point? peek_center ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned Gsk.ColorStop[] peek_color_stops ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_render_node_get_type ()")]
 	public abstract class RenderNode {
@@ -6161,7 +6161,7 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public RepeatNode (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect? child_bounds);
 		public unowned Gsk.RenderNode get_child ();
-		public unowned Graphene.Rect? peek_child_bounds ();
+		public unowned Graphene.Rect? get_child_bounds ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_linear_gradient_node_get_type ()")]
 	public class RepeatingLinearGradientNode : Gsk.RenderNode {
@@ -6178,13 +6178,13 @@ namespace Gsk {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public RoundedClipNode (Gsk.RenderNode child, Gsk.RoundedRect clip);
 		public unowned Gsk.RenderNode get_child ();
-		public unowned Gsk.RoundedRect? peek_clip ();
+		public unowned Gsk.RoundedRect? get_clip ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_shader_args_builder_ref", type_id = "gsk_shader_args_builder_get_type ()", unref_function = "gsk_shader_args_builder_unref")]
 	[Compact]
 	public class ShaderArgsBuilder {
 		[CCode (has_construct_function = false)]
-		public ShaderArgsBuilder (Gsk.GLShader shader, GLib.Bytes initial_values);
+		public ShaderArgsBuilder (Gsk.GLShader shader, GLib.Bytes? initial_values);
 		[DestroysInstance]
 		public GLib.Bytes free_to_args ();
 		public unowned Gsk.ShaderArgsBuilder @ref ();
@@ -6204,19 +6204,19 @@ namespace Gsk {
 		public ShadowNode (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
 		public unowned Gsk.RenderNode get_child ();
 		public size_t get_n_shadows ();
-		public unowned Gsk.Shadow? peek_shadow (size_t i);
+		public unowned Gsk.Shadow? get_shadow (size_t i);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_text_node_get_type ()")]
 	public class TextNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public TextNode (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, Graphene.Point offset);
+		public unowned Gdk.RGBA? get_color ();
+		public unowned Pango.Font get_font ();
+		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public unowned Pango.GlyphInfo[] get_glyphs ();
 		public uint get_num_glyphs ();
 		public unowned Graphene.Point? get_offset ();
 		public bool has_color_glyphs ();
-		public unowned Gdk.RGBA? peek_color ();
-		public unowned Pango.Font peek_font ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public unowned Pango.GlyphInfo[] peek_glyphs ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_node_get_type ()")]
 	public class TextureNode : Gsk.RenderNode {
@@ -6279,6 +6279,14 @@ namespace Gsk {
 	public struct ColorStop {
 		public float offset;
 		public Gdk.RGBA color;
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
+	public struct ParseLocation {
+		public size_t bytes;
+		public size_t chars;
+		public size_t lines;
+		public size_t line_bytes;
+		public size_t line_chars;
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
 	public struct RoundedRect {
@@ -6391,8 +6399,8 @@ namespace Gsk {
 		INVALID_DATA;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", error_pos = 1.8, instance_pos = 1.9)]
-	public delegate void ParseErrorFunc (Gtk.CssSection section) throws GLib.Error;
+	[CCode (cheader_filename = "gsk/gsk.h", error_pos = 2.8, instance_pos = 2.9)]
+	public delegate void ParseErrorFunc (Gsk.ParseLocation start, Gsk.ParseLocation end) throws GLib.Error;
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
@@ -6407,7 +6415,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.AccessibleRole accessible_role { get; set construct; }
 		[NoAccessorMethod]
-		public Gdk.Display display { owned get; construct; }
+		public Gdk.Display display { owned get; set; }
 		public signal void state_change ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
@@ -6488,7 +6496,7 @@ namespace Gtk {
 	public class ActivateAction : Gtk.ShortcutAction {
 		[CCode (has_construct_function = false)]
 		protected ActivateAction ();
-		public static unowned Gtk.ShortcutAction @get ();
+		public static unowned Gtk.ActivateAction @get ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_adjustment_get_type ()")]
 	public class Adjustment : GLib.InitiallyUnowned {
@@ -8829,7 +8837,7 @@ namespace Gtk {
 		public int get_spacing ();
 		public int get_text_column ();
 		public int get_tooltip_column ();
-		public bool get_tooltip_context (ref int x, ref int y, bool keyboard_tip, out unowned Gtk.TreeModel model, out Gtk.TreePath path, out Gtk.TreeIter iter);
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, out unowned Gtk.TreeModel model, out Gtk.TreePath path, out Gtk.TreeIter iter);
 		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public bool path_is_selected (Gtk.TreePath path);
 		public void scroll_to_path (Gtk.TreePath path, bool use_align, float row_align, float col_align);
@@ -9446,7 +9454,7 @@ namespace Gtk {
 	public class MnemonicAction : Gtk.ShortcutAction {
 		[CCode (has_construct_function = false)]
 		protected MnemonicAction ();
-		public static unowned Gtk.ShortcutAction @get ();
+		public static unowned Gtk.MnemonicAction @get ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_mnemonic_trigger_get_type ()")]
 	public class MnemonicTrigger : Gtk.ShortcutTrigger {
@@ -9629,7 +9637,7 @@ namespace Gtk {
 	public class NothingAction : Gtk.ShortcutAction {
 		[CCode (has_construct_function = false)]
 		protected NothingAction ();
-		public static unowned Gtk.ShortcutAction @get ();
+		public static unowned Gtk.NothingAction @get ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_numeric_sorter_get_type ()")]
 	public class NumericSorter : Gtk.Sorter {
@@ -11175,13 +11183,9 @@ namespace Gtk {
 		public bool can_redo { get; }
 		public bool can_undo { get; }
 		[NoAccessorMethod]
-		public Gdk.ContentFormats copy_target_list { owned get; }
-		[NoAccessorMethod]
 		public int cursor_position { get; }
 		public bool enable_undo { get; set; }
 		public bool has_selection { get; }
-		[NoAccessorMethod]
-		public Gdk.ContentFormats paste_target_list { owned get; }
 		public Gtk.TextTagTable tag_table { get; construct; }
 		[NoAccessorMethod]
 		public string text { owned get; set; }
@@ -11563,7 +11567,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TreeExpander ();
 		public unowned Gtk.Widget? get_child ();
-		public void* get_item ();
+		public unowned GLib.Object? get_item ();
 		public unowned Gtk.TreeListRow? get_list_row ();
 		public void set_child (Gtk.Widget? child);
 		public void set_list_row (Gtk.TreeListRow? list_row);
@@ -11813,7 +11817,7 @@ namespace Gtk {
 		public unowned Gtk.TreeSelection get_selection ();
 		public bool get_show_expanders ();
 		public int get_tooltip_column ();
-		public bool get_tooltip_context (ref int x, ref int y, bool keyboard_tip, out unowned Gtk.TreeModel? model, out Gtk.TreePath path, out Gtk.TreeIter iter);
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, out unowned Gtk.TreeModel? model, out Gtk.TreePath path, out Gtk.TreeIter iter);
 		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
@@ -13010,7 +13014,9 @@ namespace Gtk {
 		VALUE_MAX,
 		VALUE_MIN,
 		VALUE_NOW,
-		VALUE_TEXT
+		VALUE_TEXT;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_RELATION_", type_id = "gtk_accessible_relation_get_type ()")]
 	public enum AccessibleRelation {
@@ -13031,7 +13037,9 @@ namespace Gtk {
 		ROW_INDEX,
 		ROW_INDEX_TEXT,
 		ROW_SPAN,
-		SET_SIZE
+		SET_SIZE;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_ROLE_", type_id = "gtk_accessible_role_get_type ()")]
 	public enum AccessibleRole {
@@ -13130,7 +13138,9 @@ namespace Gtk {
 		HIDDEN,
 		INVALID,
 		PRESSED,
-		SELECTED
+		SELECTED;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_TRISTATE_", type_id = "gtk_accessible_tristate_get_type ()")]
 	public enum AccessibleTristate {
@@ -13471,13 +13481,6 @@ namespace Gtk {
 		APACHE_2_0,
 		MPL_2_0
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MENU_DIR_", type_id = "gtk_menu_direction_type_get_type ()")]
-	public enum MenuDirectionType {
-		PARENT,
-		CHILD,
-		NEXT,
-		PREV
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_MESSAGE_", type_id = "gtk_message_type_get_type ()")]
 	public enum MessageType {
 		INFO,
@@ -13577,24 +13580,12 @@ namespace Gtk {
 		INSENSITIVE,
 		NON_TARGETABLE
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PLACES_OPEN_", type_id = "gtk_places_open_flags_get_type ()")]
-	[Flags]
-	public enum PlacesOpenFlags {
-		NORMAL,
-		NEW_TAB,
-		NEW_WINDOW
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_POLICY_", type_id = "gtk_policy_type_get_type ()")]
 	public enum PolicyType {
 		ALWAYS,
 		AUTOMATIC,
 		NEVER,
 		EXTERNAL
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_POPOVER_CONSTRAINT_", type_id = "gtk_popover_constraint_get_type ()")]
-	public enum PopoverConstraint {
-		NONE,
-		WINDOW
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_POPOVER_MENU_", type_id = "gtk_popover_menu_flags_get_type ()")]
 	[Flags]
@@ -13876,12 +13867,6 @@ namespace Gtk {
 		FONT_CONFIG,
 		DISPLAY,
 		ICON_THEME
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_", type_id = "gtk_text_buffer_target_info_get_type ()")]
-	public enum TextBufferTargetInfo {
-		BUFFER_CONTENTS,
-		RICH_TEXT,
-		TEXT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_TEXT_DIR_", type_id = "gtk_text_direction_get_type ()")]
 	public enum TextDirection {
