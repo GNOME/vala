@@ -83,7 +83,7 @@ namespace GLib {
 		public static GLib.IOStream address_get_stream_sync (string address, out string out_guid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
-		public static unowned string annotation_info_lookup ([CCode (array_length = false, array_null_terminated = true)] GLib.DBusAnnotationInfo[]? annotations, string name);
+		public static unowned string? annotation_info_lookup ([CCode (array_length = false, array_null_terminated = true)] GLib.DBusAnnotationInfo[]? annotations, string name);
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static string generate_guid ();
@@ -328,11 +328,11 @@ namespace GLib {
 	public class AppLaunchContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public AppLaunchContext ();
-		public virtual string get_display (GLib.AppInfo info, GLib.List<GLib.File> files);
+		public virtual string? get_display (GLib.AppInfo info, GLib.List<GLib.File> files);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.32")]
 		public string[] get_environment ();
-		public virtual string get_startup_notify_id (GLib.AppInfo info, GLib.List<GLib.File> files);
+		public virtual string? get_startup_notify_id (GLib.AppInfo info, GLib.List<GLib.File> files);
 		[Version (since = "2.32")]
 		public void setenv (string variable, string value);
 		[Version (since = "2.32")]
@@ -366,13 +366,13 @@ namespace GLib {
 		public virtual bool dbus_register (GLib.DBusConnection connection, string object_path) throws GLib.Error;
 		[NoWrapper]
 		public virtual void dbus_unregister (GLib.DBusConnection connection, string object_path);
-		public unowned string get_application_id ();
+		public unowned string? get_application_id ();
 		[Version (since = "2.34")]
-		public unowned GLib.DBusConnection get_dbus_connection ();
+		public unowned GLib.DBusConnection? get_dbus_connection ();
 		[Version (since = "2.34")]
-		public unowned string get_dbus_object_path ();
+		public unowned string? get_dbus_object_path ();
 		[Version (since = "2.32")]
-		public static unowned GLib.Application get_default ();
+		public static unowned GLib.Application? get_default ();
 		public GLib.ApplicationFlags get_flags ();
 		public uint get_inactivity_timeout ();
 		[Version (since = "2.44")]
@@ -463,9 +463,9 @@ namespace GLib {
 		[Version (since = "2.28")]
 		public GLib.Variant? get_platform_data ();
 		[Version (since = "2.34")]
-		public virtual GLib.InputStream get_stdin ();
+		public virtual GLib.InputStream? get_stdin ();
 		[Version (since = "2.28")]
-		public unowned string getenv (string name);
+		public unowned string? getenv (string name);
 		[PrintfFormat]
 		[Version (since = "2.28")]
 		public void print (string format, ...);
@@ -744,9 +744,9 @@ namespace GLib {
 		[Version (since = "2.30")]
 		public void cache_release ();
 		public void generate_xml (uint indent, GLib.StringBuilder string_builder);
-		public unowned GLib.DBusMethodInfo lookup_method (string name);
-		public unowned GLib.DBusPropertyInfo lookup_property (string name);
-		public unowned GLib.DBusSignalInfo lookup_signal (string name);
+		public unowned GLib.DBusMethodInfo? lookup_method (string name);
+		public unowned GLib.DBusPropertyInfo? lookup_property (string name);
+		public unowned GLib.DBusSignalInfo? lookup_signal (string name);
 		public unowned GLib.DBusInterfaceInfo @ref ();
 		public void unref ();
 	}
@@ -757,12 +757,12 @@ namespace GLib {
 		protected DBusInterfaceSkeleton ();
 		public bool export (GLib.DBusConnection connection, string object_path) throws GLib.Error;
 		public virtual void flush ();
-		public unowned GLib.DBusConnection get_connection ();
+		public unowned GLib.DBusConnection? get_connection ();
 		[Version (since = "2.32")]
 		public GLib.List<GLib.DBusConnection> get_connections ();
 		public GLib.DBusInterfaceSkeletonFlags get_flags ();
 		public virtual unowned GLib.DBusInterfaceInfo get_info ();
-		public unowned string get_object_path ();
+		public unowned string? get_object_path ();
 		public virtual GLib.Variant get_properties ();
 		public virtual GLib.DBusInterfaceVTable? get_vtable ();
 		[Version (since = "2.32")]
@@ -791,26 +791,26 @@ namespace GLib {
 		public GLib.DBusMessage copy () throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public DBusMessage.from_blob ([CCode (array_length_cname = "blob_len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] blob, GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
-		public unowned string get_arg0 ();
-		public unowned GLib.Variant get_body ();
+		public unowned string? get_arg0 ();
+		public unowned GLib.Variant? get_body ();
 		public GLib.DBusMessageByteOrder get_byte_order ();
-		public unowned string get_destination ();
-		public unowned string get_error_name ();
+		public unowned string? get_destination ();
+		public unowned string? get_error_name ();
 		public GLib.DBusMessageFlags get_flags ();
 		public unowned GLib.Variant? get_header (GLib.DBusMessageHeaderField header_field);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public uchar[] get_header_fields ();
-		public unowned string get_interface ();
+		public unowned string? get_interface ();
 		public bool get_locked ();
-		public unowned string get_member ();
+		public unowned string? get_member ();
 		public GLib.DBusMessageType get_message_type ();
 		public uint32 get_num_unix_fds ();
-		public unowned string get_path ();
+		public unowned string? get_path ();
 		public uint32 get_reply_serial ();
-		public unowned string get_sender ();
+		public unowned string? get_sender ();
 		public uint32 get_serial ();
 		public unowned string get_signature ();
-		public unowned GLib.UnixFDList get_unix_fd_list ();
+		public unowned GLib.UnixFDList? get_unix_fd_list ();
 		public void @lock ();
 		[CCode (has_construct_function = false)]
 		public DBusMessage.method_call (string? name, string path, string? interface_, string method);
@@ -826,19 +826,19 @@ namespace GLib {
 		public string print (uint indent = 0);
 		public void set_body (GLib.Variant body);
 		public void set_byte_order (GLib.DBusMessageByteOrder byte_order);
-		public void set_destination (string value);
+		public void set_destination (string? value);
 		public void set_error_name (string value);
 		public void set_flags (GLib.DBusMessageFlags flags);
 		public void set_header (GLib.DBusMessageHeaderField header_field, GLib.Variant? value);
-		public void set_interface (string value);
-		public void set_member (string value);
+		public void set_interface (string? value);
+		public void set_member (string? value);
 		public void set_message_type (GLib.DBusMessageType type);
 		public void set_num_unix_fds (uint32 value);
-		public void set_path (string value);
+		public void set_path (string? value);
 		public void set_reply_serial (uint32 value);
-		public void set_sender (string value);
+		public void set_sender (string? value);
 		public void set_serial (uint32 serial);
-		public void set_signature (string value);
+		public void set_signature (string? value);
 		public void set_unix_fd_list (GLib.UnixFDList? fd_list);
 		[CCode (has_construct_function = false)]
 		public DBusMessage.@signal (string path, string interface_, string @signal);
@@ -870,12 +870,12 @@ namespace GLib {
 		public unowned GLib.DBusConnection get_connection ();
 		public unowned string get_interface_name ();
 		public unowned GLib.DBusMessage get_message ();
-		public unowned GLib.DBusMethodInfo get_method_info ();
+		public unowned GLib.DBusMethodInfo? get_method_info ();
 		public unowned string get_method_name ();
 		public unowned string get_object_path ();
 		public unowned GLib.Variant get_parameters ();
 		[Version (since = "2.38")]
-		public unowned GLib.DBusPropertyInfo get_property_info ();
+		public unowned GLib.DBusPropertyInfo? get_property_info ();
 		public unowned string get_sender ();
 		public void* get_user_data ();
 		[DestroysInstance]
@@ -912,7 +912,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public DBusNodeInfo.for_xml (string xml_data) throws GLib.Error;
 		public void generate_xml (uint indent, GLib.StringBuilder string_builder);
-		public unowned GLib.DBusInterfaceInfo lookup_interface (string name);
+		public unowned GLib.DBusInterfaceInfo? lookup_interface (string name);
 		public unowned GLib.DBusNodeInfo @ref ();
 		public void unref ();
 	}
@@ -1210,7 +1210,7 @@ namespace GLib {
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
 		public unowned GLib.FileAttributeMatcher @ref ();
-		public GLib.FileAttributeMatcher subtract (GLib.FileAttributeMatcher subtract);
+		public GLib.FileAttributeMatcher? subtract (GLib.FileAttributeMatcher? subtract);
 		[Version (since = "2.32")]
 		public string to_string ();
 		public void unref ();
@@ -1246,7 +1246,7 @@ namespace GLib {
 		public virtual bool can_seek ();
 		[NoWrapper]
 		public virtual bool can_truncate ();
-		public virtual string get_etag ();
+		public virtual string? get_etag ();
 		public virtual GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileInfo query_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -1290,9 +1290,9 @@ namespace GLib {
 		public GLib.DateTime? get_deletion_date ();
 		public unowned string get_display_name ();
 		public unowned string get_edit_name ();
-		public unowned string get_etag ();
+		public unowned string? get_etag ();
 		public GLib.FileType get_file_type ();
-		public unowned GLib.Icon get_icon ();
+		public unowned GLib.Icon? get_icon ();
 		public bool get_is_backup ();
 		public bool get_is_hidden ();
 		public bool get_is_symlink ();
@@ -1304,8 +1304,8 @@ namespace GLib {
 		public int64 get_size ();
 		public int32 get_sort_order ();
 		[Version (since = "2.34")]
-		public unowned GLib.Icon get_symbolic_icon ();
-		public unowned string get_symlink_target ();
+		public unowned GLib.Icon? get_symbolic_icon ();
+		public unowned string? get_symlink_target ();
 		public bool has_attribute (string attribute);
 		[Version (since = "2.22")]
 		public bool has_namespace (string name_space);
@@ -1381,7 +1381,7 @@ namespace GLib {
 		public virtual bool can_seek ();
 		[NoWrapper]
 		public virtual bool can_truncate ();
-		public virtual string get_etag ();
+		public virtual string? get_etag ();
 		public virtual GLib.FileInfo query_info (string attributes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileInfo query_info_async (string attributes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoWrapper]
@@ -1395,7 +1395,7 @@ namespace GLib {
 	public class FilenameCompleter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public FilenameCompleter ();
-		public string get_completion_suffix (string initial_text);
+		public string? get_completion_suffix (string initial_text);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_completions (string initial_text);
 		public void set_dirs_only (bool dirs_only);
@@ -1799,9 +1799,9 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public MenuItem.from_model (GLib.MenuModel model, int item_index);
 		[Version (since = "2.34")]
-		public GLib.Variant get_attribute_value (string attribute, GLib.VariantType? expected_type);
+		public GLib.Variant? get_attribute_value (string attribute, GLib.VariantType? expected_type);
 		[Version (since = "2.34")]
-		public GLib.MenuModel get_link (string link);
+		public GLib.MenuModel? get_link (string link);
 		[CCode (has_construct_function = false)]
 		public MenuItem.section (string? label, GLib.MenuModel section);
 		public void set_action_and_target (string? action, string? format_string, ...);
@@ -1834,10 +1834,10 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		protected MenuModel ();
 		public bool get_item_attribute (int item_index, string attribute, string format_string, ...);
-		public virtual GLib.Variant get_item_attribute_value (int item_index, string attribute, GLib.VariantType? expected_type);
+		public virtual GLib.Variant? get_item_attribute_value (int item_index, string attribute, GLib.VariantType? expected_type);
 		[NoWrapper]
 		public virtual void get_item_attributes (int item_index, [CCode (type = "GHashTable**")] out GLib.HashTable<string,GLib.Variant>? attributes);
-		public virtual GLib.MenuModel get_item_link (int item_index, string link);
+		public virtual GLib.MenuModel? get_item_link (int item_index, string link);
 		[NoWrapper]
 		public virtual void get_item_links (int item_index, out GLib.HashTable<string,GLib.MenuModel> links);
 		public virtual int get_n_items ();
@@ -1853,28 +1853,28 @@ namespace GLib {
 		public MountOperation ();
 		public bool get_anonymous ();
 		public int get_choice ();
-		public unowned string get_domain ();
+		public unowned string? get_domain ();
 		[Version (since = "2.58")]
 		public bool get_is_tcrypt_hidden_volume ();
 		[Version (since = "2.58")]
 		public bool get_is_tcrypt_system_volume ();
-		public unowned string get_password ();
+		public unowned string? get_password ();
 		public GLib.PasswordSave get_password_save ();
 		[Version (since = "2.58")]
 		public uint get_pim ();
-		public unowned string get_username ();
+		public unowned string? get_username ();
 		public void set_anonymous (bool anonymous);
 		public void set_choice (int choice);
-		public void set_domain (string domain);
+		public void set_domain (string? domain);
 		[Version (since = "2.58")]
 		public void set_is_tcrypt_hidden_volume (bool hidden_volume);
 		[Version (since = "2.58")]
 		public void set_is_tcrypt_system_volume (bool system_volume);
-		public void set_password (string password);
+		public void set_password (string? password);
 		public void set_password_save (GLib.PasswordSave save);
 		[Version (since = "2.58")]
 		public void set_pim (uint pim);
-		public void set_username (string username);
+		public void set_username (string? username);
 		public bool anonymous { get; set; }
 		public int choice { get; set; }
 		public string domain { get; set; }
@@ -1921,7 +1921,7 @@ namespace GLib {
 		[Version (since = "2.22")]
 		public uint16 get_port ();
 		[Version (since = "2.26")]
-		public unowned string get_scheme ();
+		public unowned string? get_scheme ();
 		[CCode (has_construct_function = false, type = "GSocketConnectable*")]
 		[Version (since = "2.44")]
 		public NetworkAddress.loopback (uint16 port);
@@ -2062,11 +2062,11 @@ namespace GLib {
 		public uint16 get_destination_port ();
 		[Version (since = "2.34")]
 		public unowned string get_destination_protocol ();
-		public unowned string get_password ();
+		public unowned string? get_password ();
 		public unowned string get_protocol ();
 		[Version (since = "2.34")]
-		public unowned string get_uri ();
-		public unowned string get_username ();
+		public unowned string? get_uri ();
+		public unowned string? get_username ();
 		public string destination_hostname { get; construct; }
 		public uint destination_port { get; construct; }
 		[Version (since = "2.34")]
@@ -2346,7 +2346,7 @@ namespace GLib {
 		public unowned string get_id ();
 		[Version (since = "2.40")]
 		public GLib.SettingsSchemaKey get_key (string name);
-		public unowned string get_path ();
+		public unowned string? get_path ();
 		[Version (since = "2.40")]
 		public bool has_key (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -2364,13 +2364,13 @@ namespace GLib {
 		[Version (since = "2.40")]
 		public GLib.Variant get_default_value ();
 		[Version (since = "2.34")]
-		public unowned string get_description ();
+		public unowned string? get_description ();
 		[Version (since = "2.44")]
 		public unowned string get_name ();
 		[Version (since = "2.40")]
 		public GLib.Variant get_range ();
 		[Version (since = "2.34")]
-		public unowned string get_summary ();
+		public unowned string? get_summary ();
 		[Version (since = "2.40")]
 		public unowned GLib.VariantType get_value_type ();
 		[Version (since = "2.40")]
@@ -2657,7 +2657,7 @@ namespace GLib {
 		[Version (since = "2.26")]
 		public bool get_enable_proxy ();
 		public GLib.SocketFamily get_family ();
-		public unowned GLib.SocketAddress get_local_address ();
+		public unowned GLib.SocketAddress? get_local_address ();
 		public GLib.SocketProtocol get_protocol ();
 		[Version (since = "2.36")]
 		public unowned GLib.ProxyResolver get_proxy_resolver ();
@@ -2807,9 +2807,9 @@ namespace GLib {
 		public bool get_if_exited ();
 		public bool get_if_signaled ();
 		public int get_status ();
-		public unowned GLib.InputStream get_stderr_pipe ();
-		public unowned GLib.OutputStream get_stdin_pipe ();
-		public unowned GLib.InputStream get_stdout_pipe ();
+		public unowned GLib.InputStream? get_stderr_pipe ();
+		public unowned GLib.OutputStream? get_stdin_pipe ();
+		public unowned GLib.InputStream? get_stdout_pipe ();
 		public bool get_successful ();
 		public int get_term_sig ();
 		[CCode (cname = "g_subprocess_newv", has_construct_function = false)]
@@ -2830,7 +2830,9 @@ namespace GLib {
 	public class SubprocessLauncher : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public SubprocessLauncher (GLib.SubprocessFlags flags);
-		public unowned string getenv (string variable);
+		[Version (since = "2.68")]
+		public void close ();
+		public unowned string? getenv (string variable);
 		public void set_child_setup (owned GLib.SpawnChildSetupFunc child_setup);
 		public void set_cwd (string cwd);
 		public void set_environ ([CCode (array_length = false, array_null_terminated = true)] string[] env);
@@ -2998,7 +3000,10 @@ namespace GLib {
 		public TlsCertificate.from_files (string cert_file, string key_file) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_pem (string data, ssize_t length) throws GLib.Error;
-		public unowned GLib.TlsCertificate get_issuer ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.68")]
+		public TlsCertificate.from_pkcs11_uris (string pkcs11_uri, string? private_key_pkcs11_uri) throws GLib.Error;
+		public unowned GLib.TlsCertificate? get_issuer ();
 		[Version (since = "2.34")]
 		public bool is_same (GLib.TlsCertificate cert_two);
 		public static GLib.List<GLib.TlsCertificate> list_new_from_file (string file) throws GLib.Error;
@@ -3009,9 +3014,15 @@ namespace GLib {
 		public string certificate_pem { owned get; construct; }
 		public GLib.TlsCertificate issuer { get; construct; }
 		[NoAccessorMethod]
+		[Version (since = "2.68")]
+		public string pkcs11_uri { owned get; construct; }
+		[NoAccessorMethod]
 		public GLib.ByteArray private_key { construct; }
 		[NoAccessorMethod]
 		public string private_key_pem { construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.68")]
+		public string private_key_pkcs11_uri { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_connection_get_type ()")]
 	[Version (since = "2.28")]
@@ -3184,9 +3195,9 @@ namespace GLib {
 		public static GLib.Volume adopt_orphan_mount (GLib.Mount mount);
 		public static GLib.VolumeMonitor @get ();
 		public virtual GLib.List<GLib.Drive> get_connected_drives ();
-		public virtual GLib.Mount get_mount_for_uuid (string uuid);
+		public virtual GLib.Mount? get_mount_for_uuid (string uuid);
 		public virtual GLib.List<GLib.Mount> get_mounts ();
-		public virtual GLib.Volume get_volume_for_uuid (string uuid);
+		public virtual GLib.Volume? get_volume_for_uuid (string uuid);
 		public virtual GLib.List<GLib.Volume> get_volumes ();
 		[NoWrapper]
 		public virtual bool is_supported ();
@@ -3211,7 +3222,7 @@ namespace GLib {
 		[Version (since = "2.24")]
 		public ZlibCompressor (GLib.ZlibCompressorFormat format, int level = -1);
 		[Version (since = "2.26")]
-		public unowned GLib.FileInfo get_file_info ();
+		public unowned GLib.FileInfo? get_file_info ();
 		[Version (since = "2.26")]
 		public void set_file_info (GLib.FileInfo? file_info);
 		[Version (since = "2.26")]
@@ -3227,7 +3238,7 @@ namespace GLib {
 		[Version (since = "2.24")]
 		public ZlibDecompressor (GLib.ZlibCompressorFormat format);
 		[Version (since = "2.26")]
-		public unowned GLib.FileInfo get_file_info ();
+		public unowned GLib.FileInfo? get_file_info ();
 		[Version (since = "2.26")]
 		public GLib.FileInfo file_info { get; }
 		[NoAccessorMethod]
@@ -3246,7 +3257,7 @@ namespace GLib {
 		[Version (since = "2.28")]
 		public abstract unowned GLib.VariantType? get_parameter_type ();
 		[Version (since = "2.28")]
-		public abstract GLib.Variant get_state ();
+		public abstract GLib.Variant? get_state ();
 		[Version (since = "2.28")]
 		public abstract GLib.Variant? get_state_hint ();
 		[Version (since = "2.28")]
@@ -3309,7 +3320,7 @@ namespace GLib {
 	public interface ActionMap : GLib.Object {
 		public abstract void add_action (GLib.Action action);
 		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] GLib.ActionEntry[] entries, void* user_data);
-		public abstract unowned GLib.Action lookup_action (string action_name);
+		public abstract unowned GLib.Action? lookup_action (string action_name);
 		public abstract void remove_action (string action_name);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_app_info_get_type ()")]
@@ -3330,15 +3341,15 @@ namespace GLib {
 		public abstract unowned string get_commandline ();
 		public static GLib.AppInfo? get_default_for_type (string content_type, bool must_support_uris);
 		public static GLib.AppInfo? get_default_for_uri_scheme (string uri_scheme);
-		public abstract unowned string get_description ();
+		public abstract unowned string? get_description ();
 		[Version (since = "2.24")]
 		public abstract unowned string get_display_name ();
 		[NoWrapper]
 		public abstract unowned string get_executable ();
 		[Version (since = "2.28")]
 		public static GLib.List<GLib.AppInfo> get_fallback_for_type (string content_type);
-		public abstract unowned GLib.Icon get_icon ();
-		public abstract unowned string get_id ();
+		public abstract unowned GLib.Icon? get_icon ();
+		public abstract unowned string? get_id ();
 		public abstract unowned string get_name ();
 		[Version (since = "2.28")]
 		public static GLib.List<GLib.AppInfo> get_recommended_for_type (string content_type);
@@ -3393,15 +3404,15 @@ namespace GLib {
 	[Version (since = "2.30")]
 	public interface DBusInterface : GLib.Object {
 		[Version (since = "2.32")]
-		public abstract GLib.DBusObject dup_object ();
+		public abstract GLib.DBusObject? dup_object ();
 		public abstract unowned GLib.DBusInterfaceInfo get_info ();
-		public abstract unowned GLib.DBusObject get_object ();
+		public abstract unowned GLib.DBusObject? get_object ();
 		public abstract void set_object (GLib.DBusObject? object);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_get_type ()")]
 	public interface DBusObject : GLib.Object {
 		[Version (since = "2.30")]
-		public abstract GLib.DBusInterface get_interface (string interface_name);
+		public abstract GLib.DBusInterface? get_interface (string interface_name);
 		[Version (since = "2.30")]
 		public abstract GLib.List<GLib.DBusInterface> get_interfaces ();
 		[Version (since = "2.30")]
@@ -3575,6 +3586,8 @@ namespace GLib {
 	public interface File : GLib.Object {
 		public abstract GLib.FileOutputStream append_to (GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileOutputStream append_to_async (GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.68")]
+		public string build_attribute_list_for_copy (GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
 		public virtual async bool copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
 		public bool copy_attributes (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3716,7 +3729,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_icon_get_type ()")]
 	public interface Icon : GLib.Object {
 		[Version (since = "2.38")]
-		public static GLib.Icon deserialize (GLib.Variant value);
+		public static GLib.Icon? deserialize (GLib.Variant value);
 		public abstract bool equal (GLib.Icon? icon2);
 		[NoWrapper]
 		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
@@ -3724,7 +3737,7 @@ namespace GLib {
 		[Version (since = "2.20")]
 		public static GLib.Icon? new_for_string (string str) throws GLib.Error;
 		[Version (since = "2.38")]
-		public virtual GLib.Variant serialize ();
+		public virtual GLib.Variant? serialize ();
 		[Version (since = "2.20")]
 		public string? to_string ();
 		[NoWrapper]
@@ -3851,7 +3864,7 @@ namespace GLib {
 	public interface Proxy : GLib.Object {
 		public abstract GLib.IOStream connect (GLib.IOStream connection, GLib.ProxyAddress proxy_address, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.IOStream connect_async (GLib.IOStream connection, GLib.ProxyAddress proxy_address, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public static GLib.Proxy get_default_for_protocol (string protocol);
+		public static GLib.Proxy? get_default_for_protocol (string protocol);
 		public abstract bool supports_hostname ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GProxyResolverInterface", type_id = "g_proxy_resolver_get_type ()")]
@@ -3915,7 +3928,7 @@ namespace GLib {
 		[Version (since = "2.46")]
 		public abstract void copy_session_state (GLib.TlsClientConnection source);
 		public GLib.List<GLib.ByteArray> get_accepted_cas ();
-		public unowned GLib.SocketConnectable get_server_identity ();
+		public unowned GLib.SocketConnectable? get_server_identity ();
 		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public bool get_use_ssl3 ();
 		public GLib.TlsCertificateFlags get_validation_flags ();
@@ -4949,6 +4962,12 @@ namespace GLib {
 	public delegate GLib.File VfsFileLookupFunc (GLib.Vfs vfs, string identifier);
 	[CCode (cheader_filename = "glib.h", cname = "g_realloc")]
 	public static GLib.ReallocFunc g_realloc;
+	[CCode (cheader_filename = "gio/gio.h", cname = "G_DBUS_METHOD_INVOCATION_HANDLED")]
+	[Version (since = "2.68")]
+	public const bool DBUS_METHOD_INVOCATION_HANDLED;
+	[CCode (cheader_filename = "gio/gio.h", cname = "G_DBUS_METHOD_INVOCATION_UNHANDLED")]
+	[Version (since = "2.68")]
+	public const bool DBUS_METHOD_INVOCATION_UNHANDLED;
 	[CCode (cheader_filename = "gio/gio.h", cname = "G_DRIVE_IDENTIFIER_KIND_UNIX_DEVICE")]
 	[Version (since = "2.58")]
 	public const string DRIVE_IDENTIFIER_KIND_UNIX_DEVICE;
