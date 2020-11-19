@@ -1,3 +1,39 @@
+Vala 0.48.12
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + More use of delegate_target_type and delegate_target_destroy_type
+    + Reduce get_delegate_target/get_delegate_target_destroy_notify calls
+    + Don't use inferred type for temp-value to access generic property [#1088]
+    + Update outdated array _size_ variable of captured local-variable [#1090]
+    + Report internal error for unsupported collection type in foreach
+  - vala:
+    + Issue an error on void initializer for local-variable
+    + Allow markup-reader to accept spaces around '=' of attribute assignment
+    + CodeNode.source_reference is optional, so let the API respect that
+    + Use DataType.compatible() to check for string concatenation [#1100]
+  - valadoc: Don't call CodeContext.pop() on empty stack [#1064]
+  - libvaladoc: Don't filter-out generic type-parameters of delegates
+  - libvaladoc/girimporter: Skip "docsection" elements in <namespace>
+  - testrunner: Add "-Werror=return-local-addr" flag
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - alsa: Fix PcmDevice.set_poll_descriptors_revents() binding [#1092]
+  - curses: Add Terminfo API set, function keycodes F(n) and minor changes
+  - curses: Correctly use [PrintfFormat] attribute
+  - glib-2.0: Add return codes to FileStream.putc/puts(), like posix
+  - glib-2.0: Add GenericArray.find_custom(), variant of find_with_equal_func()
+  - glib-2.0: Improve GenericArray.length property
+  - gio-2.0: Fix binding of Resolver.lookup_service*()
+  - gtk4: Attribute Gsk.ShaderArgsBuilder.free_to_args with DestroysInstance
+  - gtk4: Update to 3.99.4+7551f85d [#1089]
+  - linux: Add missing struct in cname for Spi.IocTransfer
+  - posix: Declare fstat, stat, lstat and fstatat as public [#1086]
+  - posix: Add freopen binding, as FILE.reopen()
+  - rest-0.7: Fix ParamsIter.next() binding
+  - vapi: Update GIR-based bindings
+
 Vala 0.48.11
 ============
  * Various improvements and bug fixes:
