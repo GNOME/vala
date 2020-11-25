@@ -1,7 +1,9 @@
 void test_glist () {
 	var list = new GLib.List<string> ();
+	assert (list.is_empty ());
 	list.prepend ("foo");
 	list.prepend ("bar");
+	assert (!list.is_empty ());
 	assert (list.nth_data (1) == "foo");
 	list = null;
 
@@ -14,8 +16,10 @@ void test_glist () {
 
 void test_gslist () {
 	var list = new GLib.SList<string> ();
+	assert (list.is_empty ());
 	list.prepend ("foo");
 	list.prepend ("bar");
+	assert (!list.is_empty ());
 	assert (list.nth_data (1) == "foo");
 	list = null;
 
@@ -28,8 +32,10 @@ void test_gslist () {
 
 void test_gqueue () {
 	var queue = new GLib.Queue<string> ();
+	assert (queue.is_empty ());
 	queue.push_head ("foo");
 	queue.push_head ("bar");
+	assert (!queue.is_empty ());
 	assert (queue.peek_nth (1) == "foo");
 	queue = null;
 

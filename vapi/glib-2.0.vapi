@@ -4922,6 +4922,11 @@ namespace GLib {
 		public int position (List<G> llink);
 		public int index (G data);
 
+		[CCode (cname = "vala_g_list_is_empty")]
+		public inline bool is_empty () {
+			return (List?) this == null;
+		}
+
 		public G data;
 		public List<G> next;
 		public unowned List<G> prev;
@@ -4981,6 +4986,11 @@ namespace GLib {
 
 		public int position (SList<G> llink);
 		public int index (G data);
+
+		[CCode (cname = "vala_g_slist_is_empty")]
+		public inline bool is_empty () {
+			return (SList?) this == null;
+		}
 
 		public G data;
 		public SList<G> next;
