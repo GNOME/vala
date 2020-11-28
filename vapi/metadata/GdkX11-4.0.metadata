@@ -1,4 +1,4 @@
-* cheader_filename = "gdk/gdkx.h"
+* cheader_filename = "gdk/x11/gdkx.h"
 
 x11_* name="x11_(.+)" parent="Gdk.X11"
 X11* name="X11(.+)" parent="Gdk.X11"
