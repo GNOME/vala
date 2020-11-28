@@ -4561,14 +4561,14 @@ namespace Gdk {
 		public const uint zstroke;
 	}
 	namespace Wayland {
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_device_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_device_get_type ()")]
 		[GIR (name = "WaylandDevice")]
 		public class Device : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected Device ();
 			public unowned string? get_node_path ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
 		[GIR (name = "WaylandDisplay")]
 		public class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
@@ -4578,37 +4578,37 @@ namespace Gdk {
 			public void set_cursor_theme (string name, int size);
 			public void set_startup_notification_id (string startup_id);
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
 		[GIR (name = "WaylandGLContext")]
 		public class GLContext : Gdk.GLContext {
 			[CCode (has_construct_function = false)]
 			protected GLContext ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_monitor_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_monitor_get_type ()")]
 		[GIR (name = "WaylandMonitor")]
 		public class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
 			protected Monitor ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_popup_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_popup_get_type ()")]
 		[GIR (name = "WaylandPopup")]
 		public class Popup : Gdk.Wayland.Surface, Gdk.Popup {
 			[CCode (has_construct_function = false)]
 			protected Popup ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_seat_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_seat_get_type ()")]
 		[GIR (name = "WaylandSeat")]
 		public class Seat : Gdk.Seat {
 			[CCode (has_construct_function = false)]
 			protected Seat ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_surface_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_surface_get_type ()")]
 		[GIR (name = "WaylandSurface")]
 		public class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
 		[GIR (name = "WaylandToplevel")]
 		public class Toplevel : Gdk.Wayland.Surface, Gdk.Toplevel {
 			[CCode (has_construct_function = false)]
@@ -4618,22 +4618,22 @@ namespace Gdk {
 			public bool set_transient_for_exported (string parent_handle_str);
 			public void unexport_handle ();
 		}
-		[CCode (cheader_filename = "gdk/gdkwayland.h", instance_pos = 2.9)]
+		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", instance_pos = 2.9)]
 		public delegate void ToplevelExported (Gdk.Wayland.Toplevel toplevel, string handle);
 	}
 	namespace X11 {
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_app_launch_context_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_app_launch_context_get_type ()")]
 		[GIR (name = "X11AppLaunchContext")]
 		public class AppLaunchContext : Gdk.AppLaunchContext {
 			[CCode (has_construct_function = false)]
 			protected AppLaunchContext ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_manager_xi2_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_device_manager_xi2_get_type ()")]
 		[GIR (name = "X11DeviceManagerXI2")]
 		public class DeviceManagerXI2 : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DeviceManagerXI2 ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
 			public unowned Gdk.X11.DeviceXI2? lookup_for_device_manager (int device_id);
 			[NoAccessorMethod]
 			public Gdk.Display display { owned get; construct; }
@@ -4644,19 +4644,19 @@ namespace Gdk {
 			[NoAccessorMethod]
 			public int opcode { get; construct; }
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_device_xi2_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_device_xi2_get_type ()")]
 		[GIR (name = "X11DeviceXI2")]
 		public class DeviceXI2 : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected DeviceXI2 ();
 			public Gdk.X11.DeviceType get_device_type ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_device_get_id")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_get_id")]
 			public int get_id ();
 			public void set_device_type (Gdk.X11.DeviceType type);
 			[NoAccessorMethod]
 			public int device_id { get; construct; }
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_display_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_display_get_type ()")]
 		[GIR (name = "X11Display")]
 		public class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
@@ -4671,16 +4671,16 @@ namespace Gdk {
 			public unowned Gdk.X11.Screen get_screen ();
 			public unowned string get_startup_notification_id ();
 			public uint32 get_user_time ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_get_xatom_by_name_for_display")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_xatom_by_name_for_display")]
 			public X.Atom get_xatom_by_name (string atom_name);
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_get_xatom_name_for_display")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_xatom_name_for_display")]
 			public unowned string get_xatom_name (X.Atom xatom);
 			public X.Cursor get_xcursor (Gdk.Cursor cursor);
 			public unowned X.Display get_xdisplay ();
 			public X.Window get_xrootwindow ();
 			public unowned X.Screen get_xscreen ();
 			public void grab ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_lookup_xdisplay")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_lookup_xdisplay")]
 			public static unowned Gdk.X11.Display lookup_for_xdisplay (X.Display xdisplay);
 			public static Gdk.Display? open (string? display_name);
 			public void set_cursor_theme (string? theme, int size);
@@ -4693,19 +4693,19 @@ namespace Gdk {
 			public bool utf8_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 			public signal bool xevent ([CCode (type = "gpointer")] X.Event xevent);
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_drag_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_drag_get_type ()")]
 		[GIR (name = "X11Drag")]
 		public class Drag : Gdk.Drag {
 			[CCode (has_construct_function = false)]
 			protected Drag ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_gl_context_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_gl_context_get_type ()")]
 		[GIR (name = "X11GLContext")]
 		public class GLContext : Gdk.GLContext {
 			[CCode (has_construct_function = false)]
 			protected GLContext ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_monitor_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_monitor_get_type ()")]
 		[GIR (name = "X11Monitor")]
 		public class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
@@ -4713,7 +4713,7 @@ namespace Gdk {
 			public X.ID get_output ();
 			public Gdk.Rectangle get_workarea ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
 		[GIR (name = "X11Screen")]
 		public class Screen : GLib.Object {
 			[CCode (has_construct_function = false)]
@@ -4727,14 +4727,14 @@ namespace Gdk {
 			public bool supports_net_wm_hint (string property_name);
 			public signal void window_manager_changed ();
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", type_id = "gdk_x11_surface_get_type ()")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_surface_get_type ()")]
 		[GIR (name = "X11Surface")]
 		public class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
 			public uint32 get_desktop ();
 			public unowned Gdk.Surface get_group ();
-			[CCode (cheader_filename = "gdk/gdkx.h", cname = "gdk_x11_get_server_time")]
+			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_server_time")]
 			public uint32 get_server_time ();
 			public X.Window get_xid ();
 			public static unowned Gdk.X11.Surface lookup_for_display (Gdk.X11.Display display, X.Window window);
@@ -4749,18 +4749,18 @@ namespace Gdk {
 			public void set_user_time (uint32 timestamp);
 			public void set_utf8_property (string name, string? value);
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h", cprefix = "GDK_X11_DEVICE_TYPE_", has_type_id = false)]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h", cprefix = "GDK_X11_DEVICE_TYPE_", has_type_id = false)]
 		[GIR (name = "X11DeviceType")]
 		public enum DeviceType {
 			LOGICAL,
 			PHYSICAL,
 			FLOATING
 		}
-		[CCode (cheader_filename = "gdk/gdkx.h")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
 		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] uint8[] ctext);
-		[CCode (cheader_filename = "gdk/gdkx.h")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
 		public static void free_text_list (string list);
-		[CCode (cheader_filename = "gdk/gdkx.h")]
+		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
 		public static void set_sm_client_id (string? sm_client_id);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_app_launch_context_get_type ()")]
