@@ -2656,6 +2656,40 @@ namespace GLib {
 	[NoReturn]
 	public static void assert_not_reached ();
 
+	/**
+	 * Comparison operators for use with GLib.assert_cmp*() functions
+	 */
+	[CCode (has_type_id = false)]
+	public enum CompareOperator {
+		[CCode (cname = "==")]
+		EQ,
+		[CCode (cname = "!=")]
+		NE,
+		[CCode (cname = ">=")]
+		GE,
+		[CCode (cname = "<=")]
+		LE,
+		[CCode (cname = ">")]
+		GT,
+		[CCode (cname = "<")]
+		LT,
+	}
+
+	[Version (since = "2.16")]
+	public static void assert_cmpstr (string? s1, CompareOperator cmp, string? s2);
+	[Version (since = "2.16")]
+	public static void assert_cmpint (int n1, CompareOperator cmp, int n2);
+	[Version (since = "2.16")]
+	public static void assert_cmpuint (uint n1, CompareOperator cmp, uint n2);
+	[Version (since = "2.16")]
+	public static void assert_cmphex (uint n1, CompareOperator cmp, uint n2);
+	[Version (since = "2.16")]
+	public static void assert_cmpfloat (double n1, CompareOperator cmp, double n2);
+	[Version (since = "2.58")]
+	public static void assert_cmpfloat_with_epsilon (double n1, double n2, double epsilon);
+	[Version (since = "2.60")]
+	public static void assert_cmpvariant (Variant v1, Variant v2);
+
 	public static void on_error_query (string? prg_name = null);
 	public static void on_error_stack_trace (string? prg_name = null);
 	[CCode (cname = "G_BREAKPOINT")]

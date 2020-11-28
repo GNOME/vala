@@ -38,6 +38,7 @@ AM_TESTS_ENVIRONMENT = \
 	export CC='$(CC)';
 
 TESTS = \
+	basic-types/gassert.vala \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
 	basic-types/escape-chars.vala \
