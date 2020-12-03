@@ -202,6 +202,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return !error;
 		}
 
+		if (!base.check (context)) {
+			return false;
+		}
+
 		checked = true;
 
 		var old_source_file = context.analyzer.current_source_file;
