@@ -375,4 +375,17 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 			d.accept (visitor);
 		}
 	}
+
+	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		if (!external_package && get_attribute ("DBus") != null && !context.has_package ("gio-2.0")) {
+			error = true;
+			Report.error (source_reference, "gio-2.0 package required for DBus support");
+		}
+
+		return !error;
+	}
 }
