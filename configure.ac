@@ -224,6 +224,12 @@ AM_CONDITIONAL(HAVE_WEASYPRINT, [test x$WEASYPRINT = xweasyprint])
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
 
+
+# Optional dependencies for runtime testing of bindings
+PKG_CHECK_EXISTS([gstreamer-1.0], found_gstreamer=yes, found_gstreamer=no)
+AM_CONDITIONAL([HAVE_GSTREAMER], test "x$found_gstreamer" = "xyes")
+
+
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_CONFIG_FILES([Makefile
@@ -234,6 +240,7 @@ AC_CONFIG_FILES([Makefile
            codegen/Makefile
            compiler/Makefile
            vapi/Makefile
+           vapi/tests/Makefile
            tests/Makefile
            tests/fastvapi/Makefile
            tests/girwriter/Makefile

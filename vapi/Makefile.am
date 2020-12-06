@@ -1,5 +1,9 @@
 NULL =
 
+SUBDIRS = \
+	tests \
+	$(NULL)
+
 check: $(top_builddir)/compiler/valac
 	echo "void main () {}" > test.vala; \
 	for vapi in `ls *.vapi | sed -e "s/\.vapi//g"`; do \
