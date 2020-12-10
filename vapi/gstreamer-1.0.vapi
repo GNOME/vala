@@ -436,7 +436,7 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public static bool set_object_array (GLib.Object object, string name, GLib.ValueArray array);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_value_from_string (out GLib.Value value, string value_str);
+		public static void set_value_from_string (ref GLib.Value value, string value_str);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint64 uint64_scale (uint64 val, uint64 num, uint64 denom);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -462,13 +462,13 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static int compare (GLib.Value value1, GLib.Value value2);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static bool deserialize (out GLib.Value dest, string src);
+		public static bool deserialize (ref GLib.Value dest, string src);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fixate (GLib.Value dest, GLib.Value src);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static bool fraction_multiply (GLib.Value product, GLib.Value factor1, GLib.Value factor2);
+		public static bool fraction_multiply (ref GLib.Value product, GLib.Value factor1, GLib.Value factor2);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static bool fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
+		public static bool fraction_subtract (ref GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint64 get_bitmask (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -508,7 +508,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static unowned Gst.Structure get_structure (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void init_and_copy (out GLib.Value dest, GLib.Value src);
+		public static void init_and_copy (ref GLib.Value dest, GLib.Value src);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool intersect (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -520,32 +520,32 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static string? serialize (GLib.Value value);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_bitmask (GLib.Value value, uint64 bitmask);
+		public static void set_bitmask (ref GLib.Value value, uint64 bitmask);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_caps (GLib.Value value, Gst.Caps caps);
+		public static void set_caps (ref GLib.Value value, Gst.Caps caps);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_caps_features (GLib.Value value, Gst.CapsFeatures features);
+		public static void set_caps_features (ref GLib.Value value, Gst.CapsFeatures features);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_double_range (GLib.Value value, double start, double end);
+		public static void set_double_range (ref GLib.Value value, double start, double end);
 		[CCode (cheader_filename = "gst/gst.h")]
 		[Version (since = "1.6")]
-		public static void set_flagset (GLib.Value value, uint flags, uint mask);
+		public static void set_flagset (ref GLib.Value value, uint flags, uint mask);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_fraction (GLib.Value value, int numerator, int denominator);
+		public static void set_fraction (ref GLib.Value value, int numerator, int denominator);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_fraction_range (GLib.Value value, GLib.Value start, GLib.Value end);
+		public static void set_fraction_range (ref GLib.Value value, GLib.Value start, GLib.Value end);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_fraction_range_full (GLib.Value value, int numerator_start, int denominator_start, int numerator_end, int denominator_end);
+		public static void set_fraction_range_full (ref GLib.Value value, int numerator_start, int denominator_start, int numerator_end, int denominator_end);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_int64_range (GLib.Value value, int64 start, int64 end);
+		public static void set_int64_range (ref GLib.Value value, int64 start, int64 end);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_int64_range_step (GLib.Value value, int64 start, int64 end, int64 step);
+		public static void set_int64_range_step (ref GLib.Value value, int64 start, int64 end, int64 step);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_int_range (GLib.Value value, int start, int end);
+		public static void set_int_range (ref GLib.Value value, int start, int end);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_int_range_step (GLib.Value value, int start, int end, int step);
+		public static void set_int_range_step (ref GLib.Value value, int start, int end, int step);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void set_structure (GLib.Value value, Gst.Structure structure);
+		public static void set_structure (ref GLib.Value value, Gst.Structure structure);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool subtract (out GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -2631,24 +2631,24 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ValueArray ();
 		[Version (since = "1.2")]
-		public static void append_and_take_value (GLib.Value value, owned GLib.Value append_value);
-		public static void append_value (GLib.Value value, GLib.Value append_value);
+		public static void append_and_take_value (ref GLib.Value value, owned GLib.Value append_value);
+		public static void append_value (ref GLib.Value value, GLib.Value append_value);
 		public static uint get_size (GLib.Value value);
 		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
-		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
+		public static void prepend_value (ref GLib.Value value, GLib.Value prepend_value);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_list_get_type ()")]
 	public class ValueList {
 		[CCode (has_construct_function = false)]
 		protected ValueList ();
 		[Version (since = "1.2")]
-		public static void append_and_take_value (GLib.Value value, owned GLib.Value append_value);
-		public static void append_value (GLib.Value value, GLib.Value append_value);
+		public static void append_and_take_value (ref GLib.Value value, owned GLib.Value append_value);
+		public static void append_value (ref GLib.Value value, GLib.Value append_value);
 		public static void concat (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
 		public static uint get_size (GLib.Value value);
 		public static unowned GLib.Value? get_value (GLib.Value value, uint index);
 		public static void merge (out GLib.Value dest, GLib.Value value1, GLib.Value value2);
-		public static void prepend_value (GLib.Value value, GLib.Value prepend_value);
+		public static void prepend_value (ref GLib.Value value, GLib.Value prepend_value);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_cname = "GstChildProxyInterface", type_id = "gst_child_proxy_get_type ()")]
 	public interface ChildProxy : GLib.Object {
@@ -2656,7 +2656,7 @@ namespace Gst {
 		public abstract GLib.Object? get_child_by_index (uint index);
 		public abstract GLib.Object? get_child_by_name (string name);
 		public abstract uint get_children_count ();
-		public GLib.Value get_property (string name);
+		public void get_property (string name, ref GLib.Value value);
 		public void get_valist (string first_property_name, va_list var_args);
 		public bool lookup (string name, out GLib.Object target, out unowned GLib.ParamSpec pspec);
 		public void @set (...);
@@ -3781,8 +3781,6 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 3.9)]
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate void ControlBindingConvert (Gst.ControlBinding binding, double src_value, GLib.Value dest_value);
-	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, double value);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, double values);
@@ -3796,7 +3794,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorCopyFunction (Gst.Iterator it, Gst.Iterator copy);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
-	public delegate bool IteratorFoldFunction (GLib.Value item, GLib.Value ret);
+	public delegate bool IteratorFoldFunction (GLib.Value item, ref GLib.Value ret);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
 	public delegate void IteratorForeachFunction (GLib.Value item);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
@@ -3804,7 +3802,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, GLib.Value item);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, GLib.Value result);
+	public delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, ref GLib.Value result);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void IteratorResyncFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 7.9)]
@@ -3876,15 +3874,15 @@ namespace Gst {
 	[Version (since = "1.14")]
 	public delegate void PromiseChangeFunc (Gst.Promise promise);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
-	public delegate bool StructureFilterMapFunc (GLib.Quark field_id, GLib.Value value);
+	public delegate bool StructureFilterMapFunc (GLib.Quark field_id, ref GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate bool StructureForeachFunc (GLib.Quark field_id, GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
-	public delegate bool StructureMapFunc (GLib.Quark field_id, GLib.Value value);
+	public delegate bool StructureMapFunc (GLib.Quark field_id, ref GLib.Value value);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate void TagForeachFunc (Gst.TagList list, string tag);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate void TagMergeFunc (GLib.Value dest, GLib.Value src);
+	public delegate void TagMergeFunc (out GLib.Value dest, GLib.Value src);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 0.9)]
 	public delegate void TaskFunction ();
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 0.9)]
@@ -3896,7 +3894,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
+	public delegate bool ValueDeserializeFunc (ref GLib.Value dest, string s);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate string ValueSerializeFunc (GLib.Value value1);
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_ALLOCATOR_SYSMEM")]
