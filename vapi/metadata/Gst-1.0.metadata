@@ -104,6 +104,43 @@ Structure
 Query
   .set_formats skip
 
+// GValue is bound as struct in vala
+util_set_value_from_string.value ref
+value_deserialize.dest ref
+value_deserialize_with_pspec.dest ref
+value_fraction_multiply.product ref
+value_fraction_subtract.dest ref
+value_init_and_copy.dest ref
+value_set_bitmask.value ref
+value_set_caps.value ref
+value_set_caps_features.value ref
+value_set_double_range.value ref
+value_set_flagset.value ref
+value_set_fraction.value ref
+value_set_fraction_range.value ref
+value_set_fraction_range_full.value ref
+value_set_int64_range.value ref
+value_set_int64_range_step.value ref
+value_set_int_range.value ref
+value_set_int_range_step.value ref
+value_set_structure.value ref
+ChildProxy
+  .get_property.value ref
+ValueArray
+  .append_and_take_value.value ref
+  .append_value.value ref
+  .prepend_value.value ref
+ValueList
+  .append_and_take_value.value ref
+  .append_value.value ref
+  .prepend_value.value ref
+IteratorFoldFunction.ret ref
+IteratorNextFunction.result ref
+StructureFilterMapFunc.value ref
+StructureMapFunc.value ref
+TagMergeFunc.dest out
+ValueDeserializeFunc.dest ref
+
 // Generics
 AtomicQueue
   .peek skip
@@ -255,6 +292,10 @@ Pipeline
 
 // Upstream
 ///////////
+
+// Not used internally and not meant to be used
+// https://gitlab.freedesktop.org/gstreamer/gstreamer/-/commit/58980426
+ControlBindingConvert skip
 
 URIHandler
   .get_protocols abstract

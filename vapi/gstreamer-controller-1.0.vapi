@@ -131,7 +131,7 @@ namespace Gst {
 			TRIANGLE
 		}
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBindingConvertGValue", has_target = false)]
-		public delegate void DirectControlBindingConvertGValue (Gst.Controller.DirectControlBinding self, double src_value, GLib.Value dest_value);
+		public delegate void DirectControlBindingConvertGValue (Gst.Controller.DirectControlBinding self, double src_value, ref GLib.Value dest_value);
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "GstDirectControlBindingConvertValue", has_target = false)]
 		public delegate void DirectControlBindingConvertValue (Gst.Controller.DirectControlBinding self, double src_value, void* dest_value);
 		[CCode (cheader_filename = "gst/controller/controller.h", cname = "gst_timed_value_control_invalidate_cache")]
