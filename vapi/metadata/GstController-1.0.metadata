@@ -11,3 +11,6 @@ DirectControlBinding
 TimedValueControlSource
   .find_control_point_iter skip=false
   .values type="GLib.Sequence<Gst.Controller.ControlPoint?>"
+
+// GValue is bound as struct in vala
+DirectControlBindingConvertGValue.dest_value ref
