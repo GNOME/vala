@@ -910,6 +910,8 @@ namespace Gst {
 		[DestroysInstance]
 		public Gst.Caps normalize ();
 		public void remove_structure (uint idx);
+		[Version (since = "1.20")]
+		public string serialize (Gst.SerializeFlags flags);
 		[Version (since = "1.2")]
 		public void set_features (uint index, owned Gst.CapsFeatures? features);
 		[Version (since = "1.16")]
@@ -1066,7 +1068,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public DateTime (float tzoffset, int year, int month, int day, int hour, int minute, double seconds);
 		[CCode (has_construct_function = false)]
-		public DateTime.from_g_date_time (owned GLib.DateTime dt);
+		public DateTime.from_g_date_time (owned GLib.DateTime? dt);
 		[CCode (has_construct_function = false)]
 		public DateTime.from_iso8601_string (string string);
 		[CCode (has_construct_function = false)]
@@ -2483,6 +2485,8 @@ namespace Gst {
 		public void remove_field (string fieldname);
 		public void remove_fields (params string[] field_names);
 		public void remove_fields_valist (string fieldname, va_list varargs);
+		[Version (since = "1.20")]
+		public string serialize (Gst.SerializeFlags flags);
 		public void @set (string fieldname, ...);
 		[Version (since = "1.12")]
 		public void set_array (string fieldname, GLib.ValueArray array);
@@ -3685,6 +3689,13 @@ namespace Gst {
 		TRICKMODE_FORWARD_PREDICTED,
 		TRICKMODE_NO_AUDIO
 	}
+	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_SERIALIZE_FLAG_", type_id = "gst_serialize_flags_get_type ()")]
+	[Flags]
+	[Version (since = "1.20")]
+	public enum SerializeFlags {
+		NONE,
+		BACKWARD_COMPAT
+	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STACK_TRACE_SHOW_", type_id = "gst_stack_trace_flags_get_type ()")]
 	[Flags]
 	[Version (since = "1.12")]
@@ -3750,7 +3761,7 @@ namespace Gst {
 		VIDEO,
 		CONTAINER,
 		TEXT;
-		public unowned string? get_name ();
+		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_STRUCTURE_CHANGE_TYPE_PAD_", type_id = "gst_structure_change_type_get_type ()")]
 	public enum StructureChangeType {

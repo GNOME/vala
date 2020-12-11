@@ -807,9 +807,9 @@ namespace Gst {
 			public weak int stride[4];
 			public Gst.Video.Alignment alignment;
 			[Version (since = "1.18")]
-			public bool get_plane_height (out uint plane_height);
+			public bool get_plane_height ([CCode (array_length = false)] out unowned uint plane_height[4]);
 			[Version (since = "1.18")]
-			public bool get_plane_size (out size_t plane_size);
+			public bool get_plane_size ([CCode (array_length = false)] out unowned size_t plane_size[4]);
 			public bool map (uint plane, Gst.MapInfo info, out void* data, out int stride, Gst.MapFlags flags);
 			[Version (since = "1.18")]
 			public bool set_alignment (Gst.Video.Alignment alignment);
@@ -1725,8 +1725,16 @@ namespace Gst {
 		[Version (since = "1.16")]
 		public static Gst.Caps caption_type_to_caps (Gst.Video.CaptionType type);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public static Gst.Video.ChromaSite chroma_from_string (string s);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static Gst.Video.ChromaSite chroma_site_from_string (string s);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static string? chroma_site_to_string (Gst.Video.ChromaSite site);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public static unowned string chroma_to_string (Gst.Video.ChromaSite site);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
@@ -1749,10 +1757,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void color_range_offsets (Gst.Video.ColorRange range, Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (deprecated = true, since = "1.6")]
+		[Version (deprecated = true, deprecated_since = "1.20", since = "1.6")]
 		public static double color_transfer_decode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (deprecated = true, since = "1.6")]
+		[Version (deprecated = true, deprecated_since = "1.20", since = "1.6")]
 		public static double color_transfer_encode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
