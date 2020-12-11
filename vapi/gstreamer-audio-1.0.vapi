@@ -580,6 +580,8 @@ namespace Gst {
 			public Gst.Audio.Format unpack_format;
 			public weak Gst.Audio.FormatUnpack unpack_func;
 			public weak Gst.Audio.FormatPack pack_func;
+			[Version (since = "1.20")]
+			public void fill_silence ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] dest);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
 		[GIR (name = "AudioMeta")]
@@ -979,6 +981,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_build_integer")]
 		public static Gst.Audio.Format audio_format_build_integer (bool sign, int endianness, int width, int depth);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_fill_silence")]
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public static void audio_format_fill_silence (Gst.Audio.FormatInfo info, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] dest);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_format_from_string")]
 		public static Gst.Audio.Format audio_format_from_string (string format);

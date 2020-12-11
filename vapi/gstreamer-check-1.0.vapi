@@ -42,7 +42,7 @@ namespace Gst {
 			public bool process_id (owned Gst.ClockID pending_id);
 			[Version (since = "1.4")]
 			public uint process_id_list (GLib.List<Gst.ClockID?>? pending_list);
-			public Gst.ClockID process_next_clock_id ();
+			public Gst.ClockID? process_next_clock_id ();
 			public void set_time (Gst.ClockTime new_time);
 			[Version (since = "1.16")]
 			public bool timed_wait_for_multiple_pending_ids (uint count, uint timeout_ms, out GLib.List<Gst.ClockID?> pending_list);

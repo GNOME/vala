@@ -25,7 +25,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public Gst.Structure get_config ();
 		public Gst.PlayerAudioInfo get_current_audio_track ();
-		public unowned Gst.PlayerSubtitleInfo get_current_subtitle_track ();
+		public Gst.PlayerSubtitleInfo get_current_subtitle_track ();
 		public Gst.PlayerVideoInfo get_current_video_track ();
 		public string get_current_visualization ();
 		public Gst.ClockTime get_duration ();
@@ -81,7 +81,7 @@ namespace Gst {
 		public static Gst.PlayerVisualization[] visualizations_get ();
 		public int64 audio_video_offset { get; set; }
 		public Gst.PlayerAudioInfo current_audio_track { owned get; }
-		public Gst.PlayerSubtitleInfo current_subtitle_track { get; }
+		public Gst.PlayerSubtitleInfo current_subtitle_track { owned get; }
 		public Gst.PlayerVideoInfo current_video_track { owned get; }
 		public uint64 duration { get; }
 		public Gst.PlayerMediaInfo media_info { owned get; }

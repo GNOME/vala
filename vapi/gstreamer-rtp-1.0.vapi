@@ -57,6 +57,12 @@ namespace Gst {
 			public bool source_info { get; set; }
 			[NoAccessorMethod]
 			public Gst.Structure stats { owned get; }
+			[Version (since = "1.20")]
+			public signal void add_extension (owned Gst.RTP.HeaderExtension ext);
+			[Version (since = "1.20")]
+			public signal void clear_extensions ();
+			[Version (since = "1.20")]
+			public signal Gst.RTP.HeaderExtension request_extension (uint ext_id, string? ext_uri);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", type_id = "gst_rtp_base_payload_get_type ()")]
 		[GIR (name = "RTPBasePayload")]
@@ -81,6 +87,8 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool set_caps (Gst.Caps caps);
 			public void set_options (string media, bool @dynamic, string encoding_name, uint32 clock_rate);
+			[Version (since = "1.20")]
+			public bool set_outcaps_structure (Gst.Structure? s);
 			[Version (since = "1.16")]
 			public void set_source_info_enabled (bool enable);
 			[NoWrapper]
@@ -120,6 +128,12 @@ namespace Gst {
 			public uint timestamp { get; }
 			[NoAccessorMethod]
 			public uint timestamp_offset { get; set; }
+			[Version (since = "1.20")]
+			public signal void add_extension (owned Gst.RTP.HeaderExtension ext);
+			[Version (since = "1.20")]
+			public signal void clear_extensions ();
+			[Version (since = "1.20")]
+			public signal Gst.RTP.HeaderExtension request_extension (uint ext_id, string ext_uri);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[Compact]
@@ -172,6 +186,27 @@ namespace Gst {
 			public void set_version (uint8 version);
 			public void unmap ();
 		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", type_id = "gst_rtp_header_extension_get_type ()")]
+		[GIR (name = "RTPHeaderExtension")]
+		[Version (since = "1.20")]
+		public abstract class HeaderExtension : Gst.Element {
+			public uint ext_id;
+			[CCode (has_construct_function = false)]
+			protected HeaderExtension ();
+			public static Gst.RTP.HeaderExtension? create_from_uri (string uri);
+			public uint get_id ();
+			public virtual size_t get_max_size (Gst.Buffer input_meta);
+			public string get_sdp_caps_field_name ();
+			public virtual Gst.RTP.HeaderExtensionFlags get_supported_flags ();
+			public unowned string get_uri ();
+			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, uint8 data, size_t size, Gst.Buffer buffer);
+			public virtual bool set_attributes_from_caps (Gst.Caps caps);
+			public bool set_attributes_from_caps_simple_sdp (Gst.Caps caps);
+			public virtual bool set_caps_from_attributes (Gst.Caps caps);
+			public bool set_caps_from_attributes_simple_sdp (Gst.Caps caps);
+			public void set_id (uint ext_id);
+			public virtual size_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, uint8 data, size_t size);
+		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[GIR (name = "RTPPayloadInfo")]
 		public struct PayloadInfo {
@@ -212,6 +247,14 @@ namespace Gst {
 		public enum BufferMapFlags {
 			SKIP_PADDING,
 			LAST
+		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_HEADER_EXTENSION_", type_id = "gst_rtp_header_extension_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "RTPHeaderExtensionFlags")]
+		[Version (since = "1.20")]
+		public enum HeaderExtensionFlags {
+			ONE_BYTE,
+			TWO_BYTE
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_PAYLOAD_", type_id = "gst_rtp_payload_get_type ()")]
 		[GIR (name = "RTPPayload")]
@@ -290,6 +333,9 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_BASE")]
 		public const string HDREXT_BASE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_ELEMENT_CLASS")]
+		[Version (since = "1.20")]
+		public const string HDREXT_ELEMENT_CLASS;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_56")]
 		public const string HDREXT_NTP_56;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_56_SIZE")]
@@ -298,6 +344,9 @@ namespace Gst {
 		public const string HDREXT_NTP_64;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HDREXT_NTP_64_SIZE")]
 		public const int HDREXT_NTP_64_SIZE;
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_HEADER_EXTENSION_URI_METADATA_KEY")]
+		[Version (since = "1.20")]
+		public const string HEADER_EXTENSION_URI_METADATA_KEY;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_SOURCE_META_MAX_CSRC_COUNT")]
 		public const int SOURCE_META_MAX_CSRC_COUNT;
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "GST_RTP_VERSION")]
@@ -335,6 +384,9 @@ namespace Gst {
 		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		[CCode (cheader_filename = "gst/rtp/rtp.h")]
+		[Version (since = "1.20")]
+		public static GLib.List<Gst.RTP.HeaderExtension> get_header_extension_list ();
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool hdrext_get_ntp_56 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]

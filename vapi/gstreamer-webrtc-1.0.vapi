@@ -8,9 +8,8 @@ namespace Gst {
 		public weak void* _padding[4];
 		public weak Gst.Element dtlssrtpdec;
 		public weak Gst.Element dtlssrtpenc;
-		public bool is_rtcp;
 		[CCode (has_construct_function = false)]
-		public WebRTCDTLSTransport (uint session_id, bool rtcp);
+		public WebRTCDTLSTransport (uint session_id);
 		public void set_transport (Gst.WebRTCICETransport ice);
 		[NoAccessorMethod]
 		public string certificate { owned get; set; }
@@ -18,8 +17,6 @@ namespace Gst {
 		public bool client { get; set; }
 		[NoAccessorMethod]
 		public string remote_certificate { owned get; }
-		[NoAccessorMethod]
-		public bool rtcp { get; construct; }
 		[NoAccessorMethod]
 		public uint session_id { get; construct; }
 		[NoAccessorMethod]
@@ -105,27 +102,21 @@ namespace Gst {
 	public class WebRTCRTPReceiver : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
-		public weak Gst.WebRTCDTLSTransport rtcp_transport;
 		public weak Gst.WebRTCDTLSTransport transport;
 		[CCode (has_construct_function = false)]
 		public WebRTCRTPReceiver ();
-		public void set_rtcp_transport (Gst.WebRTCDTLSTransport transport);
-		public void set_transport (Gst.WebRTCDTLSTransport transport);
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_sender", type_id = "gst_webrtc_rtp_sender_get_type ()")]
 	[Version (since = "1.16")]
 	public class WebRTCRTPSender : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
-		public weak Gst.WebRTCDTLSTransport rtcp_transport;
 		public weak GLib.Array<void*> send_encodings;
 		public weak Gst.WebRTCDTLSTransport transport;
 		[CCode (has_construct_function = false)]
 		public WebRTCRTPSender ();
 		[Version (since = "1.20")]
 		public void set_priority (Gst.WebRTCPriorityType priority);
-		public void set_rtcp_transport (Gst.WebRTCDTLSTransport transport);
-		public void set_transport (Gst.WebRTCDTLSTransport transport);
 		[NoAccessorMethod]
 		[Version (since = "1.20")]
 		public Gst.WebRTCPriorityType priority { get; set; }
