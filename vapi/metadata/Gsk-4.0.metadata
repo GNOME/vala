@@ -9,5 +9,3 @@ GLShader
 ParseErrorFunc skip
 RenderNode
 	.deserialize skip=false
-ShaderArgsBuilder
-	.free_to_args destroys_instance
