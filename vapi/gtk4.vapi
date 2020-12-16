@@ -4649,10 +4649,8 @@ namespace Gdk {
 		public class DeviceXI2 : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected DeviceXI2 ();
-			public Gdk.X11.DeviceType get_device_type ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_get_id")]
 			public int get_id ();
-			public void set_device_type (Gdk.X11.DeviceType type);
 			[NoAccessorMethod]
 			public int device_id { get; construct; }
 		}
@@ -5415,9 +5413,9 @@ namespace Gdk {
 		public ToplevelLayout ();
 		public Gdk.ToplevelLayout copy ();
 		public bool equal (Gdk.ToplevelLayout other);
-		public bool get_fullscreen ();
+		public bool get_fullscreen (out bool fullscreen);
 		public unowned Gdk.Monitor? get_fullscreen_monitor ();
-		public bool get_maximized ();
+		public bool get_maximized (out bool maximized);
 		public bool get_resizable ();
 		public unowned Gdk.ToplevelLayout @ref ();
 		public void set_fullscreen (bool fullscreen, Gdk.Monitor? monitor);
@@ -7072,7 +7070,7 @@ namespace Gtk {
 		public bool is_activatable ();
 		public void set_alignment (float xalign, float yalign);
 		public void set_fixed_size (int width, int height);
-		public void set_is_expanded (bool is_expander);
+		public void set_is_expanded (bool is_expanded);
 		public void set_is_expander (bool is_expander);
 		public void set_padding (int xpad, int ypad);
 		public void set_sensitive (bool sensitive);
@@ -7643,10 +7641,6 @@ namespace Gtk {
 	public class ConstraintLayoutChild : Gtk.LayoutChild {
 		[CCode (has_construct_function = false)]
 		protected ConstraintLayoutChild ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_crossing_data_get_type ()")]
-	[Compact]
-	public class CrossingData {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_css_provider_get_type ()")]
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
@@ -8566,10 +8560,10 @@ namespace Gtk {
 		public bool get_axis (Gdk.AxisUse axis, out double value);
 		public bool get_backlog ([CCode (array_length_cname = "n_elems", array_length_pos = 1.1, array_length_type = "guint")] out Gdk.TimeCoord[] backlog);
 		public unowned Gdk.DeviceTool? get_device_tool ();
-		public signal void down (double object, double p0);
-		public signal void motion (double object, double p0);
-		public signal void proximity (double object, double p0);
-		public signal void up (double object, double p0);
+		public signal void down (double x, double y);
+		public signal void motion (double x, double y);
+		public signal void proximity (double x, double y);
+		public signal void up (double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_swipe_get_type ()")]
 	public class GestureSwipe : Gtk.GestureSingle {
