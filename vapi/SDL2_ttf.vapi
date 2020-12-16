@@ -46,11 +46,15 @@ namespace SDLTTF {
 
 	[CCode (cname = "int", cprefix = "TTF_STYLE_")]
 	public enum FontStyle {
-		NORMAL, BOLD, ITALIC, STRIKETHROUGH, UNDERLINE
-	}// FontStyle
+		NORMAL,
+		BOLD,
+		ITALIC,
+		STRIKETHROUGH,
+		UNDERLINE
+	}
 
 	[CCode (cname = "int", cprefix = "TTF_HINTING_")]
-	public enum FontHinting{
+	public enum FontHinting {
 		NORMAL,
 		LIGHT,
 		MONO,
@@ -67,29 +71,49 @@ namespace SDLTTF {
 		public Font.index (string file, int ptsize, long index);
 
 		[CCode (cname = "TTF_OpenFontRW")]
-		public Font.RW (SDL.RWops src, int freesrc = 0, int ptsize);
+		public Font.from_rwops (SDL.RWops src, int ptsize, [CCode (pos = "1.1")] bool freesrc = false);
 
 		[CCode (cname = "TTF_OpenFontIndexRW")]
-		public Font.RWindex (SDL.RWops src, int freesrc = 0, int ptsize, long index);
+		public Font.from_rwops_index (SDL.RWops src, int ptsize, long index, [CCode (pos = "1.1")] bool freesrc = false);
+
+		[CCode (cname = "TTF_OpenFontDPIRW")]
+		public Font.from_rwops_dpi (SDL.RWops src, int ptsize, uint hdpi, uint vdpi, [CCode (pos = "1.1")] bool freesrc = false);
+
+		[CCode (cname = "TTF_OpenFontIndexDPIRW")]
+		public Font.from_rwops_index_dpi (SDL.RWops src, int ptsize, long index, uint hdpi, uint vdpi, [CCode (pos = "1.1")] bool freesrc = false);
+
+		[CCode (cname = "TTF_OpenFontDPI")]
+		public Font.dpi (string file, int ptsize, uint hdpi, uint vdpi);
+
+		[CCode (cname = "TTF_OpenFontIndexDPI")]
+		public Font.dpi_index (string file, int ptsize, long index, uint hdpi, uint vdpi);
 
 		public FontStyle font_style {
-			[CCode (cname = "TTF_GetFontStyle")]get;
-			[CCode (cname = "TTF_SetFontStyle")]set;
+			[CCode (cname = "TTF_GetFontStyle")]
+			get;
+			[CCode (cname = "TTF_SetFontStyle")]
+			set;
 		}
 
 		public bool kerning_allowed {
-			[CCode (cname = "TTF_GetFontKerning")]get;
-			[CCode (cname = "TTF_SetFontKerning")]set;
+			[CCode (cname = "TTF_GetFontKerning")]
+			get;
+			[CCode (cname = "TTF_SetFontKerning")]
+			set;
 		}
 
-		public int outline{
-			[CCode (cname = "TTF_GetFontOutline")]get;
-			[CCode (cname = "TTF_SetFontOutline")]set;
+		public int outline {
+			[CCode (cname = "TTF_GetFontOutline")]
+			get;
+			[CCode (cname = "TTF_SetFontOutline")]
+			set;
 		}
 
-		public FontHinting hinting{
-			[CCode (cname = "TTF_GetFontHinting")]get;
-			[CCode (cname = "TTF_SetFontHinting")]set;
+		public FontHinting hinting {
+			[CCode (cname = "TTF_GetFontHinting")]
+			get;
+			[CCode (cname = "TTF_SetFontHinting")]
+			set;
 		}
 
 		[CCode (cname = "TTF_FontHeight")]
@@ -117,29 +141,60 @@ namespace SDLTTF {
 		public unowned string? get_style_name ();
 
 		[CCode (cname = "TTF_GlyphMetrics")]
-		public bool provides_glyph(uint16 utf16_ch);
+		public int get_metrics_16 (unichar2 utf16_ch, out int minx, out int maxx, out int miny, out int maxy, out int advance);
 
-		[CCode (cname = "TTF_GlyphMetrics")]
-		public int get_metrics (uint16 utf16_ch, ref int minx, ref int maxx,
-			ref int miny, ref int maxy, ref int advance);
+		[CCode (cname = "TTF_GlyphMetrics32")]
+		public int get_metrics (unichar ch, out int minx, out int maxx, out int miny, out int maxy, out int advance);
 
 		[CCode (cname = "TTF_SizeUTF8")]
-		public int get_size (string text, ref int w, ref int h);
+		public int get_size (string text, out int w, out int h);
 
 		[CCode (cname = "TTF_SizeText")]
-		public int get_size_latin1 ([CCode (array_length = false)]uint8[] text, ref int w, ref int h);
+		public int get_size_latin1 ([CCode (array_length = false)] uint8[] text, out int w, out int h);
 
 		[CCode (cname = "TTF_SizeUNICODE")]
-		public int get_size_utf16 ([CCode (array_length = false)] uint16[] text, ref int w, ref int h);
+		public int get_size_utf16 (string16 text, out int w, out int h);
+
+		[CCode (cname = "TTF_SetFontSize")]
+		public int set_size (int ptsize);
+
+		[CCode (cname = "TTF_SetFontSizeDPI")]
+		public int set_size_dpi (int ptsize, uint hdpi, uint vdpi);
+
+		[CCode (cname = "TTF_GlyphIsProvided")]
+		public bool provides_glyph_16 (unichar2 ch);
+
+		[CCode (cname = "TTF_GlyphIsProvided32")]
+		public bool provides_glyph (unichar ch);
+
+		[CCode (cname = "TTF_MeasureText")]
+		public int measure_text_latin1 ([CCode (array_length = false)] uint8[] text, int measure_width, out int extent, out int count);
+
+		[CCode (cname = "TTF_MeasureUTF8")]
+		public int measure_text (string text, int measure_width, out int extent, out int count);
+		[CCode (cname = "TTF_MeasureUNICODE")]
+		public int measure_text_utf16 (string16 text, int measure_width, out int extent, out int count);
+
+		[CCode (cname = "TTF_RenderGlyph_Shaded")]
+		public SDL.Video.Surface? render_glyph_shaded_utf16 (unichar2 ch, SDL.Video.Color fg, SDL.Video.Color bg);
+
+		[CCode (cname = "TTF_RenderGlyph32_Shaded")]
+		public SDL.Video.Surface? render_glyph_shaded (unichar ch, SDL.Video.Color fg, SDL.Video.Color bg);
+
+		[CCode (cname = "TTF_RenderGlyph_Blended")]
+		public SDL.Video.Surface? render_glyph_blended_utf16 (unichar2 ch, SDL.Video.Color fg, SDL.Video.Color bg);
+
+		[CCode (cname = "TTF_RenderGlyph32_Blended")]
+		public SDL.Video.Surface? render_glyph_blended (unichar ch, SDL.Video.Color fg, SDL.Video.Color bg);
 
 		[CCode (cname = "TTF_RenderText_Solid")]
-		public SDL.Video.Surface? render_latin1 ([CCode (array_length = false)]uint8[] text, SDL.Video.Color fg);
+		public SDL.Video.Surface? render_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderUTF8_Solid")]
 		public SDL.Video.Surface? render (string text, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderUNICODE_Solid")]
-		public SDL.Video.Surface? render_utf16 ([CCode (array_length = false)] uint16[] text, SDL.Video.Color fg);
+		public SDL.Video.Surface? render_utf16 (string16 text, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderText_Shaded")]
 		public SDL.Video.Surface? render_shaded_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg, SDL.Video.Color bg);
@@ -148,7 +203,16 @@ namespace SDLTTF {
 		public SDL.Video.Surface? render_shaded (string text, SDL.Video.Color fg, SDL.Video.Color bg);
 
 		[CCode (cname = "TTF_RenderUNICODE_Shaded")]
-		public SDL.Video.Surface? render_shaded_utf16 ([CCode (array_length = false)] uint16[] text, SDL.Video.Color? fg, SDL.Video.Color bg);
+		public SDL.Video.Surface? render_shaded_utf16 (string16 text, SDL.Video.Color fg, SDL.Video.Color bg);
+
+		[CCode (cname = "TTF_RenderText_Shaded_Wrapped")]
+		public SDL.Video.Surface? render_shaded_wrapped_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg, SDL.Video.Color bg, uint32 wrap_length);
+
+		[CCode (cname = "TTF_RenderUTF8_Shaded_Wrapped")]
+		public SDL.Video.Surface? render_shaded_wrapped (string text, SDL.Video.Color fg, SDL.Video.Color bg, uint32 wrap_length);
+
+		[CCode (cname = "TTF_RenderUNICODE_Shaded_Wrapped")]
+		public SDL.Video.Surface? render_shaded_wrapped_utf16 (string16 text, SDL.Video.Color fg, SDL.Video.Color bg, uint32 wrap_length);
 
 		[CCode (cname = "TTF_RenderText_Blended")]
 		public SDL.Video.Surface? render_blended_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg);
@@ -157,7 +221,7 @@ namespace SDLTTF {
 		public SDL.Video.Surface? render_blended (string text, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderUNICODE_Blended")]
-		public SDL.Video.Surface? render_blended_utf16 ([CCode (array_length = false)] uint16[] text, SDL.Video.Color fg);
+		public SDL.Video.Surface? render_blended_utf16 (string16 text, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderText_Blended_Wrapped")]
 		public SDL.Video.Surface? render_blended_wrapped_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg, uint32 wrap_length);
@@ -166,8 +230,12 @@ namespace SDLTTF {
 		public SDL.Video.Surface? render_blended_wrapped (string text, SDL.Video.Color fg, uint32 wrap_length);
 
 		[CCode (cname = "TTF_RenderUNICODE_Blended_Wrapped")]
-		public SDL.Video.Surface? render_blended_wrapped_utf16 ([CCode (array_length = false)] uint16[] text, SDL.Video.Color fg, uint32 wrap_length);
+		public SDL.Video.Surface? render_blended_wrapped_utf16 (string16 text, SDL.Video.Color fg, uint32 wrap_length);
 
+		[CCode (cname = "TTF_GetFontKerningSizeGlyphs")]
+		public int get_kerning_size_utf16 (unichar2 previous_ch, unichar ch);
 
-	}// Font
-}// SDLTTF
+		[CCode (cname = "TTF_GetFontKerningSizeGlyphs32")]
+		public int get_kerning_size (unichar previous_ch, unichar ch);
+	}
+}
