@@ -123,6 +123,18 @@ namespace SDLImage {
 	[CCode (cname = "IMG_ReadXPMFromArray")]
 	public static SDL.Video.Surface? read_xpm (string[] xpmdata);
 
+	[CCode (cname = "IMG_SavePNG")]
+	public static int save_as_png (SDL.Video.Surface surface, string file);
+
+	[CCode (cname = "IMG_SavePNG_RW")]
+	public static int save_as_png_rw (SDL.Video.Surface surface, SDL.RWops dst, bool freedst);
+
+	[CCode (cname = "IMG_SaveJPG")]
+	public static int save_as_jpg (SDL.Video.Surface surface, string file, int quality);
+
+	[CCode (cname = "IMG_SaveJPG_RW")]
+	public static int save_as_jpg_rw (SDL.Video.Surface surface, SDL.RWops dst, bool freedst, int quality);
+
 	//!Info
 
 	[CCode (cname = "IMG_isCUR")]
