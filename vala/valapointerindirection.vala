@@ -98,6 +98,7 @@ public class Vala.PointerIndirection : Expression {
 				return false;
 			}
 			value_type = pointer_type.base_type;
+			value_type.value_owned = false;
 		} else {
 			error = true;
 			Report.error (source_reference, "Pointer indirection not supported for this expression");
