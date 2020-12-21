@@ -1424,13 +1424,15 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
-		write_string ("*");
+		write_string ("(*");
 		expr.inner.accept (this);
+		write_string (")");
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
-		write_string ("&");
+		write_string ("(&");
 		expr.inner.accept (this);
+		write_string (")");
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {

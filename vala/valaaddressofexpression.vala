@@ -65,7 +65,7 @@ public class Vala.AddressofExpression : Expression {
 	}
 
 	public override string to_string () {
-		return "&" + inner.to_string ();
+		return "(&%s)".printf (inner.to_string ());
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
