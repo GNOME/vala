@@ -378,6 +378,12 @@ public class Vala.TraverseVisitor : CodeVisitor {
 		}
 	}
 
+	public override void visit_addressof_expression (AddressofExpression expr) {
+		if (func (expr) == TraverseStatus.CONTINUE) {
+			expr.accept_children (this);
+		}
+	}
+
 	public override void visit_slice_expression (SliceExpression expr) {
 		if (func (expr) == TraverseStatus.CONTINUE) {
 			expr.accept_children (this);
