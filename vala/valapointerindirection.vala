@@ -54,11 +54,13 @@ public class Vala.PointerIndirection : Expression {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		inner.accept (visitor);
-
 		visitor.visit_pointer_indirection (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		inner.accept (visitor);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

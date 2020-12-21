@@ -731,6 +731,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 		expr.accept_children (this);
 	}
 
+	public override void visit_pointer_indirection (PointerIndirection expr) {
+		if (expr.checked) {
+			return;
+		}
+		expr.accept_children (this);
+	}
+
 	public override void visit_addressof_expression (AddressofExpression expr) {
 		if (expr.checked) {
 			return;
