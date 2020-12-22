@@ -261,8 +261,6 @@ value_take_expression.value ref
 BuildableParser skip
 
 // Backwards compatibility
-CssProvider
-  .load_from_data name="load_from_buffer"
 EntryBuffer
   .new.initial_chars type="uint8[]?" array_length_idx=1
   .emit_inserted_text.chars type="uint8[]" array_length_idx=2
