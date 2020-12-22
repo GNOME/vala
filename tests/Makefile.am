@@ -110,6 +110,7 @@ TESTS = \
 	arrays/resize-unowned-invalid.test \
 	arrays/resize-unowned-invalid-2.test \
 	arrays/resize-unowned-invalid-3.test \
+	arrays/slice-fixed-length.vala \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
 	arrays/slice-no-array.test \

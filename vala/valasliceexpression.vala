@@ -147,6 +147,13 @@ public class Vala.SliceExpression : Expression {
 		if (container.value_type is ArrayType) {
 			value_type = container.value_type.copy ();
 			value_type.value_owned = false;
+
+			// inline allocated results are not compatible with non-constant start/stop expressions
+			unowned ArrayType array_type = (ArrayType) value_type;
+			array_type.fixed_length = false;
+			array_type.inline_allocated = false;
+			array_type.length = null;
+
 			value_type.check (context);
 
 			/* check if the index is of type integer */
