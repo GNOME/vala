@@ -147,6 +147,12 @@ public class Vala.SliceExpression : Expression {
 			value_type = container.value_type.copy ();
 			value_type.value_owned = false;
 
+			// inline allocated results are not compatible with non-constant start/stop expressions
+			unowned ArrayType array_type = (ArrayType) value_type;
+			array_type.fixed_length = false;
+			array_type.inline_allocated = false;
+			array_type.length = null;
+
 			/* check if the index is of type integer */
 			if (!(start.value_type is IntegerType || start.value_type is EnumValueType)) {
 				error = true;
