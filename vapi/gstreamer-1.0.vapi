@@ -1517,7 +1517,7 @@ namespace Gst {
 		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, T user_data);
 		[CCode (simple_generics = true)]
 		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, out GLib.Value elem, T user_data);
-		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, GLib.Value ret);
+		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, ref GLib.Value ret);
 		public Gst.IteratorResult @foreach (Gst.IteratorForeachFunction func);
 		public void free ();
 		public Gst.IteratorResult next (out GLib.Value elem);
