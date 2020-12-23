@@ -126,6 +126,8 @@ value_set_int_range_step.value ref
 value_set_structure.value ref
 ChildProxy
   .get_property.value ref
+Iterator
+  .fold.ret ref
 ValueArray
   .append_and_take_value.value ref
   .append_value.value ref
