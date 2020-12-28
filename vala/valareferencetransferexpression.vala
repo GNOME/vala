@@ -100,6 +100,12 @@ public class Vala.ReferenceTransferExpression : Expression {
 			return false;
 		}
 
+		if (inner.value_type is ArrayType && ((ArrayType) inner.value_type).inline_allocated) {
+			error = true;
+			Report.error (source_reference, "Ownership of inline-allocated array cannot be transferred");
+			return false;
+		}
+
 		var is_owned_delegate = inner.value_type is DelegateType && inner.value_type.value_owned;
 		if (!inner.value_type.is_disposable ()
 		    && !(inner.value_type is PointerType)
