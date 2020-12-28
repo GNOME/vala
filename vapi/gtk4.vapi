@@ -6227,7 +6227,7 @@ namespace Gsk {
 	public class Transform {
 		[CCode (has_construct_function = false)]
 		public Transform ();
-		public bool equal (Gsk.Transform second);
+		public bool equal (Gsk.Transform? second);
 		public Gsk.TransformCategory get_category ();
 		[DestroysInstance]
 		public Gsk.Transform? invert ();
@@ -7388,10 +7388,6 @@ namespace Gtk {
 		public string label { get; set; }
 		public bool use_underline { get; set; }
 		public virtual signal void toggled ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class Clipboard {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]
 	public class ClosureExpression : Gtk.Expression {
@@ -10393,7 +10389,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool gtk_application_prefer_dark_theme { get; set; }
 		[NoAccessorMethod]
-		public float gtk_cursor_aspect_ratio { get; set; }
+		public double gtk_cursor_aspect_ratio { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_cursor_blink { get; set; }
 		[NoAccessorMethod]
