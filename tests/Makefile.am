@@ -112,6 +112,7 @@ TESTS = \
 	arrays/inline-field.test \
 	arrays/inline-local-instantiation.test \
 	arrays/inline-local-variable.test \
+	arrays/inline-ownership-transfer.test \
 	arrays/inline-parameter.test \
 	arrays/inline-struct.vala \
 	arrays/inline-struct-field.test \
