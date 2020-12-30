@@ -952,24 +952,16 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), class_param);
 		}
 
+		// memory management for generic types
+		List<TypeParameter>? type_parameters = null;
 		if (is_gtypeinstance_creation_method (m)) {
-			// memory management for generic types
-			int type_param_index = 0;
-			var cl = (Class) m.parent_symbol;
-			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.ascii_down ()), "GType"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.ascii_down ()), "GBoxedCopyFunc"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.ascii_down ()), "GDestroyNotify"));
-				if (carg_map != null) {
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ())));
-				}
-				type_param_index++;
-			}
+			type_parameters = ((Class) m.parent_symbol).get_type_parameters ();
 		} else if (!m.closure && (direction & 1) == 1) {
+			type_parameters = m.get_type_parameters ();
+		}
+		if (type_parameters != null) {
 			int type_param_index = 0;
-			foreach (var type_param in m.get_type_parameters ()) {
+			foreach (var type_param in type_parameters) {
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.ascii_down ()), "GType"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.ascii_down ()), "GBoxedCopyFunc"));
 				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.ascii_down ()), "GDestroyNotify"));
