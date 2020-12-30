@@ -93,6 +93,7 @@ TESTS = \
 	arrays/inline-struct-field.test \
 	arrays/in-operator-with-boxed-needle.vala \
 	arrays/length-inline-assignment.vala \
+	arrays/length-no-int-type.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
 	arrays/struct-namespaced-initializer.vala \
