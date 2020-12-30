@@ -6537,15 +6537,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual CCodeExpression get_param_spec_cexpression (Property prop) {
-		return new CCodeFunctionCall (new CCodeIdentifier (""));
+		return new CCodeInvalidExpression ();
 	}
 
 	public virtual CCodeExpression get_param_spec (Property prop) {
-		return new CCodeFunctionCall (new CCodeIdentifier (""));
+		return new CCodeInvalidExpression ();
 	}
 
 	public virtual CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
-		return new CCodeFunctionCall (new CCodeIdentifier (""));
+		return new CCodeInvalidExpression ();
 	}
 
 	public virtual CCodeExpression get_value_getter_function (DataType type_reference) {
@@ -6598,7 +6598,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
-		return new CCodeConstant ("");
+		return new CCodeInvalidExpression ();
 	}
 
 	public virtual CCodeExpression get_array_length_cvalue (TargetValue value, int dim = -1) {
