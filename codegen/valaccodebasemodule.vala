@@ -6532,10 +6532,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void generate_dynamic_method_wrapper (DynamicMethod method) {
 	}
 
-	public virtual bool method_has_wrapper (Method method) {
-		return false;
-	}
-
 	public virtual CCodeExpression get_param_spec_cexpression (Property prop) {
 		return new CCodeInvalidExpression ();
 	}

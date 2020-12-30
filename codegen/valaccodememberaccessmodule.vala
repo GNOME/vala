@@ -65,7 +65,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 
 			if (m.base_method != null) {
-				if (!method_has_wrapper (m.base_method)) {
+				if (m.base_method.get_attribute ("NoWrapper") != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 					if (!base_class.is_compact) {
 						var vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (base_class)));

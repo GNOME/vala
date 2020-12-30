@@ -30,10 +30,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 	private bool ellipses_to_valist = false;
 
-	public override bool method_has_wrapper (Method method) {
-		return (method.get_attribute ("NoWrapper") == null);
-	}
-
 	string get_creturn_type (Method m, string default_value) {
 		string type = get_ccode_type (m);
 		if (type == null) {
