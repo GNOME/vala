@@ -161,6 +161,7 @@ TESTS = \
 	methods/extern.vala \
 	methods/iterator.vala \
 	methods/parameter-fixed-array-initializer.vala \
+	methods/parameter-out-free-on-error.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/parameter-ref-array-resize-captured.vala \
 	methods/parameter-ref-delegate.vala \
@@ -628,6 +629,7 @@ TESTS = \
 	asynchronous/constructor-argument-check.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
+	asynchronous/out-parameter-free-on-error.vala \
 	asynchronous/out-parameter-invalid.test \
 	asynchronous/params-array-invalid.test \
 	asynchronous/result-pos.vala \
