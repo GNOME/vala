@@ -3939,6 +3939,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	public void append_out_param_free (Method? m) {
+		if (m == null) {
+			return;
+		}
+		foreach (Parameter param in m.get_parameters ()) {
+			if (param.direction == ParameterDirection.OUT && param.variable_type.is_disposable ()) {
+				ccode.add_expression (destroy_parameter (param));
+			}
+		}
+	}
+
 	public bool variable_accessible_in_finally (LocalVariable local) {
 		if (current_try == null) {
 			return false;
