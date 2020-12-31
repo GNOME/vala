@@ -104,6 +104,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		// free local variables
 		append_local_free (current_symbol);
 
+		// free possibly already assigned out-parameter
+		append_out_param_free (current_method);
+
 		if (current_method is CreationMethod && current_method.parent_symbol is Class) {
 			var cl = (Class) current_method.parent_symbol;
 			ccode.add_expression (destroy_value (new GLibValue (new ObjectType (cl), new CCodeIdentifier ("self"), true)));
@@ -122,6 +125,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		} else {
 			append_local_free (current_symbol);
 		}
+
+		// free possibly already assigned out-parameter
+		append_out_param_free (current_method);
 
 		cfile.add_include ("glib.h");
 
