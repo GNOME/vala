@@ -133,6 +133,7 @@ TESTS = \
 	methods/contains.vala \
 	methods/iterator.vala \
 	methods/parameter-fixed-array-initializer.vala \
+	methods/parameter-out-free-on-error.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/parameter-ref-array-resize-captured.vala \
 	methods/parameter-ref-delegate.vala \
@@ -524,6 +525,7 @@ TESTS = \
 	asynchronous/closures.vala \
 	asynchronous/constructor-argument-check.vala \
 	asynchronous/generator.vala \
+	asynchronous/out-parameter-free-on-error.vala \
 	asynchronous/result-pos.vala \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
