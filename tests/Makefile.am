@@ -99,6 +99,7 @@ TESTS = \
 	constants/strings.vala \
 	namespace/unique.vala \
 	arrays/cast-silent-invalid.test \
+	arrays/class-field-initializer.vala \
 	arrays/class-field-length-cname.vala \
 	arrays/constant-element-access.vala \
 	arrays/empty-length-0.vala \
