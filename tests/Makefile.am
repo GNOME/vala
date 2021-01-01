@@ -374,6 +374,7 @@ TESTS = \
 	objects/property-array-length.vala \
 	objects/property-base-access.vala \
 	objects/property-enum.vala \
+	objects/property-notify-owned-getter.vala \
 	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
 	objects/property-read-only-write.test \
