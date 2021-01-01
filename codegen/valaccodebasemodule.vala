@@ -1948,10 +1948,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					get_call.add_argument (new CCodeIdentifier (is_virtual ? "base" : "self"));
 
 					if (property_type is ArrayType && get_ccode_array_length (prop)) {
+						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
 						ccode.add_declaration (get_ccode_array_length_type (prop), new CCodeVariableDeclarator ("old_value_length"));
 						get_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("old_value_length")));
-						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
+						ccode.add_assignment (new CCodeIdentifier ("old_value"), get_call);
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("old_value"), new CCodeIdentifier ("value")));
 					} else if (property_type.compatible (string_type)) {
+						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
+						ccode.add_assignment (new CCodeIdentifier ("old_value"), get_call);
 						CCodeFunctionCall ccall;
 						if (context.profile == Profile.POSIX) {
 							ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
@@ -1959,7 +1963,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
 						}
 						ccall.add_argument (new CCodeIdentifier ("value"));
-						ccall.add_argument (get_call);
+						ccall.add_argument (new CCodeIdentifier ("old_value"));
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("0")));
 					} else if (property_type is StructValueType) {
 						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
@@ -1979,12 +1983,22 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, ccall, new CCodeConstant ("TRUE")));
 					} else {
-						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_call, new CCodeIdentifier ("value")));
+						ccode.add_declaration (get_ccode_name (property_type), new CCodeVariableDeclarator ("old_value"));
+						ccode.add_assignment (new CCodeIdentifier ("old_value"), get_call);
+						ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("old_value"), new CCodeIdentifier ("value")));
 					}
 
 					acc.body.emit (this);
 					ccode.add_expression (notify_call);
 					ccode.close ();
+
+					if (prop.get_accessor.value_type.is_disposable ()) {
+						var old_value = new GLibValue (prop.get_accessor.value_type, new CCodeIdentifier ("old_value"), true);
+						if (property_type is ArrayType && get_ccode_array_length (prop)) {
+							old_value.append_array_length_cvalue (new CCodeIdentifier ("old_value_length"));
+						}
+						ccode.add_expression (destroy_value (old_value));
+					}
 				} else {
 					acc.body.emit (this);
 					ccode.add_expression (notify_call);
