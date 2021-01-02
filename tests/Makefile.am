@@ -256,6 +256,7 @@ TESTS = \
 	control-flow/pre-post-increment-parameter.vala \
 	control-flow/pre-post-increment-property.vala \
 	control-flow/switch.vala \
+	control-flow/switch-string.vala \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
 	control-flow/unassigned-local-block-variable.test \
