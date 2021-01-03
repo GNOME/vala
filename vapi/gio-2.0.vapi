@@ -77,10 +77,10 @@ namespace GLib {
 		public static string address_escape_value (string string);
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
-		public static async GLib.IOStream address_get_stream (string address, GLib.Cancellable? cancellable = null, out string out_guid) throws GLib.Error;
+		public static async GLib.IOStream address_get_stream (string address, GLib.Cancellable? cancellable = null, out string? out_guid) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
-		public static GLib.IOStream address_get_stream_sync (string address, out string out_guid, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static GLib.IOStream address_get_stream_sync (string address, out string? out_guid, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static unowned string? annotation_info_lookup ([CCode (array_length = false, array_null_terminated = true)] GLib.DBusAnnotationInfo[]? annotations, string name);
@@ -4747,7 +4747,7 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static string encode_gerror (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static string get_remote_error (GLib.Error error);
+		public static string? get_remote_error (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static bool is_remote_error (GLib.Error error);
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -4911,9 +4911,9 @@ namespace GLib {
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h", instance_pos = 3.9)]
 	[Version (since = "2.26")]
 	public delegate string[] DBusSubtreeEnumerateFunc (GLib.DBusConnection connection, string sender, string object_path);
-	[CCode (cheader_filename = "gio/gio.h", instance_pos = 4.9)]
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h", instance_pos = 4.9)]
 	[Version (since = "2.26")]
-	public delegate GLib.DBusInterfaceInfo DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
+	public delegate GLib.DBusInterfaceInfo[]? DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	[Version (since = "2.48")]
 	public delegate bool DatagramBasedSourceFunc (GLib.DatagramBased datagram_based, GLib.IOCondition condition);
