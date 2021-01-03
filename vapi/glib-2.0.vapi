@@ -3228,7 +3228,10 @@ namespace GLib {
 	[Version (since = "2.26")]
 	[CCode (ref_function = "g_time_zone_ref", unref_function = "g_time_zone_unref", type_id = "G_TYPE_TIME_ZONE")]
 	public class TimeZone {
+		[Version (deprecated = true, deprecated_since = "2.68", replacement = "TimeZone.identifier")]
 		public TimeZone (string identifier);
+		[Version (since = "2.68")]
+		public TimeZone.identifier (string identifier);
 		public TimeZone.utc ();
 		public TimeZone.local ();
 		[Version (since = "2.58")]
@@ -4122,7 +4125,9 @@ namespace GLib {
 		NON_DNS,
 		ENCODED_QUERY,
 		ENCODED_PATH,
-		ENCODED_FRAGMENT
+		ENCODED_FRAGMENT,
+		[Version (since = "2.68")]
+		SCHEME_NORMALIZE
 	}
 
 	[Flags]
@@ -5411,6 +5416,16 @@ namespace GLib {
 		public void clear ();
 	}
 
+	[Compact]
+	[Version (since = "2.68")]
+	[CCode (ref_function = "g_strv_builder_ref", unref_function = "g_strv_builder_unref", has_type_id = false)]
+	public class StrvBuilder {
+		public StrvBuilder ();
+		public void add (string val);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] end ();
+	}
+
 	/* Pointer Arrays */
 
 	[Compact]
@@ -5752,6 +5767,18 @@ namespace GLib {
 
 	/* GTree */
 
+	public delegate bool TraverseNodeFunc<K,V> (TreeNode node);
+
+	[Compact]
+	[Version (since = "2.68")]
+	[CCode (free_function = "")]
+	public class TreeNode<K,V> {
+		public unowned K key ();
+		public unowned TreeNode<K,V>? next ();
+		public unowned TreeNode<K,V>? previous ();
+		public unowned V value ();
+	}
+
 	public delegate bool TraverseFunc<K,V> (K key, V value);
 
 	[CCode (cprefix = "G_", has_type_id = false)]
@@ -5766,7 +5793,11 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.22")]
+#if GLIB_2_68
+	[CCode (ref_function = "g_tree_ref", unref_function = "g_tree_unref", type_id = "G_TYPE_TREE")]
+#else
 	[CCode (ref_function = "g_tree_ref", unref_function = "g_tree_unref")]
+#endif
 	public class Tree<K,V> {
 		[CCode (cname = "g_tree_new_full", simple_generics = true)]
 		public Tree (CompareDataFunc<K> key_compare_func);
@@ -5774,17 +5805,35 @@ namespace GLib {
 		public Tree.with_data (CompareDataFunc<K> key_compare_func);
 		public Tree.full (CompareDataFunc<K> key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V> insert_node (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V> replace_node (owned K key, owned V value);
 		public int nnodes ();
 		public int height ();
 		public unowned V lookup (K key);
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V> lookup_node (K key);
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
 		public void foreach (TraverseFunc<K,V> traverse_func);
+		[Version (since = "2.68")]
+		public void foreach_node (TraverseNodeFunc<K,V> traverse_func);
 		public unowned V search (TreeSearchFunc<K> search_func);
 		[CCode (cname = "g_tree_search")]
 		public unowned V search_key (CompareFunc<K> search_func, K key);
+		[Version (since = "2.68")]
+		public unowned V search_node (CompareFunc<K> search_func, K key);
 		public bool remove (K key);
 		public bool steal (K key);
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V>? node_first ();
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V>? node_last ();
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V>? lower_bound (K key);
+		[Version (since = "2.68")]
+		public unowned TreeNode<K,V>? upper_bound (K key);
 	}
 
 	/* Internationalization */
@@ -5915,6 +5964,8 @@ namespace GLib {
 		public const uint @2_60;
 		public const uint @2_62;
 		public const uint @2_64;
+		public const uint @2_66;
+		public const uint @2_68;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
