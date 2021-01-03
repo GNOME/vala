@@ -1,0 +1,42 @@
+using GLib;
+
+namespace FastVapi {
+	public class Test : Object {
+		public int field;
+		public weak Test weak_field;
+		public Test.sub ();
+		public void method ();
+		public Test ();
+		public string property { get; set construct; }
+		public weak Test weak_property { get; private set; }
+		public signal void some_signal (int param);
+	}
+	public class TestFundamental {
+	}
+	public abstract class AbstractTest {
+		protected AbstractTest ();
+	}
+	public interface InterfaceTest : Object {
+		public abstract void method (int param);
+		public abstract int property { get; set construct; }
+	}
+	public struct TestStruct {
+		public int field_name;
+	}
+	public struct TestSubStruct : TestStruct {
+		public static int static_field_name;
+	}
+	public enum EnumTest {
+		VALUE
+	}
+	public enum EnumTestTwo {
+		VALUE = 3,
+		VALUE_TWO
+	}
+	public errordomain ErrorTest {
+		FAILED
+	}
+	public delegate bool DelegateTest (int param);
+	public const int CONSTANT = 42;
+	public const int CONSTANT_TWO;
+}

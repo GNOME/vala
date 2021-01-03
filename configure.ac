@@ -165,6 +165,7 @@ AC_CONFIG_FILES([Makefile
            compiler/Makefile
            vapi/Makefile
            tests/Makefile
+           tests/fastvapi/Makefile
            tests/girwriter/Makefile
            doc/Makefile
            doc/manual/Makefile

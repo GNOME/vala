@@ -1,6 +1,7 @@
 NULL =
 
 SUBDIRS = \
+	fastvapi \
 	girwriter \
 	$(NULL)
 
