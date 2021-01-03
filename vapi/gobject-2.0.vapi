@@ -56,9 +56,15 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_BINDING")]
 	[Version (since = "2.26")]
 	public class Binding : GLib.Object {
+		[Version (since = "2.68")]
+		public GLib.Object? dup_source ();
+		[Version (since = "2.68")]
+		public GLib.Object? dup_target ();
 		public GLib.BindingFlags get_flags ();
+		[Version (deprecated = true, deprecated_since = "2.68", replacement = "Binding.dup_source")]
 		public unowned GLib.Object get_source ();
 		public unowned string get_source_property ();
+		[Version (deprecated = true, deprecated_since = "2.68", replacement = "Binding.dup_target")]
 		public unowned GLib.Object get_target ();
 		public unowned string get_target_property ();
 		[DestroysInstance]
@@ -659,6 +665,8 @@ namespace GLib {
 		public void* get_qdata (GLib.Quark quark);
 		[Version (since = "2.36")]
 		public static uint get_type_registration_serial ();
+		[Version (since = "2.68")]
+		public GLib.Type interface_instantiatable_prerequisite ();
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] interface_prerequisites ();
 		[CCode (array_length_type = "guint")]
@@ -863,6 +871,8 @@ namespace GLib {
 		NO_HOOKS,
 		MUST_COLLECT,
 		DEPRECATED,
+		[Version (since = "2.68")]
+		ACCUMULATOR_FIRST_RUN,
 		[CCode (cname = "G_SIGNAL_FLAGS_MASK")]
 		MASK
 	}
