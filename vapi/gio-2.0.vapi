@@ -4876,9 +4876,9 @@ namespace GLib {
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h", instance_pos = 3.9)]
 	[Version (since = "2.26")]
 	public delegate string[] DBusSubtreeEnumerateFunc (GLib.DBusConnection connection, string sender, string object_path);
-	[CCode (cheader_filename = "gio/gio.h", instance_pos = 4.9)]
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h", instance_pos = 4.9)]
 	[Version (since = "2.26")]
-	public delegate GLib.DBusInterfaceInfo DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
+	public delegate GLib.DBusInterfaceInfo[]? DBusSubtreeIntrospectFunc (GLib.DBusConnection connection, string sender, string object_path, string node);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	[Version (since = "2.48")]
 	public delegate bool DatagramBasedSourceFunc (GLib.DatagramBased datagram_based, GLib.IOCondition condition);
