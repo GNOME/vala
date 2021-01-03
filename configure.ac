@@ -167,6 +167,7 @@ AC_CONFIG_FILES([Makefile
            tests/Makefile
            tests/fastvapi/Makefile
            tests/girwriter/Makefile
+           tests/gtktemplate/Makefile
            doc/Makefile
            doc/manual/Makefile
            doc/manual/version.xml

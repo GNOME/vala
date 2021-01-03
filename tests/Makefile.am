@@ -3,6 +3,7 @@ NULL =
 SUBDIRS = \
 	fastvapi \
 	girwriter \
+	gtktemplate \
 	$(NULL)
 
 AM_CPPFLAGS = \
