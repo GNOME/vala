@@ -321,7 +321,9 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-thumbnail.h", cprefix = "GNOME_DESKTOP_THUMBNAIL_SIZE_", has_type_id = false)]
 	public enum DesktopThumbnailSize {
 		NORMAL,
-		LARGE
+		LARGE,
+		XLARGE,
+		XXLARGE
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", cprefix = "GNOME_RR_DPMS_", has_type_id = false)]
 	public enum RRDpmsMode {
