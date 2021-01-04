@@ -100,10 +100,12 @@ namespace Gst {
 			public virtual signal void enough_data ();
 			public virtual signal void need_data (uint length);
 			[CCode (cname = "push-buffer")]
-			public signal Gst.FlowReturn on_push_buffer (Gst.Buffer object);
+			public signal Gst.FlowReturn on_push_buffer (Gst.Buffer buffer);
 			[CCode (cname = "push-buffer-list")]
-			public signal Gst.FlowReturn on_push_buffer_list (Gst.BufferList object);
+			[Version (since = "1.14")]
+			public signal Gst.FlowReturn on_push_buffer_list (Gst.BufferList buffer_list);
 			[HasEmitter]
+			[Version (since = "1.6")]
 			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);
 		}
