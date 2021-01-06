@@ -464,6 +464,7 @@ TESTS = \
 	objects/property-delegate.vala \
 	objects/property-delegate-owned.vala \
 	objects/property-gboxed-nullable.vala \
+	objects/property-real-struct-assignment.vala \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
