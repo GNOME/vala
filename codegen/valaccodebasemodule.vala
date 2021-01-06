@@ -6192,6 +6192,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
 				var cexpr = get_cvalue_ (value);
 				if (prop.property_type.is_real_non_null_struct_type ()) {
+					//TODO Make use of get_lvalue (value)
+					if (!(cexpr is CCodeConstant || cexpr is CCodeIdentifier)) {
+						var temp_value = store_temp_value (value, instance);
+						cexpr = get_cvalue_ (temp_value);
+					}
 					cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 				}
 				ccall.add_argument (cexpr);
@@ -6248,6 +6253,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cexpr = get_cvalue_ (value);
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
+			//TODO Make use of get_lvalue (value)
+			if (!(cexpr is CCodeConstant || cexpr is CCodeIdentifier)) {
+				var temp_value = store_temp_value (value, instance);
+				cexpr = get_cvalue_ (temp_value);
+			}
 			cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 		}
 
