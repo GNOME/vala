@@ -385,6 +385,7 @@ TESTS = \
 	objects/property-construct-only-write.test \
 	objects/property-construct-only-write-foreign.test \
 	objects/property-delegate-owned.vala \
+	objects/property-real-struct-assignment.vala \
 	objects/property-static.vala \
 	objects/regex.vala \
 	objects/signals.vala \
