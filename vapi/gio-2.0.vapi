@@ -3623,7 +3623,7 @@ namespace GLib {
 		[NoWrapper]
 		public abstract string? get_relative_path (GLib.File descendant);
 		public abstract string get_uri ();
-		public abstract string get_uri_scheme ();
+		public abstract string? get_uri_scheme ();
 		[Version (since = "2.24")]
 		public bool has_parent (GLib.File? parent);
 		[CCode (vfunc_name = "prefix_matches")]
