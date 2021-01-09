@@ -12377,10 +12377,6 @@ namespace Gtk {
 		public bool empty { get; }
 		public Gtk.PackType side { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class WindowGeometryInfo {
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_window_group_get_type ()")]
 	public class WindowGroup : GLib.Object {
 		[CCode (has_construct_function = false)]
