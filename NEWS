@@ -1,3 +1,29 @@
+Vala 0.48.13
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use CCodeInvalidExpression instead of place holders
+    + Don't leak memory of already assigned out-parameter on error [#1123]
+    + Don't leak memory on internal value comparison of property setter
+    + Fix assignment of casted struct value to property [#1126]
+  - vala:
+    + Report an error if gio-2.0 is missing for DBus support
+    + Add missing TraverseVisitor.visit_addressof_expression()
+    + value_type of PointerIndirection expressions must not be owned [#1118]
+    + SliceExpression need to return heap-allocated or unowned references [#1120]
+    + Accept "unowned var" as type for foreach variable declaration [#152]
+    + Ownership transfer of inline-allocated array is not allowed [#931]
+  - tests: Use Automake’s parallel test driver to speed up running tests [#1094]
+  - testrunner: A lot of simplifications
+
+ * Bindings:
+  - gio-2.0: Fix DBusSubtreeIntrospectFunc binding
+  - gstreamer-1.0: Fix direction of GLib.Value typed parameters [#1014]
+  - gtk4: Use correct cheader_include for wayland/x11 gdk backend [#1112]
+  - gtk4: Don't rename binding for gtk_css_provider_load_from_data [#1117]
+  - gtk4: Update to 4.0.1
+  - webkit2gtk-4.0: Update to 2.30.3
+
 Vala 0.48.12
 ============
  * Various improvements and bug fixes:
