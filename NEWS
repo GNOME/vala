@@ -1,3 +1,43 @@
+Vala 0.40.25
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Don't use inferred type for temp-value to access generic property [#1088]
+    + Update outdated array _size_ variable of captured local-variable [#1090]
+    + Report internal error for unsupported collection type in foreach
+    + Use CCodeInvalidExpression instead of place holders
+    + Don't leak memory of already assigned out-parameter on error [#1123]
+    + Don't leak memory on internal value comparison of property setter
+    + Fix assignment of casted struct value to property [#1126]
+  - vala:
+    + Issue an error on void initializer for local-variable
+    + Allow markup-reader to accept spaces around '=' of attribute assignment
+    + CodeNode.source_reference is optional, so let the API respect that
+    + Use DataType.compatible() to check for string concatenation [#1100]
+    + Report an error if gio-2.0 is missing for DBus support
+    + Add missing TraverseVisitor.visit_addressof_expression()
+    + value_type of PointerIndirection expressions must not be owned [#1118]
+    + SliceExpression need to return heap-allocated or unowned references [#1120]
+    + Ownership transfer of inline-allocated array is not allowed [#931]
+  - libvaladoc: Don't filter-out generic type-parameters of delegates
+  - libvaladoc/girimporter: Skip "docsection" elements in <namespace>
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - alsa: Fix PcmDevice.set_poll_descriptors_revents() binding [#1092]
+  - curses: Correctly use [PrintfFormat] attribute
+  - glib-2.0: Add return codes to FileStream.putc/puts(), like posix
+  - glib-2.0: Add GenericArray.find_custom(), variant of find_with_equal_func()
+  - glib-2.0: Improve GenericArray.length property
+  - gio-2.0: Fix binding of Resolver.lookup_service*()
+  - gio-2.0: Fix DBusSubtreeIntrospectFunc binding
+  - gstreamer-1.0: Fix direction of GLib.Value typed parameters [#1014]
+  - linux: Add missing struct in cname for Spi.IocTransfer
+  - posix: Declare fstat, stat, lstat and fstatat as public [#1086]
+  - posix: Add freopen binding, as FILE.reopen()
+  - rest-0.7: Fix ParamsIter.next() binding
+  - webkit2gtk-4.0: Update to 2.30.3
+
 Vala 0.40.24
 ============
  * Various improvements and bug fixes:
