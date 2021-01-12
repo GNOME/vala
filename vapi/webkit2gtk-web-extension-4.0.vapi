@@ -4104,11 +4104,11 @@ namespace WebKit {
 		public UserMessage (string name, GLib.Variant? parameters);
 		public static GLib.Quark error_quark ();
 		[Version (since = "2.28")]
-		public unowned GLib.UnixFDList get_fd_list ();
+		public unowned GLib.UnixFDList? get_fd_list ();
 		[Version (since = "2.28")]
 		public unowned string get_name ();
 		[Version (since = "2.28")]
-		public unowned GLib.Variant get_parameters ();
+		public unowned GLib.Variant? get_parameters ();
 		[Version (since = "2.28")]
 		public void send_reply (WebKit.UserMessage reply);
 		[CCode (has_construct_function = false)]
