@@ -399,7 +399,13 @@ public class Vala.CodeContext {
 
 		add_package (pkg);
 
-		add_source_file (new SourceFile (this, SourceFileType.PACKAGE, path));
+		var rpath = realpath (path);
+		var source_file = new SourceFile (this, SourceFileType.PACKAGE, path);
+
+		add_source_file (source_file);
+		if (rpath != path) {
+			source_files_map.set (rpath, source_file);
+		}
 
 		if (verbose_mode) {
 			stdout.printf ("Loaded package `%s'\n", path);
