@@ -4253,7 +4253,8 @@ namespace GLib {
 	public struct OptionEntry {
 		public unowned string long_name;
 		public char short_name;
-		public int flags;
+		[CCode (type = "gint")]
+		public OptionFlags flags;
 
 		public OptionArg arg;
 		public void* arg_data;
