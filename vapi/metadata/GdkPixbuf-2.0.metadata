@@ -21,6 +21,15 @@ Pixbuf
         .save_to_stream_async finish_name="gdk_pixbuf_save_to_stream_finish" finish_instance=false sentinel="NULL" throws="GLib.Error"
         .save_to_stream_finish skip
 
+PixbufModule.* skip=false
+PixbufModule._* skip
+PixbufModule
+	.load_increment.buf array array_length_idx=2
+	.save.param_keys array array_null_terminated
+	.save.param_values array array_null_terminated
+	.save_to_callback.option_keys array array_null_terminated
+	.save_to_callback.option_values array array_null_terminated
+
 // default values other than null
 Pixbuf
         .new_from_data.destroy_fn default=GLib.free

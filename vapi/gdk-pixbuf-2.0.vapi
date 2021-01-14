@@ -148,38 +148,46 @@ namespace Gdk {
 		[Version (since = "2.28")]
 		public async PixbufAnimation.from_stream_async (GLib.InputStream stream, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int get_height ();
-		public Gdk.PixbufAnimationIter get_iter (GLib.TimeVal? start_time);
-		public unowned Gdk.Pixbuf get_static_image ();
+		public virtual Gdk.PixbufAnimationIter get_iter (GLib.TimeVal? start_time);
+		[NoWrapper]
+		public virtual void get_size (int width, int height);
+		public virtual unowned Gdk.Pixbuf get_static_image ();
 		public int get_width ();
-		public bool is_static_image ();
+		public virtual bool is_static_image ();
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_animation_iter_get_type ()")]
 	public class PixbufAnimationIter : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PixbufAnimationIter ();
-		public bool advance (GLib.TimeVal? current_time);
-		public int get_delay_time ();
-		public unowned Gdk.Pixbuf get_pixbuf ();
-		public bool on_currently_loading_frame ();
+		public virtual bool advance (GLib.TimeVal? current_time);
+		public virtual int get_delay_time ();
+		public virtual unowned Gdk.Pixbuf get_pixbuf ();
+		public virtual bool on_currently_loading_frame ();
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_pixbuf_format_get_type ()")]
 	[Compact]
+	[Version (since = "2.2")]
 	public class PixbufFormat {
+		public weak string description;
+		public bool disabled;
+		public weak string domain;
+		public weak string extensions;
+		public uint32 flags;
+		public weak string license;
+		public weak string mime_types;
+		public weak string name;
+		public Gdk.PixbufModulePattern signature;
 		[Version (since = "2.22")]
 		public Gdk.PixbufFormat copy ();
 		[Version (since = "2.22")]
 		public void free ();
-		[Version (since = "2.2")]
 		public string get_description ();
 		[CCode (array_length = false, array_null_terminated = true)]
-		[Version (since = "2.2")]
 		public string[] get_extensions ();
 		[Version (since = "2.6")]
 		public string get_license ();
 		[CCode (array_length = false, array_null_terminated = true)]
-		[Version (since = "2.2")]
 		public string[] get_mime_types ();
-		[Version (since = "2.2")]
 		public string get_name ();
 		[Version (since = "2.6")]
 		public bool is_disabled ();
@@ -187,7 +195,6 @@ namespace Gdk {
 		public bool is_save_option_supported (string option_key);
 		[Version (since = "2.6")]
 		public bool is_scalable ();
-		[Version (since = "2.2")]
 		public bool is_writable ();
 		[Version (since = "2.6")]
 		public void set_disabled (bool disabled);
@@ -216,6 +223,11 @@ namespace Gdk {
 		public virtual signal void closed ();
 		public virtual signal void size_prepared (int width, int height);
 	}
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_non_anim_get_type ()")]
+	public class PixbufNonAnim : Gdk.PixbufAnimation {
+		[CCode (has_construct_function = false, type = "GdkPixbufAnimation*")]
+		public PixbufNonAnim (Gdk.Pixbuf pixbuf);
+	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_simple_anim_get_type ()")]
 	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
 		[CCode (has_construct_function = false)]
@@ -234,6 +246,31 @@ namespace Gdk {
 	public class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
 		[CCode (has_construct_function = false)]
 		protected PixbufSimpleAnimIter ();
+	}
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_type_id = false)]
+	public struct PixbufModule {
+		public weak string module_name;
+		public weak string module_path;
+		public weak GLib.Module module;
+		public weak Gdk.PixbufFormat info;
+		public weak Gdk.PixbufModuleLoadFunc load;
+		public weak Gdk.PixbufModuleLoadXpmDataFunc load_xpm_data;
+		[CCode (delegate_target = false)]
+		public weak Gdk.PixbufModuleBeginLoadFunc begin_load;
+		public weak Gdk.PixbufModuleStopLoadFunc stop_load;
+		public weak Gdk.PixbufModuleLoadIncrementFunc load_increment;
+		public weak Gdk.PixbufModuleLoadAnimationFunc load_animation;
+		public weak Gdk.PixbufModuleSaveFunc save;
+		[CCode (delegate_target = false)]
+		public weak Gdk.PixbufModuleSaveToCallbackFunc save_to_callback;
+		public weak Gdk.PixbufModuleIsSaveOptionSupportedFunc is_save_option_supported;
+	}
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_type_id = false)]
+	[Version (since = "2.2")]
+	public struct PixbufModulePattern {
+		public weak string prefix;
+		public weak string mask;
+		public int relevance;
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", has_type_id = false)]
 	public struct Pixdata {
@@ -269,6 +306,14 @@ namespace Gdk {
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL
+	}
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_FORMAT_", has_type_id = false)]
+	[Flags]
+	[Version (since = "2.2")]
+	public enum PixbufFormatFlags {
+		WRITABLE,
+		SCALABLE,
+		THREADSAFE
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ROTATE_", type_id = "gdk_pixbuf_rotation_get_type ()")]
 	public enum PixbufRotation {
@@ -314,6 +359,39 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 1.9)]
 	public delegate void PixbufDestroyNotify ([CCode (array_length = false)] uint8[] pixels);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_typedef = false, instance_pos = 3.9)]
+	public delegate void* PixbufModuleBeginLoadFunc (Gdk.PixbufModuleSizeFunc size_func, Gdk.PixbufModulePreparedFunc prepared_func, [CCode (delegate_target_pos = 0)] Gdk.PixbufModuleUpdatedFunc updated_func) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false)]
+	[Version (since = "2.2")]
+	public delegate void PixbufModuleFillInfoFunc (Gdk.PixbufFormat info);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false)]
+	[Version (since = "2.2")]
+	public delegate void PixbufModuleFillVtableFunc (Gdk.PixbufModule module);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate bool PixbufModuleIsSaveOptionSupportedFunc (string option_key);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate unowned Gdk.PixbufAnimation PixbufModuleLoadAnimationFunc (void* f) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate unowned Gdk.Pixbuf PixbufModuleLoadFunc (void* f) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate bool PixbufModuleLoadIncrementFunc (void* context, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint", type = "const guchar*")] uint8[] buf) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate unowned Gdk.Pixbuf PixbufModuleLoadXpmDataFunc (string data);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 2.9)]
+	[Version (since = "2.2")]
+	public delegate void PixbufModulePreparedFunc (Gdk.Pixbuf pixbuf, Gdk.PixbufAnimation anim);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate bool PixbufModuleSaveFunc (void* f, Gdk.Pixbuf pixbuf, [CCode (array_length = false, array_null_terminated = true, type = "gchar**")] string[] param_keys, [CCode (array_length = false, array_null_terminated = true, type = "gchar**")] string[] param_values) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_typedef = false, instance_pos = 1.9)]
+	public delegate bool PixbufModuleSaveToCallbackFunc ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, Gdk.Pixbuf pixbuf, [CCode (array_length = false, array_null_terminated = true, type = "gchar**")] string[] option_keys, [CCode (array_length = false, array_null_terminated = true, type = "gchar**")] string[] option_values) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 2.9)]
+	[Version (since = "2.2")]
+	public delegate void PixbufModuleSizeFunc (int width, int height);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
+	public delegate bool PixbufModuleStopLoadFunc (void* context) throws GLib.Error;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 5.9)]
+	[Version (since = "2.2")]
+	public delegate void PixbufModuleUpdatedFunc (Gdk.Pixbuf pixbuf, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", error_pos = 1.8, instance_pos = 1.9)]
 	[Version (since = "2.4")]
 	public delegate bool PixbufSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
