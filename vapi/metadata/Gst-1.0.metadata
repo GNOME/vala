@@ -285,6 +285,10 @@ ElementClass
   .get_pad_template#method name="class_get_pad_template"
   .get_pad_template_list#method name="class_get_pad_template_list"
 TypeFind lower_case_csuffix="type_find"
+TypeFind
+  .peek#field name="peek_v"
+  .suggest#field name="suggest_v"
+  .get_length#field name="get_length_v"
 
 // Backwards compatibility
 Structure.new_from_string skip

@@ -5,6 +5,12 @@ video_* name="video_(.+)"
 
 *.ref unowned
 
+VideoFrame
+  .data#field unowned=false
+  .map#field name="map_info" unowned=false
+VideoMeta
+  .map#field name="map_v"
+  .unmap#field name="unmap_v"
 VideoOverlay
   .set_render_rectangle#virtual_method virtual
   .set_render_rectangle#method name="try_set_render_rectangle"

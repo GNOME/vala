@@ -1571,6 +1571,7 @@ namespace Gst {
 		public weak Gst.Iterator pushed;
 		public uint size;
 		public GLib.Type type;
+		public Gst.Iterator copy ();
 		[CCode (simple_generics = true)]
 		public Gst.Iterator filter<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, T user_data);
 		[CCode (simple_generics = true)]
@@ -1800,6 +1801,7 @@ namespace Gst {
 		public GLib.Type type;
 		[Version (since = "1.16")]
 		public void add_parent (Gst.MiniObject parent);
+		public Gst.MiniObject? copy ();
 		[CCode (simple_generics = true)]
 		public T get_qdata<T> (GLib.Quark quark);
 		public bool is_writable ();
@@ -3053,7 +3055,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false, lower_case_csuffix = "type_find")]
 	public struct TypeFind {
+		[CCode (cname = "peek")]
+		public weak Gst.TypeFindPeekVFunc peek_v;
+		[CCode (cname = "suggest")]
+		public weak Gst.TypeFindSuggestVFunc suggest_v;
 		public void* data;
+		[CCode (cname = "get_length")]
+		public weak Gst.TypeFindGetLengthVFunc get_length_v;
+		public uint64 get_length ();
 		public static GLib.Type get_type ();
 		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
 		public unowned uint8[]? peek (int64 offset);
@@ -4077,6 +4086,12 @@ namespace Gst {
 	public delegate void TaskThreadFunc (Gst.Task task, GLib.Thread thread);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 1.9)]
 	public delegate void TypeFindFunction (Gst.TypeFind find);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false, has_typedef = false)]
+	public delegate uint64 TypeFindGetLengthVFunc (void* data);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false, has_typedef = false)]
+	public delegate uint8 TypeFindPeekVFunc (void* data, int64 offset, uint size);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false, has_typedef = false)]
+	public delegate void TypeFindSuggestVFunc (void* data, uint probability, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
