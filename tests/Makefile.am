@@ -692,6 +692,7 @@ TESTS = \
 	gir/class.test \
 	gir/constant.test \
 	gir/delegate-alias-without-target.test \
+	gir/delegate-anonymous.test \
 	gir/delegate-array-length-type.test \
 	gir/delegate-closure-destroy-index-conflict.test \
 	gir/delegate-error-pos.test \

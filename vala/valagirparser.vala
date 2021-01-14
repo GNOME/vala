@@ -1140,6 +1140,17 @@ public class Vala.GirParser : CodeVisitor {
 						var d = ((DelegateType) field.variable_type).delegate_symbol;
 						parser.process_virtual_method_field (this, d, parent.gtype_struct_for);
 						merged = true;
+					} else if (field.variable_type is DelegateType) {
+						// anonymous delegate
+						var d = ((DelegateType) field.variable_type).delegate_symbol;
+						if (this.lookup (d.name).parent == this) {
+							d.set_attribute_bool ("CCode", "has_typedef", false);
+							if (d.has_target && !metadata.has_argument (ArgumentType.DELEGATE_TARGET)) {
+								field.set_attribute_bool ("CCode", "delegate_target", false);
+							}
+							d.name = "%s%sFunc".printf (parent.symbol.name, Symbol.lower_case_to_camel_case (d.name));
+							get_parent_namespace (this).add_delegate (d);
+						}
 					} else if (field.variable_type is ArrayType) {
 						Node array_length;
 						if (metadata.has_argument (ArgumentType.ARRAY_LENGTH_FIELD)) {
@@ -1600,6 +1611,17 @@ public class Vala.GirParser : CodeVisitor {
 
 	static bool is_container (Symbol sym) {
 		return sym is ObjectTypeSymbol || sym is Struct || sym is Namespace || sym is ErrorDomain || sym is Enum;
+	}
+
+	static unowned Namespace get_parent_namespace (Node node) {
+		unowned Node? n = node.parent;
+		while (n != null) {
+			if (n.symbol is Namespace) {
+				return (Namespace) n.symbol;
+			}
+			n = n.parent;
+		}
+		assert_not_reached ();
 	}
 
 	UnresolvedSymbol? parse_symbol_from_string (string symbol_string, SourceReference? source_reference = null) {
