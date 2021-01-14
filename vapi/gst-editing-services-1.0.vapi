@@ -1211,6 +1211,10 @@ namespace GES {
 	public delegate bool FormatterSaveToURIMethod (GES.Formatter formatter, GES.Timeline timeline, string uri, bool overwrite) throws GLib.Error;
 	[CCode (cheader_filename = "ges/ges.h", instance_pos = 3.9)]
 	public delegate void MetaForeachFunc (GES.MetaContainer container, string key, GLib.Value value);
+	[CCode (cheader_filename = "ges/ges.h", has_target = false, has_typedef = false)]
+	public delegate bool abiGetNaturalSizeFunc (GES.VideoSource self, int width, int height);
+	[CCode (cheader_filename = "ges/ges.h", has_target = false, has_typedef = false)]
+	public delegate bool abiNeedsConvertersFunc (GES.VideoSource self);
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_FRAME_NUMBER_NONE")]
 	public const int64 FRAME_NUMBER_NONE;
 	[CCode (cheader_filename = "ges/ges.h", cname = "GES_META_DESCRIPTION")]

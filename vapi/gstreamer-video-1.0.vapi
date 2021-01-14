@@ -784,7 +784,9 @@ namespace Gst {
 			public void* meta;
 			public int id;
 			[CCode (array_length = false)]
-			public weak void* data[4];
+			public void* data[4];
+			[CCode (array_length = false, cname = "map")]
+			public Gst.MapInfo map_info[4];
 			public bool copy (Gst.Video.Frame src);
 			public bool copy_plane (Gst.Video.Frame src, uint plane);
 			public bool map (Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
@@ -868,6 +870,10 @@ namespace Gst {
 			public weak size_t offset[4];
 			[CCode (array_length = false)]
 			public weak int stride[4];
+			[CCode (cname = "map")]
+			public weak Gst.Video.MetaMapVFunc map_v;
+			[CCode (cname = "unmap")]
+			public weak Gst.Video.MetaUnmapVFunc unmap_v;
 			public Gst.Video.Alignment alignment;
 			[Version (since = "1.18")]
 			public bool get_plane_height ([CCode (array_length = false)] out unowned uint plane_height[4]);
@@ -1576,6 +1582,10 @@ namespace Gst {
 		public delegate void FormatUnpack (Gst.Video.FormatInfo info, Gst.Video.PackFlags flags, void* dest, void* data, int stride, int x, int y, int width);
 		[CCode (cheader_filename = "gst/video/video.h", has_target = false)]
 		public delegate bool GLTextureUpload (Gst.Video.GLTextureUploadMeta meta, uint texture_id);
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false, has_typedef = false)]
+		public delegate bool MetaMapVFunc (Gst.Video.Meta meta, uint plane, Gst.MapInfo info, void* data, int stride, Gst.MapFlags flags);
+		[CCode (cheader_filename = "gst/video/video.h", has_target = false, has_typedef = false)]
+		public delegate bool MetaUnmapVFunc (Gst.Video.Meta meta, uint plane, Gst.MapInfo info);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_AFFINE_TRANSFORMATION_META")]
 		public const string BUFFER_POOL_OPTION_VIDEO_AFFINE_TRANSFORMATION_META;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_BUFFER_POOL_OPTION_VIDEO_ALIGNMENT")]
