@@ -914,9 +914,13 @@ public class Vala.GirParser : CodeVisitor {
 					var colliding = parent.lookup_all (name);
 					foreach (var node in colliding) {
 						var sym = node.symbol;
-						if (sym is Field && !(m.return_type is VoidType) && m.get_parameters().size == 0) {
-							// assume method is getter
-							merged = true;
+						if (sym is Field) {
+							if (m.return_type.compatible (((Field) sym).variable_type) && m.get_parameters ().size == 0) {
+								// assume method is getter
+								merged = true;
+							} else {
+								Report.warning (symbol.source_reference, "Field `%s' conflicts with method of the same name", get_full_name ());
+							}
 						} else if (sym is Signal) {
 							node.process (parser);
 							var sig = (Signal) sym;
