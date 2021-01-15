@@ -983,7 +983,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_children (Api.Node node, Api.NodeType type, string type_string, Api.Node? container) {
 		var children = node.get_children_by_type (type);
 		if (children.size > 0) {
-			children.sort ((CompareDataFunc) Api.Node.compare_to);
+			// Follow Vala.Codewriter.visit_struct() and don't sort struct fields
+			if (!(node is Api.Struct && type == Api.NodeType.FIELD)) {
+				children.sort ((CompareDataFunc) Api.Node.compare_to);
+			}
 			writer.start_tag ("h3", {"class", css_title})
 				.text (type_string)
 				.text (":")
