@@ -116,6 +116,11 @@ public class Vala.Property : Symbol, Lockable {
 						Report.error (source_reference, "Property setter must have a body");
 					}
 					if (!get_has_body && !set_has_body) {
+						if (get_attribute ("GtkChild") != null && property_type.value_owned) {
+							Report.warning (source_reference, "[GtkChild] properties must be declared as `unowned'");
+							property_type.value_owned = false;
+						}
+
 						/* automatic property accessor body generation */
 						_field = new Field ("_%s".printf (name), property_type.copy (), initializer, source_reference);
 						_field.access = SymbolAccessibility.PRIVATE;
@@ -466,6 +471,10 @@ public class Vala.Property : Symbol, Lockable {
 			error = true;
 			Report.error (source_reference, "'void' not supported as property type");
 			return false;
+		}
+
+		if (field != null) {
+			field.check (context);
 		}
 
 		property_type.check (context);
