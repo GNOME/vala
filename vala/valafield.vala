@@ -104,6 +104,11 @@ public class Vala.Field : Variable, Lockable {
 			return false;
 		}
 
+		if (get_attribute ("GtkChild") != null && variable_type.value_owned) {
+			Report.warning (source_reference, "[GtkChild] fields must be declared as `unowned'");
+			variable_type.value_owned = false;
+		}
+
 		variable_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (variable_type);
