@@ -1,0 +1,17 @@
+Invalid Code
+
+[GtkTemplate (ui = "/org/example/gtktemplate.ui")]
+public class GtkTemplate : Gtk.ApplicationWindow {
+	[GtkChild]
+	public unowned Gtk.Button button0;
+
+	void foo () {
+		bar (out button0);
+	}
+
+	void bar (out unowned Gtk.Button b) {
+	}
+}
+
+void main () {
+}

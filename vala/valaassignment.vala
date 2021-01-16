@@ -178,6 +178,12 @@ public class Vala.Assignment : Expression {
 				return false;
 			}
 
+			if (ma.symbol_reference.get_attribute ("GtkChild") != null) {
+				error = true;
+				Report.error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", ma.symbol_reference.get_full_name ());
+				return false;
+			}
+
 			if (ma.symbol_reference is DynamicProperty) {
 				// target_type not available for dynamic properties
 			} else {

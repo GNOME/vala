@@ -492,6 +492,9 @@ public class Vala.Property : Symbol, Lockable {
 			get_accessor.check (context);
 		}
 		if (set_accessor != null) {
+			if (get_attribute ("GtkChild") != null) {
+				Report.warning (set_accessor.source_reference, "[GtkChild] property `%s' is not allowed to have `set' accessor", get_full_name ());
+			}
 			set_accessor.check (context);
 		}
 

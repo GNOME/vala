@@ -709,6 +709,10 @@ TESTS = \
 	gir/property-non-readable.test \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
+	gtktemplate/gtkchild-field-assignment.test \
+	gtktemplate/gtkchild-field-out-assignment.test \
+	gtktemplate/gtkchild-field-ref-assignment.test \
+	gtktemplate/gtkchild-property-assignment.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
@@ -1152,6 +1156,7 @@ LINUX_TESTS += \
 endif
 
 EXTRA_DIST = \
+	gtktemplate/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
 	posix/tests-extra-environment.sh \

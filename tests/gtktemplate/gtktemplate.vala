@@ -1,7 +1,7 @@
 [GtkTemplate (ui = "/org/example/gtktemplate.ui")]
 public class GtkTemplate : Gtk.ApplicationWindow {
 	[GtkChild]
-	public Gtk.Button button0 { get; set; }
+	public Gtk.Button button0 { get; }
 
 	[GtkChild (internal = true)]
 	public Gtk.Button button1;
