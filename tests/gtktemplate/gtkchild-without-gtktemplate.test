@@ -1,0 +1,9 @@
+Invalid Code
+
+public class GtkTemplate : Gtk.ApplicationWindow {
+	[GtkChild]
+	public unowned Gtk.Button button0;
+}
+
+void main () {
+}
