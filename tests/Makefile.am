@@ -706,6 +706,14 @@ TESTS = \
 	gir/property-non-readable.test \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
+	gtktemplate/gtkcallback-incompatible.test \
+	gtktemplate/gtkcallback-unknown.test \
+	gtktemplate/gtkchild-field-incompatible-type.test \
+	gtktemplate/gtkchild-field-unknown.test \
+	gtktemplate/gtkchild-property-not-automatic.test \
+	gtktemplate/gtkchild-property-unknown.test \
+	gtktemplate/gtkchild-without-gtktemplate.test \
+	gtktemplate/gtktemplate-gtkwidget-subclass.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
@@ -1147,6 +1155,7 @@ LINUX_TESTS += \
 endif
 
 EXTRA_DIST = \
+	gtktemplate/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
 	posix/tests-extra-environment.sh \
