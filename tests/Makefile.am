@@ -709,10 +709,18 @@ TESTS = \
 	gir/property-non-readable.test \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
+	gtktemplate/gtkcallback-incompatible.test \
+	gtktemplate/gtkcallback-unknown.test \
 	gtktemplate/gtkchild-field-assignment.test \
+	gtktemplate/gtkchild-field-incompatible-type.test \
 	gtktemplate/gtkchild-field-out-assignment.test \
 	gtktemplate/gtkchild-field-ref-assignment.test \
+	gtktemplate/gtkchild-field-unknown.test \
 	gtktemplate/gtkchild-property-assignment.test \
+	gtktemplate/gtkchild-property-not-automatic.test \
+	gtktemplate/gtkchild-property-unknown.test \
+	gtktemplate/gtkchild-without-gtktemplate.test \
+	gtktemplate/gtktemplate-gtkwidget-subclass.test \
 	annotations/deprecated.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \

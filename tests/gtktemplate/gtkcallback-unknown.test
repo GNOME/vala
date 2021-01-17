@@ -1,0 +1,11 @@
+Invalid Code
+
+[GtkTemplate (ui = "/org/example/gtktemplate.ui")]
+public class GtkTemplate : Gtk.ApplicationWindow {
+	[GtkCallback]
+	void on_unknown_cb (Gtk.Button button) {
+	}
+}
+
+void main () {
+}
