@@ -713,12 +713,12 @@
 		<property name="skipped-property" writable="1" construct="1" introspectable="0">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
-		<method name="get_skipped_property" c:identifier="gir_test_object_test_get_skipped_property">
+		<method name="get_skipped_property" c:identifier="gir_test_object_test_get_skipped_property" introspectable="0">
 			<return-value transfer-ownership="none">
 				<type name="utf8" c:type="const gchar*"/>
 			</return-value>
 		</method>
-		<method name="set_skipped_property" c:identifier="gir_test_object_test_set_skipped_property">
+		<method name="set_skipped_property" c:identifier="gir_test_object_test_set_skipped_property" introspectable="0">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
