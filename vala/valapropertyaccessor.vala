@@ -133,6 +133,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			m.binding = prop.binding;
 			m.is_abstract = prop.is_abstract;
 			m.is_virtual = prop.is_virtual;
+			m.this_parameter = prop.this_parameter;
 		}
 
 		return m;
