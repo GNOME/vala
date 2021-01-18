@@ -15,14 +15,24 @@ check-girwriter: $(top_builddir)/compiler/valac
 if HAVE_G_IR_COMPILER
 	$(G_IR_COMPILER) -o GirTest-1.0.typelib GirTest-1.0.gir;
 endif
-	rm -f GirTest-1.0.gir GirTest-1.0.typelib girtest.vapi girtest.c
+	rm -f girtest.vapi girtest.c;
+	G_DEBUG=fatal-warnings $(top_builddir)/vapigen/vapigen \
+		--vapidir $(top_srcdir)/vapi \
+		--pkg gio-2.0 \
+		--library girtest \
+		--metadatadir $(srcdir) \
+		GirTest-1.0.gir; \
+	tail -n +3 girtest.vapi | diff -wu $(srcdir)/girtest.vapigen-expected - || exit 1;
+	rm -f GirTest-1.0.gir GirTest-1.0.typelib girtest.vapi;
 
 check: check-girwriter
 
 EXTRA_DIST = \
 	girtest.vala \
 	girtest.vapi-expected \
+	girtest.vapigen-expected \
 	GirTest-1.0.gir-expected \
+	GirTest-1.0.metadata \
 	$(NULL)
 
 CLEANFILES = \
