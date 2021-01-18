@@ -55,12 +55,20 @@
 			<return-value transfer-ownership="none">
 				<type name="utf8" c:type="const gchar*"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.TypeTest" c:type="GirTestTypeTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="set_some_property" c:identifier="gir_test_typetest_set_some_property">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.TypeTest" c:type="GirTestTypeTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
@@ -238,6 +246,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -248,6 +259,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -258,6 +272,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -268,6 +285,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" direction="out" transfer-ownership="full">
 					<type name="gint8" c:type="gint8*"/>
 				</parameter>
@@ -277,12 +297,20 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="method_varargs" c:identifier="gir_test_object_test_method_varargs" introspectable="0">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -296,6 +324,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -309,6 +340,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="array" transfer-ownership="none">
 					<array length="1" c:type="gint*">
 						<type name="gint" c:type="gint"/>
@@ -324,6 +358,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="array" direction="inout" transfer-ownership="full">
 					<array length="1" c:type="gint**">
 						<type name="gint" c:type="gint"/>
@@ -339,6 +376,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="array" direction="out" transfer-ownership="full">
 					<array length="1" c:type="gint**">
 						<type name="gint" c:type="gint"/>
@@ -356,6 +396,9 @@
 				</array>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="result_length1" direction="out" transfer-ownership="none">
 					<type name="gint" c:type="gint*"/>
 				</parameter>
@@ -366,6 +409,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -389,6 +435,9 @@
 				</array>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -405,6 +454,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="array" direction="out" transfer-ownership="full">
 					<array length="1" c:type="gchar***">
 						<type name="utf8" c:type="gchar*"/>
@@ -422,6 +474,9 @@
 				</array>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="result_length1" direction="out" transfer-ownership="none">
 					<type name="gint" c:type="gint*"/>
 				</parameter>
@@ -431,12 +486,20 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="delegate_return" c:identifier="gir_test_object_test_delegate_return">
 			<return-value transfer-ownership="none" closure="0" scope="notified" destroy="1">
 				<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="result_target" direction="out" transfer-ownership="none" allow-none="1">
 					<type name="gpointer" c:type="void**"/>
 				</parameter>
@@ -450,6 +513,9 @@
 				<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="i1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -476,6 +542,9 @@
 				</array>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="i1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -498,6 +567,9 @@
 				<type name="GLib.EqualFunc" c:type="GEqualFunc"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 			</parameters>
 		</method>
 		<method name="container_return" c:identifier="gir_test_object_test_container_return">
@@ -507,6 +579,9 @@
 				</array>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="result_length1" direction="out" transfer-ownership="none">
 					<type name="gint" c:type="gint*"/>
 				</parameter>
@@ -518,12 +593,20 @@
 					<type name="utf8" c:type="const gchar*"/>
 				</array>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="coroutine_async" c:identifier="gir_test_object_test_coroutine_async">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 				</parameter>
@@ -537,6 +620,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -547,6 +633,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 				</parameter>
@@ -560,6 +649,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -570,6 +662,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 				</parameter>
@@ -583,6 +678,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -593,6 +691,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="i1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -609,6 +710,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -622,6 +726,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="i1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -638,6 +745,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -650,22 +760,40 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="method_throw" c:identifier="gir_test_object_test_method_throw" throws="1">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<virtual-method name="method_throw" invoker="method_throw" throws="1">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</virtual-method>
 		<method name="method_with_default" c:identifier="gir_test_object_test_method_with_default">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="i" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -675,6 +803,11 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<property name="some-property" writable="1" construct="1">
 			<type name="utf8" c:type="gchar*"/>
@@ -683,12 +816,20 @@
 			<return-value transfer-ownership="none">
 				<type name="utf8" c:type="const gchar*"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="set_some_property" c:identifier="gir_test_object_test_set_some_property">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
@@ -702,6 +843,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
@@ -717,12 +861,20 @@
 			<return-value transfer-ownership="none">
 				<type name="utf8" c:type="const gchar*"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<method name="set_skipped_property" c:identifier="gir_test_object_test_set_skipped_property" introspectable="0">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="utf8" c:type="const gchar*"/>
 				</parameter>
@@ -769,9 +921,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -784,10 +936,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					</instance-parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -802,9 +954,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -817,13 +969,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="i1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -838,9 +990,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -856,9 +1008,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -868,6 +1020,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</instance-parameter>
 					<parameter name="i1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -888,6 +1043,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -898,6 +1056,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -908,6 +1069,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" direction="inout" transfer-ownership="full">
 					<type name="gint8" c:type="gint8*"/>
 				</parameter>
@@ -918,6 +1082,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" direction="inout" transfer-ownership="full">
 					<type name="gint8" c:type="gint8*"/>
 				</parameter>
@@ -928,6 +1095,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" direction="out" transfer-ownership="full">
 					<type name="gint8" c:type="gint8*"/>
 				</parameter>
@@ -938,6 +1108,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" direction="out" transfer-ownership="full">
 					<type name="gint8" c:type="gint8*"/>
 				</parameter>
@@ -947,17 +1120,30 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<virtual-method name="method_throw" invoker="method_throw" throws="1">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
+			</parameters>
 		</virtual-method>
 		<method name="method_valist" c:identifier="gir_test_abstract_object_test_method_valist" introspectable="0">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -971,6 +1157,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -984,6 +1173,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1000,6 +1192,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1010,6 +1205,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1026,6 +1224,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1042,9 +1243,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -1057,9 +1258,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" direction="inout" transfer-ownership="full">
 						<type name="gint8" c:type="gint8*"/>
 					</parameter>
@@ -1072,9 +1273,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" direction="out" transfer-ownership="full">
 						<type name="gint8" c:type="gint8*"/>
 					</parameter>
@@ -1087,9 +1288,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1099,9 +1300,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -1117,13 +1318,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1138,9 +1339,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1315,6 +1516,12 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.GenericsTest" c:type="GirTestGenericsTest*">
+						<type name="gpointer" c:type="gpointer"/>
+						<type name="gpointer" c:type="gpointer"/>
+					</type>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none" allow-none="1">
 					<type name="gpointer" c:type="gpointer"/>
 				</parameter>
@@ -1357,6 +1564,12 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.GenericsObjectTest" c:type="GirTestGenericsObjectTest*">
+						<type name="gpointer" c:type="gpointer"/>
+						<type name="gpointer" c:type="gpointer"/>
+					</type>
+				</instance-parameter>
 				<parameter name="k_type" transfer-ownership="none">
 					<type name="GType" c:type="GType"/>
 				</parameter>
@@ -1418,6 +1631,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -1428,6 +1644,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint8" c:type="gint8"/>
 				</parameter>
@@ -1438,6 +1657,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 				</parameter>
@@ -1451,6 +1673,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1461,6 +1686,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 					<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 				</parameter>
@@ -1474,6 +1702,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1484,6 +1715,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1497,6 +1731,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1510,6 +1747,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1526,6 +1766,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1536,6 +1779,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1552,6 +1798,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="_res_" transfer-ownership="none">
 					<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 				</parameter>
@@ -1564,17 +1813,30 @@
 			<return-value transfer-ownership="none">
 				<type name="gint" c:type="gint"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 		<virtual-method name="get_property" invoker="get_property">
 			<return-value transfer-ownership="none">
 				<type name="gint" c:type="gint"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+			</parameters>
 		</virtual-method>
 		<method name="set_property" c:identifier="gir_test_interface_test_set_property">
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1585,6 +1847,9 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
 				<parameter name="value" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
@@ -1601,9 +1866,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -1616,10 +1881,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					</instance-parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1634,9 +1899,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1649,9 +1914,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -1667,13 +1932,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1688,9 +1953,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1703,9 +1968,9 @@
 					<type name="gint" c:type="gint"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1715,9 +1980,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="self" transfer-ownership="none">
+					<instance-parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</parameter>
+					</instance-parameter>
 					<parameter name="value" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -1758,6 +2023,11 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" allow-none="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 	</record>
 	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
@@ -1778,6 +2048,11 @@
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" allow-none="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</instance-parameter>
+			</parameters>
 		</method>
 	</record>
 	<record name="SkippedStruct" c:type="GirTestSkippedStruct" c:symbol-prefix="skipped_struct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
