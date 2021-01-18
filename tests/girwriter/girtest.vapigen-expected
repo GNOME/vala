@@ -1,0 +1,198 @@
+[CCode (cprefix = "GirTest", gir_namespace = "GirTest", gir_version = "1.0", lower_case_cprefix = "gir_test_")]
+namespace GirTest {
+	namespace Nested {
+		[CCode (cheader_filename = "girtest.h", cname = "gir_test_nested_function")]
+		public static void nested ();
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_abstract_object_test_get_type ()")]
+	public abstract class AbstractObjectTest : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected AbstractObjectTest ();
+		public abstract void method_int8_in (int8 param);
+		public abstract void method_int8_inout (ref int8 param);
+		public abstract void method_int8_out (out int8 param);
+		public abstract void method_throw () throws GLib.Error;
+		public abstract void method_valist (int param, va_list vargs);
+	}
+	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
+	[Compact]
+	public class CompactClass {
+		public int i;
+		public string s;
+		[CCode (has_construct_function = false)]
+		public CompactClass ();
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_deprecated_class_test_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
+	public class DeprecatedClassTest {
+		public int ref_count;
+		[CCode (has_construct_function = false)]
+		public DeprecatedClassTest ();
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_generics_object_test_get_type ()")]
+	public class GenericsObjectTest : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public GenericsObjectTest (GLib.Type g_type, GLib.BoxedCopyFunc g_dup_func, GLib.DestroyNotify g_destroy_func, GLib.Type t_type, GLib.BoxedCopyFunc t_dup_func, GLib.DestroyNotify t_destroy_func);
+		public void method (GLib.Type k_type, GLib.BoxedCopyFunc k_dup_func, GLib.DestroyNotify k_destroy_func, [CCode (array_length_cname = "param_length1", array_length_pos = 4.1)] void*[] param);
+		[NoAccessorMethod]
+		public GLib.DestroyNotify g_destroy_func { get; construct; }
+		[NoAccessorMethod]
+		public GLib.BoxedCopyFunc g_dup_func { get; construct; }
+		[NoAccessorMethod]
+		public GLib.Type g_type { get; construct; }
+		[NoAccessorMethod]
+		public GLib.DestroyNotify t_destroy_func { get; construct; }
+		[NoAccessorMethod]
+		public GLib.BoxedCopyFunc t_dup_func { get; construct; }
+		[NoAccessorMethod]
+		public GLib.Type t_type { get; construct; }
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_generics_test_get_type ()")]
+	public class GenericsTest {
+		public int ref_count;
+		[CCode (has_construct_function = false)]
+		public GenericsTest (GLib.Type g_type, GLib.BoxedCopyFunc g_dup_func, GLib.DestroyNotify g_destroy_func, GLib.Type t_type, GLib.BoxedCopyFunc t_dup_func, GLib.DestroyNotify t_destroy_func, owned GirTest.DelegateTest cb);
+		public void method (void* param);
+		[CCode (cname = "gir_test_generics_test_new_typed", has_construct_function = false)]
+		public GenericsTest.typed (GLib.Type g_type, GLib.BoxedCopyFunc g_dup_func, GLib.DestroyNotify g_destroy_func, GLib.Type t_type, GLib.BoxedCopyFunc t_dup_func, GLib.DestroyNotify t_destroy_func, owned GirTest.DelegateGenericsTest cb);
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_implemention_test_get_type ()")]
+	public class ImplementionTest : GLib.Object, GirTest.InterfaceTest {
+		[CCode (has_construct_function = false)]
+		public ImplementionTest ();
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_object_test_get_type ()")]
+	public class ObjectTest : GLib.Object {
+		public int field;
+		[CCode (array_length = false)]
+		public int fixed_array_field[23];
+		public string? nullable_field;
+		[CCode (has_construct_function = false)]
+		public ObjectTest ();
+		public void array_in ([CCode (array_length_cname = "array_length1", array_length_pos = 1.1)] int[] array);
+		public void array_inout ([CCode (array_length_cname = "array_length1", array_length_pos = 1.1)] ref int[] array);
+		public void array_out ([CCode (array_length_cname = "array_length1", array_length_pos = 1.1)] out int[] array);
+		[CCode (array_length_pos = 0.1)]
+		public int[] array_return ();
+		[CCode (array_length_pos = 2.3)]
+		public int[] array_return_int_in_delegate_out (int i1, out GirTest.DelegateTest d);
+		[CCode (array_length_pos = 0.1)]
+		public (unowned string)[] container_return ();
+		public async void coroutine_async ();
+		public virtual async void coroutine_method_throw (int i1, out int o1) throws GLib.Error;
+		public virtual void coroutine_method_throw_finish (GLib.AsyncResult _res_, out int o1) throws GLib.Error;
+		public virtual async void coroutine_virtual_async ();
+		public virtual void coroutine_virtual_finish (GLib.AsyncResult _res_);
+		public unowned GirTest.DelegateTest delegate_return (out void* result_target, out unowned GLib.DestroyNotify result_target_destroy_notify);
+		public unowned GirTest.DelegateTest delegate_return_int_in_array_out (int i1, [CCode (array_length_cname = "a_length1", array_length_pos = 2.5)] out int[] a, out void* result_target, out unowned GLib.DestroyNotify result_target_destroy_notify);
+		public static void full_inout (ref GirTest.ObjectTest obj);
+		public static void full_out (out GirTest.ObjectTest obj);
+		public static GirTest.ObjectTest full_return ();
+		public GLib.GenericArray<weak string>? generic_array_container_return ();
+		public unowned string get_some_property ();
+		public void int8_in (int8 param);
+		public void int8_out (out int8 param);
+		public void int_in_int_in_array_out (int param1, int param2, [CCode (array_length_cname = "array_length1", array_length_pos = 3.1)] out int[] array);
+		[CCode (array_length_pos = 2.1)]
+		public int[] int_in_int_in_array_return (int param1, int param2);
+		[CCode (cname = "gir_test_object_test_new_may_fail", has_construct_function = false)]
+		public ObjectTest.may_fail (int param) throws GLib.Error;
+		public void method ();
+		public virtual void method_throw () throws GLib.Error;
+		public void method_with_default (int i);
+		public virtual void method_with_default_impl (int8 param);
+		public void none_in ();
+		public static void none_inout (ref unowned GirTest.ObjectTest obj);
+		public static void none_out (out unowned GirTest.ObjectTest obj);
+		public static unowned GirTest.ObjectTest none_return ();
+		public void set_some_property (string value);
+		public void set_write_only_property (string value);
+		public unowned GLib.EqualFunc simple_delegate_return ();
+		public void simple_throw () throws GLib.Error;
+		public static void static_method ();
+		public void string_array_out ([CCode (array_length_cname = "array_length1", array_length_pos = 1.1)] out string[] array);
+		[CCode (array_length_pos = 0.1)]
+		public string[] string_array_return ();
+		[CCode (cname = "gir_test_object_test_new_with_int", has_construct_function = false)]
+		public ObjectTest.with_int (int param);
+		[NoAccessorMethod]
+		public string construct_only_property { construct; }
+		public string some_property { get; set construct; }
+		public string write_only_property { set; }
+		public signal void signal_with_default_handlder (int i1);
+		public signal void some_signal (int param);
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sub_type_test_get_type ()")]
+	public class SubTypeTest : GirTest.TypeTest {
+		[CCode (array_length = false, array_null_terminated = true)]
+		public string[] array_field;
+		public GirTest.DelegateTest delegate_field;
+		[CCode (has_construct_function = false)]
+		public SubTypeTest ();
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_typetest_get_type ()")]
+	public class TypeTest {
+		public int ref_count;
+		[CCode (has_construct_function = false)]
+		public TypeTest ();
+		public unowned string get_some_property ();
+		public void set_some_property (string value);
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_interface_test_get_type ()")]
+	public interface InterfaceTest : GLib.Object {
+		public virtual async void coroutine_async ();
+		public virtual void coroutine_finish (GLib.AsyncResult _res_);
+		public virtual int get_property ();
+		public virtual void int8_in (int8 param);
+		public virtual void set_property (int value);
+		public abstract int property { get; set construct; }
+	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_prerequisite_test_get_type ()")]
+	public interface PrerequisiteTest : GirTest.InterfaceTest, GLib.Object {
+	}
+	[CCode (cheader_filename = "girtest.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gir_test_boxed_struct_get_type ()")]
+	public struct BoxedStruct {
+		public int field_name;
+		public void inv ();
+	}
+	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
+	public struct Struct {
+		public int field_name;
+		public void inv ();
+	}
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ENUM_TEST_", type_id = "gir_test_enum_test_get_type ()")]
+	public enum EnumTest {
+		VALUE1,
+		VALUE2,
+		VALUE3
+	}
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_FLAGS_TEST_", type_id = "gir_test_flags_test_get_type ()")]
+	[Flags]
+	public enum FlagsTest {
+		VALUE1,
+		VALUE2,
+		VALUE3
+	}
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_PLAIN_ENUM_TEST_", has_type_id = false)]
+	public enum PlainEnumTest {
+		VALUE1,
+		VALUE2,
+		VALUE3
+	}
+	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ERROR_TEST_")]
+	public errordomain ErrorTest {
+		FAILED,
+		SMELLY,
+		FISHY
+	}
+	[CCode (cheader_filename = "girtest.h", has_target = false)]
+	public delegate bool DelegateErrorTest () throws GLib.Error;
+	[CCode (cheader_filename = "girtest.h", instance_pos = 8.9)]
+	public delegate bool DelegateGenericsTest (GLib.Type g_type, GLib.BoxedCopyFunc g_dup_func, GLib.DestroyNotify g_destroy_func, GLib.Type t_type, GLib.BoxedCopyFunc t_dup_func, GLib.DestroyNotify t_destroy_func, void* g, void* t);
+	[CCode (cheader_filename = "girtest.h", instance_pos = 2.9)]
+	public delegate bool DelegateTest (void* a, void* b);
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_NUMBER")]
+	public const int CONSTANT_NUMBER;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_STRING")]
+	public const string CONSTANT_STRING;
+}
