@@ -127,8 +127,9 @@ namespace GirTest {
 	}
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sub_type_test_get_type ()")]
 	public class SubTypeTest : GirTest.TypeTest {
-		[CCode (array_length = false, array_null_terminated = true)]
+		[CCode (array_length_cname = "array_field_length1")]
 		public string[] array_field;
+		public int array_field_length1;
 		public GirTest.DelegateTest delegate_field;
 		[CCode (has_construct_function = false)]
 		public SubTypeTest ();
