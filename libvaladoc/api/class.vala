@@ -265,7 +265,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 
 	public bool is_compact {
 		get {
-			return base_type == null && get_attribute ("Compact") != null;
+			return ((Vala.Class) data).is_compact;
 		}
 	}
 
