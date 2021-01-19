@@ -898,7 +898,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "is_immutable") {
 							if (eval (nv[1]) == "1") {
-								cl.is_immutable = true;
+								cl.set_attribute ("Immutable", true);
 							}
 						} else if (nv[0] == "const_cname") {
 							cl.set_attribute_string ("CCode", "const_cname", eval (nv[1]));
@@ -952,7 +952,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					cl.add_base_type (parent);
 				}
 				if (base_class == null && !is_fundamental) {
-					cl.is_compact = true;
+					cl.set_attribute ("Compact", true);
 				}
 			}
 
@@ -1069,7 +1069,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
-				cl.is_compact = true;
+				cl.set_attribute ("Compact", true);
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
@@ -1230,7 +1230,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
-				cl.is_compact = true;
+				cl.set_attribute ("Compact", true);
 				if (boxed_node.gtype_init != null) {
 					cl.set_attribute_string ("CCode", "type_id", "%s ()".printf (boxed_node.gtype_init));
 				}
@@ -1245,7 +1245,7 @@ public class Vala.GIdlParser : CodeVisitor {
 							base_class = eval (nv[1]);
 						} else if (nv[0] == "is_immutable") {
 							if (eval (nv[1]) == "1") {
-								cl.is_immutable = true;
+								cl.set_attribute ("Immutable", true);
 							}
 						} else if (nv[0] == "deprecated") {
 							if (eval (nv[1]) == "1") {
@@ -1540,7 +1540,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "compact") {
 						if (eval (nv[1]) == "1") {
-							cl.is_compact = true;
+							cl.set_attribute ("Compact", true);
 						}
 					} else if (nv[0] == "ref_function") {
 						cl.set_attribute_string ("CCode", "ref_function", eval (nv[1]));

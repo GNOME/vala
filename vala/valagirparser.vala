@@ -3484,7 +3484,7 @@ public class Vala.GirParser : CodeVisitor {
 		bool require_copy_free = false;
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
-			cl.is_compact = true;
+			cl.set_attribute ("Compact", true);
 			current.symbol = cl;
 		} else {
 			cl = (Class) current.symbol;
@@ -3812,7 +3812,7 @@ public class Vala.GirParser : CodeVisitor {
 				cl.add_base_type (base_type);
 			}
 			cl.comment = alias.comment;
-			cl.is_compact = ((Class) type_sym).is_compact;
+			cl.set_attribute ("Compact", ((Class) type_sym).is_compact);
 			alias.symbol = cl;
 		} else if (type_sym is Interface) {
 			// this is not a correct alias, but what can we do otherwise?

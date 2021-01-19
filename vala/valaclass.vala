@@ -59,10 +59,6 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 			return _is_compact;
 		}
-		set {
-			_is_compact = value;
-			set_attribute ("Compact", value);
-		}
 	}
 
 	/**
@@ -92,10 +88,6 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 			return _is_immutable;
 		}
-		set {
-			_is_immutable = value;
-			set_attribute ("Immutable", value);
-		}
 	}
 
 	/**
@@ -107,10 +99,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				_is_singleton = get_attribute ("SingleInstance") != null;
 			}
 			return _is_singleton;
-		}
-		set {
-			_is_singleton = value;
-			set_attribute ("SingleInstance", value);
 		}
 	}
 
