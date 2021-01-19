@@ -1152,6 +1152,9 @@ public class Vala.GirParser : CodeVisitor {
 								array_length = parent.lookup ("num_%s".printf (field.name));
 								if (array_length == null) {
 									array_length = parent.lookup ("%s_length".printf (field.name));
+									if (array_length == null) {
+										array_length = parent.lookup ("%s_length1".printf (field.name));
+									}
 								}
 							}
 						}

@@ -10,8 +10,7 @@ ObjectTest
 	.fixed_array_field unowned=false
 	.nullable_field unowned=false
 SubTypeTest
-	.array_field unowned=false array_length_field="array_field_length1"
-	.array_field_length1 skip
+	.array_field unowned=false
 	.delegate_field unowned=false
 	.delegate_field_target* skip
 nested_function name="nested" parent="GirTest.Nested"
