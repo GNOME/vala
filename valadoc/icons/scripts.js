@@ -40,10 +40,10 @@ function toggle_box (self, id) {
 	var orig_dir = get_path (orig_path);
 	if (element.style.display == 'block') {
 		element.style.display = 'none';
-		self.style.backgroundImage = "url('" + orig_dir + 'coll_open.png' + "')";
+		self.style.backgroundImage = "url('" + orig_dir + 'coll_open.svg' + "')";
 	} else {
 		element.style.display = 'block';
-		self.style.backgroundImage = "url('" + orig_dir + 'coll_close.png' + "')";
+		self.style.backgroundImage = "url('" + orig_dir + 'coll_close.svg' + "')";
 	}
 }
 

@@ -3,36 +3,36 @@ NULL =
 iconsdir = $(datadir)/valadoc@PACKAGE_SUFFIX@/icons
 
 dist_icons_DATA = \
-	abstractclass.png \
-	abstractmethod.png \
-	abstractproperty.png \
-	class.png \
-	coll_close.png \
-	coll_open.png \
-	constant.png \
-	constructor.png \
-	delegate.png \
+	abstractclass.svg \
+	abstractmethod.svg \
+	abstractproperty.svg \
+	class.svg \
+	coll_close.svg \
+	coll_open.svg \
+	constant.svg \
+	constructor.svg \
+	delegate.svg \
 	devhelpstyle.css \
-	enum.png \
-	enumvalue.png \
-	errorcode.png \
-	errordomain.png \
-	field.png \
-	interface.png \
-	method.png \
-	namespace.png \
-	package.png \
-	packages.png \
-	property.png \
+	enum.svg \
+	enumvalue.svg \
+	errorcode.svg \
+	errordomain.svg \
+	field.svg \
+	interface.svg \
+	method.svg \
+	namespace.svg \
+	package.svg \
+	packages.svg \
+	property.svg \
 	scripts.js \
-	signal.png \
-	staticmethod.png \
-	struct.png \
+	signal.svg \
+	staticmethod.svg \
+	struct.svg \
 	style.css \
-	tip.png \
-	virtualmethod.png \
-	virtualproperty.png \
-	warning.png \
+	tip.svg \
+	virtualmethod.svg \
+	virtualproperty.svg \
+	warning.svg \
 	wikistyle.css \
 	$(NULL)
 

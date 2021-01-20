@@ -29,7 +29,7 @@ ul.external_link {
 	min-height: 48px;
 	background-position: 6px 0.5em;
 	background-repeat: no-repeat;
-	background-image: url(warning.png);
+	background-image: url(warning.svg);
 }
 
 div.main_notification_block {
@@ -46,7 +46,7 @@ div.main_notification_block {
 }
 
 span.main_block_headline {
-	background-image:url(tip.png);
+	background-image:url(tip.svg);
 	background-repeat:no-repeat;
 	background-position:center right;
 	font-weight:bold;
@@ -238,22 +238,22 @@ h3.main_title {
 
 
 .main_inline_navigation_virtual_property {
-	list-style-image: url(virtualproperty.png);
+	list-style-image: url(virtualproperty.svg);
 }
 .main_inline_navigation_abstract_property {
-	list-style-image: url(abstractproperty.png);
+	list-style-image: url(abstractproperty.svg);
 }
 .navi_abstract_prop {
-	list-style-image: url(abstractproperty.png);
+	list-style-image: url(abstractproperty.svg);
 }
 .navi_virtual_prop {
-	list-style-image: url(virtualproperty.png);
+	list-style-image: url(virtualproperty.svg);
 }
 
 
 
 .css_content_link_constant {
-	background-image:url(constant.png);
+	background-image:url(constant.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -261,7 +261,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_namespace {
-	background-image:url(namespace.png);
+	background-image:url(namespace.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -269,7 +269,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_struct {
-	background-image:url(struct.png);
+	background-image:url(struct.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -277,7 +277,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_interface {
-	background-image:url(interface.png);
+	background-image:url(interface.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -285,7 +285,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_enum {
-	background-image:url(enum.png);
+	background-image:url(enum.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -293,7 +293,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_errordomain {
-	background-image:url(errordomain.png);
+	background-image:url(errordomain.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -301,7 +301,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_delegate {
-	background-image:url(delegate.png);
+	background-image:url(delegate.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -309,7 +309,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_signal {
-	background-image:url(signal.png);
+	background-image:url(signal.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -317,7 +317,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_field {
-	background-image:url(field.png);
+	background-image:url(field.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -325,7 +325,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_enumvalue {
-	background-image:url(enumvalue.png);
+	background-image:url(enumvalue.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -333,7 +333,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_errorcode {
-	background-image:url(errorcode.png);
+	background-image:url(errorcode.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -341,7 +341,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_class {
-	background-image:url(class.png);
+	background-image:url(class.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -349,7 +349,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_abstract_class {
-	background-image:url(abstractclass.png);
+	background-image:url(abstractclass.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -357,7 +357,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_property {
-	background-image:url(property.png);
+	background-image:url(property.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -365,7 +365,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_virtual_property {
-	background-image:url(virtualproperty.png);
+	background-image:url(virtualproperty.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -373,7 +373,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_abstract_property {
-	background-image:url(abstractproperty.png);
+	background-image:url(abstractproperty.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -381,7 +381,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_method {
-	background-image:url(method.png);
+	background-image:url(method.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -389,7 +389,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_static_method {
-	background-image:url(staticmethod.png);
+	background-image:url(staticmethod.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -397,7 +397,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_virtual_method {
-	background-image:url(virtualmethod.png);
+	background-image:url(virtualmethod.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -405,7 +405,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_abstract_method {
-	background-image:url( abstractmethod.png );
+	background-image:url( abstractmethod.svg );
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -413,7 +413,7 @@ h3.main_title {
 	border:0px;
 }
 .css_content_link_construction_method {
-	background-image:url(constructor.png);
+	background-image:url(constructor.svg);
 	display:inline-block;
 	padding-right:17px;
 	background-repeat:no-repeat;
@@ -422,78 +422,78 @@ h3.main_title {
 }
 
 .main_inline_navigation_virtual_method {
-	list-style-image:url(virtualmethod.png);
+	list-style-image:url(virtualmethod.svg);
 }
 .main_inline_navigation_errorcode {
-	list-style-image:url(errorcode.png);
+	list-style-image:url(errorcode.svg);
 }
 .main_inline_navigation_enumvalue {
-	list-style-image:url(enumvalue.png);
+	list-style-image:url(enumvalue.svg);
 }
 .navi_abstract_class, .main_inline_navigation_abstract_class {
-	list-style-image: url(abstractclass.png);
+	list-style-image: url(abstractclass.svg);
 }
 .main_inline_navigation_abstract_method, .navi_abstract_method {
-	list-style-image: url( abstractmethod.png );
+	list-style-image: url( abstractmethod.svg );
 }
 .navi_construction_method, .main_list_m, .main_inline_navigation_construction_method {
-	list-style-image: url(constructor.png);
+	list-style-image: url(constructor.svg);
 }
 .navi_static_method, .main_inline_navigation_static_method {
-	list-style-image: url(staticmethod.png);
+	list-style-image: url(staticmethod.svg);
 }
 
 .navi_package_index, .main_inline_navigation_package {
-	list-style-image: url(packages.png);
+	list-style-image: url(packages.svg);
 }
 .main_navi_enval {
-	list-style-image: url(enumvalue.png);
+	list-style-image: url(enumvalue.svg);
 }
 .main_navi_errdomcode {
-	list-style-image: url(errorcode.png);
+	list-style-image: url(errorcode.svg);
 }
 .navi_error_domain, .main_list_errdom, .main_inline_navigation_errordomain {
-	list-style-image: url(errordomain.png);
+	list-style-image: url(errordomain.svg);
 }
 .navi_namespace, .main_list_ns, .main_inline_navigation_namespace {
-	list-style-image: url(namespace.png);
+	list-style-image: url(namespace.svg);
 }
 .navi_method, .main_inline_navigation_method {
-	list-style-image: url(method.png);
+	list-style-image: url(method.svg);
 }
 .navi_virtual_method {
-	list-style-image: url(virtualmethod.png);
+	list-style-image: url(virtualmethod.svg);
 }
 .navi_struct, .main_list_stru, .main_inline_navigation_struct {
-	list-style-image: url(struct.png);
+	list-style-image: url(struct.svg);
 }
 .navi_iface, .main_navigation_interface, .main_list_iface {
-	list-style-image: url(interface.png);
+	list-style-image: url(interface.svg);
 }
 .navi_field, .main_inline_navigation_fields, .main_list_field {
-	list-style-image: url(field.png);
+	list-style-image: url(field.svg);
 }
 .navi_class, .main_inline_navigation_class, .main_list_cl {
-	list-style-image: url(class.png);
+	list-style-image: url(class.svg);
 }
 .navi_enum, .main_list_en, .main_inline_navigation_enum {
-	list-style-image: url(enum.png);
+	list-style-image: url(enum.svg);
 }
 .navi_prop, .main_inline_navigation_property, .main_list_prop {
-	list-style-image: url(property.png);
+	list-style-image: url(property.svg);
 }
 .navi_del, .main_list_del, .main_inline_navigation_delegate {
-	list-style-image: url(delegate.png);
+	list-style-image: url(delegate.svg);
 }
 .navi_sig, .main_inline_navigation_signal, .main_list_sig {
-	list-style-image: url(signal.png);
+	list-style-image: url(signal.svg);
 }
 .navi_package, .main_inline_navigation_package {
-	list-style-image: url(package.png);
+	list-style-image: url(package.svg);
 }
 
 .main_inline_navigation_constant, .navi_constant {
-	list-style-image: url(constant.png);
+	list-style-image: url(constant.svg);
 }
 
 
