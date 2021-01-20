@@ -40,6 +40,27 @@ namespace GDesktop {
 		SMART,
 		STRICT
 	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_FONT_ANTIALIASING_MODE_", has_type_id = false)]
+	public enum FontAntialiasingMode {
+		NONE,
+		GRAYSCALE,
+		RGBA
+	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_FONT_HINTING_", has_type_id = false)]
+	public enum FontHinting {
+		NONE,
+		SLIGHT,
+		MEDIUM,
+		FULL
+	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_FONT_RGBA_ORDER_", has_type_id = false)]
+	public enum FontRgbaOrder {
+		RGBA,
+		RGB,
+		BGR,
+		VRGB,
+		VBGR
+	}
 	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_LOCATION_ACCURACY_LEVEL_", has_type_id = false)]
 	public enum LocationAccuracyLevel {
 		COUNTRY,

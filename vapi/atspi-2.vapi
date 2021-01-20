@@ -91,6 +91,28 @@ namespace Atspi {
 		[CCode (has_construct_function = false)]
 		protected Application ();
 	}
+	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_get_type ()")]
+	public class Device : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Device ();
+		[NoWrapper]
+		public virtual void add_key_grab (Atspi.KeyDefinition kd);
+		public void add_key_watcher ();
+		public Atspi.KeyDefinition get_grab_by_id (uint id);
+		public virtual uint get_locked_modifiers ();
+		public virtual uint get_modifier (int keycode);
+		public virtual bool grab_keyboard ();
+		public virtual uint map_modifier (int keycode);
+		public bool notify_key (bool pressed, int keycode, int keysym, int state, string text);
+		public virtual void remove_key_grab (uint id);
+		public virtual void ungrab_keyboard ();
+		public virtual void unmap_modifier (int keycode);
+	}
+	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_legacy_get_type ()")]
+	public class DeviceLegacy : Atspi.Device {
+		[CCode (has_construct_function = false)]
+		public DeviceLegacy ();
+	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_listener_get_type ()")]
 	public class DeviceListener : GLib.Object {
 		public weak GLib.List<void*> callbacks;
@@ -103,6 +125,11 @@ namespace Atspi {
 		public void remove_callback (Atspi.DeviceListenerCB callback);
 		[CCode (has_construct_function = false)]
 		public DeviceListener.simple ([CCode (destroy_notify_pos = 1.1)] owned Atspi.DeviceListenerSimpleCB callback);
+	}
+	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_device_x11_get_type ()")]
+	public class DeviceX11 : Atspi.Device {
+		[CCode (has_construct_function = false)]
+		public DeviceX11 ();
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "atspi_event_get_type ()")]
 	[Compact]
@@ -152,7 +179,7 @@ namespace Atspi {
 		public int keycode;
 		public weak string keystring;
 		public int keysym;
-		public int unused;
+		public uint modifiers;
 	}
 	[CCode (cheader_filename = "atspi/atspi.h", type_id = "atspi_match_rule_get_type ()")]
 	public class MatchRule : GLib.Object {
@@ -798,6 +825,8 @@ namespace Atspi {
 	public delegate void EventListenerCB (owned Atspi.Event event);
 	[CCode (cheader_filename = "atspi/atspi.h", has_target = false)]
 	public delegate void EventListenerSimpleCB (owned Atspi.Event event);
+	[CCode (cheader_filename = "atspi/atspi.h", instance_pos = 6.9)]
+	public delegate void KeyCallback (Atspi.Device device, bool pressed, uint keycode, uint keysym, uint modifiers, string keystring);
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_COMPONENTLAYER_COUNT")]
 	public const int COMPONENTLAYER_COUNT;
 	[CCode (cheader_filename = "atspi/atspi.h", cname = "ATSPI_COORD_TYPE_COUNT")]

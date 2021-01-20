@@ -7388,6 +7388,7 @@ namespace Gtk {
 		public bool inconsistent { get; set; }
 		public string label { get; set; }
 		public bool use_underline { get; set; }
+		public virtual signal void activate ();
 		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]

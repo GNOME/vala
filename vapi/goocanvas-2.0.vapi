@@ -33,7 +33,7 @@ namespace Goo {
 		public Gdk.GrabStatus keyboard_grab (Goo.CanvasItem item, bool owner_events, uint32 time);
 		public void keyboard_ungrab (Goo.CanvasItem item, uint32 time);
 		public static GLib.Array<Goo.CanvasPathCommand?> parse_path_data (string path_data);
-		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint32 time);
+		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor? cursor, uint32 time);
 		public void pointer_ungrab (Goo.CanvasItem item, uint32 time);
 		public void register_widget_item (Goo.CanvasWidget witem);
 		public void render (Cairo.Context cr, Goo.CanvasBounds? bounds, double scale);
