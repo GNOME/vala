@@ -1,66 +1,147 @@
 The Vala team would like to thank the following contributors:
 
+Aaron Andersen
 Abderrahim Kitouni
 Adam Dingle
 Adam Folmert
 Adrien Bustany
+Alban Browaeys
+Alberto Fanjul
 Alberto Ruiz
 Alexander Bokovoy
+Alexander Kojevnikov
+Alexander Kurtz
+Alexander Larsson
 Alexandre Moreira
+Alexandre Rostovtsev
 Alexey Lubimov
 Ali Sabil
+Alistair Thomas
+Allison Barlow
 Amos Brocco
+Anatol Pomozov
 Andrea Del Signore
 Andreas Brauchli
+Andreas Fenkart
+Andreas Henriksson
+Andreas Obergrusberger
+Andre Klapper
+Andre Masella
 Andrew Feren
 Anthony Taylor
+Arnaud Bonatti
+Arne Hoch
+Arnel A. Borja
 Arun Raghavan
 Arwed von Merkatz
+Aurélien Zanelli
+Avi Levy
+Ben Iofel
+BianShaoLei
+Brosch Florian
 Carl-Anton Ingmarsson
 Carlos Cadete
+Carlos Garnacho
+Carlo Teubner
 Cayle Graumann
+Chris Daley
 Christian Hergert
+Christian Kellner
 Christian Meyer
+Christian Persch
+Christopher White
+Chris White
+Colin Walters
+Colin Watson
 Colomban Wendling
+Corentin Noël
 Cyril Soldani
+Daiki Ueno
+Dan Callaghan
+Daniel Foré
+Daniel Espinosa
+Daniel Hams
 Daniel Lucraft
+Daniel Pfeifer
 Daniel Silverstone
 Daniel Svensson
+Darren Warner
 David Binderman
+David Hewitt
 David Janzso
 David Keijser
+David King
+David Kozub
+David Lechner
+David Ma
+Derek Dai
 Didier 'Ptitjes
+Diego Dompe
 Diego Escalante Urrelo
+Dmitry Vagin
+Duncan Mac-Vicar P
 Ed Schouten
 Emmanuele Bassi
 Eric Alber
+Ernestas Kulik
 Étienne Bersac
 Evan Nemerson
+Evgeny Bobkin
+Fabian Deutsch
+Feng Yu
 Florian Brosch
+Florian Müllner
 Francisco Camenforte Torres
+Francisco Serna
 Frédéric-Emmanuel PICCA
 Frederik
+Frederik 'playya' Sdun
 Frederik Sdun
 Frederik Zipp
 Gabriel Falcão
+Garrett Regier
 Geert Jan Alsem
+Geert Jordaens
+George Barrett
+Giulio Paci
 Gordon Allott
 Götz Waschk
+Gregor Burger
+Guillaume Poirier-Morency
 Hans Baier
 Hans Vercammen
 Iain
+Ignacio Casal Quinteiro
+Ilya Mezhirov
 Jaap A. Haitsma
+Jacques-Pascal Deplaix
 Jakob Westhoff
+Jakub Kaszycki
 James Campos
 Jamie McCracken
+Jan Dvořák
 Jan Hudec
 Jan Luebbe
 Jan Rosczak
 Jared Moore
+Jared William Moore
+Jason Conti
+Jasper Lievisse Adriaanse
+Jasper St. Pierre
+Javier Jardón
+Jean Pierre Dudey
+Jee-Yong Um
 Jens Georg
+Jeremy Philippe
+Jeremy Whiting
+Jesse van den Kieboom
+Jesus Menendez-Castellano
 Jille Timmermans
+Jim Mason
 Jim Nelson
+Jiří Janoušek
 Jiří Zárevúcky
+Joakim Sindholt
 Johannes Schmid
 Johann Prieur
 John Carr
@@ -68,75 +149,157 @@ Jonathan Conder
 Jordan Yelloz
 Jorn Baayen
 Jörn Magens
+Joshua Simmons
 Juan Carlos Girardi
 Jukka-Pekka Iivonen
 Julian Andres Klode
 Jürg Billeter
+Jussi Kukkonen
+Klaus Kurzmann
+Koop Mast
 Krzysztof Kotlenga
 Kyle Ambroff
+Kyrylo Polezhaiev
+Lasse Schuirmann
 Levi Bard
+Lionel Landwerlin
 Luca Bruno
 Łukasz Pankowski
+Luke Benstead
+Maciej Borzecki
 Maciej Piechotka
+Magomed Abdurakhmanov
 Make Massonnet
+Manuel Wiesinger
 Marc-André Lureau
 Marcelo Lira
+Marcin Lewandowski
+Marco Trevisan (Treviño)
+Marin Moulinier
+Mario Daniel Ruiz Saavedra
 Mark Lee
 Martin Olsson
+Martin Pitt
+Mart Raudsepp
 Mart Roosmaa
+Marvin W
+Mason Bogue
 Mathias Hasselmann
 Matías De la Puente
+Matthias Berndt
+Matthias Linda
+Michael Biebl
 Michael B. Trausch
+Michael Gratton
+Michael Hofmann
+Michael James Gratton
 Michael Lauer
 Michael Lawrence
 Michael Terry
 Michal Hruby
+Michal Proszek
+Michele Dionisio
 Mikael Hermansson
 Mike Massonnet
+Mikkel Kamstrup Erlandsen
+Nathan Phillip Brink
+Nathan Summers
+Nick Schrader
+Niclas Lockner
 Nicolas Bruguier
 Nicolas Christener
 Nicolas Joseph
 Nicolas Trangez
+Nikolay Orlyuk
+Niko Tyni
+Olav Vitters
+Ole André Vadla Ravnås
+Oliver Sauder
 Ondřej Jirman
 pancake
+Paolo Borelli
 Patrick Dignan
+Peter Lamby
 Phil Housley
+Philip Flarsheim
 Philipp Zabel
 Philip Van Hoof
+Philip Withnall
+Pierre Lamot
 Piotr Skamruk
+Princeton Ferro
+Rafael Monica
 Raffaele Sandrini
+Ralf Michl
+Raphael Isemann
+Raul Gutierrez Segales
+Rémy Saissy
+René Post
 Reuben Dunnington
+Reuben Thomas
+Richard Schwarting
+Richard Wiedenhöft
+Rico Tzschichholz
+Robert Ancell
 Roberto Majadas
 Robin Sonefors
 Rob Powell
 Rob Taylor
+Rodney Dawes
 Roland Hostettler
 Ross Burton
+Rumen Zarev
 Ryan Lortie
 Sam Liddicott
+Sam Thursfield
 Samuel Cormier-Iijima
 Sandino Flores
 Sebastian Dröge
 Sebastian Noack
 Sebastian Pölsterl
 Sebastian Spaeth
+Sébastien Wilmet
+Sergej Reich
+Sergey Nizovtsev
+Sergio Costas
+Severin Heiniger
 Shawn Ferris
+Siegfried-Angel Gevatter Pujals
+Simon Busch
 Simon Wenner
 Simon Werbeck
 Stefano Debenedetti
+Stefano Facchini
+Stef Walter
 Stéphan Kochen
+Steven Oliver
 Tai Chi Minh Ralph Eastwood
 Thijs Vermeir
+Thomas Martitz
+Thomas Wood
+Tim Kirchner
+Timm Bäder
+Timo Kluck
+Ting-Wei Lan
 Tobias Müller
+Todd Fischer
 Tomaž Vajngerl
+Travis Reitter
 Travis Watkins
+Tristan Brindle
+Ulrich Küttler
 Víctor Manuel Jáquez Leal
+Vito Piserchia
+Vivek Raj
 Vlad Grecescu
+Vladislav
 William Swanson
+Will Szumski
 Xavier Bestel
 Yaakov Selkowitz
 Yu Feng
 Zeeshan Ali Khattak
 Zsombor
+ZUHONG TAO
 Zygmunt Krynicki
 Харин Роман
