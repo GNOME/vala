@@ -361,8 +361,6 @@ namespace Gst {
 			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 			public Gst.Audio.Info copy ();
 			public void free ();
-			public bool from_caps (Gst.Caps caps);
-			public void init ();
 			[Version (since = "1.2")]
 			public bool is_equal (Gst.Audio.Info other);
 			public void set_format (Gst.Audio.Format format, int rate, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition position[64]);
@@ -534,7 +532,6 @@ namespace Gst {
 			public int n_planes;
 			public void* planes;
 			public weak Gst.Buffer buffer;
-			public bool map (Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);
 			public void unmap ();
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]
@@ -951,6 +948,9 @@ namespace Gst {
 		public const int RESAMPLER_QUALITY_MIN;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_clip")]
 		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_map")]
+		[Version (since = "1.16")]
+		public static bool audio_buffer_map (out Gst.Audio.Buffer buffer, Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_reorder_channels")]
 		public static bool audio_buffer_reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] to);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_truncate")]
@@ -1000,6 +1000,10 @@ namespace Gst {
 		public static uint audio_iec61937_frame_size (Gst.Audio.RingBufferSpec spec);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_iec61937_payload")]
 		public static bool audio_iec61937_payload ([CCode (array_length_cname = "src_n", array_length_pos = 1.5, array_length_type = "guint")] uint8[] src, [CCode (array_length_cname = "dst_n", array_length_pos = 2.5, array_length_type = "guint")] uint8[] dst, Gst.Audio.RingBufferSpec spec, int endianness);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_info_from_caps")]
+		public static bool audio_info_from_caps (out unowned Gst.Audio.Info info, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_info_init")]
+		public static void audio_info_init (out unowned Gst.Audio.Info info);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_make_raw_caps")]
 		[Version (since = "1.18")]
 		public static Gst.Caps audio_make_raw_caps ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint")] Gst.Audio.Format[]? formats, Gst.Audio.Layout layout);

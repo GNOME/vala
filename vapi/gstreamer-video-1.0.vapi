@@ -361,8 +361,6 @@ namespace Gst {
 			public Gst.Video.Info copy ();
 			[Version (since = "1.6")]
 			public void free ();
-			public bool from_caps (Gst.Caps caps);
-			public void init ();
 			public bool is_equal (Gst.Video.Info other);
 			public bool set_format (Gst.Video.Format format, uint width, uint height);
 			[Version (since = "1.16")]
@@ -430,6 +428,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Sink ();
 			public static void center_rect (Gst.Video.Rectangle src, Gst.Video.Rectangle dst, Gst.Video.Rectangle result, bool scaling);
+			[NoWrapper]
+			[Version (since = "1.20")]
+			public virtual bool set_info (Gst.Caps caps, Gst.Video.Info info);
 			[NoWrapper]
 			public virtual Gst.FlowReturn show_frame (Gst.Buffer buf);
 			[NoAccessorMethod]
@@ -789,8 +790,6 @@ namespace Gst {
 			public Gst.MapInfo map_info[4];
 			public bool copy (Gst.Video.Frame src);
 			public bool copy_plane (Gst.Video.Frame src, uint plane);
-			public bool map (Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
-			public bool map_id (Gst.Video.Info info, Gst.Buffer buffer, int id, Gst.MapFlags flags);
 			public void unmap ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
@@ -1906,6 +1905,10 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public static unowned Gst.Video.Format[] formats_raw ();
 		[CCode (cheader_filename = "gst/video/video.h")]
+		public static bool frame_map (out Gst.Video.Frame frame, Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static bool frame_map_id (out Gst.Video.Frame frame, Gst.Video.Info info, Gst.Buffer buffer, int id, Gst.MapFlags flags);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type gl_texture_upload_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static unowned Gst.MetaInfo? gl_texture_upload_meta_get_info ();
@@ -1925,6 +1928,10 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.20")]
 		public static bool hdr_parse_hdr10_plus (uint8 data, size_t size, out Gst.Video.HDR10Plus hdr10_plus);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static bool info_from_caps (out unowned Gst.Video.Info info, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		public static void info_init (out unowned Gst.Video.Info info);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static Gst.Video.InterlaceMode interlace_mode_from_string (string mode);

@@ -102,9 +102,11 @@ namespace Gst {
 	public class WebRTCRTPReceiver : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
-		public weak Gst.WebRTCDTLSTransport transport;
 		[CCode (has_construct_function = false)]
 		public WebRTCRTPReceiver ();
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.WebRTCDTLSTransport transport { owned get; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_sender", type_id = "gst_webrtc_rtp_sender_get_type ()")]
 	[Version (since = "1.16")]
@@ -112,7 +114,6 @@ namespace Gst {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
 		public weak GLib.Array<void*> send_encodings;
-		public weak Gst.WebRTCDTLSTransport transport;
 		[CCode (has_construct_function = false)]
 		public WebRTCRTPSender ();
 		[Version (since = "1.20")]
@@ -120,6 +121,9 @@ namespace Gst {
 		[NoAccessorMethod]
 		[Version (since = "1.20")]
 		public Gst.WebRTCPriorityType priority { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.WebRTCDTLSTransport transport { owned get; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_transceiver", type_id = "gst_webrtc_rtp_transceiver_get_type ()")]
 	[Version (since = "1.16")]
