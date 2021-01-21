@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Foo {
+	unowned string s;
+	int i;
+}
+
+void main () {
+	Foo foo = { i = 42, s = };
+}

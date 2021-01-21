@@ -726,10 +726,13 @@ TESTS = \
 	scanner/string-escape-x-digit-length.test \
 	scanner/string-escape-x-empty.test \
 	scanner/string-escape-x.vala \
+	parser/argument-list-incomplete.test \
 	parser/array-creation-invalid.test \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
+	parser/attribute-missing-literal.test \
 	parser/attribute-wrong-number.test \
+	parser/block-delimiter-missing.test \
 	parser/constant-owned.test \
 	parser/constant-local-owned.test \
 	parser/constructor-class-exists.test \
@@ -761,6 +764,7 @@ TESTS = \
 	parser/foreach.vala \
 	parser/foreach-no-type.test \
 	parser/function-syntax-error.test \
+	parser/initializer-list-incomplete.test \
 	parser/inner-array-size.test \
 	parser/invalid-brace.test \
 	parser/invalid-statement-delimiter.test \
