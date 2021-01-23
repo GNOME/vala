@@ -1,0 +1,11 @@
+Invalid Code
+
+[CCode (has_target = false)]
+delegate void FooFunc ();
+
+void main () {
+	int i = 0;
+	FooFunc f = () => {
+		i++;
+	};
+}
