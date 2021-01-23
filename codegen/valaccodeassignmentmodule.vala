@@ -29,8 +29,6 @@ using GLib;
  */
 public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	TargetValue emit_simple_assignment (Assignment assignment) {
-		Variable variable = (Variable) assignment.left.symbol_reference;
-
 		if (requires_destroy (assignment.left.value_type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_value (assignment.left.target_value));
@@ -81,6 +79,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (assignment.left.value_type is ArrayType && (((ArrayType) assignment.left.value_type).inline_allocated)) {
+			unowned Variable variable = (Variable) assignment.left.symbol_reference;
 			return load_variable (variable, assignment.left.target_value);
 		} else {
 			return assignment.left.target_value;
@@ -94,8 +93,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			var ma = assignment.left as MemberAccess;
-			var prop = (Property) assignment.left.symbol_reference;
+			unowned MemberAccess ma = (MemberAccess) assignment.left;
+			unowned Property prop = (Property) assignment.left.symbol_reference;
 
 			store_property (prop, ma.inner, assignment.right.target_value);
 			assignment.target_value = assignment.right.target_value;
