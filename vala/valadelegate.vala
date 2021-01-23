@@ -188,7 +188,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 
 		// delegate without target for instance method or closure
-		if (first && m.binding == MemberBinding.INSTANCE && !has_target) {
+		if (first && !has_target && (m.binding == MemberBinding.INSTANCE || m.closure) && (parameters.size == 0 || m.closure)) {
 			return false;
 		}
 
