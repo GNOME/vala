@@ -380,6 +380,7 @@ TESTS = \
 	delegates/incompatible-target.test \
 	delegates/instance-method-to-no-target.test \
 	delegates/instance-method-to-no-target-2.test \
+	delegates/lambda-incompatible.test \
 	delegates/lambda-mixed-instance-static.vala \
 	delegates/lambda-shared-closure.vala \
 	delegates/member-target-destroy.vala \
