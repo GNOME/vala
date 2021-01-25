@@ -979,6 +979,9 @@ public class Vala.GirParser : CodeVisitor {
 							}
 						}
 					}
+					if (metadata.has_argument (ArgumentType.DELEGATE_TARGET)) {
+						m.set_attribute_bool ("CCode", "delegate_target", metadata.get_bool (ArgumentType.DELEGATE_TARGET));
+					}
 					if (m.coroutine) {
 						parser.process_async_method (this);
 					}
@@ -2637,6 +2640,9 @@ public class Vala.GirParser : CodeVisitor {
 				param.direction = ParameterDirection.OUT;
 			} else if (direction == "inout") {
 				param.direction = ParameterDirection.REF;
+			}
+			if (type is DelegateType && metadata.has_argument (ArgumentType.DELEGATE_TARGET)) {
+				param.set_attribute_bool ("CCode", "delegate_target", metadata.get_bool (ArgumentType.DELEGATE_TARGET));
 			}
 			if (type is ArrayType) {
 				if (metadata.has_argument (ArgumentType.ARRAY_LENGTH_IDX)) {
