@@ -70,7 +70,7 @@ namespace Cairo {
 		public void font_extents (out Cairo.FontExtents extents);
 		public Cairo.Antialias get_antialias ();
 		public void get_current_point (out double x, out double y);
-		public void get_dash (double[]? dashes, double[]? offset);
+		public void get_dash ([CCode (array_length = false)] double[]? dashes, [CCode (array_length = false)] double[]? offset);
 		public int get_dash_count ();
 		public Cairo.FillRule get_fill_rule ();
 		public unowned Cairo.FontFace get_font_face ();
@@ -144,7 +144,7 @@ namespace Cairo {
 		public void show_glyphs (Cairo.Glyph[] glyphs);
 		public void show_page ();
 		public void show_text (string utf8);
-		public Cairo.Status show_text_glyphs (string utf8, int utf8_len, Cairo.Glyph[] glyphs, Cairo.TextCluster[] clusters, out Cairo.TextClusterFlags cluster_flags);
+		public Cairo.Status show_text_glyphs (string utf8, int utf8_len, Cairo.Glyph[] glyphs, Cairo.TextCluster[] clusters, Cairo.TextClusterFlags cluster_flags);
 		public Cairo.Status status ();
 		public void stroke ();
 		public void stroke_extents (out double x1, out double y1, out double x2, out double y2);
@@ -467,7 +467,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_win32_scaled_font_get_logical_to_device")]
 		public Cairo.Matrix win32_get_logical_to_device ();
 	}
-	[CCode (cname = "cairo_device_t", ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy", has_type_id = false)]
+	[CCode (cheader_filename = "cairo-script.h", cname = "cairo_device_t", ref_function = "cairo_device_reference", unref_function = "cairo_device_destroy", has_type_id = false)]
 	[Compact]
 	public class Script : Cairo.Device {
 		[CCode (cname = "cairo_script_create")]
@@ -981,7 +981,7 @@ namespace Cairo {
 		OUT,
 		PART
 	}
-	[CCode (cname = "cairo_script_mode_t", has_type_id = false)]
+	[CCode (cheader_filename = "cairo-script.h", cname = "cairo_script_mode_t", has_type_id = false)]
 	public enum ScriptMode {
 		ASCII,
 		BINARY
@@ -1051,7 +1051,7 @@ namespace Cairo {
 		VRGB,
 		VBGR
 	}
-	[CCode (cname = "cairo_surface_observer_mode_t", has_type_id = false)]
+	[CCode (cname = "cairo_surface_observer_mode_t", cprefix = "CAIRO_SURFACE_OBSERVER_", has_type_id = false)]
 	public enum SurfaceObserverMode {
 		NORMAL,
 		RECORD_OPERATIONS
@@ -1137,7 +1137,7 @@ namespace Cairo {
 	public delegate Cairo.Status UserScaledFontInitFunc (Cairo.UserScaledFont scaled_font, Cairo.Context cr, Cairo.FontExtents extents);
 	[CCode (cname = "cairo_user_scaled_font_render_glyph_func_t", has_target = false)]
 	public delegate Cairo.Status UserScaledFontRenderGlyphFunc (Cairo.UserScaledFont scaled_font, ulong glyph, Cairo.Context cr, out Cairo.TextExtents extents);
-	[CCode (cname = "cairo_user_font_face_get_text_to_glyphs_func", has_target = false)]
+	[CCode (cname = "cairo_user_scaled_font_text_to_glyphs_func_t", has_target = false)]
 	public delegate Cairo.Status UserScaledFontTextToGlyphsFunc (Cairo.UserScaledFont scaled_font, string utf8, int utf8_len, out Cairo.Glyph[] glyphs, out Cairo.TextCluster[] clusters, out Cairo.TextClusterFlags cluster_flags);
 	[CCode (cname = "cairo_user_scaled_font_unicode_to_glyph_func_t", has_target = false)]
 	public delegate Cairo.Status UserScaledFontUnicodeToGlyphFunc (Cairo.UserScaledFont scaled_font, ulong unicode, out ulong glyph_index);
