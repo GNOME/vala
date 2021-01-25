@@ -194,6 +194,13 @@ RecentData
 CClosureExpression
   .new.callback_func closure=-1 destroy=-1 owned=false
   .new.user_destroy nullable
+ComboBox
+  .get_row_separator_func delegate_target=false
+TreeSelection
+  .get_select_function delegate_target=false
+TreeView
+  .get_row_separator_func delegate_target=false
+  .get_search_equal_func delegate_target=false
 
 // Skipped for G-I, but usable from Vala
 FlowBox
