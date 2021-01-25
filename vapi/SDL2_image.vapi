@@ -44,7 +44,7 @@ namespace SDLImage {
 	//! General
 
 	[CCode (cname = "IMG_Linked_Version")]
-	public static unowned SDL.Version linked ();
+	public static unowned SDL.Version? linked ();
 
 	[CCode (cname = "IMG_Init")]
 	public static int init (int flags);
@@ -71,9 +71,6 @@ namespace SDLImage {
 
 	[CCode (cname = "IMG_LoadTextureTyped_RW")]
 	public static SDL.Video.Texture? load_texture_rw_typed (SDL.Video.Renderer renderer, SDL.RWops src, bool freesrc, string type);
-
-	[CCode (cname = "IMG_InvertAlpha")]
-	public static int invert_alpha (int on);
 
 	[CCode (cname = "IMG_LoadCUR_RW")]
 	public static SDL.Video.Surface? load_cur (SDL.RWops src);
@@ -121,7 +118,7 @@ namespace SDLImage {
 	public static SDL.Video.Surface? load_webp (SDL.RWops src);
 
 	[CCode (cname = "IMG_ReadXPMFromArray")]
-	public static SDL.Video.Surface? read_xpm (string[] xpmdata);
+	public static SDL.Video.Surface? read_xpm ([CCode (array_length = false)] string[] xpmdata);
 
 	[CCode (cname = "IMG_SavePNG")]
 	public static int save_as_png (SDL.Video.Surface surface, string file);

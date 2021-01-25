@@ -27,10 +27,10 @@
  *  Pedro H. Lara Campos <root@pedrohlc.com>
  */
 
-[CCode (cprefix = "SDLNet_", cheader_filename = "SDL2/SDL2_net.h")]
+[CCode (cprefix = "SDLNet_", cheader_filename = "SDL2/SDL_net.h")]
 namespace SDLNet {
 	[CCode (cname = "SDLNet_Linked_Version")]
-	public static SDL.Version linked ();
+	public static unowned SDL.Version? linked_version ();
 
 	[CCode (cname = "SDLNet_Init")]
 	public static int init ();
@@ -86,7 +86,7 @@ namespace SDLNet {
 		public int resize (int newsize);
 	}// UDPPacket
 
-	[CCode (cname = "void")]
+	[CCode (cname = "struct _SDLNet_GenericSocket")]
 	[Compact]
 	public class Socket {
 		public int ready;
@@ -154,7 +154,7 @@ namespace SDLNet {
 		[CCode (cname = "SDLNet_CheckSockets")]
 		public int has_data (uint timeout);
 
-		[CCode (cname = "SDLNet_SocketReady ")]
+		[CCode (cname = "SDLNet_SocketReady")]
 		public int is_ready ();
 	}// SocketSet
 }// SDL

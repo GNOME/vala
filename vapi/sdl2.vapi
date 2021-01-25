@@ -171,8 +171,7 @@ namespace SDL {
 	//
 
 	[CCode (cheader_filename = "SDL2/SDL_cpuinfo.h")]
-	[Compact]
-	public class CPU {
+	namespace CPU {
 		[Version (since = "2.0.0")]
 		[CCode (cname = "SDL_GetCPUCacheLineSize")]
 		public static int get_cache_line_size ();
@@ -225,8 +224,8 @@ namespace SDL {
 		public static bool has_sse42 ();
 	}
 
-	[CCode (type_id = "SDL_version", cheader_filename = "SDL2/SDL_version.h", cname = "SDL_version")]
-	public class Version {
+	[CCode (cname = "SDL_version", cheader_filename = "SDL2/SDL_version.h")]
+	public struct Version {
 		public uint8 major;
 		public uint8 minor;
 		public uint8 patch;
@@ -245,8 +244,7 @@ namespace SDL {
 	/// Hints
 	///
 	[CCode (cheader_filename = "SDL2/SDL_hints.h")]
-	[Compact]
-	public class Hint {
+	namespace Hint {
 		/**
 		 * A variable controlling how 3D acceleration is used to accelerate the SDL screen surface.
 		 *
@@ -1094,7 +1092,7 @@ namespace SDL {
 		 *  A variable setting the double click radius, in pixels.
 		 */
 		[Version (since = "2.0.9")]
-		[CCode (cname = "SDL_MOUSE_DOUBLE_CLICK_RADIUS")]
+		[CCode (cname = "SDL_HINT_MOUSE_DOUBLE_CLICK_RADIUS")]
 		public const string MOUSE_DOUBLE_CLICK_RADIUS;
 
 		/**
@@ -1662,14 +1660,12 @@ namespace SDL {
 	}
 
 	[CCode (cname = "SDL_CommonEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct CommonEvent {
 		public SDL.EventType type;
 		public uint32 timestamp;
 	}// CommonEvent
 
 	[CCode (cname = "SDL_WindowEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct WindowEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1680,14 +1676,12 @@ namespace SDL {
 
 	[Version (since = "2.0.4")]
 	[CCode (cname = "SDL_AudioDeviceEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct AudioDeviceEvent : CommonEvent {
 		public uint32 which;
 		public bool iscapture;
 	}
 
 	[CCode (cname = "SDL_KeyboardEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct KeyboardEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1697,7 +1691,6 @@ namespace SDL {
 	}// KeyboardEvent
 
 	[CCode (cname = "SDL_TextEditingEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct TextEditingEvent : CommonEvent {
 		[CCode (cname = "SDL_TEXTEDITINGEVENT_TEXT_SIZE")]
 		public const uint8 TEXT_SIZE;
@@ -1710,7 +1703,6 @@ namespace SDL {
 	}// TextEditingEvent
 
 	[CCode (cname = "SDL_TextInputEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct TextInputEvent : CommonEvent {
 		[CCode (cname = "SDL_TEXTINPUTEVENT_TEXT_SIZE")]
 		public const uint8 TEXT_SIZE;
@@ -1721,7 +1713,6 @@ namespace SDL {
 	}// TextInputEvent
 
 	[CCode (cname = "SDL_MouseMotionEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct MouseMotionEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1734,7 +1725,6 @@ namespace SDL {
 	}// MouseMotionEvent
 
 	[CCode (cname = "SDL_MouseButtonEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct MouseButtonEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1754,7 +1744,6 @@ namespace SDL {
 	}
 
 	[CCode (cname = "SDL_MouseWheelEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct MouseWheelEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1767,20 +1756,14 @@ namespace SDL {
 	}// MouseWheelEvent
 
 	[CCode (cname = "SDL_JoyAxisEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct JoyAxisEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 axis;
 		public int16 @value;
 	}// JoyAxisEvent
 
 	[CCode (cname = "SDL_JoyBallEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct JoyBallEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 ball;
 		public int16 xrel;
@@ -1789,44 +1772,32 @@ namespace SDL {
 
 	[CCode (cname = "Uint8", cprefix = "SDL_HAT_", cheader_filename = "SDL2/SDL_events.h")]
 	public enum HatValue {
-		LEFTU, UP, RIGHTUP,
+		LEFTUP, UP, RIGHTUP,
 		LEFT, CENTERED, RIGHT,
 		LEFTDOWN, DOWN, RIGHTDOWN
 	}
 
 	[CCode (cname = "SDL_JoyHatEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct JoyHatEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 hat;
-		public HatValue hat_value;
+		public HatValue @value;
 	}// JoyHatEvent
 
 	[CCode (cname = "SDL_JoyButtonEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct JoyButtonEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 button;
 		public uint8 state;
 	}// JoyButtonEvent
 
 	[CCode (cname = "SDL_JoyDeviceEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct JoyDeviceEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 	}// JoyDeviceEvent
 
 	[CCode (cname = "SDL_ControllerAxisEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct ControllerAxisEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 axis;
 		public int16 @value;
@@ -1834,29 +1805,22 @@ namespace SDL {
 	}// ControllerAxisEvent
 
 	[CCode (cname = "SDL_ControllerButtonEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct ControllerButtonEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 		public uint8 button;
 		public uint8 state;
 	}// ControllerButtonEvent
 
 	[CCode (cname = "SDL_ControllerDeviceEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct ControllerDeviceEvent : CommonEvent {
-		[CCode (cname = "windowID")]
-		public uint32 window_id;
 		public Input.JoystickID which;
 	}// ControllerDeviceEvent
 
 	[CCode (cname = "SDL_TouchFingerEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct TouchFingerEvent : CommonEvent {
-		[CCode (cname = "touchID")]
+		[CCode (cname = "touchId")]
 		public Input.Touch.TouchID touch_id;
-		[CCode (cname = "fingerID")]
+		[CCode (cname = "fingerId")]
 		public Input.Touch.FingerID finger_id;
 		public float x;
 		public float y;
@@ -1866,9 +1830,8 @@ namespace SDL {
 	}// TouchFingerEvent
 
 	[CCode (cname = "SDL_MultiGestureEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct MultiGestureEvent : CommonEvent {
-		[CCode (cname = "touchID")]
+		[CCode (cname = "touchId")]
 		public Input.Touch.TouchID touch_id;
 		[CCode (cname = "dTheta")]
 		public float d_theta;
@@ -1876,17 +1839,15 @@ namespace SDL {
 		public float d_dist;
 		public float x;
 		public float y;
-		public float pressure;
 		[CCode (cname = "numFingers")]
 		public uint16 num_fingers;
 	}// MultiGestureEvent
 
 	[CCode (cname = "SDL_DollarGestureEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct DollarGestureEvent : CommonEvent {
-		[CCode (cname = "touchID")]
+		[CCode (cname = "touchId")]
 		public Input.Touch.TouchID touch_id;
-		[CCode (cname = "gestureID")]
+		[CCode (cname = "gestureId")]
 		public Input.Touch.GestureID gesture_id;
 		[CCode (cname = "numFingers")]
 		public uint32 num_fingers;
@@ -1896,13 +1857,11 @@ namespace SDL {
 	}// DollarGestureEvent
 
 	[CCode (cname = "SDL_DropEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct DropEvent : CommonEvent {
 		public string file;
 	}// DropEvent
 
 	[CCode (cname = "SDL_UserEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
 	public struct UserEvent : CommonEvent {
 		[CCode (cname = "windowID")]
 		public uint32 window_id;
@@ -1912,17 +1871,17 @@ namespace SDL {
 	}// UserEvent
 
 	[CCode (cname = "SDL_QuitEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
-	public struct QuitEvent : CommonEvent {}// QuitEvent
+	public struct QuitEvent : CommonEvent {
+	}// QuitEvent
 
 
 	[CCode (cname = "SDL_OSEvent", has_type_id = false, cheader_filename = "SDL2/SDL_events.h")]
-	[Compact]
-	public struct OSEvent : CommonEvent {}// OSEvent
+	public struct OSEvent : CommonEvent {
+	}// OSEvent
 
-	[CCode (cname = "SDL_SysWMEvent", type_id = "SDL_SysWMEvent", cheader_filename = "SDL2/SDL_events.h")]
-	public struct SysWMEvent {
-		public Video.SysWMmsg msg;
+	[CCode (cname = "SDL_SysWMEvent", cheader_filename = "SDL2/SDL_events.h")]
+	public struct SysWMEvent : CommonEvent {
+		public Video.SysWMmsg? msg;
 	}// SysWMEvent
 
 	[CCode (has_target = true, instance_pos = 0)]
@@ -1932,7 +1891,7 @@ namespace SDL {
 	[SimpleType]
 	public struct Event {
 		public SDL.EventType type;
-		public SDL.CommonEvent generic;
+		public SDL.CommonEvent common;
 		public SDL.WindowEvent window;
 		public SDL.KeyboardEvent key;
 		public SDL.TextEditingEvent edit;
@@ -1987,13 +1946,13 @@ namespace SDL {
 		public static int wait_inms (out SDL.Event ev, int timeout);
 
 		[CCode (cname = "SDL_PushEvent")]
-		public static int push (SDL.Event ev);
+		public static int push (SDL.Event? ev);
 
 		[CCode (cname = "SDL_SetEventFilter")]
 		public static void set_eventfilter (SDL.EventFilter filter);
 
 		[CCode (cname = "SDL_GetEventFilter")]
-		public static bool get_eventfilter (out SDL.EventFilter filter);
+		public static bool get_eventfilter (out unowned SDL.EventFilter filter);
 
 		[CCode (cname = "SDL_AddEventWatch")]
 		public static void add_eventwatch (SDL.EventFilter filter);
@@ -2031,9 +1990,9 @@ namespace SDL {
 	///
 	/// Video
 	///
-	[CCode (cheader_filename = "SDL2/SDL_video.h")]
+	[CCode (cprefix = "SDL_", cheader_filename = "SDL2/SDL_video.h")]
 	namespace Video {
-		[CCode (cprefix = "SDL_ALPHA_", cheader_filename = "SDL2/SDL_pixels.h")]
+		[CCode (cname = "int", cprefix = "SDL_ALPHA_", cheader_filename = "SDL2/SDL_pixels.h")]
 		public enum Alpha {
 			OPAQUE,
 			TRANSPARENT
@@ -2085,10 +2044,10 @@ namespace SDL {
 			UYVY, YVYU;
 
 			[CCode (cname = "SDL_DEFINE_PIXELFOURCC")]
-			public PixelRAWFormat define_from_four_cc (char a, char b, char c, char d);
+			public static PixelRAWFormat define_from_four_cc (char a, char b, char c, char d);
 
 			[CCode (cname = "SDL_DEFINE_PIXELFORMAT")]
-			public PixelRAWFormat define (Video.PixelType type, Video.BitmapOrder order, Video.PackedLayout layout, uchar bits, uchar bytes);
+			public static PixelRAWFormat define (Video.PixelType type, Video.BitmapOrder order, Video.PackedLayout layout, uchar bits, uchar bytes);
 
 			[CCode (cname = "SDL_PIXELFLAG")]
 			public uchar get_pixel_flag ();
@@ -2128,7 +2087,7 @@ namespace SDL {
 			public int y;
 		}// Point
 
-		[CCode (cname = "SDL_BlitMap")]
+		[CCode (cname = "struct SDL_BlitMap")]
 		[SimpleType]
 		public struct BlitMap {
 			// Private type, content should not be added
@@ -2158,8 +2117,8 @@ namespace SDL {
 			public bool is_equal (Video.Rect other_rect);
 
 			[Version (since = "2.0.4")]
-			[CCode (cname = "SDL_PointInRect", instance_pos = 1)]
-			public bool contains_point (Video.Point p);
+			[CCode (cname = "SDL_PointInRect", instance_pos = -1)]
+			public bool contains_point (Video.Point? p);
 			[CCode (cname = "SDL_HasIntersection")]
 			public bool is_intersecting (Video.Rect other_rect);
 
@@ -2170,7 +2129,7 @@ namespace SDL {
 			public void union_rect (Video.Rect other_rect, out Video.Rect result);
 
 			[CCode (cname = "SDL_EnclosePoints")]
-			public bool enclose_points (int count, Video.Rect clip, out Video.Rect result);
+			public static bool enclose_points (Video.Point[] points, Video.Rect clip, out Video.Rect result);
 
 			[CCode (cname = "SDL_IntersectRectAndLine")]
 			public bool intersects_withline (out int x1, out int y1, out int x2, out int y2);
@@ -2178,9 +2137,9 @@ namespace SDL {
 
 
 
-		[CCode (type_id = "SDL_Palette", cname = "SDL_Palette", cheader_filename = "SDL2/SDL_pixels.h", cprefix = "SDL_", free_function = "SDL_FreePalette", ref_function = "SDL_Palette_up", unref_function = "SDL_FreePalette")]
+		[CCode (cname = "SDL_Palette", cheader_filename = "SDL2/SDL_pixels.h", free_function = "SDL_FreePalette", ref_function = "SDL_Palette_up", unref_function = "SDL_FreePalette")]
 		public class Palette {
-			[CCode (array_length_cexpr = "ncolors", array_length_type = "int")]
+			[CCode (array_length_cname = "ncolors", array_length_type = "int")]
 			public Video.Color[] colors;
 			public uint32 version;
 			public int refcount;
@@ -2196,7 +2155,7 @@ namespace SDL {
 			public int set_colors (Video.Color[] colors, int first_color);
 		}
 
-		[CCode (type_id = "SDL_PixelFormat", cname = "SDL_PixelFormat", cheader_filename = "SDL2/SDL_pixels.h", cprefix = "SDL_", free_function = "SDL_FreeFormat", ref_function = "SDL_PixelFormat_up", unref_function = "SDL_FreeFormat")]
+		[CCode (cname = "SDL_PixelFormat", cheader_filename = "SDL2/SDL_pixels.h", free_function = "SDL_FreeFormat", ref_function = "SDL_PixelFormat_up", unref_function = "SDL_FreeFormat")]
 		public class PixelFormat {
 			public Video.PixelRAWFormat format;
 			public Video.Palette palette;
@@ -2213,13 +2172,21 @@ namespace SDL {
 			public uint32 b_mask;
 			[CCode (cname = "Amask")]
 			public uint32 a_mask;
+			[CCode (cname = "Rloss")]
 			public uint8 r_loss;
+			[CCode (cname = "Gloss")]
 			public uint8 g_loss;
+			[CCode (cname = "Bloss")]
 			public uint8 b_loss;
+			[CCode (cname = "Aloss")]
 			public uint8 a_loss;
+			[CCode (cname = "Rshift")]
 			public uint8 r_shift;
+			[CCode (cname = "Gshift")]
 			public uint8 g_shift;
+			[CCode (cname = "Bshift")]
 			public uint8 b_shift;
+			[CCode (cname = "Ashift")]
 			public uint8 a_shift;
 
 			public int refcount;
@@ -2263,11 +2230,10 @@ namespace SDL {
 				int bpp, uint32 r_mask, uint32 g_mask, uint32 b_mask, uint32 a_mask);
 		}// PixelFormat
 
-		[CCode (cname = "SDL_blit", cheader_filename = "SDL2/SDL_surface.h")]
-		public delegate int BlitFunc (Video.Surface src, Video.Rect? srcrect,
-		 Video.Surface dst, Video.Rect? dstrect);
+		[CCode (cname = "SDL_blit", cheader_filename = "SDL2/SDL_surface.h", has_target = false)]
+		public delegate int BlitFunc (Video.Surface src, Video.Rect? srcrect, Video.Surface dst, Video.Rect? dstrect);
 
-		[CCode (type_id = "SDL_Surface", cname = "SDL_Surface", ref_function = "SDL_Surface_up", unref_function = "SDL_FreeSurface", cheader_filename = "SDL2/SDL_surface.h")]
+		[CCode (cname = "SDL_Surface", ref_function = "SDL_Surface_up", unref_function = "SDL_FreeSurface", cheader_filename = "SDL2/SDL_surface.h")]
 		[Compact]
 		public class Surface {
 			public uint32 flags;
@@ -2278,9 +2244,9 @@ namespace SDL {
 			public void* pixels;
 			public void* userdata; //maybe this could be binded as Simple Generics?
 			public int locked;
-			public void* lock_data;
+			public void* list_blitmap;
 			public Video.Rect clip_rect;
-			public Video.BlitMap map;
+			public Video.BlitMap? map;
 			public int refcount;
 
 			public unowned Surface up () {
@@ -2411,22 +2377,12 @@ namespace SDL {
 		}// RendererFlags
 
 		[CCode (cprefix = "SDL_", cname = "SDL_RendererInfo", cheader_filename = "SDL2/SDL_render.h")]
-		[Compact]
-		public class RendererInfo {
-
-			public const string name;
+		public struct RendererInfo {
+			public unowned string name;
 			public uint32 flags;
-
-			[CCode (cname = "num_texture_formats")]
 			public uint32 num_texture_formats;
-
-			[CCode (cname = "texture_formats")]
 			public Video.PixelFormat texture_formats[16];
-
-			[CCode (cname = "max_texture_width")]
 			public int max_texture_width;
-
-			[CCode (cname = "texture_formats")]
 			public int max_texture_height;
 		}// RendererInfo
 
@@ -2540,14 +2496,14 @@ namespace SDL {
 			[CCode (cname = "SDL_RenderDrawRect")]
 			public int draw_rect (Video.Rect? rect);
 
-			[CCode (cname = "SDL_RenderDrawLines")]
-			public int draw_rects (Video.Rect[] points, int count);
+			[CCode (cname = "SDL_RenderDrawRects")]
+			public int draw_rects (Video.Rect[] rects);
 
 			[CCode (cname = "SDL_RenderFillRect")]
 			public int fill_rect (Video.Rect? rect);
 
 			[CCode (cname = "SDL_RenderFillRects")]
-			public int fill_rects (Video.Rect[] points, int count);
+			public int fill_rects (Video.Rect[] rects);
 
 			[CCode (cname = "SDL_RenderCopy")]
 			public int copy (Video.Texture texture, Video.Rect? srcrect, Video.Rect? dstrect);
@@ -2587,7 +2543,7 @@ namespace SDL {
 			[CCode (cname = "SDL_SetTextureAlphaMod")]
 			public int set_alpha_mod (uint8 alpha);
 
-			[CCode (cname = "SDL_GetTextureColorMod")]
+			[CCode (cname = "SDL_GetTextureAlphaMod")]
 			public int get_alpha_mod (out uint8 alpha);
 
 			[CCode (cname = "SDL_SetTextureBlendMode")]
@@ -2601,7 +2557,7 @@ namespace SDL {
 
 			[Version (since = "2.0.1")]
 			[CCode (cname = "SDL_UpdateYUVTexture")]
-			public int update_yuv (Video.Rect? rect, uint8[] yplane, int ypitch, uint8[] uplane, int upitch, uint8[] vplane, int vpitch);
+			public int update_yuv (Video.Rect? rect, [CCode (array_length = false)] uint8[] yplane, int ypitch, [CCode (array_length = false)] uint8[] uplane, int upitch, [CCode (array_length = false)] uint8[] vplane, int vpitch);
 
 			[CCode (cname = "SDL_LockTexture")]
 			public int do_lock (Video.Rect? rect, out void* pixels, out int pitch);
@@ -2707,7 +2663,7 @@ namespace SDL {
 
 			[Version (since = "2.0.5")]
 			[CCode (cname = "SDL_GetDisplayUsableBounds")]
-			public int get_usable_bounds (out Video.Rect? rect);
+			public int get_usable_bounds (out Video.Rect rect);
 		}// Display
 
 		[CCode (cname = " SDL_SYSWM_TYPE", cprefix = "SDL_SYSWM_", cheader_filename = "SDL2/SDL_syswm.h")]
@@ -2886,24 +2842,24 @@ namespace SDL {
 		}
 
 		[CCode (cname = "SDL_HitTest", has_target= true, delegate_target_pos = 1.1)]
-		public delegate HitTestResult HitTestFunc (Video.Window window, Video.Point area);
+		public delegate HitTestResult HitTestFunc (Video.Window window, Video.Point? area);
 
 
 		[CCode (cprefix = "SDL_", cname = "SDL_Window", free_function = "SDL_DestroyWindow", cheader_filename = "SDL2/SDL_video.h")]
 		[Compact]
 		public class Window {
 			[CCode (cname = "SDL_WINDOWPOS_UNDEFINED_MASK")]
-			public const uint8 POS_UNDEFINED;
+			public const uint POS_UNDEFINED;
 
 			[CCode (cname = "SDL_WINDOWPOS_CENTERED_MASK")]
-			public const uint8 POS_CENTERED;
+			public const uint POS_CENTERED;
 
 			[CCode (cname = "SDL_NONSHAPEABLE_WINDOW", cheader_filename = "SDL2/SDL_shape.h")]
-			private const int8 SDL_NONSHAPEABLE_WINDOW;
+			public const int8 SDL_NONSHAPEABLE_WINDOW;
 			[CCode (cname = "SDL_INVALID_SHAPE_ARGUMENT", cheader_filename = "SDL2/SDL_shape.h")]
-			private const int8 SDL_INVALID_SHAPE_ARGUMENT;
+			public const int8 SDL_INVALID_SHAPE_ARGUMENT;
 			[CCode (cname = "SDL_WINDOW_LACKS_SHAPE", cheader_filename = "SDL2/SDL_shape.h")]
-			private const int8 SDL_WINDOW_LACKS_SHAPE;
+			public const int8 SDL_WINDOW_LACKS_SHAPE;
 
 			[Version (since = "2.0.4")]
 			[CCode (cname = "SDL_GetGrabbedWindow")]
@@ -3056,10 +3012,10 @@ namespace SDL {
 			public float get_brightness ();
 
 			[CCode (cname = "SDL_SetWindowGammaRamp")]
-			public int set_gammaramp (uint16[]? red, uint16[]? green, uint16[]? blue);
+			public int set_gammaramp (uint16 red[256], uint16 green[256], uint16 blue[256]);
 
 			[CCode (cname = "SDL_GetWindowGammaRamp")]
-			public int get_gammaramp (out uint16[]? red, out uint16[]? green, out uint16[]? blue);
+			public int get_gammaramp ([CCode (array_length = false)] uint16[] red, [CCode (array_length = false)] uint16[] green, [CCode (array_length = false)] uint16[] blue);
 
 			[Version (since = "2.0.0")]
 			[CCode (cname = "SDL_GetWindowWMInfo", cheader_filename = "SDL2/SDL_syswm.h")]
@@ -3067,11 +3023,11 @@ namespace SDL {
 
 			[Version (since = "2.0.1")]
 			[CCode (cname = "SDL_GL_GetDrawableSize")]
-			public void get_gl_drawable_size (out int? w, out int? h);
+			public void get_gl_drawable_size (out int w, out int h);
 
 			[Version (since = "2.0.5")]
-			[CCode (cname = "SDL_GetWindowBorderSize")]
-			public int get_border_size (out int? top, out int? left, out int? bottom, out int? right);
+			[CCode (cname = "SDL_GetWindowBordersSize")]
+			public int get_borders_size (out int top, out int left, out int bottom, out int right);
 
 			[Version (since = "2.0.5")]
 			[CCode (cname = "SDL_SetWindowOpacity")]
@@ -3079,7 +3035,7 @@ namespace SDL {
 
 			[Version (since = "2.0.5")]
 			[CCode (cname = "SDL_GetWindowOpacity")]
-			public int get_opacity (out float? opacity);
+			public int get_opacity (out float opacity);
 
 			[Version (since = "2.0.5")]
 			[CCode (cname = "SDL_SetWindowInputFocus")]
@@ -3197,7 +3153,7 @@ namespace SDL {
 			}
 
 			[Version (since = "2.0.5")]
-			[CCode (cname = "SDL_WindowShapeMode", type_id = "SDL_WindowShapeMode" , cheader_filename = "SDL2/SDL_shape.h")]
+			[CCode (cname = "SDL_WindowShapeMode", cheader_filename = "SDL2/SDL_shape.h")]
 			public struct ShapeMode {
 				/**
 				 * The mode of these window-shape parameters.
@@ -3229,7 +3185,7 @@ namespace SDL {
 		[CCode (cprefix = "SDL_GL_", cheader_filename = "SDL2/SDL_video.h")]
 		namespace GL {
 
-			[CCode (type_id = "SDL_GLContext", cname = "SDL_GLContext", free_function = "SDL_GL_DeleteContext", cheader_filename = "SDL2/SDL_video.h")]
+			[CCode (cname = "SDL_GLContext", free_function = "SDL_GL_DeleteContext", cheader_filename = "SDL2/SDL_video.h")]
 			[Compact]
 			public class Context {
 				[CCode (cname = "SDL_GL_CreateContext")]
@@ -3257,9 +3213,16 @@ namespace SDL {
 				CORE, COMPATIBILITY, ES;
 			}// GLprofile
 
-			[CCode (cname = "SDL_GLcontextFlag", cprefix = "SDL_GL_CONTEXT_", lower_case_csuffix = "flag", cheader_filename = "SDL2/SDL_video.h")]
+			[Flags, CCode (cname = "SDL_GLcontextFlag", cprefix = "SDL_GL_CONTEXT_", cheader_filename = "SDL2/SDL_video.h")]
 			public enum ContextFlag {
-				DEBUG, FORWARD_COMPATIBLE, ROBUST_ACCESS, RESET_ISOLATION
+				[CCode (cname = "SDL_GL_CONTEXT_DEBUG_FLAG")]
+				DEBUG,
+				[CCode (cname = "SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG")]
+				FORWARD_COMPATIBLE,
+				[CCode (cname = "SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG")]
+				ROBUST_ACCESS,
+				[CCode (cname = "SDL_GL_CONTEXT_RESET_ISOLATION_FLAG")]
+				RESET_ISOLATION
 			}
 			[CCode (cname = "SDL_GL_LoadLibrary")]
 			public static int load_library (string path);
@@ -3311,8 +3274,7 @@ namespace SDL {
 		/// MessageBox
 		///
 		[CCode (cprefix = "SDL_", cheader_filename = "SDL2/SDL_messagebox.h")]
-		[Compact]
-		public class MessageBox {
+		namespace MessageBox {
 			[Flags, CCode (cname = "SDL_MessageBoxFlags", cprefix = "SDL_MESSAGEBOX_", cheader_filename = "SDL2/SDL_messagebox.h")]
 			public enum Flags {
 				/**
@@ -3385,7 +3347,7 @@ namespace SDL {
 				public Video.Window? parent_window;
 				public string title;
 				public string message;
-				[CCode (array_length_cexpr = "numbuttons", array_length_type = "int")]
+				[CCode (array_length_cname = "numbuttons", array_length_type = "int")]
 				public Video.MessageBox.ButtonData[] buttons;
 				/**
 				* Can be null to use system settings
@@ -3410,8 +3372,7 @@ namespace SDL {
 	namespace Input {
 
 		[CCode (cheader_filename = "SDL2/SDL_clipboard.h")]
-		[Compact]
-		public class Clipboard {
+		namespace Clipboard {
 
 			[Version (since = "2.0.0")]
 			[CCode (cname = "SDL_GetClipboardText")]
@@ -3591,16 +3552,16 @@ namespace SDL {
 			public Input.Scancode scancode;
 			public Input.Keycode sym;
 			public uint16 mod;
-			public uint32 unicode;
+			public uint32 unused;
 		}// Key
 
 		[CCode (cheader_filename = "SDL2/SDL_keyboard.h")]
-		public class Keyboard {
+		namespace Keyboard {
 			[CCode (cname = "SDL_GetKeyboardFocus")]
 			public static Video.Window get_focus ();
 
 			[CCode (cname = "SDL_GetKeyboardState")]
-			public static unowned uint8* get_raw_state (out size_t length = null);
+			public static unowned uint8* get_raw_state (out int numkeys = null);
 
 			[CCode (cname = "vala_get_keyboard_state")]
 			public static unowned bool[] get_state () {
@@ -3621,7 +3582,7 @@ namespace SDL {
 		}// Keyboard
 
 		[CCode (cheader_filename = "SDL2/SDL_keyboard.h")]
-		public class TextInput {
+		namespace TextInput {
 			[CCode (cname = "SDL_StartTextInput")]
 			public static void start ();
 
@@ -3637,7 +3598,7 @@ namespace SDL {
 		}// TextInput
 
 		[CCode (cheader_filename = "SDL2/SDL_keyboard.h")]
-		public class ScreenKeyboard {
+		namespace ScreenKeyboard {
 			[Version (since = "2.0.0")]
 			[CCode (cname = "SDL_HasScreenKeyboardSupport")]
 			public static bool has_support ();
@@ -3662,7 +3623,7 @@ namespace SDL {
 			X1MASK, X2MASK
 		}// Buttons
 
-		[CCode (type_id = "SDL_Cursor", free_function = "SDL_FreeCursor", cheader_filename = "SDL2/SDL_mouse.h")]
+		[CCode (cname = "SDL_Cursor", free_function = "SDL_FreeCursor", cheader_filename = "SDL2/SDL_mouse.h")]
 		[Compact]
 		public class Cursor {
 			[CCode (cname = "SDL_GetMouseFocus")]
@@ -3677,7 +3638,7 @@ namespace SDL {
 
 			[Version (since = "2.0.4")]
 			[CCode (cname = "SDL_GetGlobalMouseState")]
-			public static uint32 get_global_state (ref int? x, ref int? y);
+			public static uint32 get_global_state (ref int x, ref int y);
 
 			[CCode (cname = "SDL_GetRelativeMouseState")]
 			public static uint32 get_relative_state (ref int x, ref int y);
@@ -3707,7 +3668,7 @@ namespace SDL {
 			public Cursor.from_color (Video.Surface surface, int hot_x, int hot_y);
 
 			[Version (since = "2.0.0")]
-			[CCode (cname = "SDL_SystemCursor")]
+			[CCode (cname = "SDL_CreateSystemCursor")]
 			public Cursor.from_system (Input.SystemCursor id);
 
 			[CCode (cname = "SDL_SetCursor")]
@@ -3895,7 +3856,7 @@ namespace SDL {
 
 
 
-			[CCode (cname = "SDL_Finger", type_id = "SDL_Finger", cheader_filename = "SDL2/SDL_touch.h")]
+			[CCode (cname = "SDL_Finger", cheader_filename = "SDL2/SDL_touch.h")]
 			[Compact]
 			public class Finger {
 				public FingerID id;
@@ -4003,7 +3964,7 @@ namespace SDL {
 					return _to_string () ?? "INVALID";
 				}
 				[CCode (cname = "SDL_GameControllerGetAxisFromString")]
-				public static GameController.Axis? from_string (string axis_string);
+				public static GameController.Axis from_string (string axis_string);
 			}
 
 			[Version (since = "2.0.0")]
@@ -4018,7 +3979,7 @@ namespace SDL {
 					return _to_string () ?? "INVALID";
 				}
 				[CCode (cname = "SDL_GameControllerGetButtonFromString")]
-				public static GameController.Button? from_string (string button_string);
+				public static GameController.Button from_string (string button_string);
 			}
 			[CCode (cprefix = "SDL_CONTROLLER_BINDTYPE_", cheader_filename = "SDL2/SDL_gamecontroller.h")]
 			public enum BindType {
@@ -4026,6 +3987,7 @@ namespace SDL {
 			}
 
 			[CCode (cname = "SDL_GameControllerButtonBind")]
+			[SimpleType]
 			public struct ButtonBind {
 				[CCode (cname = "bindType")]
 				public BindType bind_type;
@@ -4061,7 +4023,7 @@ namespace SDL {
 		[SimpleType]
 		public struct HapticDirection {
 			public DirectionType type;
-			public int32 dir;
+			public int32 dir[3];
 		}
 		[CCode (cname = "SDL_HapticPeriodic", cheader_filename = "SDL2/SDL_haptic.h")]
 		public struct HapticPeriodic {
@@ -4082,7 +4044,7 @@ namespace SDL {
 			//Envelope
 			public uint16 attack_length;
 			public uint16 attack_level;
-			public uint16 fade_langth;
+			public uint16 fade_length;
 			public uint16 fade_level;
 		}
 
@@ -4102,7 +4064,7 @@ namespace SDL {
 			//Envelope
 			public uint16 attack_length;
 			public uint16 attack_level;
-			public uint16 fade_langth;
+			public uint16 fade_length;
 			public uint16 fade_level;
 		}
 
@@ -4118,17 +4080,12 @@ namespace SDL {
 			public uint16 button;
 			public uint16 interval;
 			//Condition
-			public uint16 right_sat;
-			public uint16 left_sat;
-			public int16 right_coeff;
-			public int16 left_coeff;
-			public uint16 deadband;
-			public int16 center;
-			//Envelope
-			public uint16 attack_length;
-			public uint16 attack_level;
-			public uint16 fade_langth;
-			public uint16 fade_level;
+			public uint16 right_sat[3];
+			public uint16 left_sat[3];
+			public int16 right_coeff[3];
+			public int16 left_coeff[3];
+			public uint16 deadband[3];
+			public int16 center[3];
 		}
 		[CCode (cname = "SDL_HapticRamp", cheader_filename = "SDL2/SDL_haptic.h")]
 		public struct HapticRamp {
@@ -4147,7 +4104,7 @@ namespace SDL {
 			//Envelope
 			public uint16 attack_length;
 			public uint16 attack_level;
-			public uint16 fade_langth;
+			public uint16 fade_length;
 			public uint16 fade_level;
 		}
 		[CCode (cname = "SDL_HapticLeftRight", cheader_filename = "SDL2/SDL_haptic.h")]
@@ -4180,7 +4137,7 @@ namespace SDL {
 			//Envelope
 			public uint16 attack_length;
 			public uint16 attack_level;
-			public uint16 fade_langth;
+			public uint16 fade_length;
 			public uint16 fade_level;
 		}
 
@@ -4201,28 +4158,28 @@ namespace SDL {
 		[CCode (cname = "SDL_HapticOpen")]
 		public Haptic (int device_index);
 		[Version (since = "2.0.0")]
-		[CCode (cname = "SDL_HapticOpenfromJoystick")]
+		[CCode (cname = "SDL_HapticOpenFromJoystick")]
 		public Haptic.from_joystick (Input.Joystick joystick);
 		[Version (since = "2.0.0")]
-		[CCode (cname = "SDL_HapticOpenfromMouse")]
+		[CCode (cname = "SDL_HapticOpenFromMouse")]
 		public Haptic.from_mouse ();
 		[CCode (cname = "SDL_NumHaptics")]
 		public static int num_devices ();
 		[CCode (cname = "SDL_HapticName")]
 		public static unowned string device_name (int device_index);
 		[CCode (cname = "SDL_HapticNewEffect")]
-		public int upload_effect (HapticEffect effect);
+		public int upload_effect (HapticEffect? effect);
 		[CCode (cname = "SDL_HapticRunEffect")]
-		public int run_effect (int effect_id);
-		[CCode (cname = "SDl_HapticUpdateEffect")]
-		public int update_effect (int effect_id, HapticEffect new_effect);
+		public int run_effect (int effect_id, uint32 iterations);
+		[CCode (cname = "SDL_HapticUpdateEffect")]
+		public int update_effect (int effect_id, out HapticEffect new_effect);
 		[CCode (cname = "SDL_HapticDestroyEffect")]
 		public int destroy_effect (int effect_id);
 		[CCode (cname = "SDL_HapticGetEffectStatus")]
 		public int get_effect_status (int effect_id);
 		//Returns negative on error, that's why it's not a bool
 		[CCode (cname = "SDL_HapticEffectSupported")]
-		public int supports_effect (HapticEffect effect);
+		public int supports_effect (HapticEffect? effect);
 		[Version (since = "2.0.0")]
 		[CCode (cname = "SDL_HapticNumEffects")]
 		public int effects_capacity ();
@@ -4235,19 +4192,19 @@ namespace SDL {
 		public int get_index ();
 		[CCode (cname = "SDL_HapticSetGain")]
 		public int set_gain (int gain);
-		[CCode (cname = "SDL_HapticsetAutocenter")]
+		[CCode (cname = "SDL_HapticSetAutocenter")]
 		public int set_autocenter (int percentage);
 		[CCode (cname = "SDL_HapticRumbleInit")]
 		public int rumble_init ();
 		[CCode (cname = "SDL_HapticRumblePlay")]
-		public int rumble_play ();
+		public int rumble_play (float strength, uint32 length);
 		[CCode (cname = "SDL_HapticRumbleStop")]
 		public int rumble_stop ();
 		[CCode (cname = "SDL_HapticRumbleSupported")]
 		public int rumble_supported ();
 		[Version (since = "2.0.0")]
 		[CCode (cname = "SDL_HapticOpened")]
-		public bool is_open ();
+		public static bool is_open (int device_index);
 		[CCode (cname = "SDL_HapticQuery")]
 		public uint query ();
 		[CCode (cname = "SDL_HapticPause")]
@@ -4295,8 +4252,8 @@ namespace SDL {
 			ANY_CHANGE
 		}// AudioAllowFlags
 
-		[CCode (cname = "SDL_AudioCallback", instance_pos = 0.1, has_target = true, delegate_target_pos = 0, cheader_filename = "SDL2/SDL_audio.h")]
-		public delegate void AudioFunc (uint8[] stream, int len);
+		[CCode (cname = "SDL_AudioCallback", cheader_filename = "SDL2/SDL_audio.h", instance_pos = 0.1)]
+		public delegate void AudioFunc ([CCode (array_length_cname = "len", array_length_type = "int")] uint8[] stream);
 
 		[CCode (cname = "SDL_AudioSpec", cheader_filename = "SDL2/SDL_audio.h")]
 		public struct AudioSpec {
@@ -4359,7 +4316,7 @@ namespace SDL {
 			public void unlock ();
 
 			[CCode (cname = "SDL_GetAudioDeviceName")]
-			public unowned string get_name ();
+			public unowned string get_name (int iscapture = 0);
 
 			[Version (since = "2.0.4")]
 			[CCode (cname = "SDL_QueueAudio")]
@@ -4388,11 +4345,6 @@ namespace SDL {
 			[Version (since = "2.0.4")]
 			[CCode (cname = "SDL_CloseAudioDevice")]
 			public void close_device ();
-
-			[Version (since = "2.0.4")]
-			[CCode (cname = "SDL_AudioDeviceConnected")]
-			public bool is_device_connected ();
-
 
 		}// AudioDeviceID
 
@@ -4431,7 +4383,7 @@ namespace SDL {
 		public static void pause (int pause_on);
 
 		[CCode (cname = "SDL_LoadWAV_RW")]
-		public static unowned AudioSpec? load_rw (RWops src, int freesrc, ref AudioSpec spec, out uint8[] audio_buf, out uint32 audio_len);
+		public static unowned AudioSpec? load_rw (RWops src, int freesrc, ref AudioSpec spec, [CCode (array_length = false)] out uint8[] audio_buf, out uint32 audio_len);
 
 		public static unowned AudioSpec? load (string file, ref AudioSpec spec, out uint8[] audio_buf, out uint32 audio_len) {
 			return load_rw (new SDL.RWops.from_file (file, "rb"), 1,
@@ -4442,10 +4394,10 @@ namespace SDL {
 		public static void free (ref uint8 audio_buf);
 
 		[CCode (cname = "SDL_MixAudio")]
-		public static void mix (out uint8[] dst, uint8[] src, uint32 len, int volume);
+		public static void mix ([CCode (array_length = false)] uint8[] dst, [CCode (array_length = false)] uint8[] src, uint32 len, int volume);
 
 		[CCode (cname = "SDL_MixAudioFormat")]
-		public static void mix_device (out uint8[] dst, uint8[] src, AudioFormat format, uint32 len, int volume);
+		public static void mix_device ([CCode (array_length = false)] uint8[] dst, [CCode (array_length = false)] uint8[] src, AudioFormat format, uint32 len, int volume);
 
 		[Version (deprecated = true, replacement = "AudioDevice.do_lock")]
 		[CCode (cname = "SDL_LockAudio")]
@@ -4498,7 +4450,7 @@ namespace SDL {
 	/// Threading
 	///
 	[CCode (has_target = true)]
-	public delegate int ThreadFunc ();
+	public delegate int ThreadFunction ();
 
 
 	[CCode (cname = "SDL_ThreadPriority", cprefix = "SDL_THREAD_PRIORITY_", cheader_filename = "SDL2/SDL_thread.h")]
@@ -4510,7 +4462,7 @@ namespace SDL {
 	[Compact]
 	public class Thread {
 		[CCode (cname = "SDL_CreateThread", delegate_target_pos= 1.1)]
-		public Thread (ThreadFunc f, string name);
+		public Thread (ThreadFunction f, string name);
 
 		[CCode (cname = "SDL_ThreadID")]
 		public static ulong id ();
@@ -4541,7 +4493,7 @@ namespace SDL {
 
 	}// Thread
 
-	[CCode (cname = "SDL_Mutex", free_function = "SDL_DestroyMutex")]
+	[CCode (cname = "SDL_mutex", free_function = "SDL_DestroyMutex")]
 	[Compact]
 	public class Mutex {
 		[CCode (cname = "SDL_CreateMutex")]

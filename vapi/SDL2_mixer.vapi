@@ -30,7 +30,7 @@
 [CCode (cheader_filename = "SDL2/SDL_mixer.h")]
 namespace SDLMixer {
 	[CCode (cname = "Mix_Linked_Version")]
-	public static unowned SDL.Version linked ();
+	public static unowned SDL.Version? linked ();
 
 	[CCode (cname = "Mix_OpenAudio")]
 	public static int open (int frequency, SDL.Audio.AudioFormat format, int channels, int chunksize);
@@ -50,13 +50,15 @@ namespace SDLMixer {
 	[CCode (cname = "Mix_GetSynchroValue")]
 	public static int get_synchro_value ();
 
-	[CCode (has_target = true, delegate_target_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate void MixFunction (uint8[] stream);
+	[CCode (has_typedef = false, has_target = false)]
 	public delegate void MusicFinishedCallback ();
+	[CCode (has_typedef = false, has_target = false)]
 	public delegate void ChannelFinishedCallback (int channel);
-	[CCode (has_target = true, delegate_target_pos = 2.1)]
+	[CCode (cname = "Mix_EffectFunc_t", instance_pos = 3.9)]
 	public delegate void EffectCallback (int chan, void* stream, int len);
-	[CCode (has_target = true, delegate_target_pos = 0.1)]
+	[CCode (cname = "Mix_EffectDone_t", instance_pos = 1.9)]
 	public delegate void EffectDoneCallback (int chan);
 
 	[CCode (cname = "int", cprefix = "MIX_")]
@@ -64,9 +66,9 @@ namespace SDLMixer {
 		NO_FADING, FADING_OUT, FADING_IN
 	}// FadeStatus
 
-	[CCode (cname = "int", cprefix = "MUS_")]
+	[CCode (cname = "Mix_MusicType", cprefix = "MUS_")]
 	public enum MusicType {
-		NONE, CMD, WAV, MOD, MID, OGG, MP3, MP3_MAD
+		NONE, CMD, WAV, MOD, MID, OGG, MP3, FLAC, OPUS
 	}// MusicType
 
 	[CCode (cname = "Mix_Chunk", free_function = "Mix_FreeChunk")]
@@ -149,14 +151,12 @@ namespace SDLMixer {
 		public int fade_in (int loops, int ms, double position = 0.0);
 	}// Music
 
-	[Compact]
-	public class Effect {
+	namespace Effect {
 		[CCode (cname = "Mix_RegisterEffect")]
-		public static int register (int chan, EffectCallback f,
-			EffectDoneCallback? d);
+		public static int register (int chan, [CCode (delegate_target_pos = 3.9)] EffectCallback f, [CCode (delegate_target_pos = 3.9)] EffectDoneCallback? d);
 
 		[CCode (cname = "Mix_UnregisterEffect")]
-		public static int unregister (int chan, EffectCallback f);
+		public static int unregister (int chan, [CCode (delegate_target = false)] EffectCallback f);
 
 		[CCode (cname = "Mix_UnregisterAllEffects")]
 		public static int unregister_all (int channel);
@@ -192,7 +192,7 @@ namespace SDLMixer {
 		[CCode (cname = "Mix_FadeInChannelTimed")]
 		public int fade_in (Chunk chunk, int loops, int ms, int ticks = -1);
 
-		[CCode (cname = "Mix_FadeOutChannelTimed")]
+		[CCode (cname = "Mix_FadeOutChannel")]
 		public int fade_out (int ms);
 
 		[CCode (cname = "Mix_FadingChannel")]

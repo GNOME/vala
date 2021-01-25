@@ -29,8 +29,7 @@
 
 namespace SDLGraphics {
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Pixel {
+	namespace Pixel {
 		[CCode (cname = "pixelColor")]
 		public static int color (SDL.Video.Renderer dst, int16 x, int16 y, uint32 color);
 
@@ -40,8 +39,7 @@ namespace SDLGraphics {
 	}// Pixel
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Line {
+	namespace Line {
 		[CCode (cname = "hlineColor")]
 		public static int color_h (SDL.Video.Renderer dst, int16 x1, int16 x2,
 			int16 y, uint32 color);
@@ -76,8 +74,7 @@ namespace SDLGraphics {
 	}// Line
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Rectangle {
+	namespace Rectangle {
 		[CCode (cname = "rectangleColor")]
 		public static int outline_color (SDL.Video.Renderer dst, int16 x1, int16 y1,
 			int16 x2, int16 y2, uint32 color);
@@ -112,8 +109,7 @@ namespace SDLGraphics {
 	}// Rectangle
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Circle {
+	namespace Circle {
 		[CCode (cname = "circleColor")]
 		public static int outline_color (SDL.Video.Renderer dst, int16 x, int16 y,
 			int16 radius, uint32 color);
@@ -140,8 +136,7 @@ namespace SDLGraphics {
 	}// Circle
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Ellipse {
+	namespace Ellipse {
 		[CCode (cname = "ellipseColor")]
 		public static int outline_color (SDL.Video.Renderer dst, int16 xc, int16 yc,
 			int16 rx, int16 ry, uint32 color);
@@ -168,8 +163,7 @@ namespace SDLGraphics {
 	}// Ellipse
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Arc {
+	namespace Arc {
 		[CCode (cname = "pieColor")]
 		public static int outline_color (SDL.Video.Renderer dst, int16 x, int16 y, int16 radius,
 			int16 start, int16 end, uint32 color);
@@ -188,8 +182,7 @@ namespace SDLGraphics {
 	}// Arc
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Trigon {
+	namespace Trigon {
 		[CCode (cname = "trigonColor")]
 		public static int outline_color (SDL.Video.Renderer dst, int16 x1, int16 y1,
 			int16 x2, int16 y2, int16 x3, int16 y3, uint32 color);
@@ -219,8 +212,7 @@ namespace SDLGraphics {
 	}// Trigon
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Polygon {
+	namespace Polygon {
 		[CCode (cname = "polygonColor")]
 		public static int outline_color (SDL.Video.Renderer dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy,
 			int n, uint32 color);
@@ -247,8 +239,7 @@ namespace SDLGraphics {
 	}// Polygon
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class BezierCurve {
+	namespace BezierCurve {
 		[CCode (cname = "bezierColor")]
 		public static int color (SDL.Video.Renderer dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy,
 			int vertices, int steps, uint32 color);
@@ -259,8 +250,7 @@ namespace SDLGraphics {
 	}// BezierCurve
 
 	[CCode (cheader_filename = "SDL2/SDL2_gfxPrimitives.h")]
-	[Compact]
-	public class Text {
+	namespace Text {
 		[CCode (cname = "stringColor")]
 		public static int color (SDL.Video.Renderer dst, int16 x, int16 y, string s, uint32 color);
 
@@ -273,8 +263,7 @@ namespace SDLGraphics {
 	}// Text
 
 	[CCode (cheader_filename = "SDL2/SDL2_rotozoom.h")]
-	[Compact]
-	public class RotoZoom {
+	namespace RotoZoom {
 		[CCode (cname = "rotozoomSurface")]
 		public static SDL.Video.Surface rotozoom (SDL.Video.Surface src, double degrees,
 			double zoom, int smooth);
@@ -326,8 +315,7 @@ namespace SDLGraphics {
 	}// FramerateManager
 
 	[CCode (cheader_filename = "SDL2/SDL2_imageFilter.h")]
-	[Compact]
-	public class Filter {
+	namespace Filter {
 		[CCode (cname = "SDL_imageFilterMMXdetect")]
 		public static int have_mmx ();
 
@@ -412,8 +400,8 @@ namespace SDLGraphics {
 		[CCode (cname = "SDL_imageFilterClipToRange")]
 		public static int clip ([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar min, uchar max);
 
-		[CCode (cname = "SDL_imageFilterNormalize")]
-		public static int normalize ([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, int cmin, int cmax, int nmin, int nmax);
+		[CCode (cname = "SDL_imageFilterNormalizeLinear")]
+		public static int normalize_linear ([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, int cmin, int cmax, int nmin, int nmax);
 
 		[CCode (cname = "SDL_imageFilterConvolveKernel3x3Divide")]
 		public static int convolve_3x3_divide ([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar divisor);
