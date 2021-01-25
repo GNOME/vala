@@ -978,6 +978,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		write_end_block ();
+		if (b.parent_node is Block) {
+			write_newline ();
+		}
 	}
 
 	public override void visit_empty_statement (EmptyStatement stmt) {
