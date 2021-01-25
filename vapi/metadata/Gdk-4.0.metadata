@@ -42,6 +42,12 @@ Toplevel
         .compute_size.size nullable unowned
 ToplevelSize struct
 
+// Bug #: confused girparser
+content_register_deserializer
+  .deserialize closure=-1 destroy=-1 owned=false
+content_register_serializer
+  .serialize closure=-1 destroy=-1 owned=false
+
 // g-i doesn't support nullable fields and properties (bug #730479)
 Device
         .name nullable

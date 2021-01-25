@@ -5902,9 +5902,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void content_register_deserializer (string mime_type, GLib.Type type, owned Gdk.ContentDeserializeFunc deserialize);
+	public static void content_register_deserializer (string mime_type, GLib.Type type, Gdk.ContentDeserializeFunc deserialize, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void content_register_serializer (GLib.Type type, string mime_type, owned Gdk.ContentSerializeFunc serialize);
+	public static void content_register_serializer (GLib.Type type, string mime_type, Gdk.ContentSerializeFunc serialize, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_serialize_async (GLib.OutputStream stream, string mime_type, GLib.Value value, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -7503,6 +7503,7 @@ namespace Gtk {
 		public int get_id_column ();
 		public unowned Gtk.TreeModel? get_model ();
 		public bool get_popup_fixed_width ();
+		[CCode (delegate_target = false)]
 		public unowned Gtk.TreeViewRowSeparatorFunc? get_row_separator_func ();
 		public void popup_for_device (Gdk.Device device);
 		public void set_active (int index_);
@@ -11689,6 +11690,7 @@ namespace Gtk {
 		protected TreeSelection ();
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
+		[CCode (delegate_target = false)]
 		public unowned Gtk.TreeSelectionFunc get_select_function ();
 		public bool get_selected (out unowned Gtk.TreeModel model, out Gtk.TreeIter iter);
 		public GLib.List<Gtk.TreePath> get_selected_rows (out unowned Gtk.TreeModel model);
@@ -11782,10 +11784,12 @@ namespace Gtk {
 		public uint get_n_columns ();
 		public bool get_path_at_pos (int x, int y, out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? column, out int cell_x, out int cell_y);
 		public bool get_reorderable ();
+		[CCode (delegate_target = false)]
 		public unowned Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		public bool get_rubber_banding ();
 		public int get_search_column ();
 		public unowned Gtk.Editable? get_search_entry ();
+		[CCode (delegate_target = false)]
 		public unowned Gtk.TreeViewSearchEqualFunc get_search_equal_func ();
 		public unowned Gtk.TreeSelection get_selection ();
 		public bool get_show_expanders ();

@@ -366,6 +366,12 @@ Settings.color_hash type="GLib.HashTable<string,Gdk.Color?>"
 
 // Bug #: confused girparser
 Radio*.group#property no_accessor_method
+ComboBox
+  .get_row_separator_func delegate_target=false
+TreeView
+  .get_row_separator_func delegate_target=false
+  .get_search_equal_func delegate_target=false
+  .get_search_position_func delegate_target=false
 
 // Skipped for G-I, but usable from Vala
 FlowBox
