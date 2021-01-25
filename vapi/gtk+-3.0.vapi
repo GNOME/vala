@@ -2183,6 +2183,7 @@ namespace Gtk {
 		public unowned Atk.Object get_popup_accessible ();
 		[Version (since = "3.0")]
 		public bool get_popup_fixed_width ();
+		[CCode (delegate_target = false)]
 		[Version (since = "2.6")]
 		public unowned Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		[Version (since = "2.6")]
@@ -8989,6 +8990,7 @@ namespace Gtk {
 		public uint get_n_columns ();
 		public bool get_path_at_pos (int x, int y, out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? column, out int cell_x, out int cell_y);
 		public bool get_reorderable ();
+		[CCode (delegate_target = false)]
 		[Version (since = "2.6")]
 		public unowned Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		[Version (since = "2.10")]
@@ -8998,7 +9000,9 @@ namespace Gtk {
 		public int get_search_column ();
 		[Version (since = "2.10")]
 		public unowned Gtk.Entry get_search_entry ();
+		[CCode (delegate_target = false)]
 		public unowned Gtk.TreeViewSearchEqualFunc get_search_equal_func ();
+		[CCode (delegate_target = false)]
 		[Version (since = "2.10")]
 		public unowned Gtk.TreeViewSearchPositionFunc get_search_position_func ();
 		public unowned Gtk.TreeSelection get_selection ();
