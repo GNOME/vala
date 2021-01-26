@@ -43,6 +43,7 @@ libvala_la_VALASOURCES = \
 	valabooleantype.vala \
 	valabreakstatement.vala \
 	valacallable.vala \
+	valacallableexpression.vala \
 	valacallabletype.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \

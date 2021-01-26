@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an object creation expression in the source code.
  */
-public class Vala.ObjectCreationExpression : Expression {
+public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 	/**
 	 * The object type to create.
 	 */

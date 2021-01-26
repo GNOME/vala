@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an invocation expression in the source code.
  */
-public class Vala.MethodCall : Expression {
+public class Vala.MethodCall : Expression, CallableExpression {
 	/**
 	 * The method to call.
 	 */
