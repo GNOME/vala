@@ -50,6 +50,8 @@ CanvasPolyline
 	.polyline_data nullable unowned=false
 CanvasPolylineData
 	.arrow_data nullable unowned=false
+CanvasPolylineData
+	.coords array unowned=false
 CanvasItemSimpleData
 	.clip_path_commands type="GLib.Array<Goo.CanvasPathCommand?>"
 CanvasPath
@@ -62,5 +64,7 @@ CanvasTable
 	.table_data nullable unowned=false
 CanvasTableData
 	.layout_data nullable unowned=false
+CanvasTableDimension
+	.spacings array unowned=false
 CanvasText
 	.text_data nullable unowned=false

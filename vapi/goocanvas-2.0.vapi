@@ -1057,7 +1057,8 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h", has_type_id = false)]
 	public struct CanvasPolylineData {
-		public double coords;
+		[CCode (array_length = false)]
+		public double[] coords;
 		public Goo.CanvasPolylineArrowData? arrow_data;
 		public uint num_points;
 		public uint close_path;
@@ -1093,7 +1094,8 @@ namespace Goo {
 	public struct CanvasTableDimension {
 		public int size;
 		public double default_spacing;
-		public double spacings;
+		[CCode (array_length = false)]
+		public double[] spacings;
 		public uint homogeneous;
 	}
 	[CCode (cheader_filename = "goocanvas.h", has_type_id = false)]
