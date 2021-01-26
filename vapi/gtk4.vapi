@@ -6960,10 +6960,10 @@ namespace Gtk {
 		public int attribute_get_column (Gtk.CellRenderer renderer, string attribute);
 		public void cell_get (Gtk.CellRenderer renderer, ...);
 		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, ref GLib.Value value);
-		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		public void cell_set (Gtk.CellRenderer renderer, ...);
 		public void cell_set_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
-		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		public virtual Gtk.CellAreaContext copy_context (Gtk.CellAreaContext context);
 		public virtual Gtk.CellAreaContext create_context ();
 		public virtual int event (Gtk.CellAreaContext context, Gtk.Widget widget, Gdk.Event event, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
@@ -9220,7 +9220,7 @@ namespace Gtk {
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] int[] columns, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] GLib.Value[] values);
 		public void swap (Gtk.TreeIter a, Gtk.TreeIter b);
@@ -9315,7 +9315,7 @@ namespace Gtk {
 	public abstract class MediaStream : GLib.Object, Gdk.Paintable {
 		[CCode (has_construct_function = false)]
 		protected MediaStream ();
-		public void error_valist (GLib.Quark domain, int code, string format, [CCode (type = "va_list")] va_list args);
+		public void error_valist (GLib.Quark domain, int code, string format, va_list args);
 		public void gerror (owned GLib.Error error);
 		public int64 get_duration ();
 		public bool get_ended ();
@@ -11737,7 +11737,7 @@ namespace Gtk {
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] int[] columns, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] GLib.Value[] values);
 		public void swap (Gtk.TreeIter a, Gtk.TreeIter b);
@@ -12730,7 +12730,7 @@ namespace Gtk {
 		public abstract int get_n_columns ();
 		public abstract Gtk.TreePath? get_path (Gtk.TreeIter iter);
 		public string? get_string_from_iter (Gtk.TreeIter iter);
-		public void get_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void get_valist (Gtk.TreeIter iter, va_list var_args);
 		public abstract void get_value (Gtk.TreeIter iter, int column, out GLib.Value value);
 		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
