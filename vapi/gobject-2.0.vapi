@@ -475,7 +475,6 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", free_function = "g_type_default_interface_unref", lower_case_csuffix = "type_interface")]
 	[Compact]
 	public class TypeInterface {
-		public void add_prerequisite ();
 		public unowned GLib.TypePlugin get_plugin (GLib.Type interface_type);
 		[CCode (cname = "G_TYPE_FROM_INTERFACE")]
 		public GLib.Type get_type ();
@@ -544,7 +543,7 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
 	public struct ObjectConstructParam {
 		public ParamSpec pspec;
-		public GLib.Value value;
+		public GLib.Value? value;
 	}
 	[CCode (cheader_filename = "glib-object.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
 	[Version (deprecated = true, deprecated_since = "2.54")]
@@ -655,6 +654,7 @@ namespace GLib {
 		public void* get_qdata (GLib.Quark quark);
 		[Version (since = "2.36")]
 		public static uint get_type_registration_serial ();
+		public void interface_add_prerequisite (Type prerequisite_type);
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] interface_prerequisites ();
 		[CCode (array_length_type = "guint")]
@@ -702,7 +702,7 @@ namespace GLib {
 		public uint16 instance_size;
 		public uint16 n_preallocs;
 		public GLib.InstanceInitFunc instance_init;
-		unowned GLib.TypeValueTable value_table;
+		public unowned GLib.TypeValueTable? value_table;
 	}
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
 	public struct TypeQuery {
@@ -755,7 +755,6 @@ namespace GLib {
 		public unowned GLib.Value? init (GLib.Type g_type);
 		[Version (since = "2.42")]
 		public void init_from_instance (void* instance);
-		public void param_take_ownership (out GLib.ParamSpec param);
 		public void* peek_pointer ();
 		public static void register_transform_func (GLib.Type src_type, GLib.Type dest_type, GLib.ValueTransform transform_func);
 		public unowned GLib.Value? reset ();
@@ -775,6 +774,7 @@ namespace GLib {
 		public void set_long (long v_long);
 		public void set_object (GLib.Object? v_object);
 		public void set_param (GLib.ParamSpec? param);
+		public void set_param_take_ownership (owned GLib.ParamSpec? param);
 		public void set_pointer (void* v_pointer);
 		[Version (since = "2.32")]
 		public void set_schar (int8 v_char);
