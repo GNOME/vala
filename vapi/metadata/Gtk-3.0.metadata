@@ -172,8 +172,6 @@ get_option_group skip=false
 
 // G-I cannot handle variadic functions
 *.*_valist skip=false
-*.*_valist.args type="va_list"
-*.*_valist.var_args type="va_list"
 Builder
   .add_callback_symbols skip=false
 CellArea

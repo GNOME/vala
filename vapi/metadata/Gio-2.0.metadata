@@ -115,7 +115,6 @@ DBusMethodInvocation
   .get_user_data skip=false
   .return_error skip=false
   .return_error_valist skip=false
-  .return_error_valist.var_args type="va_list"
   .take_error skip=false
   .take_error.error owned
 DBusObjectManagerClient
