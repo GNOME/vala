@@ -374,7 +374,7 @@ namespace Cairo {
 	[Compact]
 	public class RasterSourcePattern : Cairo.Pattern {
 		[CCode (cname = "cairo_pattern_create_raster_source")]
-		public RasterSourcePattern ();
+		public RasterSourcePattern (void* data, Cairo.Content content, int width, int height);
 		public void get_acquire (out Cairo.RasterSourceAcquireFunc acquire, out Cairo.RasterSourceReleaseFunc release);
 		public void* get_callback_data ();
 		public Cairo.RasterSourceCopyFunc get_copy ();
@@ -475,7 +475,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_script_create_for_stream")]
 		public Script.for_stream (Cairo.WriteFunc write_func);
 		[CCode (cname = "cairo_script_from_recording_surface")]
-		public Script.from_recording_surface ([CCode (type = "cairo_surface_t")] Cairo.RecordingSurface recording_surface);
+		public static Cairo.Status from_recording_surface (out Cairo.Script script, Cairo.RecordingSurface recording_surface);
 		public Cairo.ScriptMode get_mode ();
 		public void set_mode (Cairo.ScriptMode mode);
 		public void write_comment (string comment, int len = -1);
