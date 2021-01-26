@@ -22,9 +22,13 @@ AttrDataCopyFunc skip
 // Fields
 AttrColor
   .color unowned=false
+EngineInfo
+  .scripts array unowned=false array_length_field="n_scripts"
 GlyphString
   .glyphs unowned=false array_length_field="num_glyphs"
   .log_clusters array unowned=false array_length_field="num_glyphs"
+Renderer
+  .matrix skip
 
 // G-I doesn't support non-GObject, non-GBoxed return values
 AttrIterator
@@ -77,3 +81,5 @@ Coverage
   .unref destroys_instance=false
 Item
   .free destroys_instance
+log2vis_get_embedding_levels
+  .pbase_dir ref

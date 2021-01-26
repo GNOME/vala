@@ -594,7 +594,6 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_renderer_get_type ()")]
 	[Version (since = "1.8")]
 	public abstract class Renderer : GLib.Object {
-		public Pango.Matrix matrix;
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
 		public void activate ();
@@ -690,7 +689,8 @@ namespace Pango {
 		public weak string id;
 		public weak string engine_type;
 		public weak string render_type;
-		public Pango.EngineScriptInfo scripts;
+		[CCode (array_length_cname = "n_scripts")]
+		public Pango.EngineScriptInfo[] scripts;
 		public int n_scripts;
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
@@ -1269,7 +1269,7 @@ namespace Pango {
 	public static GLib.List<Pango.Item> itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator? cached_iter);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.4")]
-	public static uint8 log2vis_get_embedding_levels (string text, int length, Pango.Direction pbase_dir);
+	public static uint8 log2vis_get_embedding_levels (string text, int length, ref Pango.Direction pbase_dir);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.31.0")]
 	public static bool markup_parser_finish (GLib.MarkupParseContext context, out Pango.AttrList attr_list, out string text, out unichar accel_char) throws GLib.Error;
