@@ -283,6 +283,8 @@ PollableInputStream
   .read_nonblocking#virtual_method name="read_nonblocking_fn"
 PollableOutputStream
   .create_source type="GLib.PollableSource"
+  .write_nonblocking#virtual_method name="write_nonblocking_fn"
+  .writev_nonblocking#virtual_method name="writev_nonblocking_fn"
 TlsClientConnection
   .new nullable
   .accepted_cas type="GLib.List<GLib.ByteArray>"
