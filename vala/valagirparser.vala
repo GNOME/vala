@@ -89,6 +89,7 @@ public class Vala.GirParser : CodeVisitor {
 		RETURN_VOID,
 		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
+		DESTROY_NOTIFY_CNAME,
 		FINISH_VFUNC_NAME,
 		NO_ACCESSOR_METHOD,
 		CNAME,
@@ -1136,6 +1137,9 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					if (metadata.has_argument (ArgumentType.DELEGATE_TARGET_CNAME)) {
 						field.set_attribute_string ("CCode", "delegate_target_cname", metadata.get_string (ArgumentType.DELEGATE_TARGET_CNAME));
+					}
+					if (metadata.has_argument (ArgumentType.DESTROY_NOTIFY_CNAME)) {
+						field.set_attribute_string ("CCode", "destroy_notify_cname", metadata.get_string (ArgumentType.DESTROY_NOTIFY_CNAME));
 					}
 
 					if (field.variable_type is DelegateType && parent.gtype_struct_for != null) {
