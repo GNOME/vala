@@ -66,8 +66,6 @@ ShortcutTrigger
 
 // G-I cannot handle variadic functions
 *.*_valist skip=false
-*.*_valist.args type="va_list"
-*.*_valist.var_args type="va_list"
 Accessible
   .* skip=false
 BuilderCScope

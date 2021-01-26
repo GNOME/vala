@@ -1391,13 +1391,13 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void cell_get_property (Gtk.CellRenderer renderer, string property_name, ref GLib.Value value);
 		[Version (since = "3.0")]
-		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void cell_get_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		[Version (since = "3.0")]
 		public void cell_set (Gtk.CellRenderer renderer, ...);
 		[Version (since = "3.0")]
 		public void cell_set_property (Gtk.CellRenderer renderer, string property_name, GLib.Value value);
 		[Version (since = "3.0")]
-		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void cell_set_valist (Gtk.CellRenderer renderer, string first_property_name, va_list var_args);
 		[Version (since = "3.0")]
 		public virtual Gtk.CellAreaContext copy_context (Gtk.CellAreaContext context);
 		[Version (since = "3.0")]
@@ -2325,14 +2325,14 @@ namespace Gtk {
 		public void add_with_properties (Gtk.Widget widget, ...);
 		public void child_get (Gtk.Widget child, ...);
 		public void child_get_property (Gtk.Widget child, string property_name, ref GLib.Value value);
-		public void child_get_valist (Gtk.Widget child, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void child_get_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		[Version (since = "3.2")]
 		public void child_notify (Gtk.Widget child, string child_property);
 		[Version (since = "3.18")]
 		public void child_notify_by_pspec (Gtk.Widget child, GLib.ParamSpec pspec);
 		public void child_set (Gtk.Widget child, ...);
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
-		public void child_set_valist (Gtk.Widget child, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void child_set_valist (Gtk.Widget child, string first_property_name, va_list var_args);
 		public virtual GLib.Type child_type ();
 		[Version (deprecated_since = "vala-0.40", replacement = "find_child_property")]
 		public class unowned GLib.ParamSpec? class_find_child_property (string property_name);
@@ -4736,7 +4736,7 @@ namespace Gtk {
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		[Version (since = "2.12")]
 		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] int[] columns, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] GLib.Value[] values);
@@ -7498,7 +7498,7 @@ namespace Gtk {
 		[Version (since = "2.16")]
 		public void get_style_property (GLib.Type widget_type, string property_name, ref GLib.Value value);
 		[Version (since = "2.16")]
-		public void get_valist (GLib.Type widget_type, string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void get_valist (GLib.Type widget_type, string first_property_name, va_list var_args);
 		[Version (since = "3.0")]
 		public bool has_context ();
 		[NoWrapper]
@@ -7567,9 +7567,9 @@ namespace Gtk {
 		public void get_style (...);
 		public void get_style_property (string property_name, ref GLib.Value value);
 		[Version (since = "3.0")]
-		public void get_style_valist ([CCode (type = "va_list")] va_list args);
+		public void get_style_valist (va_list args);
 		[Version (since = "3.0")]
-		public void get_valist (Gtk.StateFlags state, [CCode (type = "va_list")] va_list args);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		[Version (since = "3.0")]
 		public bool has_class (string class_name);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
@@ -7705,7 +7705,7 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.16", since = "3.0")]
 		public bool get_property (string property, Gtk.StateFlags state, out GLib.Value value);
 		[Version (deprecated = true, deprecated_since = "3.16", since = "3.0")]
-		public void get_valist (Gtk.StateFlags state, [CCode (type = "va_list")] va_list args);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
 		public unowned Gtk.SymbolicColor lookup_color (string name);
 		[Version (deprecated = true, deprecated_since = "3.8", since = "3.0")]
@@ -7721,7 +7721,7 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.16", since = "3.0")]
 		public void set_property (string property, Gtk.StateFlags state, GLib.Value value);
 		[Version (deprecated = true, deprecated_since = "3.16", since = "3.0")]
-		public void set_valist (Gtk.StateFlags state, [CCode (type = "va_list")] va_list args);
+		public void set_valist (Gtk.StateFlags state, va_list args);
 		[Version (deprecated = true, deprecated_since = "3.16", since = "3.0")]
 		public void unset_property (string property, Gtk.StateFlags state);
 	}
@@ -8408,9 +8408,9 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
 		public void get_style_property (string property_name, ref GLib.Value value);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
-		public void get_style_valist ([CCode (type = "va_list")] va_list args);
+		public void get_style_valist (va_list args);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
-		public void get_valist (Gtk.StateFlags state, [CCode (type = "va_list")] va_list args);
+		public void get_valist (Gtk.StateFlags state, va_list args);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
 		public bool has_class (string style_class);
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
@@ -8922,7 +8922,7 @@ namespace Gtk {
 		[CCode (sentinel = "-1")]
 		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[] types);
-		public void set_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void set_valist (Gtk.TreeIter iter, va_list var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		[Version (since = "2.12")]
 		public void set_valuesv (Gtk.TreeIter iter, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] int[] columns, [CCode (array_length_cname = "n_values", array_length_pos = 3.1)] GLib.Value[] values);
@@ -9770,7 +9770,7 @@ namespace Gtk {
 		public void style_attach ();
 		public void style_get (...);
 		public void style_get_property (string property_name, ref GLib.Value value);
-		public void style_get_valist (string first_property_name, [CCode (type = "va_list")] va_list var_args);
+		public void style_get_valist (string first_property_name, va_list var_args);
 		public void thaw_child_notify ();
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		[Version (since = "2.12")]
@@ -10843,7 +10843,7 @@ namespace Gtk {
 		public abstract Gtk.TreePath? get_path (Gtk.TreeIter iter);
 		[Version (since = "2.2")]
 		public string get_string_from_iter (Gtk.TreeIter iter);
-		public void get_valist (Gtk.TreeIter iter, [CCode (type = "va_list")] va_list var_args);
+		public void get_valist (Gtk.TreeIter iter, va_list var_args);
 		public abstract void get_value (Gtk.TreeIter iter, int column, out GLib.Value value);
 		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);

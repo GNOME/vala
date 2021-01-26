@@ -885,7 +885,7 @@ namespace GLib {
 		[DestroysInstance]
 		public void return_error_literal (GLib.Quark domain, int code, string message);
 		[DestroysInstance]
-		public void return_error_valist (GLib.Quark domain, int code, string format, [CCode (type = "va_list")] va_list var_args);
+		public void return_error_valist (GLib.Quark domain, int code, string format, va_list var_args);
 		[DestroysInstance]
 		public void return_gerror (GLib.Error error);
 		[DestroysInstance]
