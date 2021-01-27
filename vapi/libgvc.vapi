@@ -29,7 +29,7 @@ namespace Gvc {
 
 	[CCode (cname = "aginit")]
 #if WITH_CGRAPH
-	public void init (Graph g, int kind, string rec_name, bool move_to_front);
+	public void init (Graph g, int kind, char[] rec_name, bool move_to_front);
 #else
 	public void init ();
 #endif
@@ -97,8 +97,8 @@ namespace Gvc {
 	[Compact]
 	[CCode (cname = "Agnode_t", ref_function = "", unref_function = "", free_function = "")]
 	public class Node {
-		[CCode (cname = "name")]
-		public string name;
+		[CCode (cname = "agnameof")]
+		public unowned string name ();
 
 		[CCode (cname = "agget")]
 		public unowned string? get ([CCode (type = "char*")] string attribute_name);
