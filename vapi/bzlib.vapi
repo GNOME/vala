@@ -39,7 +39,7 @@ namespace BZLib {
 		SEQUENCE_ERROR,
 		MEM_ERROR,
 		DATA_ERROR,
-		DATA_ERROR_MAGICK,
+		DATA_ERROR_MAGIC,
 		IO_ERROR,
 		UNEXPECTED_EOF,
 		OUTBUFF_FULL,
@@ -50,11 +50,11 @@ namespace BZLib {
 	public struct Stream {
 		public string next_in;
 		public uint avail_in;
-		public uint totoal_in_lo32;
+		public uint total_in_lo32;
 		public uint total_in_hi32;
 		public string next_out;
 		public uint avail_out;
-		public uint totoal_out_lo32;
+		public uint total_out_lo32;
 		public uint total_out_hi32;
 		public void *state;
 		public AllocFunc? bzalloc;
