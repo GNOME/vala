@@ -18,6 +18,10 @@ Bin
   .clock_provider unowned=false
   .messages unowned=false
   .provided_clock unowned=false
+ClockEntry
+  .func unowned=false delegate_target_cname="user_data" destroy_notify_cname="destroy_data"
+  .user_data skip
+  .destroy_data skip
 Element
   .bus unowned=false
   .clock unowned=false
@@ -25,6 +29,12 @@ Element
   .sinkpads type="GLib.List<unowned Gst.Pad>"
   .srcpads type="GLib.List<unowned Gst.Pad>"
   .state_cond unowned=false
+Meta
+  .info nullable unowned
+Task
+  .func unowned=false delegate_target_cname="user_data" destroy_notify_cname="notify"
+  .user_data skip
+  .notify skip
 
 // Private anonymous unions get exposed
 Pad
@@ -181,6 +191,7 @@ Pad
   .set_chain_function_full name="set_chain_function"
   .set_chain_list_function_full.chainlist closure=-1 destroy=-1 owned=false
   .set_chain_list_function_full name="set_chain_list_function"
+  .set_event_full_function_full.event closure=-1 destroy=-1 owned=false
   .set_event_function_full.event closure=-1 destroy=-1 owned=false
   .set_event_function_full name="set_event_function"
   .set_getrange_function_full.get closure=-1 destroy=-1 owned=false
@@ -245,6 +256,8 @@ Memory base_type="Gst.MiniObject"
   .mini_object skip
 Message base_type="Gst.MiniObject"
   .mini_object skip
+Promise base_type="Gst.MiniObject"
+  .parent skip
 Query base_type="Gst.MiniObject"
   .mini_object skip
 Sample base_type="Gst.MiniObject"
@@ -253,6 +266,12 @@ TagList base_type="Gst.MiniObject"
 Toc base_type="Gst.MiniObject"
 TocEntry base_type="Gst.MiniObject"
 *.make_writable returns_modified_pointer
+
+// GLib.ParamSpec inheritance
+ParamSpecArray struct=false base_type="GLib.ParamSpec"
+  .parent_instance skip
+ParamSpecFraction struct=false base_type="GLib.ParamSpec"
+  .parent_instance skip
 
 // Reparenting
 TAG_* parent="Gst.Tags" name="TAG_(.+)"
@@ -298,6 +317,11 @@ Pipeline
 
 // Upstream
 ///////////
+
+ControlSourceGetValue
+  .value out
+ControlSourceGetValueArray
+  .values array array_length_idx=3
 
 // Not used internally and not meant to be used
 // https://gitlab.freedesktop.org/gstreamer/gstreamer/-/commit/58980426
