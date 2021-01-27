@@ -249,7 +249,7 @@ public struct double {
 [IntegerType (rank = 8)]
 public struct time_t {
 	[CCode (cname = "time")]
-	public time_t ();
+	public time_t (time_t? tloc = null);
 }
 
 [SimpleType]
@@ -1622,7 +1622,7 @@ namespace Posix {
 	[CCode (has_target = false, cheader_filename = "signal.h", feature_test_macro = "_GNU_SOURCE")]
 	public delegate void sighandler_t (int signal);
 
-	[CCode (has_target = false, cheader_filename = "signal.h")]
+	[CCode (has_typedef = false, has_target = false, cheader_filename = "signal.h")]
 	public delegate void siginfohandler_t (int signal, siginfo_t info, void* data);
 
 	[CCode (cheader_filename = "signal.h")]
@@ -2458,7 +2458,7 @@ namespace Posix {
 	public void tzset ();
 
 	[SimpleType]
-	[IntegerType]
+	[IntegerType (rank = 8)]
 	[CCode (cheader_filename = "time.h", has_type_id = false)]
 	public struct clockid_t {
 	}
@@ -2625,7 +2625,7 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public const int _SC_VERSION;
 	[CCode (cheader_filename = "unistd.h")]
-	public const int _SC_BASE_MAX;
+	public const int _SC_BC_BASE_MAX;
 	[CCode (cheader_filename = "unistd.h")]
 	public const int _SC_BC_DIM_MAX;
 	[CCode (cheader_filename = "unistd.h")]
@@ -2635,7 +2635,7 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public const int _SC_COLL_WEIGHTS_MAX;
 	[CCode (cheader_filename = "unistd.h")]
-	public const int _SC_EXRP_NEST_MAX;
+	public const int _SC_EXPR_NEST_MAX;
 	[CCode (cheader_filename = "unistd.h")]
 	public const int _SC_LINE_MAX;
 	[CCode (cheader_filename = "unistd.h")]
@@ -2741,7 +2741,7 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public uint alarm (uint seconds);
 	[CCode (cheader_filename = "unistd.h")]
-	public uint ualarm (uint useconds);
+	public uint ualarm (uint useconds, uint interval);
 	[CCode (cheader_filename = "unistd.h")]
 	public uint sleep (uint seconds);
 	[CCode (cheader_filename = "unistd.h")]
@@ -3654,6 +3654,7 @@ namespace Posix {
 		public const RegexSyntax POSIX_EGREP;
 		public const RegexSyntax ED;
 		public const RegexSyntax SED;
+		[CCode (cname = "_RE_SYNTAX_POSIX_COMMON")]
 		public const RegexSyntax _POSIX_COMMON;
 		public const RegexSyntax POSIX_BASIC;
 		public const RegexSyntax POSIX_MINIMAL_BASIC;
@@ -3672,7 +3673,7 @@ namespace Posix {
 		ENOSYS = -1, /* (Strictly speaking, requires _XOPEN_SOURCE) */
 		NOERROR = 0,
 		NOMATCH,
-		BAD,
+		BADPAT,
 		ECOLLATE,
 		ECTYPE,
 		EESCAPE,
