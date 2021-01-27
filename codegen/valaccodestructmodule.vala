@@ -89,6 +89,10 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			decl_space.add_type_definition (instance_struct);
 		}
 
+		if (st.is_simple_type ()) {
+			return;
+		}
+
 		var function = new CCodeFunction (get_ccode_dup_function (st), get_ccode_name (st) + "*");
 		if (st.is_private_symbol ()) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -165,8 +169,10 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 				add_struct_destroy_function (st);
 			}
 
-			add_struct_dup_function (st);
-			add_struct_free_function (st);
+			if (!st.is_simple_type ()) {
+				add_struct_dup_function (st);
+				add_struct_free_function (st);
+			}
 		}
 
 		instance_finalize_context = old_instance_finalize_context;

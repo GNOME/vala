@@ -646,16 +646,23 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							}
 							ccode.add_expression (cinitcall);
 						}
+					} else if (m.parent_symbol is Struct) {
+						unowned Struct st = (Struct) m.parent_symbol;
+						if (st.is_simple_type ()) {
+							var vardecl = new CCodeVariableDeclarator ("self", default_value_for_type (creturn_type, true));
+							vardecl.init0 = true;
+							ccode.add_declaration (get_ccode_name (creturn_type), vardecl);
+						} else {
+							// memset needs string.h
+							cfile.add_include ("string.h");
+							var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+							czero.add_argument (new CCodeIdentifier ("self"));
+							czero.add_argument (new CCodeConstant ("0"));
+							czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (st))));
+							ccode.add_expression (czero);
+						}
 					} else {
-						var st = (Struct) m.parent_symbol;
-
-						// memset needs string.h
-						cfile.add_include ("string.h");
-						var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-						czero.add_argument (new CCodeIdentifier ("self"));
-						czero.add_argument (new CCodeConstant ("0"));
-						czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (st))));
-						ccode.add_expression (czero);
+						Report.error (m.source_reference, "internal: creation method not supported in `%s'".printf (m.parent_symbol.get_full_name ()));
 					}
 				}
 
@@ -758,6 +765,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 
 						ccode.add_return (cresult);
+					} else if (current_type_symbol is Struct && ((Struct) current_type_symbol).is_simple_type ()) {
+						// constructors return simple type structs by value
+						ccode.add_return (new CCodeIdentifier ("self"));
 					}
 				}
 
@@ -943,13 +953,18 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				var base_type = new ObjectType ((Class) m.base_method.parent_symbol);
 				instance_param = new CCodeParameter ("base", get_ccode_name (base_type));
 			} else {
-				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
+				unowned Struct? st = m.parent_symbol as Struct;
+				if (st != null && !st.is_simple_type ()) {
 					instance_param = new CCodeParameter ("*self", get_ccode_name (this_type));
+				} else if (st != null && st.is_simple_type () && m is CreationMethod) {
+					// constructors return simple type structs by value
 				} else {
 					instance_param = new CCodeParameter ("self", get_ccode_name (this_type));
 				}
 			}
-			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), instance_param);
+			if (instance_param != null) {
+				cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), instance_param);
+			}
 		} else if (m.binding == MemberBinding.CLASS) {
 			var this_type = SemanticAnalyzer.get_this_type (m);
 			var class_param = new CCodeParameter ("klass", get_ccode_name (this_type));

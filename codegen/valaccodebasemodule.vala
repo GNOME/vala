@@ -5169,7 +5169,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			// create a special GDestroyNotify for created GArray and set with g_array_set_clear_func (since glib 2.32)
-			if (cl == garray_type) {
+			if (cl != null && cl == garray_type) {
 				var type_arg = expr.type_reference.get_type_arguments ().get (0);
 				if (requires_destroy (type_arg)) {
 					var clear_func = new CCodeFunctionCall (new CCodeIdentifier ("g_array_set_clear_func"));
@@ -6299,10 +6299,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var creturn_type = c.return_type.copy ();
 		if (c is CreationMethod) {
 			unowned Class? cl = c.parent_symbol as Class;
+			unowned Struct? st = c.parent_symbol as Struct;
 			if (cl != null) {
 				// object creation methods return the new object in C
 				// in Vala they have no return type
 				creturn_type = new ObjectType (cl);
+			} else if (st != null && st.is_simple_type ()) {
+				// constructors return simple type structs by value
+				creturn_type = new StructValueType (st);
 			}
 		} else if (c.return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
