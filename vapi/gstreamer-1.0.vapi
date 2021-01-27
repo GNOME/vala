@@ -1954,7 +1954,7 @@ namespace Gst {
 		public void set_chain_list_function (Gst.PadChainListFunction chainlist, void* user_data = null, GLib.DestroyNotify? notify = null);
 		public void set_element_private (void* priv);
 		[Version (since = "1.8")]
-		public void set_event_full_function_full (owned Gst.PadEventFullFunction event);
+		public void set_event_full_function_full (Gst.PadEventFullFunction event, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_event_function_full")]
 		public void set_event_function (Gst.PadEventFunction event, void* user_data = null, GLib.DestroyNotify? notify = null);
 		[CCode (cname = "gst_pad_set_getrange_function_full")]
@@ -2023,6 +2023,21 @@ namespace Gst {
 	public class ParamFraction : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamFraction ();
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	[Compact]
+	public class ParamSpecArray : GLib.ParamSpec {
+		public weak GLib.ParamSpec element_spec;
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
+	[Compact]
+	public class ParamSpecFraction : GLib.ParamSpec {
+		public int def_den;
+		public int def_num;
+		public int max_den;
+		public int max_num;
+		public int min_den;
+		public int min_num;
 	}
 	[CCode (cheader_filename = "gst/gst.h", free_function = "gst_parse_context_free", type_id = "gst_parse_context_get_type ()")]
 	[Compact]
@@ -2133,11 +2148,10 @@ namespace Gst {
 		public int wait (Gst.ClockTime timeout);
 		public bool write_control ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_promise_get_type ()")]
+	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_promise_ref", type_id = "gst_promise_get_type ()", unref_function = "gst_promise_unref")]
 	[Compact]
 	[Version (since = "1.14")]
-	public class Promise {
-		public weak Gst.MiniObject parent;
+	public class Promise : Gst.MiniObject {
 		[CCode (has_construct_function = false)]
 		public Promise ();
 		public void expire ();
@@ -2572,12 +2586,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_task_get_type ()")]
 	public class Task : Gst.Object {
 		public GLib.Cond cond;
-		public weak Gst.TaskFunction func;
+		[CCode (delegate_target_cname = "user_data", destroy_notify_cname = "notify")]
+		public Gst.TaskFunction func;
 		public GLib.RecMutex @lock;
-		public weak GLib.DestroyNotify notify;
 		public bool running;
 		public Gst.TaskState state;
-		public void* user_data;
 		[CCode (has_construct_function = false)]
 		public Task (owned Gst.TaskFunction func);
 		public static void cleanup_all ();
@@ -2865,9 +2878,8 @@ namespace Gst {
 		public Gst.ClockTime time;
 		public Gst.ClockTime interval;
 		public Gst.ClockReturn status;
-		public weak Gst.ClockCallback func;
-		public void* user_data;
-		public weak GLib.DestroyNotify destroy_data;
+		[CCode (delegate_target_cname = "user_data", destroy_notify_cname = "destroy_data")]
+		public Gst.ClockCallback func;
 		public bool unscheduled;
 		public bool woken_up;
 	}
@@ -2926,7 +2938,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	public struct Meta {
 		public Gst.MetaFlags flags;
-		public Gst.MetaInfo info;
+		public weak Gst.MetaInfo? info;
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.2")]
 		public static unowned string[] api_type_get_tags (GLib.Type api);
@@ -2969,21 +2981,6 @@ namespace Gst {
 		public unowned Gst.BufferList? get_buffer_list ();
 		public unowned Gst.Event? get_event ();
 		public unowned Gst.Query? get_query ();
-	}
-	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
-	public struct ParamSpecArray {
-		public weak GLib.ParamSpec parent_instance;
-		public weak GLib.ParamSpec element_spec;
-	}
-	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
-	public struct ParamSpecFraction {
-		public weak GLib.ParamSpec parent_instance;
-		public int min_num;
-		public int min_den;
-		public int max_num;
-		public int max_den;
-		public int def_num;
-		public int def_den;
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
 	[Version (since = "1.6")]
@@ -3973,9 +3970,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 3.9)]
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, double value);
+	public delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, out double value);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, uint n_values, double values);
+	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5, array_length_type = "guint", type = "gdouble*")] double[] values);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 5.9)]
 	[Version (since = "1.20")]
 	public delegate bool CustomMetaTransformFunction (Gst.Buffer transbuf, Gst.CustomMeta meta, Gst.Buffer buffer, GLib.Quark type, void* data);

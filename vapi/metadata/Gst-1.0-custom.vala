@@ -89,6 +89,10 @@ namespace Gst {
 	public class ParseContext {
 	}
 
+	[Compact, CCode (ref_function = "gst_promise_ref", type_id = "gst_promise_get_type ()", unref_function = "gst_promise_unref")]
+	public class Promise {
+	}
+
 	[Compact, CCode (ref_function = "gst_query_ref", type_id = "gst_query_get_type ()", unref_function = "gst_query_unref")]
 	public class Query {
     [CCode (sentinel = "")]
