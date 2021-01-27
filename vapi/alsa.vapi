@@ -29,13 +29,13 @@ namespace Alsa {
     [CCode (cname = "snd_aes_iec958_t", destroy_function = "")]
     public struct AesIec958
     {
-        public uchar[] status;
-        public uchar[] subcode;
+        public uchar status[23];
+        public uchar subcode[147];
         public uchar pad;
-        public uchar[] dig_subframe;
+        public uchar dig_subframe[4];
     }
 
-    [CCode (cprefix = "SND_CTL_", cheader_filename = "alsa/control.h")]
+    [CCode (cname = "int", cprefix = "SND_CTL_", cheader_filename = "alsa/control.h", has_type_id = false)]
     public enum CardOpenType
     {
         NONBLOCK,
@@ -180,7 +180,7 @@ namespace Alsa {
         STOP,
     }
 
-    [CCode (cname = "snd_spcm_duplex_t", cprefix = "SND_SPCM_DUPLEX_", has_type_id = false)]
+    [CCode (cname = "snd_spcm_duplex_type_t", cprefix = "SND_SPCM_DUPLEX_", has_type_id = false)]
     public enum PcmSimpleDuplex {
 	    LIBERAL,
 	    PEDANTIC,
@@ -280,7 +280,7 @@ namespace Alsa {
         LAST,
     }
 
-    [CCode (cname = "snd_pcm_state_t", cprefix = "", has_type_id = false)]
+    [CCode (cname = "snd_pcm_state_t", cprefix = "SND_PCM_STATE_", has_type_id = false)]
     public enum PcmState
     {
         OPEN,
@@ -390,13 +390,13 @@ namespace Alsa {
     }
 
     [SimpleType]
-    [CCode (cname = "snd_pcm_timestamp_t")]
+    [CCode (cname = "snd_timestamp_t")]
     public struct PcmSoftwareTimestamp
     {
     }
 
     [SimpleType]
-    [CCode (cname = "snd_pcm_htimestamp_t")]
+    [CCode (cname = "snd_htimestamp_t")]
     public struct PcmHardwareTimestamp
     {
     }
@@ -434,12 +434,12 @@ namespace Alsa {
         public static int malloc( out PcmHardwareParams params );
         public void free();
         public void copy( PcmHardwareParams source );
-        public int get_access( PcmAccess access );
-        public int get_access_mask( PcmAccessMask mask );
-        public int get_format( PcmFormat format );
-        public void get_format_mask( PcmFormatMask mask );
-        public int get_subformat( PcmSubformat subformat );
-        public void get_subformat_mask( PcmSubformatMask mask );
+        public int get_access( out PcmAccess access );
+        public int get_access_mask( out PcmAccessMask mask );
+        public int get_format( out PcmFormat format );
+        public void get_format_mask( out PcmFormatMask mask );
+        public int get_subformat( out PcmSubformat subformat );
+        public void get_subformat_mask( out PcmSubformatMask mask );
         public int get_channels( out int val );
         public int get_channels_min( out int val );
         public int get_channels_max( out int val );
@@ -509,7 +509,7 @@ namespace Alsa {
         public uint step;
     }
 
-    [Compact]
+    [SimpleType]
     [CCode (cname = "snd_pcm_sync_id_t", free_function = "")]
     public struct PcmSyncId
     {
@@ -549,7 +549,7 @@ namespace Alsa {
         public int prepare();
         public int reset();
         [CCode (cname = "snd_pcm_status")]
-        public int set_status( PcmState status );
+        public int set_status( PcmState? status );
         public int start();
         public int drop();
         public int drain();
@@ -558,7 +558,7 @@ namespace Alsa {
         public int hwsync();
         public int delay( PcmSignedFrames delayp );
         public int resume();
-        public int htimestamp( PcmUnsignedFrames avail, PcmHardwareTimestamp tstamp );
+        public int htimestamp( out PcmUnsignedFrames avail, out PcmHardwareTimestamp tstamp );
         public PcmSignedFrames avail();
         public PcmSignedFrames avail_update();
         public int avail_delay( out PcmSignedFrames availp, out PcmSignedFrames delayp );
@@ -678,7 +678,7 @@ namespace Alsa {
         public ssize_t samples_to_bytes( long samples );
     }
 
-    [CCode (cprefix = "SND_MIXER_SABSTRACT_", cname = "snd_mixer_selem_regopt_abstract")]
+    [CCode (cprefix = "SND_MIXER_SABSTRACT_", cname = "enum snd_mixer_selem_regopt_abstract")]
     public enum MixerAbstractionLevel
     {
         NONE,
