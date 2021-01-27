@@ -48,7 +48,7 @@ namespace Sqlite {
 		public int64 last_insert_rowid ();
 		public int limit (Sqlite.Limit id, int new_val);
 		public int total_changes ();
-		public int complete (string sql);
+		public static int complete (string sql);
 		[CCode (cname = "sqlite3_get_table")]
 		public int _get_table (string sql, [CCode (array_length = false)] out unowned string[] resultp, out int nrow, out int ncolumn, [CCode (type = "char**")] out unowned string? errmsg = null);
 		private static void free_table ([CCode (array_length = false)] string[] result);
@@ -96,27 +96,30 @@ namespace Sqlite {
 
 		public int wal_autocheckpoint (int N);
 		public int wal_checkpoint (string zDb);
-		public void* wal_hook (WALHookCallback cb, string db_name, int page_count);
+		public void* wal_hook (WALHookCallback cb);
 	}
 
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate int AuthorizeCallback (Sqlite.Action action, string? p1, string? p2, string db_name, string? responsible);
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate void TraceCallback (string message);
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate void ProfileCallback (string sql, uint64 time);
+	[CCode (has_typedef = false)]
 	public delegate int ProgressCallback ();
+	[CCode (has_typedef = false)]
 	public delegate int CommitCallback ();
+	[CCode (has_typedef = false)]
 	public delegate void RollbackCallback ();
-	[CCode (has_target = false)]
+	[CCode (has_typedef = false, has_target = false)]
 	public delegate void UserFuncCallback (Sqlite.Context context, [CCode (array_length_pos = 1.1)] Sqlite.Value[] values);
-	[CCode (has_target = false)]
+	[CCode (has_typedef = false, has_target = false)]
 	public delegate void UserFuncFinishCallback (Sqlite.Context context);
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate void UpdateCallback (Sqlite.Action action, string dbname, string table, int64 rowid);
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate int CompareCallback (int alen, void* a, int blen, void* b);
-	[CCode (instance_pos = 0)]
+	[CCode (has_typedef = false, instance_pos = 0.9)]
 	public delegate int WALHookCallback (Sqlite.Database db, string dbname, int pages);
 
 	public unowned string? compileoption_get (int n);
@@ -410,7 +413,7 @@ namespace Sqlite {
 		}
 		[CCode (cname = "sqlite3_expanded_sql")]
 		private string? _expanded_sql ();
-		public unowned string normalised_sql ();
+		public unowned string normalized_sql ();
 	}
 
 	namespace Memory {
@@ -434,7 +437,7 @@ namespace Sqlite {
 	}
 
 	[Compact]
-	[CCode (cname = "sqlite3_mutex")]
+	[CCode (cname = "sqlite3_mutex", free_function = "sqlite3_mutex_free")]
 	public class Mutex {
 		[CCode (cname = "sqlite3_mutex_alloc")]
 		public Mutex (int mutex_type = MUTEX_RECURSIVE);
