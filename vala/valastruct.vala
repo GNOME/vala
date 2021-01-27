@@ -457,6 +457,10 @@ public class Vala.Struct : TypeSymbol {
 			if (f.binding == MemberBinding.INSTANCE
 			    && f.get_attribute_bool ("CCode", "delegate_target", true)
 			    && f.variable_type.is_disposable ()) {
+				if (is_simple_type ()) {
+					error = true;
+					Report.error (f.source_reference, "[SimpleType] struct `%s' cannot have owned heap-allocated fields".printf (get_full_name ()));
+				}
 				return true;
 			}
 		}

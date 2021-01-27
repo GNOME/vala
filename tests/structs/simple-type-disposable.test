@@ -1,0 +1,9 @@
+Invalid Code
+
+[SimpleType]
+struct Foo {
+	public string s;
+}
+
+void main () {
+}
