@@ -387,6 +387,18 @@ public class Vala.ObjectCreationExpression : Expression {
 					break;
 				}
 
+				if (param.params_array) {
+					var array_type = (ArrayType) param.variable_type;
+					while (arg_it.next ()) {
+						Expression arg = arg_it.get ();
+
+						/* store expected type for callback parameters */
+						arg.target_type = array_type.element_type;
+						arg.target_type.value_owned = array_type.value_owned;
+					}
+					break;
+				}
+
 				if (arg_it.next ()) {
 					Expression arg = arg_it.get ();
 
@@ -415,7 +427,7 @@ public class Vala.ObjectCreationExpression : Expression {
 						// recreate iterator and skip to right position
 						arg_it = argument_list.iterator ();
 						foreach (Parameter param in m.get_parameters ()) {
-							if (param.ellipsis) {
+							if (param.ellipsis || param.params_array) {
 								break;
 							}
 							arg_it.next ();

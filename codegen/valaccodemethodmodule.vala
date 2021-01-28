@@ -543,7 +543,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				foreach (Parameter param in m.get_parameters ()) {
 					if (param.ellipsis || param.params_array) {
 						if (param.params_array) {
-							append_params_array (m.params_array_var);
+							append_params_array (m);
 						}
 						break;
 					}
@@ -889,6 +889,8 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				cparam.modifiers = CCodeModifiers.FORMAT_ARG;
 			}
 		} else {
+			var va_list_name = "_vala_va_list";
+
 			// Add _first_* parameter for the params array parameter
 			if (param.params_array) {
 				var param_type = ((ArrayType) param.variable_type).element_type;
@@ -912,10 +914,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 				cparam = new CCodeParameter ("_first_%s".printf (get_ccode_name (param)), ctypename);
 				cparam_map.set (get_param_pos (get_ccode_pos (param), false), cparam);
+
+				va_list_name = "_va_list_%s".printf (get_ccode_name (param));
 			}
 
 			if (ellipses_to_valist) {
-				cparam = new CCodeParameter ("_vala_va_list", "va_list");
+				cparam = new CCodeParameter (va_list_name, "va_list");
 			} else {
 				cparam = new CCodeParameter.with_ellipsis ();
 			}
@@ -1299,9 +1303,16 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			}
 
+			var carg = carg_map.get (second_last_pos);
+			if (carg == null) {
+				// params arrays have an implicit first argument, refer to the cparameter name
+				carg = new CCodeIdentifier (cparam_map.get (second_last_pos).name);
+				vcall.add_argument (carg);
+			}
+
 			var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
 			va_start.add_argument (new CCodeIdentifier ("_vala_va_list_obj"));
-			va_start.add_argument (carg_map.get (second_last_pos));
+			va_start.add_argument (carg);
 
 			ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_vala_va_list_obj"));
 			ccode.add_expression (va_start);
