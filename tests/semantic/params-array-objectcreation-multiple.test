@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	public Foo (params string[] strv, params int[] intv) {
+	}
+}
+
+void main () {
+}

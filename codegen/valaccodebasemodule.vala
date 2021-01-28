@@ -711,7 +711,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual void append_vala_array_length () {
 	}
 
-	public virtual void append_params_array (LocalVariable local) {
+	public virtual void append_params_array (Method m) {
 	}
 
 	public void append_vala_clear_mutex (string typename, string funcprefix) {
