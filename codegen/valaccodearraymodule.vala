@@ -879,7 +879,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return main_cparam;
 	}
 
-	public override void append_params_array (LocalVariable local) {
+	public override void append_params_array (Method m) {
+		var local = m.params_array_var;
 		var array_type = (ArrayType) local.variable_type;
 
 		var local_length = new LocalVariable (array_type.length_type.copy (), get_array_length_cname (local.name, 1), null, local.source_reference);
@@ -913,11 +914,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (context.profile == Profile.POSIX) {
 			cfile.add_include ("stdarg.h");
 		}
-		ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_va_list_%s".printf (get_ccode_name (local))));
-		var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		vastart.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
-		vastart.add_argument (new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
-		ccode.add_expression (vastart);
+
+		if (!(m is CreationMethod)) {
+			ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_va_list_%s".printf (get_ccode_name (local))));
+			var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+			vastart.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
+			vastart.add_argument (new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
+			ccode.add_expression (vastart);
+		}
 
 		ccode.add_assignment (get_local_cexpression (element), new CCodeIdentifier ("_first_%s".printf (get_ccode_name (local))));
 		ccode.open_while (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_local_cexpression (element), new CCodeConstant ("NULL")));

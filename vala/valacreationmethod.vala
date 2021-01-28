@@ -115,6 +115,31 @@ public class Vala.CreationMethod : Method {
 				Report.error (param.source_reference, "Named parameter required before `...'");
 			}
 			i++;
+
+			// Add local variable to provide access to params arrays which will be constructed out of the given va-args
+			if (param.params_array && body != null) {
+				if (params_array_var != null) {
+					error = true;
+					Report.error (param.source_reference, "Only one params-array parameter is allowed");
+					continue;
+				}
+				if (!context.experimental) {
+					Report.warning (param.source_reference, "Support of params-arrays is experimental");
+				}
+				var type = (ArrayType) param.variable_type.copy ();
+				type.element_type.value_owned = type.value_owned;
+				type.value_owned = true;
+				if (type.element_type.is_real_struct_type () && !type.element_type.nullable) {
+					error = true;
+					Report.error (param.source_reference, "Only nullable struct elements are supported in params-array");
+				}
+				if (type.length != null) {
+					error = true;
+					Report.error (param.source_reference, "Passing length to params-array is not supported yet");
+				}
+				params_array_var = new LocalVariable (type, param.name, null, param.source_reference);
+				body.insert_statement (0, new DeclarationStatement (params_array_var, param.source_reference));
+			}
 		}
 
 		if (error_types != null) {

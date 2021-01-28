@@ -175,7 +175,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 	}
 
-	public LocalVariable? params_array_var { get; private set; }
+	public LocalVariable? params_array_var { get; protected set; }
 
 	public weak Signal signal_reference { get; set; }
 

@@ -1008,6 +1008,8 @@ TESTS = \
 	semantic/parameter-ref-default.test \
 	semantic/parameter-void.test \
 	semantic/params-array-multiple.test \
+	semantic/params-array-objectcreation-multiple.test \
+	semantic/params-array-objectcreation-struct-length.test \
 	semantic/params-array-struct-length.test \
 	semantic/pointer-indirection-type-not-supported.test \
 	semantic/pointer-indirection-void-not-supported.test \
