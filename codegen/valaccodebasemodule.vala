@@ -6579,7 +6579,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return new CCodeInvalidExpression ();
 	}
 
-	public virtual CCodeExpression get_signal_creation (Signal sig, TypeSymbol type) {
+	public virtual CCodeExpression get_signal_creation (Signal sig, ObjectTypeSymbol type) {
 		return new CCodeInvalidExpression ();
 	}
 

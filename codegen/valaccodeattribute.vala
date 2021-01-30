@@ -64,7 +64,14 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_type_name = ccode.get_string ("type_cname");
 				}
 				if (_type_name == null) {
-					_type_name = "%sIface".printf (get_ccode_name (sym));
+					if (sym is Class) {
+						_type_name = "%sClass".printf (get_ccode_name (sym));
+					} else if (sym is Interface) {
+						_type_name = "%sIface".printf (get_ccode_name (sym));
+					} else {
+						Report.error (sym.source_reference, "`CCode.type_cname' not supported");
+						_type_name = "";
+					}
 				}
 			}
 			return _type_name;
