@@ -14,6 +14,8 @@ namespace GirTest {
 		public abstract void method_int8_out (out int8 param);
 		public abstract void method_throw () throws GLib.Error;
 		public abstract void method_valist (int param, va_list vargs);
+		[NoWrapper]
+		public abstract void no_wrapper_method ();
 	}
 	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
 	[Compact]
@@ -104,6 +106,8 @@ namespace GirTest {
 		public virtual void method_throw () throws GLib.Error;
 		public void method_with_default (int i);
 		public virtual void method_with_default_impl (int8 param);
+		[NoWrapper]
+		public virtual void no_wrapper_method ();
 		public void none_in ();
 		public static void none_inout (ref unowned GirTest.ObjectTest obj);
 		public static void none_out (out unowned GirTest.ObjectTest obj);
@@ -149,6 +153,8 @@ namespace GirTest {
 		public virtual int get_property ();
 		public virtual void int8_in (int8 param);
 		public virtual void internal_method ();
+		[NoWrapper]
+		public virtual void no_wrapper_method ();
 		public virtual void set_property (int value);
 		public abstract int property { get; set construct; }
 	}
