@@ -119,12 +119,26 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				CCodeFunctionCall? vcast = null;
 				if (m.parent_symbol is Class) {
 					unowned Class base_class = (Class) m.parent_symbol;
-					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_class)));
-					vcast.add_argument (pub_inst);
+					if (base_class.external_package) {
+						vcast = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_CLASS"));
+						vcast.add_argument (pub_inst);
+						vcast.add_argument (new CCodeIdentifier (get_ccode_type_id (base_class)));
+						vcast.add_argument (new CCodeIdentifier (get_ccode_type_name (base_class)));
+					} else {
+						vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_class)));
+						vcast.add_argument (pub_inst);
+					}
 				} else if (m.parent_symbol is Interface) {
 					unowned Interface base_iface = (Interface) m.parent_symbol;
-					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_iface)));
-					vcast.add_argument (pub_inst);
+					if (base_iface.external_package) {
+						vcast = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+						vcast.add_argument (pub_inst);
+						vcast.add_argument (new CCodeIdentifier (get_ccode_type_id (base_iface)));
+						vcast.add_argument (new CCodeIdentifier (get_ccode_type_name (base_iface)));
+					} else {
+						vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_iface)));
+						vcast.add_argument (pub_inst);
+					}
 				}
 				if (vcast != null) {
 					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
