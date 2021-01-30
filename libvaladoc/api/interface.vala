@@ -38,7 +38,7 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	{
 		base (parent, file, name, accessibility, comment, false, data);
 
-		this.interface_macro_name = Vala.get_ccode_interface_get_function (data);
+		this.interface_macro_name = Vala.get_ccode_type_get_function (data);
 		this.dbus_name = Vala.GDBusModule.get_dbus_name (data);
 		this.cname = Vala.get_ccode_name (data);
 		this.type_id = Vala.get_ccode_type_id (data);

@@ -85,7 +85,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_check_function (cl)), macro));
 
 			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
-			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_class_get_function (cl)), macro));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_get_function (cl)), macro));
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
@@ -758,11 +758,11 @@ public class Vala.GTypeModule : GErrorModule {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ref_count));
 				ccode.open_if (ccall);
 
-				var get_class = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+				var get_class = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 				get_class.add_argument (new CCodeIdentifier ("self"));
 
 				// finalize class
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 				ccast.add_argument (new CCodeIdentifier ("self"));
 				ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
 				ccall.add_argument (new CCodeIdentifier ("self"));
@@ -2068,7 +2068,7 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_check_function (iface)), macro));
 
 		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (get_ccode_type_id (iface), get_ccode_type_name (iface));
-		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_interface_get_function (iface)), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_get_function (iface)), macro));
 		decl_space.add_type_declaration (new CCodeNewline ());
 
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (iface)), new CCodeVariableDeclarator (get_ccode_name (iface))));
