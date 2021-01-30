@@ -86,6 +86,7 @@ public class Vala.GirParser : CodeVisitor {
 		FEATURE_TEST_MACRO,
 		FLOATING,
 		TYPE_ID,
+		TYPE_GET_FUNCTION,
 		RETURN_VOID,
 		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
@@ -2921,6 +2922,9 @@ public class Vala.GirParser : CodeVisitor {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
 			cl.is_sealed = metadata.get_bool (ArgumentType.SEALED, false);
+			if (metadata.has_argument (ArgumentType.TYPE_GET_FUNCTION)) {
+				cl.set_attribute_string ("CCode", "type_get_function", metadata.get_string (ArgumentType.TYPE_GET_FUNCTION));
+			}
 
 			if (parent != null) {
 				cl.add_base_type (parse_type_from_gir_name (parent));
@@ -3003,6 +3007,10 @@ public class Vala.GirParser : CodeVisitor {
 		Interface iface;
 		if (current.new_symbol) {
 			iface = new Interface (current.name, current.source_reference);
+			if (metadata.has_argument (ArgumentType.TYPE_GET_FUNCTION)){
+				iface.set_attribute_string ("CCode", "type_get_function", metadata.get_string (ArgumentType.TYPE_GET_FUNCTION));
+			}
+
 			current.symbol = iface;
 		} else {
 			iface = (Interface) current.symbol;
