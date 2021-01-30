@@ -288,10 +288,10 @@ namespace Gtk {
 	[CCode (has_target = false)]
 	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
-	[CCode (type_cname = "GCallback")]
+	[CCode (cname = "GCallback")]
 	public delegate void ActionCallback (Action action);
 
-	[CCode (type_cname = "GCallback")]
+	[CCode (cname = "GCallback")]
 	public delegate void RadioActionCallback (Action action, Action current);
 
 	[CCode (cheader_filename = "gtk/gtk.h")]
