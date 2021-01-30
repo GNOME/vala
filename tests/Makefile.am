@@ -630,6 +630,7 @@ TESTS = \
 	asynchronous/constructor-argument-check.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
+	asynchronous/nowrapper.vala \
 	asynchronous/out-parameter-free-on-error.vala \
 	asynchronous/out-parameter-invalid.test \
 	asynchronous/params-array-invalid.test \
