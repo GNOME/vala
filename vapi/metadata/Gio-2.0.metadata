@@ -262,9 +262,6 @@ File
   .copy_async skip
   .copy_finish skip
   .copy*.progress_callback default=null
-  .get_basename nullable
-  .get_path nullable
-  .get_relative_path nullable
   .load_partial_contents_async skip
   .load_partial_contents_finish skip
   .move.progress_callback default=null
