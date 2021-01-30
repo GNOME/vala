@@ -12,6 +12,8 @@ namespace GirTest {
 		public abstract void method_int8_out (out int8 param);
 		public abstract void method_throw () throws GirTest.ErrorTest;
 		public abstract void method_valist (int param, va_list vargs);
+		[NoWrapper]
+		public abstract void no_wrapper_method ();
 		[GIR (visible = false)]
 		public abstract async void skipped_coroutine_method (int param);
 	}
@@ -76,6 +78,8 @@ namespace GirTest {
 		public virtual void method_with_default_impl (int8 param);
 		public ObjectTest.new_valist (int param, va_list vargs);
 		public ObjectTest.newv (int param, ...);
+		[NoWrapper]
+		public virtual void no_wrapper_method ();
 		public void none_in ();
 		public static void none_inout (ref unowned GirTest.ObjectTest obj);
 		public static void none_out (out unowned GirTest.ObjectTest obj);
@@ -119,6 +123,8 @@ namespace GirTest {
 		public virtual async void coroutine_async ();
 		public virtual void int8_in (int8 param);
 		public virtual void method_valist (int param, va_list vargs);
+		[NoWrapper]
+		public virtual void no_wrapper_method ();
 		[GIR (visible = false)]
 		public virtual async void skipped_coroutine_method (int param);
 		public abstract int property { get; set construct; }

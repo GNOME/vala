@@ -1276,7 +1276,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			tag_name = "function";
 		}
 
-		write_signature (m, tag_name, true);
+		if (m.get_attribute ("NoWrapper") == null) {
+			write_signature (m, tag_name, true);
+		}
 
 		if (m.is_abstract || m.is_virtual) {
 			write_signature (m, "virtual-method", true, false);
@@ -1343,7 +1345,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<%s name=\"%s\"", tag_name, name);
 		if (tag_name == "virtual-method") {
-			buffer.append_printf (" invoker=\"%s\"", name);
+			if (m.get_attribute ("NoWrapper") == null) {
+				buffer.append_printf (" invoker=\"%s\"", name);
+			}
 		} else if (tag_name == "callback") {
 			/* this is only used for vfuncs */
 			buffer.append_printf (" c:type=\"%s\"", name);
