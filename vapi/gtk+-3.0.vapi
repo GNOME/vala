@@ -9355,9 +9355,9 @@ namespace Gtk {
 		[Version (since = "3.8")]
 		public uint add_tick_callback (owned Gtk.TickCallback callback);
 		[NoWrapper]
-		public virtual void adjust_baseline_allocation (int baseline);
+		public virtual void adjust_baseline_allocation (ref int baseline);
 		[NoWrapper]
-		public virtual void adjust_baseline_request (int minimum_baseline, int natural_baseline);
+		public virtual void adjust_baseline_request (ref int minimum_baseline, ref int natural_baseline);
 		[NoWrapper]
 		public virtual void adjust_size_allocation (Gtk.Orientation orientation, ref int minimum_size, ref int natural_size, ref int allocated_pos, ref int allocated_size);
 		[NoWrapper]
@@ -10431,10 +10431,10 @@ namespace Gtk {
 		public void copy_clipboard ();
 		public void cut_clipboard ();
 		public void delete_selection ();
-		[NoWrapper]
-		public abstract void do_delete_text (int start_pos, int end_pos);
-		[NoWrapper]
-		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
+		[CCode (cname = "gtk_editable_delete_text", vfunc_name = "delete_text")]
+		public virtual void do_delete_text (int start_pos, int end_pos);
+		[CCode (cname = "gtk_editable_insert_text", vfunc_name = "insert_text")]
+		public virtual void do_insert_text (string new_text, int new_text_length, ref int position);
 		public abstract string get_chars (int start_pos = 0, int end_pos = -1);
 		public bool get_editable ();
 		public abstract int get_position ();
@@ -12294,7 +12294,7 @@ namespace Gtk {
 	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
-	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GCallback")]
+	[CCode (cheader_filename = "gtk/gtk.h", cname = "GCallback")]
 	[Version (deprecated_since = "3.10")]
 	public delegate void ActionCallback (Gtk.Action action);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -12389,7 +12389,7 @@ namespace Gtk {
 	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	public delegate void PrintSettingsFunc (string key, string value);
-	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GCallback")]
+	[CCode (cheader_filename = "gtk/gtk.h", cname = "GCallback")]
 	public delegate void RadioActionCallback (Gtk.Action action, Gtk.Action current);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
@@ -12401,8 +12401,8 @@ namespace Gtk {
 	public delegate bool StylePropertyParser (string str, GLib.Value value) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
 	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, bool create_tags) throws GLib.Error;
-	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
-	public delegate unowned uint8? TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
+	[CCode (array_length_pos = 4.1, array_length_type = "gsize", cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
+	public delegate uint8[]? TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]

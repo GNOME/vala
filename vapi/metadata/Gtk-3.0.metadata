@@ -59,6 +59,8 @@ Widget
   .adjust_size_allocation.*_size ref
   .adjust_size_allocation.allocated_pos ref
   .adjust_size_request.*_size ref
+  .adjust_baseline_allocation.baseline ref
+  .adjust_baseline_request.*_baseline ref
   .compute_expand#virtual_method.*expand_p out
   .dispatch_child_properties_changed.pspecs array array_length_idx=0
 RecentChooser
@@ -410,8 +412,8 @@ Window
   .activate_default#method name="try_activate_default"
   .activate_focus#method name="try_activate_focus"
 Editable
-  .delete_text#method skip
-  .insert_text#method skip
+  .delete_text#method name="do_delete_text" vfunc_name="delete_text"
+  .insert_text#method name="do_insert_text" vfunc_name="insert_text"
 
 // time_t
 RecentInfo
@@ -551,6 +553,7 @@ TextBuffer
   .insert*.iter ref
   .insert_text.pos ref
   .insert_text#signal.location ref
+TextBufferSerializeFunc type="uint8[]?" array_length_idx=4 unowned=false
 TextIter
   .order.second ref
 TextView

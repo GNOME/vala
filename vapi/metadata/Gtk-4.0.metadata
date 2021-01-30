@@ -243,8 +243,8 @@ Widget
   .compute_expand#virtual_method name="compute_expand_internal"
   .size_allocate#method name="allocate_size"
 Editable
-  .delete_text#method skip
-  .insert_text#method skip
+  .delete_text#method name="do_delete_text" vfunc_name="delete_text"
+  .insert_text#method name="do_insert_text" vfunc_name="insert_text"
 
 // Not sure what g-i was thinking
 TreeModel

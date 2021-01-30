@@ -6,10 +6,13 @@ X11* name="X11(.+)" parent="Gdk.X11"
 X11Display
 	.broadcast_startup_message skip=false
 	.xevent.xevent type="X.Event"
+	.text_property_to_text_list.text type="string"
+	.text_property_to_text_list.list type="string[]" out
 
 x11_device_manager_lookup name="lookup_for_device_manager" parent="Gdk.X11.DeviceManagerXI2" symbol_type="method" instance_idx=0
 x11_device_get_id name="get_id" parent="Gdk.X11.DeviceXI2" symbol_type="method" instance_idx=0
-x11_free_compound_text.ctext type="uint8[]"
+x11_free_compound_text.ctext type="owned uint8[]"
+x11_free_text_list.list array owned
 x11_get_server_time name="get_server_time" parent="Gdk.X11.Surface" symbol_type="method" instance_idx=0
 x11_get_xatom_by_name_for_display name="get_xatom_by_name" parent="Gdk.X11.Display" symbol_type="method" instance_idx=0
 x11_get_xatom_name_for_display name="get_xatom_name" parent="Gdk.X11.Display" symbol_type="method" instance_idx=0

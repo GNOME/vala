@@ -1,9 +1,9 @@
 namespace Gtk {
-	[CCode (type_cname = "GCallback")]
+	[CCode (cname = "GCallback")]
 	[Version (deprecated_since = "3.10")]
 	public delegate void ActionCallback (Action action);
 	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
-	[CCode (type_cname = "GCallback")]
+	[CCode (cname = "GCallback")]
 	public delegate void RadioActionCallback (Gtk.Action action, Gtk.Action current);
 
 	[CCode (has_type_id = false)]
@@ -112,14 +112,6 @@ namespace Gtk {
 	public class WidgetAccessible : Gtk.Accessible {
 		[NoWrapper]
 		public virtual void notify_gtk (GLib.ParamSpec pspec);
-	}
-
-	[CCode (type_id = "gtk_editable_get_type ()")]
-	public interface Editable : GLib.Object {
-		[NoWrapper]
-		public abstract void do_insert_text (string new_text, int new_text_length, ref int position);
-		[NoWrapper]
-		public abstract void do_delete_text (int start_pos, int end_pos);
 	}
 
 	[CCode (has_type_id = false)]
