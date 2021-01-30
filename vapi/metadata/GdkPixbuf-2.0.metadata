@@ -19,6 +19,7 @@ Pixbuf
         .save_to_stream throws throws="GLib.Error"
         .save_to_stream.error skip
         .save_to_stream_async finish_name="gdk_pixbuf_save_to_stream_finish" finish_instance=false sentinel="NULL" throws="GLib.Error"
+        .save_to_streamv_async finish_name="gdk_pixbuf_save_to_stream_finish" finish_instance=false throws="GLib.Error"
         .save_to_stream_finish skip
 
 // default values other than null
