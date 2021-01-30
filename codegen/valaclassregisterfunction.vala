@@ -46,7 +46,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	}
 
 	public override string get_type_struct_name () {
-		return "%sClass".printf (get_ccode_name (class_reference));
+		return get_ccode_type_name (class_reference);
 	}
 
 	public override string get_base_init_func_name () {
