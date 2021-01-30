@@ -741,6 +741,12 @@ public class Vala.Method : Subroutine, Callable {
 			return false;
 		}
 
+		if (get_attribute ("NoWrapper") != null && !(is_abstract || is_virtual)) {
+			error = true;
+			Report.error (source_reference, "[NoWrapper] methods must be declared abstract or virtual");
+			return false;
+		}
+
 		if (is_abstract) {
 			if (parent_symbol is Class) {
 				unowned Class cl = (Class) parent_symbol;

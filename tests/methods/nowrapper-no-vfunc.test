@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+	[NoWrapper]
+	public void bar () {
+	}
+}
+
+void main () {
+}
