@@ -184,7 +184,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (is_gtypeinstance) {
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("%sClass".printf (get_ccode_name (cl)))));
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_type_name (cl)), new CCodeVariableDeclarator (get_ccode_type_name (cl))));
 
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (context, in_plugin, true);
@@ -235,7 +235,7 @@ public class Vala.GTypeModule : GErrorModule {
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (cl)));
-		var type_struct = new CCodeStruct ("_%sClass".printf (get_ccode_name (cl)));
+		var type_struct = new CCodeStruct ("_%s".printf (get_ccode_type_name (cl)));
 
 		if (cl.base_class != null) {
 			instance_struct.add_field (get_ccode_name (cl.base_class), "parent_instance");
@@ -253,7 +253,7 @@ public class Vala.GTypeModule : GErrorModule {
 			if (is_fundamental) {
 				type_struct.add_field ("GTypeClass", "parent_class");
 			} else {
-				type_struct.add_field ("%sClass".printf (get_ccode_name (cl.base_class)), "parent_class");
+				type_struct.add_field (get_ccode_type_name (cl.base_class), "parent_class");
 			}
 
 			if (is_fundamental) {
