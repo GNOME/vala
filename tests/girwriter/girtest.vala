@@ -76,6 +76,9 @@ namespace GirTest {
 		[GIR (visible = false)]
 		public virtual async void skipped_coroutine_method (int param) {
 		}
+		[NoWrapper]
+		public virtual void no_wrapper_method () {
+		}
 	}
 
 	[GIR (visible = false)]
@@ -266,6 +269,10 @@ namespace GirTest {
 		[GIR (visible = false)]
 		public void skipped_method () {
 		}
+
+		[NoWrapper]
+		public virtual void no_wrapper_method () {
+		}
 	}
 
 	public abstract class AbstractObjectTest : Object {
@@ -281,6 +288,9 @@ namespace GirTest {
 
 		[GIR (visible = false)]
 		public abstract async void skipped_coroutine_method (int param);
+
+		[NoWrapper]
+		public abstract void no_wrapper_method ();
 	}
 
 	public interface PrerequisiteTest : InterfaceTest {

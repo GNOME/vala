@@ -809,6 +809,16 @@
 				</instance-parameter>
 			</parameters>
 		</method>
+		<virtual-method name="no_wrapper_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+			</parameters>
+		</virtual-method>
 		<property name="some-property" writable="1" construct="1">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
@@ -1004,6 +1014,18 @@
 		</field>
 		<field name="method_throw">
 			<callback name="method_throw" c:type="method_throw" throws="1">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</instance-parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="no_wrapper_method">
+			<callback name="no_wrapper_method" c:type="no_wrapper_method">
 				<return-value transfer-ownership="full">
 					<type name="none" c:type="void"/>
 				</return-value>
@@ -1232,6 +1254,16 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<virtual-method name="no_wrapper_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
+			</parameters>
+		</virtual-method>
 	</class>
 	<record name="AbstractObjectTestClass" c:type="GirTestAbstractObjectTestClass" glib:is-gtype-struct-for="AbstractObjectTest">
 		<field name="parent_class" readable="0" private="1">
@@ -1345,6 +1377,18 @@
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="no_wrapper_method">
+			<callback name="no_wrapper_method" c:type="no_wrapper_method">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</instance-parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1806,6 +1850,16 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<virtual-method name="no_wrapper_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+			</parameters>
+		</virtual-method>
 		<property name="property" writable="1" construct="1">
 			<type name="gint" c:type="gint"/>
 		</property>
@@ -1959,6 +2013,18 @@
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="no_wrapper_method">
+			<callback name="no_wrapper_method" c:type="no_wrapper_method">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</instance-parameter>
 				</parameters>
 			</callback>
 		</field>
