@@ -219,6 +219,7 @@ TESTS = \
 	methods/argument-named.vala \
 	methods/delegate-target.vala \
 	methods/generics.vala \
+	methods/nowrapper-interface.vala \
 	methods/nowrapper-no-vfunc.test \
 	methods/params-array.vala \
 	methods/params-array-abstract.test \
