@@ -4574,7 +4574,7 @@ namespace Gdk {
 		[Version (since = "2.2")]
 		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window? owner, Gdk.Atom selection, uint32 time_, bool send_event);
 		[CCode (cheader_filename = "gdk/gdk.h")]
-		public static int property_get (Gdk.Window requestor, [CCode (array_length = false, type = "guchar**")] uint8[] data, Gdk.Atom prop_type, int prop_format);
+		public static int property_get (Gdk.Window requestor, [CCode (array_length = false, type = "guchar**")] uint8[] data, out Gdk.Atom prop_type, out int prop_format);
 		[CCode (cheader_filename = "gdk/gdk.h")]
 		public static void send_notify (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 		[CCode (cheader_filename = "gdk/gdk.h")]
@@ -5045,7 +5045,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class EventButton : Gdk.Event {
-		public double axes;
+		[CCode (array_length = false)]
+		public weak double[] axes;
 		public uint button;
 		public weak Gdk.Device device;
 		public int8 send_event;
@@ -5273,7 +5274,8 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_event_get_type ()")]
 	[Compact]
 	public class EventTouch : Gdk.Event {
-		public double axes;
+		[CCode (array_length = false)]
+		public weak double[] axes;
 		public weak Gdk.Device device;
 		public bool emulating_pointer;
 		public int8 send_event;
@@ -6832,7 +6834,7 @@ namespace Gdk {
 	[Version (since = "2.2")]
 	public static Pango.Context pango_context_get_for_screen (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
+	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, [CCode (array_length_cname = "n_ranges", array_length_pos = 4.1, type = "const gint*")] int[] index_ranges);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "2.2")]
 	public static void parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
