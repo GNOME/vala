@@ -108,6 +108,28 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
 					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
 				}
+			} else if (m != null && m.get_attribute ("NoWrapper") != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
+				var instance_value = ma.inner.target_value;
+				if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
+					var inner_ma = (MemberAccess) ma.inner;
+					instance_value = inner_ma.inner.target_value;
+				}
+				var pub_inst = get_cvalue_ (instance_value);
+
+				CCodeFunctionCall? vcast = null;
+				if (m.parent_symbol is Class) {
+					unowned Class base_class = (Class) m.parent_symbol;
+					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_class)));
+					vcast.add_argument (pub_inst);
+				} else if (m.parent_symbol is Interface) {
+					unowned Interface base_iface = (Interface) m.parent_symbol;
+					vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_iface)));
+					vcast.add_argument (pub_inst);
+				}
+				if (vcast != null) {
+					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
+					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
+				}
 			}
 
 			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
