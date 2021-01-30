@@ -477,7 +477,6 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", free_function = "g_type_default_interface_unref", lower_case_csuffix = "type_interface")]
 	[Compact]
 	public class TypeInterface {
-		public unowned GLib.TypePlugin get_plugin (GLib.Type interface_type);
 		[CCode (cname = "G_TYPE_FROM_INTERFACE")]
 		public GLib.Type get_type ();
 		public unowned GLib.TypeInterface? peek_parent ();
@@ -636,7 +635,6 @@ namespace GLib {
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] children ();
 		public unowned GLib.TypeClass? class_peek ();
-		public unowned GLib.TypeClass? class_peek_parent ();
 		public unowned GLib.TypeClass? class_peek_static ();
 		public unowned GLib.TypeClass? default_interface_peek ();
 		public GLib.TypeInterface default_interface_ref ();
@@ -659,6 +657,7 @@ namespace GLib {
 		[Version (since = "2.36")]
 		public static uint get_type_registration_serial ();
 		public void interface_add_prerequisite (Type prerequisite_type);
+		public unowned GLib.TypePlugin interface_get_plugin (GLib.Type interface_type);
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] interface_prerequisites ();
 		[CCode (array_length_type = "guint")]
