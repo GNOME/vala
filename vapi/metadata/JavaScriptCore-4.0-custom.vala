@@ -159,8 +159,8 @@ namespace JS {
 }
 
 namespace JSC {
-	[CCode (type_cname = "GCallback", instance_pos = 1.9)]
+	[CCode (cname = "GCallback", instance_pos = 1.9)]
 	public delegate T ClassConstructorCb<T> (GLib.GenericArray<JSC.Value> values);
-	[CCode (type_cname = "GCallback", instance_pos = 2.9)]
+	[CCode (cname = "GCallback", instance_pos = 2.9)]
 	public delegate T ClassMethodCb<T> (JSC.Class instance, GLib.GenericArray<JSC.Value> values);
 }

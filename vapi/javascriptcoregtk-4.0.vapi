@@ -385,7 +385,7 @@ namespace JSC {
 		ENUMERABLE,
 		WRITABLE
 	}
-	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 1.9, type_cname = "GCallback")]
+	[CCode (cheader_filename = "jsc/jsc.h", cname = "GCallback", instance_pos = 1.9)]
 	public delegate T ClassConstructorCb<T> (GLib.GenericArray<JSC.Value> values);
 	[CCode (cheader_filename = "jsc/jsc.h", has_target = false)]
 	public delegate bool ClassDeletePropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name);
@@ -395,7 +395,7 @@ namespace JSC {
 	public delegate JSC.Value? ClassGetPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name);
 	[CCode (cheader_filename = "jsc/jsc.h", has_target = false)]
 	public delegate bool ClassHasPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name);
-	[CCode (cheader_filename = "jsc/jsc.h", instance_pos = 2.9, type_cname = "GCallback")]
+	[CCode (cheader_filename = "jsc/jsc.h", cname = "GCallback", instance_pos = 2.9)]
 	public delegate T ClassMethodCb<T> (JSC.Class instance, GLib.GenericArray<JSC.Value> values);
 	[CCode (cheader_filename = "jsc/jsc.h", has_target = false)]
 	public delegate bool ClassSetPropertyFunction (JSC.Class jsc_class, JSC.Context context, void* instance, string name, JSC.Value value);
