@@ -1117,14 +1117,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.parent_symbol is Interface) {
 			var iface = (Interface) m.parent_symbol;
 
-			var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+			var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
 			((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
 			ccode.add_declaration ("%s*".printf (get_ccode_type_name (iface)), new CCodeVariableDeclarator ("_iface_"));
 			ccode.add_assignment (vcast, vcastcall);
 		} else {
 			var cl = (Class) m.parent_symbol;
 			if (!cl.is_compact) {
-				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 				((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
 				ccode.add_declaration ("%sClass*".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("_klass_"));
 				ccode.add_assignment (vcast, vcastcall);

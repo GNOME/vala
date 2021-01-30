@@ -1780,7 +1780,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var iface = (Interface) prop.parent_symbol;
 
 				vcast = new CCodeIdentifier ("_iface_");
-				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+				var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
 				((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
 				ccode.add_declaration ("%s*".printf (get_ccode_type_name (iface)), new CCodeVariableDeclarator ("_iface_"));
 				ccode.add_assignment (vcast, vcastcall);
@@ -1788,7 +1788,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var cl = (Class) prop.parent_symbol;
 				if (!cl.is_compact) {
 					vcast = new CCodeIdentifier ("_klass_");
-					var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (cl)));
+					var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 					((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
 					ccode.add_declaration ("%sClass*".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("_klass_"));
 					ccode.add_assignment (vcast, vcastcall);
@@ -2860,7 +2860,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_type".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));
@@ -2930,7 +2930,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_dup_func".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));
@@ -3486,7 +3486,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				require_generic_accessors (iface);
 
 				string method_name = "get_%s_destroy_func".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (iface)));
+				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
 				cast_self.add_argument (new CCodeIdentifier ("self"));
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
 				function_call.add_argument (new CCodeIdentifier ("self"));

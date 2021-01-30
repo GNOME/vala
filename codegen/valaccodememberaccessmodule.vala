@@ -68,7 +68,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (m.base_method.get_attribute ("NoWrapper") != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 					if (!base_class.is_compact) {
-						var vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_function (base_class)));
+						var vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_class)));
 						vclass.add_argument (pub_inst);
 						set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, get_ccode_vfunc_name (m)));
 					} else {
@@ -80,7 +80,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else if (m.base_interface_method != null) {
 				if (m.base_interface_method.get_attribute ("NoWrapper") != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					var vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_interface_get_function (base_iface)));
+					var vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_iface)));
 					vclass.add_argument (pub_inst);
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, get_ccode_vfunc_name (m)));
 				} else {

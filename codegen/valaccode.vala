@@ -54,13 +54,20 @@ namespace Vala {
 		return get_ccode_upper_case_name (sym);
 	}
 
-	public static string get_ccode_interface_get_function (Interface iface) {
-		return "%s_GET_INTERFACE".printf (get_ccode_upper_case_name (iface));
-	}
-
-	public static string get_ccode_class_get_function (Class cl) {
-		assert (!cl.is_compact);
-		return "%s_GET_CLASS".printf (get_ccode_upper_case_name (cl));
+	public static string get_ccode_type_get_function (ObjectTypeSymbol sym) {
+		var func_name = sym.get_attribute_string ("CCode", "type_get_function");
+		if (func_name != null) {
+			return func_name;
+		}
+		if (sym is Class) {
+			assert (!((Class) sym).is_compact);
+			return "%s_GET_CLASS".printf (get_ccode_upper_case_name (sym));
+		} else if (sym is Interface) {
+			return "%s_GET_INTERFACE".printf (get_ccode_upper_case_name (sym));
+		} else {
+			Report.error (sym.source_reference, "`CCode.type_get_function' not supported");
+			return "";
+		}
 	}
 
 	public static string get_ccode_class_get_private_function (Class cl) {
