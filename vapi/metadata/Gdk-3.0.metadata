@@ -17,6 +17,8 @@ Event
         ._get_angle skip
         ._get_center skip
         ._get_distance skip
+Event*
+        .axes array
 Window abstract=false
         .add_filter skip=false
         .create_similar_image_surface type="Cairo.ImageSurface"
@@ -32,6 +34,7 @@ RGBA struct
 ModifierType
         .modifier_reserved_*_mask skip
 pango_layout_get_clip_region skip=false
+        .index_ranges array array_length_idx=4
 property_change skip=false
 add_option_entries_libgtk_only skip=false
 Device
@@ -84,6 +87,8 @@ parse_args.argv unowned
 property_change.data array
 selection_property_get skip=false
         .data array
+        .prop_type out
+        .prop_format out
 threads_add_idle skip=false
 threads_add_timeout skip=false
 threads_add_timeout_seconds skip=false

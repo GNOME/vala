@@ -33,11 +33,14 @@ Rectangle struct
         .height skip
 RGBA struct
 pango_layout_get_clip_region skip=false
+        .index_ranges array array_length_idx=4
 Texture
         // Factory method
         .new_* symbol_type="function" name="new_(.+)"
 Surface
         .destroy destroys_instance
+        .translate_coordinates.x ref
+        .translate_coordinates.y ref
 Toplevel
         .compute_size.size nullable unowned
 ToplevelSize struct

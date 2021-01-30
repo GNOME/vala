@@ -4686,7 +4686,7 @@ namespace Gdk {
 			public void set_startup_notification_id (string startup_id);
 			public void set_surface_scale (int scale);
 			public int string_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
-			public int text_property_to_text_list (string encoding, int format, uint8 text, int length, string list);
+			public int text_property_to_text_list (string encoding, int format, [CCode (type = "const guchar*")] string text, int length, [CCode (array_length = false, type = "char***")] out string[] list);
 			public void ungrab ();
 			public bool utf8_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 			public signal bool xevent ([CCode (type = "gpointer")] X.Event xevent);
@@ -4755,9 +4755,9 @@ namespace Gdk {
 			FLOATING
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
-		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] uint8[] ctext);
+		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] owned uint8[] ctext);
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
-		public static void free_text_list (string list);
+		public static void free_text_list ([CCode (array_length = false, type = "char**")] owned string[] list);
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
 		public static void set_sm_client_id (string? sm_client_id);
 	}
@@ -5376,7 +5376,7 @@ namespace Gdk {
 		public void set_opaque_region (Cairo.Region? region);
 		[CCode (has_construct_function = false)]
 		public Surface.toplevel (Gdk.Display display);
-		public bool translate_coordinates (Gdk.Surface to, double x, double y);
+		public bool translate_coordinates (Gdk.Surface to, ref double x, ref double y);
 		public Gdk.Cursor cursor { get; set; }
 		public Gdk.Display display { get; construct; }
 		public Gdk.FrameClock frame_clock { get; construct; }
@@ -5926,7 +5926,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_upper (uint keyval);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
+	public static Cairo.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, [CCode (array_length_cname = "n_ranges", array_length_pos = 4.1, type = "const int*")] int[] index_ranges);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Pixbuf? pixbuf_get_from_surface (Cairo.Surface surface, int src_x, int src_y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -12508,10 +12508,10 @@ namespace Gtk {
 		public static bool delegate_get_property (GLib.Object object, uint prop_id, GLib.Value value, GLib.ParamSpec pspec);
 		public static bool delegate_set_property (GLib.Object object, uint prop_id, GLib.Value value, GLib.ParamSpec pspec);
 		public void delete_selection ();
-		[NoWrapper]
-		public abstract void do_delete_text (int start_pos, int end_pos);
-		[NoWrapper]
-		public abstract void do_insert_text (string text, int length, ref int position);
+		[CCode (cname = "gtk_editable_delete_text", vfunc_name = "delete_text")]
+		public virtual void do_delete_text (int start_pos, int end_pos);
+		[CCode (cname = "gtk_editable_insert_text", vfunc_name = "insert_text")]
+		public virtual void do_insert_text (string text, int length, ref int position);
 		public void finish_delegate ();
 		public float get_alignment ();
 		public string get_chars (int start_pos = 0, int end_pos = -1);

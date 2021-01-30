@@ -87,7 +87,7 @@ namespace Gdk {
 			[Version (since = "2.24")]
 			public int string_to_compound_text (string str, out Gdk.Atom encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 			[Version (since = "2.24")]
-			public int text_property_to_text_list (Gdk.Atom encoding, int format, uint8 text, int length, string list);
+			public int text_property_to_text_list (Gdk.Atom encoding, int format, [CCode (type = "const guchar*")] string text, int length, [CCode (array_length = false, type = "gchar***")] out string[] list);
 			[Version (since = "2.2")]
 			public void ungrab ();
 			[Version (since = "2.24")]
@@ -198,10 +198,10 @@ namespace Gdk {
 		public static int device_get_id (Gdk.X11.DeviceCore device);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		[Version (since = "2.24")]
-		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] uint8[] ctext);
+		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] owned uint8[] ctext);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		[Version (since = "2.24")]
-		public static void free_text_list (string list);
+		public static void free_text_list ([CCode (array_length = false, type = "gchar**")] owned string[] list);
 		[CCode (cheader_filename = "gdk/gdkx.h")]
 		public static X.Window get_default_root_xwindow ();
 		[CCode (cheader_filename = "gdk/gdkx.h")]
