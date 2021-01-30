@@ -58,7 +58,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 		if (!data.is_compact) {
 			this.is_class_type_macro_name = Vala.get_ccode_class_type_check_function (data);
 			this.class_type_macro_name = Vala.get_ccode_class_type_function (data);
-			this.class_macro_name = Vala.get_ccode_class_get_function (data);
+			this.class_macro_name = Vala.get_ccode_type_get_function (data);
 			this.private_cname = _get_private_cname (data);
 		}
 		this.dbus_name = Vala.GDBusModule.get_dbus_name (data);
