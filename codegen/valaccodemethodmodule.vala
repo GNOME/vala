@@ -339,7 +339,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		// do not declare overriding methods and interface implementations
 		if ((m.is_abstract || m.is_virtual
-			 || (m.base_method == null && m.base_interface_method == null)) && m.signal_reference == null) {
+		    || (m.base_method == null && m.base_interface_method == null))
+		    && m.get_attribute ("NoWrapper") == null
+		    && m.signal_reference == null) {
 			generate_method_declaration (m, cfile);
 
 			if (!m.is_internal_symbol ()) {
@@ -811,11 +813,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		pop_context ();
 
-		if ((m.is_abstract || m.is_virtual) && !m.coroutine &&
-		/* If the method is a signal handler, the declaration
-		 * is not needed. -- the name should be reserved for the
-		 * emitter! */
-			    m.signal_reference == null) {
+		if ((m.is_abstract || m.is_virtual) && !m.coroutine
+		    && m.get_attribute ("NoWrapper") == null
+		    // If the method is a signal handler, the declaration is not needed.
+		    // the name should be reserved for the emitter!
+		    && m.signal_reference == null) {
 
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
