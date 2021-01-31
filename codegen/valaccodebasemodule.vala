@@ -4763,7 +4763,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual bool generate_method_declaration (Method m, CCodeFile decl_space) {
-		return !add_symbol_declaration (decl_space, m, get_ccode_name (m));
+		return false;
 	}
 
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeFile decl_space) {

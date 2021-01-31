@@ -153,6 +153,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.is_async_callback) {
 			return false;
 		}
+		if ((m.is_abstract || m.is_virtual) && m.get_attribute ("NoWrapper") != null) {
+			return false;
+		}
 		if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
 			return false;
 		}
@@ -336,7 +339,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		// do not declare overriding methods and interface implementations
 		if ((m.is_abstract || m.is_virtual
 		    || (m.base_method == null && m.base_interface_method == null))
-		    && m.get_attribute ("NoWrapper") == null
 		    && m.signal_reference == null) {
 			generate_method_declaration (m, cfile);
 
