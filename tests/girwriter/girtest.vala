@@ -84,6 +84,9 @@ namespace GirTest {
 		[NoWrapper]
 		public virtual void no_wrapper_method () {
 		}
+		[NoWrapper]
+		public virtual async void no_wrapper_method_async () {
+		}
 	}
 
 	[GIR (visible = false)]
@@ -287,6 +290,10 @@ namespace GirTest {
 		[NoWrapper]
 		public virtual void no_wrapper_method () {
 		}
+
+		[NoWrapper]
+		public virtual async void no_wrapper_method_async () {
+		}
 	}
 
 	public abstract class AbstractObjectTest : Object {
@@ -307,6 +314,9 @@ namespace GirTest {
 
 		[NoWrapper]
 		public abstract void no_wrapper_method ();
+
+		[NoWrapper]
+		public abstract async void no_wrapper_method_async ();
 	}
 
 	public interface PrerequisiteTest : InterfaceTest {
