@@ -30,7 +30,7 @@
 [CCode (cheader_filename = "SDL2/SDL_ttf.h")]
 namespace SDLTTF {
 	[CCode (cname = "TTF_Linked_Version")]
-	public static unowned SDL.Version linked ();
+	public static unowned SDL.Version? linked_version ();
 
 	[CCode (cname = "TTF_ByteSwappedUNICODE")]
 	public static void byteswap_unicode (int swapped);
@@ -71,16 +71,16 @@ namespace SDLTTF {
 		public Font.index (string file, int ptsize, long index);
 
 		[CCode (cname = "TTF_OpenFontRW")]
-		public Font.from_rwops (SDL.RWops src, int ptsize, [CCode (pos = "1.1")] bool freesrc = false);
+		public Font.from_rwops (SDL.RWops src, int ptsize, [CCode (pos = 1.1)] bool freesrc = false);
 
 		[CCode (cname = "TTF_OpenFontIndexRW")]
-		public Font.from_rwops_index (SDL.RWops src, int ptsize, long index, [CCode (pos = "1.1")] bool freesrc = false);
+		public Font.from_rwops_index (SDL.RWops src, int ptsize, long index, [CCode (pos = 1.1)] bool freesrc = false);
 
 		[CCode (cname = "TTF_OpenFontDPIRW")]
-		public Font.from_rwops_dpi (SDL.RWops src, int ptsize, uint hdpi, uint vdpi, [CCode (pos = "1.1")] bool freesrc = false);
+		public Font.from_rwops_dpi (SDL.RWops src, int ptsize, uint hdpi, uint vdpi, [CCode (pos = 1.1)] bool freesrc = false);
 
 		[CCode (cname = "TTF_OpenFontIndexDPIRW")]
-		public Font.from_rwops_index_dpi (SDL.RWops src, int ptsize, long index, uint hdpi, uint vdpi, [CCode (pos = "1.1")] bool freesrc = false);
+		public Font.from_rwops_index_dpi (SDL.RWops src, int ptsize, long index, uint hdpi, uint vdpi, [CCode (pos = 1.1)] bool freesrc = false);
 
 		[CCode (cname = "TTF_OpenFontDPI")]
 		public Font.dpi (string file, int ptsize, uint hdpi, uint vdpi);
@@ -182,10 +182,10 @@ namespace SDLTTF {
 		public SDL.Video.Surface? render_glyph_shaded (unichar ch, SDL.Video.Color fg, SDL.Video.Color bg);
 
 		[CCode (cname = "TTF_RenderGlyph_Blended")]
-		public SDL.Video.Surface? render_glyph_blended_utf16 (unichar2 ch, SDL.Video.Color fg, SDL.Video.Color bg);
+		public SDL.Video.Surface? render_glyph_blended_utf16 (unichar2 ch, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderGlyph32_Blended")]
-		public SDL.Video.Surface? render_glyph_blended (unichar ch, SDL.Video.Color fg, SDL.Video.Color bg);
+		public SDL.Video.Surface? render_glyph_blended (unichar ch, SDL.Video.Color fg);
 
 		[CCode (cname = "TTF_RenderText_Solid")]
 		public SDL.Video.Surface? render_latin1 ([CCode (array_length = false)] uint8[] text, SDL.Video.Color fg);
