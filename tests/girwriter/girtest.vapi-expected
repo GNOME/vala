@@ -14,6 +14,8 @@ namespace GirTest {
 		public abstract void method_valist (int param, va_list vargs);
 		[NoWrapper]
 		public abstract void no_wrapper_method ();
+		[NoWrapper]
+		public abstract async void no_wrapper_method_async ();
 		[GIR (visible = false)]
 		public abstract async void skipped_coroutine_method (int param);
 	}
@@ -80,6 +82,8 @@ namespace GirTest {
 		public ObjectTest.newv (int param, ...);
 		[NoWrapper]
 		public virtual void no_wrapper_method ();
+		[NoWrapper]
+		public virtual async void no_wrapper_method_async ();
 		public void none_in ();
 		public static void none_inout (ref unowned GirTest.ObjectTest obj);
 		public static void none_out (out unowned GirTest.ObjectTest obj);
@@ -125,6 +129,8 @@ namespace GirTest {
 		public virtual void method_valist (int param, va_list vargs);
 		[NoWrapper]
 		public virtual void no_wrapper_method ();
+		[NoWrapper]
+		public virtual async void no_wrapper_method_async ();
 		[GIR (visible = false)]
 		public virtual async void skipped_coroutine_method (int param);
 		public abstract int property { get; set construct; }
