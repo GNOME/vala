@@ -709,6 +709,7 @@ TESTS = \
 	gir/delegate-error-pos.test \
 	gir/enum.test \
 	gir/errordomain.test \
+	gir/gtype-struct-name.test \
 	gir/instance-parameter-owned.test \
 	gir/method-array-length-type.test \
 	gir/parameter-array-length-type.test \

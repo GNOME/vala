@@ -1215,10 +1215,13 @@ public class Vala.GirParser : CodeVisitor {
 						// record for a gtype
 						var gtype_struct_for = girdata["glib:is-gtype-struct-for"];
 						if (gtype_struct_for != null) {
-							var iface = parser.resolve_node (parent, parser.parse_symbol_from_string (gtype_struct_for, source_reference));
-							if (iface != null && iface.symbol is Interface && "%sIface".printf (iface.get_cname ()) != get_cname ()) {
+							var obj = parser.resolve_node (parent, parser.parse_symbol_from_string (gtype_struct_for, source_reference));
+							if (obj != null && obj.symbol is Interface && "%sIface".printf (obj.get_cname ()) != get_cname ()) {
 								// set the interface struct name
-								iface.symbol.set_attribute_string ("CCode", "type_cname", get_cname ());
+								obj.symbol.set_attribute_string ("CCode", "type_cname", get_cname ());
+							} else if (obj != null && obj.symbol is Class && "%sClass".printf (obj.get_cname ()) != get_cname ()) {
+								// set the class struct name
+								obj.symbol.set_attribute_string ("CCode", "type_cname", get_cname ());
 							}
 							merged = true;
 						}
