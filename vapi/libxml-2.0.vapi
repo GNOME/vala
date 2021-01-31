@@ -249,6 +249,7 @@ namespace Xml {
 		ISO_8859_8,
 		[CCode (cname = "XML_CHAR_ENCODING_8859_9")]
 		ISO_8859_9,
+		[CCode (cname = "XML_CHAR_ENCODING_2022_JP")]
 		ISO_2022_JP,
 		SHIFT_JIS,
 		EUC_JP,
@@ -330,7 +331,7 @@ namespace Xml {
 		public Attribute* nexth;
 		public AttributeType atype;
 		public AttributeDefault def;
-		[CCode (type = "xmlChar*")]
+		[CCode (cname = "defaultValue", type = "xmlChar*")]
 		public weak string default_value;
 		[CCode (type = "xmlChar*")]
 		public weak string prefix;
@@ -601,12 +602,12 @@ namespace Xml {
 		public ElementContentType type;
 		public ElementContentOccur ocur;
 		[CCode (type = "xmlChar*")]
-		public const string name;
+		public weak string name;
 		public ElementContent c1;
 		public ElementContent c2;
 		public ElementContent parent;
 		[CCode (type = "xmlChar*")]
-		public const string prefix;
+		public weak string prefix;
 	}
 
 	[CCode (cname = "xmlElementContentType", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h", has_type_id = false)]
@@ -628,10 +629,10 @@ namespace Xml {
 	[Compact]
 	[CCode (cname = "xmlEntity", cheader_filename = "libxml/tree.h")]
 	public struct Entity {
-		public void* private;
+		public void* _private;
 		public ElementType type;
 		[CCode (type = "xmlChar*")]
-		public const string name;
+		public weak string name;
 		public Node* children;
 		public Node* last;
 		public Dtd* parent;
@@ -645,12 +646,12 @@ namespace Xml {
 		public int length;
 		public EntityType etype;
 		[CCode (cname = "ExternalID", type = "xmlChar*")]
-		public const string external_id;
+		public weak string external_id;
 		[CCode (cname = "SystemID", type = "xmlChar*")]
-		public const string system_id;
+		public weak string system_id;
 		public Entity* nexte;
 		[CCode (cname = "URI", type = "xmlChar*")]
-		public const string uri;
+		public weak string uri;
 		public int owner;
 		public int checked;
 	}
@@ -670,7 +671,7 @@ namespace Xml {
 	public struct Enumeration {
 		public Enumeration* next;
 		[CCode (type = "xmlChar*")]
-		public const string name;
+		public weak string name;
 	}
 
 	[CCode (has_target = false, cname = "xmlHashScannerFull", cheader_filename = "libxml/hash.h")]
@@ -755,7 +756,7 @@ namespace Xml {
 		[CCode (cname = "xmlDocCopyNode")]
 		public Node* doc_copy (Doc* doc, int extended);
 
-		[CCode (cname = "xmlDocCopyNodeList")]
+		[CCode (cname = "xmlDocCopyNodeList", instance_pos = -1)]
 		public Node* doc_copy_list (Doc* doc);
 
 		[CCode (cname = "xmlFreeNodeList")]
@@ -931,7 +932,7 @@ namespace Xml {
 		public ParserCtxt.create_push (Xml.SAXHandler* sax, void* user_data, [CCode (array_length = false)] char[] data, int len, string? filename = null);
 
 		[CCode (cname = "xmlCreateIOParserCtxt")]
-		public ParserCtxt.create_io (Xml.SAXHandler* sax, void* user_data, Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string? encoding = null);
+		public ParserCtxt.create_io (Xml.SAXHandler* sax, void* user_data, Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, CharEncoding encoding);
 
 		[CCode (cname = "xmlCreateDocParserCtxt")]
 		public ParserCtxt.create_doc ([CCode (type = "xmlChar*")] string cur);
@@ -947,12 +948,6 @@ namespace Xml {
 
 		[CCode (cname = "xmlCtxtReset")]
 		public void reset ();
-
-		[CCode (cname = "xmlCtxtInit")]
-		public void init ();
-
-		[CCode (cname = "xmlCtxtClear")]
-		public void clear ();
 
 		[CCode (cname = "xmlCtxtUseOptions")]
 		public int use_options (int options);
@@ -1260,7 +1255,7 @@ namespace Xml {
 		public int write_dtd_element ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string content);
 
 		[CCode (cname = "xmlTextWriterWriteDTDEntity")]
-		public int write_dtd_entity ([CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid, [CCode (type = "xmlChar*")] string content);
+		public int write_dtd_entity (bool pe, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid, [CCode (type = "xmlChar*")] string content);
 
 		[CCode (cname = "xmlTextWriterWriteDTDExternalEntity")]
 		public int write_dtd_external_entity (bool pe, [CCode (type = "xmlChar*")] string name, [CCode (type = "xmlChar*")] string? pubid, [CCode (type = "xmlChar*")] string? sysid, [CCode (type = "xmlChar*")] string ndataid);
@@ -1555,7 +1550,7 @@ namespace Xml {
 		public void set_error_handler (TextReaderErrorFunc f, void* arg);
 
 		[CCode (cname = "xmlTextReaderSetParserProp")]
-		public int set_parser_prop (SchemaValidCtxt* ctxt, int options);
+		public int set_parser_prop (int prop, int options);
 
 		[CCode (cname = "xmlTextReaderStandalone")]
 		public int standalone ();
@@ -1582,7 +1577,7 @@ namespace Xml {
 		READING
 	}
 
-	[CCode (has_target = false)]
+	[CCode (cname = "xmlTextReaderErrorFunc", has_target = false)]
 	public delegate void TextReaderErrorFunc (void* arg, string msg, ParserSeverities severity, TextReaderLocator* locator);
 
 
@@ -1702,7 +1697,7 @@ namespace Xml {
 	[CCode (cname = "charactersSAXFunc", has_target = false)]
 	public delegate void charactersSAXFunc (void* ctx, [CCode (type = "xmlChar*")] string ch, int len);
 
-	[CCode (cname = "commentsSAXFunc", has_target = false)]
+	[CCode (cname = "commentSAXFunc", has_target = false)]
 	public delegate void commentSAXFunc (void* ctx, [CCode (type = "xmlChar*")] string value);
 
 	[CCode (cname = "elementDeclSAXFunc", has_target = false)]
@@ -1863,7 +1858,7 @@ namespace Xml {
 		public string str3;
 		public int int1;
 		public int int2;
-		public void* ctx;
+		public void* ctxt;
 		public void* node;
 	}
 
@@ -1986,9 +1981,9 @@ namespace Html {
 
 		[CCode (cname = "htmlNodeDumpFileFormat", instance_pos = 1.1)]
 #if POSIX
-		public int node_dump_file_format (Posix.FILE file, string enc = "UTF-8", bool format = true);
+		public int node_dump_file_format (Posix.FILE file, Xml.Node* cur, string enc = "UTF-8", bool format = true);
 #else
-		public int node_dump_file_format (GLib.FileStream file, string enc = "UTF-8", bool format = true);
+		public int node_dump_file_format (GLib.FileStream file, Xml.Node* cur, string enc = "UTF-8", bool format = true);
 #endif
 
 		[CCode (cname = "htmlSaveFileEnc", instance_pos = 1.1)]
@@ -2019,10 +2014,14 @@ namespace Html {
 		public char dtd;
 		public bool isinline;
 		public weak string desc;
+		[CCode (array_length = false)]
 		public weak string[] subelts;
 		public weak string defaultsubelt;
+		[CCode (array_length = false)]
 		public weak string[] attrs_opt;
+		[CCode (array_length = false)]
 		public weak string[] attrs_depr;
+		[CCode (array_length = false)]
 		public weak string[] attrs_req;
 
 		[CCode (cname = "htmlTagLookup")]
@@ -2040,15 +2039,15 @@ namespace Html {
 		[CCode (cname = "htmlElementStatusHere")]
 		public Status status_here (ElemDesc* child);
 
-		[Ccode (cname = "htmlDefaultSubelement")]
+		[CCode (cname = "htmlDefaultSubelement")]
 		public unowned string default_subelement ();
 
-		[Ccode (cname = "htmlRequiredAttrs")]
+		[CCode (cname = "htmlRequiredAttrs", array_length = false)]
 		public unowned string[] required_attrs ();
 	}
 
 	[Compact]
-	[CCode (cname = "htmlEntityDesc", cheader_filename = "libxml/HTMLParser.h")]
+	[CCode (cname = "htmlEntityDesc", cheader_filename = "libxml/HTMLparser.h")]
 	public class EntityDesc
 	{
 		public uint value;
