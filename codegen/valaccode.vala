@@ -466,6 +466,10 @@ namespace Vala {
 		return m.get_attribute_double ("CCode", "generic_type_pos");
 	}
 
+	public static bool get_ccode_no_wrapper (Method m) {
+		return m.get_attribute ("NoWrapper") != null;
+	}
+
 	public static string get_ccode_sentinel (Method m) {
 		return get_ccode_attribute(m).sentinel;
 	}

@@ -108,7 +108,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					async_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_vfunc_name (m));
 					finish_call.call = new CCodeMemberAccess.pointer (vcast, get_ccode_finish_vfunc_name (m));
 				}
-			} else if (m != null && m.get_attribute ("NoWrapper") != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
+			} else if (m != null && get_ccode_no_wrapper (m) && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 				var instance_value = ma.inner.target_value;
 				if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
 					var inner_ma = (MemberAccess) ma.inner;
