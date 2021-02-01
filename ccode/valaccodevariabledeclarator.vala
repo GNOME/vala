@@ -102,20 +102,32 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 public class Vala.CCodeDeclaratorSuffix {
 	bool array;
-	CCodeExpression? array_length;
+	List<CCodeExpression>? array_length;
 
 	public CCodeDeclaratorSuffix.with_array (CCodeExpression? array_length = null) {
+		if (array_length != null) {
+			this.array_length = new ArrayList<CCodeExpression> ();
+			this.array_length.add (array_length);
+		}
+		array = true;
+	}
+
+	public CCodeDeclaratorSuffix.with_multi_array (List<CCodeExpression>? array_length = null) {
 		this.array_length = array_length;
 		array = true;
 	}
 
 	public void write (CCodeWriter writer) {
-		if (array) {
-			writer.write_string ("[");
-			if (array_length != null) {
-				array_length.write (writer);
+		if (array_length != null && array_length.size > 0) {
+			foreach (var length in array_length) {
+				writer.write_string ("[");
+				if (length != null) {
+					length.write (writer);
+				}
+				writer.write_string ("]");
 			}
-			writer.write_string ("]");
+		} else if (array) {
+			writer.write_string ("[]");
 		}
 	}
 }
