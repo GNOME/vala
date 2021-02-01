@@ -318,7 +318,7 @@ public class Vala.GAsyncModule : GtkModule {
 
 	public override bool generate_method_declaration (Method m, CCodeFile decl_space) {
 		if (m.coroutine) {
-			if ((m.is_abstract || m.is_virtual) && m.get_attribute ("NoWrapper") != null) {
+			if ((m.is_abstract || m.is_virtual) && get_ccode_no_wrapper (m)) {
 				return false;
 			}
 			if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
@@ -432,7 +432,7 @@ public class Vala.GAsyncModule : GtkModule {
 				}
 			}
 
-			if ((m.is_abstract || m.is_virtual) && m.get_attribute ("NoWrapper") == null) {
+			if ((m.is_abstract || m.is_virtual) && !get_ccode_no_wrapper (m)) {
 				// generate virtual function wrappers
 				var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
