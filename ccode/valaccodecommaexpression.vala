@@ -41,7 +41,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 		inner[index] = expr;
 	}
 
-	public List<CCodeExpression> get_inner () {
+	public unowned List<CCodeExpression> get_inner () {
 		return inner;
 	}
 

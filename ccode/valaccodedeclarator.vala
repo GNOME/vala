@@ -27,6 +27,11 @@ using GLib;
  */
 public abstract class Vala.CCodeDeclarator : CCodeNode {
 	/**
+	 * The declarator name.
+	 */
+	public string name { get; set; }
+
+	/**
 	 * Writes initialization statements for this declarator with the
 	 * specified C code writer if necessary.
 	 *

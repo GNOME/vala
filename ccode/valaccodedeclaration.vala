@@ -46,6 +46,15 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		declarators.add (decl);
 	}
 
+	/**
+	 * Returns the list of declarators.
+	 *
+	 * @return declarators list
+	 */
+	public unowned List<CCodeDeclarator> get_declarators () {
+		return declarators;
+	}
+
 	public override void write (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.INTERNAL | CCodeModifiers.EXTERN)) == 0) {
 			foreach (CCodeDeclarator decl in declarators) {

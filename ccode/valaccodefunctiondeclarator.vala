@@ -26,11 +26,6 @@ using GLib;
  * Represents a function pointer declarator in the C code.
  */
 public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
-	/**
-	 * The declarator name.
-	 */
-	public string name { get; set; }
-
 	private List<CCodeParameter> parameters = new ArrayList<CCodeParameter> ();
 
 	public CCodeFunctionDeclarator (string name) {

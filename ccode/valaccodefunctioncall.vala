@@ -51,11 +51,11 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	}
 
 	/**
-	 * Returns a copy of the list of arguments.
+	 * Returns the list of arguments.
 	 *
 	 * @return list of arguments
 	 */
-	public List<CCodeExpression> get_arguments () {
+	public unowned List<CCodeExpression> get_arguments () {
 		return arguments;
 	}
 

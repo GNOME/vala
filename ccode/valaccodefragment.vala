@@ -38,11 +38,11 @@ public class Vala.CCodeFragment : CCodeNode {
 	}
 
 	/**
-	 * Returns a copy of the list of children.
+	 * Returns the list of children.
 	 *
 	 * @return children list
 	 */
-	public List<CCodeNode> get_children () {
+	public unowned List<CCodeNode> get_children () {
 		return children;
 	}
 
