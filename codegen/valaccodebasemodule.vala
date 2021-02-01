@@ -944,7 +944,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
-	private void constant_array_ranks_sizes (InitializerList initializer_list, int[] sizes, int rank = 0) {
+	static void constant_array_ranks_sizes (InitializerList initializer_list, int[] sizes, int rank = 0) {
 		sizes[rank] = int.max (sizes[rank], initializer_list.size);
 		rank++;
 		foreach (var expr in initializer_list.get_initializers()) {
@@ -952,6 +952,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				constant_array_ranks_sizes ((InitializerList) expr, sizes, rank);
 			}
 		}
+	}
+
+	CCodeDeclaratorSuffix? get_constant_declarator_suffix (Constant c) {
+		unowned ArrayType? array = c.type_reference as ArrayType;
+		unowned InitializerList? initializer_list = c.value as InitializerList;
+		if (array == null || initializer_list == null) {
+			if (c.type_reference.compatible (string_type)) {
+				return new CCodeDeclaratorSuffix.with_array ();
+			}
+			return null;
+		}
+
+		var lengths = new ArrayList<CCodeExpression> ();
+		int[] sizes = new int[array.rank];
+		constant_array_ranks_sizes (initializer_list, sizes);
+		for (int i = 0; i < array.rank; i++) {
+			lengths.add (new CCodeConstant ("%d".printf (sizes[i])));
+		}
+		return new CCodeDeclaratorSuffix.with_multi_array (lengths);
 	}
 
 	public void generate_constant_declaration (Constant c, CCodeFile decl_space, bool definition = false) {
@@ -972,16 +991,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			var initializer_list = c.value as InitializerList;
 			if (initializer_list != null) {
 				var cdecl = new CCodeDeclaration (get_ccode_const_name (c.type_reference));
-				var arr = "";
-				if (c.type_reference is ArrayType) {
-					var array = (ArrayType) c.type_reference;
-					int[] sizes = new int[array.rank];
-					constant_array_ranks_sizes (initializer_list, sizes);
-					for (int i = 0; i < array.rank; i++) {
-						arr += "[%d]".printf (sizes[i]);
-					}
-				}
-
 				var cinitializer = get_cvalue (c.value);
 				if (!definition) {
 					// never output value in header
@@ -989,7 +998,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cinitializer = null;
 				}
 
-				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (get_ccode_name (c), arr), cinitializer));
+				cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_name (c), cinitializer, get_constant_declarator_suffix (c)));
 				if (c.is_private_symbol ()) {
 					cdecl.modifiers = CCodeModifiers.STATIC;
 				} else {
@@ -1020,28 +1029,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			c.value.emit (this);
 
-			string type_name = get_ccode_const_name (c.type_reference);
-			string arr = "";
-			if (c.type_reference is ArrayType) {
-				var array = (ArrayType) c.type_reference;
-				var initializer_list = c.value as InitializerList;
-				if (initializer_list != null) {
-					int[] sizes = new int[array.rank];
-					constant_array_ranks_sizes (initializer_list, sizes);
-					for (int i = 0; i < array.rank; i++) {
-						arr += "[%d]".printf (sizes[i]);
-					}
-				}
-			}
-
+			string type_name;
 			if (c.type_reference.compatible (string_type)) {
 				type_name = "const char";
-				arr = "[]";
+			} else {
+				type_name = get_ccode_const_name (c.type_reference);
 			}
 
 			var cinitializer = get_cvalue (c.value);
 
-			ccode.add_declaration (type_name, new CCodeVariableDeclarator ("%s%s".printf (get_ccode_name (c), arr), cinitializer), CCodeModifiers.STATIC);
+			ccode.add_declaration (type_name, new CCodeVariableDeclarator (get_ccode_name (c), cinitializer, get_constant_declarator_suffix (c)), CCodeModifiers.STATIC);
 		} else {
 			generate_constant_declaration (c, cfile, true);
 
