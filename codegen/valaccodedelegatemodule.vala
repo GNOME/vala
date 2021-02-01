@@ -74,9 +74,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) d.return_type;
 			if (deleg_type.delegate_symbol.has_target) {
+				generate_type_declaration (delegate_target_type, decl_space);
 				var cparam = new CCodeParameter (get_delegate_target_cname ("result"), get_ccode_name (delegate_target_type) + "*");
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d)), cparam);
 				if (deleg_type.is_disposable ()) {
+					generate_type_declaration (delegate_target_destroy_type, decl_space);
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), get_ccode_name (delegate_target_destroy_type) + "*");
 					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (d) + 0.01), cparam);
 				}
@@ -84,10 +86,12 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		if (d.has_target) {
+			generate_type_declaration (delegate_target_type, decl_space);
 			var cparam = new CCodeParameter ("user_data", get_ccode_name (delegate_target_type));
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (d)), cparam);
 		}
 		if (d.tree_can_fail) {
+			generate_type_declaration (gerror_type, decl_space);
 			var cparam = new CCodeParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (get_ccode_error_pos (d)), cparam);
 		}
