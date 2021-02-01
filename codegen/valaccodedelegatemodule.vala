@@ -37,10 +37,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return;
 		}
 
-		generate_type_declaration (new DelegateType (d), decl_space);
-
 		var creturn_type = get_callable_creturn_type (d);
-
 		if (creturn_type is DelegateType && ((DelegateType) creturn_type).delegate_symbol == d) {
 			// recursive delegate
 			creturn_type = new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("Callback"));
@@ -450,17 +447,17 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
-		generate_type_declaration (param.variable_type, decl_space);
+		var param_type = param.variable_type;
+		if (param_type is DelegateType && ((DelegateType) param_type).delegate_symbol == param.parent_symbol) {
+			// recursive delegate
+			param_type = new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("Callback"));
+		}
 
-		string ctypename = get_ccode_name (param.variable_type);
+		generate_type_declaration (param_type, decl_space);
+
+		string ctypename = get_ccode_name (param_type);
 		string target_ctypename = get_ccode_name (delegate_target_type);
 		string target_destroy_notify_ctypename = get_ccode_name (delegate_target_destroy_type);
-
-		if (param.parent_symbol is Delegate
-		    && get_ccode_name (param.variable_type) == get_ccode_name (param.parent_symbol)) {
-			// recursive delegate
-			ctypename = "GCallback";
-		}
 
 		if (param.direction != ParameterDirection.IN) {
 			ctypename += "*";
@@ -475,11 +472,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			carg_map.set (get_param_pos (get_ccode_pos (param)), get_parameter_cexpression (param));
 		}
 
-		if (param.variable_type is DelegateType) {
-			var deleg_type = (DelegateType) param.variable_type;
-
-			generate_delegate_declaration (deleg_type.delegate_symbol, decl_space);
-
+		if (param_type is DelegateType) {
+			unowned DelegateType deleg_type = (DelegateType) param_type;
 			if (get_ccode_delegate_target (param) && deleg_type.delegate_symbol.has_target) {
 				var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 				cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
@@ -494,7 +488,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 				}
 			}
-		} else if (param.variable_type is MethodType) {
+		} else if (param_type is MethodType) {
 			var cparam = new CCodeParameter (get_ccode_delegate_target_name (param), target_ctypename);
 			cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), cparam);
 			if (carg_map != null) {
