@@ -218,6 +218,7 @@ dist_vapi_DATA = \
 	libsexy.vapi \
 	libsoup-2.4.deps \
 	libsoup-2.4.vapi \
+	libunwind-generic.vapi \
 	libusb.vapi \
 	libusb-1.0.deps \
 	libusb-1.0.vapi \
