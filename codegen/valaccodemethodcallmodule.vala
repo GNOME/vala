@@ -950,9 +950,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (unary != null && unary.operator == UnaryOperator.REF) {
 				if (param != null && get_ccode_array_length (param) && param.variable_type is ArrayType
 				    && !((ArrayType) param.variable_type).fixed_length && ((ArrayType) param.variable_type).rank == 1) {
-					unowned Symbol? array_var = unary.inner.symbol_reference;
-					if (array_var != null && array_var.is_internal_symbol ()
-					    && (array_var is LocalVariable || array_var is Field)) {
+					unowned Variable? array_var = unary.inner.symbol_reference as Variable;
+					if ((array_var is LocalVariable || array_var is Field) && array_var.is_internal_symbol ()
+					    && array_var.variable_type is ArrayType && !((ArrayType) array_var.variable_type).fixed_length) {
 						ccode.add_assignment (get_array_size_cvalue (unary.inner.target_value), get_array_length_cvalue (unary.inner.target_value, 1));
 					}
 				}
