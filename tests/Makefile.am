@@ -371,6 +371,7 @@ TESTS = \
 	delegates/casting.vala \
 	delegates/compatible.vala \
 	delegates/delegate_only.vala \
+	delegates/delegate-recusive.vala \
 	delegates/delegates.vala \
 	delegates/delegates-error.test \
 	delegates/error-pos.vala \
