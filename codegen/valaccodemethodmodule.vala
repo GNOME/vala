@@ -157,7 +157,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (m.is_async_callback) {
 			return false;
 		}
-		if ((m.is_abstract || m.is_virtual) && m.get_attribute ("NoWrapper") != null) {
+		if ((m.is_abstract || m.is_virtual) && get_ccode_no_wrapper (m)) {
 			return false;
 		}
 		if (add_symbol_declaration (decl_space, m, get_ccode_name (m))) {
@@ -816,7 +816,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		pop_context ();
 
 		if ((m.is_abstract || m.is_virtual) && !m.coroutine
-		    && m.get_attribute ("NoWrapper") == null
+		    && !get_ccode_no_wrapper (m)
 		    // If the method is a signal handler, the declaration is not needed.
 		    // the name should be reserved for the emitter!
 		    && m.signal_reference == null) {
