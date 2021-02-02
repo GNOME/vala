@@ -6148,6 +6148,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (target_type.type_symbol.get_full_name ()));
 				return result;
 			}
+			// need to free old array after copying it
+			if (array_needs_copy && requires_destroy (type)) {
+				result.value_type = type.copy ();
+				ccode.add_expression (destroy_value (result));
+			}
 			result = copy;
 
 			// implicit array copying is deprecated, but allow it for internal codegen usage
