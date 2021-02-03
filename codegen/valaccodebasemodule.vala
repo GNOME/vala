@@ -5403,6 +5403,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var innercexpr = get_cvalue (expr.inner);
 		if (expr.type_reference is ValueType && !expr.type_reference.nullable &&
 			expr.inner.value_type is ValueType && expr.inner.value_type.nullable) {
+			if (!(expr.inner.symbol_reference is Variable)) {
+				// heap allocated struct leaked, destroy it
+				var value = new GLibValue (new PointerType (new VoidType ()), innercexpr);
+				temp_ref_values.insert (0, value);
+			}
 			// nullable integer or float or boolean or struct or enum cast to non-nullable
 			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
 		} else if (expr.type_reference is ValueType && expr.type_reference.nullable &&
