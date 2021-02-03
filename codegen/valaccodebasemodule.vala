@@ -3280,7 +3280,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		if (get_ccode_is_gboxed (type.type_symbol)) {
+		if (get_ccode_is_gboxed (type.type_symbol) || (gvalue_type != null && type.type_symbol == gvalue_type)) {
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_free"));
 			free_call.add_argument (new CCodeIdentifier (get_ccode_type_id (type.type_symbol)));
 			free_call.add_argument (new CCodeIdentifier ("self"));
