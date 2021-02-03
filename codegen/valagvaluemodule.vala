@@ -44,6 +44,17 @@ public class Vala.GValueModule : GAsyncModule {
 		}
 		ccall.add_argument (gvalue);
 
+		if (value_type.is_disposable ()) {
+			var temp_var = get_temp_variable (value_type, true, expr, false);
+			emit_temp_var (temp_var);
+			var temp_ref = get_variable_cexpression (temp_var.name);
+			ccode.add_assignment (temp_ref, get_cvalue (expr.inner));
+
+			// value needs to be kept alive until the end of this block
+			assert (current_symbol is Block);
+			((Block) current_symbol).add_local_variable (temp_var);
+		}
+
 		CCodeExpression rv;
 		if (target_type is ArrayType) {
 			var temp_var = get_temp_variable (target_type, true, expr, false);
