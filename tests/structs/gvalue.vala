@@ -5,6 +5,10 @@ void test_value () {
 	string s = "hello";
 	Value v2 = s;
 	assert (v2.get_string () == s);
+
+	unowned string s2 = "world";
+	Value v3 = s2;
+	assert (v3.get_string () == s2);
 }
 
 void test_value_array () {
@@ -30,6 +34,10 @@ void test_nullable_value () {
 	string s = "hello";
 	Value? v2 = s;
 	assert (v2.get_string () == s);
+
+	unowned string s2 = "world";
+	Value? v3 = s2;
+	assert (v3.get_string () == s2);
 }
 
 void test_nullable_value_array () {
@@ -105,7 +113,10 @@ void test_try_cast_value () {
 	Value va = sarray;
 
 	string[] sarray2 = (string[]) va;
-	assert (sarray[1] == "vala");
+	assert (sarray2[1] == "vala");
+
+	unowned string[] sarray3 = (string[]) va;
+	assert (sarray3[2] == "world");
 }
 
 void main () {
