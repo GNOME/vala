@@ -51,8 +51,7 @@ public class Vala.GValueModule : GAsyncModule {
 			ccode.add_assignment (temp_ref, get_cvalue (expr.inner));
 
 			// value needs to be kept alive until the end of this block
-			assert (current_symbol is Block);
-			((Block) current_symbol).add_local_variable (temp_var);
+			temp_ref_values.insert (0, get_local_cvalue (temp_var));
 		}
 
 		CCodeExpression rv;
