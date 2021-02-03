@@ -870,6 +870,7 @@ TESTS = \
 	semantic/assignment-same-variable.vala \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
+	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
 	semantic/chainup-gobject-incompatible-type-property.test \
 	semantic/chainup-gobject-unknown-property.test \

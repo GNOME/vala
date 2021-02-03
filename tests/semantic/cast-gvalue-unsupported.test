@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	Value v = Value (typeof (int));
+	var i = (int?) v;
+}

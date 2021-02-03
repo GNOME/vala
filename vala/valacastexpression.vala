@@ -215,6 +215,10 @@ public class Vala.CastExpression : Expression {
 		    && is_gvalue (context, inner.value_type) && !is_gvalue (context, value_type)) {
 			// GValue unboxing returns unowned value
 			value_type.value_owned = false;
+			if (value_type.nullable && value_type.type_symbol != null && !value_type.type_symbol.is_reference_type ()) {
+				error = true;
+				Report.error (source_reference, "Casting of `GLib.Value' to `%s' is not supported", value_type.to_qualified_string ());
+			}
 		}
 
 		inner.target_type = inner.value_type.copy ();
