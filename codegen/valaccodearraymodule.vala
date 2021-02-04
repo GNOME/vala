@@ -636,7 +636,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 				ccode.add_return (new CCodeIdentifier ("result"));
 			} else {
-				var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				CCodeFunctionCall dup_call;
+				if (context.require_glib_version (2, 68)) {
+					dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
+				} else {
+					dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				}
 				dup_call.add_argument (new CCodeIdentifier ("self"));
 				dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length_expr, sizeof_call));
 

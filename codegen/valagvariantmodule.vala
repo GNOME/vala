@@ -418,7 +418,12 @@ public class Vala.GVariantModule : GValueModule {
 		ccode.add_declaration ("gsize", new CCodeVariableDeclarator (temp_name + "_length", get_size_call));
 		var length = new CCodeIdentifier (temp_name + "_length");
 
-		var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+		CCodeFunctionCall dup_call;
+		if (context.require_glib_version (2, 68)) {
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
+		} else {
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+		}
 		dup_call.add_argument (get_data_call);
 		dup_call.add_argument (length);
 
@@ -559,7 +564,12 @@ public class Vala.GVariantModule : GValueModule {
 			if (result != null && type.nullable) {
 				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 				csizeof.add_argument (new CCodeIdentifier (get_ccode_name (st)));
-				var cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				CCodeFunctionCall cdup;
+				if (context.require_glib_version (2, 68)) {
+					cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
+				} else {
+					cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				}
 				cdup.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result));
 				cdup.add_argument (csizeof);
 				result = cdup;
@@ -731,7 +741,12 @@ public class Vala.GVariantModule : GValueModule {
 		var gvariant_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VARIANT_TYPE"));
 		gvariant_type.add_argument (new CCodeConstant ("\"%s\"".printf (array_type.get_type_signature ())));
 
-		var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+		CCodeFunctionCall dup_call;
+		if (context.require_glib_version (2, 68)) {
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
+		} else {
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+		}
 		dup_call.add_argument (array_expr);
 		dup_call.add_argument (get_array_length (array_expr, 1));
 		ccode.add_declaration (get_ccode_name (array_type), new CCodeVariableDeclarator (buffer_name, dup_call));
