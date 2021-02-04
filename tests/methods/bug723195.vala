@@ -20,4 +20,7 @@ void main () {
 	assert (string.joinv (":", a) == "foo:bar");
 
 	assert (string.joinv (":", null) == "");
+
+	// LeakSanitizer -fsanitize=address
+	a.length = 4;
 }
