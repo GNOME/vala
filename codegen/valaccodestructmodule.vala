@@ -330,6 +330,20 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 	}
 
 	void add_struct_destroy_function (Struct st) {
+		unowned Struct sym = st;
+		while (sym.base_struct != null) {
+			sym = sym.base_struct;
+		}
+		if (st != sym) {
+			push_context (instance_finalize_context);
+
+			var destroy_func = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_destroy_function (sym)));
+			destroy_func.add_argument (new CCodeIdentifier ("self"));
+			ccode.add_expression (destroy_func);
+
+			pop_context ();
+		}
+
 		cfile.add_function (instance_finalize_context.ccode);
 	}
 }
