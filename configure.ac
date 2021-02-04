@@ -152,6 +152,13 @@ for flag in $TEST_EXTRA_CFLAGS; do
 	AX_CHECK_COMPILE_FLAG([$flag],[TEST_CFLAGS="$TEST_CFLAGS $flag"])
 done
 
+AC_ARG_ENABLE(test-asan, AS_HELP_STRING([--enable-test-asan], [Enable Address Sanitizer analysis for tests]), enable_test_asan=$enableval, enable_test_asan=no)
+AM_CONDITIONAL(ENABLE_TEST_ASAN, test x$enable_test_asan = xyes)
+
+if test "$enable_test_asan" = "yes"; then
+	TEST_CFLAGS="$TEST_CFLAGS -g3 -fsanitize=address -fno-omit-frame-pointer"
+fi
+
 AC_SUBST(TEST_CFLAGS)
 
 
