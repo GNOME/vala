@@ -2444,6 +2444,9 @@ namespace GLib {
 		public static void* move (void* dest, void* src, size_t n);
 		[CCode (cname = "g_memdup")]
 		public static void* dup (void* mem, uint n);
+		[Version (since = "2.68")]
+		[CCode (cname = "g_memdup2")]
+		public static void* dup2 (void* mem, size_t n);
 	}
 
 	[Version (since = "2.10")]
@@ -2677,6 +2680,8 @@ namespace GLib {
 
 	[Version (since = "2.16")]
 	public static void assert_cmpstr (string? s1, CompareOperator cmp, string? s2);
+	[Version (since = "2.68")]
+	public static void assert_cmpstrv ([CCode (array_length = false, array_null_terminated = true)] string[] strv1, [CCode (array_length = false, array_null_terminated = true)] string[] strv2);
 	[Version (since = "2.16")]
 	public static void assert_cmpint (int n1, CompareOperator cmp, int n2);
 	[Version (since = "2.16")]
@@ -2800,6 +2805,10 @@ namespace GLib {
 		public static bool writer_is_journald (int output_fd);
 		[Version (since = "2.50")]
 		public static string writer_format_fields (LogLevelFlags log_levels, [CCode (array_length_type = "gsize")] LogField[] fields, bool use_color);
+		[Version (since = "2.68")]
+		public static void writer_default_set_use_stderr (bool use_stderr);
+		[Version (since = "2.68")]
+		public static bool writer_default_would_drop (LogLevelFlags log_level, string log_domain);
 		[Version (since = "2.50")]
 		[CCode (delegate_target = false)]
 		public static LogWriterFunc writer_journald;
@@ -4792,6 +4801,8 @@ namespace GLib {
 		public static unowned string get_dir (GLib.Test.FileType file_type);
 		[Version (since = "2.38")]
 		public static unowned string get_filename (GLib.Test.FileType file_type, params string[] path_segments);
+		[Version (since = "2.68")]
+		public static unowned string get_path ();
 		[Version (since = "2.38")]
 		public static void incomplete (string? msg = null);
 		[Version (since = "2.36")]
