@@ -364,6 +364,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_length;
 	public bool requires_array_n_elements;
 	public bool requires_clear_mutex;
+	public bool requires_memdup2;
 
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
@@ -756,6 +757,44 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (fun);
 	}
 
+	void append_vala_memdup2 () {
+		// g_malloc
+		cfile.add_include ("glib.h");
+
+		var fun = new CCodeFunction ("_vala_memdup2", "gpointer");
+		fun.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+		fun.add_parameter (new CCodeParameter ("mem", "gconstpointer"));
+		fun.add_parameter (new CCodeParameter ("byte_size", "gsize"));
+
+		push_function (fun);
+
+		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("new_mem"));
+
+		ccode.open_if (new CCodeIdentifier ("mem && byte_size != 0"));
+
+		var malloc = new CCodeFunctionCall (new CCodeIdentifier ("g_malloc"));
+		malloc.add_argument (new CCodeIdentifier ("byte_size"));
+		ccode.add_assignment (new CCodeIdentifier ("new_mem"), malloc);
+		var mcpy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+		mcpy.add_argument (new CCodeIdentifier ("new_mem"));
+		mcpy.add_argument (new CCodeIdentifier ("mem"));
+		mcpy.add_argument (new CCodeIdentifier ("byte_size"));
+		ccode.add_expression (mcpy);
+
+		ccode.add_else ();
+
+		ccode.add_assignment (new CCodeIdentifier ("new_mem"), new CCodeIdentifier ("NULL"));
+
+		ccode.close ();
+
+		ccode.add_return (new CCodeIdentifier ("new_mem"));
+
+		pop_function ();
+
+		cfile.add_function_declaration (fun);
+		cfile.add_function (fun);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
@@ -810,6 +849,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			append_vala_clear_mutex ("GRecMutex", "g_rec_mutex");
 			append_vala_clear_mutex ("GRWLock", "g_rw_lock");
 			append_vala_clear_mutex ("GCond", "g_cond");
+		}
+		if (requires_memdup2) {
+			append_vala_memdup2 ();
 		}
 
 		var comments = source_file.get_comments();

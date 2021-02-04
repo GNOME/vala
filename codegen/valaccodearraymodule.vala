@@ -640,7 +640,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (context.require_glib_version (2, 68)) {
 					dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
 				} else {
-					dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+					requires_memdup2 = true;
+					dup_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_memdup2"));
 				}
 				dup_call.add_argument (new CCodeIdentifier ("self"));
 				dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length_expr, sizeof_call));

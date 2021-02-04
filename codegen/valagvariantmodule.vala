@@ -422,7 +422,8 @@ public class Vala.GVariantModule : GValueModule {
 		if (context.require_glib_version (2, 68)) {
 			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
 		} else {
-			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+			requires_memdup2 = true;
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_memdup2"));
 		}
 		dup_call.add_argument (get_data_call);
 		dup_call.add_argument (length);
@@ -568,7 +569,8 @@ public class Vala.GVariantModule : GValueModule {
 				if (context.require_glib_version (2, 68)) {
 					cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
 				} else {
-					cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+					requires_memdup2 = true;
+					cdup = new CCodeFunctionCall (new CCodeIdentifier ("_vala_memdup2"));
 				}
 				cdup.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result));
 				cdup.add_argument (csizeof);
@@ -745,7 +747,8 @@ public class Vala.GVariantModule : GValueModule {
 		if (context.require_glib_version (2, 68)) {
 			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup2"));
 		} else {
-			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+			requires_memdup2 = true;
+			dup_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_memdup2"));
 		}
 		dup_call.add_argument (array_expr);
 		dup_call.add_argument (get_array_length (array_expr, 1));
