@@ -235,6 +235,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			}
 
 			current_block.connect (m.return_block);
+		} else {
+			m.body.unreachable_exit = true;
 		}
 
 		analyze_body (m.entry_block);

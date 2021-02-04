@@ -32,6 +32,11 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public bool contains_jump_statement { get; set; }
 
+	/**
+	 * Specifies whether the end of this block is unreachable.
+	 */
+	public bool unreachable_exit { get; set; }
+
 	public bool captured { get; set; }
 
 	private List<Statement> statement_list = new ArrayList<Statement> ();

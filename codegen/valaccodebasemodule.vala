@@ -2404,17 +2404,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cfile.add_function (unref_fun);
 		}
 
-		bool reachable_exit_block = true;
 		foreach (Statement stmt in b.get_statements ()) {
-			if (stmt is ReturnStatement) {
-				reachable_exit_block = false;
-			}
 			push_line (stmt.source_reference);
 			stmt.emit (this);
 			pop_line ();
 		}
 
-		if (reachable_exit_block) {
+		if (!b.unreachable_exit) {
 			if (b.parent_symbol is Method) {
 				unowned Method m = (Method) b.parent_symbol;
 				// check postconditions
