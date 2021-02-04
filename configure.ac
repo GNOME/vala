@@ -122,6 +122,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=pointer-arith \
 -Werror=redundant-decls \
 -Werror=return-local-addr \
+-Werror=return-stack-address \
 -Werror=return-type \
 -Werror=sequence-point \
 -Werror=uninitialized \
