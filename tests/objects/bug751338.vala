@@ -16,6 +16,11 @@ void main() {
 	assert (strings[0] == "foo");
 	assert (strings[1] == "bar");
 
+	// LeakSanitizer -fsanitize=address
+	if (strings.length == -1) {
+		strings.length = (int) strv_length (strings);
+	}
+
 	f.set("strings", null);
 	f.get("strings", out strings);
 	assert(strings == null);
@@ -24,4 +29,9 @@ void main() {
 	f.get("strings", out strings);
 	assert (strings[0] == "foo");
 	assert (strings[1] == "bar");
+
+	// LeakSanitizer -fsanitize=address
+	if (strings.length == -1) {
+		strings.length = (int) strv_length (strings);
+	}
 }
