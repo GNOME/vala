@@ -1774,7 +1774,7 @@ namespace Gst {
 		[Version (since = "1.14")]
 		public unowned Gst.Structure writable_structure ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", has_type_id = false, ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", unref_function = "gst_mini_object_unref")]
+	[CCode (cheader_filename = "gst/gst.h", get_value_function = "g_value_get_boxed", ref_function = "gst_mini_object_ref", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_id = "G_TYPE_BOXED", unref_function = "gst_mini_object_unref")]
 	[Compact]
 	public abstract class MiniObject {
 		public weak Gst.MiniObjectDisposeFunction dispose;
