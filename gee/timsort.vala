@@ -655,7 +655,9 @@ internal class Vala.TimSort<G> {
 		}
 
 		public void copy () {
-			new_list = Memory.dup (&list[index], (uint) sizeof (G) * length);
+			size_t size = sizeof (G) * length;
+			new_list = malloc (size);
+			Memory.copy (new_list, &list[index], size);
 			list = new_list;
 			index = 0;
 		}
