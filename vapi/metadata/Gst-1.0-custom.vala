@@ -67,7 +67,7 @@ namespace Gst {
 		public bool find_custom<T> ([CCode (type = "GCompareFunc")] GLib.SearchFunc<GLib.Value?,T> func, out GLib.Value elem, T user_data);
 	}
 
-	[Compact, CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed")]
+	[Compact, CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_id = "G_TYPE_BOXED")]
 	public abstract class MiniObject {
 		[CCode (simple_generics = true)]
 		public T get_qdata<T> (GLib.Quark quark);
