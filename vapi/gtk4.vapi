@@ -6004,6 +6004,7 @@ namespace Gsk {
 	public class ConicGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public float get_angle ();
 		public unowned Graphene.Point? get_center ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 		public unowned Gsk.ColorStop[] get_color_stops ();
@@ -9115,7 +9116,7 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_adjustment ();
 		public unowned Gtk.ListBoxRow? get_row_at_index (int index_);
 		public unowned Gtk.ListBoxRow? get_row_at_y (int y);
-		public unowned Gtk.ListBoxRow get_selected_row ();
+		public unowned Gtk.ListBoxRow? get_selected_row ();
 		public GLib.List<weak Gtk.ListBoxRow> get_selected_rows ();
 		public Gtk.SelectionMode get_selection_mode ();
 		public bool get_show_separators ();
@@ -12079,7 +12080,7 @@ namespace Gtk {
 		public int get_margin_end ();
 		public int get_margin_start ();
 		public int get_margin_top ();
-		public unowned string? get_name ();
+		public unowned string get_name ();
 		public unowned Gtk.Native? get_native ();
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
