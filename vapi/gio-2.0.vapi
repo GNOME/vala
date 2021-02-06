@@ -85,6 +85,12 @@ namespace GLib {
 		[Version (since = "2.26")]
 		public static unowned string? annotation_info_lookup ([CCode (array_length = false, array_null_terminated = true)] GLib.DBusAnnotationInfo[]? annotations, string name);
 		[CCode (cheader_filename = "gio/gio.h")]
+		[Version (since = "2.68")]
+		public static string escape_object_path (string s);
+		[CCode (cheader_filename = "gio/gio.h")]
+		[Version (since = "2.68")]
+		public static string escape_object_path_bytestring ([CCode (array_length = false, array_null_terminated = true)] uint8[] bytes);
+		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static string generate_guid ();
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -114,6 +120,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static bool is_unique_name (string string);
+		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
+		[Version (since = "2.68")]
+		public static unowned uint8[]? unescape_object_path (string s);
 	}
 	namespace FileAttribute {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE")]
