@@ -731,6 +731,8 @@ namespace Gst {
 			public bool from_caps (Gst.Caps caps);
 			public bool from_string (string level);
 			public void init ();
+			[Version (since = "1.20")]
+			public bool is_equal (Gst.Video.ContentLightLevel other);
 			public string to_string ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]

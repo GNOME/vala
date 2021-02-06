@@ -3085,7 +3085,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BIN_FLAG_", type_id = "gst_bin_flags_get_type ()")]
 	[Flags]
 	public enum BinFlags {
+		[Version (since = "1.0.5")]
 		NO_RESYNC,
+		[Version (since = "1.10")]
 		STREAMS_AWARE,
 		LAST
 	}
@@ -3114,7 +3116,9 @@ namespace Gst {
 		DROPPABLE,
 		DELTA_UNIT,
 		TAG_MEMORY,
+		[Version (since = "1.6")]
 		SYNC_AFTER,
+		[Version (since = "1.14")]
 		NON_DROPPABLE,
 		LAST
 	}

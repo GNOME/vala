@@ -50,6 +50,9 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public void set_source_info_enabled (bool enable);
 			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool auto_header_extension { get; set; }
+			[NoAccessorMethod]
 			[Version (since = "1.18")]
 			public int max_reorder { get; set; }
 			[NoAccessorMethod]
@@ -95,6 +98,9 @@ namespace Gst {
 			public virtual bool sink_event (Gst.Event event);
 			[NoWrapper]
 			public virtual bool src_event (Gst.Event event);
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool auto_header_extension { get; set; }
 			[NoAccessorMethod]
 			public int64 max_ptime { get; set; }
 			[NoAccessorMethod]
