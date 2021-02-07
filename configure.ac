@@ -180,7 +180,7 @@ if test x$enable_valadoc = xyes; then
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([
 			#include <gvc.h>
-			int main(void) {
+			int main() {
 				#ifdef WITH_CGRAPH
 					return 0;
 				#else
