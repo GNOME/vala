@@ -23,6 +23,9 @@
 [CCode (cname = "valadoc_compat_gvc_graph_new")]
 extern Gvc.Graph valadoc_gvc_graph_new (string name);
 
+[CCode (cname = "valadoc_compat_gvc_graph_create_edge")]
+extern Gvc.Edge valadoc_gvc_graph_create_edge (Gvc.Graph graph, Gvc.Node from, Gvc.Node to);
+
 public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	protected virtual Gvc.Node configure_type (Gvc.Node node, Api.Node item) {
  		node.safe_set ("shape", "box", "");
@@ -75,7 +78,7 @@ public class Valadoc.Charts.SimpleFactory : Charts.Factory {
 	}
 
 	public override Gvc.Edge add_children (Gvc.Graph graph, Gvc.Node parent, Gvc.Node child) {
-		var edge = graph.create_edge (parent, child);
+		var edge = valadoc_gvc_graph_create_edge (graph, parent, child);
 		edge.safe_set ("dir", "back", "");
 		return edge;
 	}

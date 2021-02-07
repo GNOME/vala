@@ -33,6 +33,9 @@ valadoc_compat_gvc_graph_create_node (Agraph_t* graph, const char *name);
 Agraph_t*
 valadoc_compat_gvc_graph_new (const char *name);
 
+Agedge_t*
+valadoc_compat_gvc_graph_create_edge (Agraph_t* graph, Agnode_t* from, Agnode_t* to);
+
 void
 valadoc_compat_gvc_init (void)
 {
@@ -58,5 +61,15 @@ valadoc_compat_gvc_graph_new (const char *name)
 	return agopen ((char*) name, Agdirected, NULL);
 #else
 	return agopen ((char*) name, AGDIGRAPH);
+#endif
+}
+
+Agedge_t*
+valadoc_compat_gvc_graph_create_edge (Agraph_t* graph, Agnode_t* from, Agnode_t* to)
+{
+#ifdef WITH_CGRAPH
+	return agedge (graph, from, to, NULL, TRUE);
+#else
+	return agedge (graph, from, to);
 #endif
 }
