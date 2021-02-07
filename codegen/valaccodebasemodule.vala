@@ -3724,9 +3724,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			// FIXME this breaks in our macro, so this should not happen
-			if (cvar is CCodeCastExpression) {
+			while (cvar is CCodeCastExpression) {
 				cvar = ((CCodeCastExpression) cvar).inner;
-			} else if (cvar is CCodeFunctionCall) {
+			}
+			if (cvar is CCodeFunctionCall) {
 				cvar = ((CCodeFunctionCall) cvar).get_arguments ()[0];
 			}
 
