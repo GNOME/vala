@@ -17,6 +17,7 @@ if help2man.found() and get_option('manpages')
 			'--include', join_paths(meson.current_source_dir(), 'valac.h2m'),
 			'--no-info', '--output=@OUTPUT@', valac_exe
 		],
+		env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
 		install: true,
 		install_dir: man_1_dir,
 	)
@@ -26,6 +27,7 @@ if help2man.found() and get_option('manpages')
 			'--include', join_paths(meson.current_source_dir(), 'vapigen.h2m'),
 			'--no-info', '--output=@OUTPUT@', vapigen_exe
 		],
+		env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
 		install: true,
 		install_dir: man_1_dir,
 	)
@@ -36,6 +38,7 @@ if help2man.found() and get_option('manpages')
 				'--include', join_paths(meson.current_source_dir(), 'valadoc.h2m'),
 				'--no-info', '--output=@OUTPUT@', valadoc_exe
 			],
+			env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen') + ':' + join_paths(meson.build_root(), 'libvaladoc'),
 			install: true,
 			install_dir: man_1_dir,
 		)

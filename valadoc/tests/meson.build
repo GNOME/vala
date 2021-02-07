@@ -37,6 +37,11 @@ vala_flags = [
 	join_paths(meson.source_root(), 'valadoc', 'tests', 'libvaladoc', 'parser-generic-scanner.vala'),
 ]
 
+test_envars = [
+	'G_DEBUG=fatal-warnings',
+	'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen') + ':' + join_paths(meson.build_root(), 'libvaladoc'),
+]
+
 foreach flag : supported_test_cflags
 	vala_flags += ['-X', flag]
 endforeach
@@ -47,6 +52,7 @@ foreach case : test_cases
 		valac_exe,
 		workdir: meson.current_build_dir(),
 		args: vala_flags + [join_paths(meson.current_source_dir(), case)],
+		env: test_envars,
 		depends: [valacore_lib, libvaladoc_lib],
 		suite: suite[0],
 	)
