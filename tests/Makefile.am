@@ -645,6 +645,7 @@ TESTS = \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
 	generics/integer-type-cast.vala \
+	generics/integer-type-cast-return.vala \
 	generics/parameter-invalid-initializer.test \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
