@@ -1421,6 +1421,7 @@ vala_flags = [
 
 test_envars = [
 	'G_DEBUG=fatal-warnings',
+	'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
 ]
 
 foreach flag : supported_test_cflags
