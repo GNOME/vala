@@ -760,6 +760,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	void append_vala_memdup2 () {
 		// g_malloc
 		cfile.add_include ("glib.h");
+		// memcpy
+		cfile.add_include ("string.h");
 
 		var fun = new CCodeFunction ("_vala_memdup2", "gpointer");
 		fun.modifiers = CCodeModifiers.STATIC | CCodeModifiers.INLINE;
