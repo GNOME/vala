@@ -497,6 +497,7 @@ TESTS = \
 	objects/simple-generics-chainup.vala \
 	objects/singleton.vala \
 	objects/type-narrowing.vala \
+	objects/type-narrowing-by-precondition.vala \
 	objects/type-narrowing-fallback.vala \
 	objects/test-025.vala \
 	objects/test-026.vala \

@@ -1130,6 +1130,7 @@ public class Vala.MemberAccess : Expression {
 		bool is_negation = false;
 		unowned CodeNode? parent = parent_node;
 		unowned IfStatement? if_statement = null;
+		var scope_type_checks = new ArrayList<unowned TypeCheck> ();
 		while (parent != null && !(parent is Method)) {
 			if (parent is TypeCheck) {
 				parent = null;
@@ -1138,6 +1139,14 @@ public class Vala.MemberAccess : Expression {
 			if (parent.parent_node is IfStatement) {
 				if_statement = (IfStatement) parent.parent_node;
 				is_negation = if_statement.false_statement == parent;
+				break;
+			}
+			if (parent.parent_node is Method) {
+				foreach (Expression expr in ((Method) parent.parent_node).get_preconditions ()) {
+					if (expr is TypeCheck) {
+						scope_type_checks.add ((TypeCheck) expr);
+					}
+				}
 				break;
 			}
 			parent = parent.parent_node;
@@ -1151,6 +1160,17 @@ public class Vala.MemberAccess : Expression {
 			}
 			unowned TypeCheck? type_check = expr as TypeCheck;
 			if (!is_negation && type_check != null) {
+				unowned TypeSymbol? narrowed_symnol = type_check.type_reference.type_symbol;
+				if (variable == type_check.expression.symbol_reference) {
+					if (narrowed_symnol != value_type.type_symbol) {
+						value_type.context_symbol = narrowed_symnol;
+					}
+					value_type.nullable = false;
+				}
+			}
+		}
+		if (value_type.context_symbol == null) {
+			foreach (TypeCheck type_check in scope_type_checks) {
 				unowned TypeSymbol? narrowed_symnol = type_check.type_reference.type_symbol;
 				if (variable == type_check.expression.symbol_reference) {
 					if (narrowed_symnol != value_type.type_symbol) {
