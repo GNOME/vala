@@ -1,0 +1,10 @@
+Invalid Code
+
+interface Foo<T> : Object {
+}
+
+interface Bar : Object, Foo<int[]> {
+}
+
+void main () {
+}

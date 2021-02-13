@@ -202,6 +202,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		foreach (DataType type in prerequisites) {
 			type.check (context);
+			context.analyzer.check_type (type);
 		}
 
 		foreach (TypeParameter p in get_type_parameters ()) {
