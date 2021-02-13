@@ -649,6 +649,8 @@ TESTS = \
 	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
 	generics/arrays-not-supported.test \
+	generics/arrays-not-supported-2.test \
+	generics/arrays-not-supported-3.test \
 	generics/constructor-chain-up.vala \
 	generics/floating-type-cast.vala \
 	generics/inference-argument-may-fail.vala \

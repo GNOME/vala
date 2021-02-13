@@ -570,6 +570,7 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		foreach (DataType type in base_types) {
 			type.check (context);
+			context.analyzer.check_type (type);
 		}
 
 		foreach (TypeParameter p in get_type_parameters ()) {

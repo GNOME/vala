@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo<T> : Object {
+}
+
+class Bar : Foo<int[]> {
+}
+
+void main () {
+}
