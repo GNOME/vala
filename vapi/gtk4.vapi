@@ -5301,12 +5301,16 @@ namespace Gdk {
 		public unowned Gdk.Rectangle? get_anchor_rect ();
 		public void get_offset (out int dx, out int dy);
 		public Gdk.Gravity get_rect_anchor ();
+		[Version (since = "4.2")]
+		public void get_shadow_width (out int left, out int right, out int top, out int bottom);
 		public Gdk.Gravity get_surface_anchor ();
 		public unowned Gdk.PopupLayout @ref ();
 		public void set_anchor_hints (Gdk.AnchorHints anchor_hints);
 		public void set_anchor_rect (Gdk.Rectangle anchor_rect);
 		public void set_offset (int dx, int dy);
 		public void set_rect_anchor (Gdk.Gravity anchor);
+		[Version (since = "4.2")]
+		public void set_shadow_width (int left, int right, int top, int bottom);
 		public void set_surface_anchor (Gdk.Gravity anchor);
 		public void unref ();
 	}

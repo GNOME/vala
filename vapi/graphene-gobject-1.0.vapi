@@ -663,18 +663,10 @@ namespace Graphene {
 		ENTER,
 		LEAVE
 	}
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_GCC")]
-	public const int HAS_GCC;
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_SCALAR")]
-	public const int HAS_SCALAR;
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_HAS_SSE")]
-	public const int HAS_SSE;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_PI")]
 	public const double PI;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_PI_2")]
 	public const double PI_2;
-	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_SIMD_S")]
-	public const string SIMD_S;
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_VEC2_LEN")]
 	[Version (since = "1.0")]
 	public const int VEC2_LEN;

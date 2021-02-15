@@ -4196,7 +4196,8 @@ namespace GLib {
 		AUTHENTICATION_SERVER,
 		AUTHENTICATION_ALLOW_ANONYMOUS,
 		MESSAGE_BUS_CONNECTION,
-		DELAY_MESSAGE_PROCESSING
+		DELAY_MESSAGE_PROCESSING,
+		AUTHENTICATION_REQUIRE_SAME_USER
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_INTERFACE_SKELETON_FLAGS_", type_id = "g_dbus_interface_skeleton_flags_get_type ()")]
 	[Flags]
@@ -4282,7 +4283,8 @@ namespace GLib {
 	public enum DBusServerFlags {
 		NONE,
 		RUN_IN_THREAD,
-		AUTHENTICATION_ALLOW_ANONYMOUS
+		AUTHENTICATION_ALLOW_ANONYMOUS,
+		AUTHENTICATION_REQUIRE_SAME_USER
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SIGNAL_FLAGS_", type_id = "g_dbus_signal_flags_get_type ()")]
 	[Flags]
