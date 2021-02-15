@@ -157,6 +157,8 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected CommandLineFormatter ();
 		public static string get_help (int nargs, string commands);
+		[Version (since = "1.20")]
+		public static string get_timeline_uri (GES.Timeline timeline);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_container_get_type ()")]
 	public abstract class Container : GES.TimelineElement, GES.Extractable, GES.MetaContainer {

@@ -196,6 +196,8 @@ namespace Gst {
 			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
 			public bool get_allow_dynamic_output ();
 			public unowned string get_description ();
+			[Version (since = "1.20")]
+			public Gst.Structure? get_element_properties ();
 			public unowned string get_file_extension ();
 			public Gst.Caps get_format ();
 			public Gst.Caps get_input_caps ();
@@ -211,6 +213,8 @@ namespace Gst {
 			public bool is_equal (Gst.PbUtils.EncodingProfile b);
 			public void set_allow_dynamic_output (bool allow_dynamic_output);
 			public void set_description (string? description);
+			[Version (since = "1.20")]
+			public void set_element_properties (owned Gst.Structure element_properties);
 			[Version (since = "1.6")]
 			public void set_enabled (bool enabled);
 			public void set_format (Gst.Caps format);
@@ -221,6 +225,8 @@ namespace Gst {
 			public void set_restriction (owned Gst.Caps? restriction);
 			[Version (since = "1.18")]
 			public void set_single_segment (bool single_segment);
+			[Version (since = "1.20")]
+			public Gst.Structure element_properties { owned get; owned set; }
 			[NoAccessorMethod]
 			public Gst.Caps restriction_caps { owned get; set; }
 		}

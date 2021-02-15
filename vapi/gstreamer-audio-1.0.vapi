@@ -189,7 +189,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual void flush (bool hard);
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
-			public Gst.Audio.Info get_audio_info ();
+			public unowned Gst.Audio.Info get_audio_info ();
 			public int get_delay ();
 			public bool get_drainable ();
 			public int get_estimate_rate ();
@@ -274,7 +274,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual void flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
-			public Gst.Audio.Info get_audio_info ();
+			public unowned Gst.Audio.Info get_audio_info ();
 			public bool get_drainable ();
 			public int get_frame_max ();
 			public int get_frame_samples_max ();

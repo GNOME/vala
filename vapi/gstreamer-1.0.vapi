@@ -786,7 +786,7 @@ namespace Gst {
 		public BufferPool ();
 		public virtual Gst.FlowReturn acquire_buffer (out Gst.Buffer buffer, Gst.BufferPoolAcquireParams? @params);
 		[NoWrapper]
-		public virtual Gst.FlowReturn alloc_buffer (Gst.Buffer buffer, Gst.BufferPoolAcquireParams @params);
+		public virtual Gst.FlowReturn alloc_buffer (out Gst.Buffer buffer, Gst.BufferPoolAcquireParams? @params);
 		public static void config_add_option (Gst.Structure config, string option);
 		public static bool config_get_allocator (Gst.Structure config, out unowned Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 		public static unowned string? config_get_option (Gst.Structure config, uint index);
@@ -798,8 +798,10 @@ namespace Gst {
 		[Version (since = "1.4")]
 		public static bool config_validate_params (Gst.Structure config, Gst.Caps? caps, uint size, uint min_buffers, uint max_buffers);
 		[NoWrapper]
+		[Version (since = "1.4")]
 		public virtual void flush_start ();
 		[NoWrapper]
+		[Version (since = "1.4")]
 		public virtual void flush_stop ();
 		[NoWrapper]
 		public virtual void free_buffer (Gst.Buffer buffer);
@@ -3100,6 +3102,7 @@ namespace Gst {
 		META,
 		MEMORY,
 		MERGE,
+		[Version (since = "1.2")]
 		DEEP
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_BUFFER_FLAG_", type_id = "gst_buffer_flags_get_type ()")]
