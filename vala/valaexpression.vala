@@ -104,18 +104,14 @@ public abstract class Vala.Expression : CodeNode {
 
 	public Statement? parent_statement {
 		get {
-			unowned Expression? expr = parent_node as Expression;
-			unowned Statement? stmt = parent_node as Statement;
-			unowned LocalVariable? local = parent_node as LocalVariable;
-			unowned MemberInitializer? initializer = parent_node as MemberInitializer;
-			if (stmt != null) {
+			if (parent_node is MemberInitializer) {
+				return ((Expression) parent_node.parent_node).parent_statement;
+			} else if (parent_node is LocalVariable) {
+				return (Statement) parent_node.parent_node;
+			} else if (parent_node is Statement) {
 				return (Statement) parent_node;
-			} else if (expr != null) {
-				return expr.parent_statement;
-			} else if (local != null) {
-				return (Statement) local.parent_node;
-			} else if (initializer != null) {
-				return ((Expression)initializer.parent_node).parent_statement;
+			} else if (parent_node is Expression) {
+				return ((Expression) parent_node).parent_statement;
 			} else {
 				return null;
 			}
