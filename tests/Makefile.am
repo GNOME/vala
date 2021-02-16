@@ -451,6 +451,8 @@ TESTS = \
 	objects/interface-property-override.vala \
 	objects/interface-virtual-override.vala \
 	objects/member-initializer-base-properties.vala \
+	objects/member-initializer-chained.vala \
+	objects/member-initializer-chained-2.vala \
 	objects/member-initializer-property.vala \
 	objects/member-initializer-property-owned-setter.vala \
 	objects/methods.vala \

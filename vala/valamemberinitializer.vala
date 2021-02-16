@@ -26,7 +26,7 @@ using GLib;
  * Represents a member initializer, i.e. an element of an object initializer, in
  * the source code.
  */
-public class Vala.MemberInitializer : CodeNode {
+public class Vala.MemberInitializer : Expression {
 	/**
 	 * Member name.
 	 */
@@ -43,11 +43,6 @@ public class Vala.MemberInitializer : CodeNode {
 		}
 	}
 
-	/**
-	 * The symbol this expression refers to.
-	 */
-	public weak Symbol symbol_reference { get; set; }
-
 	Expression _initializer;
 
 	/**
@@ -62,6 +57,10 @@ public class Vala.MemberInitializer : CodeNode {
 		this.initializer = initializer;
 		this.source_reference = source_reference;
 		this.name = name;
+	}
+
+	public override bool is_pure () {
+		return false;
 	}
 
 	public override void accept (CodeVisitor visitor) {

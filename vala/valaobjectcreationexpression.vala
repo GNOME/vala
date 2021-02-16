@@ -507,7 +507,34 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 			context.analyzer.check_type (type_reference);
 		}
 
+		// Unwrap chained member initializers
 		foreach (MemberInitializer init in get_object_initializer ()) {
+			if (!(init.initializer is MemberInitializer)) {
+				continue;
+			}
+
+			int index = object_initializer.index_of (init);
+			object_initializer.remove_at (index);
+			assert (index >= 0);
+
+			unowned MemberInitializer? inner_mi = (MemberInitializer) init.initializer;
+			while (inner_mi.initializer is MemberInitializer) {
+				inner_mi = (MemberInitializer) inner_mi.initializer;
+			}
+
+			var local = new LocalVariable (null, get_temp_name (), inner_mi.initializer, inner_mi.initializer.source_reference);
+			var decl = new DeclarationStatement (local, inner_mi.initializer.source_reference);
+			decl.check (context);
+			insert_statement (context.analyzer.insert_block, decl);
+
+			do {
+				var member_init = new MemberInitializer (inner_mi.name, new MemberAccess (null, local.name, inner_mi.source_reference), inner_mi.source_reference);
+				object_initializer.insert (index++, member_init);
+				inner_mi = inner_mi.parent_node as MemberInitializer;
+			} while (inner_mi != null);
+		}
+		foreach (MemberInitializer init in get_object_initializer ()) {
+			init.parent_node = this;
 			init.check (context);
 		}
 
