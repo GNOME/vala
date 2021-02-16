@@ -617,6 +617,11 @@ public class Vala.MemberAccess : Expression {
 
 				local.captured = true;
 				block.captured = true;
+
+				if (local.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+					error = true;
+					Report.error (source_reference, "Capturing `va_list' variable `%s' is not allowed", local.get_full_name ());
+				}
 			}
 		} else if (member is Parameter) {
 			unowned Parameter param = (Parameter) member;
@@ -639,6 +644,10 @@ public class Vala.MemberAccess : Expression {
 				if (param.direction != ParameterDirection.IN) {
 					error = true;
 					Report.error (source_reference, "Cannot capture reference or output parameter `%s'", param.get_full_name ());
+				}
+				if (param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+					error = true;
+					Report.error (source_reference, "Capturing `va_list' parameter `%s' is not allowed", param.get_full_name ());
 				}
 			} else {
 				unowned PropertyAccessor? acc = param.parent_symbol.parent_symbol as PropertyAccessor;
