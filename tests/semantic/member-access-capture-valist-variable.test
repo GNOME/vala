@@ -1,0 +1,13 @@
+Invalid Code
+
+delegate void FooFunc ();
+
+void foo (int first, ...) {
+	va_list v = va_list ();
+	FooFunc f = () => {
+		int arg = v.arg<int> ();
+	};
+}
+
+void main () {
+}

@@ -2123,6 +2123,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						if (local.variable_type.is_disposable ()) {
 							data.add_field (get_ccode_name (delegate_target_destroy_type), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 						}
+					} else if (local.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+						Report.error (local.source_reference, "internal: Capturing `va_list' variable `%s' is not allowed".printf (local.get_full_name ()));
+						b.error = true;
 					}
 				}
 			}
@@ -2182,6 +2185,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				foreach (var param in m.get_parameters ()) {
 					if (param.captured) {
 						capture_parameter (param, data, block_id);
+
+						if (param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
+							Report.error (param.source_reference, "internal: Capturing `va_list' parameter `%s' is not allowed".printf (param.get_full_name ()));
+							b.error = true;
+						}
 					}
 				}
 

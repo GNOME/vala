@@ -935,6 +935,8 @@ TESTS = \
 	semantic/localvariable-void-initializer.test \
 	semantic/member-access-async-callback-invalid.test \
 	semantic/member-access-capture-out.test \
+	semantic/member-access-capture-valist-parameter.test \
+	semantic/member-access-capture-valist-variable.test \
 	semantic/member-access-protected-invalid.test \
 	semantic/member-access-undefined.test \
 	semantic/member-access-static-with-instance.vala \
