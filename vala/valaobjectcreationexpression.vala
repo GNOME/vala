@@ -508,7 +508,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 		}
 
 		foreach (MemberInitializer init in get_object_initializer ()) {
-			context.analyzer.visit_member_initializer (init, type_reference);
+			init.check (context);
 		}
 
 		// FIXME code duplication in MethodCall.check
