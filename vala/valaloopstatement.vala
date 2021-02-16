@@ -34,7 +34,7 @@ public class Vala.LoopStatement : Loop, Statement {
 	 * @return                 newly created while statement
 	 */
 	public LoopStatement (Block body, SourceReference? source_reference = null) {
-		base (null, body, source_reference);
+		base (new BooleanLiteral (true, source_reference), body, source_reference);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -56,6 +56,7 @@ public class Vala.LoopStatement : Loop, Statement {
 
 		checked = true;
 
+		condition.check (context);
 		body.check (context);
 
 		return !error;
