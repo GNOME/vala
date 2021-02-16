@@ -5209,6 +5209,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					if (!p.set_accessor.value_type.value_owned && requires_destroy (init.initializer.target_value.value_type)) {
 						ccode.add_expression (destroy_value (init.initializer.target_value));
 					}
+				} else {
+					Report.error (init.source_reference, "internal: Unsupported symbol");
 				}
 			}
 
