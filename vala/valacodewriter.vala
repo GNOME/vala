@@ -1170,7 +1170,6 @@ public class Vala.CodeWriter : CodeVisitor {
 		stmt.expression.accept (this);
 		write_string (")");
 		stmt.body.accept (this);
-		write_string (";");
 		write_newline ();
 	}
 
