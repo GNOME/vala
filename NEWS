@@ -1,3 +1,18 @@
+Vala 0.51.2
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Check type-arguments in base-types/prerequisites of class/interface [#404]
+    + Include type-checks in preconditions of methods for type narrowing [#894]
+    + Capturing va_list parameters/variables is not allowed [#1136]
+    + Properly parse and handle chained initialization of members [#1137]
+  - codewriter: Output valid vala syntax for LoopStatement and don't write
+    trailing ";" after body of WithStatement
+
+ * Bindings:
+    + gstreamer: Update from 1.19.0+ git master
+    + vapi: Update GIR-based bindings
+
 Vala 0.51.1
 ===========
  * Highlights:
