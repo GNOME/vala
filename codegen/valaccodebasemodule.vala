@@ -4430,7 +4430,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			push_function (fun);
 
 			var once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
-			once_enter_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+			if (context.require_glib_version (2, 68)) {
+				once_enter_call.add_argument (new CCodeConstant ("(gsize*) re"));
+			} else {
+				once_enter_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+			}
 			ccode.open_if (once_enter_call);
 
 			var regex_new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_regex_new"));
@@ -4441,7 +4445,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccode.add_assignment (new CCodeIdentifier ("GRegex* val"), regex_new_call);
 
 			var once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
-			once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+			if (context.require_glib_version (2, 68)) {
+				once_leave_call.add_argument (new CCodeConstant ("(gsize*) re"));
+			} else {
+				once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+			}
 			once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
 			ccode.add_expression (once_leave_call);
 

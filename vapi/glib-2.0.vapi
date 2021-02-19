@@ -1829,6 +1829,47 @@ namespace GLib {
 
 	/* Atomic Operations */
 
+#if GLIB_2_68
+	[Version (since = "2.4")]
+	namespace AtomicInt {
+		public static int get (ref int atomic);
+		public static void set (ref int atomic, int newval);
+		[Version (since = "2.30")]
+		public static int add (ref int atomic, int val);
+		[Version (deprecated_since = "2.30", replacement = "add")]
+		public static int exchange_and_add (ref int atomic, int val);
+		public static bool compare_and_exchange (ref int atomic, int oldval, int newval);
+		public static void inc (ref int atomic);
+		public static bool dec_and_test (ref int atomic);
+	}
+
+	[Version (since = "2.4")]
+	namespace AtomicUint {
+		[CCode (cname = "g_atomic_int_get")]
+		public static uint get (ref uint atomic);
+		[CCode (cname = "g_atomic_int_set")]
+		public static void set (ref uint atomic, uint newval);
+		[Version (since = "2.30")]
+		[CCode (cname = "g_atomic_int_add")]
+		public static uint add (ref uint atomic, uint val);
+		[Version (deprecated_since = "2.30", replacement = "add")]
+		[CCode (cname = "g_atomic_int_exchange_and_add")]
+		public static uint exchange_and_add (ref uint atomic, uint val);
+		[CCode (cname = "g_atomic_int_compare_and_exchange")]
+		public static bool compare_and_exchange (ref uint atomic, uint oldval, uint newval);
+		[CCode (cname = "g_atomic_int_inc")]
+		public static void inc (ref uint atomic);
+		[CCode (cname = "g_atomic_int_dec_and_test")]
+		public static bool dec_and_test (ref uint atomic);
+	}
+
+	[Version (since = "2.4")]
+	namespace AtomicPointer {
+		public static void* get (void** atomic);
+		public static void set (void** atomic, void* newval);
+		public static bool compare_and_exchange (void** atomic, void* oldval, void* newval);
+	}
+#else
 	[Version (since = "2.4")]
 	namespace AtomicInt {
 		public static int get ([CCode (type = "volatile gint *")] ref int atomic);
@@ -1868,6 +1909,7 @@ namespace GLib {
 		public static void set ([CCode (type = "volatile gpointer *")] void** atomic, void* newval);
 		public static bool compare_and_exchange ([CCode (type = "volatile gpointer *")] void** atomic, void* oldval, void* newval);
 	}
+#endif
 
 	/* The Main Event Loop */
 
@@ -2307,10 +2349,17 @@ namespace GLib {
 	public struct Once<G> {
 		[CCode (cname = "g_once")]
 		public unowned G once (OnceFunc<G> function);
+#if GLIB_2_68
+		[Version (since = "2.14")]
+		public static bool init_enter (size_t *value);
+		[Version (since = "2.14")]
+		public static void init_leave (size_t *value, size_t set_value);
+#else
 		[Version (since = "2.14")]
 		public static bool init_enter ([CCode (type="volatile gsize *")] size_t *value);
 		[Version (since = "2.14")]
 		public static void init_leave ([CCode (type="volatile gsize *")] size_t *value, size_t set_value);
+#endif
 		public OnceStatus status;
 	}
 

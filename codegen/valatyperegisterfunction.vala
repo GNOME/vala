@@ -50,7 +50,11 @@ public abstract class Vala.TypeRegisterFunction {
 		if (!plugin) {
 			cdecl = new CCodeDeclaration ("gsize");
 			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name + "__volatile", new CCodeConstant ("0")));
-			cdecl.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+			if (context.require_glib_version (2, 68)) {
+				cdecl.modifiers = CCodeModifiers.STATIC;
+			} else {
+				cdecl.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+			}
 			type_block.add_statement (cdecl);
 		} else {
 			cdecl = new CCodeDeclaration ("GType");

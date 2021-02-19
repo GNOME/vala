@@ -515,7 +515,11 @@ public class Vala.GObjectModule : GTypeModule {
 
 				var once_lock = new CCodeDeclaration("gsize");
 				once_lock.add_declarator (new CCodeVariableDeclarator (singleton_once_name, new CCodeConstant ("0")));
-				once_lock.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+				if (context.require_glib_version (2, 68)) {
+					once_lock.modifiers = CCodeModifiers.STATIC;
+				} else {
+					once_lock.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
+				}
 				ccode.add_statement (once_lock);
 
 				var once_init = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
