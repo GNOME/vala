@@ -663,6 +663,7 @@ TESTS = \
 	generics/property-int-cast.vala \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
+	generics/value-pointer-type-access.vala \
 	generics/bug640330.test \
 	generics/bug640330.vala \
 	generics/bug694765-1.vala \
