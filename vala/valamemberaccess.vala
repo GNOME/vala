@@ -349,6 +349,9 @@ public class Vala.MemberAccess : Expression {
 			if (inner.value_type is PointerType) {
 				unowned PointerType? pointer_type = inner.value_type as PointerType;
 				if (pointer_type != null && pointer_type.base_type is ValueType) {
+					if (inner.formal_value_type is GenericType) {
+						inner = new CastExpression (inner, pointer_type.copy (), source_reference);
+					}
 					// transform foo->bar to (*foo).bar
 					inner = new PointerIndirection (inner, source_reference);
 					inner.check (context);
