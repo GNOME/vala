@@ -5805,13 +5805,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else {
 			CCodeFunctionCall ccheck;
 			if (type.type_symbol == null || type.type_symbol.external_package) {
-				var type_id = get_type_id_expression (type);
-				if (type_id == null) {
-					return new CCodeInvalidExpression ();
-				}
 				ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
 				ccheck.add_argument ((CCodeExpression) ccodenode);
-				ccheck.add_argument (type_id);
+				ccheck.add_argument (get_type_id_expression (type));
 			} else {
 				ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_check_function (type.type_symbol)));
 				ccheck.add_argument ((CCodeExpression) ccodenode);
