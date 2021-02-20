@@ -133,7 +133,10 @@ namespace GirTest {
 		public virtual async void no_wrapper_method_async ();
 		[GIR (visible = false)]
 		public virtual async void skipped_coroutine_method (int param);
+		public static void static_method ();
 		public abstract int property { get; set construct; }
+		[HasEmitter]
+		public signal void some_signal (int param);
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public interface PrerequisiteTest : GirTest.InterfaceTest {

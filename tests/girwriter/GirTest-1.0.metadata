@@ -1,14 +1,24 @@
 AbstractObjectTest
+	.method_throw throws="GirTest.ErrorTest"
 	.method_valist skip=false
 	.*#virtual_method abstract
 BoxedStruct struct
 CompactClass struct=false
 	.s unowned=false
+DelegateErrorTest throws="GirTest.ErrorTest"
 InterfaceTest
 	.*#virtual_method virtual
 ObjectTest
+	.coroutine_method_throw throws="GirTest.ErrorTest"
 	.fixed_array_field unowned=false
+	.method_throw throws="GirTest.ErrorTest"
+	.method_valist skip=false
+	.method_varargs skip=false
+	.new_valist name="new_valist" skip=false
+	.newv skip=false
+	.may_fail throws="GirTest.ErrorTest"
 	.nullable_field unowned=false
+	.simple_throw throws="GirTest.ErrorTest"
 SubTypeTest
 	.array_field unowned=false
 	.delegate_field unowned=false
