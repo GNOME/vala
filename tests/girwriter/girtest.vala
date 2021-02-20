@@ -87,6 +87,10 @@ namespace GirTest {
 		[NoWrapper]
 		public virtual async void no_wrapper_method_async () {
 		}
+		[HasEmitter]
+		public signal void some_signal (int param);
+		public static void static_method () {
+		}
 	}
 
 	[GIR (visible = false)]

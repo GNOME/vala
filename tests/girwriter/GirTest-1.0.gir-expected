@@ -2131,6 +2131,11 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<function name="static_method" c:identifier="gir_test_interface_test_static_method">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+		</function>
 		<property name="property" writable="1" construct="1">
 			<type name="gint" c:type="gint"/>
 		</property>
@@ -2180,6 +2185,29 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="some_signal" c:identifier="gir_test_interface_test_some_signal">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</method>
+		<glib:signal name="some-signal">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</glib:signal>
 	</interface>
 	<record name="InterfaceTestIface" c:type="GirTestInterfaceTestIface" glib:is-gtype-struct-for="InterfaceTest">
 		<field name="parent_iface" readable="0" private="1">
