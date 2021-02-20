@@ -939,6 +939,19 @@
 				</parameter>
 			</parameters>
 		</glib:signal>
+		<virtual-method name="signal_with_default_handlder" invoker="signal_with_default_handlder">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+				<parameter name="i1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<glib:signal name="signal-with-default-handlder">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>

@@ -1266,7 +1266,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			tag_name = "function";
 		}
 
-		if (!get_ccode_no_wrapper (m)) {
+		if (!get_ccode_no_wrapper (m) && m.signal_reference == null) {
 			write_signature (m, tag_name, true);
 		}
 
@@ -1470,6 +1470,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		if (sig.emitter != null) {
 			sig.emitter.accept (this);
+		}
+
+		if (sig.default_handler != null) {
+			sig.default_handler.accept (this);
 		}
 
 		write_indent ();

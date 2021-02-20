@@ -127,7 +127,7 @@ namespace GirTest {
 		public string construct_only_property { construct; }
 		public string some_property { get; set construct; }
 		public string write_only_property { set; }
-		public signal void signal_with_default_handlder (int i1);
+		public virtual signal void signal_with_default_handlder (int i1);
 		public signal void some_signal (int param);
 	}
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sub_type_test_get_type ()")]
