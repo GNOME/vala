@@ -1,0 +1,30 @@
+GIR
+
+Input:
+
+<record name="Foo" c:type="TestFoo">
+  <field name="u" writable="1">
+    <type name="guint" c:type="guint"/>
+  </field>
+  <union>
+    <field name="a" writable="1">
+      <array zero-terminated="0" fixed-size="2">
+        <type name="int" c:type="int*"/>
+      </array>
+    </field>
+    <field name="pad" readable="0" private="1">
+      <array zero-terminated="0" fixed-size="4">
+        <type name="guint" c:type="guint"/>
+      </array>
+    </field>
+  </union>
+</record>
+
+Output:
+
+[CCode (cheader_filename = "test.h", has_type_id = false)]
+public struct Foo {
+	public uint u;
+	[CCode (array_length = false)]
+	public weak int a[2];
+}

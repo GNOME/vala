@@ -2,6 +2,12 @@ GIR
 
 Input:
 
+<alias name="Bar" c:type="TestBar">
+  <type name="Foo" c:type="TestFoo"/>
+</alias>
+<alias name="IBar" c:type="TestIBar">
+  <type name="IFoo" c:type="TestIFoo"/>
+</alias>
 <class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
   <implements name="Test.IFoo"/>
   <method name="method_virtual" c:identifier="test_foo_method_virtual" throws="1">
@@ -128,6 +134,11 @@ Input:
 Output:
 
 [CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class Bar : Test.Foo {
+	[CCode (has_construct_function = false)]
+	protected Bar ();
+}
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
 public class Foo : GLib.Object, Test.IFoo {
 	[CCode (has_construct_function = false)]
 	public Foo ();
@@ -139,6 +150,9 @@ public class Foo : GLib.Object, Test.IFoo {
 	public void set_prop (string value);
 	public string prop { owned get; set construct; }
 	public signal void sig (string arg);
+}
+[CCode (cheader_filename = "test.h")]
+public interface IBar : Test.IFoo, GLib.Object {
 }
 [CCode (cheader_filename = "test.h", type_id = "test_ifoo_get_type ()")]
 public interface IFoo : GLib.Object {

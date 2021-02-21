@@ -1,0 +1,14 @@
+GIR
+
+Input:
+
+<alias name="Foo" c:type="TestFoo">
+  <type name="gint" c:type="int"/>
+</alias>
+
+Output:
+
+[CCode (cheader_filename = "test.h")]
+[SimpleType]
+public struct Foo : int {
+}

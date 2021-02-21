@@ -690,6 +690,7 @@ TESTS = \
 	gir/bug742012.test \
 	gir/bug788775.test \
 	gir/bug792998.test \
+	gir/alias.test \
 	gir/array-fixed-length.test \
 	gir/async-result-pos.test \
 	gir/async-sync-out.test \
@@ -709,6 +710,7 @@ TESTS = \
 	gir/property-non-readable.test \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
+	gir/union-transparent.test \
 	gtktemplate/gtkcallback-incompatible.test \
 	gtktemplate/gtkcallback-unknown.test \
 	gtktemplate/gtkchild-field-incompatible-type.test \
