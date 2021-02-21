@@ -573,6 +573,11 @@ public class Vala.BinaryExpression : Expression {
 				// integers or enums
 				left.target_type.nullable = false;
 				right.target_type.nullable = false;
+				if (left.value_type.type_symbol is Enum && right.value_type.type_symbol is Enum
+				    && left.value_type.type_symbol != right.value_type.type_symbol) {
+					error = true;
+					Report.error (source_reference, "Cannot look for `%s' in `%s'", left.value_type.to_string (), right.value_type.to_string ());
+				}
 			} else if (right.value_type is ArrayType) {
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
 					error = true;

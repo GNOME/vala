@@ -1,0 +1,18 @@
+Invalid Code
+
+[Flags]
+enum Foo {
+	BAR,
+	MANAM;
+}
+
+[Flags]
+enum Bar {
+	MANAM,
+	FOO;
+}
+
+void main() {
+	Foo foo = MANAM;
+	assert (Bar.MANAM in foo);
+}
