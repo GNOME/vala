@@ -303,6 +303,11 @@ public class Vala.BinaryExpression : Expression {
 		    && (operator == BinaryOperator.BITWISE_AND || operator == BinaryOperator.BITWISE_OR)) {
 			left.target_type = target_type.copy ();
 			right.target_type = target_type.copy ();
+		} else if (operator == BinaryOperator.IN) {
+			right.check (context);
+			if (right.value_type.type_symbol is Enum) {
+				left.target_type = right.value_type.copy ();
+			}
 		}
 		left.check (context);
 		if (left.value_type != null && left.value_type.type_symbol is Enum

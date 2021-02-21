@@ -310,6 +310,7 @@ TESTS = \
 	enums/enums.vala \
 	enums/flags.vala \
 	enums/from-0-literal.vala \
+	enums/in-inference.vala \
 	enums/no_gtype_to_string.vala \
 	enums/switch.vala \
 	enums/bug666035.vala \
