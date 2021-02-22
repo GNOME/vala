@@ -19,6 +19,8 @@ Bin
   .messages unowned=false
   .provided_clock unowned=false
 ClockEntry
+  .* skip=false
+  ._* skip
   .func unowned=false delegate_target_cname="user_data" destroy_notify_cname="destroy_data"
   .user_data skip
   .destroy_data skip

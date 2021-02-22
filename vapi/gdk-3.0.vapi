@@ -5688,7 +5688,7 @@ namespace Gdk {
 		[Version (since = "3.16")]
 		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		[Version (since = "3.10")]
-		public Cairo.ImageSurface create_similar_image_surface (int format, int width, int height, int scale);
+		public Cairo.ImageSurface create_similar_image_surface (Cairo.Format format, int width, int height, int scale);
 		[Version (since = "2.22")]
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public void deiconify ();

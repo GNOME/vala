@@ -14264,8 +14264,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void hsv_to_rgb (float h, float s, float v, out float r, out float g, out float b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void im_modules_init ();
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_check ();

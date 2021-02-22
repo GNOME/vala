@@ -1147,7 +1147,10 @@ namespace Pango {
 	public const int ANALYSIS_FLAG_NEED_HYPHEN;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING")]
 	[Version (since = "1.24")]
-	public const int ATTR_INDEX_FROM_TEXT_BEGINNING;
+	public const uint ATTR_INDEX_FROM_TEXT_BEGINNING;
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ATTR_INDEX_TO_TEXT_END")]
+	[Version (since = "1.24")]
+	public const uint ATTR_INDEX_TO_TEXT_END;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_ENGINE_TYPE_LANG")]
 	[Version (deprecated = true, deprecated_since = "1.38")]
 	public const string ENGINE_TYPE_LANG;
@@ -1170,16 +1173,13 @@ namespace Pango {
 	public const int UNKNOWN_GLYPH_HEIGHT;
 	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_UNKNOWN_GLYPH_WIDTH")]
 	public const int UNKNOWN_GLYPH_WIDTH;
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_MAJOR")]
 	public const int VERSION_MAJOR;
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_MICRO")]
 	public const int VERSION_MICRO;
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_MINOR")]
 	public const int VERSION_MINOR;
-	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_MIN_REQUIRED")]
-	[Version (since = "1.42")]
-	public const int VERSION_MIN_REQUIRED;
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (cheader_filename = "pango/pango.h", cname = "PANGO_VERSION_STRING")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.44")]

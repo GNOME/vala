@@ -1012,7 +1012,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual void unschedule (Gst.ClockEntry entry);
 		[NoWrapper]
-		public virtual Gst.ClockReturn wait (Gst.ClockEntry entry, Gst.ClockTimeDiff jitter);
+		public virtual Gst.ClockReturn wait (Gst.ClockEntry entry, out Gst.ClockTimeDiff jitter);
 		[NoWrapper]
 		public virtual Gst.ClockReturn wait_async (Gst.ClockEntry entry);
 		[Version (since = "1.6")]
@@ -3177,6 +3177,7 @@ namespace Gst {
 		CAN_DO_PERIODIC_ASYNC,
 		CAN_SET_RESOLUTION,
 		CAN_SET_MASTER,
+		[Version (since = "1.6")]
 		NEEDS_STARTUP_SYNC,
 		LAST
 	}

@@ -73,13 +73,4 @@ namespace Pango {
 
 	[CCode (cheader_filename = "pango/pango.h", has_target = false)]
 	public delegate T AttrDataCopyFunc<T> (T data);
-
-	[CCode (cheader_filename = "pango/pango.h")]
-	public const int VERSION_MAJOR;
-	[CCode (cheader_filename = "pango/pango.h")]
-	public const int VERSION_MICRO;
-	[CCode (cheader_filename = "pango/pango.h")]
-	public const int VERSION_MINOR;
-	[CCode (cheader_filename = "pango/pango.h")]
-	public const string VERSION_STRING;
 }
