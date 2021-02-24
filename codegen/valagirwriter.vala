@@ -1504,6 +1504,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (prop.get_accessor != null && prop.get_accessor.readable) {
 			var m = prop.get_accessor.get_method ();
 			if (m != null) {
+				// TODO inherit CCode.name
 				visit_method (m);
 			}
 		}
@@ -1511,6 +1512,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (prop.set_accessor != null && prop.set_accessor.writable) {
 			var m = prop.set_accessor.get_method ();
 			if (m != null) {
+				// TODO inherit CCode.name
 				visit_method (m);
 			}
 		}

@@ -100,11 +100,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 			}
 
 			if (prop.get_accessor != null) {
-				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + get_ccode_name (prop).replace ("-", "_"));
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)));
 			}
 			if (prop.set_accessor != null) {
-				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + get_ccode_name (prop).replace ("-", "_"));
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)));
 			}
 		}
@@ -973,7 +973,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	string generate_dbus_proxy_property_get (Interface main_iface, Interface iface, Property prop) {
-		string proxy_name = "%sdbus_proxy_get_%s".printf (get_ccode_lower_case_prefix (main_iface), prop.name);
+		string proxy_name = "%sdbus_proxy_get_%s".printf (get_ccode_lower_case_prefix (main_iface), get_ccode_name (prop).replace ("-", "_"));
 
 		string dbus_iface_name = get_dbus_name (iface);
 
@@ -1113,7 +1113,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 	}
 
 	string generate_dbus_proxy_property_set (Interface main_iface, Interface iface, Property prop) {
-		string proxy_name = "%sdbus_proxy_set_%s".printf (get_ccode_lower_case_prefix (main_iface), prop.name);
+		string proxy_name = "%sdbus_proxy_set_%s".printf (get_ccode_lower_case_prefix (main_iface), get_ccode_name (prop).replace ("-", "_"));
 
 		string dbus_iface_name = get_dbus_name (iface);
 

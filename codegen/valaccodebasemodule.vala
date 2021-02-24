@@ -1828,7 +1828,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			if (acc.readable) {
-				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
+				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (get_ccode_name (prop).replace ("-", "_"))));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 
 				// check if vfunc pointer is properly set
@@ -1859,7 +1859,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					ccode.add_return (default_value_for_type (acc.value_type, false, true));
 				}
 			} else {
-				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
+				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (get_ccode_name (prop).replace ("-", "_"))));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
 
@@ -6408,7 +6408,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				vcast = get_this_interface_cexpression (base_iface);
 			}
 			if (vcast != null) {
-				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
+				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (get_ccode_name (prop).replace ("-", "_"))));
 				ccall.add_argument ((CCodeExpression) get_ccodenode (instance));
 				var cexpr = get_cvalue_ (value);
 				if (prop.property_type.is_real_non_null_struct_type ()) {

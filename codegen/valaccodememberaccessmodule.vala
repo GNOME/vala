@@ -225,7 +225,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					vcast = get_this_interface_cexpression (base_iface);
 				}
 				if (vcast != null) {
-					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
+					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (get_ccode_name (prop).replace ("-", "_"))));
 					ccall.add_argument (get_cvalue (expr.inner));
 					if (prop.property_type.is_real_non_null_struct_type ()) {
 						var temp_value = (GLibValue) create_temp_value (prop.get_accessor.value_type, false, expr);

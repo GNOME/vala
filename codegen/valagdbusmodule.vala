@@ -441,11 +441,11 @@ public class Vala.GDBusModule : GVariantModule {
 			info.append (new CCodeConstant ("NULL"));
 
 			var cdecl = new CCodeDeclaration ("const GDBusPropertyInfo");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name, info));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + get_ccode_name (prop).replace ("-", "_"), info));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			cfile.add_constant_declaration (cdecl);
 
-			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name)));
+			infos.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + get_ccode_name (prop).replace ("-", "_"))));
 		}
 
 		infos.append (new CCodeConstant ("NULL"));

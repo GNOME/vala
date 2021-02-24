@@ -787,12 +787,11 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return sym.name.replace ("_", "-");
 			} else if (sym is PropertyAccessor) {
 				unowned PropertyAccessor acc = (PropertyAccessor) sym;
-				var t = (TypeSymbol) acc.prop.parent_symbol;
-
+				unowned Property prop = (Property) acc.prop;
 				if (acc.readable) {
-					return "%sget_%s".printf (get_ccode_lower_case_prefix (t), acc.prop.name);
+					return "%sget_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), get_ccode_name (prop).replace ("-", "_"));
 				} else {
-					return "%sset_%s".printf (get_ccode_lower_case_prefix (t), acc.prop.name);
+					return "%sset_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), get_ccode_name (prop).replace ("-", "_"));
 				}
 			} else if (sym is Signal) {
 				return Symbol.camel_case_to_lower_case (sym.name).replace ("_", "-");;
@@ -982,6 +981,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				csuffix = csuffix.substring (0, csuffix.length - "_class".length) + "class";
 			}
 			return csuffix;
+		} else if (sym is Property) {
+			return get_ccode_name (sym).replace ("-", "_");
 		} else if (sym is Signal) {
 			return get_ccode_attribute (sym).name.replace ("-", "_");
 		} else if (sym.name != null) {
@@ -1518,9 +1519,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 			unowned Property prop = (Property) acc.prop;
 			if (prop.base_property != null || prop.base_interface_property != null) {
 				if (acc.readable) {
-					return "%sreal_get_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), prop.name);
+					return "%sreal_get_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), get_ccode_name (prop).replace ("-", "_"));
 				} else {
-					return "%sreal_set_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), prop.name);
+					return "%sreal_set_%s".printf (get_ccode_lower_case_prefix (prop.parent_symbol), get_ccode_name (prop).replace ("-", "_"));
 				}
 			} else {
 				return name;
