@@ -1296,7 +1296,6 @@ public class Vala.GTypeModule : GErrorModule {
 			if (sig.default_handler == null || !sig.is_virtual) {
 				continue;
 			}
-			generate_method_declaration (sig.default_handler, cfile);
 
 			var ccast = new CCodeCastExpression (new CCodeIdentifier ("klass"), "%sClass *".printf (get_ccode_name (cl)));
 			ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, get_ccode_vfunc_name (sig.default_handler)), new CCodeIdentifier (get_ccode_real_name (sig.default_handler)));
