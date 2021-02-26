@@ -1949,6 +1949,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						ccode.add_assignment (new CCodeIdentifier ("old_value"), get_call);
 						CCodeFunctionCall ccall;
 						if (context.profile == Profile.POSIX) {
+							cfile.add_include ("string.h");
 							ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
 						} else {
 							ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
@@ -3047,6 +3048,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!(f.variable_type is NullType) && f.variable_type.compatible (string_type)) {
 				CCodeFunctionCall ccall;
 				if (context.profile == Profile.POSIX) {
+					cfile.add_include ("string.h");
 					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
 				} else {
 					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
@@ -5716,6 +5718,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
 				CCodeFunctionCall ccall;
 				if (context.profile == Profile.POSIX) {
+					cfile.add_include ("string.h");
 					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
 				} else {
 					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
@@ -5800,6 +5803,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (array_type.element_type.compatible (string_type)) {
 			CCodeFunctionCall ccall;
 			if (context.profile == Profile.POSIX) {
+				cfile.add_include ("string.h");
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
