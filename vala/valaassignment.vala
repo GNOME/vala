@@ -276,26 +276,6 @@ public class Vala.Assignment : Expression {
 					dynamic_prop.property_type = right.value_type.copy ();
 					left.value_type = dynamic_prop.property_type.copy ();
 				}
-
-				if (prop.set_accessor == null
-				    || (!prop.set_accessor.writable && !(context.analyzer.find_current_method () is CreationMethod || context.analyzer.is_in_constructor ()))) {
-					ma.error = true;
-					Report.error (ma.source_reference, "Property `%s' is read-only", prop.get_full_name ());
-					return false;
-				} else if (!context.deprecated
-				           && !prop.set_accessor.writable
-				           && context.analyzer.find_current_method () is CreationMethod) {
-					if (ma.inner.symbol_reference != context.analyzer.find_current_method ().this_parameter) {
-						// trying to set construct-only property in creation method for foreign instance
-						error = true;
-						Report.error (ma.source_reference, "Property `%s' is read-only", prop.get_full_name ());
-						return false;
-					} else {
-						error = true;
-						Report.error (ma.source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
-						return false;
-					}
-				}
 			} else if (ma.symbol_reference is ArrayLengthField && ((ArrayType) ma.inner.value_type).inline_allocated) {
 				error = true;
 				Report.error (source_reference, "`length' field of fixed length arrays is read-only");

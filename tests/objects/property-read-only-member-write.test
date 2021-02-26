@@ -1,0 +1,15 @@
+Invalid Code
+
+class Foo : GLib.Object {
+	public string manam { get; construct; }
+}
+
+class Bar : GLib.Object {
+	construct {
+		var foo = new Foo ();
+		foo.manam = "manam";
+	}
+}
+
+void main () {
+}
