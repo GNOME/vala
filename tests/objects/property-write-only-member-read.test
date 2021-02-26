@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo : GLib.Object {
+	public string manam { set; }
+}
+
+void main () {
+	var foo = new Foo ();
+	var s = foo.manam;
+}

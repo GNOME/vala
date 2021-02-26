@@ -465,8 +465,11 @@ TESTS = \
 	objects/property-notify-owned-getter.vala \
 	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
+	objects/property-read-only-member-write.test \
 	objects/property-read-only-write.test \
+	objects/property-construct-only.vala \
 	objects/property-construct-only-write.test \
+	objects/property-construct-only-write-after.test \
 	objects/property-construct-only-write-foreign.test \
 	objects/property-delegate.vala \
 	objects/property-delegate-owned.vala \
@@ -476,6 +479,7 @@ TESTS = \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
 	objects/property-struct-no-gtype.vala \
+	objects/property-write-only-member-read.test \
 	objects/regex.vala \
 	objects/sealed-abstract-class.test \
 	objects/sealed-class.test \

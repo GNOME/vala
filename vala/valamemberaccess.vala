@@ -798,6 +798,22 @@ public class Vala.MemberAccess : Expression {
 					error = true;
 					Report.error (source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 					return false;
+				} else if (!prop.set_accessor.writable && prop.set_accessor.construction) {
+					if (context.analyzer.find_current_method () is CreationMethod) {
+						error = true;
+						Report.error (source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
+						return false;
+					} else if (context.analyzer.is_in_constructor ()) {
+						if (!context.analyzer.current_type_symbol.is_subtype_of ((TypeSymbol) prop.parent_symbol)) {
+							error = true;
+							Report.error (source_reference, "Cannot assign to construct-only property `%s' in `construct' of `%s'".printf (prop.get_full_name (), context.analyzer.current_type_symbol.get_full_name ()));
+							return false;
+						}
+					} else {
+						error = true;
+						Report.error (source_reference, "Cannot assign to construct-only property in this context");
+						return false;
+					}
 				}
 				if (prop.access == SymbolAccessibility.PUBLIC) {
 					access = prop.set_accessor.access;
