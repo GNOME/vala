@@ -1179,6 +1179,7 @@ LINUX_TESTS += \
 	posix/struct_only.vala \
 	posix/delegate_only.vala \
 	posix/enum_only.vala \
+	posix/enum-to-string.vala \
 	$(NULL)
 endif
 

@@ -48,7 +48,11 @@ public class Vala.EnumValueType : ValueType {
 			to_string_method = new Method ("to_string", string_type);
 			to_string_method.access = SymbolAccessibility.PUBLIC;
 			to_string_method.is_extern = true;
-			to_string_method.set_attribute_string ("CCode", "cheader_filename", "glib-object.h");
+			if (CodeContext.get ().profile == Profile.POSIX) {
+				to_string_method.set_attribute_string ("CCode", "cheader_filename", "stdlib.h");
+			} else {
+				to_string_method.set_attribute_string ("CCode", "cheader_filename", "glib-object.h");
+			}
 			to_string_method.owner = type_symbol.scope;
 			to_string_method.this_parameter = new Parameter ("this", copy ());
 			to_string_method.scope.add (to_string_method.this_parameter.name, to_string_method.this_parameter);
