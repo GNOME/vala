@@ -312,14 +312,14 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this), m.source_reference);
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			if (m.result_var != null) {
 				m.scope.remove (m.result_var.name);
 			}
-			m.result_var = new LocalVariable (m.return_type.copy (), "result");
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, m.source_reference);
 			m.result_var.is_result = true;
 		}
 
