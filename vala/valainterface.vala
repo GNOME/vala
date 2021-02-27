@@ -74,11 +74,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return;
 		}
 		if (m.binding != MemberBinding.STATIC) {
-			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this), m.source_reference);
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
-			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, m.source_reference);
 			m.result_var.is_result = true;
 		}
 
@@ -101,7 +101,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		base.add_property (prop);
 
 		if (prop.binding != MemberBinding.STATIC) {
-			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this), prop.source_reference);
 			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		}
 	}
