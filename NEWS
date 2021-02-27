@@ -1,3 +1,26 @@
+Vala 0.51.3
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Don't use volatile modifier in glib API when targetting >= 2.68 [glib!1719]
+    + CCodeBaseModule.get_type_id_expression () won't return null
+    + Don't wrongly emit declaration for default-handler of signals
+    + Include "string.h" for strcmp() (POSIX)
+  - vala:
+    + Generics value holding struct pointer requires casting on access [#347]
+    + Infer needle type for "in" expression on enum [#1138]
+    + Don't allow "in" operation with different enum types [#1139]
+    + Improve context check whether property is writeable on assignments
+    + Include "stdlib.h" for Enum.to_string() (POSIX) [#1143]
+    + Set proper source_reference for implicit "this" and "result" variables
+    + Report error for invalid inner operand of unary expressions
+  - girwriter: Output default handler of signals
+
+ * Bindings:
+  - glib-2.0: Add new symbols from 2.68
+  - webkit2gtk-4.0: Update to 2.31.90
+  - vapi: Update GIR-based bindings
+
 Vala 0.51.2
 ===========
  * Various improvements and bug fixes:
