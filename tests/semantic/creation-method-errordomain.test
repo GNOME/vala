@@ -1,0 +1,10 @@
+Invalid Code
+
+errordomain Foo {
+	BAR;
+	public Foo () {
+	}
+}
+
+void main () {
+}
