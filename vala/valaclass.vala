@@ -274,14 +274,14 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this), m.source_reference);
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			if (m.result_var != null) {
 				m.scope.remove (m.result_var.name);
 			}
-			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, m.source_reference);
 			m.result_var.is_result = true;
 		}
 		if (m is CreationMethod) {
@@ -325,7 +325,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		base.add_property (prop);
 
 		if (prop.binding != MemberBinding.STATIC) {
-			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this), prop.source_reference);
 			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		}
 
@@ -362,7 +362,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (c.this_parameter != null) {
 				c.scope.remove (c.this_parameter.name);
 			}
-			c.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (c, this));
+			c.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (c, this), c.source_reference);
 			c.scope.add (c.this_parameter.name, c.this_parameter);
 		}
 	}
@@ -395,7 +395,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (d.this_parameter != null) {
 				d.scope.remove (d.this_parameter.name);
 			}
-			d.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (d, this));
+			d.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (d, this), d.source_reference);
 			d.scope.add (d.this_parameter.name, d.this_parameter);
 		}
 	}

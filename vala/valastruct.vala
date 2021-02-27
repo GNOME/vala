@@ -234,11 +234,11 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public override void add_method (Method m) {
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
-			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this));
+			m.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (m, this), m.source_reference);
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
-			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, m.source_reference);
 			m.result_var.is_result = true;
 		}
 		if (m is CreationMethod) {
@@ -279,7 +279,7 @@ public class Vala.Struct : TypeSymbol {
 		scope.add (prop.name, prop);
 
 		if (prop.binding == MemberBinding.INSTANCE) {
-			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this));
+			prop.this_parameter = new Parameter ("this", SemanticAnalyzer.get_this_type (prop, this), prop.source_reference);
 			prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		}
 
