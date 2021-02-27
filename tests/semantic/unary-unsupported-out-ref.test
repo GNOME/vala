@@ -1,0 +1,19 @@
+Invalid Code
+
+class Foo {
+	public string bar { get; set; }
+}
+
+void manam (out string s) {
+	s = "manam";
+}
+
+void minim (ref string s) {
+	s = "minim";
+}
+
+void main () {
+	var foo = new Foo ();
+	manam (out foo.bar);
+	minim (ref foo.bar);
+}

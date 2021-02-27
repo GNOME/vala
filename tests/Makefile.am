@@ -1080,10 +1080,12 @@ TESTS = \
 	semantic/throw-no-error-type.test \
 	semantic/throw-unknown-error-type.test \
 	semantic/type-argument-ownership-mismatch.test \
+	semantic/unary-invalid-instance-member-access.test \
 	semantic/unary-unsupported-complement.test \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
+	semantic/unary-unsupported-out-ref.test \
 	semantic/with-array.test \
 	semantic/with-buildin.vala \
 	semantic/with-class.test \
