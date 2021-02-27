@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+	public bool bar;
+}
+
+void main () {
+	assert (!Foo.bar);
+}
