@@ -1,0 +1,9 @@
+Invalid Code
+
+interface Foo : Object {
+	public Foo () {
+	}
+}
+
+void main () {
+}

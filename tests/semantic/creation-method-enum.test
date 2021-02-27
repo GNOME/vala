@@ -1,0 +1,10 @@
+Invalid Code
+
+enum Foo {
+	BAR;
+	public Foo () {
+	}
+}
+
+void main () {
+}

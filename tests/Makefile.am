@@ -911,6 +911,10 @@ TESTS = \
 	semantic/constant-void.test \
 	semantic/construct-without-gobject.test \
 	semantic/creation-error-accessibility.test \
+	semantic/creation-method-enum.test \
+	semantic/creation-method-errordomain.test \
+	semantic/creation-method-interface.test \
+	semantic/creation-method-namespace.test \
 	semantic/delegate-error-accessibility.test \
 	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
