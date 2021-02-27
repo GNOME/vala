@@ -6102,6 +6102,11 @@ namespace Gsk {
 		public size_t get_n_color_stops ();
 		public unowned Graphene.Point? get_start ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_ngl_renderer_get_type ()")]
+	public class NglRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		public NglRenderer ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
 	public class OpacityNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]

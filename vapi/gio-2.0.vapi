@@ -3640,8 +3640,8 @@ namespace GLib {
 		public GLib.Bytes load_bytes (GLib.Cancellable? cancellable = null, out string? etag_out = null) throws GLib.Error;
 		[Version (since = "2.56")]
 		public async GLib.Bytes load_bytes_async (GLib.Cancellable? cancellable = null, out string? etag_out) throws GLib.Error;
-		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
-		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string? etag_out) throws GLib.Error;
+		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string? etag_out) throws GLib.Error;
 		public async bool load_partial_contents_async (GLib.Cancellable? cancellable = null, [CCode (delegate_target_pos = -0.9)] GLib.FileReadMoreCallback read_more_callback, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.38")]
@@ -3696,11 +3696,11 @@ namespace GLib {
 		public virtual async GLib.FileInputStream read_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
+		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
 		[CCode (finish_name = "g_file_replace_contents_finish")]
 		[Version (since = "2.40")]
-		public async bool replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string new_etag) throws GLib.Error;
+		public async bool replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
 		[Version (since = "2.22")]
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]

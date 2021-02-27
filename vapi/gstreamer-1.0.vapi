@@ -4028,6 +4028,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool MetaTransformFunction (Gst.Buffer transbuf, Gst.Meta meta, Gst.Buffer buffer, GLib.Quark type, void* data);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool MiniObjectDisposeFunction (Gst.MiniObject obj);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate void MiniObjectFreeFunction (Gst.MiniObject obj);

@@ -57,5 +57,3 @@ Device
 
 // vapigen actually generates the correctly, but in away that breaks BC
 Rectangle.union return_void
-
-DrawingContext skip
