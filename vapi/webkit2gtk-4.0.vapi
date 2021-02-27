@@ -471,6 +471,11 @@ namespace WebKit {
 		public unowned WebKit.JavascriptResult @ref ();
 		public void unref ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_media_key_system_permission_request_get_type ()")]
+	public class MediaKeySystemPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected MediaKeySystemPermissionRequest ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_mime_info_ref", type_id = "webkit_mime_info_get_type ()", unref_function = "webkit_mime_info_unref")]
 	[Compact]
 	public class MimeInfo {
@@ -2008,6 +2013,9 @@ namespace WebKit {
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_minor_version ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (since = "2.32")]
+	public static unowned string media_key_system_permission_get_name (WebKit.MediaKeySystemPermissionRequest request);
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.24")]
 	public static string? uri_for_display (string uri);
