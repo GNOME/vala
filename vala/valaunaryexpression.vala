@@ -158,6 +158,10 @@ public class Vala.UnaryExpression : Expression {
 			/* if there was an error in the inner expression, skip type check */
 			error = true;
 			return false;
+		} else if (inner.value_type == null) {
+			error = true;
+			Report.error (inner.source_reference, "Invalid inner operand");
+			return false;
 		}
 
 		if (inner.value_type is FieldPrototype || inner.value_type is PropertyPrototype) {
