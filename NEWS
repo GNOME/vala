@@ -1,3 +1,64 @@
+Vala 0.48.14
+============
+ * Highlights:
+  - Add further support for params arrays in constructors [#128]
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Improve support of SimpleType struct constructors
+    + Improve handling of "NoWrapper" attribute
+    + Allow CCode.type_cname for classes and use get_ccode_type_name()
+    + Always use G_TYPE_INSTANCE_GET_CLASS/INTERFACE for external symbols
+    + Also check array type of variable argument for ref parameters
+    + Don't leak array memory after it was implicitly copied
+    + Use g_boxed_free in free-wrapper for heap-allocated GLib.Value
+    + Don't leak GLib.Value when implicitly unboxing it
+    + Don't leak memory moving heap-allocated struct to stack
+    + Chain up to base struct destroy function
+    + Correctly retrieve symbol_reference of nested cast expressions [#1134]
+    + Strip all nested occurances of CCodeCastExpression [#1134]
+    + Don't wrongly emit declaration for default-handler of signals
+    + Include "string.h" for strcmp() (POSIX)
+  - vala:
+    + Improve detection of duplicate package source files
+    + Apply stricter condition for lambda to delegate assignment
+    + Don't allow disposable SimpleType structs
+    + GLib.Value unboxing returns unowned value
+    + Don't allow GLib.Value casting to nullable struct/simple types
+    + Check type-arguments in base-types/prerequisites of class/interface [#404]
+    + Capturing va_list parameters/variables is not allowed [#1136]
+    + Generics value holding struct pointer requires casting on access [#347]
+    + Infer needle type for "in" expression on enum [#1138]
+    + Improve context check whether property is writeable on assignments
+    + Include "stdlib.h" for Enum.to_string() (POSIX) [#1143]
+    + Set proper source_reference for implicit "this" and "result" variables
+    + Report error for invalid inner operand of unary expressions
+  - codewriter: Don't write trailing ";" after body of WithStatement
+  - girparser:
+    + Apply "delegate_target" metadata for methods and parameters
+    + Apply "destroy_notify_cname" metadata for fields
+    + Apply "type_get_function" metadata for classes and inferfaces
+    + Set CCode.type_cname for classes if it doesn't match our default
+  - girwriter: Write instance-parameter elements [#1128]
+  - girwriter: Output default handler of signals
+  - libvaladoc/html: Don't sort struct fields to keep their original order
+  - libvaladoc: Correctly retrieve value for Api.Class.is_compact
+  - libvaladoc: Add wrapper for "agedge" of graphviz
+
+ * Bindings:
+  - Fix several bindings which lead to invalid code by using them in:
+    cairo, gobject-2.0, pango, goocanvas-2.0, curses, alsa, bzlib, sqlite3,
+    libgvc, posix, gstreamer-1.0, gdk-3.0, gdk-x11-3.0, gtk+-3.0, gtk4,
+    fuse, libxml-2.0
+  - gdk-pixbuf-2.0: Fix Pixbuf.save_to_streamv_async()
+  - gio-2.0: Fix binding of PollableOutputStream.write*_nonblocking()
+  - gio-2.0,gtk+-3.0,gtk4: Drop explicit c-type attributes of va_list parameters
+  - gio-2.0: Pick up missing invoker for some AppInfo/File.*() methods
+  - gstreamer-1.0: Set CCode.type_id of MiniObject to G_TYPE_BOXED [#1133]
+  - gtk+-2.0,javascriptcoregtk-4.0: Wrong usage of CCode.type_cname attribute
+  - gtk+-3.0,gtk4: Fix some delegate return values and parameters
+  - gtk4: Update to 4.0.2
+
 Vala 0.48.13
 ============
  * Various improvements and bug fixes:
