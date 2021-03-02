@@ -168,7 +168,11 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				method = method.base_interface_method;
 			}
 
-			return new CCodeIdentifier (generate_delegate_wrapper (method, dt, node));
+			if (method.is_variadic ()) {
+				Report.warning (node.source_reference, "internal: Variadic method requires a direct cast to delegate");
+			} else {
+				return new CCodeIdentifier (generate_delegate_wrapper (method, dt, node));
+			}
 		}
 
 		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, node);

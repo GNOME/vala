@@ -146,8 +146,15 @@ public class Vala.DelegateType : CallableType {
 				return false;
 			}
 
-			// target-delegate is allowed to accept arguments of looser types (weaker precondition)
 			var p = params_it.get ();
+			if (p != null && (param.ellipsis || param.params_array)) {
+				if (param.ellipsis != p.ellipsis || param.params_array != p.params_array) {
+					return false;
+				}
+				break;
+			}
+
+			// target-delegate is allowed to accept arguments of looser types (weaker precondition)
 			if (!param.variable_type.get_actual_type (this, null, this).stricter (p.variable_type)) {
 				return false;
 			}

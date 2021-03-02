@@ -165,6 +165,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 
 		bool first = true;
 		foreach (Parameter param in parameters) {
+			Parameter? method_param = null;
 			DataType method_param_type;
 			/* use first callback parameter as instance parameter if
 			 * an instance method is being compared to a static
@@ -178,7 +179,15 @@ public class Vala.Delegate : TypeSymbol, Callable {
 				if (!method_params_it.next ()) {
 					break;
 				}
-				method_param_type = method_params_it.get ().variable_type;
+				method_param = method_params_it.get ();
+				method_param_type = method_param.variable_type;
+			}
+
+			if (method_param != null && (param.ellipsis || param.params_array)) {
+				if (param.ellipsis != method_param.ellipsis || param.params_array != method_param.params_array) {
+					return false;
+				}
+				break;
 			}
 
 			// method is allowed to accept arguments of looser types (weaker precondition)
