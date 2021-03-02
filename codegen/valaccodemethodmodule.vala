@@ -917,7 +917,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				cparam = new CCodeParameter ("_first_%s".printf (get_ccode_name (param)), ctypename);
-				cparam_map.set (get_param_pos (get_ccode_pos (param), false), cparam);
+				cparam_map.set (get_param_pos (get_ccode_pos (param) - 0.1, true), cparam);
 
 				va_list_name = "_va_list_%s".printf (get_ccode_name (param));
 			}
