@@ -134,7 +134,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.Buffer render_start_tag (Gst.TagList tag_list);
 		}
-		[CCode (cheader_filename = "gst/tag/tag.h", type_id = "gst_tag_xmp_writer_get_type ()")]
+		[CCode (cheader_filename = "gst/tag/tag.h", type_cname = "GstTagXmpWriterInterface", type_id = "gst_tag_xmp_writer_get_type ()")]
 		[GIR (name = "TagXmpWriter")]
 		public interface XmpWriter : Gst.Element {
 			public void add_all_schemas ();

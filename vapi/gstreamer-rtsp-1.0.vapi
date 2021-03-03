@@ -239,7 +239,7 @@ namespace Gst {
 			public Gst.RTSP.Result wait_backlog_usec (int64 timeout);
 			public Gst.RTSP.Result write_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] owned uint8[] data, out uint id);
 		}
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h", type_id = "gst_rtsp_extension_get_type ()")]
+		[CCode (cheader_filename = "gst/rtsp/rtsp.h", type_cname = "GstRTSPExtensionInterface", type_id = "gst_rtsp_extension_get_type ()")]
 		[GIR (name = "RTSPExtension")]
 		public interface Extension : GLib.Object {
 			public abstract Gst.RTSP.Result after_send (Gst.RTSP.Message req, Gst.RTSP.Message resp);
