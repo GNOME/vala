@@ -1202,9 +1202,8 @@ public class Vala.GirParser : CodeVisitor {
 						merged = true;
 					} else {
 						// record for a gtype
-						var gtype_struct_for = girdata["glib:is-gtype-struct-for"];
 						if (gtype_struct_for != null) {
-							var obj = parser.resolve_node (parent, parser.parse_symbol_from_string (gtype_struct_for, source_reference));
+							var obj = parser.resolve_node (parent, gtype_struct_for);
 							if (obj != null && obj.symbol is Interface && "%sIface".printf (obj.get_cname ()) != get_cname ()) {
 								// set the interface struct name
 								obj.symbol.set_attribute_string ("CCode", "type_cname", get_cname ());
