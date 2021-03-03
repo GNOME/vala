@@ -17,5 +17,25 @@ void main () {
 		int i = 0;
 		assert (++i == 1);
 	}
+	{
+		int i = 1;
+		i -= i++ % 2;
+		assert (i == 1);
+	}
+	{
+		int i = 1;
+		i -= ++i % 2;
+		assert (i == 2);
+	}
+	{
+		int i = 1;
+		i += i++ % 2;
+		assert (i == 3);
+	}
+	{
+		int i = 1;
+		i += ++i % 2;
+		assert (i == 2);
+	}
 }
 
