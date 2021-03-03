@@ -1831,7 +1831,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					vcast = new CCodeIdentifier ("_klass_");
 					var vcastcall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 					((CCodeFunctionCall) vcastcall).add_argument (new CCodeIdentifier ("self"));
-					ccode.add_declaration ("%sClass*".printf (get_ccode_name (cl)), new CCodeVariableDeclarator ("_klass_"));
+					ccode.add_declaration ("%s*".printf (get_ccode_type_name (cl)), new CCodeVariableDeclarator ("_klass_"));
 					ccode.add_assignment (vcast, vcastcall);
 				} else {
 					vcast = new CCodeIdentifier ("self");
