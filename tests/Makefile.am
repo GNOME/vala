@@ -870,6 +870,7 @@ TESTS = \
 	semantic/array-incompatible-initializer2.test \
 	semantic/assignment-element-incompatible-ownership.test \
 	semantic/assignment-element-incompatible-type.test \
+	semantic/assignment-fixed-array-length.test \
 	semantic/assignment-same-variable.vala \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \

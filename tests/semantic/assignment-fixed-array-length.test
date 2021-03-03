@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	int i[42];
+	i.length = 23;
+}
