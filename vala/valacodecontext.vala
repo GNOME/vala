@@ -632,7 +632,8 @@ public class Vala.CodeContext {
 		if (target_glib == "auto") {
 			var available_glib = pkg_config_modversion ("glib-2.0");
 			if (available_glib != null && available_glib.scanf ("%d.%d", out glib_major, out glib_minor) >= 2) {
-				glib_minor -= ++glib_minor % 2;
+				glib_minor++;
+				glib_minor -= glib_minor % 2;
 				set_target_glib_version ("%d.%d".printf (glib_major, glib_minor));
 			} else {
 				Report.warning (null, "Could not determine the version of `glib-2.0', target version of glib was not set");
