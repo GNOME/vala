@@ -842,7 +842,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			return "void";
 		} else if (node is ClassType) {
 			var type = (ClassType) node;
-			return "%sClass*".printf (get_ccode_name (type.class_symbol));
+			return "%s*".printf (get_ccode_type_name (type.class_symbol));
 		} else if (node is InterfaceType) {
 			var type = (InterfaceType) node;
 			return "%s*".printf (get_ccode_type_name (type.interface_symbol));
