@@ -604,8 +604,10 @@ public class Vala.CodeContext {
 			if (available_glib != null && available_glib.scanf ("%d.%d", out glib_major, out glib_minor) >= 2) {
 				glib_minor -= ++glib_minor % 2;
 				set_target_glib_version ("%d.%d".printf (glib_major, glib_minor));
-				return;
+			} else {
+				Report.warning (null, "Could not determine the version of `glib-2.0', target version of glib was not set");
 			}
+			return;
 		}
 
 		glib_major = target_glib_major;
