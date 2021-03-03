@@ -1,0 +1,1 @@
+VALAFLAGS="--target-glib=auto"

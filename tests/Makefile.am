@@ -1190,6 +1190,7 @@ TESTS = \
 	genie/preparser-or-expression.gs \
 	genie/struct.gs \
 	genie/struct-after-class.gs \
+	glib/conditional-glib-api.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
 
@@ -1210,6 +1211,7 @@ LINUX_TESTS += \
 endif
 
 EXTRA_DIST = \
+	glib/tests-extra-environment.sh \
 	gtktemplate/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
