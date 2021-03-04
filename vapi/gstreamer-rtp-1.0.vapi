@@ -211,6 +211,8 @@ namespace Gst {
 			public virtual bool set_caps_from_attributes (Gst.Caps caps);
 			public bool set_caps_from_attributes_simple_sdp (Gst.Caps caps);
 			public void set_id (uint ext_id);
+			[CCode (cname = "gst_rtp_header_extension_class_set_uri")]
+			public class void set_uri (string uri);
 			public virtual size_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, uint8 data, size_t size);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
