@@ -537,6 +537,8 @@ public class Vala.GirParser : CodeVisitor {
 		public ArrayList<int> destroy_parameters;
 		// record-specific
 		public UnresolvedSymbol gtype_struct_for;
+		// class-specific
+		public UnresolvedSymbol type_struct;
 		// alias-specific
 		public DataType base_type;
 		// struct-specific
@@ -854,6 +856,25 @@ public class Vala.GirParser : CodeVisitor {
 			return res;
 		}
 
+		static void move_class_methods (Node target, Node? source) {
+			if (source == null) {
+				return;
+			}
+
+			var i = 0;
+			while (i < source.members.size) {
+				var node = source.members[i];
+				if (node.symbol is Method) {
+					source.remove_member (node);
+					target.add_member (node);
+
+					((Method) node.symbol).binding = MemberBinding.CLASS;
+				} else {
+					i++;
+				}
+			}
+		}
+
 		public void process (GirParser parser) {
 			if (processed) {
 				return;
@@ -881,24 +902,12 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			if (symbol is Class && girdata != null) {
+				if (type_struct != null) {
+					move_class_methods (this, parser.resolve_node (parent, type_struct));
+				}
 				var class_struct = girdata["glib:type-struct"];
 				if (class_struct != null) {
-					var klass = parser.resolve_node (parent, parser.parse_symbol_from_string (class_struct, source_reference));
-					if (klass != null) {
-						var i = 0;
-						while ( i < klass.members.size ) {
-							var node = klass.members[i];
-							if (node.symbol is Method) {
-								klass.remove_member (node);
-								this.add_member (node);
-
-								Method m = (Method) node.symbol;
-								m.binding = MemberBinding.CLASS;
-							} else {
-								i++;
-							}
-						}
-					}
+					move_class_methods (this, parser.resolve_node (parent, parser.parse_symbol_from_string (class_struct, source_reference)));
 				}
 			}
 
@@ -2930,6 +2939,11 @@ public class Vala.GirParser : CodeVisitor {
 
 			if (parent != null) {
 				cl.add_base_type (parse_type_from_gir_name (parent));
+			}
+			var type_struct = reader.get_attribute ("glib:type-struct");
+			if (type_struct != null) {
+				current.type_struct = parse_symbol_from_string (type_struct, current.source_reference);
+				unresolved_gir_symbols.add (current.type_struct);
 			}
 			current.symbol = cl;
 		} else {
