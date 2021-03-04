@@ -341,6 +341,8 @@ namespace Gst {
 			public weak Gst.Audio.Info info;
 			[CCode (has_construct_function = false)]
 			protected Filter ();
+			[CCode (cname = "gst_audio_filter_class_add_pad_templates")]
+			public class void add_pad_templates (Gst.Caps allowed_caps);
 			[NoWrapper]
 			public virtual bool setup (Gst.Audio.Info info);
 		}
