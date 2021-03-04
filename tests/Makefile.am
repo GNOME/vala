@@ -710,6 +710,8 @@ TESTS = \
 	gir/gtype-struct-name.test \
 	gir/instance-parameter-owned.test \
 	gir/method-array-length-type.test \
+	gir/method-class.test \
+	gir/method-nowrapper.test \
 	gir/parameter-array-length-type.test \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
