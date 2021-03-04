@@ -1,0 +1,41 @@
+GIR
+
+Input:
+
+<class name="Foo"
+       c:symbol-prefix="foo"
+       c:type="TestFoo"
+       parent="GLib.Object"
+       abstract="1"
+       glib:type-name="TestFoo"
+       glib:get-type="test_foo_get_type"
+       glib:type-struct="FooClass">
+  <field name="parent">
+    <type name="GLib.Object" c:type="GObject"/>
+  </field>
+</class>
+<record name="FooClass"
+        c:type="TestFooClass"
+        glib:is-gtype-struct-for="Foo">
+  <method name="bar"
+          c:identifier="test_foo_class_bar">
+    <return-value transfer-ownership="none">
+      <type name="none" c:type="void"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="klass" transfer-ownership="none">
+        <type name="FooClass" c:type="TestFooClass*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+</record>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public abstract class Foo : GLib.Object {
+	[CCode (has_construct_function = false)]
+	protected Foo ();
+	[CCode (cname = "test_foo_class_bar")]
+	public class void bar ();
+}
