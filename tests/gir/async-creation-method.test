@@ -1,0 +1,70 @@
+GIR
+
+Input:
+
+<class name="Foo"
+       c:symbol-prefix="foo"
+       c:type="TestFoo"
+       parent="GObject.Object"
+       glib:type-name="TestFoo"
+       glib:get-type="test_foo_get_type"
+       glib:type-struct="FooClass">
+  <constructor name="new_finish"
+               c:identifier="test_foo_new_finish"
+               throws="1">
+    <return-value transfer-ownership="full">
+      <type name="Foo" c:type="TestFoo*"/>
+    </return-value>
+    <parameters>
+      <parameter name="async_result" transfer-ownership="none">
+        <type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+      </parameter>
+    </parameters>
+  </constructor>
+  <function name="new_async"
+            c:identifier="test_foo_new_async">
+    <return-value transfer-ownership="none">
+      <type name="none" c:type="void"/>
+    </return-value>
+    <parameters>
+      <parameter name="cancellable"
+                 transfer-ownership="none"
+                 nullable="1"
+                 allow-none="1">
+        <type name="Gio.Cancellable" c:type="GCancellable*"/>
+      </parameter>
+      <parameter name="callback"
+                 transfer-ownership="none"
+                 nullable="1"
+                 allow-none="1"
+                 scope="async"
+                 closure="2">
+        <type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+      </parameter>
+      <parameter name="user_data"
+                 transfer-ownership="none"
+                 nullable="1"
+                 allow-none="1">
+        <type name="gpointer" c:type="gpointer"/>
+      </parameter>
+    </parameters>
+  </function>
+  <field name="parent_instance">
+    <type name="GObject.Object" c:type="GObject"/>
+  </field>
+</class>
+<record name="FooClass"
+        c:type="TestFooClass"
+        glib:is-gtype-struct-for="Foo">
+  <field name="parent_class">
+    <type name="GObject.ObjectClass" c:type="GObjectClass"/>
+  </field>
+</record>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class Foo : GLib.Object {
+	[CCode (cname = "test_foo_new_async", has_construct_function = false)]
+	public async Foo (GLib.Cancellable? cancellable) throws GLib.Error;
+}
