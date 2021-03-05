@@ -707,6 +707,7 @@ TESTS = \
 	gir/bug792998.test \
 	gir/alias.test \
 	gir/array-fixed-length.test \
+	gir/async-creation-method.test \
 	gir/async-result-pos.test \
 	gir/async-sync-out.test \
 	gir/class.test \
@@ -726,6 +727,7 @@ TESTS = \
 	gir/parameter-array-length-type.test \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
+	gir/signal-virtual.test \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
 	gir/union-transparent.test \
