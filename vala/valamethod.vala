@@ -1201,7 +1201,7 @@ public class Vala.Method : Subroutine, Callable {
 		assert (this.coroutine);
 
 		if (callback_method == null) {
-			var bool_type = new BooleanType ((Struct) CodeContext.get ().root.scope.lookup ("bool"));
+			var bool_type = CodeContext.get ().analyzer.bool_type.copy ();
 			bool_type.value_owned = true;
 			callback_method = new Method ("callback", bool_type, source_reference);
 			callback_method.access = SymbolAccessibility.PUBLIC;

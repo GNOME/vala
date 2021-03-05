@@ -210,7 +210,7 @@ public class Vala.ArrayType : ReferenceType {
 		var context = CodeContext.get ();
 
 		if (context.profile == Profile.GOBJECT && target_type.type_symbol != null) {
-			if (target_type.type_symbol.is_subtype_of (context.analyzer.gvalue_type.type_symbol) && element_type.type_symbol == context.root.scope.lookup ("string")) {
+			if (target_type.type_symbol.is_subtype_of (context.analyzer.gvalue_type.type_symbol) && element_type.type_symbol == context.analyzer.string_type.type_symbol) {
 				// allow implicit conversion from string[] to GValue
 				return true;
 			}

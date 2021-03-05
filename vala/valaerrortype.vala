@@ -115,8 +115,7 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override Symbol? get_member (string member_name) {
-		var gerror_symbol = CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("Error");
-		return gerror_symbol.scope.lookup (member_name);
+		return CodeContext.get ().analyzer.gerror_type.scope.lookup (member_name);
 	}
 
 	public override bool is_reference_type_or_type_parameter () {
