@@ -1,0 +1,49 @@
+GIR
+
+Input:
+
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <virtual-method name="signal_virtual">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="Foo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </virtual-method>
+  <constructor name="new" c:identifier="test_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Test.Foo" c:type="TestFoo*"/>
+    </return-value>
+  </constructor>
+  <glib:signal name="signal-virtual">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </glib:signal>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo">
+  <field name="signal_virtual">
+    <callback name="signal_virtual" c:type="signal_virtual">
+      <return-value transfer-ownership="full">
+        <type name="none"/>
+      </return-value>
+      <parameters>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Test.Foo" c:type="TestFoo*"/>
+        </parameter>
+      </parameters>
+    </callback>
+  </field>
+</record>
+
+Output:
+
+[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+public class Foo : GLib.Object {
+	[CCode (has_construct_function = false)]
+	public Foo ();
+	public virtual signal void signal_virtual ();
+}
