@@ -336,6 +336,7 @@ TESTS = \
 	structs/constructor-wrong-name.test \
 	structs/default-gtype.vala \
 	structs/gmutex.vala \
+	structs/gtype-base-struct.vala \
 	structs/gvalue.vala \
 	structs/gvalue-implicit-comparison.vala \
 	structs/simple-type-constructor.vala \

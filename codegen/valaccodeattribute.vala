@@ -1014,8 +1014,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return get_ccode_upper_case_name (sym, "TYPE_");
 			} else if (sym is Struct) {
 				unowned Struct st = (Struct) sym;
-				if (!get_ccode_has_type_id (st)) {
-					unowned Struct? base_struct = st.base_struct;
+				unowned Struct? base_struct = st.base_struct;
+				if (!get_ccode_has_type_id (st) || (base_struct != null && base_struct.is_simple_type ())) {
 					if (base_struct != null) {
 						return get_ccode_type_id (base_struct);
 					}
