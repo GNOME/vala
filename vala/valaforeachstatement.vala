@@ -332,9 +332,10 @@ public class Vala.ForeachStatement : Block {
 		// analyze element type
 		if (type_reference is VarType) {
 			// var type
+			bool value_owned = type_reference.value_owned;
 			type_reference = element_type.copy ();
 			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
-			if (!type_reference.value_owned) {
+			if (!value_owned) {
 				type_reference.value_owned = false;
 			}
 		} else if (!element_type.compatible (type_reference)) {
@@ -354,9 +355,10 @@ public class Vala.ForeachStatement : Block {
 		// analyze element type
 		if (type_reference is VarType) {
 			// var type
+			bool value_owned = type_reference.value_owned;
 			type_reference = element_type.copy ();
 			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
-			if (!type_reference.value_owned) {
+			if (!value_owned) {
 				type_reference.value_owned = false;
 			}
 		} else if (!element_type.compatible (type_reference)) {
