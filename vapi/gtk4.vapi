@@ -8709,10 +8709,13 @@ namespace Gtk {
 		public virtual void focus_out ();
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
 		public virtual bool get_surrounding (out string text, out int cursor_index);
+		public virtual bool get_surrounding_with_selection (string text, int cursor_index, int anchor_index);
 		public virtual void reset ();
 		public virtual void set_client_widget (Gtk.Widget? widget);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
+		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual void set_surrounding (string text, int len, int cursor_index);
+		public virtual void set_surrounding_with_selection (string text, int len, int cursor_index, int anchor_index);
 		public virtual void set_use_preedit (bool use_preedit);
 		[NoAccessorMethod]
 		public Gtk.InputHints input_hints { get; set; }
@@ -10653,7 +10656,7 @@ namespace Gtk {
 		public bool get_can_unselect ();
 		public unowned GLib.ListModel get_model ();
 		public uint get_selected ();
-		public void* get_selected_item ();
+		public unowned GLib.Object? get_selected_item ();
 		public void set_autoselect (bool autoselect);
 		public void set_can_unselect (bool can_unselect);
 		public void set_model (GLib.ListModel? model);
