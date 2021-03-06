@@ -193,6 +193,8 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 					}
 
 					ccode.close ();
+				} else if (!need_goto_label && m.tree_can_fail && requires_destroy (owned_type)) {
+					need_goto_label = true;
 				}
 			}
 		}
