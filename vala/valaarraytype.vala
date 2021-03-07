@@ -324,7 +324,18 @@ public class Vala.ArrayType : ReferenceType {
 			}
 		}
 
-		return element_type.check (context);
+		if (!element_type.check (context)) {
+			error = true;
+			return false;
+		}
+
+		// check whether there is the expected amount of type-arguments
+		if (!element_type.check_type_arguments (context, true)) {
+			error = true;
+			return false;
+		}
+
+		return true;
 	}
 
 	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
