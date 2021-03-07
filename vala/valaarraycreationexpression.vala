@@ -245,6 +245,12 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		if (element_type != null) {
 			element_type.check (context);
+
+			// check whether there is the expected amount of type-arguments
+			if (!element_type.check_type_arguments (context, true)) {
+				error = true;
+				return false;
+			}
 		}
 
 		if (length_type == null) {
