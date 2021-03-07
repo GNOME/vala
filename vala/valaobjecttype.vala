@@ -103,21 +103,9 @@ public class Vala.ObjectType : ReferenceType {
 			return false;
 		}
 
-		int n_type_args = get_type_arguments ().size;
-		if (n_type_args > 0 && n_type_args < object_type_symbol.get_type_parameters ().size) {
-			error = true;
-			Report.error (source_reference, "too few type arguments");
+		// check whether there is the expected amount of type-arguments
+		if (!check_type_arguments (context, true)) {
 			return false;
-		} else if (n_type_args > 0 && n_type_args > object_type_symbol.get_type_parameters ().size) {
-			error = true;
-			Report.error (source_reference, "too many type arguments");
-			return false;
-		}
-
-		foreach (DataType type in get_type_arguments ()) {
-			if (!type.check (context)) {
-				return false;
-			}
 		}
 
 		return true;
