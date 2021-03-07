@@ -58,6 +58,7 @@ TESTS = \
 	basic-types/glists.vala \
 	basic-types/gptrarray.vala \
 	basic-types/gvariants.vala \
+	basic-types/gvariants-hashtable-missing-type-arguments.test \
 	basic-types/gvariants-unboxing-safe.vala \
 	basic-types/null.vala \
 	basic-types/bug570846.test \
