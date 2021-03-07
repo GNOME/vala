@@ -2165,7 +2165,7 @@ namespace GLib {
 		public static void yield ();
 		public static void exit (T retval);
 		[Version (deprecated_since = "2.32", since = "2.10")]
-		public static void @foreach (Func<Thread> thread_func);
+		public static void @foreach (Func<Thread<T>> thread_func);
 
 		[CCode (cname = "g_usleep")]
 		public static void usleep (ulong microseconds);
@@ -2346,10 +2346,10 @@ namespace GLib {
 		[CCode (cname = "g_thread_pool_free")]
 		void _free (bool immediate, bool wait);
 		[CCode (cname = "vala__g_thread_pool_free_wrapper")]
-		public static void free (owned ThreadPool? pool, bool immediate, bool wait) {
-			ThreadPool* ptr = (owned) pool;
+		public static void free (owned ThreadPool<T>? pool, bool immediate, bool wait) {
+			ThreadPool<T>* ptr = (owned) pool;
 			if (ptr != null) {
-				((ThreadPool)ptr)._free (immediate, wait);
+				((ThreadPool<T>)ptr)._free (immediate, wait);
 			}
 		}
 		public static void set_max_unused_threads (int max_threads);
@@ -4864,7 +4864,7 @@ namespace GLib {
 		public uint get_length ();
 		[Version (since = "2.4")]
 		public void reverse ();
-		public Queue copy ();
+		public Queue<G> copy ();
 		[Version (since = "2.4")]
 		public unowned List<G> find (G data);
 		[Version (since = "2.4")]
@@ -5392,8 +5392,8 @@ namespace GLib {
 
 	/* N-ary Trees */
 
-	public delegate bool NodeTraverseFunc (Node node);
-	public delegate void NodeForeachFunc (Node node);
+	public delegate bool NodeTraverseFunc<G> (Node<G> node);
+	public delegate void NodeForeachFunc<G> (Node<G> node);
 
 	[CCode (cprefix = "G_TRAVERSE_")]
 	public enum TraverseFlags {
@@ -5421,8 +5421,8 @@ namespace GLib {
 		public unowned Node<G> append_data (owned G data);
 		public unowned Node<G> prepend_data (owned G data);
 		public void reverse_children ();
-		public void traverse (TraverseType order, TraverseFlags flags, int max_depth, NodeTraverseFunc func);
-		public void children_foreach (TraverseFlags flags, NodeForeachFunc func);
+		public void traverse (TraverseType order, TraverseFlags flags, int max_depth, NodeTraverseFunc<G> func);
+		public void children_foreach (TraverseFlags flags, NodeForeachFunc<G> func);
 		public unowned Node<G> get_root ();
 		public unowned Node<G> find (TraverseType order, TraverseFlags flags, G data);
 		public unowned Node<G> find_child (TraverseFlags flags, G data);
@@ -5458,10 +5458,10 @@ namespace GLib {
 		}
 
 		public G data;
-		public Node next;
-		public Node prev;
-		public Node parent;
-		public Node children;
+		public Node<G> next;
+		public Node<G> prev;
+		public Node<G> parent;
+		public Node<G> children;
 	}
 
 	/* Quarks */
