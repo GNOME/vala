@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Foo<G> {
+	public G g;
+}
+
+void main () {
+	var foo = new Foo<string>[] {};
+	Variant v = foo;
+}

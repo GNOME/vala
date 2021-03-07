@@ -668,6 +668,7 @@ TESTS = \
 	generics/arrays-not-supported-3.test \
 	generics/constructor-chain-up.vala \
 	generics/floating-type-cast.vala \
+	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
 	generics/integer-type-cast.vala \
