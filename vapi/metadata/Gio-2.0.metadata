@@ -55,6 +55,9 @@ dbus_address_get_for_bus_sync parent="GLib.BusType" name="get_address_sync"
 SETTINGS_BACKEND_EXTENSION_POINT_NAME cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
 SettingsBackend
   .* cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
+  .changed_tree.tree type="GLib.Tree<string,GLib.Variant>"
+  .flatten_tree.tree type="GLib.Tree<string,GLib.Variant>"
+  .write_tree.tree type="GLib.Tree<string,GLib.Variant>"
 
 Action
   .parameter_type nullable
@@ -157,6 +160,7 @@ ListModel
   .get_item#virtual_method skip
   .get_item#method skip=false abstract type="GLib.Object?"
 ListStore
+  .find_with_equal_func.equal_func type_arguments="GLib.Object"
   .insert_sorted.compare_func type_arguments="GLib.Object"
   .sort.compare_func type_arguments="GLib.Object"
 MemoryInputStream

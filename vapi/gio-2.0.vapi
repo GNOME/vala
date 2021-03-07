@@ -1682,7 +1682,7 @@ namespace GLib {
 		[Version (since = "2.64")]
 		public bool find (GLib.Object item, out uint position);
 		[Version (since = "2.64")]
-		public bool find_with_equal_func (GLib.Object item, GLib.EqualFunc equal_func, out uint position);
+		public bool find_with_equal_func (GLib.Object item, GLib.EqualFunc<GLib.Object> equal_func, out uint position);
 		[Version (since = "2.44")]
 		public void insert (uint position, GLib.Object item);
 		[Version (since = "2.44")]
@@ -2284,10 +2284,10 @@ namespace GLib {
 		public void changed (string key, void* origin_tag);
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
-		public void changed_tree (GLib.Tree tree, void* origin_tag);
+		public void changed_tree ([CCode (type = "GTree*")] GLib.Tree<string,GLib.Variant> tree, void* origin_tag);
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.26")]
-		public static void flatten_tree (GLib.Tree tree, out string path, [CCode (array_length = false, array_null_terminated = true)] out (unowned string)[] keys, [CCode (array_length = false, array_null_terminated = true)] out (unowned GLib.Variant)[] values);
+		public static void flatten_tree ([CCode (type = "GTree*")] GLib.Tree<string,GLib.Variant> tree, out string path, [CCode (array_length = false, array_null_terminated = true)] out (unowned string)[] keys, [CCode (array_length = false, array_null_terminated = true)] out (unowned GLib.Variant)[] values);
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.28")]
 		public static GLib.SettingsBackend get_default ();
@@ -2337,7 +2337,7 @@ namespace GLib {
 		public virtual bool write (string key, GLib.Variant value, void* origin_tag);
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
-		public virtual bool write_tree (GLib.Tree tree, void* origin_tag);
+		public virtual bool write_tree ([CCode (type = "GTree*")] GLib.Tree<string,GLib.Variant> tree, void* origin_tag);
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_settings_schema_ref", type_id = "g_settings_schema_get_type ()", unref_function = "g_settings_schema_unref")]
 	[Compact]
