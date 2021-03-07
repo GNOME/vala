@@ -474,7 +474,10 @@ public class Vala.GVariantModule : GValueModule {
 		string value_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var type_args = type.get_type_arguments ();
-		assert (type_args.size == 2);
+		if (type_args.size != 2) {
+			Report.error (type.source_reference, "Missing type-arguments for GVariant deserialization of `%s'", type.type_symbol.get_full_name ());
+			return new CCodeInvalidExpression ();
+		}
 		var key_type = type_args.get (0);
 		var value_type = type_args.get (1);
 
@@ -803,7 +806,10 @@ public class Vala.GVariantModule : GValueModule {
 		string value_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var type_args = type.get_type_arguments ();
-		assert (type_args.size == 2);
+		if (type_args.size != 2) {
+			Report.error (type.source_reference, "Missing type-arguments for GVariant serialization of `%s'", type.type_symbol.get_full_name ());
+			return new CCodeInvalidExpression ();
+		}
 		var key_type = type_args.get (0);
 		var value_type = type_args.get (1);
 
