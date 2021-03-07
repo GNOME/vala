@@ -887,6 +887,7 @@ TESTS = \
 	semantic/array-stacked.test \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
+	semantic/array-invalid-type-argument.test \
 	semantic/assignment-element-incompatible-ownership.test \
 	semantic/assignment-element-incompatible-type.test \
 	semantic/assignment-fixed-array-length.test \
