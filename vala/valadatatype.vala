@@ -574,7 +574,12 @@ public abstract class Vala.DataType : CodeNode {
 				str.append_c ('(');
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
-						str.append (f.variable_type.get_type_signature (f));
+						var s = f.variable_type.get_type_signature (f);
+						if (s != null) {
+							str.append (s);
+						} else {
+							return null;
+						}
 					}
 				}
 				str.append_c (')');
