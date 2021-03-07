@@ -99,23 +99,9 @@ public class Vala.DelegateType : CallableType {
 			return false;
 		}
 
-		var n_type_params = delegate_symbol.get_type_parameters ().size;
-		var n_type_args = get_type_arguments ().size;
-		if (n_type_args > 0 && n_type_args < n_type_params) {
-			error = true;
-			Report.error (source_reference, "too few type arguments");
+		// check whether there is the expected amount of type-arguments
+		if (!check_type_arguments (context, true)) {
 			return false;
-		} else if (n_type_args > 0 && n_type_args > n_type_params) {
-			error = true;
-			Report.error (source_reference, "too many type arguments");
-			return false;
-		}
-
-		foreach (DataType type in get_type_arguments ()) {
-			if (!type.check (context)) {
-				error = true;
-				return false;
-			}
 		}
 
 		return true;

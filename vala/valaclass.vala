@@ -557,15 +557,9 @@ public class Vala.Class : ObjectTypeSymbol {
 				return false;
 			}
 
-			int n_type_args = base_type_reference.get_type_arguments ().size;
-			int n_type_params = ((ObjectTypeSymbol) base_type_reference.type_symbol).get_type_parameters ().size;
-			if (n_type_args < n_type_params) {
+			// check whether there is the expected amount of type-arguments
+			if (!base_type_reference.check_type_arguments (context)) {
 				error = true;
-				Report.error (base_type_reference.source_reference, "too few type arguments");
-				return false;
-			} else if (n_type_args > n_type_params) {
-				error = true;
-				Report.error (base_type_reference.source_reference, "too many type arguments");
 				return false;
 			}
 		}
