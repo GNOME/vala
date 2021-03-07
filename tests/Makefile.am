@@ -856,6 +856,8 @@ TESTS = \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
 	semantic/array-invalid-type-argument.test \
+	semantic/array-too-few-type-arguments.test \
+	semantic/array-too-many-type-arguments.test \
 	semantic/assignment-element-incompatible-ownership.test \
 	semantic/assignment-element-incompatible-type.test \
 	semantic/assignment-fixed-array-length.test \
