@@ -256,13 +256,8 @@ public class Vala.ObjectCreationExpression : Expression {
 		value_type = type_reference.copy ();
 		value_type.value_owned = true;
 
-		int given_num_type_args = type_reference.get_type_arguments ().size;
-		int expected_num_type_args = 0;
-
 		if (type is Class) {
 			var cl = (Class) type;
-
-			expected_num_type_args = cl.get_type_parameters ().size;
 
 			if (struct_creation) {
 				error = true;
@@ -320,8 +315,6 @@ public class Vala.ObjectCreationExpression : Expression {
 		} else if (type is Struct) {
 			var st = (Struct) type;
 
-			expected_num_type_args = st.get_type_parameters ().size;
-
 			if (!struct_creation && !context.deprecated) {
 				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
@@ -337,13 +330,9 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 		}
 
-		if (expected_num_type_args > given_num_type_args) {
+		// check whether there is the expected amount of type-arguments
+		if (!type_reference.check_type_arguments (context)) {
 			error = true;
-			Report.error (source_reference, "too few type arguments");
-			return false;
-		} else if (expected_num_type_args < given_num_type_args) {
-			error = true;
-			Report.error (source_reference, "too many type arguments");
 			return false;
 		}
 
