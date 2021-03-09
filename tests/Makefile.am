@@ -168,9 +168,11 @@ TESTS = \
 	methods/parameter-ref-array-resize-captured.vala \
 	methods/parameter-ref-delegate.vala \
 	methods/parameter-ref-element-access.vala \
+	methods/preconditions-temp-variables.vala \
 	methods/prepostconditions.vala \
 	methods/prepostconditions-captured.vala \
 	methods/postconditions.vala \
+	methods/postconditions-temp-variables.vala \
 	methods/return-unowned-delegate.vala \
 	methods/same-name.vala \
 	methods/symbolresolution.vala \

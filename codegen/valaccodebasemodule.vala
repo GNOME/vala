@@ -6461,6 +6461,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_assert = true;
 
 		ccode.add_expression (cassert);
+
+		foreach (var value in temp_ref_values) {
+			ccode.add_expression (destroy_value (value));
+		}
+
+		temp_ref_values.clear ();
 	}
 
 	public unowned DataType? get_this_type () {
