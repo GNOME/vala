@@ -979,7 +979,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), class_param);
 		}
 
-		if (is_gtypeinstance_creation_method (m)) {
+		if (is_gtypeinstance_creation_method (m) && (direction & 1) == 1) {
 			// memory management for generic types
 			int type_param_index = 0;
 			var cl = (Class) m.parent_symbol;
