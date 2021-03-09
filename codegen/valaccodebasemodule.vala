@@ -3695,7 +3695,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (!is_gcollection && ccall.call is CCodeIdentifier && !(type is ArrayType) && !is_macro_definition) {
+		if (!is_gcollection && ccall.call is CCodeIdentifier && !(type is ArrayType) && !(type is GenericType) && !is_macro_definition) {
 			// generate and use NULL-aware free macro to simplify code
 
 			var freeid = (CCodeIdentifier) ccall.call;
