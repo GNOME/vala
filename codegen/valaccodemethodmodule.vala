@@ -977,7 +977,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		// memory management for generic types
 		List<TypeParameter>? type_parameters = null;
-		if (is_gtypeinstance_creation_method (m)) {
+		if (is_gtypeinstance_creation_method (m) && (direction & 1) == 1) {
 			type_parameters = ((Class) m.parent_symbol).get_type_parameters ();
 		} else if (!m.closure && (direction & 1) == 1) {
 			type_parameters = m.get_type_parameters ();
