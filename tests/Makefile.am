@@ -451,6 +451,7 @@ TESTS = \
 	objects/interface-inner-types.vala \
 	objects/interfaces.vala \
 	objects/interface-abstract-async-override.vala \
+	objects/interface-async-captured-generic.vala \
 	objects/interface-generics.vala \
 	objects/interface-property-base-access.vala \
 	objects/interface-property-base-impl.vala \
