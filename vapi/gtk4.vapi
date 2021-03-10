@@ -6008,6 +6008,7 @@ namespace Gsk {
 	public class ConicGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		[Version (since = "4.2")]
 		public float get_angle ();
 		public unowned Graphene.Point? get_center ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
@@ -6105,6 +6106,7 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_ngl_renderer_get_type ()")]
 	public class NglRenderer : Gsk.Renderer {
 		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[Version (since = "4.2")]
 		public NglRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
@@ -7398,6 +7400,7 @@ namespace Gtk {
 		public bool inconsistent { get; set; }
 		public string label { get; set; }
 		public bool use_underline { get; set; }
+		[Version (since = "4.2")]
 		public virtual signal void activate ();
 		public virtual signal void toggled ();
 	}
@@ -8708,8 +8711,9 @@ namespace Gtk {
 		public virtual void focus_in ();
 		public virtual void focus_out ();
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
+		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual bool get_surrounding (out string text, out int cursor_index);
-		public virtual bool get_surrounding_with_selection (string text, int cursor_index, int anchor_index);
+		public virtual bool get_surrounding_with_selection (out string text, out int cursor_index, out int anchor_index);
 		public virtual void reset ();
 		public virtual void set_client_widget (Gtk.Widget? widget);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
@@ -14250,7 +14254,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void disable_setlocale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
+	public static int distribute_natural_allocation (int extra_space, [CCode (array_length_cname = "n_requested_sizes", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RequestedSize[] sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]

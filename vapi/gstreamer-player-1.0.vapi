@@ -100,7 +100,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.Video.MultiviewFramePacking video_multiview_mode { get; set; }
 		[NoAccessorMethod]
-		public Gst.PlayerVideoRenderer video_renderer { construct; }
+		public Gst.PlayerVideoRenderer video_renderer { owned get; }
 		public double volume { get; set; }
 		public signal void buffering (int object);
 		public signal void duration_changed (uint64 object);
