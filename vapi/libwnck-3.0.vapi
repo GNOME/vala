@@ -61,6 +61,17 @@ namespace Wnck {
 		public virtual signal void icon_changed ();
 		public virtual signal void name_changed ();
 	}
+	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_image_menu_item_get_type ()")]
+	public class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ImageMenuItem ();
+		public void make_label_bold ();
+		public void make_label_normal ();
+		public void set_image_from_icon_pixbuf (Gdk.Pixbuf pixbuf);
+		public void set_image_from_window (Wnck.Window window);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public ImageMenuItem.with_label (string label);
+	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_pager_get_type ()")]
 	public class Pager : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -70,6 +81,7 @@ namespace Wnck {
 		public void set_display_mode (Wnck.PagerDisplayMode mode);
 		public bool set_n_rows (int n_rows);
 		public bool set_orientation (Gtk.Orientation orientation);
+		[Version (since = "3.36")]
 		public void set_scroll_mode (Wnck.PagerScrollMode scroll_mode);
 		[Version (since = "2.2")]
 		public void set_shadow_type (Gtk.ShadowType shadow_type);
@@ -363,9 +375,11 @@ namespace Wnck {
 		CONTENT
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_PAGER_SCROLL_", type_id = "wnck_pager_scroll_mode_get_type ()")]
+	[Version (since = "3.36")]
 	public enum PagerScrollMode {
 		@2D,
-		@1D
+		@1D,
+		NONE
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", cprefix = "WNCK_TASKLIST_", type_id = "wnck_tasklist_grouping_type_get_type ()")]
 	public enum TasklistGroupingType {
