@@ -497,6 +497,38 @@ public abstract class Vala.DataType : CodeNode {
 		return result;
 	}
 
+	public bool is_generic () {
+		if (this is GenericType) {
+			return true;
+		}
+
+		if (!has_type_arguments ()) {
+			return false;
+		}
+		foreach (var type_arg in type_argument_list) {
+			if (type_arg.is_generic ()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void replace_type_parameter (TypeParameter old_type_param, TypeParameter new_type_param) {
+		if (this is GenericType) {
+			unowned GenericType generic_type = (GenericType) this;
+			if (generic_type.type_parameter == old_type_param) {
+				generic_type.type_parameter = new_type_param;
+			}
+			return;
+		}
+		if (!has_type_arguments ()) {
+			return;
+		}
+		foreach (var type_arg in type_argument_list) {
+			type_arg.replace_type_parameter (old_type_param, new_type_param);
+		}
+	}
+
 	/**
 	 * Search for the type parameter in this formal type and match it in
 	 * value_type.
