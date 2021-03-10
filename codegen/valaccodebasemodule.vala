@@ -5926,8 +5926,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			generate_type_declaration (actual_type, cfile);
 			result = new CCodeCastExpression (cexpr, get_ccode_name (actual_type));
 		} else if (analyzer.is_signed_integer_type_argument (actual_type)) {
+			// FIXME this should not happen
+			while (cexpr is CCodeCastExpression) {
+				cexpr = ((CCodeCastExpression) cexpr).inner;
+			}
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (actual_type));
 		} else if (analyzer.is_unsigned_integer_type_argument (actual_type)) {
+			// FIXME this should not happen
+			while (cexpr is CCodeCastExpression) {
+				cexpr = ((CCodeCastExpression) cexpr).inner;
+			}
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), get_ccode_name (actual_type));
 		}
 		return result;
@@ -5937,8 +5945,16 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		unowned SemanticAnalyzer analyzer = context.analyzer;
 		var result = cexpr;
 		if (analyzer.is_signed_integer_type_argument (actual_type)) {
+			// FIXME this should not happen
+			while (cexpr is CCodeCastExpression) {
+				cexpr = ((CCodeCastExpression) cexpr).inner;
+			}
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "gintptr"), get_ccode_name (pointer_type));
 		} else if (analyzer.is_unsigned_integer_type_argument (actual_type)) {
+			// FIXME this should not happen
+			while (cexpr is CCodeCastExpression) {
+				cexpr = ((CCodeCastExpression) cexpr).inner;
+			}
 			result = new CCodeCastExpression (new CCodeCastExpression (cexpr, "guintptr"), get_ccode_name (pointer_type));
 		}
 		return result;

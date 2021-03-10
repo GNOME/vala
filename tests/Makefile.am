@@ -658,6 +658,7 @@ TESTS = \
 	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
+	generics/integer-member-access.vala \
 	generics/integer-type-cast.vala \
 	generics/integer-type-cast-return.vala \
 	generics/parameter-invalid-initializer.test \
