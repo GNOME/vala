@@ -1,3 +1,24 @@
+Vala 0.51.91
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Error for missing type-arguments of HashTable (de)serialization [#1147]
+    + Free intermediate temp-variables of postcondition expression [#80]
+    + Use the one available source_reference for internal error [#436]
+    + Fix access to captured generics in async method of interfaces [#537]
+    + Don't ever create null-aware free macro for GenericType
+    + Don't add generics arguments/parameters to async finish method
+    + Drop inner casts before converting between generics and integers
+  - vala:
+    + Add missing null-check in DataType.get_type_signature()
+    + Check array type of declarations for errornous type-arguments
+    + Check (optional) type-arguments of array creation expression
+    + Replace all type parameter occurances in parameters for signal delegate
+
+ * Bindings:
+  - glib-2.0,gio-2.0: Add some missing type-arguments
+  - vapi: Update GIR-based bindings
+
 Vala 0.51.90
 ============
  * Various improvements and bug fixes:
