@@ -904,9 +904,9 @@ namespace GnuTLS
 		public struct Ava
 		{
 			[CCode (cname = "oid.data", array_length_cname = "oid.size")]
-			uint8[] oid;
+			unowned uint8[] oid;
 			[CCode (cname = "value.data", array_length_cname = "value.size")]
-			uint8[] value;
+			unowned uint8[] value;
 			ulong value_tag;
 		}
 
@@ -1711,13 +1711,13 @@ namespace GnuTLS
 	{
 		public CertificateType type;
 		[CCode (cname = "cert.x509", array_length_cname = "ncerts", array_length_type = "unsigned int")]
-		public X509.Certificate[] cert_x509;
+		public unowned X509.Certificate[] cert_x509;
 		[CCode (cname = "cert.pgp")]
-		public OpenPGP.Certificate cert_pgp;
+		public unowned OpenPGP.Certificate cert_pgp;
 		[CCode (cname = "key.x509")]
-		public X509.PrivateKey key_x509;
+		public unowned X509.PrivateKey key_x509;
 		[CCode (cname = "key.pgp")]
-		public OpenPGP.PrivateKey key_pgp;
+		public unowned OpenPGP.PrivateKey key_pgp;
 		public uint deinit_all;
 	}
 
