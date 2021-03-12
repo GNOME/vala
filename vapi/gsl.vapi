@@ -910,7 +910,7 @@ namespace Gsl
 		public static int CL_array (double lmin, int kmax, double eta, [CCode (array_length = false)] double[] cl);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_coupling_", cheader_filename="gsl/gsl_coupling.h")]
+	[CCode (lower_case_cprefix="gsl_sf_coupling_", cheader_filename="gsl/gsl_sf_coupling.h")]
 	namespace Coupling
 	{
 		public static double 3j (int two_ja, int two_jb, int two_jc, int two_ma, int two_mb, int two_mc);
@@ -1003,7 +1003,7 @@ namespace Gsl
 		public static int RJ_e (double x, double y, double z, double p, Mode mode, out Result result);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_elljac_", cheader_filename="gsl/gsl_elljac.h")]
+	[CCode (lower_case_cprefix="gsl_sf_elljac_", cheader_filename="gsl/gsl_sf_elljac.h")]
 	namespace EllJac
 	{
 		public static int e (double u, double m, out double sn, out double cn, out double dn);
@@ -1074,7 +1074,7 @@ namespace Gsl
 		public static double atanint_e (double x, out Result result);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_fermi_dirac_", cheader_filename="gsl/gsl_sf_fermi_dirach.h")]
+	[CCode (lower_case_cprefix="gsl_sf_fermi_dirac_", cheader_filename="gsl/gsl_sf_fermi_dirac.h")]
 	namespace FermiDirac
 	{
 		public static double m1 (double x);
@@ -2552,7 +2552,7 @@ namespace Gsl
 	[CCode (cname="gsl_rng_type", cheader_filename="gsl/gsl_rng.h", has_type_id = false)]
 	public struct RNGType
 	{
-		public string name;
+		public unowned string name;
 		public ulong max;
 		public ulong min;
 		public size_t size;
@@ -2808,7 +2808,7 @@ namespace Gsl
 	[CCode (cname="gsl_qrng_type", cheader_filename="gsl/gsl_qrng.h", has_type_id = false)]
 	public struct QRNGType
 	{
-  		public string name;
+  		public unowned string name;
   		public uint max_dimension;
   		public QRNGStateSize state_size;
   		public QRNGInitState init_state;
@@ -3452,7 +3452,7 @@ namespace Gsl
 	[CCode (cname="gsl_odeiv_step_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivStepType
 	{
-		public string name;
+		public unowned string name;
 		public int can_use_dydt_in;
 		public int gives_exact_dydt_out;
 		public OdeivStepAlloc alloc;
@@ -3499,7 +3499,7 @@ namespace Gsl
 	[CCode (cname="gsl_odeiv_control_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivControlType
 	{
-		public string name;
+		public unowned string name;
 		public OdeivControlAlloc alloc;
 		public OdeivControlInit init;
 		public OdeivControlHadjust hadjust;
@@ -3585,7 +3585,7 @@ namespace Gsl
 	[CCode (cname="gsl_interp_type", cheader_filename="gsl/gsl_interp.h", has_type_id = false)]
 	public struct InterpType
 	{
-		public string name;
+		public unowned string name;
 		public uint min_size;
 		public InterpAlloc alloc;
 		public InterpInit init;
@@ -3768,7 +3768,7 @@ namespace Gsl
 	[CCode (cname="gsl_wavelet_type", cheader_filename="gsl/gsl_wavelet.h", has_type_id = false)]
 	public struct WaveletType
 	{
-		public string name;
+		public unowned string name;
 		public WaveletInit init;
 	}
 
@@ -3882,7 +3882,7 @@ namespace Gsl
 	[CCode (cname="gsl_root_fsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public RootFsolverSet @set;
 		public RootFsolverIterate iterate;
@@ -3910,7 +3910,7 @@ namespace Gsl
 	[CCode (cname="gsl_root_fdfsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public RootFdfsolverSet @set;
 		public RootFdfsolverIterate iterate;
@@ -3971,7 +3971,7 @@ namespace Gsl
 	[CCode (cname="gsl_min_fminimizer_type", cheader_filename="gsl/gsl_min.h", has_type_id = false)]
 	public struct MinFminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MinSet @set;
 		public MinIterate iterate;
@@ -4058,7 +4058,7 @@ namespace Gsl
 	[CCode (cname="gsl_multiroot_fsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultirootFAlloc alloc;
 		public MultirootFSet @set;
@@ -4100,7 +4100,7 @@ namespace Gsl
 	[CCode (cname="gsl_multiroot_fdfsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultirootFdfAlloc alloc;
 		public MultirootFdfSet @set;
@@ -4199,7 +4199,7 @@ namespace Gsl
 	[CCode (cname="gsl_multimin_fminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultiminFAlloc alloc;
 		public MultiminFSet @set;
@@ -4248,7 +4248,7 @@ namespace Gsl
 	[CCode (cname="gsl_multimin_fdfminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFdfminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultiminFdfAlloc alloc;
 		public MultiminFdfSet @set;
@@ -4373,7 +4373,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_function", cheader_filename="gls/gsl_multifit_nlin.h", has_type_id = false)]
+	[CCode (cname="gsl_multifit_function", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFunction
 	{
 		public MultifitF f;
@@ -4386,7 +4386,7 @@ namespace Gsl
 	[CCode (cname="gsl_multifit_fsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultifitFAlloc alloc;
 		public MultifitFSet @set;
@@ -4429,7 +4429,7 @@ namespace Gsl
 	[CCode (cname="gsl_multifit_fdfsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultifitFdfAlloc alloc;
 		public MultifitFdfSet @set;
