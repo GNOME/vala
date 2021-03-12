@@ -66,10 +66,6 @@ namespace Gsl
 		MASS_NEUTRON,
 		RYDBERG,
 		BOLTZMANN,
-		BOHR_MAGNETON,
-		NUCLEAR_MAGNETON,
-		ELECTRON_MAGNETIC_MOMENT,
-		PROTON_MAGNETIC_MOMENT,
 		MOLAR_GAS,
 		STANDARD_GAS_VOLUME,
 		MINUTE,
@@ -128,9 +124,6 @@ namespace Gsl
 		PSI,
 		POISE,
 		STOKES,
-		FARADAY,
-		ELECTRON_CHARGE,
-		GAUSS,
 		STILB,
 		LUMEN,
 		LUX,
@@ -169,10 +162,6 @@ namespace Gsl
 		MASS_NEUTRON,
 		RYDBERG,
 		BOLTZMANN,
-		BOHR_MAGNETON,
-		NUCLEAR_MAGNETON,
-		ELECTRON_MAGNETIC_MOMENT,
-		PROTON_MAGNETIC_MOMENT,
 		MOLAR_GAS,
 		STANDARD_GAS_VOLUME,
 		MINUTE,
@@ -231,9 +220,6 @@ namespace Gsl
 		PSI,
 		POISE,
 		STOKES,
-		FARADAY,
-		ELECTRON_CHARGE,
-		GAUSS,
 		STILB,
 		LUMEN,
 		LUX,
@@ -251,7 +237,13 @@ namespace Gsl
 		JOULE,
 		ERG,
 		STEFAN_BOLTZMANN_CONSTANT,
-		THOMSON_CROSS_SECTION
+		THOMSON_CROSS_SECTION,
+		BOHR_MAGNETON,
+		NUCLEAR_MAGNETON,
+		ELECTRON_MAGNETIC_MOMENT,
+		PROTON_MAGNETIC_MOMENT,
+		FARADAY,
+		ELECTRON_CHARGE
 	}
 
 	[CCode (cprefix="GSL_CONST_MKS_", cheader_filename="gsl/gsl_const_mks.h", has_type_id = false)]
@@ -272,10 +264,6 @@ namespace Gsl
 		MASS_NEUTRON,
 		RYDBERG,
 		BOLTZMANN,
-		BOHR_MAGNETON,
-		NUCLEAR_MAGNETON,
-		ELECTRON_MAGNETIC_MOMENT,
-		PROTON_MAGNETIC_MOMENT,
 		MOLAR_GAS,
 		STANDARD_GAS_VOLUME,
 		MINUTE,
@@ -334,9 +322,6 @@ namespace Gsl
 		PSI,
 		POISE,
 		STOKES,
-		FARADAY,
-		ELECTRON_CHARGE,
-		GAUSS,
 		STILB,
 		LUMEN,
 		LUX,
@@ -353,11 +338,18 @@ namespace Gsl
 		DYNE,
 		JOULE,
 		ERG,
+		BOHR_MAGNETON,
+		NUCLEAR_MAGNETON,
+		ELECTRON_MAGNETIC_MOMENT,
+		PROTON_MAGNETIC_MOMENT,
 		STEFAN_BOLTZMANN_CONSTANT,
 		THOMSON_CROSS_SECTION,
+		FARADAY,
+		ELECTRON_CHARGE,
 		VACUUM_PERMITTIVITY,
 		VACUUM_PERMEABILITY,
-		DEBYE
+		DEBYE,
+		GAUSS
 	}
 
 	[CCode (cprefix="GSL_CONST_MKSA_", cheader_filename="gsl/gsl_const_mksa.h", has_type_id = false)]
@@ -378,10 +370,6 @@ namespace Gsl
 		MASS_NEUTRON,
 		RYDBERG,
 		BOLTZMANN,
-		BOHR_MAGNETON,
-		NUCLEAR_MAGNETON,
-		ELECTRON_MAGNETIC_MOMENT,
-		PROTON_MAGNETIC_MOMENT,
 		MOLAR_GAS,
 		STANDARD_GAS_VOLUME,
 		MINUTE,
@@ -440,9 +428,6 @@ namespace Gsl
 		PSI,
 		POISE,
 		STOKES,
-		FARADAY,
-		ELECTRON_CHARGE,
-		GAUSS,
 		STILB,
 		LUMEN,
 		LUX,
@@ -461,9 +446,16 @@ namespace Gsl
 		ERG,
 		STEFAN_BOLTZMANN_CONSTANT,
 		THOMSON_CROSS_SECTION,
+		BOHR_MAGNETON,
+		NUCLEAR_MAGNETON,
+		ELECTRON_MAGNETIC_MOMENT,
+		PROTON_MAGNETIC_MOMENT,
+		FARADAY,
+		ELECTRON_CHARGE,
 		VACUUM_PERMITTIVITY,
 		VACUUM_PERMEABILITY,
-		DEBYE
+		DEBYE,
+		GAUSS
 	}
 
 
@@ -518,9 +510,9 @@ namespace Gsl
 		APPROX
 	}
 
-	[CCode (has_target = false)]
+	[CCode (cname = "gsl_error_handler_t*", has_target = false)]
 	public delegate void ErrorHandler (string reason, string file, int line, int errno);
-	[CCode (has_target = false)]
+	[CCode (cname = "gsl_stream_handler_t*", has_target = false)]
 	public delegate void StreamHandler (string label, string file, int line, string reason);
 
 	[CCode (lower_case_cprefix="gsl_", cheader_filename="gsl/gsl_errno.h")]
@@ -568,9 +560,9 @@ namespace Gsl
 
 	/* The isnan, isinf and finite are define in the double type. The elementary functions are in GLib.Math */
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate double _Function (double x, void* params);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void _FunctionFdf (double x, void* params, out double f, out double df);
 
 	[SimpleType]
@@ -910,7 +902,7 @@ namespace Gsl
 		public static int CL_array (double lmin, int kmax, double eta, [CCode (array_length = false)] double[] cl);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_coupling_", cheader_filename="gsl/gsl_coupling.h")]
+	[CCode (lower_case_cprefix="gsl_sf_coupling_", cheader_filename="gsl/gsl_sf_coupling.h")]
 	namespace Coupling
 	{
 		public static double 3j (int two_ja, int two_jb, int two_jc, int two_ma, int two_mb, int two_mc);
@@ -990,8 +982,8 @@ namespace Gsl
 		public static int E_e (double phi, double k, Mode mode, out Result result);
 		public static double P (double phi, double k, double n, Mode mode);
 		public static int P_e (double phi, double k, double n, Mode mode, out Result result);
-		public static double D (double phi, double k, double n, Mode mode);
-		public static int D_e (double phi, double k, double n, Mode mode, out Result result);
+		public static double D (double phi, double k, Mode mode);
+		public static int D_e (double phi, double k, Mode mode, out Result result);
 
 		public static double RC (double x, double y, Mode mode);
 		public static int RC_e (double x, double y, Mode mode, out Result result);
@@ -1003,7 +995,7 @@ namespace Gsl
 		public static int RJ_e (double x, double y, double z, double p, Mode mode, out Result result);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_elljac_", cheader_filename="gsl/gsl_elljac.h")]
+	[CCode (lower_case_cprefix="gsl_sf_elljac_", cheader_filename="gsl/gsl_sf_elljac.h")]
 	namespace EllJac
 	{
 		public static int e (double u, double m, out double sn, out double cn, out double dn);
@@ -1037,8 +1029,8 @@ namespace Gsl
 		public static int exp_mult_e10_e (double x, double y, out ResultE10 result);
 		public static int exp_err_e (double x, double dx, out Result result);
 		public static int exp_err_e10_e (double x, double dx, out ResultE10 result);
-		public static int exp_mul_err_e (double x, double dx, double y, double dy, out Result result);
-		public static int exp_mul_err_e10_e (double x, double dx, double y, double dy, out ResultE10 result);
+		public static int exp_mult_err_e (double x, double dx, double y, double dy, out Result result);
+		public static int exp_mult_err_e10_e (double x, double dx, double y, double dy, out ResultE10 result);
 		public static double expm1 (double x);
 		public static int expm1_e (double x, out Result result);
 		public static double exprel (double x);
@@ -1060,8 +1052,8 @@ namespace Gsl
 		public static int expint_En_e (int n, double x, out Result result);
 		public static double expint_Ei (double x);
 		public static int expint_Ei_e (double x, out Result result);
-		public static double expint_Ei_3 (double x);
-		public static int expint_Ei_3_e (double x, out Result result);
+		public static double expint_3 (double x);
+		public static int expint_3_e (double x, out Result result);
 		public static double Shi (double x);
 		public static int Shi_e (double x, out Result result);
 		public static double Chi (double x);
@@ -1074,7 +1066,7 @@ namespace Gsl
 		public static double atanint_e (double x, out Result result);
 	}
 
-	[CCode (lower_case_cprefix="gsl_sf_fermi_dirac_", cheader_filename="gsl/gsl_sf_fermi_dirach.h")]
+	[CCode (lower_case_cprefix="gsl_sf_fermi_dirac_", cheader_filename="gsl/gsl_sf_fermi_dirac.h")]
 	namespace FermiDirac
 	{
 		public static double m1 (double x);
@@ -1174,10 +1166,10 @@ namespace Gsl
 		[CCode (cname="gsl_sf_gegenpoly_3_e")]
 		public static double C3_e (double lambda, double x, out Result result);
 		[CCode (cname="gsl_sf_gegenpoly_n")]
-		public static double Cn (double lambda, double x);
+		public static double Cn (int n, double lambda, double x);
 		[CCode (cname="gsl_sf_gegenpoly_n_e")]
-		public static double Cn_e (double lambda, double x, out Result result);
-		public static int array (int nmax, double lambda, double x, out Result result);
+		public static double Cn_e (int n, double lambda, double x, out Result result);
+		public static int array (int nmax, double lambda, double x, [CCode (array_length = false)] double[] result_array);
 	}
 
 	[CCode (lower_case_cprefix="gsl_sf_hyperg_", cheader_filename="gsl/gsl_sf_hyperg.h")]
@@ -1260,11 +1252,11 @@ namespace Gsl
 		public static double Plm (int l, int m, double x);
 		public static int Plm_e (int l, int m, double x, out Result result);
 		public static int Plm_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array);
-		public static int Plm_deriv_array (int lmax, int m, double x, double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
+		public static int Plm_deriv_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
 		public static double sphPlm (int l, int m, double x);
 		public static int sphPlm_e (int l, int m, double x, out Result result);
 		public static int sphPlm_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array);
-		public static int sphPlm_deriv_array (int lmax, int m, double x, double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
+		public static int sphPlm_deriv_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
 		public static int array_size (int lmax, int m);
 
 		[CCode (cname="gsl_sf_conicalP_half")]
@@ -1338,21 +1330,21 @@ namespace Gsl
 
 		public static int a_array (int order_min, int order_max, double qq, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 		public static int b_array (int order_min, int order_max, double qq, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
-		public static int a (int order, double qq, out Result result);
-		public static int b (int order, double qq, out Result result);
+		public static int a (int order, double qq);
+		public static int b (int order, double qq);
 		public static int a_coeff (int order, double qq, double aa, [CCode (array_length = false)] double[] coeff);
 		public static int b_coeff (int order, double qq, double aa, [CCode (array_length = false)] double[] coeff);
 
 		[CCode (cname="gsl_sf_mathieu_alloc")]
 		public MathieuWorkspace (size_t nn, double qq);
 
-		public static int ce (int order, double qq, double zz, out Result result);
-		public static int se (int order, double qq, double zz, out Result result);
+		public static int ce (int order, double qq, double zz);
+		public static int se (int order, double qq, double zz);
 		public static int ce_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 		public static int se_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 
-		public static int Mc (int kind, int order, double qq, double zz, out Result result);
-		public static int Ms (int kind, int order, double qq, double zz, out Result result);
+		public static int Mc (int kind, int order, double qq, double zz);
+		public static int Ms (int kind, int order, double qq, double zz);
 		public static int Mc_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 		public static int Ms_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 	}
@@ -1380,7 +1372,7 @@ namespace Gsl
 		public static int psi_1_e (double x, out Result result);
 
 		public static double psi_n (int n, double x);
-		public static int psi_e_n (int n, double x, out Result result);
+		public static int psi_n_e (int n, double x, out Result result);
 	}
 
 	[CCode (lower_case_cprefix="gsl_sf_", cheader_filename="gsl/gsl_sf_synchrotron.h")]
@@ -1619,8 +1611,8 @@ namespace Gsl
 
 		public VectorComplexView subvector (size_t i, size_t n);
 		public VectorComplexView subvector_with_stride (size_t i, size_t stride, size_t n);
-		public VectorView complex_real ();
-		public VectorView complex_imag ();
+		public VectorView const_real ();
+		public VectorView const_imag ();
 
 		public int memcpy (VectorComplex src);
 		public int swap (VectorComplex w);
@@ -1632,15 +1624,8 @@ namespace Gsl
 		public int sub (VectorComplex b);
 		public int mul (VectorComplex b);
 		public int div (VectorComplex b);
-		public int scale (double x);
-		public int add_constant (double x);
-
-		public double max ();
-		public double min ();
-		public void minmax (out double min_out, out double max_out);
-		public size_t max_index ();
-		public size_t min_index ();
-		public void minmax_index (out size_t imin, out size_t imax);
+		public int scale (Complex x);
+		public int add_constant (Complex x);
 
 		public bool isnull ();
 		public bool ispos ();
@@ -1657,7 +1642,7 @@ namespace Gsl
 		public static MatrixView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
 		public static MatrixView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);
 		public static MatrixView vector (Vector v, size_t n1, size_t n2);
-		public static MatrixView vectr_with_tda (Vector v, size_t n1, size_t n2, size_t tda);
+		public static MatrixView vector_with_tda (Vector v, size_t n1, size_t n2, size_t tda);
 	}
 
 	[Compact]
@@ -1680,7 +1665,9 @@ namespace Gsl
 		[CCode (cname="gsl_matrix_alloc_from_matrix")]
 		public Matrix.from_matrix (Matrix m, size_t k1, size_t k2, size_t n1, size_t n2);
 
+		[CCode (cname="gsl_vector_alloc_row_from_matrix")]
 		public Vector alloc_row_from_matrix (size_t i);
+		[CCode (cname="gsl_vector_alloc_col_from_matrix")]
 		public Vector alloc_col_from_matrix (size_t j);
 
 		public double @get (size_t i, size_t j);
@@ -1752,7 +1739,7 @@ namespace Gsl
 		public static MatrixComplexView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
 		public static MatrixComplexView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);
 		public static MatrixComplexView vector (VectorComplex v, size_t n1, size_t n2);
-		public static MatrixComplexView vectr_with_tda (VectorComplex v, size_t n1, size_t n2, size_t tda);
+		public static MatrixComplexView vector_with_tda (VectorComplex v, size_t n1, size_t n2, size_t tda);
 	}
 
 	[Compact]
@@ -1775,14 +1762,16 @@ namespace Gsl
 		[CCode (cname="gsl_matrix_complex_alloc_from_matrix")]
 		public MatrixComplex.from_matrix (MatrixComplex m, size_t k1, size_t k2, size_t n1, size_t n2);
 
+		[CCode (cname="gsl_vector_complex_alloc_row_from_matrix")]
 		public VectorComplex alloc_row_from_matrix (size_t i);
+		[CCode (cname="gsl_vector_complex_alloc_col_from_matrix")]
 		public VectorComplex alloc_col_from_matrix (size_t j);
 
-		public double @get (size_t i, size_t j);
-		public void @set (size_t i, size_t j, double x);
-		public double* ptr (size_t i, size_t j);
+		public Complex @get (size_t i, size_t j);
+		public void @set (size_t i, size_t j, Complex x);
+		public Complex* ptr (size_t i, size_t j);
 
-		public void set_all (double x);
+		public void set_all (Complex x);
 		public void set_zero ();
 		public void set_identity ();
 
@@ -1821,16 +1810,9 @@ namespace Gsl
 		public int sub (MatrixComplex b);
 		public int mul_elements (MatrixComplex b);
 		public int div_elements (MatrixComplex b);
-		public int scale (double x);
-		public int add_constant (double x);
-		public int add_diagonal (double x);
-
-		public double max ();
-		public double min ();
-		public void minmax (out double min_out, out double max_out);
-		public void max_index (out size_t imax, out size_t jmax);
-		public void min_index (out size_t imin, out size_t jmin);
-		public void minmax_index (out size_t imin, out size_t jmin, out size_t imax, out size_t jmax);
+		public int scale (Complex x);
+		public int add_constant (Complex x);
+		public int add_diagonal (Complex x);
 
 		public bool isnull ();
 		public bool ispos ();
@@ -1913,9 +1895,9 @@ namespace Gsl
 	namespace PermuteVectorComplex
 	{
 		[CCode (cname="gsl_permute_vector_complex")]
-		public static int permute (Permutation p, Vector v);
+		public static int permute (Permutation p, VectorComplex v);
 		[CCode (cname="gsl_permute_vector_complex_inverse")]
-		public static int permute_inverse (Permutation p, Vector v);
+		public static int permute_inverse (Permutation p, VectorComplex v);
 	}
 
 
@@ -2001,7 +1983,7 @@ namespace Gsl
 		public static int LU_refine (Matrix A, Matrix LU, Permutation p, Vector b, Vector x, Vector residual);
 		public static int complex_LU_refine (MatrixComplex A, MatrixComplex LU, Permutation p, VectorComplex b, VectorComplex x, VectorComplex residual);
 		public static int LU_invert (Matrix LU, Permutation p, Matrix inverse);
-		public static int complex_LU_invert (MatrixComplex LU, Permutation p, Matrix inverse);
+		public static int complex_LU_invert (MatrixComplex LU, Permutation p, MatrixComplex inverse);
 		public static double LU_det (Matrix LU, int signum);
 		public static Complex complex_LU_det (MatrixComplex LU, int signum);
 		public static double LU_lndet (Matrix LU);
@@ -2065,7 +2047,7 @@ namespace Gsl
 		public static int bidiag_unpack2 (Matrix A, Vector tau_U, Vector tau_V, Matrix V);
 		public static int bidiag_unpack_B (Matrix A, Vector diag, Vector superdiag);
 
-		public static int householder_tansform (Vector v);
+		public static int householder_transform (Vector v);
 		public static Complex complex_householder_transform (VectorComplex V);
 		public static int householder_hm (double tau, Vector v, Matrix A);
 		public static int complex_householder_hm (Complex tau, VectorComplex V, MatrixComplex A);
@@ -2140,7 +2122,7 @@ namespace Gsl
 		[CCode (cname="gsl_eigen_herm_alloc")]
 		public EigenHermWorkspace (size_t n);
 		[CCode (cname="gsl_eigen_herm", instance_pos=-1)]
-		public int init (MatrixComplex A, VectorComplex eval);
+		public int init (MatrixComplex A, Vector eval);
 	}
 
 	[Compact]
@@ -2157,7 +2139,7 @@ namespace Gsl
 		[CCode (cname="gsl_eigen_hermv_alloc")]
 		public EigenHermvWorkspace (size_t n);
 		[CCode (cname="gsl_eigen_hermv", instance_pos=-1)]
-		public int init (MatrixComplex A, VectorComplex eval, MatrixComplex evec);
+		public int init (MatrixComplex A, Vector eval, MatrixComplex evec);
 	}
 
 	[Compact]
@@ -2322,7 +2304,7 @@ namespace Gsl
 	/*
 	 * Fast Fourier Transforms (FFTs)
 	 */
-	[CCode (cname="gsl_fft_direction", cheader_filename="gsl/gsl_fft.h", has_type_id = false)]
+	[CCode (cname="gsl_fft_direction", cprefix = "gsl_fft_", cheader_filename="gsl/gsl_fft.h", has_type_id = false)]
 	public enum FFTDirection
 	{
 		forward = -1,
@@ -2336,11 +2318,12 @@ namespace Gsl
 		public size_t n;
 		public size_t nf;
 		public size_t factor[64];
-		public Complex twiddle[64];
-		public Complex trig;
+		public Complex* twiddle[64];
+		public Complex* trig;
 
 		[CCode (cname="gsl_fft_complex_wavetable_alloc")]
 		public FFTComplexWavetable (size_t n);
+		[CCode (cname="gsl_fft_complex_memcpy")]
 		public int memcpy (FFTComplexWavetable src);
 	}
 
@@ -2355,7 +2338,6 @@ namespace Gsl
 		public FFTComplexWorkspace (size_t n);
 	}
 
-	[Compact]
 	[CCode (lower_case_cprefix="gsl_fft_complex_", cheader_filename="gsl/gsl_fft_complex.h")]
 	namespace FFTComplex
 	{
@@ -2381,8 +2363,8 @@ namespace Gsl
 		public size_t n;
 		public size_t nf;
 		public size_t factor[64];
-		public Complex twiddle[64];
-		public Complex trig;
+		public Complex* twiddle[64];
+		public Complex* trig;
 
 		[CCode (cname="gsl_fft_real_wavetable_alloc")]
 		public FFTRealWavetable (size_t n);
@@ -2399,11 +2381,10 @@ namespace Gsl
 		public FFTRealWorkspace (size_t n);
 	}
 
-	[Compact]
 	[CCode (lower_case_cprefix="gsl_fft_real_", cheader_filename="gsl/gsl_fft_real.h")]
 	namespace FFTReal
 	{
-		public static int radix2_forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
 		public static int transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTRealWavetable wavetable, FFTRealWorkspace work);
 		public static int unpack ([CCode (array_length = false)] double[] real_coefficient, [CCode (array_length = false)] double[] complex_coeficient, size_t stride, size_t n);
 	}
@@ -2415,8 +2396,8 @@ namespace Gsl
 		public size_t n;
 		public size_t nf;
 		public size_t factor[64];
-		public Complex twiddle[64];
-		public Complex trig;
+		public Complex* twiddle[64];
+		public Complex* trig;
 
 		[CCode (cname="gsl_fft_halfcomplex_wavetable_alloc")]
 		public FFTHalfcomplexWavetable (size_t n);
@@ -2439,7 +2420,7 @@ namespace Gsl
 	/*
 	 * Numerical Integration
 	 */
-	[CCode (cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h", has_type_id = false)]
+	[CCode (cname = "enum gsl_integration_qawo_enum", cprefix="GSL_INTEG_", cheader_filename="gsl/gsl_integration.h", has_type_id = false)]
 	public enum QAWO
 	{
 		COSINE,
@@ -2523,7 +2504,7 @@ namespace Gsl
 		public static void qk61 (Function* f, double a, double b, out double result, out double abserr, out double resabs, out double resasc);
 		public static void qcheb (Function* f, double a, double b, out double cheb12, out double cheb24);
 
-		public static void qk (int n, [CCode (array_length = false)] double[] xgk, [CCode (array_length = false)] double[] wg, [CCode (array_length = false)] double[] wgk, [CCode (array_length = false)] double[] fv1, [CCode (array_length = false)] double[] fv2, Function* f, double a, double b, out double result, out double abserr, out double resabs, double resasc);
+		public static void qk (int n, [CCode (array_length = false)] double[] xgk, [CCode (array_length = false)] double[] wg, [CCode (array_length = false)] double[] wgk, [CCode (array_length = false)] double[] fv1, [CCode (array_length = false)] double[] fv2, Function* f, double a, double b, out double result, out double abserr, out double resabs, out double resasc);
 		public static int qng (Function* f, double a, double b, double epsabs, double epsrel, out double result, out double abserr, out size_t neval);
 		public static int qag (Function* f, double a, double b, double epsabs, double epsrel, size_t limit, int key, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qagi (Function* f, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
@@ -2541,18 +2522,18 @@ namespace Gsl
 	/*
 	 * Random Number Generation
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void RNGSetState (void *state, ulong seed);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate ulong RNGGetState (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate double RNGGetDouble (void* state);
 
 	[SimpleType]
 	[CCode (cname="gsl_rng_type", cheader_filename="gsl/gsl_rng.h", has_type_id = false)]
 	public struct RNGType
 	{
-		public string name;
+		public unowned string name;
 		public ulong max;
 		public ulong min;
 		public size_t size;
@@ -2797,18 +2778,18 @@ namespace Gsl
 	/*
 	 * Quasi-Random Sequences
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate size_t QRNGStateSize (uint dimension);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int QRNGInitState (void* state, uint dimension);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int QRNGGetState2 (void* state, uint dimension, out double x);
 
 	[SimpleType]
 	[CCode (cname="gsl_qrng_type", cheader_filename="gsl/gsl_qrng.h", has_type_id = false)]
 	public struct QRNGType
 	{
-  		public string name;
+  		public unowned string name;
   		public uint max_dimension;
   		public QRNGStateSize state_size;
   		public QRNGInitState init_state;
@@ -2989,7 +2970,7 @@ namespace Gsl
 
 		[CCode (cname="gsl_ran_discrete_preproc")]
 		public RanDiscrete (size_t K, double* P);
-		[CCode (cname="gsl_ran_discrete")]
+		[CCode (cname="gsl_ran_discrete", instance_pos = -1)]
 		public size_t discrete (RNG g);
 		[CCode (instance_pos=-1)]
 		public double pdf (size_t k);
@@ -3179,9 +3160,9 @@ namespace Gsl
 		public double cov ();
 
 		public double sum ();
-		public int equal_bins_p (Histogram h2) ;
-		public int add (Histogram h2);
-		public int sub (Histogram h2);
+		public int equal_bins_p (Histogram2d h2);
+		public int add (Histogram2d h2);
+		public int sub (Histogram2d h2);
 		public int mul (Histogram2d h2);
 		public int div (Histogram2d h2);
 		public int scale (double scale);
@@ -3191,7 +3172,7 @@ namespace Gsl
 		public int fwrite (GLib.FileStream stream);
 		[CCode (instance_pos=-1)]
 		public int fread (GLib.FileStream stream);
-		public static int fprintf (GLib.FileStream stream, Histogram h, string range_format, string bin_format);
+		public static int fprintf (GLib.FileStream stream, Histogram2d h, string range_format, string bin_format);
 		[CCode (instance_pos=-1)]
 		public int fscanf (GLib.FileStream stream);
 	}
@@ -3216,14 +3197,16 @@ namespace Gsl
 	/*
 	 * N-Tuples
 	 */
-	[CCode (has_target = false)]
-	public delegate int NTupleFunc (void* ntuple_data, void* params);
+	[CCode (has_target = false, has_typedef = false)]
+	public delegate int NTupleSelectFunc (void* ntuple_data, void* params);
+	[CCode (has_target = false, has_typedef = false)]
+	public delegate double NTupleValueFunc (void* ntuple_data, void* params);
 
 	[SimpleType]
 	[CCode (cname="gsl_ntuple_select_fn", cheader_filename="gsl/gsl_ntuple.h", has_type_id = false)]
 	public struct NTupleSelectFn
 	{
-		public NTupleFunc function;
+		public NTupleSelectFunc function;
 		public void* params;
 	}
 
@@ -3231,7 +3214,7 @@ namespace Gsl
 	[CCode (cname="gsl_ntuple_value_fn", cheader_filename="gsl/gsl_ntuple.h", has_type_id = false)]
 	public struct NTupleValueFn
 	{
-		public NTupleFunc function;
+		public NTupleValueFunc function;
 		public void* params;
 	}
 
@@ -3240,7 +3223,7 @@ namespace Gsl
 	public class NTuple
 	{
 		public GLib.FileStream file;
-		public void* ntrupel_data;
+		public void* ntuple_data;
 		public size_t size;
 
 		public static NTuple open (string filename, void* ntuple_data, size_t size);
@@ -3264,7 +3247,7 @@ namespace Gsl
 		STRATIFIED
 	}
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
 
 	[SimpleType]
@@ -3384,19 +3367,19 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_siman_", cheader_filename="gsl/gsl_siman.h", has_type_id = false)]
 	namespace Siman
 	{
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_Efunc_t", has_target = false)]
 		public delegate double Efunc_t (void *xp);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_step_t", has_target = false)]
 		public delegate void step_t (RNG r, void *xp, double step_size);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_metric_t", has_target = false)]
 		public delegate double metric_t (void *xp, void* yp);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_print_t", has_target = false)]
 		public delegate void print_t (void* xp);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_copy_t", has_target = false)]
 		public delegate void copy_t (void* source, void* dest);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_copy_construct_t", has_target = false)]
 		public delegate void copy_construct_t (void* xp);
-		[CCode (has_target = false)]
+		[CCode (cname = "gsl_siman_destroy_t", has_target = false)]
 		public delegate void destroy_t (void* xp);
 
 		public static void solve(RNG r, void *x0_p, Efunc_t Ef, step_t take_step, metric_t distance, print_t print_position, copy_t copyfunc, copy_construct_t copy_constructor, destroy_t destructor, size_t element_size, SimanParams params);
@@ -3415,27 +3398,27 @@ namespace Gsl
 		DEC
 	}
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivFunction (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dydt, void* params);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivJacobian (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dfdy, [CCode (array_length = false)] double[] dfdt, void* params);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void* OdeivStepAlloc (size_t dim);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivStepApply (void* state, size_t dim, double t, double h, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] dydt_in, [CCode (array_length = false)] double[] dydt_out, OdeivSystem* dydt);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivStepReset (void* state, size_t dim);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate uint OdeivStepOrder (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void OdeivStepFree (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void* OdeivControlAlloc ();
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivControlInit (void* state, double eps_abs, double eps_rel, double a_y, double a_dydt);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int OdeivControlHadjust (void* state, size_t dim, uint ord, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] yp, [CCode (array_length = false)] double[] h);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void OdeivControlFree (void* state);
 
 	[SimpleType]
@@ -3452,7 +3435,7 @@ namespace Gsl
 	[CCode (cname="gsl_odeiv_step_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivStepType
 	{
-		public string name;
+		public unowned string name;
 		public int can_use_dydt_in;
 		public int gives_exact_dydt_out;
 		public OdeivStepAlloc alloc;
@@ -3499,7 +3482,7 @@ namespace Gsl
 	[CCode (cname="gsl_odeiv_control_type", cheader_filename="gsl/gsl_odeiv.h", has_type_id = false)]
 	public struct OdeivControlType
 	{
-		public string name;
+		public unowned string name;
 		public OdeivControlAlloc alloc;
 		public OdeivControlInit init;
 		public OdeivControlHadjust hadjust;
@@ -3552,19 +3535,19 @@ namespace Gsl
 	/*
 	 * Interpolation
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void* InterpAlloc (size_t size);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int InterpInit (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int InterpEval (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int InterpEvalDeriv (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_p);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int InterpEvalDeriv2 (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_pp);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int InterpEvalInteg (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, InterpAccel* i, double a, double b, out double result);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void InterpFree (void* t);
 
 	[Compact]
@@ -3585,7 +3568,7 @@ namespace Gsl
 	[CCode (cname="gsl_interp_type", cheader_filename="gsl/gsl_interp.h", has_type_id = false)]
 	public struct InterpType
 	{
-		public string name;
+		public unowned string name;
 		public uint min_size;
 		public InterpAlloc alloc;
 		public InterpInit init;
@@ -3618,7 +3601,7 @@ namespace Gsl
 		public void* state;
 
 		[CCode (cname="gsl_interp_alloc")]
-		public Interp (InterpType T, size_t n);
+		public Interp (InterpType* T, size_t n);
 		public int init ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
 		public string name ();
 		public uint min_size ();
@@ -3660,7 +3643,7 @@ namespace Gsl
 	/*
 	 * Numerical Differentiation
 	 */
-	[CCode (lower_case_cprefix="gsl_deriv_", cheader_fileame="gsl/gsl_deriv.h")]
+	[CCode (lower_case_cprefix="gsl_deriv_", cheader_filename="gsl/gsl_deriv.h")]
 	namespace Deriv
 	{
 		public static int central (Function* f, double x, double h, out double result, out double abserr);
@@ -3754,21 +3737,21 @@ namespace Gsl
 	/*
 	 * Wavelet Transforms
 	 */
-	[CCode (has_type_id = false)]
+	[CCode (cname = "gsl_wavelet_direction", cprefix = "gsl_wavelet_", has_type_id = false)]
 	public enum WaveletDirection
 	{
 		forward = 1,
 		backward = -1
 	}
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int WaveletInit (double** h1, double** g1, double** h2, double** g2, size_t* nc, size_t* offset, size_t member);
 
 	[SimpleType]
 	[CCode (cname="gsl_wavelet_type", cheader_filename="gsl/gsl_wavelet.h", has_type_id = false)]
 	public struct WaveletType
 	{
-		public string name;
+		public unowned string name;
 		public WaveletInit init;
 	}
 
@@ -3817,25 +3800,25 @@ namespace Gsl
 		public int transform_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir, WaveletWorkspace work);
 		[CCode (cname="gsl_wavelet2d_transform_forward")]
 		public int transform_forward_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[CCode (cname="gsl_wavelet2d__transform_inverse")]
+		[CCode (cname="gsl_wavelet2d_transform_inverse")]
 		public int transform_inverse_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform")]
 		public int nstransform ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir,WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform_forward")]
 		public int nstransform_forward ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform_inverse")]
 		public int nstransform_inverse ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace * work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_transform_matrix")]
 		public int transform_matrix (Matrix a, WaveletDirection dir, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_transform_matrix_forward")]
 		public int transform_matrix_forward (Matrix a, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_transform_matrix_inverse")]
 		public int transform_matrix_inverse (Matrix a, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform_matrix")]
 		public int nstransform_matrix (Matrix a, WaveletDirection dir, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform_matrix_forward")]
 		public int nstransform_matrix_forward (Matrix a, WaveletWorkspace work);
-		[CCode (cprefix="gsl_wavelet2d_")]
+		[CCode (cname="gsl_wavelet2d_nstransform_matrix_inverse")]
 		public int nstransform_matrix_inverse (Matrix a, WaveletWorkspace work);
 	}
 
@@ -3869,20 +3852,20 @@ namespace Gsl
 	/*
 	 * One dimensional Root-Finding
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int RootFsolverSet (void* state, Function* f, double* root, double x_lower, double x_upper);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int RootFsolverIterate (void* state, Function* f, double* root, double* x_lower, double* x_upper);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int RootFdfsolverSet (void* state, FunctionFdf* f, double* root);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int RootFdfsolverIterate (void* state, FunctionFdf* d, double* root);
 
 	[SimpleType]
 	[CCode (cname="gsl_root_fsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public RootFsolverSet @set;
 		public RootFsolverIterate iterate;
@@ -3910,7 +3893,7 @@ namespace Gsl
 	[CCode (cname="gsl_root_fdfsolver_type", cheader_filename="gsl/gsl_roots.h", has_type_id = false)]
 	public struct RootFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public RootFdfsolverSet @set;
 		public RootFdfsolverIterate iterate;
@@ -3960,18 +3943,18 @@ namespace Gsl
 	/*
 	 * One dimensional Minimization
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MinSet (void* state, Function* f, double xminimun, double f_minimum, double x_lower, double f_lower, double x_upper, double f_upper);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MinIterate (void *state, Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MinBracketingFunction (Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper, size_t eval_max);
 
 	[SimpleType]
 	[CCode (cname="gsl_min_fminimizer_type", cheader_filename="gsl/gsl_min.h", has_type_id = false)]
 	public struct MinFminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MinSet @set;
 		public MinIterate iterate;
@@ -4019,27 +4002,27 @@ namespace Gsl
 	/*
 	 * Multidimensional Root-Finding
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootF (Vector x, void* params, Vector f);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFAlloc (void* state, size_t n);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFSet (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFIterate (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void MultirootFFree (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootDF (Vector x, void* params, Matrix df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFDF (Vector x, void* params, Vector f, Matrix df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFdfAlloc (void* state, size_t n);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFdfSet (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFdfIterate (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultirootFdfFree (void* state);
 
 	[SimpleType]
@@ -4058,7 +4041,7 @@ namespace Gsl
 	[CCode (cname="gsl_multiroot_fsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultirootFAlloc alloc;
 		public MultirootFSet @set;
@@ -4100,7 +4083,7 @@ namespace Gsl
 	[CCode (cname="gsl_multiroot_fdfsolver_type", cheader_filename="gsl/gsl_multiroots.h", has_type_id = false)]
 	public struct MultirootFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultirootFdfAlloc alloc;
 		public MultirootFdfSet @set;
@@ -4157,19 +4140,19 @@ namespace Gsl
 	/*
 	 * Multidimensional Minimization
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate double MultiminF (Vector x, void* params);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void MultiminDf (Vector x, void* params, Vector df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void MultiminFdf (Vector x, void* params, double* f, Vector df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFAlloc (void *state, size_t n);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFSet (void* state, MultiminFunction* f, Vector x, double* size);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFIterate (void* state, MultiminFunction* f, Vector x, double* size, double* fval);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFFree (void* state);
 
 	[SimpleType]
@@ -4199,7 +4182,7 @@ namespace Gsl
 	[CCode (cname="gsl_multimin_fminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultiminFAlloc alloc;
 		public MultiminFSet @set;
@@ -4233,22 +4216,22 @@ namespace Gsl
 		public static int size (double size, double epsabs);
 	}
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFdfAlloc (void *state, size_t n);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFdfSet (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, double step_size, double tol);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFdfIterate (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFdfRestart (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultiminFdfFree (void* state);
 
 	[SimpleType]
 	[CCode (cname="gsl_multimin_fdfminimizer_type", cheader_filename="gsl/gsl_multimin.h", has_type_id = false)]
 	public struct MultiminFdfminimizerType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultiminFdfAlloc alloc;
 		public MultiminFdfSet @set;
@@ -4302,7 +4285,7 @@ namespace Gsl
 	namespace Fit
 	{
 		public static int linear ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, out double sumsq);
-		public static int wlinear ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, double chisq);
+		public static int wlinear ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, out double chisq);
 		public static int linear_est (double x, double c0, double c1, double cov00, double cov01, double cov11, out double y, out double y_err);
 		public static int mul ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
 		public static int wmul ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
@@ -4331,7 +4314,7 @@ namespace Gsl
 	namespace Multifit
 	{
 		public static int linear (Matrix X, Vector y, Vector c, Matrix cov, out double chisq, MultifitLinearWorkspace work);
-		public static int linear_svd (Matrix X, Vector y, double tol, out size_t rank, Vector c, Matrix cov, out double chisq, MultifitLinearWorkspace work);
+		public static int linear_svd (Matrix X, MultifitLinearWorkspace work);
 		public static int wlinear (Matrix X, Vector w, Vector y, Vector c, Matrix cov, out double chisq, MultifitLinearWorkspace work);
 		public static int wlinear_svd (Matrix X, Vector w, Vector y, double tol, out size_t rank, Vector c, Matrix cov, out double chisq, MultifitLinearWorkspace work);
 		public static int linear_est (Vector x, Vector c, Matrix cov, out double y, out double y_err);
@@ -4342,27 +4325,27 @@ namespace Gsl
 	/*
 	 * Nonlinear Least-Squares Fitting
 	 */
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitF (Vector x, void* params, Vector f);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFAlloc (void* state, size_t n, size_t p);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFSet (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFIterate (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void MultifitFFree (void* state);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitDf (Vector x, void* params, Matrix df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFdf (Vector x, void* params, Vector f, Matrix df);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFdfAlloc (void* state, size_t n, size_t p);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFdfSet (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate int MultifitFdfIterate (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void MultifitFdfFree (void* state);
 
 	[CCode (lower_case_cprefix="gsl_multifit_", cheader_filename="gsl/gsl_multifit_nlin.h")]
@@ -4373,7 +4356,7 @@ namespace Gsl
 	}
 
 	[SimpleType]
-	[CCode (cname="gsl_multifit_function", cheader_filename="gls/gsl_multifit_nlin.h", has_type_id = false)]
+	[CCode (cname="gsl_multifit_function", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFunction
 	{
 		public MultifitF f;
@@ -4386,7 +4369,7 @@ namespace Gsl
 	[CCode (cname="gsl_multifit_fsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultifitFAlloc alloc;
 		public MultifitFSet @set;
@@ -4429,7 +4412,7 @@ namespace Gsl
 	[CCode (cname="gsl_multifit_fdfsolver_type", cheader_filename="gsl/gsl_multifit_nlin.h", has_type_id = false)]
 	public struct MultifitFdfsolverType
 	{
-		public string name;
+		public unowned string name;
 		public size_t size;
 		public MultifitFdfAlloc alloc;
 		public MultifitFdfSet @set;
@@ -4445,8 +4428,10 @@ namespace Gsl
 		public MultifitFunctionFdf* fdf;
 		public Vector x;
 		public Vector f;
-		public Vector J;
 		public Vector dx;
+		public Vector g;
+		public Vector sqrt_wts;
+		public size_t niter;
 		public void* state;
 
 		[CCode (cname="gsl_multifit_fdfsolver_alloc")]
