@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Matias De la Puente <mfpuente.ar@gmail.com>
+ * 	XX Wu <xwuanhkust@gmail.com> (add BLAS Module)
  */
 
 namespace Gsl
@@ -4484,6 +4485,129 @@ namespace Gsl
 		public int knots_uniform (double a, double b);
 		[CCode (instance_pos=-1)]
 		public int eval (double x, Vector B);
+	}
+
+	/*
+	 * BLAS Module
+	 */
+	[CCode (lower_case_cprefix="gsl_blas_", cheader_filename="gsl/gsl_blas.h")]
+	namespace Blas
+	{
+		/*
+		 * Enumerated and derived types in CBLAS, used by BLAS module
+		 */
+		[CCode (cname="CBLAS_ORDER_t", cprefix="Cblas", cheader_filename="gsl/gsl_blas_types.h", has_type_id = false)]
+		public enum Order {
+			RowMajor,
+			ColMajor
+		}
+		[CCode (cname="CBLAS_TRANSPOSE_t", cprefix="Cblas", cheader_filename="gsl/gsl_blas_types.h", has_type_id = false)]
+		public enum Transpose {
+			NoTrans,
+			Trans,
+			ConjTrans
+		}
+		[CCode (cname="CBLAS_UPLO_t", cprefix="Cblas", cheader_filename="gsl/gsl_blas_types.h", has_type_id = false)]
+		public enum Uplo {
+			Upper,
+			Lower
+		}
+		[CCode (cname="CBLAS_DIAG_t", cprefix="Cblas", cheader_filename="gsl/gsl_blas_types.h", has_type_id = false)]
+		public enum Diag {
+			NonUnit,
+			Unit
+		}
+		[CCode (cname="CBLAS_SIDE_t", cprefix="Cblas", cheader_filename="gsl/gsl_blas_types.h", has_type_id = false)]
+		public enum Side {
+			Left,
+			Right
+		}
+
+		/*
+		 * BLAS Routines with standard 4 prefixes (S, D, C, Z)
+		 *
+		 * Only D (double-precision) and Z (double-precision complex)
+		 * are allowed in Vala binding
+		 */
+
+		/* ========================================================================
+		 * Level 1
+		 * ========================================================================
+		 */
+		public static int ddot (Vector X, Vector Y, out double result);
+		public static int zdotu (VectorComplex X, VectorComplex Y, out Complex result);
+		public static int zdotc (VectorComplex X, VectorComplex Y, out Complex result);
+
+		public static double dnrm2 (Vector X);
+		public static double dasum (Vector X);
+		public static double dznrm2 (VectorComplex X);
+		public static double dzasum (VectorComplex X);
+
+		public static size_t idamax (Vector X);
+		public static size_t izamax (VectorComplex X);
+
+		public static int dswap (Vector X, Vector Y);
+		public static int dcopy (Vector X, Vector Y);
+		public static int daxpy (double alpha, Vector X, Vector Y);
+
+		public static int zswap (VectorComplex X, VectorComplex Y);
+		public static int zcopy (VectorComplex X, VectorComplex Y);
+		public static int zaxpy (Complex alpha, VectorComplex X, VectorComplex Y);
+
+		public static int drotg ([CCode (array_length = false)] double[] a, [CCode (array_length = false)] double[] b, [CCode (array_length = false)] double[] c, [CCode (array_length = false)] double[] s);
+		public static int drotmg ([CCode (array_length = false)] double[] d1, [CCode (array_length = false)] double[] d2, [CCode (array_length = false)] double[] b1, double b2, [CCode (array_length = false)] double[] P);
+		public static int drot (Vector X, Vector Y, double c, double s);
+		public static int drotm (Vector X, Vector Y, [CCode (array_length = false)] double[] P);
+
+		public static void dscal  (double alpha, Vector X);
+		public static void zscal  (Complex alpha, VectorComplex X);
+		public static void zdscal (double alpha, VectorComplex X);
+
+		/* ===========================================================================
+		 * Level 2
+		 * ===========================================================================
+		 */
+		public static int dgemv (Transpose transA, double alpha, Matrix A, Vector X, double beta, Vector Y);
+		public static int dtrmv (Uplo uplo, Transpose transA, Diag diag, Matrix A, Vector X);
+		public static int dtrsv (Uplo uplo, Transpose transA, Diag diag, Matrix A, Vector X);
+
+		public static int zgemv (Transpose transA, Complex alpha, MatrixComplex A, VectorComplex X, Complex beta, VectorComplex Y);
+		public static int ztrmv (Uplo uplo, Transpose transA, Diag diag, MatrixComplex A, VectorComplex X);
+		public static int ztrsv (Uplo uplo, Transpose transA, Diag diag, MatrixComplex A, VectorComplex X);
+
+		public static int dsymv (Uplo uplo, double alpha, Matrix A, Vector X, double beta, Vector Y);
+		public static int dger (double alpha, Vector X, Vector Y, Matrix A);
+		public static int dsyr (Uplo uplo, double alpha, Vector X, Matrix A);
+		public static int dsyr2 (Uplo uplo, double alpha, Vector X, Vector Y, Matrix A);
+
+		public static int zhemv (Uplo uplo, Complex alpha, MatrixComplex A, VectorComplex X, Complex beta, VectorComplex Y);
+		public static int zgeru (Complex alpha, VectorComplex X, VectorComplex Y, MatrixComplex A);
+		public static int zgerc (Complex alpha, VectorComplex X, VectorComplex Y, MatrixComplex A);
+		public static int zher (Uplo uplo, double alpha, VectorComplex X, MatrixComplex A);
+		public static int zher2 (Uplo uplo, Complex alpha, VectorComplex X, VectorComplex Y, MatrixComplex A);
+
+		/* ===========================================================================
+		 * Level 3
+		 * ===========================================================================
+		 */
+		public static int dgemm (Transpose transA, Transpose transB, double alpha, Matrix A, Matrix B, double beta, Matrix C);
+		public static int dsymm (Side side, Uplo uplo, double alpha, Matrix A, Matrix B, double beta, Matrix C);
+		public static int dsyrk (Uplo uplo, Transpose trans, double alpha, Matrix A, double beta, Matrix C);
+
+		public static int dsyr2k (Uplo uplo, Transpose trans, double alpha, Matrix A, Matrix B, double beta, Matrix C);
+		public static int dtrmm (Side side, Uplo uplo, Transpose transA, Diag diag, double alpha, Matrix A, Matrix B);
+		public static int dtrsm (Side side, Uplo uplo, Transpose transA, Diag diag, double alpha, Matrix A, Matrix B);
+
+		public static int zgemm (Transpose transA, Transpose transB, Complex alpha, MatrixComplex A, MatrixComplex B, Complex beta, MatrixComplex C);
+		public static int zsymm (Side side, Uplo uplo, Complex alpha, MatrixComplex A, MatrixComplex B, Complex beta, MatrixComplex C);
+		public static int zsyrk (Uplo uplo, Transpose trans, Complex alpha, MatrixComplex A, Complex beta, MatrixComplex C);
+		public static int zsyr2k (Uplo uplo, Transpose trans, Complex alpha, MatrixComplex A, MatrixComplex B, Complex beta, MatrixComplex C);
+		public static int ztrmm (Side side, Uplo uplo, Transpose transA, Diag diag, Complex alpha, MatrixComplex A, MatrixComplex B);
+		public static int ztrsm (Side side, Uplo uplo, Transpose transA, Diag diag, Complex alpha, MatrixComplex A, MatrixComplex B);
+
+		public static int zhemm (Side side, Uplo uplo, Complex alpha, MatrixComplex A, MatrixComplex B, Complex beta, MatrixComplex C);
+		public static int zherk (Uplo uplo, Transpose trans, double alpha, MatrixComplex A, double beta, MatrixComplex C);
+		public static int zher2k (Uplo uplo, Transpose trans, Complex alpha, MatrixComplex A, MatrixComplex B, double beta, MatrixComplex C);
 	}
 }
 
