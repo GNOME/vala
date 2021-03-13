@@ -5301,12 +5301,16 @@ namespace Gdk {
 		public unowned Gdk.Rectangle? get_anchor_rect ();
 		public void get_offset (out int dx, out int dy);
 		public Gdk.Gravity get_rect_anchor ();
+		[Version (since = "4.2")]
+		public void get_shadow_width (out int left, out int right, out int top, out int bottom);
 		public Gdk.Gravity get_surface_anchor ();
 		public unowned Gdk.PopupLayout @ref ();
 		public void set_anchor_hints (Gdk.AnchorHints anchor_hints);
 		public void set_anchor_rect (Gdk.Rectangle anchor_rect);
 		public void set_offset (int dx, int dy);
 		public void set_rect_anchor (Gdk.Gravity anchor);
+		[Version (since = "4.2")]
+		public void set_shadow_width (int left, int right, int top, int bottom);
 		public void set_surface_anchor (Gdk.Gravity anchor);
 		public void unref ();
 	}
@@ -6004,6 +6008,8 @@ namespace Gsk {
 	public class ConicGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
 		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		[Version (since = "4.2")]
+		public float get_angle ();
 		public unowned Graphene.Point? get_center ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 		public unowned Gsk.ColorStop[] get_color_stops ();
@@ -6096,6 +6102,12 @@ namespace Gsk {
 		public unowned Graphene.Point? get_end ();
 		public size_t get_n_color_stops ();
 		public unowned Graphene.Point? get_start ();
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_ngl_renderer_get_type ()")]
+	public class NglRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[Version (since = "4.2")]
+		public NglRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
 	public class OpacityNode : Gsk.RenderNode {
@@ -7388,6 +7400,8 @@ namespace Gtk {
 		public bool inconsistent { get; set; }
 		public string label { get; set; }
 		public bool use_underline { get; set; }
+		[Version (since = "4.2")]
+		public virtual signal void activate ();
 		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]
@@ -8697,8 +8711,9 @@ namespace Gtk {
 		public virtual void focus_in ();
 		public virtual void focus_out ();
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
+		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual bool get_surrounding (out string text, out int cursor_index);
-		public virtual bool get_surrounding_with_selection (string text, int cursor_index, int anchor_index);
+		public virtual bool get_surrounding_with_selection (out string text, out int cursor_index, out int anchor_index);
 		public virtual void reset ();
 		public virtual void set_client_widget (Gtk.Widget? widget);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
@@ -9117,7 +9132,7 @@ namespace Gtk {
 		public unowned Gtk.Adjustment get_adjustment ();
 		public unowned Gtk.ListBoxRow? get_row_at_index (int index_);
 		public unowned Gtk.ListBoxRow? get_row_at_y (int y);
-		public unowned Gtk.ListBoxRow get_selected_row ();
+		public unowned Gtk.ListBoxRow? get_selected_row ();
 		public GLib.List<weak Gtk.ListBoxRow> get_selected_rows ();
 		public Gtk.SelectionMode get_selection_mode ();
 		public bool get_show_separators ();
@@ -12081,7 +12096,7 @@ namespace Gtk {
 		public int get_margin_end ();
 		public int get_margin_start ();
 		public int get_margin_top ();
-		public unowned string? get_name ();
+		public unowned string get_name ();
 		public unowned Gtk.Native? get_native ();
 		public unowned Gtk.Widget? get_next_sibling ();
 		public double get_opacity ();
@@ -14239,7 +14254,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void disable_setlocale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static int distribute_natural_allocation (int extra_space, uint n_requested_sizes, Gtk.RequestedSize sizes);
+	public static int distribute_natural_allocation (int extra_space, [CCode (array_length_cname = "n_requested_sizes", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RequestedSize[] sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14260,8 +14275,6 @@ namespace Gtk {
 	public static uint get_minor_version ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void hsv_to_rgb (float h, float s, float v, out float r, out float g, out float b);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void im_modules_init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
