@@ -1644,7 +1644,10 @@ namespace Linux {
 
         [CCode (cname = "struct input_event", has_type_id = false, cheader_filename = "linux/input.h")]
         public struct Event {
+            [Version (deprecated = true, replacement = "Event.input_event_sec and Event.input_event_usec")]
             public Posix.timeval time;
+            public time_t input_event_sec;
+            public long input_event_usec;
             public uint16 type;
             public uint16 code;
             public int32 value;
