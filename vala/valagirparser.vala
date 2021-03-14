@@ -63,6 +63,7 @@ public class Vala.GirParser : CodeVisitor {
 		VFUNC_NAME,
 		VIRTUAL,
 		ABSTRACT,
+		COMPACT,
 		SEALED,
 		SCOPE,
 		STRUCT,
@@ -3521,7 +3522,11 @@ public class Vala.GirParser : CodeVisitor {
 		bool require_copy_free = false;
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
-			cl.set_attribute ("Compact", true);
+			if (metadata.has_argument (ArgumentType.COMPACT)) {
+				cl.set_attribute ("Compact", metadata.get_bool (ArgumentType.COMPACT));
+			} else {
+				cl.set_attribute ("Compact", true);
+			}
 			current.symbol = cl;
 		} else {
 			cl = (Class) current.symbol;
