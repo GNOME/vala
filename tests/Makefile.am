@@ -897,6 +897,7 @@ TESTS = \
 	semantic/class-singleton-non-gobject.test \
 	semantic/class-too-few-type-arguments.test \
 	semantic/class-too-many-type-arguments.test \
+	semantic/conditional-expression-incompatible.test \
 	semantic/conditional-expression-no-block.test \
 	semantic/constant-extern.test \
 	semantic/constant-pointer.test \
