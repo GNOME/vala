@@ -14121,6 +14121,8 @@ namespace Gtk {
 	public const int INPUT_ERROR;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_INTERFACE_AGE")]
 	public const int INTERFACE_AGE;
+	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_INVALID_LIST_POSITION")]
+	public const uint INVALID_LIST_POSITION;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_LEVEL_BAR_OFFSET_FULL")]
 	public const string LEVEL_BAR_OFFSET_FULL;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_LEVEL_BAR_OFFSET_HIGH")]
