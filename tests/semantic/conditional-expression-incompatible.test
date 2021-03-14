@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	string foo = "foo";
+	int bar = 42;
+	var manam = true ? foo : bar;
+}

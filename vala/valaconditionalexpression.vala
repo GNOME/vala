@@ -194,7 +194,8 @@ public class Vala.ConditionalExpression : Expression {
 			value_type = false_expression.value_type.copy ();
 		} else {
 			error = true;
-			Report.error (condition.source_reference, "Incompatible expressions");
+			var source_reference = new SourceReference (true_expression.source_reference.file, true_expression.source_reference.begin, false_expression.source_reference.end);
+			Report.error (source_reference, "Cannot resolve target type from `%s' and `%s'", true_expression.value_type.to_prototype_string (), false_expression.value_type.to_prototype_string ());
 			return false;
 		}
 
