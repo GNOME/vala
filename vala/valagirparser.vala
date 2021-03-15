@@ -2722,7 +2722,16 @@ public class Vala.GirParser : CodeVisitor {
 			type_name = ctype;
 		}
 
-		DataType type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated, ctype);
+		DataType type;
+		if (type_name != null) {
+			type = parse_type_from_gir_name (type_name, out no_array_length, out array_null_terminated, ctype);
+		} else {
+			// empty <type/>
+			no_array_length = false;
+			array_null_terminated = false;
+			type = new InvalidType ();
+			Report.error (get_current_src (), "empty type element");
+		}
 
 		// type arguments / element types
 		while (current_token == MarkupTokenType.START_ELEMENT) {
