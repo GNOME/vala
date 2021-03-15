@@ -6463,7 +6463,7 @@ namespace Gtk {
 		public void set_license_type (Gtk.License license_type);
 		public void set_logo (Gdk.Paintable? logo);
 		public void set_logo_icon_name (string? icon_name);
-		public void set_program_name (string name);
+		public void set_program_name (string? name);
 		public void set_system_information (string? system_information);
 		public void set_translator_credits (string? translator_credits);
 		public void set_version (string? version);
@@ -8205,9 +8205,10 @@ namespace Gtk {
 		public void unref ();
 		public unowned Gtk.ExpressionWatch watch (GLib.Object? this_, owned Gtk.ExpressionNotify notify);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false, ref_function = "gtk_expression_watch_ref", unref_function = "gtk_expression_watch_unref")]
-	[Compact]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_expression_watch_ref", type_id = "gtk_expression_watch_get_type ()", unref_function = "gtk_expression_watch_unref")]
 	public class ExpressionWatch {
+		[CCode (has_construct_function = false)]
+		protected ExpressionWatch ();
 		public bool evaluate (GLib.Value value);
 		public unowned Gtk.ExpressionWatch @ref ();
 		public void unref ();
@@ -11101,10 +11102,6 @@ namespace Gtk {
 		public signal void preedit_changed (string preedit);
 		public signal void toggle_overwrite ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	[Compact]
-	public class TextBTree {
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_text_buffer_get_type ()")]
 	public class TextBuffer : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -12310,6 +12307,8 @@ namespace Gtk {
 		public unowned Gtk.Widget? get_focus ();
 		public bool get_focus_visible ();
 		public unowned Gtk.WindowGroup get_group ();
+		[Version (since = "4.2")]
+		public bool get_handle_menubar_accel ();
 		public bool get_hide_on_close ();
 		public unowned string? get_icon_name ();
 		public bool get_mnemonics_visible ();
@@ -12339,6 +12338,8 @@ namespace Gtk {
 		public void set_display (Gdk.Display display);
 		public void set_focus (Gtk.Widget? focus);
 		public void set_focus_visible (bool setting);
+		[Version (since = "4.2")]
+		public void set_handle_menubar_accel (bool handle_menubar_accel);
 		public void set_hide_on_close (bool setting);
 		public void set_icon_name (string? name);
 		public static void set_interactive_debugging (bool enable);
@@ -12369,6 +12370,8 @@ namespace Gtk {
 		public Gtk.Widget focus_widget { owned get; set; }
 		[NoAccessorMethod]
 		public bool fullscreened { get; set construct; }
+		[Version (since = "4.2")]
+		public bool handle_menubar_accel { get; set; }
 		public bool hide_on_close { get; set; }
 		public string icon_name { get; set; }
 		[NoAccessorMethod]
@@ -12869,11 +12872,6 @@ namespace Gtk {
 		public int height;
 		public Gtk.Requisition? copy ();
 		public void free ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	public struct SettingsValue {
-		public weak string origin;
-		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_text_iter_get_type ()")]
 	public struct TextIter {
@@ -13527,7 +13525,9 @@ namespace Gtk {
 	public enum Ordering {
 		SMALLER,
 		EQUAL,
-		LARGER
+		LARGER;
+		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static Gtk.Ordering from_cmpfunc (int cmpfunc_result);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ORIENTATION_", type_id = "gtk_orientation_get_type ()")]
 	public enum Orientation {
