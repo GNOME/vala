@@ -125,6 +125,8 @@ dist_vapi_DATA = \
 	gstreamer-net-1.0.deps \
 	gstreamer-pbutils-1.0.vapi \
 	gstreamer-pbutils-1.0.deps \
+	gstreamer-play-1.0.vapi \
+	gstreamer-play-1.0.deps \
 	gstreamer-player-1.0.vapi \
 	gstreamer-player-1.0.deps \
 	gstreamer-riff-1.0.deps \
@@ -348,6 +350,7 @@ GSTREAMER_1_0_BINDINGS = \
 	gstreamer-audio-1.0 \
 	gstreamer-fft-1.0 \
 	gstreamer-pbutils-1.0 \
+	gstreamer-play-1.0 \
 	gstreamer-player-1.0 \
 	gstreamer-riff-1.0 \
 	gstreamer-rtp-1.0 \
@@ -558,6 +561,9 @@ gstreamer-net-1.0:
 
 gstreamer-pbutils-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-pbutils-1.0 --pkg gstreamer-base-1.0 --pkg gstreamer-audio-1.0 --pkg gstreamer-video-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPbutils-1.0.gir
+
+gstreamer-play-1.0:
+	$(GENVAPI) --library $(srcdir)/gstreamer-play-1.0 --pkg gstreamer-1.0 --pkg gstreamer-pbutils-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPlay-1.0.gir
 
 gstreamer-player-1.0:
 	$(GENVAPI) --library $(srcdir)/gstreamer-player-1.0 --pkg gstreamer-1.0 --pkg gstreamer-pbutils-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GstPlayer-1.0.gir

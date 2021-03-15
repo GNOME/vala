@@ -1,0 +1,6 @@
+* parent="Gst.Play"
+Play* name="Play(.+)"
+
+PlayVideoOverlayVideoRenderer
+	.new symbol_type="constructor"
+	.new_with_sink symbol_type="constructor"
