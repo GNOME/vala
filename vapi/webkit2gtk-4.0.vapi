@@ -743,7 +743,7 @@ namespace WebKit {
 		public uint16 get_port ();
 		[Version (since = "2.16")]
 		public unowned string? get_protocol ();
-		[Version (since = "2.16")]
+		[Version (deprecated = true, deprecated_since = "2.32", since = "2.16")]
 		public bool is_opaque ();
 		[Version (since = "2.16")]
 		public unowned WebKit.SecurityOrigin @ref ();
