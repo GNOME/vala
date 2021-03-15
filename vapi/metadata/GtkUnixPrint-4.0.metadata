@@ -1,0 +1,12 @@
+* cheader_filename="gtk/gtkunixprint.h"
+* skip
+
+PageSetupUnixDialog skip=false
+Printer skip=false
+PrinterFunc skip=false
+//PrintBackend skip=false
+PrintCapabilities skip=false
+PrintJob skip=false
+//PrintJobCompleteFunc skip=false
+PrintUnixDialog skip=false
+enumerate_printers skip=false
