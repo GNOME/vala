@@ -2,10 +2,10 @@
 
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
-	public class PageSetupUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager, Gtk.Root {
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_page_setup_unix_dialog_get_type ()")]
+	public class PageSetupUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public PageSetupUnixDialog (string title, Gtk.Window parent);
+		public PageSetupUnixDialog (string? title, Gtk.Window? parent);
 		public unowned Gtk.PageSetup get_page_setup ();
 		public unowned Gtk.PrintSettings get_print_settings ();
 		public void set_page_setup (Gtk.PageSetup page_setup);
@@ -14,7 +14,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
 	public abstract class PrintBackend : GLib.Object {
 	}
-	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_print_job_get_type ()")]
 	public class PrintJob : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public PrintJob (string title, Gtk.Printer printer, Gtk.PrintSettings settings, Gtk.PageSetup page_setup);
@@ -22,6 +22,7 @@ namespace Gtk {
 		public uint get_n_up ();
 		public Gtk.NumberUpLayout get_n_up_layout ();
 		public int get_num_copies ();
+		[CCode (array_length_pos = 0.1)]
 		public unowned Gtk.PageRange[] get_page_ranges ();
 		public Gtk.PageSet get_page_set ();
 		public Gtk.PrintPages get_pages ();
@@ -39,7 +40,7 @@ namespace Gtk {
 		public void set_n_up (uint n_up);
 		public void set_n_up_layout (Gtk.NumberUpLayout layout);
 		public void set_num_copies (int num_copies);
-		public void set_page_ranges (Gtk.PageRange[] ranges);
+		public void set_page_ranges ([CCode (array_length_cname = "n_ranges", array_length_pos = 1.1)] owned Gtk.PageRange[] ranges);
 		public void set_page_set (Gtk.PageSet page_set);
 		public void set_pages (Gtk.PrintPages pages);
 		public void set_reverse (bool reverse);
@@ -54,12 +55,12 @@ namespace Gtk {
 		public Gtk.PrintSettings settings { get; construct; }
 		public string title { get; construct; }
 		public bool track_print_status { get; set; }
-		public virtual signal void status_changed ();
+		public signal void status_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
-	public class PrintUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.ShortcutManager, Gtk.Root {
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_print_unix_dialog_get_type ()")]
+	public class PrintUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
-		public PrintUnixDialog (string title, Gtk.Window parent);
+		public PrintUnixDialog (string? title, Gtk.Window? parent);
 		public void add_custom_tab (Gtk.Widget child, Gtk.Widget tab_label);
 		public int get_current_page ();
 		public bool get_embed_page_setup ();
@@ -75,7 +76,7 @@ namespace Gtk {
 		public void set_has_selection (bool has_selection);
 		public void set_manual_capabilities (Gtk.PrintCapabilities capabilities);
 		public void set_page_setup (Gtk.PageSetup page_setup);
-		public void set_settings (Gtk.PrintSettings settings);
+		public void set_settings (Gtk.PrintSettings? settings);
 		public void set_support_selection (bool support_selection);
 		public int current_page { get; set; }
 		public bool embed_page_setup { get; set; }
@@ -87,7 +88,7 @@ namespace Gtk {
 		public Gtk.Printer selected_printer { get; }
 		public bool support_selection { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_printer_get_type ()")]
 	public class Printer : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Printer (string name, Gtk.PrintBackend backend, bool virtual_);
@@ -132,9 +133,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool paused { get; }
 		public string state_message { get; }
-		public virtual signal void details_acquired (bool p0);
+		public signal void details_acquired (bool success);
 	}
-	[CCode (cheader_filename = "gtk/gtkunixprint.h", cprefix = "GTK_PRINT_CAPABILITY_")]
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", cprefix = "GTK_PRINT_CAPABILITY_", type_id = "gtk_print_capabilities_get_type ()")]
 	[Flags]
 	public enum PrintCapabilities {
 		PAGE_SET,
@@ -150,8 +151,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", instance_pos = 1.9)]
 	public delegate void PrintJobCompleteFunc (Gtk.PrintJob print_job) throws GLib.Error;
-	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
+	[CCode (cheader_filename = "gtk/gtkunixprint.h", instance_pos = 1.9)]
 	public delegate bool PrinterFunc (Gtk.Printer printer);
 	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
-	public static void enumerate_printers (owned Gtk.PrinterFunc func, bool wait);
+	public static void enumerate_printers ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Gtk.PrinterFunc func, bool wait);
 }

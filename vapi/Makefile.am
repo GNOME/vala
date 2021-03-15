@@ -599,7 +599,9 @@ gtk+-unix-print-3.0:
 	$(GENVAPI) --library $(srcdir)/gtk+-unix-print-3.0 $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0-custom.vala $(PACKAGESDIR)/gtk+-unix-print-3.0/gtk+-unix-print-3.0.gi
 
 gtk4-unix-print:
-	$(GENVAPI) --library $(srcdir)/gtk4-unix-print $(PACKAGESDIR)/gtk4-unix-print/gtk4-unix-print-custom.vala $(PACKAGESDIR)/gtk4-unix-print/gtk4-unix-print.gi
+	ln -s $(GIRDIR)/Gtk-4.0.gir GtkUnixPrint-4.0.gir; \
+	$(GENVAPI) --library $(srcdir)/gtk4-unix-print --pkg gtk4 --pkg pangocairo --metadatadir $(METADATADIR) $(METADATADIR)/GtkUnixPrint-4.0-custom.vala GtkUnixPrint-4.0.gir; \
+	rm -f GtkUnixPrint-4.0.gir
 
 gtksourceview-2.0:
 	$(GENVAPI) --library $(srcdir)/gtksourceview-2.0 $(PACKAGESDIR)/gtksourceview-2.0/gtksourceview-2.0.gi
