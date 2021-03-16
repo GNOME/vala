@@ -1,4 +1,4 @@
-[CCode (cprefix = "FTDI_", lower_case_prefix = "ftdi_", cheader_filename = "ftdi.h")]
+[CCode (cprefix = "FTDI_", lower_case_cprefix = "ftdi_", cheader_filename = "ftdi.h")]
 namespace FTDI {
 
 	public const int DEFAULT_EEPROM_SIZE;

@@ -664,7 +664,7 @@ namespace Linux {
                 SET_TEARSYNC
             }
 
-            [Flags, CCode (cname = "int", has_type_id = false, prefix = "OMAPFB_CAPS_")]
+            [Flags, CCode (cname = "int", has_type_id = false, cprefix = "OMAPFB_CAPS_")]
             public enum Caps {
                 GENERIC_MASK,
                 LCDC_MASK,
