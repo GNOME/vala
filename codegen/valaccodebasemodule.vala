@@ -828,7 +828,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var cenum = new CCodeEnum (get_ccode_name (en));
 
-		cenum.modifiers |= (en.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+		if (en.version.deprecated) {
+			if (context.profile == Profile.GOBJECT) {
+				decl_space.add_include ("glib.h");
+			}
+			cenum.modifiers |= CCodeModifiers.DEPRECATED;
+		}
 
 		var current_cfile = cfile;
 		cfile = decl_space;
@@ -1649,6 +1654,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		if (prop.version.deprecated) {
+			if (context.profile == Profile.GOBJECT) {
+				decl_space.add_include ("glib.h");
+			}
 			function.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 

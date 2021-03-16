@@ -178,6 +178,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.version.deprecated) {
+			if (context.profile == Profile.GOBJECT) {
+				decl_space.add_include ("glib.h");
+			}
 			function.modifiers |= CCodeModifiers.DEPRECATED;
 		}
 

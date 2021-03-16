@@ -111,7 +111,13 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var ctypedef = new CCodeTypeDefinition (get_ccode_name (creturn_type), cfundecl);
-		ctypedef.modifiers |= (d.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+
+		if (d.version.deprecated) {
+			if (context.profile == Profile.GOBJECT) {
+				decl_space.add_include ("glib.h");
+			}
+			ctypedef.modifiers |= CCodeModifiers.DEPRECATED;
+		}
 
 		decl_space.add_type_declaration (ctypedef);
 	}
