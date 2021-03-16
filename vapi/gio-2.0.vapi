@@ -3436,14 +3436,19 @@ namespace GLib {
 		public bool condition_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Source create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (vfunc_name = "condition_check")]
+		[NoWrapper]
 		public virtual GLib.IOCondition datagram_condition_check (GLib.IOCondition condition);
 		[CCode (vfunc_name = "condition_wait")]
+		[NoWrapper]
 		public virtual bool datagram_condition_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "create_source")]
+		[NoWrapper]
 		public virtual GLib.Source datagram_create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (vfunc_name = "receive_messages")]
+		[NoWrapper]
 		public virtual int datagram_receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "send_messages")]
+		[NoWrapper]
 		public virtual int datagram_send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -3830,6 +3835,7 @@ namespace GLib {
 		public abstract bool is_readable ();
 		public ssize_t read_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "read_nonblocking")]
+		[NoWrapper]
 		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buffer) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableOutputStreamInterface", type_id = "g_pollable_output_stream_get_type ()")]
@@ -3840,10 +3846,12 @@ namespace GLib {
 		public abstract bool is_writable ();
 		public ssize_t write_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "write_nonblocking")]
+		[NoWrapper]
 		public abstract ssize_t write_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? buffer) throws GLib.Error;
 		[Version (since = "2.60")]
 		public GLib.PollableReturn writev_nonblocking ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "writev_nonblocking")]
+		[NoWrapper]
 		[Version (since = "2.60")]
 		public abstract GLib.PollableReturn writev_nonblocking_fn ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written) throws GLib.Error;
 	}
@@ -4929,9 +4937,9 @@ namespace GLib {
 	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant value, out void* result);
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", has_typedef = false)]
 	public delegate void SimpleActionActivateCallback (GLib.SimpleAction action, GLib.Variant? parameter);
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", has_typedef = false)]
 	public delegate void SimpleActionChangeStateCallback (GLib.SimpleAction action, GLib.Variant value);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable? cancellable = null);
