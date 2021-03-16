@@ -94,6 +94,7 @@ public class Vala.GirParser : CodeVisitor {
 		DESTROY_NOTIFY_CNAME,
 		FINISH_VFUNC_NAME,
 		NO_ACCESSOR_METHOD,
+		NO_WRAPPER,
 		CNAME,
 		DELEGATE_TARGET,
 		CTYPE;
@@ -3293,9 +3294,12 @@ public class Vala.GirParser : CodeVisitor {
 				} else {
 					m.is_virtual = true;
 				}
-				if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
+				if (metadata.has_argument (ArgumentType.NO_WRAPPER)) {
+					s.set_attribute ("NoWrapper", metadata.get_bool (ArgumentType.NO_WRAPPER), s.source_reference);
+				} else if (invoker == null && !metadata.has_argument (ArgumentType.VFUNC_NAME)) {
 					s.set_attribute ("NoWrapper", true, s.source_reference);
-				} if (current.girdata["name"] != name) {
+				}
+				if (current.girdata["name"] != name) {
 					m.set_attribute_string ("CCode", "vfunc_name", current.girdata["name"]);
 				}
 			} else if (symbol_type == "function") {
