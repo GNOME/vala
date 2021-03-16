@@ -759,6 +759,11 @@ TESTS = \
 	gtktemplate/gtkchild-without-gtktemplate.test \
 	gtktemplate/gtktemplate-gtkwidget-subclass.test \
 	annotations/deprecated.vala \
+	annotations/deprecated-delegate-minimal.vala \
+	annotations/deprecated-enum-minimal.vala \
+	annotations/deprecated-method-minimal.vala \
+	annotations/deprecated-property-minimal.vala \
+	annotations/deprecated-struct-minimal.vala \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
 	scanner/comment-not-closed.test \

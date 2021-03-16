@@ -77,7 +77,13 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		var instance_struct = new CCodeStruct ("_%s".printf (get_ccode_name (st)));
-		instance_struct.modifiers |= (st.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
+
+		if (st.version.deprecated) {
+			if (context.profile == Profile.GOBJECT) {
+				decl_space.add_include ("glib.h");
+			}
+			instance_struct.modifiers |= CCodeModifiers.DEPRECATED;
+		}
 
 		foreach (Field f in st.get_fields ()) {
 			if (f.binding == MemberBinding.INSTANCE)  {
