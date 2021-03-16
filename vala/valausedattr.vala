@@ -132,17 +132,14 @@ public class Vala.UsedAttr : CodeVisitor {
 	}
 
 	void check_unused_attr (Symbol sym) {
-		// optimize by not looking at all the symbols
-		if (sym.used) {
-			foreach (unowned Attribute attr in sym.attributes) {
-				var set = marked.get (attr.name);
-				if (set == null) {
-					Report.warning (attr.source_reference, "Attribute `%s' never used", attr.name);
-				} else {
-					foreach (var arg in attr.args.get_keys()) {
-						if (!set.contains (arg)) {
-							Report.warning (attr.source_reference, "Argument `%s' never used", arg);
-						}
+		foreach (unowned Attribute attr in sym.attributes) {
+			var set = marked.get (attr.name);
+			if (set == null) {
+				Report.warning (attr.source_reference, "Attribute `%s' never used", attr.name);
+			} else {
+				foreach (var arg in attr.args.get_keys()) {
+					if (!set.contains (arg)) {
+						Report.warning (attr.source_reference, "Argument `%s' never used", arg);
 					}
 				}
 			}
