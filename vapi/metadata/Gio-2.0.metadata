@@ -84,11 +84,11 @@ Cancellable
 Credentials
   .get_native skip=false
 DatagramBased
-  .condition_check#virtual_method virtual name="datagram_condition_check"
-  .condition_wait#virtual_method virtual name="datagram_condition_wait"
-  .create_source#virtual_method virtual name="datagram_create_source"
-  .receive_messages#virtual_method virtual name="datagram_receive_messages"
-  .send_messages#virtual_method virtual name="datagram_send_messages"
+  .condition_check#virtual_method virtual name="datagram_condition_check" no_wrapper
+  .condition_wait#virtual_method virtual name="datagram_condition_wait" no_wrapper
+  .create_source#virtual_method virtual name="datagram_create_source" no_wrapper
+  .receive_messages#virtual_method virtual name="datagram_receive_messages" no_wrapper
+  .send_messages#virtual_method virtual name="datagram_send_messages" no_wrapper
 DataInputStream
   .read_* throws="GLib.IOError"
   .read_line_finish_utf8 skip
@@ -283,11 +283,11 @@ Initable
 PollableInputStream
   .create_source type="GLib.PollableSource"
   .read_nonblocking.buffer type="uint8[]" array_length_idx=1
-  .read_nonblocking#virtual_method name="read_nonblocking_fn"
+  .read_nonblocking#virtual_method name="read_nonblocking_fn" no_wrapper
 PollableOutputStream
   .create_source type="GLib.PollableSource"
-  .write_nonblocking#virtual_method name="write_nonblocking_fn"
-  .writev_nonblocking#virtual_method name="writev_nonblocking_fn"
+  .write_nonblocking#virtual_method name="write_nonblocking_fn" no_wrapper
+  .writev_nonblocking#virtual_method name="writev_nonblocking_fn" no_wrapper
 TlsClientConnection
   .new nullable
   .accepted_cas type="GLib.List<GLib.ByteArray>"
