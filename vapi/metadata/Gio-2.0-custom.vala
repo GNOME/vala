@@ -177,7 +177,9 @@ namespace GLib {
 		}
 	}
 
+	[CCode (has_typedef = false)]
 	public delegate void SimpleActionActivateCallback (SimpleAction action, Variant? parameter);
+	[CCode (has_typedef = false)]
 	public delegate void SimpleActionChangeStateCallback (SimpleAction action, Variant value);
 	[CCode (cheader_filename = "gio/gio.h", cname = "GAsyncReadyCallback", instance_pos = 2.9)]
 	public delegate void TaskReadyCallback (GLib.Object? source_object, GLib.Task task);
