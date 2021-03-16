@@ -115,17 +115,17 @@ namespace GNet {
 	}
 
 	public class IOChannel {
-		[CCode(name = "gnet_io_channel_writen")]
+		[CCode(cname = "gnet_io_channel_writen")]
 		public static GLib.IOError writen(GLib.IOChannel chan, string buf,
 										  size_t len, out size_t bytes_written);
 
-		[CCode(name = "gnet_io_channel_readn")]
+		[CCode(cname = "gnet_io_channel_readn")]
 		public static GLib.IOError readn(GLib.IOChannel chan, string buf,
 										 size_t len, out size_t bytes_read);
-		[CCode(name = "gnet_io_channel_readline")]
+		[CCode(cname = "gnet_io_channel_readline")]
 		public static GLib.IOError readline(GLib.IOChannel chan, string buf,
 											size_t len, out size_t bytes_read);
-		[CCode(name = "gnet_io_channel_readline_strdup")]
+		[CCode(cname = "gnet_io_channel_readline_strdup")]
 		public static GLib.IOError readline_strdup(GLib.IOChannel chan,
 												   out string buf,
 												   size_t bytes_read);

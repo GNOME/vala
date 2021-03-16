@@ -1526,7 +1526,7 @@ namespace SDL {
 	}
 
 	[CCode (cname = "SDL_SetError")]
-	[PrintfFunction]
+	[PrintfFormat]
 	public static int set_error (string format, ...);
 
 	[CCode (cname = "SDL_GetError")]

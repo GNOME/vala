@@ -139,7 +139,7 @@ namespace ZLib {
 		public int inflate (int flush);
 		[CCode (cname = "inflateSetDictionary")]
 		public int set_dictionary ([CCode (array_length_type = "guint")] uint8[] dictionary);
-		[CCode (cnmae = "inflateSync")]
+		[CCode (cname = "inflateSync")]
 		public int sync ();
 		public int reset ();
 		public int prime (int bits, int value);
