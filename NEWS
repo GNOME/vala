@@ -1,3 +1,26 @@
+Vala 0.52.0
+===========
+ * Various improvements and bug fixes:
+  - codegen: Include "glib.h" for deprecated symbols (GOBJECT) [#1155]
+  - vala: Improve error for incompatible expressions in conditional expression
+  - vala: Check for unused attributes unconditionally
+  - girparser: Allow overriding of "Compact" attribute for classes
+  - girparser: Handle empty "<type/>" element and report an error
+  - girparser: Add support for NoWrapper metadata for methods
+  - build: Add --enable-test-asan configure option
+
+ * Bindings:
+  - gio-2.0: Add some missing NoWrapper and CCode.has_typedef attributes
+  - gnutls: Fix some binding errors
+  - gsl: Fix some binding errors
+  - gstreamer: Update from 1.19.0+ git master
+  - gtk4: Add Gtk.INVALID_LIST_POSITION [#1151]
+  - gtk4-unix-print: Switch to gir
+  - gtk4: Update to 4.1.2
+  - linux: Provide Input.Event.input_event_sec/input_event_usec fields [#1152]
+  - vapi: Fix a couple of attribute typos
+  - webkit2gtk-4.0: Update to 2.31.91
+
 Vala 0.51.91
 ============
  * Various improvements and bug fixes:
