@@ -1,3 +1,48 @@
+Vala 0.50.5
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + More use of get_ccode_type_name()
+    + "_first_array" parameter for params-array is variadic too
+    + Inherit GType from base struct of SimpleType structs
+    + Error for missing type-arguments of HashTable (de)serialization [#1147]
+    + Free intermediate temp-variables of postcondition expression [#80]
+    + Use the one available source_reference for internal error [#436]
+    + Fix access to captured generics in async method of interfaces [#537]
+    + Don't ever create null-aware free macro for GenericType
+    + Don't add generics arguments/parameters to async finish method
+    + Drop inner casts before converting between generics and integers
+    + Include "glib.h" for deprecated symbols (GOBJECT) [#1155]
+  - vala:
+    + Report warning if --target-glib=auto was not evaluated successfully
+    + Fix ownership inheritance of "unowned var" in foreach statement
+    + Add missing null-check in DataType.get_type_signature()
+    + Check array type of declarations for errornous type-arguments
+    + Check (optional) type-arguments of array creation expression
+    + Replace all type parameter occurances in parameters for signal delegate
+    + Improve error for incompatible expressions in conditional expression
+  - gdbus: Don't leak memory of deserialized arguments on error in wrapper method
+  - girparser:
+    + Reuse populated Node.gtype_struct_for instead of resolving again
+    + Evaluate "glib:type-struct" twice to pick up reparented structs
+    + Allow overriding of "Compact" attribute for classes
+    + Handle empty "<type/>" element and report an error
+    + Add support for NoWrapper metadata for methods
+  - testrunner: Include Gio-2.0/gio-2.0 for GIR tests too
+
+ * Bindings:
+  - glib-2.0,gio-2.0: Add some missing type-arguments
+  - gio-2.0: Add some missing NoWrapper and CCode.has_typedef attributes
+  - gnutls: Fix some binding errors
+  - gsl: Fix some binding errors
+  - gtk4: Add Gtk.INVALID_LIST_POSITION [#1151]
+  - gtk4-unix-print: Switch to gir
+  - gtk4: Update to 4.1.2
+  - libwnck-3.0: Update to 3.36.0
+  - linux: Provide Input.Event.input_event_sec/input_event_usec fields [#1152]
+  - vapi: Fix a couple of attribute typos
+  - webkit2gtk-4.0: Update to 2.31.91
+
 Vala 0.50.4
 ===========
  * Highlights:
