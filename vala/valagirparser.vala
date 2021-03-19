@@ -1468,10 +1468,14 @@ public class Vala.GirParser : CodeVisitor {
 		reader = new MarkupReader (source_file.filename);
 
 		// xml prolog
-		next ();
-		next ();
+		do {
+			next ();
+			if (current_token == MarkupTokenType.EOF) {
+				Report.error (get_current_src (), "unexpected end of file");
+				return;
+			}
+		} while (current_token != MarkupTokenType.START_ELEMENT && reader.name != "repository");
 
-		next ();
 		parse_repository ();
 
 		reader = null;
