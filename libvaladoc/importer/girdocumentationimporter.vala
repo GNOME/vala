@@ -849,7 +849,15 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 	private void parse_constant () {
 		start_element ("constant");
-		string c_identifier = reader.get_attribute ("c:type");
+		string c_identifier = reader.get_attribute ("c:identifier");
+		if (c_identifier == null) {
+			//TODO G-I seems to do this wrong
+			c_identifier = reader.get_attribute ("c:type");
+		}
+		if (c_identifier == null) {
+			skip_element ();
+			return ;
+		}
 		next ();
 
 		Api.GirSourceComment? comment = parse_symbol_doc ();
