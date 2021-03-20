@@ -968,6 +968,7 @@ public class Vala.MemberAccess : Expression {
 						inner_ma = (MemberAccess) inner_ma.inner;
 						inner_sym = inner_sym.parent_symbol;
 					}
+					inner_ma.qualified = true;
 					inner.check (context);
 				}
 			}
