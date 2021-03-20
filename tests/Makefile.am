@@ -1012,6 +1012,7 @@ TESTS = \
 	semantic/member-access-protected-invalid.test \
 	semantic/member-access-undefined.test \
 	semantic/member-access-static-with-instance.vala \
+	semantic/member-access-static-transformed-qualified.vala \
 	semantic/member-access-transformed-qualified.vala \
 	semantic/method-abstract.test \
 	semantic/method-abstract-body.test \
