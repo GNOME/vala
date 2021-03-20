@@ -69,10 +69,14 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		this.reader = new Vala.MarkupReader (source_file);
 
 		// xml prolog
-		next ();
-		next ();
+		do {
+			next ();
+			if (current_token == Vala.MarkupTokenType.EOF) {
+				error ("unexpected end of file");
+				return;
+			}
+		} while (current_token != Vala.MarkupTokenType.START_ELEMENT && reader.name != "repository");
 
-		next ();
 		parse_repository ();
 
 		reader = null;
