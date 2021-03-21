@@ -1,0 +1,1 @@
+VALAFLAGS="--keep-going"

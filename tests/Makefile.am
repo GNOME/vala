@@ -884,6 +884,7 @@ TESTS = \
 	parser/yield-return.vala \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
+	parser-keep-going/member-initializer.vala \
 	resolver/class-base-cycle.test \
 	resolver/interface-prerequisite-cycle.test \
 	resolver/peek-inner-types-ambiguous.test \
@@ -1244,6 +1245,7 @@ endif
 EXTRA_DIST = \
 	glib/tests-extra-environment.sh \
 	gtktemplate/tests-extra-environment.sh \
+	parser-keep-going/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
 	posix/tests-extra-environment.sh \

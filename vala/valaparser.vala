@@ -302,11 +302,11 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	string parse_identifier () throws ParseError {
+	string parse_identifier (bool required = false) throws ParseError {
 		try {
 			skip_identifier ();
 		} catch (ParseError e) {
-			if (context.keep_going) {
+			if (!required && context.keep_going) {
 				report_parse_error (e);
 				prev ();
 				return get_location_string ();
@@ -1060,16 +1060,16 @@ public class Vala.Parser : CodeVisitor {
 		return list;
 	}
 
-	MemberInitializer parse_member_initializer () throws ParseError {
+	MemberInitializer parse_member_initializer (bool chained = false) throws ParseError {
 		var begin = get_location ();
-		string id = parse_identifier ();
+		string id = parse_identifier (chained);
 		expect (TokenType.ASSIGN);
 
 		var inner = get_location ();
 		Expression expr;
 		try {
 			// chained member initializer
-			expr = parse_member_initializer ();
+			expr = parse_member_initializer (true);
 		} catch {
 			rollback (inner);
 			expr = parse_expression ();
