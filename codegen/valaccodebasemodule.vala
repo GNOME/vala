@@ -4398,7 +4398,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			// memory management, implicit casts, and boxing/unboxing
-			if (expr.value_type != null) {
+			if (expr is CastExpression && expr.value_type != null && !(expr.value_type is PointerType)
+			    && ((CastExpression) expr).inner.value_type is PointerType) {
+				// allow ownership transfer from pointer to non-pointer
+			} else if (expr.value_type != null) {
 				// FIXME: temporary workaround until the refactoring is complete, not all target_value have a value_type
 				expr.target_value.value_type = expr.value_type;
 				expr.target_value = transform_value (expr.target_value, expr.target_type, expr);

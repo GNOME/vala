@@ -360,6 +360,7 @@ TESTS = \
 	structs/struct-initializer-list-nested.vala \
 	structs/struct-no-gtype.vala \
 	structs/struct-no-gtype-inherit.vala \
+	structs/struct-pointer-cast.vala \
 	structs/struct-static-field-initializer.vala \
 	structs/struct-static-field-initializer-2.test \
 	structs/struct-static-property-initializer.test \
@@ -471,6 +472,7 @@ TESTS = \
 	objects/classes-implicit-implementation.vala \
 	objects/compact-class.vala \
 	objects/compact-class-destructor.vala \
+	objects/compact-class-pointer-cast.vala \
 	objects/compact-class-refcount.vala \
 	objects/compact-class-custom-ref.vala \
 	objects/constructor-abstract-public.test \
