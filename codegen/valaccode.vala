@@ -45,6 +45,25 @@ namespace Vala {
 		return get_ccode_attribute(node).const_name;
 	}
 
+	public static string get_ccode_struct_name (CodeNode node) {
+		unowned DataType? data_type = node as DataType;
+
+		if (data_type is ObjectType) {
+			return get_ccode_name (data_type.type_symbol);
+		} else if (data_type is ValueType && !data_type.nullable) {
+			return get_ccode_name (data_type.type_symbol);
+		} else if (data_type is ClassType || data_type is InterfaceType) {
+			return get_ccode_type_name ((ObjectTypeSymbol) data_type.type_symbol);
+		} else if (data_type is ErrorType) {
+			return "GError";
+		} else if (node is CType) {
+			return ((CType) node).ctype_name;
+		}
+
+		Report.error (node.source_reference, "internal: No type available");
+		return "";
+	}
+
 	public static string get_ccode_type_name (ObjectTypeSymbol sym) {
 		return get_ccode_attribute (sym).type_name;
 	}

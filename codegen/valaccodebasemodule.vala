@@ -5404,8 +5404,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public override void visit_sizeof_expression (SizeofExpression expr) {
 		generate_type_declaration (expr.type_reference, cfile);
 
+		string struct_name;
+		unowned DataType data_type = expr.type_reference;
+		if (data_type is PointerType) {
+			if (!(((PointerType) data_type).base_type is VoidType)) {
+				Report.warning (expr.source_reference, "Passing a pointer-type to `sizeof()' defaults to `sizeof(void*)'");
+			}
+			struct_name = "void*";
+		} else if (data_type is ValueType && data_type.nullable) {
+			// boxed-types are pointers too
+			Report.warning (expr.source_reference, "Passing a boxed-type to `sizeof()' defaults to `sizeof(void*)'");
+			struct_name = "void*";
+		} else {
+			struct_name = get_ccode_struct_name (data_type);
+		}
+
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		csizeof.add_argument (new CCodeIdentifier (get_ccode_name (expr.type_reference)));
+		csizeof.add_argument (new CCodeIdentifier (struct_name));
 		set_cvalue (expr, csizeof);
 	}
 
