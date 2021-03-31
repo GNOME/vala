@@ -3135,7 +3135,7 @@ namespace GLib {
 		public virtual unowned string get_default_warning ();
 		public unowned string get_description ();
 		public GLib.TlsPasswordFlags get_flags ();
-		[CCode (array_length_pos = 0.1)]
+		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 		public virtual unowned uint8[] get_value ();
 		public unowned string get_warning ();
 		public void set_description (string description);
