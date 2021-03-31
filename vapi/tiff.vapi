@@ -59,24 +59,21 @@ namespace Tiff {
 		public float Y0;
 		public float Z0;
 		public Display display;
-		[CCode (array_length = false)]
-		public float[] Yr2r;
-		[CCode (array_length = false)]
-		public float[] Yg2g;
-		[CCode (array_length = false)]
-		public float[] Yb2b;
+		public float Yr2r[CIELABTORGB_TABLE_RANGE + 1];
+		public float Yg2g[CIELABTORGB_TABLE_RANGE + 1];
+		public float Yb2b[CIELABTORGB_TABLE_RANGE + 1];
 	}
 
 	[CCode (cname = "TIFFCodec", has_type_id = false)]
 	public struct Codec {
-		public string name;
+		public unowned string name;
 		public uint16 scheme;
 		public InitMethod init;
 	}
 
 	[CCode (cname = "TIFFDisplay", has_type_id = false)]
 	public struct Display {
-		public float[,] d_mat;
+		public float d_mat[9];
 		public float d_YCR;
 		public float d_YCG;
 		public float d_YCB;
@@ -110,8 +107,9 @@ namespace Tiff {
 		TileSeparateRoutine separate;
 	}
 
-	[CCode (cname = "TIFFRGBAImage", has_type_id = false)]
-	public struct RGBAImage {
+	[CCode (cname = "TIFFRGBAImage", has_type_id = false, free_function = "TIFFRGBAImageEnd")]
+	[Compact]
+	public class RGBAImage {
 		public int get;
 		public TIFF tif;
 		public int stoponerr;
@@ -220,9 +218,9 @@ namespace Tiff {
 	public delegate int VSetMethod (TIFF p1, ttag_t p2, ...);
 	************************************************************* */
 	[CCode (cname = "tileContigRoutine", has_target = false)]
-	public delegate void TileContigRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar *p9);
+	public delegate void TileContigRoutine (RGBAImage p1, [CCode (array_length = false)] uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar *p9);
 	[CCode (cname = "tileSeparateRoutine", has_target = false)]
-	public delegate void TileSeparateRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar p9, uchar p10, uchar* p11, uchar* p12);
+	public delegate void TileSeparateRoutine (RGBAImage p1, [CCode (array_length = false)] uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar* p9, uchar* p10, uchar* p11, uchar* p12);
 
 	public const ttag_t CIELABTORGB_TABLE_RANGE;
 	public const ttag_t CLEANFAXDATA_CLEAN;
@@ -601,7 +599,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFOpen")]
 		public TIFF (string path, string mode);
 		[CCode (cname = "TIFFAccessTagMethods")]
-		public TagMethods AccessTagMethods ();
+		public TagMethods? AccessTagMethods ();
 		[CCode (cname = "TIFFCheckTile")]
 		public bool CheckTile (uint32 p1, uint32 p2, uint32 p3, tsample_t p4);
 		[CCode (cname = "TIFFCheckpointDirectory")]
@@ -631,17 +629,17 @@ namespace Tiff {
 		[CCode (cname = "TIFFDefaultTileSize")]
 		public void DefaultTileSize (out uint32 p1, out uint32 p2);
 		[CCode (cname = "TIFFFieldWithName")]
-		public unowned FieldInfo FieldWithName (string p1);
+		public unowned FieldInfo? FieldWithName (string p1);
 		[CCode (cname = "TIFFFieldWithTag")]
-		public unowned FieldInfo FieldWithTag (ttag_t p1);
+		public unowned FieldInfo? FieldWithTag (ttag_t p1);
 		[CCode (cname = "TIFFFileName")]
 		public unowned string FileName ();
 		[CCode (cname = "TIFFFileno")]
 		public int Fileno ();
 		[CCode (cname = "TIFFFindFieldInfo")]
-		public unowned FieldInfo FindFieldInfo (ttag_t p1, DataType p2);
+		public unowned FieldInfo? FindFieldInfo (ttag_t p1, DataType p2);
 		[CCode (cname = "TIFFFindFieldInfoByName")]
-		public unowned FieldInfo FindFieldInfoByName (string p1, DataType p2);
+		public unowned FieldInfo? FindFieldInfoByName (string p1, DataType p2);
 		[CCode (cname = "TIFFFlush")]
 		public bool Flush ();
 		[CCode (cname = "TIFFFlushData")]
@@ -687,7 +685,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFLastDirectory")]
 		public bool LastDirectory ();
 		[CCode (cname = "TIFFMergeFieldInfo")]
-		public void MergeFieldInfo (FieldInfo[] p1, int p2);
+		public void MergeFieldInfo ([CCode (array_length = false)] FieldInfo[] p1, int p2);
 		[CCode (cname = "TIFFNumberOfDirectories")]
 		public tdir_t NumberOfDirectories ();
 		[CCode (cname = "TIFFNumberOfStrips")]
@@ -705,7 +703,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFReadBufferSetup")]
 		public bool ReadBufferSetup (tdata_t p1, tsize_t p2);
 		[CCode (cname = "TIFFReadCustomDirectory")]
-		public bool ReadCustomDirectory (toff_t p1, FieldInfo[] p2, size_t p3);
+		public bool ReadCustomDirectory (toff_t p1, [CCode (array_length = false)] FieldInfo[] p2);
 		[CCode (cname = "TIFFReadDirectory")]
 		public bool ReadDirectory ();
 		[CCode (cname = "TIFFReadEXIFDirectory")]
@@ -806,7 +804,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFClientOpen")]
 		public static TIFF ClientOpen (string p1, string p2, thandle_t p3, ReadWriteProc p4, ReadWriteProc p5, SeekProc p6, CloseProc p7, SizeProc p8, MapFileProc p9, UnmapFileProc p10);
 		[CCode (cname = "TIFFCIELabToRGBInit")]
-		public static int CIELabToRGBInit (CIELabToRGB p1, Display p2, float[] p3);
+		public static int CIELabToRGBInit (CIELabToRGB p1, Display p2, [CCode(array_length = false)] float[] p3);
 		[CCode (cname = "TIFFCIELabToXYZ")]
 		public static void CIELabToXYZ (CIELabToRGB p1, uint p2, int p3, int p4, out float p5, out float p6, out float p7);
 		[CCode (cname = "TIFFDataWidth")]
@@ -820,13 +818,13 @@ namespace Tiff {
 		[CCode (cname = "TIFFGetVersion")]
 		public static unowned string GetVersion ();
 		[CCode (cname = "TIFFFindCODEC")]
-		public static unowned Codec FindCODEC (ushort p1);
+		public static unowned Codec? FindCODEC (ushort p1);
 		[CCode (cname = "TIFFGetBitRevTable")]
 		public static unowned string GetBitRevTable (int p1);
-		[CCode (cname = "TIFFGetConfiguredCODECs")]
-		public static Codec GetConfiguredCODECs ();
+		[CCode (cname = "TIFFGetConfiguredCODECs", array_length = false, array_null_terminated = true)]
+		public static Codec[] GetConfiguredCODECs ();
 		[CCode (cname = "TIFFRGBAImageBegin")]
-		public static int RGBAImageBegin (RGBAImage p1, TIFF p2, int p3, string[] p4);
+		public static int RGBAImageBegin (RGBAImage p1, TIFF p2, int p3, char p4[1024]);
 		[CCode (cname = "TIFFIsCODECConfigured")]
 		public static int IsCODECConfigured (ushort p1);
 		[CCode (cname = "TIFFRGBAImageEnd")]
@@ -836,9 +834,9 @@ namespace Tiff {
 		[CCode (cname = "TIFFReassignTagToIgnore")]
 		public static int ReassignTagToIgnore (IgnoreSense p1, int p2);
 		[CCode (cname = "TIFFRegisterCODEC")]
-		public static Codec RegisterCODEC (uint16 p1, string p2, InitMethod p3);
+		public static Codec? RegisterCODEC (uint16 p1, string p2, InitMethod p3);
 		[CCode (cname = "TIFFReverseBits")]
-		public static void ReverseBits (uchar[] p1, ulong p2);
+		public static void ReverseBits ([CCode (array_length = false)] uchar[] p1, ulong p2);
 		/* *******************************************************************************
 		[CCode (cname = "TIFFSetErrorHandler")]
 		public static ErrorHandler SetErrorHandler (ErrorHandler p1);
@@ -852,19 +850,19 @@ namespace Tiff {
 		[CCode (cname = "TIFFSetTagExtender")]
 		public static ExtendProc SetTagExtender (ExtendProc p1);
 		[CCode (cname = "TIFFSwabArrayOfDouble")]
-		public static void SwabArrayOfDouble (double[] p1, ulong p2);
+		public static void SwabArrayOfDouble ([CCode (array_length = false)] double[] p1, ulong p2);
 		[CCode (cname = "TIFFSwabArrayOfLong")]
-		public static void SwabArrayOfLong (uint32[] p1, ulong p2);
+		public static void SwabArrayOfLong ([CCode (array_length = false)] uint32[] p1, ulong p2);
 		[CCode (cname = "TIFFSwabArrayOfShort")]
-		public static void SwabArrayOfShort (uint16[] p1, ulong p2);
+		public static void SwabArrayOfShort ([CCode (array_length = false)] uint16[] p1, ulong p2);
 		[CCode (cname = "TIFFSwabArrayOfTriples")]
-		public static void SwabArrayOfTriples (uint8[] p1, ulong p2);
+		public static void SwabArrayOfTriples ([CCode (array_length = false)] uint8[] p1, ulong p2);
 		[CCode (cname = "TIFFSwabDouble")]
-		public static void SwabDouble (double[] p1);
+		public static void SwabDouble ([CCode (array_length = false)] double[] p1);
 		[CCode (cname = "TIFFSwabLong")]
-		public static void SwabLong (uint32[] p1);
+		public static void SwabLong ([CCode (array_length = false)] uint32[] p1);
 		[CCode (cname = "TIFFSwabShort")]
-		public static void SwabShort (uint16[] p1);
+		public static void SwabShort ([CCode (array_length = false)] uint16[] p1);
 		[CCode (cname = "TIFFUnRegisterCODEC")]
 		public static void UnRegisterCODEC (Codec p1);
 		[CCode (cname = "TIFFWarning")]
@@ -874,7 +872,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFXYZToRGB")]
 		public static void XYZToRGB (CIELabToRGB p1, float p2, float p3, float p4, out uint32 p5, out uint32 p6, out uint32 p7);
 		[CCode (cname = "TIFFYCbCrToRGBInit")]
-		public static int YCbCrToRGBInit (YCbCrToRGB p1, float[] p2, float[] p3);
+		public static int YCbCrToRGBInit (YCbCrToRGB p1, [CCode (array_length = false)] float[] p2, [CCode (array_length = false)] float[] p3);
 		[CCode (cname = "TIFFYCbCrtoRGB")]
 		public static void YCbCrtoRGB (YCbCrToRGB p1, uint32 p2, int32 p3, int32 p4, out uint32 p5, out uint32 p6, out uint32 p7);
 		[CCode (cname = "LogL10fromY")]
@@ -886,17 +884,17 @@ namespace Tiff {
 		[CCode (cname = "LogL16toY")]
 		public static double LogL16toY (int p1);
 		[CCode (cname = "LogLuv24fromXYZ")]
-		public static uint LogLuv24fromXYZ (float p1, int p2);
+		public static uint32 LogLuv24fromXYZ (float p1[3], int p2);
 		[CCode (cname = "LogLuv24toXYZ")]
-		public static void LogLuv24toXYZ (uint32 p1, float p2);
+		public static void LogLuv24toXYZ (uint32 p1, float p2[3]);
 		[CCode (cname = "LogLuv32fromXYZ")]
-		public static uint LogLuv32fromXYZ (float p1, int p2);
+		public static uint32 LogLuv32fromXYZ (float p1[3], int p2);
 		[CCode (cname = "LogLuv32toXYZ")]
-		public static void LogLuv32toXYZ (uint32 p1, float p2);
+		public static void LogLuv32toXYZ (uint32 p1, float p2[3]);
 		[CCode (cname = "XYZtoRGB24")]
-		public static void XYZtoRGB24 (float p1, uint8 p2);
+		public static void XYZtoRGB24 (float p1[3], uint8 p2[3]);
 		[CCode (cname = "uv_decode")]
-		public static int uv_decode (double p1, double p2, int p3);
+		public static int uv_decode (out double p1, out double p2, int p3);
 		[CCode (cname = "uv_encode")]
 		public static int uv_encode (double p1, double p2, int p3);
 	}
