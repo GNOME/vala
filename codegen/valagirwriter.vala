@@ -1008,7 +1008,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		buffer.append_printf ("<field name=\"%s\"", get_ccode_name (f));
 		if (f.variable_type.nullable) {
-			buffer.append_printf (" allow-none=\"1\"");
+			buffer.append_printf (" nullable=\"1\"");
 		}
 		write_symbol_attributes (f);
 		buffer.append_printf (">\n");
@@ -1560,7 +1560,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf (" caller-allocates=\"1\"");
 		}
 		if (type != null && type.nullable) {
-			buffer.append_printf (" allow-none=\"1\"");
+			if (tag == "parameter"
+			    && (direction == ParameterDirection.OUT || direction == ParameterDirection.REF)) {
+				buffer.append_printf (" optional=\"1\"");
+			} else {
+				buffer.append_printf (" nullable=\"1\"");
+			}
 		}
 
 		if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
