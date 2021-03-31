@@ -253,7 +253,7 @@ namespace Rest {
 		HTTP_HTTP_VERSION_NOT_SUPPORTED;
 		public static GLib.Quark quark ();
 	}
-	[CCode (cheader_filename = "rest/oauth-proxy.h", instance_pos = 3.9)]
+	[CCode (cheader_filename = "rest/oauth-proxy.h", cname = "OAuthProxyAuthCallback", instance_pos = 3.9)]
 	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error? error, GLib.Object? weak_object);
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = 3.9)]
 	public delegate void ProxyCallAsyncCallback (Rest.ProxyCall call, GLib.Error? error, GLib.Object? weak_object);
