@@ -1,4 +1,5 @@
 NULL =
+GIRDIR = $$($(PKG_CONFIG) gobject-introspection-1.0 --variable=girdir)
 
 check-girwriter: $(top_builddir)/compiler/valac
 	G_DEBUG=fatal-warnings $(top_builddir)/compiler/valac \
@@ -14,6 +15,9 @@ check-girwriter: $(top_builddir)/compiler/valac
 	tail -n +3 GirTest-1.0.gir | diff -wu $(srcdir)/GirTest-1.0.gir-expected - || exit 1;
 if HAVE_G_IR_COMPILER
 	$(G_IR_COMPILER) -o GirTest-1.0.typelib GirTest-1.0.gir;
+endif
+if HAVE_JING
+	$(JING) -c -e UTF-8 $(GIRDIR)/gir-1.2.rnc GirTest-1.0.gir || echo "Ignoring above error(s)";
 endif
 	rm -f girtest.vapi girtest.c;
 	G_DEBUG=fatal-warnings $(top_builddir)/vapigen/vapigen \
