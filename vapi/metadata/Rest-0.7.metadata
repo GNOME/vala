@@ -34,7 +34,7 @@ XmlNode cheader_filename="rest/rest-xml-node.h"
   .unref skip=false
 XmlParser cheader_filename="rest/rest-xml-parser.h"
 
-OAuthProxyAuthCallback cheader_filename="rest/oauth-proxy.h"
+OAuthProxyAuthCallback cheader_filename="rest/oauth-proxy.h" cname="OAuthProxyAuthCallback"
 	.error nullable=true
 	.weak_object nullable=true
 	.userdata closure=3
