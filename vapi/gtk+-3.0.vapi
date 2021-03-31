@@ -12384,7 +12384,7 @@ namespace Gtk {
 	[Version (since = "2.2")]
 	public delegate void ModuleDisplayInitFunc (Gdk.Display display);
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
-	public delegate void ModuleInitFunc ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] string[]? argv);
+	public delegate void ModuleInitFunc ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]

@@ -691,6 +691,7 @@ Widget
 
 // Sure
 binding_set_by_class.object_class type="GLib.ObjectClass"
+ModuleInitFunc.argv ref unowned
 *.ref unowned
 
 // These delegate types don't have targets in the typedefs, but they
