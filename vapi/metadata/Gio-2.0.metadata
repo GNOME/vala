@@ -246,7 +246,6 @@ Task
   .report_new_error skip
   .return_new_error skip=false printf_format
 TlsPassword
-  .get_value array array_length_idx=0
   .set_value#virtual_method.value owned
   .set_value#virtual_method.destroy default=GLib.free
 Vfs
