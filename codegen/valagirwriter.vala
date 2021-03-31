@@ -361,7 +361,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 		string? csymbol_prefix = get_ccode_lower_case_suffix (ns);
 		if (csymbol_prefix != null) {
-			buffer.append_printf (" c:symbol-prefix=\"%s\"", csymbol_prefix);
+			buffer.append_printf (" c:symbol-prefixes=\"%s\"", csymbol_prefix);
 		}
 		buffer.append_printf (">\n");
 		indent++;

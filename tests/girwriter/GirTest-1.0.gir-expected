@@ -4,7 +4,7 @@
 <include name="Gio" version="2.0"/>
 <package name="girtest"/>
 <c:include name="girtest.h"/>
-<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefix="gir_test">
+<namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefixes="gir_test">
 	<function name="nested_function" c:identifier="gir_test_nested_function">
 		<return-value transfer-ownership="full">
 			<type name="none" c:type="void"/>
