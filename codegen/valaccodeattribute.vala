@@ -771,7 +771,18 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 			} else if (sym is Signal) {
 				return Symbol.camel_case_to_lower_case (sym.name).replace ("_", "-");;
-			} else if (sym is LocalVariable || sym is Parameter) {
+			} else if (sym is LocalVariable) {
+				unowned string name = sym.name;
+				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
+					return "_%s_".printf (name);
+				} else {
+					return name;
+				}
+			} else if (sym is Parameter) {
+				unowned Parameter param = (Parameter) sym;
+				if (param.ellipsis) {
+					return "...";
+				}
 				unowned string name = sym.name;
 				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
 					return "_%s_".printf (name);
