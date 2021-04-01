@@ -82,6 +82,8 @@ namespace GirTest {
 		[NoWrapper]
 		public virtual async void no_wrapper_method_async () {
 		}
+		public virtual void method_implicit_params (int[] param1, owned DelegateTest param2) {
+		}
 		[HasEmitter]
 		public signal void some_signal (int param);
 		public static void static_method () {
@@ -284,6 +286,9 @@ namespace GirTest {
 		[NoWrapper]
 		public virtual async void no_wrapper_method_async () {
 		}
+
+		public virtual void method_implicit_params (int[] param1, owned DelegateTest param2) {
+		}
 	}
 
 	public abstract class AbstractObjectTest : Object {
@@ -305,6 +310,8 @@ namespace GirTest {
 
 		[NoWrapper]
 		public abstract async void no_wrapper_method_async ();
+
+		public abstract void method_implicit_params (int[] param1, owned DelegateTest param2);
 	}
 
 	public interface PrerequisiteTest : InterfaceTest {

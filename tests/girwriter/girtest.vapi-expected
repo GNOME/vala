@@ -7,6 +7,7 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public abstract class AbstractObjectTest : GLib.Object {
 		protected AbstractObjectTest ();
+		public abstract void method_implicit_params (int[] param1, owned GirTest.DelegateTest param2);
 		public abstract void method_int8_in (int8 param);
 		public abstract void method_int8_inout (ref int8 param);
 		public abstract void method_int8_out (out int8 param);
@@ -73,6 +74,7 @@ namespace GirTest {
 		public int[] int_in_int_in_array_return (int param1, int param2);
 		public ObjectTest.may_fail (int param) throws GirTest.ErrorTest;
 		public void method ();
+		public virtual void method_implicit_params (int[] param1, owned GirTest.DelegateTest param2);
 		public virtual void method_throw () throws GirTest.ErrorTest;
 		public void method_valist (int param, va_list vargs);
 		public void method_varargs (int param, ...);
@@ -126,6 +128,7 @@ namespace GirTest {
 	public interface InterfaceTest : GLib.Object {
 		public virtual async void coroutine_async ();
 		public virtual void int8_in (int8 param);
+		public virtual void method_implicit_params (int[] param1, owned GirTest.DelegateTest param2);
 		public virtual void method_valist (int param, va_list vargs);
 		[NoWrapper]
 		public virtual void no_wrapper_method ();
