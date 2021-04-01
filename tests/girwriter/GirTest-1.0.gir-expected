@@ -1027,9 +1027,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -1042,10 +1042,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1060,9 +1060,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1075,13 +1075,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="i1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1096,9 +1096,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1114,9 +1114,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1126,9 +1126,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1138,10 +1138,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1156,9 +1156,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1171,18 +1171,18 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param1" transfer-ownership="none">
-						<array length="1" c:type="gint*">
+						<array length="2" c:type="gint*">
 							<type name="gint" c:type="gint"/>
 						</array>
 					</parameter>
 					<parameter name="param1_length1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<parameter name="param2" transfer-ownership="none" closure="4" scope="notified" destroy="5">
 						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 					</parameter>
 					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
@@ -1200,9 +1200,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="i1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -1516,9 +1516,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -1531,9 +1531,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" direction="inout" transfer-ownership="full">
 						<type name="gint8" c:type="gint8*"/>
 					</parameter>
@@ -1546,9 +1546,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" direction="out" transfer-ownership="full">
 						<type name="gint8" c:type="gint8*"/>
 					</parameter>
@@ -1561,9 +1561,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1573,9 +1573,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -1591,13 +1591,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1612,9 +1612,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1627,9 +1627,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -1639,10 +1639,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -1657,9 +1657,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -1672,18 +1672,18 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param1" transfer-ownership="none">
-						<array length="1" c:type="gint*">
+						<array length="2" c:type="gint*">
 							<type name="gint" c:type="gint"/>
 						</array>
 					</parameter>
 					<parameter name="param1_length1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<parameter name="param2" transfer-ownership="none" closure="4" scope="notified" destroy="5">
 						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 					</parameter>
 					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
@@ -2334,9 +2334,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint8" c:type="gint8"/>
 					</parameter>
@@ -2349,10 +2349,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -2367,9 +2367,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -2382,9 +2382,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
@@ -2400,13 +2400,13 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="3" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -2421,9 +2421,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -2436,9 +2436,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -2448,10 +2448,10 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
-					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="1" scope="async">
+					</parameter>
+					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
 						<type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
 					</parameter>
 					<parameter name="_callback__target" transfer-ownership="none" allow-none="1">
@@ -2466,9 +2466,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="this" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
 					</parameter>
@@ -2481,18 +2481,18 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="param1" transfer-ownership="none">
-						<array length="1" c:type="gint*">
+						<array length="2" c:type="gint*">
 							<type name="gint" c:type="gint"/>
 						</array>
 					</parameter>
 					<parameter name="param1_length1" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
-					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<parameter name="param2" transfer-ownership="none" closure="4" scope="notified" destroy="5">
 						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 					</parameter>
 					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
@@ -2510,9 +2510,9 @@
 					<type name="gint" c:type="gint"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 				</parameters>
 			</callback>
 		</field>
@@ -2522,9 +2522,9 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<instance-parameter name="self" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
-					</instance-parameter>
+					</parameter>
 					<parameter name="value" transfer-ownership="none">
 						<type name="gint" c:type="gint"/>
 					</parameter>
