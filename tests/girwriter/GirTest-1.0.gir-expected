@@ -877,6 +877,60 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="method_implicit_params" c:identifier="gir_test_object_test_method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_implicit_params" invoker="method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<property name="some-property" writable="1" construct="1">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
@@ -1151,6 +1205,35 @@
 					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_implicit_params">
+			<callback name="method_implicit_params" c:type="method_implicit_params">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+					</instance-parameter>
+					<parameter name="param1" transfer-ownership="none">
+						<array length="1" c:type="gint*">
+							<type name="gint" c:type="gint"/>
+						</array>
+					</parameter>
+					<parameter name="param1_length1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+					</parameter>
+					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+					<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+						<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
 					</parameter>
 				</parameters>
 			</callback>
@@ -1438,6 +1521,60 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="method_implicit_params" c:identifier="gir_test_abstract_object_test_method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_implicit_params" invoker="method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 	</class>
 	<record name="AbstractObjectTestClass" c:type="GirTestAbstractObjectTestClass" glib:is-gtype-struct-for="AbstractObjectTest">
 		<field name="parent_class" readable="0" private="1">
@@ -1610,6 +1747,35 @@
 					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_implicit_params">
+			<callback name="method_implicit_params" c:type="method_implicit_params">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.AbstractObjectTest" c:type="GirTestAbstractObjectTest*"/>
+					</instance-parameter>
+					<parameter name="param1" transfer-ownership="none">
+						<array length="1" c:type="gint*">
+							<type name="gint" c:type="gint"/>
+						</array>
+					</parameter>
+					<parameter name="param1_length1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+					</parameter>
+					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+					<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+						<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
 					</parameter>
 				</parameters>
 			</callback>
@@ -2131,6 +2297,60 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
+		<method name="method_implicit_params" c:identifier="gir_test_interface_test_method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</method>
+		<virtual-method name="method_implicit_params" invoker="method_implicit_params">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="param1_length1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+					<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+				</parameter>
+				<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+					<type name="gpointer" c:type="void*"/>
+				</parameter>
+				<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+					<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
+				</parameter>
+			</parameters>
+		</virtual-method>
 		<function name="static_method" c:identifier="gir_test_interface_test_static_method">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
@@ -2368,6 +2588,35 @@
 					</instance-parameter>
 					<parameter name="_res_" transfer-ownership="none">
 						<type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+					</parameter>
+				</parameters>
+			</callback>
+		</field>
+		<field name="method_implicit_params">
+			<callback name="method_implicit_params" c:type="method_implicit_params">
+				<return-value transfer-ownership="full">
+					<type name="none" c:type="void"/>
+				</return-value>
+				<parameters>
+					<instance-parameter name="self" transfer-ownership="none">
+						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
+					</instance-parameter>
+					<parameter name="param1" transfer-ownership="none">
+						<array length="1" c:type="gint*">
+							<type name="gint" c:type="gint"/>
+						</array>
+					</parameter>
+					<parameter name="param1_length1" transfer-ownership="none">
+						<type name="gint" c:type="gint"/>
+					</parameter>
+					<parameter name="param2" transfer-ownership="none" closure="3" scope="notified" destroy="4">
+						<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
+					</parameter>
+					<parameter name="param2_target" transfer-ownership="none" allow-none="1">
+						<type name="gpointer" c:type="void*"/>
+					</parameter>
+					<parameter name="param2_target_destroy_notify" transfer-ownership="none" scope="call">
+						<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
 					</parameter>
 				</parameters>
 			</callback>

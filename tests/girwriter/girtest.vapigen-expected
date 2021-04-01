@@ -9,6 +9,7 @@ namespace GirTest {
 		[CCode (has_construct_function = false)]
 		protected AbstractObjectTest ();
 		public abstract void internal_method (int8 param);
+		public abstract void method_implicit_params ([CCode (array_length_cname = "param1_length1", array_length_pos = 1.5)] int[] param1, owned GirTest.DelegateTest param2);
 		public abstract void method_int8_in (int8 param);
 		public abstract void method_int8_inout (ref int8 param);
 		public abstract void method_int8_out (out int8 param);
@@ -105,6 +106,7 @@ namespace GirTest {
 		[CCode (cname = "gir_test_object_test_new_may_fail", has_construct_function = false)]
 		public ObjectTest.may_fail (int param) throws GirTest.ErrorTest;
 		public void method ();
+		public virtual void method_implicit_params ([CCode (array_length_cname = "param1_length1", array_length_pos = 1.5)] int[] param1, owned GirTest.DelegateTest param2);
 		public virtual void method_throw () throws GirTest.ErrorTest;
 		public void method_valist (int param, va_list vargs);
 		public void method_varargs (int param, ...);
@@ -163,6 +165,7 @@ namespace GirTest {
 		public virtual int get_property ();
 		public virtual void int8_in (int8 param);
 		public virtual void internal_method ();
+		public virtual void method_implicit_params ([CCode (array_length_cname = "param1_length1", array_length_pos = 1.5)] int[] param1, owned GirTest.DelegateTest param2);
 		[NoWrapper]
 		public virtual void no_wrapper_method ();
 		[NoWrapper]
