@@ -1190,9 +1190,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			foreach (Parameter param in params) {
-				write_param_or_return (param.variable_type, "parameter", ref index, get_ccode_array_length (param), param.name, get_parameter_comment (param), param.direction, false, false, param.ellipsis || param.params_array);
+				write_param_or_return (param.variable_type, "parameter", ref index, get_ccode_array_length (param), get_ccode_name (param), get_parameter_comment (param), param.direction, false, false, param.ellipsis || param.params_array);
 
-				write_implicit_params (param.variable_type, ref index, get_ccode_array_length (param), param.name, param.direction);
+				write_implicit_params (param.variable_type, ref index, get_ccode_array_length (param), get_ccode_name (param), param.direction);
 			}
 
 			if (ret_is_struct) {
@@ -1369,7 +1369,15 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_doc (get_method_comment (m));
 		}
 
-		write_params_and_return (params, m.get_type_parameters (), return_type, get_ccode_array_length (m), return_comment, false, m.this_parameter);
+		if (tag_name == "callback" && m.this_parameter != null) {
+			m.this_parameter.set_attribute_string ("CCode", "cname", "self");
+			var static_params = new ArrayList<Vala.Parameter> ();
+			static_params.add (m.this_parameter);
+			static_params.add_all (params);
+			write_params_and_return (static_params, m.get_type_parameters (), return_type, get_ccode_array_length (m), return_comment, false);
+		} else {
+			write_params_and_return (params, m.get_type_parameters (), return_type, get_ccode_array_length (m), return_comment, false, m.this_parameter);
+		}
 
 		indent--;
 		write_indent ();
