@@ -1042,7 +1042,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
@@ -1060,7 +1060,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
@@ -1075,7 +1075,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="i1" transfer-ownership="none">
@@ -1096,7 +1096,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
@@ -1138,7 +1138,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
@@ -1156,7 +1156,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
@@ -2349,7 +2349,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
@@ -2367,7 +2367,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
@@ -2400,7 +2400,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="param" transfer-ownership="none">
@@ -2421,7 +2421,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
@@ -2448,7 +2448,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
@@ -2466,7 +2466,7 @@
 					<type name="none" c:type="void"/>
 				</return-value>
 				<parameters>
-					<parameter name="this" transfer-ownership="none">
+					<parameter name="self" transfer-ownership="none">
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="_res_" transfer-ownership="none">
