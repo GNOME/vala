@@ -3676,7 +3676,7 @@ namespace WebKit {
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public abstract string lookup_namespace_uri (string prefix);
 		}
-		[CCode (cheader_filename = "webkit2/webkit-web-extension.h")]
+		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", has_typedef = false)]
 		public delegate void EventTargetFunc (WebKit.DOM.EventTarget target, WebKit.DOM.Event event);
 		[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cname = "WEBKIT_DOM_CSS_RULE_CHARSET_RULE")]
 		[Version (deprecated = true, deprecated_since = "2.22")]
