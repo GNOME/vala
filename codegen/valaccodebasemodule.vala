@@ -4952,7 +4952,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
 								carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
 								if (deleg_type.is_disposable ()) {
-									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), delegate_target_destroy_notify);
+									carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (param)), delegate_target_destroy_notify);
 								}
 							}
 						}
