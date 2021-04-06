@@ -223,7 +223,7 @@ namespace Linux {
         public struct FontDescription {
             public uint16 charcount;
             public uint16 charheight;
-            public string chardata;
+            public char* chardata;
         }
 
         [CCode (cname = "struct console_font_op", has_type_id = false, cheader_filename = "linux/kd.h")]
@@ -270,7 +270,8 @@ namespace Linux {
         [CCode (cname = "struct unimapdesc", has_type_id = false, cheader_filename = "linux/kd.h")]
         public struct UniMapDesc {
             public uint16 entry_ct;
-            UniPair entries;
+            [CCode (array_length_cname = "entry_ct")]
+            public UniPair[] entries;
         }
 
         [CCode (cname = "struct unimapinit", has_type_id = false, cheader_filename = "linux/kd.h")]
@@ -324,7 +325,7 @@ namespace Linux {
     [CCode (cheader_filename = "sys/epoll.h")]
     public int epoll_wait (int epfd, EpollEvent[] events, int timeout);
     [CCode (cheader_filename = "sys/epoll.h")]
-    public int epoll_pwait (int epfd, EpollEvent[] events, Posix.sigset_t? sigmask, int timeout);
+    public int epoll_pwait (int epfd, EpollEvent[] events, int timeout, Posix.sigset_t? sigmask);
     [CCode (cheader_filename = "sys/epoll.h")]
     public int epoll_ctl (int epfd, int op, int fd, EpollEvent? ev);
     [CCode (cheader_filename = "sys/epoll.h")]
@@ -543,7 +544,7 @@ namespace Linux {
             public uint16 set;
             public uint16 enable;
             public uint16 rop;
-            string mask;
+            public unowned string mask;
             public CurPos hot;
             public Image image;
         }
@@ -720,7 +721,7 @@ namespace Linux {
                 RGBX32,
             }
 
-            [CCode (cname = "omapfb_update_window", has_type_id = false)]
+            [CCode (cname = "struct omapfb_update_window", has_type_id = false)]
             public struct UpdateWindow {
                 public uint32 x;
                 public uint32 y;
@@ -889,7 +890,7 @@ namespace Linux {
                 return write_byte_data (file, command, oldvalue | (value & mask) );
             }
 
-            //[CCode (cheader_filename = "i2c.h")]
+            //[CCode (cheader_filename = "linux/i2c.h")]
             //int32 access(int file, char read_write, uint8 command, int size, union data *data);
             [CCode (cheader_filename = "i2c.h")]
             int32 write_quick (int file, uint8 value);
@@ -929,7 +930,7 @@ namespace Linux {
         public uint32 mask;
         public uint32 cookie;
         public uint32 len;
-        public string name;
+        public char name[0];
     }
 
     [Flags, CCode (cname = "int", cprefix = "IN_", has_type_id = false, cheader_filename = "sys/inotify.h")]
@@ -1426,7 +1427,7 @@ namespace Linux {
         [CCode (cheader_filename = "net/if.h")]
         public unowned string if_indextoname (uint ifindex, string ifname);
         [CCode (cheader_filename = "net/if.h")]
-        public IfNameindex if_nameindex ();
+        public IfNameindex? if_nameindex ();
 
         [CCode (cname = "int", cprefix = "IFF_", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h")]
         public enum IfFlag {
@@ -1465,8 +1466,7 @@ namespace Linux {
 
         [CCode (cname = "struct ifreq", has_type_id = false, cheader_filename = "netinet/in.h,net/if.h", destroy_function = "")]
         public struct IfReq {
-            [CCode (array_length = false)]
-            public char[] ifr_name;
+            public char ifr_name[INTERFACE_NAME_SIZE];
             public Posix.SockAddr ifr_addr;
             public Posix.SockAddr ifr_dstaddr;
             public Posix.SockAddr ifr_broadaddr;
@@ -1476,19 +1476,20 @@ namespace Linux {
             public int ifr_metric;
             public int ifr_mtu;
             public IfMap ifr_map;
-            public char[] ifr_slave;
-            public string ifr_data;
+            public char ifr_slave[INTERFACE_NAME_SIZE];
+            public char* ifr_data;
             public int ifr_ifindex;
             public int ifr_bandwidth;
             public int ifr_qlen;
-            public char[] ifr_newname;
+            public char ifr_newname[INTERFACE_NAME_SIZE];
         }
 
         [CCode (cname = "struct ifconf", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h", destroy_function = "")]
         public struct IfConf {
             public int ifc_len;
-            public string ifc_buf;
-            public IfReq ifc_req;
+            public char* ifc_buf;
+            [CCode (array_length_cname = "ifc_len")]
+            public IfReq[] ifc_req;
         }
 
         [CCode (cname = "struct ifaddrmsg", has_type_id = false, cheader_filename = "linux/if_addr.h", destroy_function = "")]
@@ -4494,8 +4495,7 @@ namespace Linux {
         [CCode (cname = "struct iwreq_data", has_type_id = false, cheader_filename = "linux/wireless.h", destroy_function = "")]
         public struct IwReqData
         {
-            [CCode (array_length = false)]
-            public string name;
+            public char name[Network.INTERFACE_NAME_SIZE];
             public IwPoint essid;
             public IwParam nwid;
             public IwFreq freq;
@@ -4518,8 +4518,7 @@ namespace Linux {
         [CCode (cname = "struct iwreq", has_type_id = false, cheader_filename = "linux/wireless.h", destroy_function = "")]
         public struct IwReq
         {
-            [CCode (array_length = false)]
-            public char[] ifr_name;
+            public char ifr_name[Network.INTERFACE_NAME_SIZE];
             public IwReqData u;
         }
 
