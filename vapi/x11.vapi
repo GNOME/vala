@@ -135,7 +135,7 @@ namespace X {
 		public string get_atom_name (X.Atom atom);
 
 		[CCode (cname = "XGetAtomNames")]
-		public Status get_atom_names (Atom[] atoms, [CCode (array_length = false)] out string[] names);
+		public Status get_atom_names (Atom[] atoms, [CCode (array_length = false)] string[] names);
 
 		[CCode (cname = "XDeleteProperty")]
 		public int delete_property (Window w, X.Atom property);
@@ -303,7 +303,7 @@ namespace X {
 		public string xserver_vendor_name ();
 
 		[CCode (cname = "XVendorRelease")]
-		public string xserver_vendor_release ();
+		public int xserver_vendor_release ();
 
 		[CCode (cname = "XMoveWindow")]
 		public void move_window (Window window, int x, int y);
@@ -489,9 +489,11 @@ namespace X {
 	[CCode (ref_function = "", unref_function = "")]
 	[Compact]
 	public class Visual {
+		[CCode (cname = "XVisualIDFromVisual")]
 		public VisualID get_visual_id ();
 	}
 
+	[CCode (cname = "XWindowChanges")]
 	public struct WindowChanges {
 		public int x;
 		public int y;
@@ -501,6 +503,8 @@ namespace X {
 		public Window sibling;
 		public int stack_mode;
 	}
+
+	[CCode (cname = "XSizeHints")]
 	public struct SizeHints {
 		public long @flags;
 		public int x;
@@ -973,7 +977,7 @@ namespace X {
 		public ulong serial;
 		public bool send_event;
 		public unowned Display display;
-		public Window window;
+		public Drawable drawable;
 		public int x;
 		public int y;
 		public int width;
@@ -989,8 +993,9 @@ namespace X {
 		public ulong serial;
 		public bool send_event;
 		public unowned Display display;
-		public Window window;
-		public int state;
+		public Drawable drawable;
+		public int major_code;
+		public int minor_code;
 	}
 
 	[CCode (cname = "XVisibilityEvent", has_type_id = false)]
@@ -1226,7 +1231,12 @@ namespace X {
 		public Window window;
 		public Atom message_type;
 		public int format;
-		public ClientMessageEventData data;
+		[CCode (cname = "data.b")]
+		public unowned char b[20];
+		[CCode (cname = "data.s")]
+		public unowned short s[10];
+		[CCode (cname = "data.l")]
+		public unowned long l[5];
 	}
 
 	[CCode (cname = "XMappingEvent", has_type_id = false)]
@@ -1259,7 +1269,7 @@ namespace X {
 		public bool send_event;
 		public unowned Display display;
 		public Window window;
-		public unowned char[] key_vector;
+		public char key_vector[32];
 	}
 
 	[CCode (cname = "XGenericEvent", has_type_id = false)]
@@ -1290,13 +1300,6 @@ namespace X {
 		public short y;
 		public short width;
 		public short height;
-	}
-
-	// union
-	public struct ClientMessageEventData {
-		public unowned char[] b;
-		public unowned short[] s;
-		public unowned long[] l;
 	}
 
 	[CCode (cprefix = "Queued", has_type_id = false)]
@@ -1398,7 +1401,7 @@ namespace X {
 		[CCode (cname = "RootWindowOfScreen")]
 		public Window root_window_of_screen ();
 
-		[CCode (cname = "ScreenNumberOfScreen")]
+		[CCode (cname = "XScreenNumberOfScreen")]
 		public int screen_number_of_screen ();
 
 		[CCode (cname = "WhitePixelOfScreen")]
