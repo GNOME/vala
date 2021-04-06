@@ -94,6 +94,80 @@ public class Foo : Object {
 	}
 }
 
+void call_shared ([CCode (delegate_target_cname = "user_data", delegate_target_pos = 2.9)] FooFunc a, [CCode (delegate_target_cname = "user_data", delegate_target_pos = 2.9)] FooFunc b) {
+	a ();
+	b ();
+}
+
+void call_shared_owned ([CCode (delegate_target_cname = "user_data", delegate_target_pos = 2.9)] owned FooFunc a, [CCode (delegate_target_cname = "user_data", delegate_target_pos = 2.9)] owned FooFunc b) {
+	a ();
+	b ();
+}
+
+void run_static_1 () {
+	var foo = new Foo ();
+
+	assert (foo.ref_count == 1);
+
+	call_shared (
+		() => {
+			assert (foo != null);
+		},
+		() => {
+		}
+	);
+
+	assert (foo.ref_count == 1);
+}
+
+void run_static_2 () {
+	var foo = new Foo ();
+
+	assert (foo.ref_count == 1);
+
+	call_shared (
+		() => {
+		},
+		() => {
+			assert (foo != null);
+		}
+	);
+
+	assert (foo.ref_count == 1);
+}
+
+void run_static_3 () {
+	var foo = new Foo ();
+
+	assert (foo.ref_count == 1);
+
+	call_shared_owned (
+		() => {
+			assert (foo != null);
+		},
+		() => {
+		}
+	);
+
+	assert (foo.ref_count == 1);
+}
+
+void run_static_4 () {
+	var foo = new Foo ();
+
+	assert (foo.ref_count == 1);
+
+	call_shared_owned (
+		() => {
+		},
+		() => {
+			assert (foo != null);
+		}
+	);
+
+	assert (foo.ref_count == 1);
+}
+
 void main () {
 	var foo = new Foo ();
 	assert (foo.ref_count == 1);
@@ -105,4 +179,9 @@ void main () {
 	assert (foo.ref_count == 1);
 	foo.run_4 ();
 	assert (foo.ref_count == 1);
+
+	run_static_1 ();
+	run_static_2 ();
+	run_static_3 ();
+	run_static_4 ();
 }
