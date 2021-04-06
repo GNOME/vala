@@ -1011,7 +1011,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_val_if_fail"));
 		ccall.add_argument (subccall);
-		ccall.add_argument (new CCodeIdentifier ("NULL"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
 		ccode.add_expression (ccall);
 
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_internal"));
@@ -1190,7 +1190,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_val_if_fail"));
 		ccall.add_argument (ccall_typecheck);
-		ccall.add_argument (new CCodeIdentifier ("NULL"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
 		ccode.add_expression (ccall);
 
 		ccode.add_return (vpointer);
@@ -2347,8 +2347,8 @@ public class Vala.GTypeModule : GErrorModule {
 			get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
 
 			ccode.add_assignment (get_variable_cexpression (temp_var.name), get_value);
-			var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeIdentifier ("NULL"));
-			set_cvalue (expr, new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeIdentifier ("NULL")));
+			var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeConstant ("NULL"));
+			set_cvalue (expr, new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeConstant ("NULL")));
 		}
 		pop_line ();
 	}
