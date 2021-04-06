@@ -1233,7 +1233,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 							ccode.add_assignment (get_delegate_target_cvalue (field_value), new CCodeIdentifier ("self"));
 							if (delegate_type.is_disposable ()) {
-								ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeIdentifier ("NULL"));
+								ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeConstant ("NULL"));
 							}
 						}
 					}
@@ -5984,7 +5984,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (sink_func != "") {
 				if (type.nullable) {
-					var is_not_null = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, result.cvalue, new CCodeIdentifier ("NULL"));
+					var is_not_null = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, result.cvalue, new CCodeConstant ("NULL"));
 					ccode.open_if (is_not_null);
 				}
 

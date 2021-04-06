@@ -606,7 +606,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccode.add_return (new CCodeIdentifier ("result"));
 
 			ccode.close ();
-			ccode.add_return (new CCodeIdentifier ("NULL"));
+			ccode.add_return (new CCodeConstant ("NULL"));
 		} else {
 			// only dup if length > 0, this deals with negative lengths and returns NULL
 			var length_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("length"), new CCodeConstant ("0"));
@@ -644,7 +644,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 
 			ccode.close ();
-			ccode.add_return (new CCodeIdentifier ("NULL"));
+			ccode.add_return (new CCodeConstant ("NULL"));
 		}
 
 		// append to file
