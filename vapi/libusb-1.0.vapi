@@ -31,19 +31,33 @@ namespace LibUSB {
 		SS_ENDPOINT_COMPANION
 	}
 
-	[CCode (cprefix = "LIBUSB_DT_")]
 	namespace DescriptorTypeSize {
+		[CCode (cname = "LIBUSB_DT_DEVICE_SIZE")]
 		public const int DEVICE_SIZE;
+		[CCode (cname = "LIBUSB_DT_CONFIG_SIZE")]
 		public const int CONFIG_SIZE;
+		[CCode (cname = "LIBUSB_DT_INTERFACE_SIZE")]
 		public const int INTERFACE_SIZE;
+		[CCode (cname = "LIBUSB_DT_ENDPOINT_SIZE")]
 		public const int ENDPOINT_SIZE;
+		[CCode (cname = "LIBUSB_DT_ENDPOINT_AUDIO_SIZE")]
 		public const int ENDPOINT_AUDIO_SIZE;
+		[CCode (cname = "LIBUSB_DT_HUB_NONVAR_SIZE")]
+		public const int HUB_NONVAR_SIZE;
+		[CCode (cname = "LIBUSB_DT_SS_ENDPOINT_COMPANION_SIZE")]
 		public const int SS_ENDPOINT_COMPANION_SIZE;
+		[CCode (cname = "LIBUSB_DT_BOS_SIZE")]
 		public const int BOS_SIZE;
+		[CCode (cname = "LIBUSB_DT_DEVICE_CAPABILITY_SIZE")]
 		public const int DEVICE_CAPABILITY_SIZE;
+		[CCode (cname = "LIBUSB_BT_USB_2_0_EXTENSION_SIZE")]
 		public const int USB_2_0_EXTENSION_SIZE;
+		[CCode (cname = "LIBUSB_BT_SS_USB_DEVICE_CAPABILITY_SIZE")]
 		public const int SS_USB_DEVICE_CAPABILITY_SIZE;
+		[CCode (cname = "LIBUSB_BT_CONTAINER_ID_SIZE")]
 		public const int CONTAINER_ID_SIZE;
+		[CCode (cname = "LIBUSB_DT_BOS_MAX_SIZE")]
+		public const int BOS_MAX_SIZE;
 	}
 
 	namespace EndpointMask {
@@ -230,7 +244,7 @@ namespace LibUSB {
 		public uint8 bRefresh;
 		public uint8 bSynchAddress;
 		[CCode (array_length_cname = "extra_length")]
-		public uint8[] extra;
+		public unowned uint8[] extra;
 	}
 
 	[CCode (cname = "struct libusb_interface_descriptor", has_type_id = false)]
@@ -245,15 +259,15 @@ namespace LibUSB {
 		public uint8 bInterfaceProtocol;
 		public uint8 iInterface;
 		[CCode (array_length_cname = "bNumEndpoints", array_length_type = "uint8_t")]
-		public EndpointDescriptor[] endpoint;
+		public unowned EndpointDescriptor[] endpoint;
 		[CCode (array_length_cname = "extra_length")]
-		public uint8[] extra;
+		public unowned uint8[] extra;
 	}
 
 	[CCode (cname = "struct libusb_interface", has_type_id = false)]
 	public struct Interface {
 		[CCode (array_length_cname = "num_altsetting")]
-		public InterfaceDescriptor[] altsetting;
+		public unowned InterfaceDescriptor[] altsetting;
 	}
 
 	[CCode (cname = "struct libusb_config_descriptor", free_function = "libusb_free_config_descriptor")]
@@ -288,7 +302,7 @@ namespace LibUSB {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
 		public uint8 bDevCapabilityType;
-		public uint8 dev_capability_data;
+		public uint8 dev_capability_data[0];
 	}
 
 	[CCode (cname = "struct libusb_bos_descriptor", free_function = "libusb_free_bos_descriptor")]
@@ -297,8 +311,8 @@ namespace LibUSB {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
 		public uint16 wTotalLength;
-		[CCode (array_length_cname = "bNumDeviceCaps", array_length_type = "uint8_t")]
-		public BosDevCapabilityDescriptor[] dev_capability;
+		public uint8 bNumDeviceCaps;
+		public BosDevCapabilityDescriptor dev_capability[0];
 	}
 
 	[CCode (cname = "struct libusb_usb_2_0_extension_descriptor", free_function = "libusb_free_usb_2_0_extension_descriptor")]
@@ -336,10 +350,11 @@ namespace LibUSB {
 	[CCode (cname = "libusb_device_handle", cprefix = "libusb_", free_function = "libusb_close")]
 	[Compact]
 	public class DeviceHandle {
-		[CCode (cname = "_vala_libusb_device_handle_new")]
-		public DeviceHandle (Device device) {
+		[CCode (cname = "_vala_libusb_device_handle_from_device")]
+		public DeviceHandle from_device (Device device) {
 			DeviceHandle handle;
-			device.open(out handle);
+			device.open (out handle);
+			return handle;
 		}
 
 		[CCode (cname = "libusb_open_device_with_vid_pid")]
@@ -373,7 +388,7 @@ namespace LibUSB {
 	public class Device {
 		public uint8 get_bus_number ();
 		public uint8 get_port_number ();
-		public int get_port_numbers (out uint8[] port_numbers);
+		public int get_port_numbers (uint8[] port_numbers);
 		public uint8 get_device_address ();
 		public int get_max_packet_size (uint8 endpoint);
 		public int get_max_iso_packet_size (uint8 endpoint);
@@ -425,7 +440,7 @@ namespace LibUSB {
 		public LibUSB.Error handle_events_timeout (Posix.timeval tv);
 		public LibUSB.Error handle_events_timeout_completed (Posix.timeval tv, out int completed);
 		public LibUSB.Error handle_events ();
-		public LibUSB.Error handle_events_completed (Posix.timeval tv, out int completed);
+		public LibUSB.Error handle_events_completed (out int completed);
 		public LibUSB.Error handle_events_locked (Posix.timeval tv);
 		public LibUSB.Error pollfds_handle_timeouts ();
 		public LibUSB.Error get_next_timeout (out Posix.timeval tv);
@@ -441,7 +456,9 @@ namespace LibUSB {
 		public LibUSB.Error hotplug_deregister_callback (HotCallbackHandle callback_handle);
 	}
 
+	[CCode (cname = "libusb_le16_to_cpu")]
 	public static uint16 le16_to_cpu (uint16 n);
+	[CCode (cname = "libusb_cpu_to_le16")]
 	public static uint16 cpu_to_le16 (uint16 n);
 
 	[CCode (cname = "struct libusb_control_setup")]
@@ -527,7 +544,7 @@ namespace LibUSB {
 		public LibUSB.Error submit ();
 		[CCode (cname = "libusb_cancel_transfer")]
 		public LibUSB.Error cancel ();
-		[CCode (cname = "libusb_contrel_transfer_get_data", array_length = false)]
+		[CCode (cname = "libusb_control_transfer_get_data", array_length = false)]
 		public unowned char[] control_get_data ();
 		[CCode (cname = "libusb_control_transfer_get_setup")]
 		public unowned ControlSetup control_get_setup ();
@@ -537,7 +554,7 @@ namespace LibUSB {
 		public void fill_bulk_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, uint timeout);
 		public void fill_interrupt_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, uint timeout);
 		public void fill_iso_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, int num_iso_packets, TransferCb @callback, uint timeout);
-		public void set_packet_lengths (uint length);
+		public void set_iso_packet_lengths (uint length);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_iso_packet_buffer (uint packet);
 		[CCode (array_length = false)]
@@ -559,5 +576,6 @@ namespace LibUSB {
 		public short events;
 	}
 
+	[CCode (cname = "libusb_has_capability")]
 	public static int has_capability (Capability capability);
 }
