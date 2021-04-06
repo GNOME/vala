@@ -126,7 +126,7 @@ namespace USB {
 		public InterfaceDescriptor[] altsetting;
 	}
 
-	[Compact, CCode (cname = "struct usd_config_descriptor")]
+	[Compact, CCode (cname = "struct usb_config_descriptor")]
 	public class ConfigDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
@@ -200,7 +200,7 @@ namespace USB {
 		public int bulk_read (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
 		public int interrupt_write (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
 		public int interrupt_read (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
-		public int control_msg (int requesttype, int request, int value, int index, char[] bytes, int size, int timeout);
+		public int control_msg (int requesttype, int request, int value, int index, [CCode (array_length = false)] char[] bytes, int size, int timeout);
 		public int set_configuration (int configuration);
 		public int claim_interface (int @interface);
 		public int release_interface (int @interface);
