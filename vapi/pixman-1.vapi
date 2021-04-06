@@ -8,10 +8,11 @@ namespace Pixman {
 		[CCode (cname = "PIXMAN_VERSION")]
 		public const int INT;
 
+		[CCode (cname = "PIXMAN_VERSION_ENCODE")]
 		public static int encode (int major, int minor, int micro);
 		[CCode (cname = "pixman_version")]
 		public static int library_int ();
-		[CCode (cname = "pixman_string")]
+		[CCode (cname = "pixman_version_string")]
 		public static unowned string library_string ();
 	}
 
@@ -32,11 +33,13 @@ namespace Pixman {
 		public Fixed ceil ();
 		public Fixed fraction ();
 		public Fixed mod_2 ();
+		[CCode (cname = "pixman_sample_ceil_y")]
 		public Fixed sample_ceil_y (int bpp);
+		[CCode (cname = "pixman_sample_floor_y")]
 		public Fixed sample_floor_y (int bpp);
 	}
 
-	[CCode (cname = "struct pixman_color", has_type_id = false)]
+	[CCode (cname = "pixman_color_t", has_type_id = false)]
 	public struct Color {
 		public uint16 red;
 		public uint16 green;
@@ -44,31 +47,31 @@ namespace Pixman {
 		public uint16 alpha;
 	}
 
-	[CCode (cname = "struct pixman_point_fixed", has_type_id = false)]
+	[CCode (cname = "pixman_point_fixed_t", has_type_id = false)]
 	public struct PointFixed {
 		public Pixman.Fixed x;
 		public Pixman.Fixed y;
 	}
 
-	[CCode (cname = "struct pixman_line_fixed", has_type_id = false)]
+	[CCode (cname = "pixman_line_fixed_t", has_type_id = false)]
 	public struct LineFixed {
 		public Pixman.PointFixed p1;
 		public Pixman.PointFixed p2;
 	}
 
-	[CCode (cname = "struct pixman_vector", has_type_id = false)]
+	[CCode (cname = "pixman_vector_t", has_type_id = false)]
 	public struct Vector {
 		public Pixman.Fixed vector[3];
 	}
 
-	[CCode (cname = "struct pixman_transform", has_type_id = false)]
+	[CCode (cname = "pixman_transform_t", has_type_id = false)]
 	public struct Transform {
 		public Pixman.Fixed matrix[9];
 
 		[CCode (cname = "pixman_transform_init_identity")]
 		public Transform.identity ();
 		public bool point_3d (Pixman.Vector vector);
-		public bool point ();
+		public bool point (Pixman.Vector vector);
 		public bool multiply (Pixman.Transform l, Pixman.Transform r);
 		[CCode (cname = "pixman_transform_init_scale")]
 		public Transform.init_scale (Pixman.Fixed sx, Pixman.Fixed sy);
@@ -76,7 +79,7 @@ namespace Pixman {
 		[CCode (cname = "pixman_transform_init_rotate")]
 		public Transform.init_rotate (Pixman.Fixed cos, Pixman.Fixed sin);
 		public bool rotate (Pixman.Transform reverse, Pixman.Fixed c, Pixman.Fixed s);
-		[CCode (cname = "pixman_transform_rotate")]
+		[CCode (cname = "pixman_transform_init_translate")]
 		public Transform.init_translate (Pixman.Fixed tx, Pixman.Fixed ty);
 		public bool translate (Pixman.Transform reverse, Pixman.Fixed tx, Pixman.Fixed ty);
 		public bool bounds (Pixman.Box16 b);
@@ -86,7 +89,7 @@ namespace Pixman {
 		public bool is_inverse (Pixman.Transform b);
 	}
 
-	[CCode (cprefix = "PIXMAN_REGION_", has_type_id = false)]
+	[CCode (cname = "pixman_region_overlap_t", cprefix = "PIXMAN_REGION_", has_type_id = false)]
 	public enum RegionOverlap {
 		OUT,
 		IN,
@@ -136,7 +139,10 @@ namespace Pixman {
 
 	[CCode (cname = "pixman_rectangle16_t", has_type_id = false)]
 	public struct Rectangle16 {
-		public Pixman.Box16 extents;
+		public int16 x;
+		public int16 y;
+		public uint16 width;
+		public uint16 height;
 	}
 
 	[CCode (cname = "pixman_region32_t", has_type_id = false, destroy_function = "pixman_region32_fini")]
@@ -170,6 +176,7 @@ namespace Pixman {
 		public bool equal (Pixman.Region32 region2);
 		public bool selfcheck ();
 		public void reset (Pixman.Box32 box);
+		public void clear ();
 	}
 
 	[CCode (cname = "pixman_box32_t", has_type_id = false)]
@@ -182,7 +189,10 @@ namespace Pixman {
 
 	[CCode (cname = "pixman_rectangle32_t", has_type_id = false)]
 	public struct Rectangle32 {
-		public Pixman.Box32 extents;
+		public int32 x;
+		public int32 y;
+		public uint32 width;
+		public uint32 height;
 	}
 
 	public static bool blt ([CCode (array_length = false, type = "uint32_t*")] uint8[] src_bits, [CCode (array_length = false, type = "uint32_t*")] uint8[] dst_bits, int src_stride, int dst_stride, int src_bpp, int dst_bpp, int src_x, int src_y, int dst_x, int dst_y, int width, int height);
@@ -292,7 +302,7 @@ namespace Pixman {
 		ABGR,
 		COLOR,
 		GRAY,
-		YUV2,
+		YUY2,
 		YV12,
 		BGRA;
 
@@ -448,6 +458,7 @@ namespace Pixman {
 		[CCode (instance_pos = 1.1)]
 		public bool fill_rectangles (Pixman.Operation op, Pixman.Color color, [CCode (array_length_pos = 2.1)] Pixman.Rectangle16[] rects);
 
+		[CCode (cname = "pixman_compute_composite_region")]
 		public static bool compute_composite_region (Pixman.Region16 region, Pixman.Image src_image, Pixman.Image? mask_image, Pixman.Image dst_image, int src_x, int src_y, int mask_x, int mask_y, int dest_x, int dest_y, int width, int height);
 		public static void composite (Pixman.Operation op, Pixman.Image src, Pixman.Image? mask, Pixman.Image dest, int16 src_x, int16 src_y, int16 mask_x, int16 mask_y, int16 dest_x, int16 dest_y, uint16 width, uint16 height);
 
@@ -456,12 +467,18 @@ namespace Pixman {
 		[CCode (cname = "pixman_add_traps")]
 		public void add_traps (int16 x_off, int16 y_off, [CCode (array_length_pos = 2.9)] Pixman.Trap[] traps);
 		[CCode (cname = "pixman_add_trapezoids")]
-		public void add_trapezoids (int16 x_off, int y_off, [CCode (array_length_pos = 2.9)] Pixman.Trap[] traps);
+		public void add_trapezoids (int16 x_off, int y_off, [CCode (array_length_pos = 2.9)] Pixman.Trapezoid[] traps);
 		[CCode (cname = "pixman_rasterize_trapezoid")]
 		public void rasterize_trapezoid (Pixman.Trapezoid trap, int x_off, int y_off);
+		[CCode (cname = "pixman_composite_trapezoids")]
+		public static bool composite_trapezoids (Pixman.Operation op, Pixman.Image src, Pixman.Image dst, Pixman.Format mask_format, int x_src, int y_src, int x_dst, int y_dst, [CCode (array_length_pos = 8.9)] Pixman.Trapezoid[] traps);
+		[CCode (cname = "pixman_composite_triangles")]
+		public static bool composite_triangles (Pixman.Operation op, Pixman.Image src, Pixman.Image dst, Pixman.Format mask_format, int x_src, int y_src, int x_dst, int y_dst, [CCode (array_length_pos = 8.9)] Pixman.Triangle[] tries);
+		[CCode (cname = "pixman_add_triangles")]
+		public void add_triangles (int32 x_off, int32 y_off, [CCode (array_length_pos = 2.9)] Pixman.Triangle[] tris);
 	}
 
-	[CCode (cname = "struct pixman_edge", has_type_id = false)]
+	[CCode (cname = "pixman_edge_t", has_type_id = false)]
 	public struct Edge {
 		public Pixman.Fixed x;
 		public Pixman.Fixed e;
@@ -481,7 +498,7 @@ namespace Pixman {
 		public Edge.line_fixed (int bpp, Pixman.Fixed y, Pixman.LineFixed line, int x_off, int y_off);
 	}
 
-	[CCode (cname = "struct pixman_trapezoid", has_type_id = false)]
+	[CCode (cname = "pixman_trapezoid_t", has_type_id = false)]
 	public struct Trapezoid {
 		public Pixman.Fixed top;
 		public Pixman.Fixed bottom;
@@ -491,14 +508,21 @@ namespace Pixman {
 		public bool valid ();
 	}
 
-	[CCode (cname = "struct pixman_span_fix", has_type_id = false)]
+	[CCode (cname = "pixman_triangle_t", has_type_id = false)]
+	public struct Triangle {
+		public Pixman.PointFixed p1;
+		public Pixman.PointFixed p2;
+		public Pixman.PointFixed p3;
+	}
+
+	[CCode (cname = "pixman_span_fix_t", has_type_id = false)]
 	public struct SpanFix {
 		public Pixman.Fixed l;
 		public Pixman.Fixed r;
 		public Pixman.Fixed y;
 	}
 
-	[CCode (cname = "struct pixman_trap", has_type_id = false)]
+	[CCode (cname = "pixman_trap_t", has_type_id = false)]
 	public struct Trap {
 		public Pixman.SpanFix top;
 		public Pixman.SpanFix bot;
