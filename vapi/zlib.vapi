@@ -23,8 +23,6 @@
  * 	Jörn Magens <joernmagens@gmx.de>
  */
 
-using GLib;
-
 [CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
 namespace ZLib {
 	[CCode (cname="int", cprefix="Z_", has_type_id = false)]
@@ -141,8 +139,11 @@ namespace ZLib {
 		public int set_dictionary ([CCode (array_length_type = "guint")] uint8[] dictionary);
 		[CCode (cname = "inflateSync")]
 		public int sync ();
+		[CCode (cname = "inflateReset")]
 		public int reset ();
+		[CCode (cname = "inflatePrime")]
 		public int prime (int bits, int value);
+		[CCode (cname = "inflateGetHeader")]
 		public int get_header (out GZHeader head);
 	}
 	[CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
@@ -162,17 +163,17 @@ namespace ZLib {
 		public int xflags;
 		public int os;
 		[CCode (array_length_cname = "extra_len", array_length_type = "guint")]
-		public uint8[] extra;
+		public unowned uint8[] extra;
 		public uint extra_max;
-		public string? name;
+		public unowned string? name;
 		public uint name_max;
-		public string comment;
+		public unowned string comment;
 		[CCode (cname = "comm_max")]
 		public uint comment_max;
 		public int hcrc;
 		public int done;
 	}
-	[CCode (cname = "gzFile", cprefix = "gz", free_function = "gzclose")]
+	[CCode (cname = "struct gzFile_s", cprefix = "gz", free_function = "gzclose")]
 	[Compact]
 	public class GZFileStream {
 		public static GZFileStream open (string path, string mode = "rb");
