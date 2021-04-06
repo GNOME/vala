@@ -89,9 +89,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 				if (deleg_type.is_disposable ()) {
 					cparam = new CCodeParameter (get_delegate_target_destroy_notify_cname ("result"), get_ccode_name (delegate_target_destroy_type) + "*");
-					cparam_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), cparam);
+					cparam_map.set (get_param_pos (get_ccode_destroy_notify_pos (m)), cparam);
 					if (carg_map != null) {
-						carg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), get_cexpression (cparam.name));
+						carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (m)), get_cexpression (cparam.name));
 					}
 				}
 			}
