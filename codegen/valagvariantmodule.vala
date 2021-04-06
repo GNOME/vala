@@ -345,7 +345,7 @@ public class Vala.GVariantModule : GValueModule {
 			// NULL terminate array
 			var length = new CCodeIdentifier (temp_name + "_length");
 			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), length);
-			ccode.add_assignment (element_access, new CCodeIdentifier ("NULL"));
+			ccode.add_assignment (element_access, new CCodeConstant ("NULL"));
 		}
 
 		return new CCodeIdentifier (temp_name);
@@ -499,7 +499,7 @@ public class Vala.GVariantModule : GValueModule {
 		} else if (key_type.type_symbol.get_full_name () == "GLib.HashTable") {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_hash_table_unref"), "GDestroyNotify"));
 		} else {
-			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
+			hash_table_new.add_argument (new CCodeConstant ("NULL"));
 		}
 
 		if (value_type.type_symbol.is_subtype_of (string_type.type_symbol)) {
@@ -509,7 +509,7 @@ public class Vala.GVariantModule : GValueModule {
 		} else if (value_type.type_symbol.get_full_name () == "GLib.HashTable") {
 			hash_table_new.add_argument (new CCodeCastExpression (new CCodeIdentifier ("g_hash_table_unref"), "GDestroyNotify"));
 		} else {
-			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
+			hash_table_new.add_argument (new CCodeConstant ("NULL"));
 		}
 		ccode.add_assignment (new CCodeIdentifier (temp_name), hash_table_new);
 
