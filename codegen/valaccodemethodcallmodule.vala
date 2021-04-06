@@ -448,7 +448,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), delegate_target);
 									if (deleg_type.is_disposable ()) {
 										assert (delegate_target_destroy_notify != null);
-										carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), delegate_target_destroy_notify);
+										carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (param)), delegate_target_destroy_notify);
 									}
 								}
 							}
@@ -502,7 +502,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									temp_var = get_temp_variable (delegate_target_destroy_type, true, null, true);
 									emit_temp_var (temp_var);
 									set_delegate_target_destroy_notify (arg, get_variable_cexpression (temp_var.name));
-									carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param) + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
+									carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (param)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
 								}
 							}
 						}
@@ -623,7 +623,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					emit_temp_var (temp_var);
 
-					out_arg_map.set (get_param_pos (get_ccode_delegate_target_pos (m) + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+					out_arg_map.set (get_param_pos (get_ccode_destroy_notify_pos (m)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					set_delegate_target_destroy_notify (expr, temp_ref);
 				} else {
@@ -688,7 +688,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					emit_temp_var (temp_var);
 
-					out_arg_map.set (get_param_pos (get_ccode_delegate_target_pos (deleg) + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+					out_arg_map.set (get_param_pos (get_ccode_destroy_notify_pos (deleg)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					set_delegate_target_destroy_notify (expr, temp_ref);
 				}

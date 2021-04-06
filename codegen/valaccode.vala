@@ -365,12 +365,7 @@ namespace Vala {
 		if (a != null && a.has_argument ("destroy_notify_pos")) {
 			return a.get_double ("destroy_notify_pos");
 		}
-		if (node is Parameter) {
-			unowned Parameter param = (Parameter) node;
-			return get_ccode_pos (param) + 0.1;
-		} else {
-			return -3;
-		}
+		return get_ccode_delegate_target_pos (node) + 0.01;
 	}
 
 	public static bool get_ccode_delegate_target (CodeNode node) {
