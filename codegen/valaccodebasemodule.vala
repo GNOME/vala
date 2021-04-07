@@ -4905,6 +4905,18 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			generate_method_declaration (m, cfile);
 
+			if (m is CreationMethod && !m.external && m.external_package) {
+				unowned CreationMethod cm = (CreationMethod) m;
+				if (!cm.chain_up) {
+					Report.error (cm.source_reference, "internal: Creation method implementation in binding must be chained up");
+				}
+				// internal VAPI creation methods
+				// only add them once per source file
+				if (add_generated_external_symbol (cm)) {
+					visit_creation_method (cm);
+				}
+			}
+
 			unowned Class? cl = expr.type_reference.type_symbol as Class;
 
 			if (!get_ccode_has_new_function (m)) {
