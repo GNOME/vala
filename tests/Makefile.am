@@ -143,6 +143,7 @@ TESTS = \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
 	chainup/class-compact-base.vala \
+	chainup/class-compact-this.vala \
 	chainup/class-object.vala \
 	chainup/class-this.vala \
 	chainup/class-this-foo.vala \
