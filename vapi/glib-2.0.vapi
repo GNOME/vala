@@ -3288,8 +3288,16 @@ namespace GLib {
 	public class TimeZone {
 		[Version (deprecated = true, deprecated_since = "2.68", replacement = "TimeZone.identifier")]
 		public TimeZone (string identifier);
+		[CCode (cname = "g_time_zone_new_identifier")]
+		TimeZone.new_identifier (string? identifier);
 		[Version (since = "2.68")]
-		public TimeZone.identifier (string identifier);
+		[CCode (cname = "vala_g_time_zone_new_identifier")]
+		public TimeZone.identifier (string? identifier) throws Error {
+			this.new_identifier (identifier);
+			if ((TimeZone?) this == null) {
+				throw new ConvertError.ILLEGAL_SEQUENCE ("Invalid identifier argument");
+			}
+		}
 		public TimeZone.utc ();
 		public TimeZone.local ();
 		[Version (since = "2.58")]
