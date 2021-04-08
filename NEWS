@@ -1,3 +1,26 @@
+Vala 0.50.6
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Improve handling of ellipsis parameter in get_ccode_name()
+    + Fix default value of get_ccode_destroy_notify_pos()
+    + Don't override valid target/destroy of previous lambda argument [#59]
+    + Don't call *_instance_init() in compact class chainup
+  - vala: Mark tranformed static member-access as qualified [#270]
+  - girwriter: namespace expects "c:symbol-prefixes" attribute [#1038]
+  - girwriter: Don't use instance-parameter inside callback [#1167]
+  - girparser,libvaladoc/girimporter: Don't guess length of xml header, iterate
+    forward to <repository>
+  - libvaladoc/girimporter: parse_constant() use "c:identifier" attribute first
+
+ * Bindings:
+  - rest-0.7: Fix OAuthProxyAuthCallback binding
+  - gtk+-3.0: Fix ModuleInitFunc binding
+  - gio-2.0: Fix TlsPassword.get_value() binding
+  - Fix several bindings which lead to invalid code by using them in:
+    javascriptcoregtk-4.0, libusb, libusb-1.0, pixman-1,
+    webkit2gtk-web-extension-4.0, x11, zlib,
+
 Vala 0.50.5
 ===========
  * Various improvements and bug fixes:
