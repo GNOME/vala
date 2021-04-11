@@ -99,6 +99,7 @@ TESTS = \
 	constants/strings.vala \
 	namespace/unique.vala \
 	arrays/cast-silent-invalid.test \
+	arrays/cast-struct-boxed-element-access.vala \
 	arrays/class-field-initializer.vala \
 	arrays/class-field-length-cname.vala \
 	arrays/constant-element-access.vala \
@@ -322,6 +323,7 @@ TESTS = \
 	enums/bug673879.vala \
 	enums/bug763831.vala \
 	enums/bug780050.vala \
+	structs/cast-struct-boxed.vala \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
 	structs/struct-boxed-cast.vala \
