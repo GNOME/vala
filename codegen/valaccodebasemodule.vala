@@ -5423,7 +5423,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			while (inner_expr is CastExpression) {
 				inner_expr = ((CastExpression) inner_expr).inner;
 			}
-			if (!(inner_expr.symbol_reference is Variable)) {
+			if (!(inner_expr.symbol_reference is Variable || inner_expr is ElementAccess)) {
 				// heap allocated struct leaked, destroy it
 				var value = new GLibValue (new PointerType (new VoidType ()), innercexpr);
 				temp_ref_values.insert (0, value);
