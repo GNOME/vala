@@ -14,17 +14,22 @@ void test_garray () {
 
 	array.append_val (foo);
 	assert (foo.ref_count == 2);
+	assert (array.index (0) == foo);
 	array.remove_index (0);
 	assert (foo.ref_count == 1);
 
 	array.append_val (foo);
 	assert (foo.ref_count == 2);
+	assert (array.index (0) == foo);
 	array.remove_index_fast (0);
 	assert (foo.ref_count == 1);
 
 	array.append_val (foo);
-	assert (foo.ref_count == 2);
-	array.remove_range (0, 1);
+	array.append_val (foo);
+	assert (foo.ref_count == 3);
+	assert (array.index (0) == foo);
+	assert (array.index (1) == foo);
+	array.remove_range (0, 2);
 	assert (foo.ref_count == 1);
 }
 
@@ -45,17 +50,21 @@ void test_int_garray () {
 }
 
 GLib.Array<FooStruct?> create_struct_garray () {
-	FooStruct foo = { "foo", new Foo () };
 	var array = new GLib.Array<FooStruct?> ();
-	array.append_val (foo);
+	FooStruct foo1 = { "foo", new Foo () };
+	array.append_val (foo1);
+	FooStruct foo2 = { "bar", new Foo () };
+	array.append_val (foo2);
 	return array;
 }
 
 void test_struct_garray () {
 	var array = create_struct_garray ();
-	assert (array.length == 1);
+	assert (array.length == 2);
 	assert (array.index (0).content == "foo");
 	assert (array.index (0).object.ref_count == 1);
+	assert (array.index (1).content == "bar");
+	assert (array.index (1).object.ref_count == 1);
 	Foo f = array.index (0).object;
 	assert (f.ref_count == 2);
 	array = null;
