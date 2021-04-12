@@ -5526,7 +5526,7 @@ namespace GLib {
 		[Version (since = "2.54")]
 		public bool find (G needle, out uint index = null);
 		[Version (since = "2.54")]
-		[CCode (cname = "g_ptr_array_find_with_equal_func")]
+		[CCode (cname = "g_ptr_array_find_with_equal_func", simple_generics = true)]
 		public bool find_custom<T> (T needle, GLib.ArraySearchFunc<G,T>? equal_func, out uint index = null);
 		[Version (since = "2.54")]
 		public bool find_with_equal_func (G needle, GLib.EqualFunc<G>? equal_func, out uint index = null);
