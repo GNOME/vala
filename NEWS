@@ -1,3 +1,13 @@
+Vala 0.52.2
+===========
+ * Regression and bug fixes:
+  - codegen:
+    + Don't free temp-var for element-access to array with boxed structs [#1174]
+    + Don't free unowned heap allocated struct
+
+ * Bindings:
+  - glib-2.0: Add simple_generics attribute to GenericArray.find_custom()
+
 Vala 0.52.1
 ===========
  * Various improvements and bug fixes:
