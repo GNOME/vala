@@ -2384,12 +2384,18 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.CONSTRUCT:
 			if (context.profile == Profile.GOBJECT) {
 				rollback (begin);
+				if (!(parent is TypeSymbol)) {
+					throw new ParseError.SYNTAX ("unexpected `construct' declaration");
+				}
 				parse_constructor_declaration (parent, attrs);
 				return;
 			}
 			break;
 		case TokenType.TILDE:
 			rollback (begin);
+			if (!(parent is TypeSymbol)) {
+				throw new ParseError.SYNTAX ("unexpected `destructor' declaration");
+			}
 			parse_destructor_declaration (parent, attrs);
 			return;
 		case TokenType.OPEN_BRACE:
@@ -2468,6 +2474,9 @@ public class Vala.Parser : CodeVisitor {
 				break;
 			case TokenType.OPEN_PARENS:
 				rollback (begin);
+				if (!(parent is TypeSymbol)) {
+					throw new ParseError.SYNTAX ("unexpected `constructor' declaration");
+				}
 				parse_creation_method_declaration (parent, attrs);
 				return;
 			default:
@@ -2480,6 +2489,9 @@ public class Vala.Parser : CodeVisitor {
 						parse_delegate_declaration (parent, attrs);
 						return;
 					case TokenType.SIGNAL:
+						if (!(parent is ObjectTypeSymbol)) {
+							throw new ParseError.SYNTAX ("unexpected `signal' declaration");
+						}
 						parse_signal_declaration (parent, attrs);
 						return;
 					default:
@@ -2500,6 +2512,9 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.OPEN_BRACE:
 				case TokenType.THROWS:
 					rollback (begin);
+					if (!(parent is TypeSymbol)) {
+						throw new ParseError.SYNTAX ("unexpected `property' declaration");
+					}
 					parse_property_declaration (parent, attrs);
 					return;
 				default:
