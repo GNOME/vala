@@ -539,6 +539,7 @@ public class Vala.Parser : CodeVisitor {
 
 			if (!(type is PointerType)) {
 				type.nullable = accept (TokenType.INTERR);
+				type.source_reference = get_src (begin);
 			}
 		}
 
