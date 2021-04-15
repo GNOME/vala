@@ -835,6 +835,9 @@ TESTS = \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
 	parser/member-access-pointer.vala \
+	parser/member-initializer.vala \
+	parser/member-initializer-empty.vala \
+	parser/member-initializer-trailing-comma.vala \
 	parser/method-no-abstract-override.test \
 	parser/method-no-abstract-virtual-override.test \
 	parser/method-no-abstract-virtual.test \
