@@ -128,6 +128,7 @@ public class ValaDoc : Object {
 			case null:
 			case "gobject-2.0":
 			case "gobject": profile = Vala.Profile.GOBJECT; break;
+			case "libc": profile = Vala.Profile.LIBC; break;
 			case "posix": profile = Vala.Profile.POSIX; break;
 			default: throw new OptionError.FAILED ("Invalid --profile argument '%s'", val);
 		}

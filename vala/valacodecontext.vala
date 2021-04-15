@@ -607,7 +607,9 @@ public class Vala.CodeContext {
 			}
 			break;
 		case Profile.POSIX:
+		// case Profile.LIBC:
 			this.profile = profile;
+			add_define ("LIBC");
 			add_define ("POSIX");
 
 			if (include_stdpkg) {

@@ -185,6 +185,7 @@ class Vala.Compiler {
 			case null:
 			case "gobject-2.0":
 			case "gobject": profile = Profile.GOBJECT; break;
+			case "libc": profile = Vala.Profile.LIBC; break;
 			case "posix": profile = Profile.POSIX; break;
 			default: throw new OptionError.FAILED ("Invalid --profile argument '%s'", val);
 		}
