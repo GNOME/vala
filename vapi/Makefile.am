@@ -287,8 +287,6 @@ dist_vapi_DATA = \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
-	webkit-1.0.deps \
-	webkit-1.0.vapi \
 	webkit2gtk-4.0.vapi \
 	webkit2gtk-4.0.deps \
 	webkit2gtk-web-extension-4.0.vapi \
@@ -335,7 +333,6 @@ GIDL_BINDINGS = \
 	loudmouth-1.0 \
 	purple \
 	unique-1.0 \
-	webkit-1.0 \
 	$(NULL)
 
 GSTREAMER_1_0_BINDINGS = \
@@ -728,9 +725,6 @@ udisks2:
 
 unique-1.0:
 	$(GENVAPI) --library $(srcdir)/unique-1.0 $(PACKAGESDIR)/unique-1.0/unique-1.0.gi
-
-webkit-1.0:
-	$(GENVAPI) --library $(srcdir)/webkit-1.0 $(PACKAGESDIR)/webkit-1.0/webkit-1.0.gi
 
 webkit2gtk-4.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-2.4 $(GIRDIR)/WebKit2-4.0.gir
