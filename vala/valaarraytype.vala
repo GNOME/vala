@@ -317,7 +317,7 @@ public class Vala.ArrayType : ReferenceType {
 			length_type = context.analyzer.int_type.copy ();
 		} else {
 			length_type.check (context);
-			if (!(length_type is IntegerType)) {
+			if (!(length_type is IntegerType) || length_type.nullable) {
 				error = true;
 				Report.error (length_type.source_reference, "Expected integer type as length type of array");
 				return false;
