@@ -70,8 +70,6 @@ dist_vapi_DATA = \
 	gdl-1.0.vapi \
 	gdl-3.0.deps \
 	gdl-3.0.vapi \
-	gedit-2.20.vapi \
-	gedit-2.20.deps \
 	gio-2.0.deps \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
@@ -492,9 +490,6 @@ gdl-1.0:
 
 gdl-3.0:
 	$(GENVAPI) --library $(srcdir)/gdl-3.0 --pkg gio-2.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/Gdl-3.gir
-
-gedit-2.20:
-	$(GENVAPI) --library $(srcdir)/gedit-2.20 $(PACKAGESDIR)/gedit-2.20/gedit-2.20.gi
 
 gio-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gio-2.0-custom.vala $(GIRDIR)/Gio-2.0.gir
