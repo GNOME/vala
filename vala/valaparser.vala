@@ -1038,9 +1038,13 @@ public class Vala.Parser : CodeVisitor {
 	List<MemberInitializer> parse_object_initializer () throws ParseError {
 		var list = new ArrayList<MemberInitializer> ();
 		if (accept (TokenType.OPEN_BRACE)) {
-			do {
+			while (current () != TokenType.CLOSE_BRACE) {
 				list.add (parse_member_initializer ());
-			} while (accept (TokenType.COMMA));
+
+				if (!accept (TokenType.COMMA)) {
+					break;
+				}
+			}
 			expect (TokenType.CLOSE_BRACE);
 		}
 		return list;
