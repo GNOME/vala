@@ -21,4 +21,4 @@ Input:
 Output:
 
 [CCode (cheader_filename = "test.h")]
-public static void function ([CCode (array_length_cname = "foo_length", array_length_pos = 1.1, array_length_type = "gsize")] string[] foo);
+public static void function ([CCode (array_length_cname = "foo_length", array_length_pos = 1.1)] string[:size_t] foo);

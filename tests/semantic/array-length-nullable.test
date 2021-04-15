@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	var foo = new uint8[23:size_t?];
+}

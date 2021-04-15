@@ -25,5 +25,5 @@ Input:
 
 Output:
 
-[CCode (array_length = true, array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true, cheader_filename = "test.h")]
-public static string[] get_string_list (string key);
+[CCode (array_length = true, array_length_pos = 1.1, array_null_terminated = true, cheader_filename = "test.h")]
+public static string[:size_t] get_string_list (string key);
