@@ -53,22 +53,14 @@ public class Vala.UnresolvedType : DataType {
 	 * @param expr   member access expression
 	 * @return       newly created type reference
 	 */
-	public static UnresolvedType? new_from_expression (Expression expr) {
-		var sym = UnresolvedSymbol.new_from_expression (expr);
+	public UnresolvedType.from_expression (MemberAccess expr) {
+		unresolved_symbol = new UnresolvedSymbol.from_expression (expr);
+		source_reference = expr.source_reference;
+		value_owned = true;
 
-		if (sym != null) {
-			var type_ref = new UnresolvedType.from_symbol (sym, expr.source_reference);
-			type_ref.value_owned = true;
-
-			var ma = (MemberAccess) expr;
-			foreach (DataType arg in ma.get_type_arguments ()) {
-				type_ref.add_type_argument (arg);
-			}
-
-			return type_ref;
+		foreach (DataType arg in expr.get_type_arguments ()) {
+			add_type_argument (arg);
 		}
-
-		return null;
 	}
 
 	public override DataType copy () {
