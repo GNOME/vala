@@ -1279,6 +1279,8 @@ namespace GLib {
 		public void clear_status ();
 		public void copy_into (GLib.FileInfo dest_info);
 		public GLib.FileInfo dup ();
+		[Version (since = "2.70")]
+		public GLib.DateTime? get_access_date_time ();
 		public string? get_attribute_as_string (string attribute);
 		public bool get_attribute_boolean (string attribute);
 		public unowned string? get_attribute_byte_string (string attribute);
@@ -1295,6 +1297,8 @@ namespace GLib {
 		public uint32 get_attribute_uint32 (string attribute);
 		public uint64 get_attribute_uint64 (string attribute);
 		public unowned string? get_content_type ();
+		[Version (since = "2.70")]
+		public GLib.DateTime? get_creation_date_time ();
 		[Version (since = "2.36")]
 		public GLib.DateTime? get_deletion_date ();
 		public unowned string get_display_name ();
@@ -1321,6 +1325,8 @@ namespace GLib {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? list_attributes (string? name_space);
 		public void remove_attribute (string attribute);
+		[Version (since = "2.70")]
+		public void set_access_date_time (GLib.DateTime atime);
 		public void set_attribute (string attribute, GLib.FileAttributeType type, void* value_p);
 		public void set_attribute_boolean (string attribute, bool attr_value);
 		public void set_attribute_byte_string (string attribute, string attr_value);
@@ -1335,6 +1341,8 @@ namespace GLib {
 		public void set_attribute_uint32 (string attribute, uint32 attr_value);
 		public void set_attribute_uint64 (string attribute, uint64 attr_value);
 		public void set_content_type (string content_type);
+		[Version (since = "2.70")]
+		public void set_creation_date_time (GLib.DateTime creation_time);
 		public void set_display_name (string display_name);
 		public void set_edit_name (string edit_name);
 		public void set_file_type (GLib.FileType type);

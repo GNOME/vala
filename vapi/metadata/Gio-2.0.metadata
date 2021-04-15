@@ -281,7 +281,7 @@ Initable
   .newv skip=false type="GLib.Object"
 PollableInputStream
   .create_source type="GLib.PollableSource"
-  .read_nonblocking.buffer type="uint8[]" array_length_idx=1
+  .read_nonblocking.buffer type="uint8[]" array_length_idx=1 out=false
   .read_nonblocking#virtual_method name="read_nonblocking_fn" no_wrapper
 PollableOutputStream
   .create_source type="GLib.PollableSource"

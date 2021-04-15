@@ -8,7 +8,7 @@ namespace Gdk {
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public Gdk.Pixbuf add_alpha (bool substitute_color, uint8 r, uint8 g, uint8 b);
 		[Version (since = "2.12")]
-		public Gdk.Pixbuf apply_embedded_orientation ();
+		public Gdk.Pixbuf? apply_embedded_orientation ();
 		[Version (since = "2.36.8")]
 		public static int calculate_rowstride (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public void composite (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha);
@@ -67,13 +67,13 @@ namespace Gdk {
 		[Version (since = "2.4")]
 		public static unowned Gdk.PixbufFormat? get_file_info (string filename, out int width, out int height);
 		[Version (since = "2.32")]
-		public static async unowned Gdk.PixbufFormat get_file_info_async (string filename, GLib.Cancellable? cancellable, out int width, out int height) throws GLib.Error;
+		public static async unowned Gdk.PixbufFormat? get_file_info_async (string filename, GLib.Cancellable? cancellable, out int width, out int height) throws GLib.Error;
 		[Version (since = "2.2")]
 		public static GLib.SList<weak Gdk.PixbufFormat> get_formats ();
 		public bool get_has_alpha ();
 		public int get_height ();
 		public int get_n_channels ();
-		public unowned string get_option (string key);
+		public unowned string? get_option (string key);
 		[Version (since = "2.32")]
 		public GLib.HashTable<weak string,weak string> get_options ();
 		[CCode (array_length = false)]
@@ -98,22 +98,22 @@ namespace Gdk {
 		[Version (since = "2.4")]
 		public bool save_to_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, ...) throws GLib.Error;
 		[Version (since = "2.4")]
-		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
+		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values) throws GLib.Error;
 		[Version (since = "2.4")]
 		public bool save_to_callback ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, ...) throws GLib.Error;
 		[Version (since = "2.4")]
-		public bool save_to_callbackv ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
+		public bool save_to_callbackv ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values) throws GLib.Error;
 		[Version (since = "2.14")]
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		[CCode (finish_instance = false, finish_name = "gdk_pixbuf_save_to_stream_finish", sentinel = "NULL")]
 		[Version (since = "2.24")]
 		public async void save_to_stream_async (GLib.OutputStream stream, string type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		[Version (since = "2.36")]
-		public bool save_to_streamv (GLib.OutputStream stream, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool save_to_streamv (GLib.OutputStream stream, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (finish_instance = false, finish_name = "gdk_pixbuf_save_to_stream_finish")]
 		[Version (since = "2.36")]
-		public async void save_to_streamv_async (GLib.OutputStream stream, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool savev (string filename, string type, [CCode (array_length = false, array_null_terminated = true)] string[] option_keys, [CCode (array_length = false, array_null_terminated = true)] string[] option_values) throws GLib.Error;
+		public async void save_to_streamv_async (GLib.OutputStream stream, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool savev (string filename, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public Gdk.Pixbuf? scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[Version (since = "2.2")]
@@ -172,10 +172,12 @@ namespace Gdk {
 		public weak string description;
 		public bool disabled;
 		public weak string domain;
-		public weak string extensions;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] extensions;
 		public uint32 flags;
 		public weak string license;
-		public weak string mime_types;
+		[CCode (array_length = false, array_null_terminated = true)]
+		public weak string[] mime_types;
 		public weak string name;
 		public Gdk.PixbufModulePattern signature;
 		[Version (since = "2.22")]
@@ -205,10 +207,10 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public PixbufLoader ();
 		public bool close () throws GLib.Error;
-		public unowned Gdk.PixbufAnimation get_animation ();
+		public unowned Gdk.PixbufAnimation? get_animation ();
 		[Version (since = "2.2")]
 		public unowned Gdk.PixbufFormat? get_format ();
-		public unowned Gdk.Pixbuf get_pixbuf ();
+		public unowned Gdk.Pixbuf? get_pixbuf ();
 		[Version (since = "2.2")]
 		public void set_size (int width, int height);
 		[CCode (has_construct_function = false)]
@@ -274,6 +276,7 @@ namespace Gdk {
 		public int relevance;
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", has_type_id = false)]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public struct Pixdata {
 		public uint32 magic;
 		public int32 length;
@@ -283,12 +286,9 @@ namespace Gdk {
 		public uint32 height;
 		[CCode (array_length = false)]
 		public weak uint8[] pixel_data;
-		[Version (deprecated = true, deprecated_since = "2.32")]
 		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint")] uint8[] stream) throws GLib.Error;
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		[Version (deprecated = true, deprecated_since = "2.32")]
 		public uint8[] serialize ();
-		[Version (deprecated = true, deprecated_since = "2.32")]
 		public GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_COLORSPACE_", type_id = "gdk_colorspace_get_type ()")]
@@ -303,7 +303,7 @@ namespace Gdk {
 		HYPER
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_PIXBUF_ALPHA_", type_id = "gdk_pixbuf_alpha_mode_get_type ()")]
-	[Version (deprecated = true)]
+	[Version (deprecated = true, deprecated_since = "2.42")]
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL
@@ -325,6 +325,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_DUMP_", has_type_id = false)]
 	[Flags]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public enum PixdataDumpType {
 		PIXDATA_STREAM,
 		PIXDATA_STRUCT,
@@ -337,6 +338,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h", cprefix = "GDK_PIXDATA_", has_type_id = false)]
 	[Flags]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public enum PixdataType {
 		COLOR_TYPE_RGB,
 		COLOR_TYPE_RGBA,
@@ -396,8 +398,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", error_pos = 1.8, instance_pos = 1.9)]
 	[Version (since = "2.4")]
 	public delegate bool PixbufSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_FEATURES_H")]
-	public const int PIXBUF_FEATURES_H;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_MAGIC_NUMBER")]
 	public const int PIXBUF_MAGIC_NUMBER;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_MAJOR")]
@@ -409,5 +409,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_VERSION")]
 	public const string PIXBUF_VERSION;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXDATA_HEADER_LENGTH")]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public const int PIXDATA_HEADER_LENGTH;
 }
