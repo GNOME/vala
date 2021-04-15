@@ -33,6 +33,8 @@ public class Vala.VarType : DataType {
 	}
 
 	public override DataType copy () {
-		return new VarType (value_owned);
+		var result = new VarType (value_owned);
+		result.nullable = nullable;
+		return result;
 	}
 }

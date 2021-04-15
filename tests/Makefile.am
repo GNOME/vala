@@ -879,6 +879,7 @@ TESTS = \
 	parser/using-ambiguous-reference.test \
 	parser/using-directive.vala \
 	parser/using-invalid-namespace.test \
+	parser/var-type-nullable.vala \
 	parser/with-embedded.vala \
 	parser/with-empty.vala \
 	parser/with-invalid-declaration.test \
@@ -1151,6 +1152,7 @@ TESTS = \
 	nullability/method-return-invalid-convert.test \
 	nullability/string-concat.test \
 	nullability/with-non-null.test \
+	nullability/var-type.vala \
 	version/since-constant.test \
 	version/since-field.test \
 	version/since-local-variable.test \

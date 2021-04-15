@@ -1944,10 +1944,12 @@ public class Vala.Parser : CodeVisitor {
 		DataType variable_type;
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			variable_type = new VarType (false);
+			variable_type.nullable = accept (TokenType.INTERR);
 		} else {
 			rollback (begin);
 			if (accept (TokenType.VAR)) {
 				variable_type = new VarType ();
+				variable_type.nullable = accept (TokenType.INTERR);
 			} else {
 				variable_type = parse_type (true, true);
 			}
@@ -2211,10 +2213,12 @@ public class Vala.Parser : CodeVisitor {
 		DataType type;
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			type = new VarType (false);
+			type.nullable = accept (TokenType.INTERR);
 		} else {
 			rollback (var_or_type);
 			if (accept (TokenType.VAR)) {
 				type = new VarType ();
+				type.nullable = accept (TokenType.INTERR);
 			} else {
 				type = parse_type (true, true);
 				if (accept (TokenType.IN)) {
@@ -2380,10 +2384,12 @@ public class Vala.Parser : CodeVisitor {
 			DataType variable_type;
 			if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 				variable_type = new VarType (false);
+				variable_type.nullable = accept (TokenType.INTERR);
 			} else {
 				rollback (expr_or_decl);
 				if (accept (TokenType.VAR)) {
 					variable_type = new VarType ();
+					variable_type.nullable = accept (TokenType.INTERR);
 				} else {
 					variable_type = parse_type (true, true);
 				}
