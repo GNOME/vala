@@ -41,7 +41,7 @@ public abstract class Vala.ValueType : DataType {
 		}
 
 		unowned Struct? st = type_symbol as Struct;
-		if (st != null) {
+		if (st != null && !st.error) {
 			return st.is_disposable ();
 		}
 

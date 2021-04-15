@@ -560,6 +560,9 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 
+		// FIXME Perform this [SimpleType] check in a better way
+		is_disposable ();
+
 		if (!external && !external_package) {
 			bool has_instance_field = false;
 			foreach (Field f in fields) {
