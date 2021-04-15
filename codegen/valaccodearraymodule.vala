@@ -685,7 +685,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		push_function (function);
 
 		if (requires_copy (array_type.element_type)) {
-			ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
+			ccode.add_declaration (get_ccode_name (array_type.length_type), new CCodeVariableDeclarator ("i"));
 
 			ccode.open_for (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")),
 			                   new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), get_ccodenode (array_type.length)),
@@ -729,8 +729,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (array_type))));
-		function.add_parameter (new CCodeParameter ("length", "%s*".printf (get_ccode_name (int_type))));
-		function.add_parameter (new CCodeParameter ("size", "%s*".printf (get_ccode_name (int_type))));
+		function.add_parameter (new CCodeParameter ("length", "%s*".printf (get_ccode_name (array_type.length_type))));
+		function.add_parameter (new CCodeParameter ("size", "%s*".printf (get_ccode_name (array_type.length_type))));
 
 		push_function (function);
 

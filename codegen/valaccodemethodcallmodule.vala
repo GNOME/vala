@@ -852,7 +852,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			arg_it.next ();
 			var new_size = get_cvalue (arg_it.get ());
 
-			var temp_decl = get_temp_variable (int_type);
+			var array_type = (ArrayType) ma.inner.value_type;
+			var temp_decl = get_temp_variable (array_type.length_type);
 			var temp_ref = get_variable_cexpression (temp_decl.name);
 
 			emit_temp_var (temp_decl);
@@ -862,7 +863,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			var clen = get_array_length_cexpression (ma.inner, 1);
 			var celems = get_cvalue (ma.inner);
-			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (get_ccode_name (array_type.element_type)));
 			var cdelta = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen);
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
