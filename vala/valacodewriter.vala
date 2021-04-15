@@ -1569,6 +1569,11 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (array_type != null && array_type.fixed_length) {
 			write_string ("[");
 			array_type.length.accept (this);
+			var length_type = array_type.length_type.to_qualified_string (current_scope);
+			if (length_type != "int") {
+				write_string (":");
+				write_string (length_type);
+			}
 			write_string ("]");
 		}
 	}

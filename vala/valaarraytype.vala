@@ -199,7 +199,13 @@ public class Vala.ArrayType : ReferenceType {
 		}
 
 		if (!fixed_length) {
-			return "%s[%s]%s".printf (elem_str, string.nfill (rank - 1, ','), nullable ? "?" : "");
+			var length_str = length_type == null ? "int" : length_type.to_qualified_string (scope);
+			if (length_str != "int") {
+				length_str = ":%s".printf (length_str);
+			} else {
+				length_str = "";
+			}
+			return "%s[%s%s]%s".printf (elem_str, string.nfill (rank - 1, ','), length_str, nullable ? "?" : "");
 		} else {
 			return elem_str;
 		}

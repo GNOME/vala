@@ -129,6 +129,7 @@ TESTS = \
 	arrays/inline-struct-field.test \
 	arrays/in-operator-with-boxed-needle.vala \
 	arrays/length-inline-assignment.vala \
+	arrays/length-type.vala \
 	arrays/length-type-include.vala \
 	arrays/length-no-int-type.test \
 	arrays/struct-field-length-cname.vala \
@@ -868,6 +869,7 @@ TESTS = \
 	scanner/string-escape-x.vala \
 	parser/argument-list-incomplete.test \
 	parser/array-creation-invalid.test \
+	parser/array-length.vala \
 	parser/assignment.vala \
 	parser/attribute-duplicate.test \
 	parser/attribute-missing-literal.test \
@@ -992,6 +994,8 @@ TESTS = \
 	semantic/array-incompatible-initializer.test \
 	semantic/array-incompatible-initializer2.test \
 	semantic/array-invalid-type-argument.test \
+	semantic/array-length-invalid.test \
+	semantic/array-length-nullable.test \
 	semantic/array-too-few-type-arguments.test \
 	semantic/array-too-many-type-arguments.test \
 	semantic/assignment-element-incompatible-ownership.test \
