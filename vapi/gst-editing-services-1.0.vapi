@@ -589,8 +589,8 @@ namespace GES {
 		public GES.TimelineElement get_toplevel_parent ();
 		[Version (since = "1.6.0")]
 		public virtual GES.TrackType get_track_types ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public GLib.ParamSpec[] list_children_properties ();
+		[CCode (array_length_pos = 0.1)]
+		public GLib.ParamSpec[:uint] list_children_properties ();
 		public virtual bool lookup_child (string prop_name, out GLib.Object child, out GLib.ParamSpec pspec);
 		[Version (since = "1.6.0")]
 		public GES.TimelineElement? paste (Gst.ClockTime paste_position);
@@ -780,9 +780,9 @@ namespace GES {
 		public bool is_active ();
 		[Version (since = "1.18")]
 		public bool is_core ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 0.1)]
 		[Version (deprecated = true)]
-		public GLib.ParamSpec[] list_children_properties ();
+		public GLib.ParamSpec[:uint] list_children_properties ();
 		[Version (deprecated = true, deprecated_since = "1.14")]
 		public virtual bool lookup_child (string prop_name, out Gst.Element element, out GLib.ParamSpec pspec);
 		public bool remove_control_binding (string property_name);

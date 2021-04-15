@@ -4837,15 +4837,15 @@ namespace Gdk {
 	[Compact]
 	public class ContentFormats {
 		[CCode (has_construct_function = false)]
-		public ContentFormats ([CCode (array_length_cname = "n_mime_types", array_length_pos = 1.1, array_length_type = "guint")] string[]? mime_types);
+		public ContentFormats ([CCode (array_length_cname = "n_mime_types", array_length_pos = 1.1)] string[:uint]? mime_types);
 		public bool contain_gtype (GLib.Type type);
 		public bool contain_mime_type (string mime_type);
 		[CCode (has_construct_function = false)]
 		public ContentFormats.for_gtype (GLib.Type type);
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public unowned GLib.Type[]? get_gtypes ();
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public unowned string[]? get_mime_types ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public unowned GLib.Type[:size_t]? get_gtypes ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public unowned string[:size_t]? get_mime_types ();
 		public bool match (Gdk.ContentFormats second);
 		public GLib.Type match_gtype (Gdk.ContentFormats second);
 		public unowned string? match_mime_type (Gdk.ContentFormats second);
@@ -4894,7 +4894,7 @@ namespace Gdk {
 		public virtual Gdk.ContentFormats ref_formats ();
 		public virtual Gdk.ContentFormats ref_storable_formats ();
 		[CCode (has_construct_function = false)]
-		public ContentProvider.union ([CCode (array_length_cname = "n_providers", array_length_pos = 1.1, array_length_type = "gsize")] owned Gdk.ContentProvider[]? providers);
+		public ContentProvider.union ([CCode (array_length_cname = "n_providers", array_length_pos = 1.1)] owned Gdk.ContentProvider[:size_t]? providers);
 		public virtual async bool write_mime_type_async (string mime_type, GLib.OutputStream stream, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		[NoAccessorMethod]
 		public Gdk.ContentFormats formats { owned get; }
@@ -5141,7 +5141,7 @@ namespace Gdk {
 		protected Event ();
 		[CCode (cname = "gdk_events_get_angle")]
 		public bool get_angle (Gdk.Event event2, out double angle);
-		public bool get_axes ([CCode (array_length_cname = "n_axes", array_length_pos = 1.1, array_length_type = "guint")] out unowned double[] axes);
+		public bool get_axes ([CCode (array_length_cname = "n_axes", array_length_pos = 1.1)] out unowned double[:uint] axes);
 		public bool get_axis (Gdk.AxisUse axis_use, out double value);
 		[CCode (cname = "gdk_events_get_center")]
 		public bool get_center (Gdk.Event event2, out double x, out double y);
@@ -5152,8 +5152,8 @@ namespace Gdk {
 		public bool get_distance (Gdk.Event event2, out double distance);
 		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public Gdk.TimeCoord[]? get_history ();
+		[CCode (array_length_pos = 0.1)]
+		public Gdk.TimeCoord[:uint]? get_history ();
 		public Gdk.ModifierType get_modifier_state ();
 		public bool get_pointer_emulated ();
 		public bool get_position (out double x, out double y);
@@ -6104,19 +6104,19 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_conic_gradient_node_get_type ()")]
 	public class ConicGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] color_stops);
 		[Version (since = "4.2")]
 		public float get_angle ();
 		public unowned Graphene.Point? get_center ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned Gsk.ColorStop[] get_color_stops ();
+		[CCode (array_length_pos = 0.1)]
+		public unowned Gsk.ColorStop[:size_t] get_color_stops ();
 		public size_t get_n_color_stops ();
 		public float get_rotation ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_container_node_get_type ()")]
 	public class ContainerNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public ContainerNode ([CCode (array_length_cname = "n_children", array_length_pos = 1.1, array_length_type = "guint")] Gsk.RenderNode[] children);
+		public ContainerNode ([CCode (array_length_cname = "n_children", array_length_pos = 1.1)] Gsk.RenderNode[:uint] children);
 		public unowned Gsk.RenderNode get_child (uint idx);
 		public uint get_n_children ();
 	}
@@ -6174,7 +6174,7 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_node_get_type ()")]
 	public class GLShaderNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1, array_length_type = "guint")] Gsk.RenderNode[] children);
+		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1)] Gsk.RenderNode[:uint] children);
 		public unowned GLib.Bytes get_args ();
 		public unowned Gsk.RenderNode get_child (uint idx);
 		public uint get_n_children ();
@@ -6194,9 +6194,9 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_linear_gradient_node_get_type ()")]
 	public class LinearGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public LinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned Gsk.ColorStop[] get_color_stops ();
+		public LinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] color_stops);
+		[CCode (array_length_pos = 0.1)]
+		public unowned Gsk.ColorStop[:size_t] get_color_stops ();
 		public unowned Graphene.Point? get_end ();
 		public size_t get_n_color_stops ();
 		public unowned Graphene.Point? get_start ();
@@ -6228,10 +6228,10 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_radial_gradient_node_get_type ()")]
 	public class RadialGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1)] Gsk.ColorStop[:size_t] color_stops);
 		public unowned Graphene.Point? get_center ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned Gsk.ColorStop[] get_color_stops ();
+		[CCode (array_length_pos = 0.1)]
+		public unowned Gsk.ColorStop[:size_t] get_color_stops ();
 		public float get_end ();
 		public float get_hradius ();
 		public size_t get_n_color_stops ();
@@ -6277,12 +6277,12 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_linear_gradient_node_get_type ()")]
 	public class RepeatingLinearGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public RepeatingLinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public RepeatingLinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] color_stops);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_radial_gradient_node_get_type ()")]
 	public class RepeatingRadialGradientNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public RepeatingRadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
+		public RepeatingRadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1)] Gsk.ColorStop[:size_t] color_stops);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_rounded_clip_node_get_type ()")]
 	public class RoundedClipNode : Gsk.RenderNode {
@@ -6310,7 +6310,7 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_shadow_node_get_type ()")]
 	public class ShadowNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public ShadowNode (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
+		public ShadowNode (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1)] Gsk.Shadow[:size_t] shadows);
 		public unowned Gsk.RenderNode get_child ();
 		public size_t get_n_shadows ();
 		public unowned Gsk.Shadow? get_shadow (size_t i);
@@ -6321,8 +6321,8 @@ namespace Gsk {
 		public TextNode (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, Graphene.Point offset);
 		public unowned Gdk.RGBA? get_color ();
 		public unowned Pango.Font get_font ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public unowned Pango.GlyphInfo[] get_glyphs ();
+		[CCode (array_length_pos = 0.1)]
+		public unowned Pango.GlyphInfo[:uint] get_glyphs ();
 		public uint get_num_glyphs ();
 		public unowned Graphene.Point? get_offset ();
 		[Version (since = "4.2")]
@@ -7039,7 +7039,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_cclosure_expression_get_type ()")]
 	public class CClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal? marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[] @params, GLib.Callback callback_func, void* user_data, GLib.ClosureNotify? user_destroy);
+		public CClosureExpression (GLib.Type value_type, GLib.ClosureMarshal? marshal, [CCode (array_length_cname = "n_params", array_length_pos = 2.5)] owned Gtk.Expression[:uint] @params, GLib.Callback callback_func, void* user_data, GLib.ClosureNotify? user_destroy);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_calendar_get_type ()")]
 	public class Calendar : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -7124,8 +7124,8 @@ namespace Gtk {
 		public class void install_cell_property (uint property_id, GLib.ParamSpec pspec);
 		public virtual bool is_activatable ();
 		public bool is_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_cell_area_class_list_cell_properties")]
-		public class (unowned GLib.ParamSpec)[] list_cell_properties ();
+		[CCode (array_length_pos = 0.1, cname = "gtk_cell_area_class_list_cell_properties")]
+		public class (unowned GLib.ParamSpec)[:uint] list_cell_properties ();
 		public virtual void remove (Gtk.CellRenderer renderer);
 		public void remove_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
 		public void request_renderer (Gtk.CellRenderer renderer, Gtk.Orientation orientation, Gtk.Widget widget, int for_size, out int minimum_size, out int natural_size);
@@ -7526,7 +7526,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_closure_expression_get_type ()")]
 	public class ClosureExpression : Gtk.Expression {
 		[CCode (has_construct_function = false, type = "GtkExpression*")]
-		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5, array_length_type = "guint")] owned Gtk.Expression[]? @params);
+		public ClosureExpression (GLib.Type value_type, GLib.Closure closure, [CCode (array_length_cname = "n_params", array_length_pos = 2.5)] owned Gtk.Expression[:uint]? @params);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_color_button_get_type ()")]
 	public class ColorButton : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ColorChooser, Gtk.ConstraintTarget {
@@ -7763,8 +7763,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkLayoutManager*")]
 		public ConstraintLayout ();
 		public void add_constraint (owned Gtk.Constraint constraint);
-		public GLib.List<weak Gtk.Constraint> add_constraints_from_description ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5, array_length_type = "gsize")] string[] lines, int hspacing, int vspacing, ...) throws GLib.Error;
-		public GLib.List<weak Gtk.Constraint> add_constraints_from_descriptionv ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5, array_length_type = "gsize")] string[] lines, int hspacing, int vspacing, GLib.HashTable<string,Gtk.ConstraintTarget> views) throws GLib.Error;
+		public GLib.List<weak Gtk.Constraint> add_constraints_from_description ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5)] string[:size_t] lines, int hspacing, int vspacing, ...) throws GLib.Error;
+		public GLib.List<weak Gtk.Constraint> add_constraints_from_descriptionv ([CCode (array_length_cname = "n_lines", array_length_pos = 1.5)] string[:size_t] lines, int hspacing, int vspacing, GLib.HashTable<string,Gtk.ConstraintTarget> views) throws GLib.Error;
 		public void add_guide (owned Gtk.ConstraintGuide guide);
 		public GLib.ListModel observe_constraints ();
 		public GLib.ListModel observe_guides ();
@@ -7781,7 +7781,7 @@ namespace Gtk {
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
 		[CCode (has_construct_function = false)]
 		public CssProvider ();
-		public void load_from_data ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] data);
+		public void load_from_data ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:ssize_t] data);
 		public void load_from_file (GLib.File file);
 		public void load_from_path (string path);
 		public void load_from_resource (string resource_path);
@@ -7969,13 +7969,13 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "4.4")]
 		public unowned Gdk.Drop? get_drop ();
 		public Gdk.ContentFormats? get_formats ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned GLib.Type[]? get_gtypes ();
+		[CCode (array_length_pos = 0.1)]
+		public unowned GLib.Type[:size_t]? get_gtypes ();
 		public bool get_preload ();
 		public unowned GLib.Value? get_value ();
 		public void reject ();
 		public void set_actions (Gdk.DragAction actions);
-		public void set_gtypes ([CCode (array_length_cname = "n_types", array_length_pos = 1.1, array_length_type = "gsize")] GLib.Type[]? types);
+		public void set_gtypes ([CCode (array_length_cname = "n_types", array_length_pos = 1.1)] GLib.Type[:size_t]? types);
 		public void set_preload (bool preload);
 		public Gdk.DragAction actions { get; set; }
 		[Version (since = "4.4")]
@@ -8157,7 +8157,7 @@ namespace Gtk {
 		public EntryBuffer ([CCode (array_length_cname = "n_initial_chars", array_length_pos = 1.1, type = "const char*")] uint8[]? initial_chars = null);
 		public virtual uint delete_text (uint position, uint n_chars);
 		public void emit_deleted_text (uint position, uint n_chars);
-		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const char*")] uint8[] chars);
+		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, type = "const char*")] uint8[:uint] chars);
 		public size_t get_bytes ();
 		public virtual uint get_length ();
 		public int get_max_length ();
@@ -8165,7 +8165,7 @@ namespace Gtk {
 		[CCode (vfunc_name = "get_text")]
 		[NoWrapper]
 		public virtual unowned string get_text_internal (out size_t n_bytes = null);
-		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const char*")] uint8[] chars);
+		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, type = "const char*")] uint8[:uint] chars);
 		public void set_max_length (int max_length);
 		public void set_text ([CCode (array_length_cname = "n_chars", array_length_pos = 1.1, type = "const char*")] uint8[] chars);
 		public uint length { get; }
@@ -8713,7 +8713,7 @@ namespace Gtk {
 		public GestureStylus ();
 		public bool get_axes ([CCode (array_length = false)] Gdk.AxisUse[] axes, [CCode (array_length = false)] out double[] values);
 		public bool get_axis (Gdk.AxisUse axis, out double value);
-		public bool get_backlog ([CCode (array_length_cname = "n_elems", array_length_pos = 1.1, array_length_type = "guint")] out Gdk.TimeCoord[] backlog);
+		public bool get_backlog ([CCode (array_length_cname = "n_elems", array_length_pos = 1.1)] out Gdk.TimeCoord[:uint] backlog);
 		public unowned Gdk.DeviceTool? get_device_tool ();
 		public signal void down (double x, double y);
 		public signal void motion (double x, double y);
@@ -10359,13 +10359,13 @@ namespace Gtk {
 		public unowned GLib.DateTime get_added ();
 		public int get_age ();
 		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, out unowned GLib.DateTime stamp);
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public string[] get_applications ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public string[:size_t] get_applications ();
 		public unowned string get_description ();
 		public unowned string get_display_name ();
 		public GLib.Icon? get_gicon ();
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public string[] get_groups ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public string[:size_t] get_groups ();
 		public unowned string get_mime_type ();
 		public unowned GLib.DateTime get_modified ();
 		public bool get_private_hint ();
@@ -10890,15 +10890,15 @@ namespace Gtk {
 		public void append_border (Gsk.RoundedRect outline, [CCode (array_length = false)] float border_width[4], [CCode (array_length = false)] Gdk.RGBA border_color[4]);
 		public Cairo.Context append_cairo (Graphene.Rect bounds);
 		public void append_color (Gdk.RGBA color, Graphene.Rect bounds);
-		public void append_conic_gradient (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_conic_gradient (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] stops);
 		public void append_inset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public void append_layout (Pango.Layout layout, Gdk.RGBA color);
-		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] stops);
 		public void append_node (Gsk.RenderNode node);
 		public void append_outset_shadow (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
-		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
-		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
-		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
+		public void append_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1)] Gsk.ColorStop[:size_t] stops);
+		public void append_repeating_linear_gradient (Graphene.Rect bounds, Graphene.Point start_point, Graphene.Point end_point, [CCode (array_length_cname = "n_stops", array_length_pos = 4.1)] Gsk.ColorStop[:size_t] stops);
+		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1)] Gsk.ColorStop[:size_t] stops);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
 		public Gsk.RenderNode free_to_node ();
@@ -10917,7 +10917,7 @@ namespace Gtk {
 		public void push_opacity (double opacity);
 		public void push_repeat (Graphene.Rect bounds, Graphene.Rect? child_bounds);
 		public void push_rounded_clip (Gsk.RoundedRect bounds);
-		public void push_shadow ([CCode (array_length_cname = "n_shadows", array_length_pos = 1.1, array_length_type = "gsize")] Gsk.Shadow[] shadow);
+		public void push_shadow ([CCode (array_length_cname = "n_shadows", array_length_pos = 1.1)] Gsk.Shadow[:size_t] shadow);
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
@@ -11394,8 +11394,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TextChildAnchor ();
 		public bool get_deleted ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public (unowned Gtk.Widget)[] get_widgets ();
+		[CCode (array_length_pos = 0.1)]
+		public (unowned Gtk.Widget)[:uint] get_widgets ();
 		[CCode (has_construct_function = false)]
 		[Version (since = "4.6")]
 		public TextChildAnchor.with_replacement (string character);
@@ -11880,7 +11880,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, sentinel = "-1")]
 		public TreePath.from_indices (...);
 		[CCode (has_construct_function = false)]
-		public TreePath.from_indicesv ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] int[] indices);
+		public TreePath.from_indicesv ([CCode (array_length_cname = "length", array_length_pos = 1.1)] int[:size_t] indices);
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
@@ -12950,7 +12950,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSymbolicPaintableInterface", type_id = "gtk_symbolic_paintable_get_type ()")]
 	[Version (since = "4.6")]
 	public interface SymbolicPaintable : Gdk.Paintable, GLib.Object {
-		public abstract void snapshot_symbolic (Gdk.Snapshot snapshot, double width, double height, [CCode (array_length_cname = "n_colors", array_length_pos = 4.1, array_length_type = "gsize")] Gdk.RGBA[] colors);
+		public abstract void snapshot_symbolic (Gdk.Snapshot snapshot, double width, double height, [CCode (array_length_cname = "n_colors", array_length_pos = 4.1)] Gdk.RGBA[:size_t] colors);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_drag_dest_get_type ()")]
 	public interface TreeDragDest : GLib.Object {
@@ -14510,7 +14510,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void disable_setlocale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static int distribute_natural_allocation (int extra_space, [CCode (array_length_cname = "n_requested_sizes", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RequestedSize[] sizes);
+	public static int distribute_natural_allocation (int extra_space, [CCode (array_length_cname = "n_requested_sizes", array_length_pos = 1.5)] Gtk.RequestedSize[:uint] sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14587,8 +14587,8 @@ namespace Gtk {
 	public static bool test_accessible_has_state (Gtk.Accessible accessible, Gtk.AccessibleState state);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_init ([CCode (array_length_cname = "argcp", array_length_pos = 0.5)] ref unowned string[] argvp, ...);
-	[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
-	public static unowned GLib.Type[] test_list_all_types ();
+	[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
+	public static unowned GLib.Type[:uint] test_list_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_register_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]

@@ -130,15 +130,15 @@ namespace JSC {
 		public Value.array_from_strv (JSC.Context context, [CCode (array_length = false, array_null_terminated = true)] global::string[] strv);
 		[CCode (has_construct_function = false)]
 		public Value.boolean (JSC.Context context, bool value);
-		public JSC.Value constructor_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
+		public JSC.Value constructor_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5)] JSC.Value[:uint]? parameters);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.28")]
 		public Value.from_json (JSC.Context context, global::string json);
-		public JSC.Value function_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] JSC.Value[]? parameters);
+		public JSC.Value function_callv ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5)] JSC.Value[:uint]? parameters);
 		[CCode (has_construct_function = false)]
 		public Value.function_variadic (JSC.Context context, global::string? name, GLib.Callback callback, void* user_data, GLib.DestroyNotify? destroy_notify, GLib.Type return_type);
 		[CCode (has_construct_function = false)]
-		public Value.functionv (JSC.Context context, global::string? name, GLib.Callback callback, void* user_data, GLib.DestroyNotify? destroy_notify, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 6.5, array_length_type = "guint")] GLib.Type[]? parameter_types);
+		public Value.functionv (JSC.Context context, global::string? name, GLib.Callback callback, void* user_data, GLib.DestroyNotify? destroy_notify, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 6.5)] GLib.Type[:uint]? parameter_types);
 		public unowned JSC.Context get_context ();
 		public bool is_array ();
 		public bool is_boolean ();
@@ -163,7 +163,7 @@ namespace JSC {
 		public JSC.Value object_get_property (global::string name);
 		public JSC.Value object_get_property_at_index (uint index);
 		public bool object_has_property (global::string name);
-		public JSC.Value object_invoke_methodv (global::string name, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5, array_length_type = "guint")] JSC.Value[]? parameters);
+		public JSC.Value object_invoke_methodv (global::string name, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5)] JSC.Value[:uint]? parameters);
 		public bool object_is_instance_of (global::string name);
 		public void object_set_property (global::string name, JSC.Value property);
 		public void object_set_property_at_index (uint index, JSC.Value property);

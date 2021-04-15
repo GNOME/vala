@@ -786,8 +786,8 @@ namespace Goo {
 		public void animate (double x, double y, double scale, double degrees, bool absolute, int duration, int step_time, Goo.CanvasAnimateType type);
 		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass iclass, string property_name);
 		public static void class_install_child_property (GLib.ObjectClass iclass, uint property_id, GLib.ParamSpec pspec);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		public static (unowned GLib.ParamSpec)[] class_list_child_properties (GLib.ObjectClass iclass);
+		[CCode (array_length_pos = 1.1)]
+		public static (unowned GLib.ParamSpec)[:uint] class_list_child_properties (GLib.ObjectClass iclass);
 		public void ensure_updated ();
 		public int find_child (Goo.CanvasItem child);
 		public abstract void get_bounds (out Goo.CanvasBounds bounds);
@@ -875,8 +875,8 @@ namespace Goo {
 		public void animate (double x, double y, double scale, double degrees, bool absolute, int duration, int step_time, Goo.CanvasAnimateType type);
 		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass mclass, string property_name);
 		public static void class_install_child_property (GLib.ObjectClass mclass, uint property_id, GLib.ParamSpec pspec);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		public static (unowned GLib.ParamSpec)[] class_list_child_properties (GLib.ObjectClass mclass);
+		[CCode (array_length_pos = 1.1)]
+		public static (unowned GLib.ParamSpec)[:uint] class_list_child_properties (GLib.ObjectClass mclass);
 		[NoWrapper]
 		public abstract unowned Goo.CanvasItem create_item (Goo.Canvas canvas);
 		public int find_child (Goo.CanvasItemModel child);

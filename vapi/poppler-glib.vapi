@@ -652,9 +652,9 @@ namespace Poppler {
 		[Version (since = "0.26")]
 		public string get_text_for_area (Poppler.Rectangle area);
 		[Version (since = "0.16")]
-		public bool get_text_layout ([CCode (array_length_cname = "n_rectangles", array_length_pos = 1.1, array_length_type = "guint")] out Poppler.Rectangle[] rectangles);
+		public bool get_text_layout ([CCode (array_length_cname = "n_rectangles", array_length_pos = 1.1)] out Poppler.Rectangle[:uint] rectangles);
 		[Version (since = "0.26")]
-		public bool get_text_layout_for_area (Poppler.Rectangle area, [CCode (array_length_cname = "n_rectangles", array_length_pos = 2.1, array_length_type = "guint")] out Poppler.Rectangle[] rectangles);
+		public bool get_text_layout_for_area (Poppler.Rectangle area, [CCode (array_length_cname = "n_rectangles", array_length_pos = 2.1)] out Poppler.Rectangle[:uint] rectangles);
 		public Cairo.Surface get_thumbnail ();
 		public bool get_thumbnail_size (out int width, out int height);
 		public Poppler.PageTransition get_transition ();
@@ -742,12 +742,12 @@ namespace Poppler {
 		public bool get_color (out unowned Poppler.Color color);
 		[Version (since = "0.26")]
 		public uint get_column_count ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 0.1)]
 		[Version (since = "0.26")]
-		public double[] get_column_gaps ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		public double[:uint] get_column_gaps ();
+		[CCode (array_length_pos = 0.1)]
 		[Version (since = "0.26")]
-		public double[] get_column_widths ();
+		public double[:uint] get_column_widths ();
 		[Version (since = "0.26")]
 		public double get_end_indent ();
 		[Version (since = "0.26")]
@@ -815,9 +815,9 @@ namespace Poppler {
 		public Poppler.StructureTextDecoration get_text_decoration_type ();
 		[Version (since = "0.26")]
 		public double get_text_indent ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 0.1)]
 		[Version (since = "0.26")]
-		public Poppler.TextSpan[] get_text_spans ();
+		public Poppler.TextSpan[:uint] get_text_spans ();
 		[Version (since = "0.26")]
 		public string get_title ();
 		[Version (since = "0.26")]
@@ -1493,10 +1493,10 @@ namespace Poppler {
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "poppler.h", instance_pos = 1.9)]
-	public delegate bool AttachmentSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
+	public delegate bool AttachmentSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t] buf) throws GLib.Error;
 	[CCode (cheader_filename = "poppler.h", instance_pos = 1.9)]
 	[Version (since = "0.14")]
-	public delegate bool MediaSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
+	public delegate bool MediaSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t] buf) throws GLib.Error;
 	[CCode (cheader_filename = "poppler.h", cname = "POPPLER_HAS_CAIRO")]
 	public const int HAS_CAIRO;
 	[CCode (cheader_filename = "poppler.h", cname = "POPPLER_MAJOR_VERSION")]
@@ -1520,8 +1520,8 @@ namespace Poppler {
 	public static unowned string get_version ();
 	[CCode (cheader_filename = "poppler.h")]
 	[Version (since = "0.73")]
-	public static string named_dest_from_bytestring ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
-	[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "poppler.h")]
+	public static string named_dest_from_bytestring ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:size_t] data);
+	[CCode (array_length_pos = 1.1, cheader_filename = "poppler.h")]
 	[Version (since = "0.73")]
-	public static uint8[]? named_dest_to_bytestring (string name);
+	public static uint8[:size_t]? named_dest_to_bytestring (string name);
 }

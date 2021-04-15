@@ -452,8 +452,8 @@ namespace Gtk {
 		[Version (since = "2.14")]
 		public Gdk.ModifierType get_modifier_mask ();
 		public void @lock ();
-		[CCode (array_length_pos = 2.1, array_length_type = "guint")]
-		public unowned Gtk.AccelGroupEntry[]? query (uint accel_key, Gdk.ModifierType accel_mods);
+		[CCode (array_length_pos = 2.1)]
+		public unowned Gtk.AccelGroupEntry[:uint]? query (uint accel_key, Gdk.ModifierType accel_mods);
 		public void @unlock ();
 		public bool is_locked { get; }
 		public Gdk.ModifierType modifier_mask { get; }
@@ -657,17 +657,17 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public void add_action_with_accel (Gtk.Action action, string? accelerator);
 		[Version (since = "2.4")]
-		public void add_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.ActionEntry[] entries, void* user_data);
+		public void add_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.ActionEntry[:uint] entries, void* user_data);
 		[Version (since = "2.4")]
-		public void add_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.ActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
+		public void add_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.ActionEntry[:uint] entries, void* user_data, GLib.DestroyNotify? destroy);
 		[Version (since = "2.4")]
-		public void add_radio_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RadioActionEntry[] entries, int value, [CCode (type = "GCallback")] Gtk.RadioActionCallback on_change);
+		public void add_radio_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.RadioActionEntry[:uint] entries, int value, [CCode (type = "GCallback")] Gtk.RadioActionCallback on_change);
 		[Version (since = "2.4")]
-		public void add_radio_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RadioActionEntry[] entries, int value, [CCode (type = "GCallback")] owned Gtk.RadioActionCallback on_change);
+		public void add_radio_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.RadioActionEntry[:uint] entries, int value, [CCode (type = "GCallback")] owned Gtk.RadioActionCallback on_change);
 		[Version (since = "2.4")]
-		public void add_toggle_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.ToggleActionEntry[] entries, void* user_data);
+		public void add_toggle_actions ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.ToggleActionEntry[:uint] entries, void* user_data);
 		[Version (since = "2.4")]
-		public void add_toggle_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5, array_length_type = "guint")] Gtk.ToggleActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
+		public void add_toggle_actions_full ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] Gtk.ToggleActionEntry[:uint] entries, void* user_data, GLib.DestroyNotify? destroy);
 		[Version (since = "3.6")]
 		public unowned Gtk.AccelGroup get_accel_group ();
 		[Version (since = "2.4")]
@@ -1098,8 +1098,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	[Compact]
 	public class BindingSignal {
-		[CCode (array_length_cname = "n_args", array_length_type = "guint")]
-		public weak Gtk.BindingArg[] args;
+		[CCode (array_length_cname = "n_args")]
+		public weak Gtk.BindingArg[:uint] args;
 		public uint n_args;
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
@@ -1448,9 +1448,9 @@ namespace Gtk {
 		public virtual bool is_activatable ();
 		[Version (since = "3.0")]
 		public bool is_focus_sibling (Gtk.CellRenderer renderer, Gtk.CellRenderer sibling);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_cell_area_class_list_cell_properties")]
+		[CCode (array_length_pos = 0.1, cname = "gtk_cell_area_class_list_cell_properties")]
 		[Version (since = "3.0")]
-		public class (unowned GLib.ParamSpec)[] list_cell_properties ();
+		public class (unowned GLib.ParamSpec)[:uint] list_cell_properties ();
 		[Version (since = "3.0")]
 		public virtual void remove (Gtk.CellRenderer renderer);
 		[Version (since = "3.0")]
@@ -2005,16 +2005,16 @@ namespace Gtk {
 		[Version (since = "2.6")]
 		public void set_image (Gdk.Pixbuf pixbuf);
 		public void set_text (string text, int len);
-		public bool set_with_data ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5, array_length_type = "guint")] Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, void* user_data);
-		public bool set_with_owner ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5, array_length_type = "guint")] Gtk.TargetEntry[] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
+		public bool set_with_data ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Gtk.TargetEntry[:uint] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, void* user_data);
+		public bool set_with_owner ([CCode (array_length_cname = "n_targets", array_length_pos = 1.5)] Gtk.TargetEntry[:uint] targets, [CCode (scope = "async")] Gtk.ClipboardGetFunc get_func, [CCode (scope = "async")] Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
 		[Version (since = "2.6")]
 		public void store ();
 		public Gtk.SelectionData? wait_for_contents (Gdk.Atom target);
 		[Version (since = "2.6")]
 		public Gdk.Pixbuf? wait_for_image ();
-		[CCode (array_length_pos = 2.1, array_length_type = "gsize")]
+		[CCode (array_length_pos = 2.1)]
 		[Version (since = "2.10")]
-		public uint8[]? wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format);
+		public uint8[:size_t]? wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format);
 		[Version (since = "2.4")]
 		public bool wait_for_targets ([CCode (array_length_cname = "n_targets", array_length_pos = 1.1)] out Gdk.Atom[] targets);
 		public string? wait_for_text ();
@@ -2360,11 +2360,11 @@ namespace Gtk {
 		public class void handle_border_width ();
 		[CCode (cname = "gtk_container_class_install_child_properties")]
 		[Version (since = "3.18")]
-		public class void install_child_properties ([CCode (array_length_cname = "n_pspecs", array_length_pos = 0.5, array_length_type = "guint")] GLib.ParamSpec[] pspecs);
+		public class void install_child_properties ([CCode (array_length_cname = "n_pspecs", array_length_pos = 0.5)] GLib.ParamSpec[:uint] pspecs);
 		[CCode (cname = "gtk_container_class_install_child_property")]
 		public class void install_child_property (uint property_id, GLib.ParamSpec pspec);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_container_class_list_child_properties")]
-		public class (unowned GLib.ParamSpec)[] list_child_properties ();
+		[CCode (array_length_pos = 0.1, cname = "gtk_container_class_list_child_properties")]
+		public class (unowned GLib.ParamSpec)[:uint] list_child_properties ();
 		public void propagate_draw (Gtk.Widget child, Cairo.Context cr);
 		[Version (deprecated = true, deprecated_since = "3.10")]
 		public void resize_children ();
@@ -2419,7 +2419,7 @@ namespace Gtk {
 		public static unowned Gtk.CssProvider get_default ();
 		public static unowned Gtk.CssProvider get_named (string name, string? variant);
 		[CCode (cname = "gtk_css_provider_load_from_data")]
-		public bool load_from_buffer ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] data) throws GLib.Error;
+		public bool load_from_buffer ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:ssize_t] data) throws GLib.Error;
 		public bool load_from_data (string data, ssize_t length = -1) throws GLib.Error;
 		public bool load_from_file (GLib.File file) throws GLib.Error;
 		public bool load_from_path (string path) throws GLib.Error;
@@ -2773,7 +2773,7 @@ namespace Gtk {
 		public EntryBuffer ([CCode (array_length_cname = "n_initial_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[]? initial_chars = null);
 		public virtual uint delete_text (uint position, uint n_chars);
 		public void emit_deleted_text (uint position, uint n_chars);
-		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
+		public void emit_inserted_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, type = "const gchar*")] uint8[:uint] chars);
 		public size_t get_bytes ();
 		public virtual uint get_length ();
 		public int get_max_length ();
@@ -2781,7 +2781,7 @@ namespace Gtk {
 		[CCode (vfunc_name = "get_text")]
 		[NoWrapper]
 		public virtual unowned string get_text_internal (out size_t n_bytes = null);
-		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, array_length_type = "guint", type = "const gchar*")] uint8[] chars);
+		public virtual uint insert_text (uint position, [CCode (array_length_cname = "n_chars", array_length_pos = 2.1, type = "const gchar*")] uint8[:uint] chars);
 		public void set_max_length (int max_length);
 		public void set_text ([CCode (array_length_cname = "n_chars", array_length_pos = 1.1, type = "const gchar*")] uint8[] chars);
 		public uint length { get; }
@@ -6395,14 +6395,14 @@ namespace Gtk {
 		public time_t get_added ();
 		public int get_age ();
 		public bool get_application_info (string app_name, out unowned string app_exec, out uint count, [CCode (type = "time_t*")] out time_t time_);
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public string[] get_applications ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public string[:size_t] get_applications ();
 		public unowned string get_description ();
 		public unowned string get_display_name ();
 		[Version (since = "2.22")]
 		public GLib.Icon? get_gicon ();
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
-		public string[] get_groups ();
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
+		public string[:size_t] get_groups ();
 		public Gdk.Pixbuf? get_icon (int size);
 		public unowned string get_mime_type ();
 		public time_t get_modified ();
@@ -7813,13 +7813,13 @@ namespace Gtk {
 	[Compact]
 	public class TargetList {
 		[CCode (has_construct_function = false)]
-		public TargetList ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1, array_length_type = "guint")] Gtk.TargetEntry[]? targets);
+		public TargetList ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1)] Gtk.TargetEntry[:uint]? targets);
 		public void add (Gdk.Atom target, uint flags, uint info);
 		[Version (since = "2.6")]
 		public void add_image_targets (uint info, bool writable);
 		[Version (since = "2.10")]
 		public void add_rich_text_targets (uint info, bool deserializable, Gtk.TextBuffer buffer);
-		public void add_table ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1, array_length_type = "guint")] Gtk.TargetEntry[] targets);
+		public void add_table ([CCode (array_length_cname = "ntargets", array_length_pos = 1.1)] Gtk.TargetEntry[:uint] targets);
 		[Version (since = "2.6")]
 		public void add_text_targets (uint info);
 		[Version (since = "2.6")]
@@ -7890,7 +7890,7 @@ namespace Gtk {
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
 		[Version (since = "2.10")]
-		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data) throws GLib.Error;
+		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.1)] uint8[:size_t] data) throws GLib.Error;
 		[Version (since = "2.10")]
 		public bool deserialize_get_can_create_tags (Gdk.Atom format);
 		[Version (since = "2.10")]
@@ -7953,9 +7953,9 @@ namespace Gtk {
 		public void remove_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		[Version (since = "2.4")]
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
-		[CCode (array_length_pos = 4.1, array_length_type = "gsize")]
+		[CCode (array_length_pos = 4.1)]
 		[Version (since = "2.10")]
-		public uint8[] serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end);
+		public uint8[:size_t] serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end);
 		public void set_modified (bool setting);
 		public void set_text (string text, int len = -1);
 		[Version (since = "2.10")]
@@ -8824,7 +8824,7 @@ namespace Gtk {
 		public TreePath.from_indices (...);
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.12")]
-		public TreePath.from_indicesv ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] int[] indices);
+		public TreePath.from_indicesv ([CCode (array_length_cname = "length", array_length_pos = 1.1)] int[:size_t] indices);
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
@@ -9379,7 +9379,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public bool device_is_shadowed (Gdk.Device device);
 		[NoWrapper]
-		public virtual void dispatch_child_properties_changed ([CCode (array_length_cname = "n_pspecs", array_length_pos = 0.5, array_length_type = "guint", type = "GParamSpec**")] GLib.ParamSpec[] pspecs);
+		public virtual void dispatch_child_properties_changed ([CCode (array_length_cname = "n_pspecs", array_length_pos = 0.5, type = "GParamSpec**")] GLib.ParamSpec[:uint] pspecs);
 		[CCode (cname = "gtk_widget_draw")]
 		[Version (since = "3.0")]
 		public void draw_to_cairo_context (Cairo.Context cr);
@@ -9588,9 +9588,9 @@ namespace Gtk {
 		public (unowned string)[] list_action_prefixes ();
 		[Version (since = "2.4")]
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cname = "gtk_widget_class_list_style_properties")]
+		[CCode (array_length_pos = 0.1, cname = "gtk_widget_class_list_style_properties")]
 		[Version (since = "2.2")]
-		public class (unowned GLib.ParamSpec)[] list_style_properties ();
+		public class (unowned GLib.ParamSpec)[:uint] list_style_properties ();
 		[Version (deprecated = true, deprecated_since = "3.0", replacement = "override_background_color")]
 		public void modify_base (Gtk.StateType state, Gdk.Color? color);
 		[Version (deprecated = true, deprecated_since = "3.0", replacement = "override_background_color")]
@@ -10695,9 +10695,9 @@ namespace Gtk {
 		public bool get_show_tips ();
 		[Version (since = "2.10")]
 		public Gtk.RecentSortType get_sort_type ();
-		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true)]
 		[Version (since = "2.10")]
-		public string[] get_uris ();
+		public string[:size_t] get_uris ();
 		[Version (since = "2.10")]
 		public abstract GLib.SList<weak Gtk.RecentFilter> list_filters ();
 		[Version (since = "2.10")]
@@ -12326,7 +12326,7 @@ namespace Gtk {
 	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 3.9)]
 	[Version (since = "2.10")]
-	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_cname = "length", array_length_pos = 3.1, array_length_type = "gsize", type = "const guint8*")] uint8[]? text);
+	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, [CCode (array_length_cname = "length", array_length_pos = 3.1, type = "const guint8*")] uint8[:size_t]? text);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 2.9)]
 	[Version (since = "2.4")]
 	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, [CCode (array_length_cname = "n_atoms", array_length_pos = 2.1)] Gdk.Atom[]? atoms);
@@ -12402,9 +12402,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
 	public delegate bool StylePropertyParser (string str, GLib.Value value) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 5.9)]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.5, array_length_type = "gsize")] uint8[] data, bool create_tags) throws GLib.Error;
-	[CCode (array_length_pos = 4.1, array_length_type = "gsize", cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
-	public delegate uint8[]? TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end);
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, [CCode (array_length_cname = "length", array_length_pos = 4.5)] uint8[:size_t] data, bool create_tags) throws GLib.Error;
+	[CCode (array_length_pos = 4.1, cheader_filename = "gtk/gtk.h", instance_pos = 4.9)]
+	public delegate uint8[:size_t]? TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -13203,7 +13203,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_add_target (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint info);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, [CCode (array_length_cname = "ntargets", array_length_pos = 3.1, array_length_type = "guint")] Gtk.TargetEntry[] targets);
+	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, [CCode (array_length_cname = "ntargets", array_length_pos = 3.1)] Gtk.TargetEntry[:uint] targets);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_clear_targets (Gtk.Widget widget, Gdk.Atom selection);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -13228,10 +13228,10 @@ namespace Gtk {
 	public static bool show_uri_on_window (Gtk.Window? parent, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated = true, deprecated_since = "3.10")]
-	public static void stock_add ([CCode (array_length_cname = "n_items", array_length_pos = 1.1, array_length_type = "guint")] Gtk.StockItem[] items);
+	public static void stock_add ([CCode (array_length_cname = "n_items", array_length_pos = 1.1)] Gtk.StockItem[:uint] items);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated = true, deprecated_since = "3.10")]
-	public static void stock_add_static ([CCode (array_length_cname = "n_items", array_length_pos = 1.1, array_length_type = "guint")] Gtk.StockItem[] items);
+	public static void stock_add_static ([CCode (array_length_cname = "n_items", array_length_pos = 1.1)] Gtk.StockItem[:uint] items);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated = true, deprecated_since = "3.10")]
 	public static GLib.SList<string> stock_list_ids ();
@@ -13280,9 +13280,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
 	public static void test_init ([CCode (array_length_cname = "argcp", array_length_pos = 0.5)] ref unowned string[] argvp, ...);
-	[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "guint", array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
+	[CCode (array_length = true, array_length_pos = 0.1, array_null_terminated = true, cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
-	public static unowned GLib.Type[] test_list_all_types ();
+	public static unowned GLib.Type[:uint] test_list_all_types ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.14")]
 	public static void test_register_all_types ();

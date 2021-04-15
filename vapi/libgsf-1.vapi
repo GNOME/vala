@@ -5,7 +5,7 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_blob_get_type ()")]
 	public class Blob : GLib.Object {
 		[CCode (has_construct_function = false)]
-		public Blob ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "gsize")] uint8[] data_to_copy) throws GLib.Error;
+		public Blob ([CCode (array_length_cname = "size", array_length_pos = 0.5)] uint8[:size_t] data_to_copy) throws GLib.Error;
 		public size_t get_size ();
 		public void* peek_data ();
 	}
@@ -127,8 +127,8 @@ namespace Gsf {
 		public Input.mmap_new (string filename) throws GLib.Error;
 		[CCode (array_length = false, vfunc_name = "Read")]
 		public virtual unowned uint8[]? read (size_t num_bytes, [CCode (array_length = false)] uint8[]? optional_buffer);
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize")]
-		public uint8[] read0 (size_t num_bytes);
+		[CCode (array_length_pos = 1.1)]
+		public uint8[:size_t] read0 (size_t num_bytes);
 		[CCode (vfunc_name = "Seek")]
 		public virtual bool seek (Gsf.off_t offset, GLib.SeekType whence);
 		public bool seek_emulate (Gsf.off_t pos);
@@ -189,9 +189,9 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_input_memory_get_type ()")]
 	public class InputMemory : Gsf.Input {
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[] buf, bool needs_free);
+		public InputMemory ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[:Gsf.off_t] buf, bool needs_free);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
-		public InputMemory.clone ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[] buf);
+		public InputMemory.clone ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:Gsf.off_t] buf);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
 		[CCode (has_construct_function = false, type = "GsfInput*")]
@@ -339,7 +339,7 @@ namespace Gsf {
 		public virtual Gsf.off_t vprintf (string format, va_list args);
 		public static bool wrap (GLib.Object wrapper, Gsf.Output wrapee);
 		[CCode (vfunc_name = "Write")]
-		public virtual bool write ([CCode (array_length_cname = "num_bytes", array_length_pos = 0.5, array_length_type = "gsize")] uint8[] data);
+		public virtual bool write ([CCode (array_length_cname = "num_bytes", array_length_pos = 0.5)] uint8[:size_t] data);
 		[NoAccessorMethod]
 		public Gsf.Outfile container { owned get; set; }
 		[NoAccessorMethod]
@@ -541,7 +541,7 @@ namespace Gsf {
 		public weak Gsf.Output output;
 		[CCode (has_construct_function = false)]
 		public XMLOut (Gsf.Output output);
-		public void add_base64 (string? id, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
+		public void add_base64 (string? id, [CCode (array_length_cname = "len", array_length_pos = 2.1)] uint8[:uint] data);
 		public void add_bool (string? id, bool val);
 		public void add_color (string? id, uint r, uint g, uint b);
 		public void add_cstr (string? id, string? val_utf8);
@@ -744,7 +744,7 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static size_t base64_decode_step ([CCode (array_length = false)] uint8[] @in, size_t len, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static size_t base64_encode_close ([CCode (array_length_cname = "inlen", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] @in, bool break_lines, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
+	public static size_t base64_encode_close ([CCode (array_length_cname = "inlen", array_length_pos = 1.5)] uint8[:size_t] @in, bool break_lines, [CCode (array_length = false)] uint8[] @out, ref int state, ref uint save);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static uint8 base64_encode_simple ([CCode (array_length = false)] uint8[] data, size_t len);
 	[CCode (cheader_filename = "gsf/gsf.h")]
@@ -809,9 +809,9 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static GLib.Error open_pkg_parse_rel_by_id (Gsf.XMLIn xin, string id, Gsf.XMLInNode dtd, Gsf.XMLInNS ns);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static unowned GLib.Parameter? property_settings_find (string name, [CCode (array_length_cname = "n_params", array_length_pos = 2.1, array_length_type = "gsize")] GLib.Parameter[] @params);
+	public static unowned GLib.Parameter? property_settings_find (string name, [CCode (array_length_cname = "n_params", array_length_pos = 2.1)] GLib.Parameter[:size_t] @params);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static void property_settings_free ([CCode (array_length_cname = "n_params", array_length_pos = 1.1, array_length_type = "gsize")] owned GLib.Parameter[] @params);
+	public static void property_settings_free ([CCode (array_length_cname = "n_params", array_length_pos = 1.1)] owned GLib.Parameter[:size_t] @params);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static void shutdown ();
 	[CCode (cheader_filename = "gsf/gsf.h")]

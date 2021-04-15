@@ -551,7 +551,7 @@ namespace Gst {
 		public class VBIEncoder {
 			[CCode (has_construct_function = false)]
 			public VBIEncoder (Gst.Video.Format format, uint32 pixel_width);
-			public bool add_ancillary (bool composite, uint8 DID, uint8 SDID_block_number, [CCode (array_length_cname = "data_count", array_length_pos = 4.1, array_length_type = "guint")] uint8[] data);
+			public bool add_ancillary (bool composite, uint8 DID, uint8 SDID_block_number, [CCode (array_length_cname = "data_count", array_length_pos = 4.1)] uint8[:uint] data);
 			public Gst.Video.VBIEncoder copy ();
 			public void free ();
 			public void write_line (uint8 data);
@@ -689,8 +689,8 @@ namespace Gst {
 			public uint8 DID;
 			public uint8 SDID_block_number;
 			public uint8 data_count;
-			[CCode (array_length_cname = "data_count", array_length_type = "guint8")]
-			public weak uint8[] data;
+			[CCode (array_length_cname = "data_count")]
+			public weak uint8[:uint8] data;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoBarMeta")]
@@ -709,8 +709,8 @@ namespace Gst {
 		public struct CaptionMeta {
 			public Gst.Meta meta;
 			public Gst.Video.CaptionType caption_type;
-			[CCode (array_length_cname = "size", array_length_type = "gsize")]
-			public weak uint8[] data;
+			[CCode (array_length_cname = "size")]
+			public weak uint8[:size_t] data;
 			public size_t size;
 			public static unowned Gst.MetaInfo? get_info ();
 		}
@@ -1840,7 +1840,7 @@ namespace Gst {
 		public static unowned Gst.Video.BarMeta? buffer_add_video_bar_meta (Gst.Buffer buffer, uint8 field, bool is_letterbox, uint bar_data1, uint bar_data2);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_caption_meta")]
 		[Version (since = "1.16")]
-		public static unowned Gst.Video.CaptionMeta? buffer_add_video_caption_meta (Gst.Buffer buffer, Gst.Video.CaptionType caption_type, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] data);
+		public static unowned Gst.Video.CaptionMeta? buffer_add_video_caption_meta (Gst.Buffer buffer, Gst.Video.CaptionType caption_type, [CCode (array_length_cname = "size", array_length_pos = 3.1)] uint8[:size_t] data);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_codec_alpha_meta")]
 		[Version (since = "1.20")]
 		public static unowned Gst.Video.CodecAlphaMeta? buffer_add_video_codec_alpha_meta (Gst.Buffer buffer, owned Gst.Buffer alpha_buffer);
@@ -1983,9 +1983,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoFormat.to_string")]
 		public static unowned string format_to_string (Gst.Video.Format format);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint", cheader_filename = "gst/video/video.h")]
+		[CCode (array_length_pos = 0.1, cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
-		public static unowned Gst.Video.Format[] formats_raw ();
+		public static unowned Gst.Video.Format[:uint] formats_raw ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoFrame.map")]
 		public static bool frame_map (out Gst.Video.Frame frame, Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
@@ -2016,10 +2016,10 @@ namespace Gst {
 		public static bool is_video_overlay_prepare_window_handle_message (Gst.Message msg);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
-		public static Gst.Caps make_raw_caps ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] Gst.Video.Format[]? formats);
+		public static Gst.Caps make_raw_caps ([CCode (array_length_cname = "len", array_length_pos = 1.1)] Gst.Video.Format[:uint]? formats);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
-		public static Gst.Caps make_raw_caps_with_features ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint")] Gst.Video.Format[]? formats, owned Gst.CapsFeatures? features);
+		public static Gst.Caps make_raw_caps_with_features ([CCode (array_length_cname = "len", array_length_pos = 1.5)] Gst.Video.Format[:uint]? formats, owned Gst.CapsFeatures? features);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoMasteringDisplayInfo.from_string", since = "1.18")]
 		public static bool mastering_display_info_from_string (out Gst.Video.MasteringDisplayInfo minfo, string mastering);

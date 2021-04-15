@@ -929,7 +929,7 @@ namespace Gst {
 		public delegate bool ClientSendFunc (Gst.RTSPServer.Client client, Gst.RTSP.Message message, bool close);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSendMessagesFunc", instance_pos = 3.9)]
 		[Version (since = "1.16")]
-		public delegate bool ClientSendMessagesFunc (Gst.RTSPServer.Client client, [CCode (array_length_cname = "n_messages", array_length_pos = 2.5, array_length_type = "guint", type = "GstRTSPMessage*")] Gst.RTSP.Message[] messages, bool close);
+		public delegate bool ClientSendMessagesFunc (Gst.RTSPServer.Client client, [CCode (array_length_cname = "n_messages", array_length_pos = 2.5, type = "GstRTSPMessage*")] Gst.RTSP.Message[:uint] messages, bool close);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPClientSessionFilterFunc", instance_pos = 2.9)]
 		public delegate Gst.RTSPServer.FilterResult ClientSessionFilterFunc (Gst.RTSPServer.Client client, Gst.RTSPServer.Session sess);
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstRTSPKeepAliveFunc", instance_pos = 0.9)]

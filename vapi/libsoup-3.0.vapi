@@ -373,15 +373,15 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", ref_function = "soup_message_body_ref", type_id = "soup_message_body_get_type ()", unref_function = "soup_message_body_unref")]
 	[Compact]
 	public class MessageBody {
-		[CCode (array_length_cname = "length", array_length_type = "gint64")]
-		public weak uint8[] data;
+		[CCode (array_length_cname = "length")]
+		public weak uint8[:int64] data;
 		public int64 length;
 		[CCode (has_construct_function = false)]
 		public MessageBody ();
 		[Version (deprecated = true, deprecated_since = "2.32", replacement = "MessageBody.append_take")]
-		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] data);
+		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1)] uint8[:size_t] data);
 		public void append_bytes (GLib.Bytes buffer);
-		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1)] owned uint8[:size_t] data);
 		public void complete ();
 		public GLib.Bytes flatten ();
 		public bool get_accumulate ();
@@ -543,7 +543,7 @@ namespace Soup {
 		public bool is_options_ping ();
 		public void set_http_version (Soup.HTTPVersion version);
 		public void set_redirect (uint status_code, string redirect_uri);
-		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[]? resp_body);
+		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1)] uint8[:size_t]? resp_body);
 		public void set_status (uint status_code, string? reason_phrase);
 		public GLib.IOStream steal_connection ();
 		public signal bool accept_certificate (GLib.TlsCertificate tls_peer_certificate, GLib.TlsCertificateFlags tls_peer_errors);
@@ -634,7 +634,7 @@ namespace Soup {
 		public unowned string? get_protocol ();
 		public Soup.WebsocketState get_state ();
 		public unowned GLib.Uri get_uri ();
-		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? data);
+		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:size_t]? data);
 		public void send_message (Soup.WebsocketDataType type, GLib.Bytes message);
 		public void send_text (string text);
 		public void set_keepalive_interval (uint interval);

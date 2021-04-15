@@ -9,8 +9,8 @@ namespace Peas {
 		public void add_search_path (string module_dir, string? data_dir);
 		public Peas.Extension create_extension (Peas.PluginInfo info, GLib.Type extension_type, ...);
 		[Version (since = "1.24")]
-		public Peas.Extension create_extension_with_properties (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] string[] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] prop_values);
-		public Peas.Extension create_extensionv (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[]? parameters);
+		public Peas.Extension create_extension_with_properties (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] string[:uint] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] GLib.Value[:uint] prop_values);
+		public Peas.Extension create_extensionv (Peas.PluginInfo info, GLib.Type extension_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5)] GLib.Parameter[:uint]? parameters);
 		public void enable_loader (string loader_name);
 		public void garbage_collect ();
 		public static unowned Peas.Engine get_default ();
@@ -63,9 +63,9 @@ namespace Peas {
 		public void @foreach (Peas.ExtensionSetForeachFunc func);
 		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
 		[CCode (cname = "peas_extension_set_newv", has_construct_function = false)]
-		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
+		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5)] GLib.Parameter[:uint] parameters);
 		[CCode (has_construct_function = false)]
-		public ExtensionSet.with_properties (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] string[] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] prop_values);
+		public ExtensionSet.with_properties (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] string[:uint] prop_names, [CCode (array_length_cname = "n_properties", array_length_pos = 2.5)] GLib.Value[:uint] prop_values);
 		[NoAccessorMethod]
 		public void* construct_properties { construct; }
 		[NoAccessorMethod]
@@ -141,7 +141,7 @@ namespace Peas {
 	[Version (since = "1.2")]
 	public delegate void ExtensionSetForeachFunc (Peas.ExtensionSet @set, Peas.PluginInfo info, Peas.Extension exten);
 	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 1.9)]
-	public delegate GLib.Object FactoryFunc ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] GLib.Parameter[] parameters);
+	public delegate GLib.Object FactoryFunc ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5)] GLib.Parameter[:uint] parameters);
 	[CCode (cheader_filename = "libpeas/peas.h")]
 	public static void cclosure_marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 }

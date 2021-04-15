@@ -24,9 +24,9 @@ namespace Graphene {
 		public static unowned Graphene.Box? infinite ();
 		public unowned Graphene.Box? init (Graphene.Point3D? min, Graphene.Point3D? max);
 		public unowned Graphene.Box? init_from_box (Graphene.Box src);
-		public unowned Graphene.Box? init_from_points ([CCode (array_length_cname = "n_points", array_length_pos = 0.5, array_length_type = "guint")] Graphene.Point3D[] points);
+		public unowned Graphene.Box? init_from_points ([CCode (array_length_cname = "n_points", array_length_pos = 0.5)] Graphene.Point3D[:uint] points);
 		public unowned Graphene.Box? init_from_vec3 (Graphene.Vec3? min, Graphene.Vec3? max);
-		public unowned Graphene.Box? init_from_vectors ([CCode (array_length_cname = "n_vectors", array_length_pos = 0.5, array_length_type = "guint")] Graphene.Vec3[] vectors);
+		public unowned Graphene.Box? init_from_vectors ([CCode (array_length_cname = "n_vectors", array_length_pos = 0.5)] Graphene.Vec3[:uint] vectors);
 		public bool intersection (Graphene.Box b, out Graphene.Box res);
 		public static unowned Graphene.Box? minus_one ();
 		public static unowned Graphene.Box? one ();
@@ -412,8 +412,8 @@ namespace Graphene {
 		public Graphene.Point3D get_center ();
 		public float get_radius ();
 		public unowned Graphene.Sphere? init (Graphene.Point3D? center, float radius);
-		public unowned Graphene.Sphere? init_from_points ([CCode (array_length_cname = "n_points", array_length_pos = 0.5, array_length_type = "guint")] Graphene.Point3D[] points, Graphene.Point3D? center);
-		public unowned Graphene.Sphere? init_from_vectors ([CCode (array_length_cname = "n_vectors", array_length_pos = 0.5, array_length_type = "guint")] Graphene.Vec3[] vectors, Graphene.Point3D? center);
+		public unowned Graphene.Sphere? init_from_points ([CCode (array_length_cname = "n_points", array_length_pos = 0.5)] Graphene.Point3D[:uint] points, Graphene.Point3D? center);
+		public unowned Graphene.Sphere? init_from_vectors ([CCode (array_length_cname = "n_vectors", array_length_pos = 0.5)] Graphene.Vec3[:uint] vectors, Graphene.Point3D? center);
 		public bool is_empty ();
 		public Graphene.Sphere translate (Graphene.Point3D point);
 	}

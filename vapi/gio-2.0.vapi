@@ -54,7 +54,7 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public static GLib.Icon get_symbolic_icon (string type);
 		[CCode (cheader_filename = "gio/gio.h")]
-		public static string guess (string? filename, [CCode (array_length_cname = "data_size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[]? data, out bool result_uncertain);
+		public static string guess (string? filename, [CCode (array_length_cname = "data_size", array_length_pos = 2.5)] uint8[:size_t]? data, out bool result_uncertain);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gio/gio.h")]
 		[Version (since = "2.18")]
 		public static string[] guess_for_tree (GLib.File root);
@@ -104,7 +104,7 @@ namespace GLib {
 		public static bool error_register_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (replacement = "DBusError.register_error_domain", since = "2.26")]
-		public static void error_register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1, array_length_type = "guint")] GLib.DBusErrorEntry[] entries);
+		public static void error_register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1)] GLib.DBusErrorEntry[:uint] entries);
 		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (replacement = "DBusError.strip_remote_error", since = "2.26")]
 		public static bool error_strip_remote_error (GLib.Error error);
@@ -535,9 +535,9 @@ namespace GLib {
 		public virtual async ssize_t fill_async (ssize_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public size_t get_available ();
 		public size_t get_buffer_size ();
-		public size_t peek ([CCode (array_length_cname = "count", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] buffer, size_t offset = 0);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public unowned uint8[] peek_buffer ();
+		public size_t peek ([CCode (array_length_cname = "count", array_length_pos = 2.1)] uint8[:size_t] buffer, size_t offset = 0);
+		[CCode (array_length_pos = 0.1)]
+		public unowned uint8[:size_t] peek_buffer ();
 		public int read_byte (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_buffer_size (size_t size);
 		[CCode (has_construct_function = false, type = "GInputStream*")]
@@ -829,10 +829,10 @@ namespace GLib {
 	public class DBusMessage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public DBusMessage ();
-		public static ssize_t bytes_needed ([CCode (array_length_cname = "blob_len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] blob) throws GLib.Error;
+		public static ssize_t bytes_needed ([CCode (array_length_cname = "blob_len", array_length_pos = 1.1)] uint8[:size_t] blob) throws GLib.Error;
 		public GLib.DBusMessage copy () throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public DBusMessage.from_blob ([CCode (array_length_cname = "blob_len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] blob, GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
+		public DBusMessage.from_blob ([CCode (array_length_cname = "blob_len", array_length_pos = 1.5)] uint8[:size_t] blob, GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
 		public unowned string? get_arg0 ();
 		public unowned GLib.Variant? get_body ();
 		public GLib.DBusMessageByteOrder get_byte_order ();
@@ -884,8 +884,8 @@ namespace GLib {
 		public void set_unix_fd_list (GLib.UnixFDList? fd_list);
 		[CCode (has_construct_function = false)]
 		public DBusMessage.@signal (string path, string interface_, string @signal);
-		[CCode (array_length_pos = 0.5, array_length_type = "gsize")]
-		public uint8[] to_blob (GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
+		[CCode (array_length_pos = 0.5)]
+		public uint8[:size_t] to_blob (GLib.DBusCapabilityFlags capabilities) throws GLib.Error;
 		public bool to_gerror () throws GLib.Error;
 		public bool locked { get; }
 	}
@@ -1716,11 +1716,11 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		[CCode (vfunc_name = "read_fn")]
-		public abstract ssize_t read ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool read_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t read ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public bool read_all ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, out size_t bytes_read, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.44")]
-		public async bool read_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_read) throws GLib.Error;
-		public virtual async ssize_t read_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[]? buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async bool read_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_read) throws GLib.Error;
+		public virtual async ssize_t read_async ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t]? buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.34")]
 		public GLib.Bytes read_bytes (size_t count, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.34")]
@@ -1751,7 +1751,7 @@ namespace GLib {
 		[Version (since = "2.46")]
 		public void sort (GLib.CompareDataFunc<GLib.Object> compare_func);
 		[Version (since = "2.44")]
-		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] GLib.Object[] additions);
+		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1)] GLib.Object[:uint] additions);
 		[NoAccessorMethod]
 		[Version (since = "2.44")]
 		public GLib.Type item_type { get; construct; }
@@ -1762,12 +1762,12 @@ namespace GLib {
 		public MemoryInputStream ();
 		[Version (since = "2.34")]
 		public void add_bytes (GLib.Bytes bytes);
-		public void add_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy = GLib.g_free);
+		public void add_data ([CCode (array_length_cname = "len", array_length_pos = 1.5)] owned uint8[:ssize_t] data, GLib.DestroyNotify? destroy = GLib.g_free);
 		[CCode (has_construct_function = false, type = "GInputStream*")]
 		[Version (since = "2.34")]
 		public MemoryInputStream.from_bytes (GLib.Bytes bytes);
 		[CCode (has_construct_function = false, type = "GInputStream*")]
-		public MemoryInputStream.from_data ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] data, GLib.DestroyNotify? destroy = GLib.g_free);
+		public MemoryInputStream.from_data ([CCode (array_length_cname = "len", array_length_pos = 1.5)] owned uint8[:ssize_t] data, GLib.DestroyNotify? destroy = GLib.g_free);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_memory_output_stream_get_type ()")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.PollableOutputStream, GLib.Seekable {
@@ -2067,22 +2067,22 @@ namespace GLib {
 		[Version (since = "2.40")]
 		public bool vprintf (out size_t bytes_written, GLib.Cancellable? cancellable, string format, va_list args) throws GLib.Error;
 		[CCode (vfunc_name = "write_fn")]
-		public abstract ssize_t write ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
-		public bool write_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract ssize_t write ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public bool write_all ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		[Version (since = "2.44")]
-		public async bool write_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_written) throws GLib.Error;
-		public virtual async ssize_t write_async ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[]? buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public async bool write_all_async ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, int io_priority, GLib.Cancellable? cancellable, out size_t bytes_written) throws GLib.Error;
+		public virtual async ssize_t write_async ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t]? buffer, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public ssize_t write_bytes (GLib.Bytes bytes, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async ssize_t write_bytes_async (GLib.Bytes bytes, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "writev_fn")]
 		[Version (since = "2.60")]
-		public virtual bool writev ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual bool writev ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.60")]
-		public bool writev_all ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public bool writev_all ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.60")]
-		public async bool writev_all_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
+		public async bool writev_all_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
 		[Version (since = "2.60")]
-		public virtual async bool writev_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
+		public virtual async bool writev_async ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t bytes_written) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_permission_get_type ()")]
 	public abstract class Permission : GLib.Object {
@@ -2643,22 +2643,22 @@ namespace GLib {
 		[Version (since = "2.56")]
 		public bool leave_multicast_group_ssm (GLib.InetAddress group, GLib.InetAddress? source_specific, string? iface) throws GLib.Error;
 		public bool listen () throws GLib.Error;
-		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_message (out GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[]? messages, ref int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.48")]
-		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.InputMessage[:uint] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
-		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_message (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.60")]
 		public GLib.PollableReturn send_message_with_timeout (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, int64 timeout_us, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.44")]
-		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.OutputMessage[:uint] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
-		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_blocking (bool blocking);
 		[Version (since = "2.32")]
 		public void set_broadcast (bool broadcast);
@@ -2804,7 +2804,7 @@ namespace GLib {
 	public abstract class SocketControlMessage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SocketControlMessage ();
-		public static GLib.SocketControlMessage deserialize (int level, int type, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data);
+		public static GLib.SocketControlMessage deserialize (int level, int type, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] data);
 		public virtual int get_level ();
 		public int get_msg_type ();
 		public virtual size_t get_size ();
@@ -3244,14 +3244,14 @@ namespace GLib {
 		public virtual unowned string get_default_warning ();
 		public unowned string get_description ();
 		public GLib.TlsPasswordFlags get_flags ();
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
-		public virtual unowned uint8[] get_value ();
+		[CCode (array_length_pos = 0.1)]
+		public virtual unowned uint8[:size_t] get_value ();
 		public unowned string get_warning ();
 		public void set_description (string description);
 		public void set_flags (GLib.TlsPasswordFlags flags);
-		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize")] uint8[] value);
+		public void set_value ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:ssize_t] value);
 		[CCode (vfunc_name = "set_value")]
-		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gssize")] owned uint8[] value, GLib.DestroyNotify? destroy = GLib.free);
+		public virtual void set_value_full ([CCode (array_length_cname = "length", array_length_pos = 1.5)] owned uint8[:ssize_t] value, GLib.DestroyNotify? destroy = GLib.free);
 		public void set_warning (string warning);
 		public string description { get; set; }
 		public GLib.TlsPasswordFlags flags { get; set; }
@@ -3516,7 +3516,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_converter_get_type ()")]
 	[Version (since = "2.24")]
 	public interface Converter : GLib.Object {
-		public abstract GLib.ConverterResult convert ([CCode (array_length_cname = "inbuf_size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] inbuf, [CCode (array_length_cname = "outbuf_size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] outbuf, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
+		public abstract GLib.ConverterResult convert ([CCode (array_length_cname = "inbuf_size", array_length_pos = 1.5)] uint8[:size_t] inbuf, [CCode (array_length_cname = "outbuf_size", array_length_pos = 2.5)] uint8[:size_t] outbuf, GLib.ConverterFlags flags, out size_t bytes_read, out size_t bytes_written) throws GLib.Error;
 		public abstract void reset ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_interface_get_type ()")]
@@ -3577,12 +3577,12 @@ namespace GLib {
 		public virtual GLib.DatagramBasedSource datagram_create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (vfunc_name = "receive_messages")]
 		[NoWrapper]
-		public virtual int datagram_receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual int datagram_receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.InputMessage[:uint] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "send_messages")]
 		[NoWrapper]
-		public virtual int datagram_send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public virtual int datagram_send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.OutputMessage[:uint] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.InputMessage[:uint] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5)] GLib.OutputMessage[:uint] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_drive_get_type ()")]
 	public interface Drive : GLib.Object {
@@ -3766,8 +3766,8 @@ namespace GLib {
 		public GLib.Bytes load_bytes (GLib.Cancellable? cancellable = null, out string? etag_out = null) throws GLib.Error;
 		[Version (since = "2.56")]
 		public async GLib.Bytes load_bytes_async (GLib.Cancellable? cancellable = null, out string? etag_out) throws GLib.Error;
-		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string? etag_out) throws GLib.Error;
-		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string? etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable? cancellable, [CCode (array_length_cname = "length", array_length_pos = 2.5)] out uint8[:size_t] contents, out string? etag_out) throws GLib.Error;
+		public async bool load_contents_async (GLib.Cancellable? cancellable = null, [CCode (array_length_cname = "length", array_length_pos = 2.5)] out uint8[:size_t] contents, out string? etag_out) throws GLib.Error;
 		public async bool load_partial_contents_async (GLib.Cancellable? cancellable = null, [CCode (delegate_target_pos = -0.9)] GLib.FileReadMoreCallback read_more_callback, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] out uint8[] contents, out string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.38")]
@@ -3822,8 +3822,8 @@ namespace GLib {
 		public virtual async GLib.FileInputStream read_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
+		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[:size_t] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[:size_t] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
 		[CCode (finish_name = "g_file_replace_contents_finish")]
 		[Version (since = "2.40")]
 		public async bool replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
@@ -3881,7 +3881,7 @@ namespace GLib {
 		public static GLib.Object @new (GLib.Type object_type, GLib.Cancellable? cancellable = null, ...) throws GLib.Error;
 		public static GLib.Object new_valist (GLib.Type object_type, string first_property_name, va_list var_args, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
-		public static GLib.Object newv (GLib.Type object_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5, array_length_type = "guint")] GLib.Parameter[] parameters, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public static GLib.Object newv (GLib.Type object_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5)] GLib.Parameter[:uint] parameters, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
 	public interface ListModel : GLib.Object {
@@ -3976,10 +3976,10 @@ namespace GLib {
 		public abstract bool can_poll ();
 		public abstract GLib.PollableSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_readable ();
-		public ssize_t read_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t read_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "read_nonblocking")]
 		[NoWrapper]
-		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buffer) throws GLib.Error;
+		public abstract ssize_t read_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t] buffer) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPollableOutputStreamInterface", type_id = "g_pollable_output_stream_get_type ()")]
 	[Version (since = "2.28")]
@@ -3987,16 +3987,16 @@ namespace GLib {
 		public abstract bool can_poll ();
 		public abstract GLib.PollableSource create_source (GLib.Cancellable? cancellable = null);
 		public abstract bool is_writable ();
-		public ssize_t write_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t write_nonblocking ([CCode (array_length_cname = "count", array_length_pos = 1.5)] uint8[:size_t] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "write_nonblocking")]
 		[NoWrapper]
-		public abstract ssize_t write_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? buffer) throws GLib.Error;
+		public abstract ssize_t write_nonblocking_fn ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t]? buffer) throws GLib.Error;
 		[Version (since = "2.60")]
-		public GLib.PollableReturn writev_nonblocking ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public GLib.PollableReturn writev_nonblocking ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "writev_nonblocking")]
 		[NoWrapper]
 		[Version (since = "2.60")]
-		public abstract GLib.PollableReturn writev_nonblocking_fn ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written) throws GLib.Error;
+		public abstract GLib.PollableReturn writev_nonblocking_fn ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5)] GLib.OutputVector[:size_t] vectors, out size_t bytes_written) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPowerProfileMonitorInterface", type_id = "g_power_profile_monitor_get_type ()")]
 	[Version (since = "2.70")]
@@ -4185,8 +4185,8 @@ namespace GLib {
 	[Version (since = "2.48")]
 	public struct InputMessage {
 		public weak GLib.SocketAddress address;
-		[CCode (array_length_cname = "num_vectors", array_length_type = "guint")]
-		public weak GLib.InputVector[] vectors;
+		[CCode (array_length_cname = "num_vectors")]
+		public weak GLib.InputVector[:uint] vectors;
 		public uint num_vectors;
 		public size_t bytes_received;
 		public int flags;
@@ -4203,8 +4203,8 @@ namespace GLib {
 	[Version (since = "2.44")]
 	public struct OutputMessage {
 		public weak GLib.SocketAddress address;
-		[CCode (array_length_cname = "num_vectors", array_length_type = "guint")]
-		public weak GLib.OutputVector[] vectors;
+		[CCode (array_length_cname = "num_vectors")]
+		public weak GLib.OutputVector[:uint] vectors;
 		public uint num_vectors;
 		public uint bytes_sent;
 		public GLib.SocketControlMessage*** control_messages;
@@ -4923,7 +4923,7 @@ namespace GLib {
 		public static GLib.Error new_for_dbus_error (string dbus_error_name, string dbus_error_message);
 		public static GLib.Quark quark ();
 		public static bool register_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
-		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1, array_length_type = "guint")] GLib.DBusErrorEntry[] entries);
+		public static void register_error_domain (string error_domain_quark_name, size_t quark_volatile, [CCode (array_length_cname = "num_entries", array_length_pos = 3.1)] GLib.DBusErrorEntry[:uint] entries);
 		public static bool strip_remote_error (GLib.Error error);
 		public static bool unregister_error (GLib.Quark error_domain, int error_code, string dbus_error_name);
 	}
@@ -5167,13 +5167,13 @@ namespace GLib {
 	public static void networking_init ();
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.34")]
-	public static ssize_t pollable_stream_read (GLib.InputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	public static ssize_t pollable_stream_read (GLib.InputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5)] uint8[:size_t] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.34")]
-	public static ssize_t pollable_stream_write (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	public static ssize_t pollable_stream_write (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5)] uint8[:size_t] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.34")]
-	public static bool pollable_stream_write_all (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	public static bool pollable_stream_write_all (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5)] uint8[:size_t] buffer, bool blocking, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "PowerProfileMonitor.dup_default", since = "2.70")]
 	public static GLib.PowerProfileMonitor power_profile_monitor_dup_default ();

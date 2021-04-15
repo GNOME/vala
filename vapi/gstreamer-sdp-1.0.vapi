@@ -33,9 +33,9 @@ namespace Gst {
 			[Version (since = "1.4")]
 			public bool add_payload (owned Gst.SDP.MIKEYPayload payload);
 			[Version (since = "1.4")]
-			public bool add_pke (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			public bool add_pke (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5)] uint8[:uint16] data);
 			[Version (since = "1.4")]
-			public bool add_rand ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			public bool add_rand ([CCode (array_length_cname = "len", array_length_pos = 0.5)] uint8[:uint8] rand);
 			[Version (since = "1.4")]
 			public bool add_rand_len (uint8 len);
 			[Version (since = "1.4")]
@@ -54,7 +54,7 @@ namespace Gst {
 			public MIKEYMessage.from_caps (Gst.Caps caps);
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.4")]
-			public MIKEYMessage.from_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
+			public MIKEYMessage.from_data ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] data, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
 			[Version (since = "1.4")]
 			public unowned Gst.SDP.MIKEYMapSRTP? get_cs_srtp (uint idx);
 			[Version (since = "1.4")]
@@ -102,19 +102,19 @@ namespace Gst {
 			[Version (since = "1.4")]
 			public bool kemac_set (Gst.SDP.MIKEYEncAlg enc_alg, Gst.SDP.MIKEYMacAlg mac_alg);
 			[Version (since = "1.4")]
-			public bool key_data_set_interval (uint8 vf_len, [CCode (array_length_cname = "vt_len", array_length_pos = 1.66667, array_length_type = "guint8")] uint8[] vt_data);
+			public bool key_data_set_interval (uint8 vf_len, [CCode (array_length_cname = "vt_len", array_length_pos = 1.66667)] uint8[:uint8] vt_data);
 			[Version (since = "1.4")]
-			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, [CCode (array_length_cname = "key_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] key_data);
+			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, [CCode (array_length_cname = "key_len", array_length_pos = 1.5)] uint8[:uint16] key_data);
 			[Version (since = "1.4")]
-			public bool key_data_set_salt ([CCode (array_length_cname = "salt_len", array_length_pos = 0.5, array_length_type = "guint16")] uint8[]? salt_data);
+			public bool key_data_set_salt ([CCode (array_length_cname = "salt_len", array_length_pos = 0.5)] uint8[:uint16]? salt_data);
 			[Version (since = "1.4")]
-			public bool key_data_set_spi ([CCode (array_length_cname = "spi_len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] spi_data);
+			public bool key_data_set_spi ([CCode (array_length_cname = "spi_len", array_length_pos = 0.5)] uint8[:uint8] spi_data);
 			[Version (since = "1.4")]
-			public bool pke_set (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] data);
+			public bool pke_set (Gst.SDP.MIKEYCacheType C, [CCode (array_length_cname = "data_len", array_length_pos = 1.5)] uint8[:uint16] data);
 			[Version (since = "1.4")]
-			public bool rand_set ([CCode (array_length_cname = "len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] rand);
+			public bool rand_set ([CCode (array_length_cname = "len", array_length_pos = 0.5)] uint8[:uint8] rand);
 			[Version (since = "1.4")]
-			public bool sp_add_param (uint8 type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] uint8[] val);
+			public bool sp_add_param (uint8 type, [CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[:uint8] val);
 			[Version (since = "1.4")]
 			public uint sp_get_n_params ();
 			[Version (since = "1.4")]
@@ -248,7 +248,7 @@ namespace Gst {
 			public static Gst.SDP.Result @new (out Gst.SDP.Message msg);
 			[Version (since = "1.16")]
 			public static Gst.SDP.Result new_from_text (string text, out Gst.SDP.Message msg);
-			public static Gst.SDP.Result parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.SDP.Message msg);
+			public static Gst.SDP.Result parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:uint] data, Gst.SDP.Message msg);
 			[Version (since = "1.8.1")]
 			public Gst.SDP.Result parse_keymgmt (out Gst.SDP.MIKEYMessage mikey);
 			public static Gst.SDP.Result parse_uri (string uri, Gst.SDP.Message msg);
@@ -600,7 +600,7 @@ namespace Gst {
 		public static Gst.SDP.Result message_new_from_text (string text, out Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMessage.parse_buffer")]
-		public static Gst.SDP.Result message_parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.SDP.Message msg);
+		public static Gst.SDP.Result message_parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:uint] data, Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMessage.parse_uri")]
 		public static Gst.SDP.Result message_parse_uri (string uri, Gst.SDP.Message msg);

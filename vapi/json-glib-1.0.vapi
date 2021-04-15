@@ -328,9 +328,9 @@ namespace Json {
 		public virtual unowned GLib.ParamSpec? find_property (string name);
 		[Version (since = "0.14")]
 		public virtual GLib.Value get_property (GLib.ParamSpec pspec);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 0.1)]
 		[Version (since = "0.14")]
-		public virtual (unowned GLib.ParamSpec)[] list_properties ();
+		public virtual (unowned GLib.ParamSpec)[:uint] list_properties ();
 		public virtual Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 		[Version (since = "0.14")]
 		public virtual void set_property (GLib.ParamSpec pspec, GLib.Value value);

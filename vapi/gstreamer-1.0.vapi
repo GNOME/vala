@@ -431,7 +431,7 @@ namespace Gst {
 		[Version (since = "1.14")]
 		public static void dump_buffer (Gst.Buffer buf);
 		[CCode (cheader_filename = "gst/gst.h")]
-		public static void dump_mem ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] mem);
+		public static void dump_mem ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:uint] mem);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool fraction_add (int a_n, int a_d, int b_n, int b_d, out int res_n, out int res_d);
 		[CCode (cheader_filename = "gst/gst.h")]
@@ -721,10 +721,10 @@ namespace Gst {
 		[CCode (instance_pos = 1.9)]
 		public bool copy_into (Gst.Buffer dst, Gst.BufferCopyFlags flags, size_t offset, size_t size);
 		public Gst.Buffer copy_region (Gst.BufferCopyFlags flags, size_t offset, size_t size);
-		public size_t extract (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest);
+		public size_t extract (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1)] out unowned uint8[:size_t] dest);
 		[Version (since = "1.0.10")]
-		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1, array_length_type = "gsize")] out uint8[] dest);
-		public size_t fill (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] src);
+		public void extract_dup (size_t offset, size_t size, [CCode (array_length_cname = "dest_size", array_length_pos = 3.1)] out uint8[:size_t] dest);
+		public size_t fill (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1)] uint8[:size_t] src);
 		public bool find_memory (size_t offset, size_t size, out uint idx, out uint length, out size_t skip);
 		public bool foreach_meta (Gst.BufferForeachMetaFunc func);
 		public Gst.Memory? get_all_memory ();
@@ -753,10 +753,10 @@ namespace Gst {
 		public bool is_memory_range_writable (uint idx, int length);
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map_range (uint idx, int length, out Gst.MapInfo info, Gst.MapFlags flags);
-		public int memcmp (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] mem);
+		public int memcmp (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1)] uint8[:size_t] mem);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.20")]
-		public Buffer.memdup ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
+		public Buffer.memdup ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:size_t] data);
 		public size_t memset (size_t offset, uint8 val, size_t size);
 		public uint n_memory ();
 		[CCode (has_construct_function = false, simple_generics = true)]
@@ -779,7 +779,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public bool unset_flags (Gst.BufferFlags flags);
 		[CCode (has_construct_function = false)]
-		public Buffer.wrapped ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		public Buffer.wrapped ([CCode (array_length_cname = "size", array_length_pos = 1.1)] owned uint8[:size_t] data);
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.16")]
 		public Buffer.wrapped_bytes (GLib.Bytes bytes);
@@ -1077,7 +1077,7 @@ namespace Gst {
 		public weak GLib.ParamSpec pspec;
 		[CCode (has_construct_function = false)]
 		protected ControlBinding ();
-		public virtual bool get_g_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5, array_length_type = "guint")] GLib.Value[] values);
+		public virtual bool get_g_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5)] GLib.Value[:uint] values);
 		public virtual GLib.Value? get_value (Gst.ClockTime timestamp);
 		public virtual bool get_value_array<T> (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_pos = 2.5, array_length_type = "guint")] T[] values);
 		public bool is_disabled ();
@@ -1097,7 +1097,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ControlSource ();
 		public bool get_value (Gst.ClockTime timestamp, out double value);
-		public bool get_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5, array_length_type = "guint")] double[] values);
+		public bool get_value_array (Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 2.5)] double[:uint] values);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_date_time_ref", type_id = "gst_date_time_get_type ()", unref_function = "gst_date_time_unref")]
 	[Compact]
@@ -1426,7 +1426,7 @@ namespace Gst {
 		public Gst.Element? create_valist (string? first, va_list? properties);
 		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public Gst.Element? create_with_properties ([CCode (array_length_cname = "n", array_length_pos = 0.5, array_length_type = "guint")] string[]? names, [CCode (array_length_cname = "n", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[]? values);
+		public Gst.Element? create_with_properties ([CCode (array_length_cname = "n", array_length_pos = 0.5)] string[:uint]? names, [CCode (array_length_cname = "n", array_length_pos = 0.5)] GLib.Value[:uint]? values);
 		public static Gst.ElementFactory? find (string name);
 		public GLib.Type get_element_type ();
 		public unowned string? get_metadata (string key);
@@ -1453,7 +1453,7 @@ namespace Gst {
 		public static Gst.Element? make_valist (string factoryname, string? first, va_list? properties);
 		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
-		public static Gst.Element? make_with_properties (string factoryname, [CCode (array_length_cname = "n", array_length_pos = 1.5, array_length_type = "guint")] string[]? names, [CCode (array_length_cname = "n", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[]? values);
+		public static Gst.Element? make_with_properties (string factoryname, [CCode (array_length_cname = "n", array_length_pos = 1.5)] string[:uint]? names, [CCode (array_length_cname = "n", array_length_pos = 1.5)] GLib.Value[:uint]? values);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", type_id = "gst_event_get_type ()", unref_function = "gst_event_unref")]
 	[Compact]
@@ -1898,7 +1898,7 @@ namespace Gst {
 		public void default_error (GLib.Error error, string? debug);
 		public Gst.ControlBinding? get_control_binding (string property_name);
 		public Gst.ClockTime get_control_rate ();
-		public bool get_g_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5, array_length_type = "guint")] GLib.Value[] values);
+		public bool get_g_value_array (string property_name, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5)] GLib.Value[:uint] values);
 		public string? get_name ();
 		public Gst.Object? get_parent ();
 		public string get_path_string ();
@@ -3025,8 +3025,8 @@ namespace Gst {
 	public struct MapInfo {
 		public weak Gst.Memory memory;
 		public Gst.MapFlags flags;
-		[CCode (array_length_cname = "size", array_length_type = "gsize")]
-		public weak uint8[] data;
+		[CCode (array_length_cname = "size")]
+		public weak uint8[:size_t] data;
 		public size_t size;
 		public size_t maxsize;
 		[CCode (array_length = false)]
@@ -3158,8 +3158,8 @@ namespace Gst {
 		public weak Gst.TypeFindGetLengthVFunc get_length_v;
 		public uint64 get_length ();
 		public static GLib.Type get_type ();
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		public unowned uint8[]? peek (int64 offset);
+		[CCode (array_length_pos = 1.1)]
+		public unowned uint8[:uint]? peek (int64 offset);
 		public static bool register (Gst.Plugin? plugin, string name, uint rank, [CCode (delegate_target_pos = 6.1, destroy_notify_pos = 6.2)] owned Gst.TypeFindFunction func, string? extensions, Gst.Caps? possible_caps);
 		public void suggest (uint probability, Gst.Caps caps);
 		[Version (since = "1.20")]
@@ -4079,7 +4079,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
 	public delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, out double value);
 	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
-	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5, array_length_type = "guint", type = "gdouble*")] double[] values);
+	public delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ClockTime interval, [CCode (array_length_cname = "n_values", array_length_pos = 3.5, type = "gdouble*")] double[:uint] values);
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 5.9)]
 	[Version (since = "1.20")]
 	public delegate bool CustomMetaTransformFunction (Gst.Buffer transbuf, Gst.CustomMeta meta, Gst.Buffer buffer, GLib.Quark type, void* data);

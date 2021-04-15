@@ -12,13 +12,13 @@ namespace Gst {
 			public uint get_packet_count ();
 			public static bool map (Gst.Buffer buffer, Gst.MapFlags flags, out Gst.RTCP.Buffer rtcp);
 			public static Gst.Buffer @new (uint mtu);
-			public static Gst.Buffer new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
-			public static Gst.Buffer new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
+			public static Gst.Buffer new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
+			public static Gst.Buffer new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] owned uint8[:uint] data);
 			public bool unmap ();
 			public static bool validate (Gst.Buffer buffer);
-			public static bool validate_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public static bool validate_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 			[Version (since = "1.6")]
-			public static bool validate_data_reduced ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public static bool validate_data_reduced ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 			[Version (since = "1.6")]
 			public static bool validate_reduced (Gst.Buffer buffer);
 		}
@@ -28,7 +28,7 @@ namespace Gst {
 			public weak Gst.RTCP.Buffer? rtcp;
 			public uint offset;
 			[Version (since = "1.10")]
-			public bool add_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public bool add_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 			public bool add_rb (uint32 ssrc, uint8 fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 			[Version (since = "1.10")]
 			public uint8 app_get_data ();
@@ -49,14 +49,14 @@ namespace Gst {
 			[Version (since = "1.10")]
 			public void app_set_subtype (uint8 subtype);
 			public bool bye_add_ssrc (uint32 ssrc);
-			public bool bye_add_ssrcs ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint32[] ssrc);
+			public bool bye_add_ssrcs ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint32[:uint] ssrc);
 			public uint32 bye_get_nth_ssrc (uint nth);
 			public string bye_get_reason ();
 			public uint8 bye_get_reason_len ();
 			public uint bye_get_ssrc_count ();
 			public bool bye_set_reason (string reason);
 			[Version (since = "1.10")]
-			public bool copy_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
+			public bool copy_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1)] out uint8[:uint] data);
 			public uint8 fb_get_fci ();
 			public uint16 fb_get_fci_length ();
 			public uint32 fb_get_media_ssrc ();
@@ -70,7 +70,7 @@ namespace Gst {
 			public uint16 get_length ();
 			public bool get_padding ();
 			[Version (since = "1.10")]
-			public bool get_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
+			public bool get_profile_specific_ext ([CCode (array_length_cname = "len", array_length_pos = 1.1)] out unowned uint8[:uint] data);
 			[Version (since = "1.10")]
 			public uint16 get_profile_specific_ext_length ();
 			public void get_rb (uint nth, out uint32 ssrc, out uint8 fractionlost, out int32 packetslost, out uint32 exthighestseq, out uint32 jitter, out uint32 lsr, out uint32 dlsr);
@@ -80,12 +80,12 @@ namespace Gst {
 			public bool remove ();
 			public uint32 rr_get_ssrc ();
 			public void rr_set_ssrc (uint32 ssrc);
-			public bool sdes_add_entry (Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] uint8[] data);
+			public bool sdes_add_entry (Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[:uint8] data);
 			public bool sdes_add_item (uint32 ssrc);
-			public bool sdes_copy_entry (out Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] out uint8[] data);
+			public bool sdes_copy_entry (out Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5)] out uint8[:uint8] data);
 			public bool sdes_first_entry ();
 			public bool sdes_first_item ();
-			public bool sdes_get_entry (out Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint8")] out unowned uint8[] data);
+			public bool sdes_get_entry (out Gst.RTCP.SDESType type, [CCode (array_length_cname = "len", array_length_pos = 1.5)] out unowned uint8[:uint8] data);
 			public uint sdes_get_item_count ();
 			public uint32 sdes_get_ssrc ();
 			public bool sdes_next_entry ();
@@ -240,19 +240,19 @@ namespace Gst {
 		public static Gst.Buffer buffer_new (uint mtu);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.new_copy_data")]
-		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.new_take_data")]
-		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.validate")]
 		public static bool buffer_validate (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.validate_data")]
-		public static bool buffer_validate_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+		public static bool buffer_validate_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.validate_data_reduced", since = "1.6")]
-		public static bool buffer_validate_data_reduced ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+		public static bool buffer_validate_data_reduced ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:uint] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTCPBuffer.validate_reduced", since = "1.6")]
 		public static bool buffer_validate_reduced (Gst.Buffer buffer);
@@ -273,7 +273,7 @@ namespace Gst {
 			protected BaseAudioPayload ();
 			public Gst.FlowReturn flush (uint payload_len, Gst.ClockTime timestamp);
 			public Gst.Base.Adapter get_adapter ();
-			public Gst.FlowReturn push ([CCode (array_length_cname = "payload_len", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.ClockTime timestamp);
+			public Gst.FlowReturn push ([CCode (array_length_cname = "payload_len", array_length_pos = 1.5)] uint8[:uint] data, Gst.ClockTime timestamp);
 			public void set_frame_based ();
 			public void set_frame_options (int frame_duration, int frame_size);
 			public void set_sample_based ();
@@ -413,7 +413,7 @@ namespace Gst {
 			public string get_sdp_caps_field_name ();
 			public virtual Gst.RTP.HeaderExtensionFlags get_supported_flags ();
 			public unowned string get_uri ();
-			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, Gst.Buffer buffer);
+			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] data, Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual bool set_attributes (Gst.RTP.HeaderExtensionDirection direction, string attributes);
 			public bool set_attributes_from_caps (Gst.Caps caps);
@@ -427,7 +427,7 @@ namespace Gst {
 			public void set_wants_update_non_rtp_src_caps (bool state);
 			public virtual bool update_non_rtp_src_caps (Gst.Caps caps);
 			public bool wants_update_non_rtp_src_caps ();
-			public virtual ssize_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data);
+			public virtual ssize_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1)] uint8[:size_t] data);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[GIR (name = "RTPBuffer")]
@@ -438,8 +438,8 @@ namespace Gst {
 			public weak void* data[4];
 			[CCode (array_length = false)]
 			public weak size_t size[4];
-			public bool add_extension_onebyte_header (uint8 id, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] uint8[] data);
-			public bool add_extension_twobytes_header (uint8 appbits, uint8 id, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "guint")] uint8[] data);
+			public bool add_extension_onebyte_header (uint8 id, [CCode (array_length_cname = "size", array_length_pos = 2.1)] uint8[:uint] data);
+			public bool add_extension_twobytes_header (uint8 appbits, uint8 id, [CCode (array_length_cname = "size", array_length_pos = 3.1)] uint8[:uint] data);
 			public static void allocate_data (Gst.Buffer buffer, uint payload_len, uint8 pad_len, uint8 csrc_count);
 			public static uint calc_header_len (uint8 csrc_count);
 			public static uint calc_packet_len (uint payload_len, uint8 pad_len, uint8 csrc_count);
@@ -453,10 +453,10 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public GLib.Bytes get_extension_bytes (out uint16 bits);
 			public bool get_extension_data (out uint16 bits, [CCode (array_length = false)] out unowned uint8[] data, out uint wordlen);
-			public bool get_extension_onebyte_header (uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "guint")] out unowned uint8[] data);
+			public bool get_extension_onebyte_header (uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 3.1)] out unowned uint8[:uint] data);
 			[Version (since = "1.18")]
-			public static bool get_extension_onebyte_header_from_bytes (GLib.Bytes bytes, uint16 bit_pattern, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 5.1, array_length_type = "guint")] out unowned uint8[] data);
-			public bool get_extension_twobytes_header (out uint8 appbits, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "guint")] out unowned uint8[] data);
+			public static bool get_extension_onebyte_header_from_bytes (GLib.Bytes bytes, uint16 bit_pattern, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 5.1)] out unowned uint8[:uint] data);
+			public bool get_extension_twobytes_header (out uint8 appbits, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 4.1)] out unowned uint8[:uint] data);
 			public uint get_header_len ();
 			public bool get_marker ();
 			public uint get_packet_len ();
@@ -476,8 +476,8 @@ namespace Gst {
 			public static bool map (Gst.Buffer buffer, Gst.MapFlags flags, out Gst.RTP.Buffer rtp);
 			public static Gst.Buffer new_allocate (uint payload_len, uint8 pad_len, uint8 csrc_count);
 			public static Gst.Buffer new_allocate_len (uint packet_len, uint8 pad_len, uint8 csrc_count);
-			public static Gst.Buffer new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
-			public static Gst.Buffer new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+			public static Gst.Buffer new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:size_t] data);
+			public static Gst.Buffer new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] owned uint8[:size_t] data);
 			public void pad_to (uint len);
 			[Version (since = "1.20")]
 			public void remove_extension_data ();
@@ -516,7 +516,7 @@ namespace Gst {
 			[CCode (array_length = false)]
 			public weak uint32 csrc[15];
 			public uint csrc_count;
-			public bool append_csrc ([CCode (array_length_cname = "csrc_count", array_length_pos = 1.1, array_length_type = "guint", type = "const guint32*")] uint32[] csrc);
+			public bool append_csrc ([CCode (array_length_cname = "csrc_count", array_length_pos = 1.1, type = "const guint32*")] uint32[:uint] csrc);
 			public static unowned Gst.MetaInfo? get_info ();
 			public uint get_source_count ();
 			public bool set_ssrc (uint32? ssrc);
@@ -678,7 +678,7 @@ namespace Gst {
 		public static uint64 buffer_ext_timestamp (ref uint64 exttimestamp, uint32 timestamp);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTPBuffer.get_extension_onebyte_header_from_bytes", since = "1.18")]
-		public static bool buffer_get_extension_onebyte_header_from_bytes (GLib.Bytes bytes, uint16 bit_pattern, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 5.1, array_length_type = "guint")] out unowned uint8[] data);
+		public static bool buffer_get_extension_onebyte_header_from_bytes (GLib.Bytes bytes, uint16 bit_pattern, uint8 id, uint nth, [CCode (array_length_cname = "size", array_length_pos = 5.1)] out unowned uint8[:uint] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cname = "gst_buffer_get_rtp_source_meta")]
 		[Version (since = "1.16")]
 		public static unowned Gst.RTP.SourceMeta? buffer_get_rtp_source_meta (Gst.Buffer buffer);
@@ -693,17 +693,17 @@ namespace Gst {
 		public static Gst.Buffer buffer_new_allocate_len (uint packet_len, uint8 pad_len, uint8 csrc_count);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTPBuffer.new_copy_data")]
-		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
+		public static Gst.Buffer buffer_new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[:size_t] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (replacement = "RTPBuffer.new_take_data")]
-		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1)] owned uint8[:size_t] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (since = "1.20")]
 		public static GLib.List<Gst.ElementFactory> get_header_extension_list ();
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
-		public static bool hdrext_get_ntp_56 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
+		public static bool hdrext_get_ntp_56 ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:uint] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
-		public static bool hdrext_get_ntp_64 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
+		public static bool hdrext_get_ntp_64 ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:uint] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool hdrext_set_ntp_56 (void* data, uint size, uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]

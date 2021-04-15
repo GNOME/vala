@@ -79,9 +79,9 @@ namespace Gst {
 			[Version (deprecated = true, deprecated_since = "1.18")]
 			public Gst.RTSP.Result send (Gst.RTSP.Message message, GLib.TimeVal timeout);
 			[Version (deprecated = true, deprecated_since = "1.18", since = "1.16")]
-			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5, array_length_type = "guint")] Gst.RTSP.Message[] messages, GLib.TimeVal timeout);
+			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5)] Gst.RTSP.Message[:uint] messages, GLib.TimeVal timeout);
 			[Version (since = "1.18")]
-			public Gst.RTSP.Result send_messages_usec ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5, array_length_type = "guint")] Gst.RTSP.Message[] messages, int64 timeout);
+			public Gst.RTSP.Result send_messages_usec ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5)] Gst.RTSP.Message[:uint] messages, int64 timeout);
 			[Version (since = "1.18")]
 			public Gst.RTSP.Result send_usec (Gst.RTSP.Message message, int64 timeout);
 			[Version (since = "1.14")]
@@ -143,7 +143,7 @@ namespace Gst {
 			[CCode (cname = "gst_rtsp_message_free")]
 			public Gst.RTSP.Result free ();
 			[CCode (cname = "gst_rtsp_message_get_body")]
-			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out unowned uint8[] data);
+			public Gst.RTSP.Result get_body ([CCode (array_length_cname = "size", array_length_pos = 1.1)] out unowned uint8[:uint] data);
 			[CCode (cname = "gst_rtsp_message_get_body_buffer")]
 			[Version (since = "1.16")]
 			public Gst.RTSP.Result get_body_buffer (out unowned Gst.Buffer buffer);
@@ -180,17 +180,17 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public Gst.RTSP.Result remove_header_by_name (string header, int index);
 			[CCode (cname = "gst_rtsp_message_set_body")]
-			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public Gst.RTSP.Result set_body ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:uint] data);
 			[CCode (cname = "gst_rtsp_message_set_body_buffer")]
 			[Version (since = "1.16")]
 			public Gst.RTSP.Result set_body_buffer (Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_steal_body")]
-			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] out uint8[] data);
+			public Gst.RTSP.Result steal_body ([CCode (array_length_cname = "size", array_length_pos = 1.1)] out uint8[:uint] data);
 			[CCode (cname = "gst_rtsp_message_steal_body_buffer")]
 			[Version (since = "1.16")]
 			public Gst.RTSP.Result steal_body_buffer (out Gst.Buffer buffer);
 			[CCode (cname = "gst_rtsp_message_take_body")]
-			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] owned uint8[] data);
+			public Gst.RTSP.Result take_body ([CCode (array_length_cname = "size", array_length_pos = 1.1)] owned uint8[:uint] data);
 			[CCode (cname = "gst_rtsp_message_take_body_buffer")]
 			[Version (since = "1.16")]
 			public Gst.RTSP.Result take_body_buffer (owned Gst.Buffer buffer);
@@ -235,7 +235,7 @@ namespace Gst {
 			public void reset ();
 			public Gst.RTSP.Result send_message (Gst.RTSP.Message message, out uint id);
 			[Version (since = "1.16")]
-			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5, array_length_type = "guint")] Gst.RTSP.Message[] messages, out uint id);
+			public Gst.RTSP.Result send_messages ([CCode (array_length_cname = "n_messages", array_length_pos = 1.5)] Gst.RTSP.Message[:uint] messages, out uint id);
 			[Version (since = "1.4")]
 			public void set_flushing (bool flushing);
 			[Version (since = "1.2")]
@@ -245,7 +245,7 @@ namespace Gst {
 			public Gst.RTSP.Result wait_backlog (GLib.TimeVal timeout);
 			[Version (since = "1.18")]
 			public Gst.RTSP.Result wait_backlog_usec (int64 timeout);
-			public Gst.RTSP.Result write_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] owned uint8[] data, out uint id);
+			public Gst.RTSP.Result write_data ([CCode (array_length_cname = "size", array_length_pos = 1.5)] owned uint8[:uint] data, out uint id);
 		}
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h", type_cname = "GstRTSPExtensionInterface", type_id = "gst_rtsp_extension_get_type ()")]
 		[GIR (name = "RTSPExtension")]

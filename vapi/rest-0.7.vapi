@@ -65,7 +65,7 @@ namespace Rest {
 	[Compact]
 	public class Param {
 		[CCode (has_construct_function = false)]
-		public Param.full (global::string name, Rest.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 3.5, array_length_type = "gsize")] uint8[] data, global::string content_type, global::string filename);
+		public Param.full (global::string name, Rest.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 3.5)] uint8[:size_t] data, global::string content_type, global::string filename);
 		public void* get_content ();
 		public size_t get_content_length ();
 		public unowned global::string get_content_type ();
@@ -77,7 +77,7 @@ namespace Rest {
 		public Param.string (global::string name, Rest.MemoryUse use, global::string string);
 		public void unref ();
 		[CCode (has_construct_function = false)]
-		public Param.with_owner (global::string name, [CCode (array_length_cname = "length", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, global::string content_type, global::string? filename, owned void* owner, GLib.DestroyNotify? owner_dnotify);
+		public Param.with_owner (global::string name, [CCode (array_length_cname = "length", array_length_pos = 2.5)] uint8[:size_t] data, global::string content_type, global::string? filename, owned void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
 	[CCode (cheader_filename = "rest/rest-params.h", has_type_id = false)]
 	[Compact]

@@ -265,26 +265,26 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_buffer_get_type ()")]
 	[Compact]
 	public class Buffer {
-		[CCode (array_length_cname = "length", array_length_type = "gsize")]
-		public uint8[] data;
+		[CCode (array_length_cname = "length")]
+		public uint8[:size_t] data;
 		public size_t length;
 		[CCode (has_construct_function = false)]
 		[Version (deprecated = true, deprecated_since = "2.32", replacement = "Buffer.take")]
-		public Buffer (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] data);
+		public Buffer (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1)] uint8[:size_t] data);
 		public Soup.Buffer copy ();
 		public void free ();
 		[Version (since = "2.40")]
 		public GLib.Bytes get_as_bytes ();
 		[Version (since = "2.32")]
-		public void get_data ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] out unowned uint8[] data);
+		public void get_data ([CCode (array_length_cname = "length", array_length_pos = 1.1)] out unowned uint8[:size_t] data);
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
 		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.32")]
-		public Buffer.take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		public Buffer.take ([CCode (array_length_cname = "length", array_length_pos = 1.1)] owned uint8[:size_t] data);
 		[CCode (has_construct_function = false)]
-		public Buffer.with_owner ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, void* owner, GLib.DestroyNotify? owner_dnotify);
+		public Buffer.with_owner ([CCode (array_length_cname = "length", array_length_pos = 1.5)] uint8[:size_t] data, void* owner, GLib.DestroyNotify? owner_dnotify);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_byte_array_get_type ()")]
 	[Compact]
@@ -615,8 +615,8 @@ namespace Soup {
 		public void set_priority (Soup.MessagePriority priority);
 		[Version (since = "2.38")]
 		public void set_redirect (uint status_code, string redirect_uri);
-		public void set_request (string? content_type, Soup.MemoryUse req_use, [CCode (array_length_cname = "req_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] req_body);
-		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[]? resp_body);
+		public void set_request (string? content_type, Soup.MemoryUse req_use, [CCode (array_length_cname = "req_length", array_length_pos = 3.1)] uint8[:size_t] req_body);
+		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1)] uint8[:size_t]? resp_body);
 		[Version (since = "2.70")]
 		public void set_site_for_cookies (Soup.URI? site_for_cookies);
 		public void set_status (uint status_code);
@@ -680,16 +680,16 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_message_body_get_type ()")]
 	[Compact]
 	public class MessageBody {
-		[CCode (array_length_cname = "length", array_length_type = "gint64")]
-		public uint8[] data;
+		[CCode (array_length_cname = "length")]
+		public uint8[:int64] data;
 		public int64 length;
 		[CCode (has_construct_function = false)]
 		public MessageBody ();
 		[Version (deprecated = true, deprecated_since = "2.32", replacement = "MessageBody.append_take")]
-		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] data);
+		public void append (Soup.MemoryUse use, [CCode (array_length_cname = "length", array_length_pos = 2.1)] uint8[:size_t] data);
 		public void append_buffer (Soup.Buffer buffer);
 		[Version (since = "2.32")]
-		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
+		public void append_take ([CCode (array_length_cname = "length", array_length_pos = 1.1)] owned uint8[:size_t] data);
 		public void complete ();
 		public Soup.Buffer flatten ();
 		public void free ();
@@ -1088,11 +1088,11 @@ namespace Soup {
 		public bool is_connected ();
 		public bool is_ssl ();
 		public bool listen ();
-		public Soup.SocketIOStatus read ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t nread, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, void* boundary, size_t boundary_len, out size_t nread, bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus read ([CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[:size_t] buffer, out size_t nread, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[:size_t] buffer, void* boundary, size_t boundary_len, out size_t nread, bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable? cancellable = null);
 		public bool start_ssl (GLib.Cancellable? cancellable = null);
-		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[:size_t] buffer, out size_t nwrote, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[NoAccessorMethod]
 		public GLib.MainContext async_context { owned get; construct; }
 		public int fd { get; construct; }
@@ -1208,7 +1208,7 @@ namespace Soup {
 		public unowned string? get_protocol ();
 		public Soup.WebsocketState get_state ();
 		public unowned Soup.URI get_uri ();
-		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gsize")] uint8[]? data);
+		public void send_binary ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[:size_t]? data);
 		[Version (since = "2.68")]
 		public void send_message (Soup.WebsocketDataType type, GLib.Bytes message);
 		public void send_text (string text);

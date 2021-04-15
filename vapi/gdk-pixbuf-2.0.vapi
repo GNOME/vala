@@ -78,9 +78,9 @@ namespace Gdk {
 		public GLib.HashTable<weak string,weak string> get_options ();
 		[CCode (array_length = false)]
 		public unowned uint8[] get_pixels ();
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 0.1)]
 		[Version (since = "2.26")]
-		public unowned uint8[] get_pixels_with_length ();
+		public unowned uint8[:uint] get_pixels_with_length ();
 		public int get_rowstride ();
 		public int get_width ();
 		[Version (since = "2.40")]
@@ -96,9 +96,9 @@ namespace Gdk {
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
 		[Version (since = "2.4")]
-		public bool save_to_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, ...) throws GLib.Error;
+		public bool save_to_buffer ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5)] out uint8[:size_t] buffer, string type, ...) throws GLib.Error;
 		[Version (since = "2.4")]
-		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5, array_length_type = "gsize")] out uint8[] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values) throws GLib.Error;
+		public bool save_to_bufferv ([CCode (array_length_cname = "buffer_size", array_length_pos = 1.5)] out uint8[:size_t] buffer, string type, [CCode (array_length = false, array_null_terminated = true)] string[]? option_keys, [CCode (array_length = false, array_null_terminated = true)] string[]? option_values) throws GLib.Error;
 		[Version (since = "2.4")]
 		public bool save_to_callback ([CCode (delegate_target_pos = 1.5)] Gdk.PixbufSaveFunc save_func, string type, ...) throws GLib.Error;
 		[Version (since = "2.4")]
@@ -218,7 +218,7 @@ namespace Gdk {
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
-		public bool write ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
+		public bool write ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t] buf) throws GLib.Error;
 		[Version (since = "2.30")]
 		public bool write_bytes (GLib.Bytes buffer) throws GLib.Error;
 		public virtual signal void area_prepared ();
@@ -286,9 +286,9 @@ namespace Gdk {
 		public uint32 height;
 		[CCode (array_length = false)]
 		public weak uint8[] pixel_data;
-		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5, array_length_type = "guint")] uint8[] stream) throws GLib.Error;
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public uint8[] serialize ();
+		public bool deserialize ([CCode (array_length_cname = "stream_length", array_length_pos = 0.5)] uint8[:uint] stream) throws GLib.Error;
+		[CCode (array_length_pos = 0.1)]
+		public uint8[:uint] serialize ();
 		public GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cprefix = "GDK_COLORSPACE_", type_id = "gdk_colorspace_get_type ()")]
@@ -377,7 +377,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
 	public delegate unowned Gdk.Pixbuf PixbufModuleLoadFunc (void* f) throws GLib.Error;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
-	public delegate bool PixbufModuleLoadIncrementFunc (void* context, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint", type = "const guchar*")] uint8[] buf) throws GLib.Error;
+	public delegate bool PixbufModuleLoadIncrementFunc (void* context, [CCode (array_length_cname = "size", array_length_pos = 2.1, type = "const guchar*")] uint8[:uint] buf) throws GLib.Error;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", has_target = false, has_typedef = false)]
 	public delegate unowned Gdk.Pixbuf PixbufModuleLoadXpmDataFunc (string data);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", instance_pos = 2.9)]
@@ -397,7 +397,7 @@ namespace Gdk {
 	public delegate void PixbufModuleUpdatedFunc (Gdk.Pixbuf pixbuf, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", error_pos = 1.8, instance_pos = 1.9)]
 	[Version (since = "2.4")]
-	public delegate bool PixbufSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] buf) throws GLib.Error;
+	public delegate bool PixbufSaveFunc ([CCode (array_length_cname = "count", array_length_pos = 1.1)] uint8[:size_t] buf) throws GLib.Error;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_MAGIC_NUMBER")]
 	public const int PIXBUF_MAGIC_NUMBER;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXBUF_MAJOR")]

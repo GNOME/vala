@@ -11,7 +11,7 @@ namespace Gst {
 			public size_t available ();
 			public size_t available_fast ();
 			public void clear ();
-			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
+			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1)] out unowned uint8[:size_t] dest, size_t offset);
 			[Version (since = "1.4")]
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
 			[Version (since = "1.10")]
@@ -164,8 +164,8 @@ namespace Gst {
 		public class BitReader {
 			public uint bit;
 			public uint byte;
-			[CCode (array_length_cname = "size", array_length_type = "guint")]
-			public weak uint8[] data;
+			[CCode (array_length_cname = "size")]
+			public weak uint8[:uint] data;
 			public uint size;
 			public BitReader ([CCode (array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_bit_reader_free")]
@@ -186,7 +186,7 @@ namespace Gst {
 			[CCode (cname = "gst_bit_reader_get_size")]
 			public uint get_size ();
 			[CCode (cname = "gst_bit_reader_init")]
-			public void init ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public void init ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:uint] data);
 			[CCode (cname = "gst_bit_reader_peek_bits_uint16")]
 			public bool peek_bits_uint16 (out uint16 val, uint nbits);
 			[CCode (cname = "gst_bit_reader_peek_bits_uint32")]
@@ -207,12 +207,12 @@ namespace Gst {
 		[GIR (name = "ByteReader")]
 		public class ByteReader {
 			public uint byte;
-			[CCode (array_length_cname = "size", array_length_type = "guint")]
-			public weak uint8[] data;
+			[CCode (array_length_cname = "size")]
+			public weak uint8[:uint] data;
 			public uint size;
 			public ByteReader ([CCode (array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_byte_reader_dup_data")]
-			public bool dup_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out uint8[] val);
+			public bool dup_data ([CCode (array_length_cname = "size", array_length_pos = 0.5)] out uint8[:uint] val);
 			[CCode (cname = "gst_byte_reader_dup_string_utf16")]
 			public bool dup_string_utf16 ([CCode (array_length = false, array_null_terminated = true)] out uint16[] str);
 			[CCode (cname = "gst_byte_reader_dup_string_utf32")]
@@ -223,7 +223,7 @@ namespace Gst {
 			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_byte_reader_get_data")]
-			public bool get_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
+			public bool get_data ([CCode (array_length_cname = "size", array_length_pos = 0.5)] out unowned uint8[:uint] val);
 			[CCode (cname = "gst_byte_reader_get_float32_be")]
 			public bool get_float32_be (out float val);
 			[CCode (cname = "gst_byte_reader_get_float32_le")]
@@ -277,14 +277,14 @@ namespace Gst {
 			[CCode (cname = "gst_byte_reader_get_uint8")]
 			public bool get_uint8 (out uint8 val);
 			[CCode (cname = "gst_byte_reader_init")]
-			public void init ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public void init ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:uint] data);
 			[CCode (cname = "gst_byte_reader_masked_scan_uint32")]
 			public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
 			[CCode (cname = "gst_byte_reader_masked_scan_uint32_peek")]
 			[Version (since = "1.6")]
 			public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, out uint32 value);
 			[CCode (cname = "gst_byte_reader_peek_data")]
-			public bool peek_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
+			public bool peek_data ([CCode (array_length_cname = "size", array_length_pos = 0.5)] out unowned uint8[:uint] val);
 			[CCode (cname = "gst_byte_reader_peek_float32_be")]
 			public bool peek_float32_be (out float val);
 			[CCode (cname = "gst_byte_reader_peek_float32_le")]
@@ -369,7 +369,7 @@ namespace Gst {
 			[CCode (cname = "gst_byte_writer_init")]
 			public void init ();
 			[CCode (cname = "gst_byte_writer_init_with_data")]
-			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, bool initialized);
+			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:uint] data, bool initialized);
 			[CCode (cname = "gst_byte_writer_init_with_size")]
 			public void init_with_size (uint size, bool fixed);
 			[CCode (cname = "gst_byte_writer_new")]
@@ -381,7 +381,7 @@ namespace Gst {
 			[CCode (cname = "gst_byte_writer_put_buffer")]
 			public bool put_buffer (Gst.Buffer buffer, size_t offset, ssize_t size);
 			[CCode (cname = "gst_byte_writer_put_data")]
-			public bool put_data ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public bool put_data ([CCode (array_length_cname = "size", array_length_pos = 1.1)] uint8[:uint] data);
 			[CCode (cname = "gst_byte_writer_put_float32_be")]
 			public bool put_float32_be (float val);
 			[CCode (cname = "gst_byte_writer_put_float32_le")]
@@ -899,7 +899,7 @@ namespace Gst {
 			[CCode (cname = "gst_bit_writer_put_bits_uint8")]
 			public bool put_bits_uint8 (uint8 value, uint nbits);
 			[CCode (cname = "gst_bit_writer_put_bytes")]
-			public bool put_bytes ([CCode (array_length_cname = "nbytes", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
+			public bool put_bytes ([CCode (array_length_cname = "nbytes", array_length_pos = 1.1)] uint8[:uint] data);
 			[CCode (cname = "gst_bit_writer_reset")]
 			public void reset ();
 			[CCode (cname = "gst_bit_writer_reset_and_get_buffer")]
@@ -996,10 +996,10 @@ namespace Gst {
 		[Version (since = "1.16")]
 		public static Gst.Caps? type_find_helper_for_buffer_with_extension (Gst.Object? obj, Gst.Buffer buf, string? extension, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data")]
-		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, out Gst.TypeFindProbability prob);
+		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] data, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data_with_extension")]
 		[Version (since = "1.16")]
-		public static Gst.Caps? type_find_helper_for_data_with_extension (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, string? extension, out Gst.TypeFindProbability prob);
+		public static Gst.Caps? type_find_helper_for_data_with_extension (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5)] uint8[:size_t] data, string? extension, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_extension")]
 		public static Gst.Caps? type_find_helper_for_extension (Gst.Object? obj, string extension);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_get_range")]

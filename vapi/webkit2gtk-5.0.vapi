@@ -1344,7 +1344,7 @@ namespace WebKit {
 	public class WebResource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebResource ();
-		public async uint8[] get_data (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async uint8[:size_t] get_data (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned WebKit.URIResponse get_response ();
 		public unowned string get_uri ();
 		public WebKit.URIResponse response { get; }
