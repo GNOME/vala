@@ -320,6 +320,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public DataType int64_type;
 	public DataType uint64_type;
 	public DataType size_t_type;
+	public DataType ssize_t_type;
 	public DataType string_type;
 	public DataType regex_type;
 	public DataType float_type;
@@ -486,6 +487,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		int64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int64"));
 		uint64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint64"));
 		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
+		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
 		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
@@ -5840,7 +5842,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeParameter ("stack", "%s *".printf (get_ccode_name (array_type.element_type))));
-		function.add_parameter (new CCodeParameter ("stack_length", get_ccode_name (int_type)));
+		function.add_parameter (new CCodeParameter ("stack_length", get_ccode_name (ssize_t_type)));
 		if (array_type.element_type is StructValueType) {
 			function.add_parameter (new CCodeParameter ("needle", "const %s *".printf (get_ccode_name (array_type.element_type))));
 		} else {
@@ -5849,7 +5851,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		push_function (function);
 
-		ccode.add_declaration (get_ccode_name (int_type), new CCodeVariableDeclarator ("i"));
+		ccode.add_declaration (get_ccode_name (ssize_t_type), new CCodeVariableDeclarator ("i"));
 
 		var cloop_initializer = new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0"));
 		var cloop_condition = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("stack_length"));
