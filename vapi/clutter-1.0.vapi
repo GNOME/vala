@@ -4625,15 +4625,15 @@ namespace Clutter {
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		[Version (since = "1.10")]
 		public static unowned Clutter.PaintNode get_paint_node (GLib.Value value);
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "clutter/clutter.h")]
+		[CCode (array_length_pos = 1.1, cheader_filename = "clutter/clutter.h")]
 		[Version (since = "0.8")]
-		public static unowned float[] get_shader_float (GLib.Value value);
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "clutter/clutter.h")]
+		public static unowned float[:size_t] get_shader_float (GLib.Value value);
+		[CCode (array_length_pos = 1.1, cheader_filename = "clutter/clutter.h")]
 		[Version (since = "0.8")]
-		public static unowned int[] get_shader_int (GLib.Value value);
-		[CCode (array_length_pos = 1.1, array_length_type = "gsize", cheader_filename = "clutter/clutter.h")]
+		public static unowned int[:size_t] get_shader_int (GLib.Value value);
+		[CCode (array_length_pos = 1.1, cheader_filename = "clutter/clutter.h")]
 		[Version (since = "0.8")]
-		public static unowned float[] get_shader_matrix (GLib.Value value);
+		public static unowned float[:size_t] get_shader_matrix (GLib.Value value);
 		[CCode (cheader_filename = "clutter/clutter.h")]
 		[Version (since = "0.8")]
 		public static unowned Clutter.Units? get_units (GLib.Value value);
@@ -5697,7 +5697,7 @@ namespace Clutter {
 		public BehaviourPath.with_description (Clutter.Alpha? alpha, string desc);
 		[CCode (has_construct_function = false, type = "ClutterBehaviour*")]
 		[Version (since = "1.0")]
-		public BehaviourPath.with_knots (Clutter.Alpha? alpha, [CCode (array_length_cname = "n_knots", array_length_pos = 2.1, array_length_type = "guint")] Clutter.Knot[] knots);
+		public BehaviourPath.with_knots (Clutter.Alpha? alpha, [CCode (array_length_cname = "n_knots", array_length_pos = 2.1)] Clutter.Knot[:uint] knots);
 		public Clutter.Path path { get; set; }
 		public virtual signal void knot_reached (uint knot_num);
 	}
@@ -5826,7 +5826,7 @@ namespace Clutter {
 		[Version (deprecated = true, deprecated_since = "1.10", since = "1.2")]
 		public void pack_before (Clutter.Actor actor, Clutter.Actor? sibling, ...);
 		[Version (deprecated = true, deprecated_since = "1.10", since = "1.2")]
-		public void packv (Clutter.Actor actor, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5, array_length_type = "guint")] string[] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] values);
+		public void packv (Clutter.Actor actor, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5)] string[:uint] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 1.5)] GLib.Value[:uint] values);
 		[Version (deprecated = true, deprecated_since = "1.10", since = "1.2")]
 		public void set_color (Clutter.Color? color);
 		[Version (deprecated = true, deprecated_since = "1.10", since = "1.2")]
@@ -6614,9 +6614,9 @@ namespace Clutter {
 		public void get_key_frame (uint index_, out double key, out Clutter.AnimationMode mode, out GLib.Value value);
 		public uint get_n_key_frames ();
 		public void set_key_frame (uint index_, double key, Clutter.AnimationMode mode, GLib.Value value);
-		public void set_key_frames ([CCode (array_length_cname = "n_key_frames", array_length_pos = 0.5, array_length_type = "guint")] double[] key_frames);
-		public void set_modes ([CCode (array_length_cname = "n_modes", array_length_pos = 0.5, array_length_type = "guint")] Clutter.AnimationMode[] modes);
-		public void set_values ([CCode (array_length_cname = "n_values", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
+		public void set_key_frames ([CCode (array_length_cname = "n_key_frames", array_length_pos = 0.5)] double[:uint] key_frames);
+		public void set_modes ([CCode (array_length_cname = "n_modes", array_length_pos = 0.5)] Clutter.AnimationMode[:uint] modes);
+		public void set_values ([CCode (array_length_cname = "n_values", array_length_pos = 0.5)] GLib.Value[:uint] values);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_layout_manager_get_type ()")]
 	[Version (since = "1.2")]
@@ -6643,8 +6643,8 @@ namespace Clutter {
 		public virtual GLib.Type get_child_meta_type ();
 		public virtual void get_preferred_height (Clutter.Container container, float for_width, out float min_height_p, out float nat_height_p);
 		public virtual void get_preferred_width (Clutter.Container container, float for_height, out float min_width_p, out float nat_width_p);
-		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
-		public GLib.ParamSpec[] list_child_properties ();
+		[CCode (array_length_pos = 0.1)]
+		public GLib.ParamSpec[:uint] list_child_properties ();
 		public virtual void set_container (Clutter.Container? container);
 		[HasEmitter]
 		public virtual signal void layout_changed ();
@@ -6663,7 +6663,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false, type = "ClutterModel*")]
 		public ListModel (uint n_columns, ...);
 		[CCode (cname = "clutter_list_model_newv", has_construct_function = false, type = "ClutterModel*")]
-		public ListModel.newv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] GLib.Type[] types, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] string[] names);
+		public ListModel.newv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[:uint] types, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] string[:uint] names);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_model_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.24", since = "0.6")]
@@ -6671,7 +6671,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false)]
 		protected Model ();
 		public void append (...);
-		public void appendv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] uint[] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
+		public void appendv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] uint[:uint] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Value[:uint] values);
 		public bool filter_iter (Clutter.ModelIter iter);
 		public bool filter_row (uint row);
 		public void @foreach (Clutter.ModelForeachFunc func);
@@ -6689,18 +6689,18 @@ namespace Clutter {
 		[NoWrapper]
 		public virtual unowned Clutter.ModelIter insert_row (int index_);
 		public void insert_value (uint row, uint column, GLib.Value value);
-		public void insertv (uint row, [CCode (array_length_cname = "n_columns", array_length_pos = 1.5, array_length_type = "guint")] uint[] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] values);
+		public void insertv (uint row, [CCode (array_length_cname = "n_columns", array_length_pos = 1.5)] uint[:uint] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 1.5)] GLib.Value[:uint] values);
 		public void prepend (...);
-		public void prependv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] uint[] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
+		public void prependv ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] uint[:uint] columns, [CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Value[:uint] values);
 		public void remove (uint row);
 		[NoWrapper]
 		public virtual void remove_row (uint row);
 		public void resort ();
 		public void set_filter (owned Clutter.ModelFilterFunc? func);
-		public void set_names ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] string[] names);
+		public void set_names ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] string[:uint] names);
 		public void set_sort (int column, owned Clutter.ModelSortFunc? func);
 		public void set_sorting_column (int column);
-		public void set_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5, array_length_type = "guint")] GLib.Type[] types);
+		public void set_types ([CCode (array_length_cname = "n_columns", array_length_pos = 0.5)] GLib.Type[:uint] types);
 		[Version (since = "1.0")]
 		public bool filter_set { get; }
 		public virtual signal void filter_changed ();
@@ -6967,7 +6967,7 @@ namespace Clutter {
 		[CCode (has_construct_function = false)]
 		public Script ();
 		[Version (since = "0.8")]
-		public void add_search_paths ([CCode (array_length_cname = "n_paths", array_length_pos = 1.1, array_length_type = "gsize")] string[] paths);
+		public void add_search_paths ([CCode (array_length_cname = "n_paths", array_length_pos = 1.1)] string[:size_t] paths);
 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.8")]
 		public void add_states (string? name, Clutter.State state);
 		public void connect_signals (void* user_data);
@@ -7745,9 +7745,9 @@ namespace Clutter {
 		[Version (since = "0.8")]
 		public bool has_marker (string marker_name);
 		public bool is_playing ();
-		[CCode (array_length = true, array_length_pos = 1.1, array_length_type = "gsize", array_null_terminated = true)]
+		[CCode (array_length = true, array_length_pos = 1.1, array_null_terminated = true)]
 		[Version (since = "0.8")]
-		public string[] list_markers (int msecs);
+		public string[:size_t] list_markers (int msecs);
 		public void pause ();
 		[Version (since = "0.8")]
 		public void remove_marker (string marker_name);
@@ -7937,9 +7937,9 @@ namespace Clutter {
 		public void child_set_property (Clutter.Actor child, string property, GLib.Value value);
 		[Version (since = "0.8")]
 		public static unowned GLib.ParamSpec class_find_child_property (GLib.ObjectClass klass, string property_name);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
+		[CCode (array_length_pos = 1.1)]
 		[Version (since = "0.8")]
-		public static GLib.ParamSpec[] class_list_child_properties (GLib.ObjectClass klass);
+		public static GLib.ParamSpec[:uint] class_list_child_properties (GLib.ObjectClass klass);
 		[Version (since = "1.2")]
 		public virtual void create_child_meta (Clutter.Actor actor);
 		[Version (since = "1.2")]

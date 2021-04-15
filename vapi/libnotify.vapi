@@ -19,7 +19,7 @@ namespace Notify {
 		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_byte (string key, [CCode (type = "guchar")] uchar value);
 		[Version (deprecated = true, deprecated_since = "0.6.")]
-		public void set_hint_byte_array (string key, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "gsize")] uchar[] value);
+		public void set_hint_byte_array (string key, [CCode (array_length_cname = "len", array_length_pos = 2.1)] uchar[:size_t] value);
 		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_double (string key, double value);
 		[Version (deprecated = true, deprecated_since = "0.6.")]

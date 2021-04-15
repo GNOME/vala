@@ -70,7 +70,7 @@ namespace Gst {
 		}
 		namespace List {
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static bool add_id3_image (Gst.TagList tag_list, [CCode (array_length_cname = "image_data_len", array_length_pos = 2.5, array_length_type = "guint")] uint8[] image_data, uint id3_picture_type);
+			public static bool add_id3_image (Gst.TagList tag_list, [CCode (array_length_cname = "image_data_len", array_length_pos = 2.5)] uint8[:uint] image_data, uint id3_picture_type);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.TagList from_exif_buffer (Gst.Buffer buffer, int byte_order, uint32 base_offset);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
@@ -78,9 +78,9 @@ namespace Gst {
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.TagList from_id3v2_tag (Gst.Buffer buffer);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_vorbiscomment ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
+			public static Gst.TagList from_vorbiscomment ([CCode (array_length_cname = "size", array_length_pos = 1.5)] uint8[:size_t] data, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5)] uint8[:uint] id_data, out string vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_vorbiscomment_buffer (Gst.Buffer buffer, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
+			public static Gst.TagList from_vorbiscomment_buffer (Gst.Buffer buffer, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5)] uint8[:uint] id_data, out string vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.TagList from_xmp_buffer (Gst.Buffer buffer);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
@@ -90,7 +90,7 @@ namespace Gst {
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.Buffer to_exif_buffer_with_tiff_header (Gst.TagList taglist);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.Buffer to_vorbiscomment_buffer (Gst.TagList list, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, string? vendor_string);
+			public static Gst.Buffer to_vorbiscomment_buffer (Gst.TagList list, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5)] uint8[:uint] id_data, string? vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.Buffer to_xmp_buffer (Gst.TagList list, bool read_only, [CCode (array_length = false, array_null_terminated = true)] string[] schemas);
 		}
@@ -246,7 +246,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static unowned string id3_genre_get (uint id);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static Gst.Sample image_data_to_image_sample ([CCode (array_length_cname = "image_data_len", array_length_pos = 1.5, array_length_type = "guint")] uint8[] image_data, Gst.Tag.ImageType image_type);
+		public static Gst.Sample image_data_to_image_sample ([CCode (array_length_cname = "image_data_len", array_length_pos = 1.5)] uint8[:uint] image_data, Gst.Tag.ImageType image_type);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static bool parse_extended_comment (string ext_comment, out string? key, out string? lang, out string value, bool fail_if_no_key);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
