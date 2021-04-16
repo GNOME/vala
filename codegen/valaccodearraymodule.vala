@@ -236,6 +236,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return cname;
 		}
 
+		generate_type_declaration (ssize_t_type, cfile);
+
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", "%s *".printf (get_ccode_name (st))));
@@ -275,6 +277,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (cfile.add_declaration (cname)) {
 			return cname;
 		}
+
+		generate_type_declaration (ssize_t_type, cfile);
 
 		var fun = new CCodeFunction (cname, "void");
 		fun.modifiers = CCodeModifiers.STATIC;
@@ -321,6 +325,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override void append_vala_array_free () {
 		// _vala_array_destroy only frees elements but not the array itself
 		generate_type_declaration (delegate_target_destroy_type, cfile);
+		generate_type_declaration (ssize_t_type, cfile);
 
 		var fun = new CCodeFunction ("_vala_array_destroy", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
@@ -379,6 +384,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 	public override void append_vala_array_move () {
 		cfile.add_include ("string.h");
+		generate_type_declaration (ssize_t_type, cfile);
 
 		// assumes that overwritten array elements are null before invocation
 		// FIXME will leak memory if that's not the case
@@ -442,6 +448,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void append_vala_array_length () {
+		generate_type_declaration (ssize_t_type, cfile);
+
 		var fun = new CCodeFunction ("_vala_array_length", get_ccode_name (ssize_t_type));
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
@@ -541,6 +549,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 
 		// declaration
+		generate_type_declaration (ssize_t_type, cfile);
 
 		var function = new CCodeFunction (dup_func, get_ccode_name (array_type));
 		function.modifiers = CCodeModifiers.STATIC;

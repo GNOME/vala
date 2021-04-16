@@ -5838,6 +5838,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return array_contains_func;
 		}
 
+		generate_type_declaration (ssize_t_type, cfile);
+
 		var function = new CCodeFunction (array_contains_func, get_ccode_name (bool_type));
 		function.modifiers = CCodeModifiers.STATIC;
 
