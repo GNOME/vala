@@ -688,6 +688,7 @@ TESTS = \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
 	generics/property-int-cast.vala \
+	generics/reference-transfer.vala \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/value-pointer-type-access.vala \
