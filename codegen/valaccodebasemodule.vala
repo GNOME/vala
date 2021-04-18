@@ -4789,15 +4789,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			CCodeExpression cifnull;
-			if (type.type_symbol != null) {
-				cifnull = new CCodeConstant ("NULL");
-			} else {
+			if (type is GenericType) {
 				// the value might be non-null even when the dup function is null,
 				// so we may not just use NULL for type parameters
 
 				// cast from gconstpointer to gpointer as methods in
 				// generic classes may not return gconstpointer
 				cifnull = new CCodeCastExpression (cexpr, get_ccode_name (pointer_type));
+			} else if (type.type_symbol != null) {
+				cifnull = new CCodeConstant ("NULL");
+			} else {
+				cifnull = cexpr;
 			}
 
 			if (is_ref_function_void (type)) {
