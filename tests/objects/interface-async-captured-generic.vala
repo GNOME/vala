@@ -1,7 +1,12 @@
 [GenericAccessors]
 interface IFoo<G> : Object {
-	public async void bar (G g) {
+	public async void bar (owned G g) {
 		assert (typeof (G) == typeof (string));
+		assert (g == "foo");
+		baz (g);
+	}
+
+	public void baz (owned G g) {
 		assert (g == "foo");
 	}
 }

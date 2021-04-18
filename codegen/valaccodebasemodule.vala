@@ -2985,9 +2985,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				string method_name = "get_%s_dup_func".printf (type_parameter.name.ascii_down ());
 				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
-				cast_self.add_argument (new CCodeIdentifier ("self"));
+				cast_self.add_argument (get_this_cexpression ());
 				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
-				function_call.add_argument (new CCodeIdentifier ("self"));
+				function_call.add_argument (get_this_cexpression ());
 				return function_call;
 			}
 
