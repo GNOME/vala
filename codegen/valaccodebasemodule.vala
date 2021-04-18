@@ -2906,28 +2906,30 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 	}
 
+	CCodeExpression get_generic_type_expression (string identifier, GenericType type, bool is_chainup = false) {
+		if (type.type_parameter.parent_symbol is Interface) {
+			unowned Interface iface = (Interface) type.type_parameter.parent_symbol;
+			require_generic_accessors (iface);
+
+			var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
+			cast_self.add_argument (get_this_cexpression ());
+			var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, "get_%s".printf (identifier)));
+			function_call.add_argument (get_this_cexpression ());
+			return function_call;
+		}
+
+		if (is_in_generic_type (type) && !is_chainup && !in_creation_method) {
+			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_this_cexpression (), "priv"), identifier);
+		} else {
+			return get_variable_cexpression (identifier);
+		}
+	}
+
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string var_name = "%s_type".printf (type_parameter.name.ascii_down ());
-
-			if (type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type_parameter.parent_symbol;
-				require_generic_accessors (iface);
-
-				string method_name = "get_%s_type".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
-				cast_self.add_argument (get_this_cexpression ());
-				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
-				function_call.add_argument (get_this_cexpression ());
-				return function_call;
-			}
-
-			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
-				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_this_cexpression (), "priv"), var_name);
-			} else {
-				return get_variable_cexpression (var_name);
-			}
+			string identifier = "%s_type".printf (type_parameter.name.ascii_down ());
+			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else {
 			string type_id = get_ccode_type_id (type);
 			if (type_id == "") {
@@ -2942,6 +2944,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public virtual CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference, bool is_chainup = false) {
 		if (type is ErrorType) {
 			return new CCodeIdentifier ("g_error_copy");
+		} else if (type is GenericType) {
+			var type_parameter = ((GenericType) type).type_parameter;
+			string identifier = "%s_dup_func".printf (type_parameter.name.ascii_down ());
+			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else if (type.type_symbol != null) {
 			string dup_function;
 			unowned Class? cl = type.type_symbol as Class;
@@ -2977,27 +2983,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			return new CCodeIdentifier (dup_function);
-		} else if (type is GenericType) {
-			var type_parameter = ((GenericType) type).type_parameter;
-			string func_name = "%s_dup_func".printf (type_parameter.name.ascii_down ());
-
-			if (type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type_parameter.parent_symbol;
-				require_generic_accessors (iface);
-
-				string method_name = "get_%s_dup_func".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
-				cast_self.add_argument (get_this_cexpression ());
-				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
-				function_call.add_argument (get_this_cexpression ());
-				return function_call;
-			}
-
-			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
-				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_this_cexpression (), "priv"), func_name);
-			} else {
-				return get_variable_cexpression (func_name);
-			}
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
 			return get_dup_func_expression (pointer_type.base_type, source_reference);
@@ -3476,6 +3461,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		} else if (type is ErrorType) {
 			cfile.add_include ("glib.h");
 			return new CCodeIdentifier ("g_error_free");
+		} else if (type is GenericType) {
+			var type_parameter = ((GenericType) type).type_parameter;
+			string identifier = "%s_destroy_func".printf (type_parameter.name.ascii_down ());
+			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else if (type.type_symbol != null) {
 			string unref_function;
 			if (type is ReferenceType) {
@@ -3534,27 +3523,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return new CCodeConstant ("NULL");
 			}
 			return new CCodeIdentifier (unref_function);
-		} else if (type is GenericType) {
-			var type_parameter = ((GenericType) type).type_parameter;
-			string func_name = "%s_destroy_func".printf (type_parameter.name.ascii_down ());
-
-			if (type_parameter.parent_symbol is Interface) {
-				var iface = (Interface) type_parameter.parent_symbol;
-				require_generic_accessors (iface);
-
-				string method_name = "get_%s_destroy_func".printf (type_parameter.name.ascii_down ());
-				var cast_self = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
-				cast_self.add_argument (get_this_cexpression ());
-				var function_call = new CCodeFunctionCall (new CCodeMemberAccess.pointer (cast_self, method_name));
-				function_call.add_argument (get_this_cexpression ());
-				return function_call;
-			}
-
-			if (is_in_generic_type ((GenericType) type) && !is_chainup && !in_creation_method) {
-				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (get_this_cexpression (), "priv"), func_name);
-			} else {
-				return get_variable_cexpression (func_name);
-			}
 		} else if (type is ArrayType) {
 			if (context.profile == Profile.POSIX) {
 				cfile.add_include ("stdlib.h");
