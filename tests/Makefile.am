@@ -480,6 +480,7 @@ TESTS = \
 	objects/property-read-only-auto.vala \
 	objects/property-read-only-member-write.test \
 	objects/property-read-only-write.test \
+	objects/property-class-invalid-name.test \
 	objects/property-construct-only.vala \
 	objects/property-construct-only-write.test \
 	objects/property-construct-only-write-after.test \
@@ -487,6 +488,7 @@ TESTS = \
 	objects/property-delegate.vala \
 	objects/property-delegate-owned.vala \
 	objects/property-gboxed-nullable.vala \
+	objects/property-interface-invalid-name.test \
 	objects/property-real-struct-assignment.vala \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \

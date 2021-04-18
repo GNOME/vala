@@ -465,11 +465,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 
-		if (!prop.name[0].isalpha ()) {
-			// GObject requires properties to start with a letter
-			return false;
-		}
-
 		if (type_sym is Interface && !prop.is_abstract && !prop.external && !prop.external_package) {
 			// GObject does not support non-abstract interface properties,
 			// however we assume external properties always are GObject properties

@@ -1,0 +1,8 @@
+Invalid Code
+
+interface IFoo : Object {
+	public abstract string _foo { get; set; }
+}
+
+void main () {
+}

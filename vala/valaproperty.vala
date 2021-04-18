@@ -413,6 +413,14 @@ public class Vala.Property : Symbol, Lockable {
 
 		checked = true;
 
+		if (context.profile == Profile.GOBJECT && parent_symbol is ObjectTypeSymbol
+		    && ((ObjectTypeSymbol) parent_symbol).is_subtype_of (context.analyzer.object_type)) {
+			if (!is_valid_name (name)) {
+				error = true;
+				Report.error (source_reference, "Name `%s' is not valid for a GLib.Object property", name);
+			}
+		}
+
 		if (this_parameter != null) {
 			this_parameter.check (context);
 		}
@@ -542,5 +550,25 @@ public class Vala.Property : Symbol, Lockable {
 		context.analyzer.current_symbol = old_symbol;
 
 		return !error;
+	}
+
+	// Ported from glib's "g_param_spec_is_valid_name"
+	static bool is_valid_name (string name) {
+		char* p;
+
+		if ((name[0] < 'A' || name[0] > 'Z')
+		    && (name[0] < 'a' || name[0] > 'z')) {
+			return false;
+		}
+
+		for (p = name; *p != '\0'; p++) {
+			char c = *p;
+			if (c != '-' && c != '_' && (c < '0' || c > '9')
+			    && (c < 'A' || c > 'Z') && (c < 'a' || c > 'z')) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
