@@ -160,11 +160,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				params = m.get_async_begin_parameters ();
 			} else {
 				ccall = finish_call;
-
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
-				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
+				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), get_variable_cexpression ("_res_"));
 			}
 		}
 
@@ -806,7 +805,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// set state before calling async function to support immediate callbacks
 			int state = emit_context.next_coroutine_state++;
 
-			ccode.add_assignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_state_"), new CCodeConstant (state.to_string ()));
+			ccode.add_assignment (get_variable_cexpression ("_state_"), new CCodeConstant (state.to_string ()));
 			ccode.add_expression (async_call);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 			ccode.add_label ("_state_%d".printf (state));

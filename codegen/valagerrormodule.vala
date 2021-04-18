@@ -157,9 +157,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				ccode.add_return (new CCodeConstant ("NULL"));
 			}
 		} else if (is_in_coroutine ()) {
-			var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_async_result");
 			var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			unref.add_argument (async_result_expr);
+			unref.add_argument (get_variable_cexpression ("_async_result"));
 			ccode.add_expression (unref);
 			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type != null) {

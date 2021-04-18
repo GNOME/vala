@@ -485,9 +485,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 				if (is_in_coroutine ()) {
-					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_cname (get_local_cname (local)));
+					result.delegate_target_cvalue = get_variable_cexpression (get_delegate_target_cname (get_local_cname (local)));
 					if (local.variable_type.is_disposable ()) {
-						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_delegate_target_destroy_notify_cname (get_local_cname (local)));
+						result.delegate_target_destroy_notify_cvalue = get_variable_cexpression (get_delegate_target_destroy_notify_cname (get_local_cname (local)));
 					}
 				} else {
 					result.delegate_target_cvalue = new CCodeIdentifier (get_delegate_target_cname (get_local_cname (local)));
@@ -522,7 +522,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		if (param.name == "this") {
 			if (is_in_coroutine ()) {
 				// use closure
-				result.cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "self");
+				result.cvalue = get_this_cexpression ();
 			} else {
 				unowned Struct? st = result.value_type.type_symbol as Struct;
 				if (st != null && !st.is_simple_type ()) {
@@ -555,9 +555,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// use closure
 				result.cvalue = get_parameter_cexpression (param);
 				if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
-					result.delegate_target_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_ccode_delegate_target_name (param));
+					result.delegate_target_cvalue = get_variable_cexpression (get_ccode_delegate_target_name (param));
 					if (delegate_type.is_disposable ()) {
-						result.delegate_target_destroy_notify_cvalue = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), get_ccode_delegate_target_destroy_notify_name (param));
+						result.delegate_target_destroy_notify_cvalue = get_variable_cexpression (get_ccode_delegate_target_destroy_notify_name (param));
 					}
 				}
 			} else {

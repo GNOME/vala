@@ -1441,7 +1441,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 								var vardecl = new CCodeVariableDeclarator.zero (temp_decl.name, rhs);
 								ccode.add_declaration (get_ccode_name (temp_decl.variable_type), vardecl);
 
-								var tmp = get_variable_cexpression (get_variable_cname (temp_decl.name));
+								var tmp = get_variable_cexpression (temp_decl.name);
 								ccode.add_assignment (lhs, tmp);
 
 								ccode.close ();
