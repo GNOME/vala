@@ -2166,11 +2166,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				unowned DataType? this_type = get_this_type ();
 				if (this_type != null && (!in_creation_method_with_chainup || current_method.body != b)) {
-					var ref_call = new CCodeFunctionCall (get_dup_func_expression (this_type, b.source_reference));
-					ref_call.add_argument (get_this_cexpression ());
-
-					// never increase reference count for self in finalizers to avoid infinite recursion on following unref
-					var instance = (is_in_destructor () ? (CCodeExpression) new CCodeIdentifier ("self") : (CCodeExpression) ref_call);
+					CCodeExpression instance;
+					if (is_in_destructor ()) {
+						// never increase reference count for self in finalizers to avoid infinite recursion on following unref
+						instance = new CCodeIdentifier ("self");
+					} else {
+						var ref_call = new CCodeFunctionCall (get_dup_func_expression (this_type, b.source_reference));
+						ref_call.add_argument (get_this_cexpression ());
+						instance = ref_call;
+					}
 
 					ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), instance);
 				}
