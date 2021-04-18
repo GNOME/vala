@@ -222,6 +222,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (_copy_function == null && sym is Struct) {
 					_copy_function = "%scopy".printf (lower_case_prefix);
 				}
+				if (_copy_function == null && sym is TypeParameter) {
+					_copy_function = "%s_dup_func".printf (sym.name.ascii_down ());
+				}
 				copy_function_set = true;
 			}
 			return _copy_function;
@@ -236,6 +239,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				if (_destroy_function == null && sym is Struct) {
 					_destroy_function = "%sdestroy".printf (lower_case_prefix);
+				}
+				if (_destroy_function == null && sym is TypeParameter) {
+					_destroy_function = "%s_destroy_func".printf (sym.name.ascii_down ());
 				}
 				destroy_function_set = true;
 			}
@@ -314,6 +320,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 			if (_type_id == null) {
 				if (ccode != null) {
 					_type_id = ccode.get_string ("type_id");
+				}
+				if (_type_id == null && sym is TypeParameter) {
+					_type_id = "%s_type".printf (sym.name.ascii_down ());
 				}
 				if (_type_id == null) {
 					_type_id = get_default_type_id ();

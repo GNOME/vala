@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a generic type parameter in the source code.
  */
-public class Vala.TypeParameter : Symbol {
+public class Vala.TypeParameter : TypeSymbol {
 	/**
 	 * Creates a new generic type parameter.
 	 *
