@@ -1099,9 +1099,9 @@ public class Vala.GIRWriter : CodeVisitor {
 	private void write_type_parameter (TypeParameter type_parameter, string tag_type) {
 		write_indent ();
 		if (tag_type == "property") {
-			buffer.append_printf ("<%s name=\"%s-type\" writable=\"1\" construct-only=\"1\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" writable=\"1\" construct-only=\"1\">\n", tag_type, get_ccode_type_id (type_parameter).replace ("_", "-"));
 		} else {
-			buffer.append_printf ("<%s name=\"%s_type\" transfer-ownership=\"none\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" transfer-ownership=\"none\">\n", tag_type, get_ccode_type_id (type_parameter));
 		}
 		indent++;
 		write_indent ();
@@ -1111,9 +1111,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("</%s>\n", tag_type);
 		write_indent ();
 		if (tag_type == "property") {
-			buffer.append_printf ("<%s name=\"%s-dup-func\" writable=\"1\" construct-only=\"1\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" writable=\"1\" construct-only=\"1\">\n", tag_type, get_ccode_copy_function (type_parameter).replace ("_", "-"));
 		} else {
-			buffer.append_printf ("<%s name=\"%s_dup_func\" transfer-ownership=\"none\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" transfer-ownership=\"none\">\n", tag_type, get_ccode_copy_function (type_parameter));
 		}
 		indent++;
 		write_indent ();
@@ -1123,9 +1123,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("</%s>\n", tag_type);
 		write_indent ();
 		if (tag_type == "property") {
-			buffer.append_printf ("<%s name=\"%s-destroy-func\" writable=\"1\" construct-only=\"1\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" writable=\"1\" construct-only=\"1\">\n", tag_type, get_ccode_destroy_function (type_parameter).replace ("_", "-"));
 		} else {
-			buffer.append_printf ("<%s name=\"%s_destroy_func\" transfer-ownership=\"none\">\n", tag_type, type_parameter.name.ascii_down ());
+			buffer.append_printf ("<%s name=\"%s\" transfer-ownership=\"none\">\n", tag_type, get_ccode_destroy_function (type_parameter));
 		}
 		indent++;
 		write_indent ();

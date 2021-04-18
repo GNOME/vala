@@ -196,9 +196,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					int type_param_index = 0;
 					var cl = (Class) m.parent_symbol;
 					foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ())));
-						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ())));
-						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ())));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier (get_ccode_type_id (type_param)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (get_ccode_copy_function (type_param)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier (get_ccode_destroy_function (type_param)));
 						type_param_index++;
 					}
 				}
@@ -384,14 +384,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (!current_class.is_compact && current_class.has_type_parameters ()) {
 				/* type, dup func, and destroy func fields for generic types */
-				var suffices = new string[] {"type", "dup_func", "destroy_func"};
+				var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-					var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
-
-					foreach (string suffix in suffices) {
-						var param_name = new CCodeIdentifier ("%s_%s".printf (type_param.name.ascii_down (), suffix));
-						ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-					}
+					var type = get_ccode_type_id (type_param);
+					var dup_func = get_ccode_copy_function (type_param);
+					var destroy_func = get_ccode_destroy_function (type_param);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, type), new CCodeIdentifier (type));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, dup_func), new CCodeIdentifier (dup_func));
+					ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, destroy_func), new CCodeIdentifier (destroy_func));
 				}
 			}
 			// object chainup can't be used as expression

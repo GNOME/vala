@@ -2180,16 +2180,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				if (current_method != null) {
 					// allow capturing generic type parameters
 					foreach (var type_param in current_method.get_type_parameters ()) {
-						string func_name;
-
-						func_name = "%s_type".printf (type_param.name.ascii_down ());
-						data.add_field ("GType", func_name);
-
-						func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
-						data.add_field ("GBoxedCopyFunc", func_name);
-
-						func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
-						data.add_field ("GDestroyNotify", func_name);
+						data.add_field ("GType", get_ccode_type_id (type_param));
+						data.add_field ("GBoxedCopyFunc", get_ccode_copy_function (type_param));
+						data.add_field ("GDestroyNotify", get_ccode_destroy_function (type_param));
 					}
 				}
 			}
@@ -2256,12 +2249,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 				if (current_method != null) {
 					// allow capturing generic type parameters
-					var suffices = new string[] {"type", "dup_func", "destroy_func"};
+					var data_var = get_variable_cexpression ("_data%d_".printf (block_id));
 					foreach (var type_param in current_method.get_type_parameters ()) {
-						foreach (string suffix in suffices) {
-							string func_name = "%s_%s".printf (type_param.name.ascii_down (), suffix);
-							ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name), get_variable_cexpression (func_name));
-						}
+						var type = get_ccode_type_id (type_param);
+						var dup_func = get_ccode_copy_function (type_param);
+						var destroy_func = get_ccode_destroy_function (type_param);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, type), get_variable_cexpression (type));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, dup_func), get_variable_cexpression (dup_func));
+						ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, destroy_func), get_variable_cexpression (destroy_func));
 					}
 				}
 			}
@@ -2355,19 +2350,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (current_method != null) {
 				// assign captured generic type parameters
 				foreach (var type_param in current_method.get_type_parameters ()) {
-					string func_name;
-
-					func_name = "%s_type".printf (type_param.name.ascii_down ());
-					ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
-					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
-
-					func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
-					ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
-					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
-
-					func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
-					ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
-					ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (outer_block, func_name));
+					var type = get_ccode_type_id (type_param);
+					var dup_func = get_ccode_copy_function (type_param);
+					var destroy_func = get_ccode_destroy_function (type_param);
+					ccode.add_declaration ("GType", new CCodeVariableDeclarator (type));
+					ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (dup_func));
+					ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (destroy_func));
+					ccode.add_assignment (new CCodeIdentifier (type), new CCodeMemberAccess.pointer (outer_block, type));
+					ccode.add_assignment (new CCodeIdentifier (dup_func), new CCodeMemberAccess.pointer (outer_block, dup_func));
+					ccode.add_assignment (new CCodeIdentifier (destroy_func), new CCodeMemberAccess.pointer (outer_block, destroy_func));
 				}
 			}
 
@@ -2928,7 +2919,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string identifier = "%s_type".printf (type_parameter.name.ascii_down ());
+			string identifier = get_ccode_type_id (type_parameter);
 			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else {
 			string type_id = get_ccode_type_id (type);
@@ -2946,7 +2937,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier ("g_error_copy");
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string identifier = "%s_dup_func".printf (type_parameter.name.ascii_down ());
+			string identifier = get_ccode_copy_function (type_parameter);
 			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else if (type.type_symbol != null) {
 			string dup_function;
@@ -3463,7 +3454,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier ("g_error_free");
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string identifier = "%s_destroy_func".printf (type_parameter.name.ascii_down ());
+			string identifier = get_ccode_destroy_function (type_parameter);
 			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
 		} else if (type.type_symbol != null) {
 			string unref_function;

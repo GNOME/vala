@@ -488,16 +488,9 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			/* create type, dup_func, and destroy_func fields for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-				string func_name;
-
-				func_name = "%s_type".printf (type_param.name.ascii_down ());
-				instance_priv_struct.add_field ("GType", func_name);
-
-				func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
-				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
-
-				func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
-				instance_priv_struct.add_field ("GDestroyNotify", func_name);
+				instance_priv_struct.add_field ("GType", get_ccode_type_id (type_param));
+				instance_priv_struct.add_field ("GBoxedCopyFunc", get_ccode_copy_function (type_param));
+				instance_priv_struct.add_field ("GDestroyNotify", get_ccode_destroy_function (type_param));
 			}
 		}
 
@@ -1427,17 +1420,17 @@ public class Vala.GTypeModule : GErrorModule {
 				GenericType p_type = new GenericType (p);
 				DataType p_data_type = p_type.get_actual_type (SemanticAnalyzer.get_data_type_for_symbol (cl), null, cl);
 
-				add_generic_accessor_function ("get_%s_type".printf (p.name.ascii_down ()),
+				add_generic_accessor_function ("get_%s".printf (get_ccode_type_id (p)),
 				                               "GType",
 				                               get_type_id_expression (p_data_type),
 				                               p, cl, iface);
 
-				add_generic_accessor_function ("get_%s_dup_func".printf (p.name.ascii_down ()),
+				add_generic_accessor_function ("get_%s".printf (get_ccode_copy_function (p)),
 				                               "GBoxedCopyFunc",
 				                               get_dup_func_expression (p_data_type, null),
 				                               p, cl, iface);
 
-				add_generic_accessor_function ("get_%s_destroy_func".printf (p.name.ascii_down ()),
+				add_generic_accessor_function ("get_%s".printf (get_ccode_destroy_function (p)),
 				                               "GDestroyNotify",
 				                               get_destroy_func_expression (p_data_type),
 				                               p, cl, iface);
@@ -2091,8 +2084,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (iface.get_attribute ("GenericAccessors") != null) {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
-				string method_name = "get_%s_type".printf (p.name.ascii_down ());
-				var vdeclarator = new CCodeFunctionDeclarator (method_name);
+				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (get_ccode_type_id (p)));
 				var this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 
@@ -2100,8 +2092,7 @@ public class Vala.GTypeModule : GErrorModule {
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
 
-				method_name = "get_%s_dup_func".printf (p.name.ascii_down ());
-				vdeclarator = new CCodeFunctionDeclarator (method_name);
+				vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (get_ccode_copy_function (p)));
 				this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 
@@ -2109,8 +2100,7 @@ public class Vala.GTypeModule : GErrorModule {
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
 
-				method_name = "get_%s_destroy_func".printf (p.name.ascii_down ());
-				vdeclarator = new CCodeFunctionDeclarator (method_name);
+				vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (get_ccode_destroy_function (p)));
 				this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
 				vdeclarator.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 

@@ -504,20 +504,17 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 
 					// allow capturing generic type parameters
+					var data_var = get_variable_cexpression ("_data%d_".printf (block_id));
 					foreach (var type_param in m.get_type_parameters ()) {
-						string func_name;
-
-						func_name = "%s_type".printf (type_param.name.ascii_down ());
-						ccode.add_declaration ("GType", new CCodeVariableDeclarator (func_name));
-						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
-
-						func_name = "%s_dup_func".printf (type_param.name.ascii_down ());
-						ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (func_name));
-						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
-
-						func_name = "%s_destroy_func".printf (type_param.name.ascii_down ());
-						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (func_name));
-						ccode.add_assignment (new CCodeIdentifier (func_name), new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), func_name));
+						var type = get_ccode_type_id (type_param);
+						var dup_func = get_ccode_copy_function (type_param);
+						var destroy_func = get_ccode_destroy_function (type_param);
+						ccode.add_declaration ("GType", new CCodeVariableDeclarator (type));
+						ccode.add_declaration ("GBoxedCopyFunc", new CCodeVariableDeclarator (dup_func));
+						ccode.add_declaration ("GDestroyNotify", new CCodeVariableDeclarator (destroy_func));
+						ccode.add_assignment (new CCodeIdentifier (type), new CCodeMemberAccess.pointer (data_var, type));
+						ccode.add_assignment (new CCodeIdentifier (dup_func), new CCodeMemberAccess.pointer (data_var, dup_func));
+						ccode.add_assignment (new CCodeIdentifier (destroy_func), new CCodeMemberAccess.pointer (data_var, destroy_func));
 					}
 				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
@@ -607,23 +604,14 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							ccode.add_assignment (get_this_cexpression (), new CCodeCastExpression (ccall, get_ccode_name (cl) + "*"));
 
 							/* type, dup func, and destroy func fields for generic types */
+							var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-								CCodeIdentifier param_name;
-								CCodeAssignment assign;
-
-								var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
-
-								param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ()));
-								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								ccode.add_expression (assign);
-
-								param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ()));
-								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								ccode.add_expression (assign);
-
-								param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ()));
-								assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-								ccode.add_expression (assign);
+								var type = get_ccode_type_id (type_param);
+								var dup_func = get_ccode_copy_function (type_param);
+								var destroy_func = get_ccode_destroy_function (type_param);
+								ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, type), new CCodeIdentifier (type));
+								ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, dup_func), new CCodeIdentifier (dup_func));
+								ccode.add_assignment (new CCodeMemberAccess.pointer (priv_access, destroy_func), new CCodeIdentifier (destroy_func));
 							}
 						}
 					} else if (current_type_symbol is Class) {
@@ -988,13 +976,16 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (type_parameters != null) {
 			int type_param_index = 0;
 			foreach (var type_param in type_parameters) {
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter ("%s_type".printf (type_param.name.ascii_down ()), "GType"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter ("%s_dup_func".printf (type_param.name.ascii_down ()), "GBoxedCopyFunc"));
-				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter ("%s_destroy_func".printf (type_param.name.ascii_down ()), "GDestroyNotify"));
+				var type = get_ccode_type_id (type_param);
+				var dup_func = get_ccode_copy_function (type_param);
+				var destroy_func = get_ccode_destroy_function (type_param);
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeParameter (type, "GType"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeParameter (dup_func, "GBoxedCopyFunc"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeParameter (destroy_func, "GDestroyNotify"));
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier ("%s_type".printf (type_param.name.ascii_down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier ("%s_dup_func".printf (type_param.name.ascii_down ())));
-					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.ascii_down ())));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier (type));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (dup_func));
+					carg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier (destroy_func));
 				}
 				type_param_index++;
 			}
