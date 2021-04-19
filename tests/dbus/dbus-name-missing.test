@@ -1,0 +1,9 @@
+Invalid Code
+
+class Test : Object {
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object<Test> ("/org/example/test", new Test ());
+}

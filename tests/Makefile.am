@@ -687,8 +687,10 @@ TESTS = \
 	dbus/async-connection.test \
 	dbus/async-errors.test \
 	dbus/connection.test \
+	dbus/dbus-name-missing.test \
 	dbus/dynamic-method.test \
 	dbus/enum-string-marshalling.vala \
+	dbus/generics.test \
 	dbus/signals.test \
 	dbus/filedescriptor.test \
 	dbus/filedescriptor-async.test \
