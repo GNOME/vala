@@ -1696,6 +1696,16 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (cl.static_destructor != null) {
 			cl.static_destructor.body.emit (this);
+
+			if (current_method_inner_error) {
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
+			}
+
+			if (current_method_return) {
+				// support return statements in destructors
+				ccode.add_label ("_return");
+				ccode.add_statement (new CCodeEmptyStatement ());
+			}
 		}
 
 		pop_context ();
@@ -1719,6 +1729,16 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (cl.class_destructor != null) {
 			cl.class_destructor.body.emit (this);
+
+			if (current_method_inner_error) {
+				ccode.add_declaration ("GError*", new CCodeVariableDeclarator.zero ("_inner_error%d_".printf (current_inner_error_id), new CCodeConstant ("NULL")));
+			}
+
+			if (current_method_return) {
+				// support return statements in destructors
+				ccode.add_label ("_return");
+				ccode.add_statement (new CCodeEmptyStatement ());
+			}
 		}
 
 		pop_context ();
