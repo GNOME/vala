@@ -77,6 +77,16 @@ public class Vala.Destructor : Subroutine {
 			body.check (context);
 		}
 
+		if (body != null && !body.error) {
+			var body_errors = new ArrayList<DataType> ();
+			body.get_error_types (body_errors);
+			foreach (DataType body_error_type in body_errors) {
+				if (!((ErrorType) body_error_type).dynamic_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				}
+			}
+		}
+
 		context.analyzer.current_symbol = parent_symbol;
 
 		return !error;
