@@ -34,6 +34,14 @@ class Manam : Object {
 		}
 		assert_not_reached ();
 	}
+
+	class ~Manam () {
+		bool b = true;
+		if (b) {
+			return;
+		}
+		assert_not_reached ();
+	}
 }
 
 void main () {
