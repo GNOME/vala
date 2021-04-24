@@ -613,6 +613,7 @@ TESTS = \
 	errors/invalid-type-check.test \
 	errors/loops.vala \
 	errors/method-throws.vala \
+	errors/unhandled.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
