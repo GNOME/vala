@@ -9,9 +9,9 @@ RTPBuffer struct=false base_type="Gst.Buffer"
   .buffer skip
   .map unowned=false
 
-RTCP* parent="Gst.RTPC" name="RTCP(.+)"
-RTCP_* parent="Gst.RTPC" name="RTCP_(.+)"
-rtcp_* parent="Gst.RTPC" name="rtcp_(.+)"
+RTCP* parent="Gst.RTCP" name="RTCP(.+)"
+RTCP_* parent="Gst.RTCP" name="RTCP_(.+)"
+rtcp_* parent="Gst.RTCP" name="rtcp_(.+)"
 
 RTCPBuffer struct=false base_type="Gst.Buffer"
   .buffer skip
