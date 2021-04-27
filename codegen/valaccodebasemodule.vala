@@ -1163,8 +1163,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (f.is_private_symbol ()) {
 				flock.modifiers = CCodeModifiers.STATIC;
-			} else if (context.hide_internal && f.is_internal_symbol ()) {
-				flock.modifiers = CCodeModifiers.INTERNAL;
 			} else {
 				flock.modifiers = CCodeModifiers.EXTERN;
 			}
@@ -1182,8 +1180,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_variable_array_length_cname (f, dim)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
-					} else if (context.hide_internal && f.is_internal_symbol ()) {
-						cdecl.modifiers = CCodeModifiers.INTERNAL;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 					}
@@ -1199,8 +1195,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f)));
 				if (f.is_private_symbol ()) {
 					cdecl.modifiers = CCodeModifiers.STATIC;
-				} else if (context.hide_internal && f.is_internal_symbol ()) {
-					cdecl.modifiers = CCodeModifiers.INTERNAL;
 				} else {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
 				}
@@ -1211,8 +1205,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_destroy_notify_name (f)));
 					if (f.is_private_symbol ()) {
 						cdecl.modifiers = CCodeModifiers.STATIC;
-					} else if (context.hide_internal && f.is_internal_symbol ()) {
-						cdecl.modifiers = CCodeModifiers.INTERNAL;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 					}
