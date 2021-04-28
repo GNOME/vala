@@ -157,6 +157,7 @@ TESTS = \
 	chainup/struct-this.vala \
 	chainup/struct-this-foo.vala \
 	chainup/bug791785.vala \
+	pointers/delete.vala \
 	pointers/bug590641.vala \
 	methods/array-length-type.vala \
 	methods/lambda.vala \
