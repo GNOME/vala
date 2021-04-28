@@ -4,8 +4,10 @@ string[] manam;
 class Foo {
 	public string[] f = manam;
 	public string[] i = { "baz", "foo", "bar" };
+	public string[] ia = { "baz", manam[0], "bar" };
 	public static string[] sf = manam;
 	public static string[] si = { "baz", "foo", "bar" };
+	public static string[] sa = { "baz", manam[0], "bar" };
 }
 
 [CCode (array_length = false)]
@@ -22,9 +24,15 @@ void main () {
 		assert (manam.length == 3);
 		var foo = new Foo ();
 		assert (foo.f.length == 3);
+		assert (foo.f[0] == "manam");
 		assert (Foo.sf.length == 3);
+		assert (Foo.sf[0] == "manam");
 		assert (foo.i.length == 3);
+		assert (foo.ia.length == 3);
+		assert (foo.ia[1] == "manam");
 		assert (Foo.si.length == 3);
+		assert (Foo.sa.length == 3);
+		assert (Foo.sa[1] == "manam");
 	}
 	{
 		minim = { "minim", "foo", "bar" };
