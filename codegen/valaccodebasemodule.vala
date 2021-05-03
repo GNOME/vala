@@ -4257,7 +4257,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			CCodeExpression klass;
 
 			if (get_this_type () != null) {
-				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function ((Class) parent)));
 				k.add_argument (new CCodeIdentifier ("self"));
 				klass = k;
 			} else {
