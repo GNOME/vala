@@ -715,13 +715,13 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					klass = new CCodeIdentifier ("klass");
 				} else {
 					// Accessing the field from within an instance method
-					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+					var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 					k.add_argument (new CCodeIdentifier ("self"));
 					klass = k;
 				}
 			} else {
 				// Accessing the field of an instance
-				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 				k.add_argument (get_cvalue_ (instance));
 				klass = k;
 			}
