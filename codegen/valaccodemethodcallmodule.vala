@@ -299,13 +299,13 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					klass = new CCodeIdentifier ("klass");
 				} else {
 					// Accessing the method from within an instance method
-					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+					var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl));
 					k.add_argument (get_this_cexpression ());
 					klass = k;
 				}
 			} else {
 				// Accessing the method of an instance
-				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
 				k.add_argument (get_cvalue (ma.inner));
 				klass = k;
 			}
