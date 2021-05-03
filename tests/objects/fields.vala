@@ -1,109 +1,264 @@
-using GLib;
-
 [Compact]
-class CompactTest {
-	public int initialized_field = 24;
-	private static int private_static_field = 25;
-	public static int public_static_field = 26;
+class CompactFoo {
+	public int initialized_field = 23;
+	private static int private_static_field = 42;
+	public static int public_static_field = 4711;
 }
 
-class Maman.Foo : Object {
-	public int public_base_field = 2;
-	public class int public_class_field = 23;
+class Foo {
+	public int public_base_field = 23;
+	public class int public_base_class_field = 42;
 }
 
-class Maman.Bar : Foo {
-	public int public_field = 3;
-	private int private_field = 4;
-	private static int private_static_field = 5;
-	public static int public_static_field = 6;
-	private class int private_class_field;
-	public class int public_class_field;
+class Faz : Foo {
+	public int public_field = 23;
+	private int private_field = 23;
+
+	public class int public_class_field = 42;
+	private class int private_class_field = 42;
+
+	public static int public_static_field = 4711;
+	private static int private_static_field = 4711;
 
 	class construct {
-		private_class_field = 7;
+		//FIXME
+		public_class_field = 42;
+		assert (public_class_field == 42);
+		public_class_field = 24;
+		assert (public_class_field == 24);
+
+		//FIXME
+		private_class_field = 42;
+		assert (private_class_field == 42);
+		private_class_field = 24;
+		assert (private_class_field == 24);
 	}
+
 	static construct {
-		public_class_field = 8;
+		assert (public_class_field == 42);
+		public_class_field = 24;
+		assert (public_class_field == 24);
+
+		assert (private_class_field == 42);
+		private_class_field = 24;
+		assert (private_class_field == 24);
 	}
 
-	void do_action () {
-		stdout.printf (" %d %d %d %d %d %d %d", public_base_field, public_field,
-		               private_field, private_static_field, public_static_field,
-					   private_class_field, public_class_field);
-		public_base_field = 9;
-		public_field = 10;
-		private_field = 11;
+	public void action () {
+		assert (public_field == 23);
+		public_field = 32;
+		assert (public_field == 32);
+
+		assert (private_field == 23);
+		private_field = 32;
+		assert (private_field == 32);
+
+		assert (public_base_field == 23);
+		public_base_field = 32;
+		assert (public_base_field == 32);
+	}
+
+	public void action_class () {
+		assert (public_class_field == 24);
+		public_class_field = 42;
+		assert (public_class_field == 42);
+
+		assert (private_class_field == 24);
+		private_class_field = 42;
+		assert (private_class_field == 42);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+	}
+
+	public void lock_action () {
 		lock (private_static_field) {
-			private_static_field = 12;
+			private_static_field = 1147;
+			assert (private_static_field == 1147);
 		}
 		lock (public_static_field) {
-			public_static_field = 13;
+			public_static_field = 1147;
+			assert (public_static_field == 1147);
 		}
-		lock (private_class_field) {
-			private_class_field = 14;
+		lock (private_field) {
+			private_field = 1147;
+			assert (private_field == 1147);
 		}
-		lock (public_class_field) {
-			public_class_field = 15;
+		lock (public_field) {
+			public_field = 1147;
+			assert (public_field == 1147);
 		}
-		stdout.printf (" %d %d %d %d %d %d %d", public_base_field, public_field,
-		               private_field, private_static_field, public_static_field,
-					   private_class_field, public_class_field);
 	}
 
-	class void do_action_class () {
-		stdout.printf (" %d %d %d %d", private_static_field, public_static_field,
-					   private_class_field, public_class_field);
-		lock (private_static_field) {
-			private_static_field = 12;
-		}
-		lock (public_static_field) {
-			public_static_field = 13;
-		}
+	public void lock_action_class () {
 		lock (private_class_field) {
-			private_class_field = 14;
+			private_class_field = 1147;
+			assert (private_class_field == 1147);
 		}
 		lock (public_class_field) {
-			public_class_field = 15;
+			public_class_field = 1147;
+			assert (public_class_field == 1147);
 		}
-		stdout.printf (" %d %d %d %d", private_static_field, public_static_field,
-					   private_class_field, public_class_field);
-	}
-
-	public static void run () {
-		stdout.printf ("Field Test: 1");
-
-		var bar = new Bar ();
-		bar.do_action ();
-		bar.do_action_class ();
-
-		bar.public_base_field = 16;
-		bar.public_field = 17;
-		bar.private_field = 18;
-		bar.private_static_field = 19;
-		bar.public_static_field = 20;
-		bar.private_class_field = 21;
-		((Foo)bar).public_class_field = 22;
-		stdout.printf (" %d %d %d %d %d %d %d", bar.public_base_field, bar.public_field,
-		               bar.private_field, bar.private_static_field, bar.public_static_field,
-					   bar.private_class_field, ((Foo)bar).public_class_field);
-
-		var foo = new Foo ();
-		stdout.printf (" %d", foo.public_class_field);
-
-		var compact = new CompactTest ();
-		stdout.printf (" %d", compact.initialized_field);
-
-		stdout.printf (" 27\n");
 	}
 }
 
-class Maman.Baz<T> {
+class Bar : Object {
+	public int public_base_field = 23;
+	public class int public_base_class_field = 42;
+}
+
+class Baz : Bar {
+	public int public_field = 23;
+	private int private_field = 23;
+
+	public class int public_class_field = 42;
+	private class int private_class_field = 42;
+
+	public static int public_static_field = 4711;
+	private static int private_static_field = 4711;
+
+	class construct {
+		//FIXME
+		print ("%i\n", public_class_field);
+		public_class_field = 42;
+		assert (public_class_field == 42);
+		public_class_field = 24;
+		assert (public_class_field == 24);
+
+		//FIXME
+		print ("%i\n", private_class_field);
+		private_class_field = 42;
+		assert (private_class_field == 42);
+		private_class_field = 24;
+		assert (private_class_field == 24);
+	}
+
+	static construct {
+		assert (public_class_field == 42);
+		public_class_field = 24;
+		assert (public_class_field == 24);
+
+		assert (private_class_field == 42);
+		private_class_field = 24;
+		assert (private_class_field == 24);
+	}
+
+	public void action () {
+		assert (public_field == 23);
+		public_field = 32;
+		assert (public_field == 32);
+
+		assert (private_field == 23);
+		private_field = 32;
+		assert (private_field == 32);
+
+		assert (public_base_field == 23);
+		public_base_field = 32;
+		assert (public_base_field == 32);
+	}
+
+	public void action_class () {
+		assert (public_class_field == 24);
+		public_class_field = 42;
+		assert (public_class_field == 42);
+
+		assert (private_class_field == 24);
+		private_class_field = 42;
+		assert (private_class_field == 42);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+	}
+
+	public void lock_action () {
+		lock (private_static_field) {
+			private_static_field = 1147;
+			assert (private_static_field == 1147);
+		}
+		lock (public_static_field) {
+			public_static_field = 1147;
+			assert (public_static_field == 1147);
+		}
+		lock (private_field) {
+			private_field = 1147;
+			assert (private_field == 1147);
+		}
+		lock (public_field) {
+			public_field = 1147;
+			assert (public_field == 1147);
+		}
+	}
+
+	public void lock_action_class () {
+		lock (private_class_field) {
+			private_class_field = 1147;
+			assert (private_class_field == 1147);
+		}
+		lock (public_class_field) {
+			public_class_field = 1147;
+			assert (public_class_field == 1147);
+		}
+	}
+}
+
+class Manam<T> {
 	public T foo;
 }
 
 void main () {
-	Maman.Bar.run ();
-	Maman.Baz<Maman.Bar> baz = new Maman.Baz<Maman.Bar> ();
-	baz.foo = null;
+	{
+		var foo = new Foo ();
+		foo.public_base_field = 132;
+		assert (foo.public_base_field == 132);
+		foo.public_base_class_field = 264;
+		assert (foo.public_base_class_field == 264);
+		foo.public_base_class_field = 42;
+	}
+	{
+		var faz = new Faz ();
+		faz.action ();
+		faz.action_class ();
+		faz.lock_action ();
+		faz.lock_action_class ();
+
+		faz.public_field = 66;
+		assert (faz.public_field == 66);
+		faz.public_class_field = 132;
+		assert (faz.public_class_field == 132);
+		faz.public_base_class_field = 264;
+		assert (faz.public_base_class_field == 264);
+	}
+	{
+		var bar = new Bar ();
+		bar.public_base_field = 132;
+		assert (bar.public_base_field == 132);
+		bar.public_base_class_field = 264;
+		assert (bar.public_base_class_field == 264);
+		bar.public_base_class_field = 42;
+	}
+	{
+		var baz = new Baz ();
+		baz.action ();
+		baz.action_class ();
+		baz.lock_action ();
+		baz.lock_action_class ();
+
+		baz.public_field = 66;
+		assert (baz.public_field == 66);
+		baz.public_class_field = 132;
+		assert (baz.public_class_field == 132);
+		baz.public_base_class_field = 264;
+		assert (baz.public_base_class_field == 264);
+	}
+	{
+		var foo = new CompactFoo ();
+		assert (foo.initialized_field == 23);
+		assert (foo.public_static_field == 4711);
+	}
+	{
+		var manam = new Manam<Bar> ();
+		manam.foo = null;
+	}
 }
