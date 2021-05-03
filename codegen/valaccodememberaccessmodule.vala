@@ -702,31 +702,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			}
 		} else if (field.binding == MemberBinding.CLASS) {
-			var cl = (Class) field.parent_symbol;
-			var cast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (cl)));
-
-			CCodeExpression klass;
-			if (instance == null) {
-				if (get_this_type () == null) {
-					// Accessing the field from a static or class constructor
-					klass = new CCodeIdentifier ("klass");
-				} else {
-					// Accessing the field from within an instance method
-					var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
-					k.add_argument (new CCodeIdentifier ("self"));
-					klass = k;
-				}
-			} else {
-				// Accessing the field of an instance
-				var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
-				k.add_argument (get_cvalue_ (instance));
-				klass = k;
-			}
-			cast.add_argument (klass);
-
+			unowned Class cl = (Class) field.parent_symbol;
+			var cast = get_this_class_cexpression (cl, instance);
 			if (field.access == SymbolAccessibility.PRIVATE) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function (cl)));
-				ccall.add_argument (klass);
+				ccall.add_argument (cast);
 				result.cvalue = new CCodeMemberAccess.pointer (ccall, get_ccode_name (field));
 			} else {
 				result.cvalue = new CCodeMemberAccess.pointer (cast, get_ccode_name (field));

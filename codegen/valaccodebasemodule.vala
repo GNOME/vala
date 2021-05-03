@@ -2539,6 +2539,25 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return get_cexpression ("self");
 	}
 
+	public CCodeExpression get_this_class_cexpression (Class cl, TargetValue? instance = null) {
+		CCodeExpression cast;
+		if (instance != null) {
+			// Accessing the member of an instance
+			var call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
+			call.add_argument (get_cvalue_ (instance));
+			cast = call;
+		} else if (get_this_type () != null) {
+			// Accessing the member from within an instance method
+			var call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
+			call.add_argument (get_this_cexpression ());
+			cast = call;
+		} else {
+			// Accessing the member from a static or class constructor
+			cast = new CCodeIdentifier ("klass");
+		}
+		return cast;
+	}
+
 	public CCodeExpression get_this_interface_cexpression (Interface iface) {
 		if (current_class.implements (iface)) {
 			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (iface)));
@@ -4207,18 +4226,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			l = get_cvalue (((MemberAccess) resource).inner);
 			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (get_ccode_name (member)));
 		} else if (member.is_class_member ()) {
-			CCodeExpression klass;
-
-			if (get_this_type () != null) {
-				var k = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function ((Class) parent))));
-				k.add_argument (new CCodeIdentifier ("self"));
-				klass = k;
-			} else {
-				klass = new CCodeIdentifier ("klass");
-			}
-
-			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function ((Class) parent)));
-			get_class_private_call.add_argument (klass);
+			unowned Class cl = (Class) parent;
+			var cast = get_this_class_cexpression (cl);
+			var get_class_private_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function (cl)));
+			get_class_private_call.add_argument (cast);
 			l = new CCodeMemberAccess.pointer (get_class_private_call, get_symbol_lock_name (get_ccode_name (member)));
 		} else {
 			string lock_name = "%s_%s".printf (get_ccode_lower_case_name (parent), get_ccode_name (member));
