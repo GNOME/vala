@@ -666,6 +666,7 @@ TESTS = \
 	asynchronous/variadic-invalid.test \
 	asynchronous/variadic-invalid-2.test \
 	asynchronous/yield.vala \
+	threads/threadpool.vala \
 	generics/arrays.vala \
 	generics/arrays-not-supported.test \
 	generics/arrays-not-supported-2.test \
