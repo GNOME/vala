@@ -3782,11 +3782,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var ccomma = new CCodeCommaExpression ();
 
 		if (context.profile == Profile.GOBJECT
-		    && type.type_symbol != null && !is_reference_counting (type.type_symbol) &&
-		    (type.type_symbol.is_subtype_of (gstringbuilder_type)
-		     || type.type_symbol.is_subtype_of (garray_type)
-		     || type.type_symbol.is_subtype_of (gbytearray_type)
-		     || type.type_symbol.is_subtype_of (gptrarray_type))) {
+		    && type.type_symbol != null && !is_reference_counting (type.type_symbol)
+		    && type.type_symbol.is_subtype_of (gstringbuilder_type)) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (context.profile == Profile.GOBJECT
 		    && type.type_symbol == gthreadpool_type) {
