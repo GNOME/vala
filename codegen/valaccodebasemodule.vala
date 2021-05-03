@@ -4200,19 +4200,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	private CCodeExpression get_lock_expression (Statement stmt, Expression resource) {
 		CCodeExpression l = null;
-		var inner_node = ((MemberAccess)resource).inner;
 		var member = resource.symbol_reference;
 		var parent = (TypeSymbol)resource.symbol_reference.parent_symbol;
 
 		if (member.is_instance_member ()) {
-			if (inner_node  == null) {
-				l = new CCodeIdentifier ("self");
-			} else if (parent != current_type_symbol) {
-				l = generate_instance_cast (get_cvalue (inner_node), parent);
-			} else {
-				l = get_cvalue (inner_node);
-			}
-
+			l = get_cvalue (((MemberAccess) resource).inner);
 			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (get_ccode_name (member)));
 		} else if (member.is_class_member ()) {
 			CCodeExpression klass;
