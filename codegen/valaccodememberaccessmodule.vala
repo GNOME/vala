@@ -66,18 +66,9 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 			if (m.base_method != null) {
 				if (get_ccode_no_wrapper (m.base_method)) {
-					var base_class = (Class) m.base_method.parent_symbol;
+					unowned Class base_class = (Class) m.base_method.parent_symbol;
 					if (!base_class.is_compact) {
-						CCodeFunctionCall vclass;
-						if (base_class.external_package) {
-							vclass = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_CLASS"));
-							vclass.add_argument (pub_inst);
-							vclass.add_argument (new CCodeIdentifier (get_ccode_type_id (base_class)));
-							vclass.add_argument (new CCodeIdentifier (get_ccode_type_name (base_class)));
-						} else {
-							vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_class)));
-							vclass.add_argument (pub_inst);
-						}
+						var vclass = get_this_class_cexpression (base_class, expr.inner.target_value);
 						set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, get_ccode_vfunc_name (m)));
 					} else {
 						set_cvalue (expr, new CCodeMemberAccess.pointer (pub_inst, get_ccode_vfunc_name (m)));
@@ -87,17 +78,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (m.base_interface_method != null) {
 				if (get_ccode_no_wrapper (m.base_interface_method)) {
-					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					CCodeFunctionCall vclass;
-					if (base_iface.external_package) {
-						vclass = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
-						vclass.add_argument (pub_inst);
-						vclass.add_argument (new CCodeIdentifier (get_ccode_type_id (base_iface)));
-						vclass.add_argument (new CCodeIdentifier (get_ccode_type_name (base_iface)));
-					} else {
-						vclass = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (base_iface)));
-						vclass.add_argument (pub_inst);
-					}
+					unowned Interface base_iface = (Interface) m.base_interface_method.parent_symbol;
+					var vclass = get_this_interface_cexpression (base_iface, expr.inner.target_value);
 					set_cvalue (expr, new CCodeMemberAccess.pointer (vclass, get_ccode_vfunc_name (m)));
 				} else {
 					set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m.base_interface_method)));
