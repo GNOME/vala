@@ -2558,20 +2558,35 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return cast;
 	}
 
-	public CCodeExpression get_this_interface_cexpression (Interface iface) {
-		if (current_class.implements (iface)) {
-			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (current_class), get_ccode_lower_case_name (iface)));
+	public CCodeExpression get_this_interface_cexpression (Interface iface, TargetValue? instance = null) {
+		unowned Class? cl = current_class;
+		if (cl != null && cl.implements (iface)) {
+			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)));
 		}
 
-		if (!current_class.is_a (iface)) {
-			Report.warning (current_class.source_reference, "internal: `%s' is not a `%s'", current_class.get_full_name (), iface.get_full_name ());
+		if (cl != null && !cl.is_a (iface)) {
+			Report.warning (cl.source_reference, "internal: `%s' is not a `%s'", cl.get_full_name (), iface.get_full_name ());
 		}
 
-		var vcast = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
-		vcast.add_argument (get_this_cexpression ());
-		vcast.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
-		vcast.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
-		return vcast;
+		CCodeExpression cast;
+		if (instance != null) {
+			var call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+			call.add_argument (get_cvalue_ (instance));
+			call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
+			call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			cast = call;
+		} else if (get_this_type () != null) {
+			var call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+			call.add_argument (get_this_cexpression ());
+			call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
+			call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			cast = call;
+		} else {
+			Report.error (null, "internal: missing instance");
+			cast = null;
+			assert_not_reached ();
+		}
+		return cast;
 	}
 
 	public CCodeExpression get_inner_error_cexpression () {
