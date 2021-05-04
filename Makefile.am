@@ -48,6 +48,10 @@ bootstrap: all
 test:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check
 
+.PHONY: test-asan
+test-asan:
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) check TEST_CFLAGS="$(TEST_CFLAGS) -g3 -fsanitize=address -fno-omit-frame-pointer"
+
 #if ENABLE_COVERAGE
 .PHONY: coverage coverage-report
 coverage:
