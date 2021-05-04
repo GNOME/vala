@@ -2541,15 +2541,30 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_this_class_cexpression (Class cl, TargetValue? instance = null) {
 		CCodeExpression cast;
+		CCodeFunctionCall call;
 		if (instance != null) {
 			// Accessing the member of an instance
-			var call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
-			call.add_argument (get_cvalue_ (instance));
+			if (cl.external_package) {
+				call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_CLASS"));
+				call.add_argument (get_cvalue_ (instance));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_name (cl)));
+			} else {
+				call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
+				call.add_argument (get_cvalue_ (instance));
+			}
 			cast = call;
 		} else if (get_this_type () != null) {
 			// Accessing the member from within an instance method
-			var call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
-			call.add_argument (get_this_cexpression ());
+			if (cl.external_package) {
+				call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_CLASS"));
+				call.add_argument (get_this_cexpression ());
+				call.add_argument (new CCodeIdentifier (get_ccode_type_id (cl)));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_name (cl)));
+			} else {
+				call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (cl)));
+				call.add_argument (get_this_cexpression ());
+			}
 			cast = call;
 		} else {
 			// Accessing the member from a static or class constructor
@@ -2569,17 +2584,28 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		CCodeExpression cast;
+		CCodeFunctionCall call;
 		if (instance != null) {
-			var call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
-			call.add_argument (get_cvalue_ (instance));
-			call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
-			call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			if (iface.external_package) {
+				call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+				call.add_argument (get_cvalue_ (instance));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			} else {
+				call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
+				call.add_argument (get_cvalue_ (instance));
+			}
 			cast = call;
 		} else if (get_this_type () != null) {
-			var call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
-			call.add_argument (get_this_cexpression ());
-			call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
-			call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			if (iface.external_package) {
+				call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_INSTANCE_GET_INTERFACE"));
+				call.add_argument (get_this_cexpression ());
+				call.add_argument (new CCodeIdentifier (get_ccode_type_id (iface)));
+				call.add_argument (new CCodeIdentifier (get_ccode_type_name (iface)));
+			} else {
+				call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_type_get_function (iface)));
+				call.add_argument (get_this_cexpression ());
+			}
 			cast = call;
 		} else {
 			Report.error (null, "internal: missing instance");
