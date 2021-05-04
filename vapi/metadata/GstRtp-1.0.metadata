@@ -5,17 +5,31 @@ rtp_* name="rtp_(.+)"
 
 RTP_PAYLOAD_* parent="Gst.RTP.Payload" name="RTP_PAYLOAD_(.+)"
 
-RTPBuffer struct=false base_type="Gst.Buffer"
-  .buffer skip
+RTPBuffer
   .map unowned=false
+RTPHeaderExtension
+  .read.data array array_length_idx=2
+  .write.data array array_length_idx=4
+RTPSourceMeta
+  .append_csrc.csrc array array_length_idx=1
 
 RTCP* parent="Gst.RTCP" name="RTCP(.+)"
 RTCP_* parent="Gst.RTCP" name="RTCP_(.+)"
 rtcp_* parent="Gst.RTCP" name="rtcp_(.+)"
 
-RTCPBuffer struct=false base_type="Gst.Buffer"
-  .buffer skip
-  .map unowned=false
+rtcp_buffer_* parent="Gst.RTCP.Buffer" name="rtcp_buffer_(.+)"
+rtcp_buffer_new_take_data.data owned
+rtcp_buffer_map.rtcp out
+
+RTCPPacket
+  .rtcp nullable
+  .sdes_copy_entry.type out
+  .sdes_get_entry.type out
+  .xr_get_*.* out
+  .xr_get_*.packet out=false
+  .xr_get_dlrr_block.nth out=false
+  .xr_get_prt_by_seq.seq out=false
+  .xr_get_rle_nth_chunk.nth out=false
 
 // Backwards compatibility
 RTPBuffer
