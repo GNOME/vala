@@ -572,6 +572,9 @@ namespace Gst {
 		public Gst.MemoryFlags flags;
 		public size_t padding;
 		public size_t prefix;
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.20")]
+		public AllocationParams ();
 		public Gst.AllocationParams? copy ();
 		[DestroysInstance]
 		public void free ();
@@ -961,6 +964,9 @@ namespace Gst {
 		public void remove (string feature);
 		public void remove_id (GLib.Quark feature);
 		public bool set_parent_refcount (int refcount);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.20")]
+		public CapsFeatures.single (string feature);
 		public string to_string ();
 		[CCode (has_construct_function = false)]
 		public CapsFeatures.valist (string feature1, va_list varargs);
@@ -3067,6 +3073,8 @@ namespace Gst {
 		public unowned uint8[]? peek (int64 offset);
 		public static bool register (Gst.Plugin? plugin, string name, uint rank, [CCode (delegate_target_pos = 6.1, destroy_notify_pos = 6.2)] owned Gst.TypeFindFunction func, string? extensions, Gst.Caps? possible_caps);
 		public void suggest (uint probability, Gst.Caps caps);
+		[Version (since = "1.20")]
+		public void suggest_empty_simple (uint probability, string media_type);
 		public void suggest_simple (uint probability, string media_type, string? fieldname, ...);
 	}
 	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]

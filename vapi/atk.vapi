@@ -863,6 +863,7 @@ namespace Atk {
 		HAS_POPUP,
 		HAS_TOOLTIP,
 		READ_ONLY,
+		COLLAPSED,
 		LAST_DEFINED;
 		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.StateType for_name (string name);

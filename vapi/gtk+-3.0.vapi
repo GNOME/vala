@@ -10637,11 +10637,11 @@ namespace Gtk {
 		public void set_show_preview_entry (bool show_preview_entry);
 		public string font { owned get; set; }
 		public Pango.FontDescription font_desc { owned get; set; }
-		[Version (since = "3.22.30")]
+		[Version (since = "3.24.1")]
 		public string font_features { owned get; }
-		[Version (since = "3.22.30")]
+		[Version (since = "3.24.1")]
 		public string language { owned get; set; }
-		[Version (since = "3.22.30")]
+		[Version (since = "3.24.1")]
 		public Gtk.FontChooserLevel level { get; set; }
 		public string preview_text { owned get; set; }
 		public bool show_preview_entry { get; set; }

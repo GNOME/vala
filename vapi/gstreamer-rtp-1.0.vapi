@@ -397,7 +397,7 @@ namespace Gst {
 		public static Gst.Buffer buffer_new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		[Version (since = "1.20")]
-		public static GLib.List<Gst.RTP.HeaderExtension> get_header_extension_list ();
+		public static GLib.List<Gst.ElementFactory> get_header_extension_list ();
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]
 		public static bool hdrext_get_ntp_56 ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out uint64 ntptime);
 		[CCode (cheader_filename = "gst/rtp/rtp.h")]

@@ -4567,6 +4567,8 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected Device ();
 			public unowned string? get_node_path ();
+			[Version (since = "4.4")]
+			public void* get_xkb_keymap ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
 		[GIR (name = "WaylandDisplay")]
@@ -4834,10 +4836,10 @@ namespace Gdk {
 		public bool contain_mime_type (string mime_type);
 		[CCode (has_construct_function = false)]
 		public ContentFormats.for_gtype (GLib.Type type);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public unowned GLib.Type[]? get_gtypes ();
-		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[]? get_mime_types (out size_t n_mime_types);
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		public unowned string[]? get_mime_types ();
 		public bool match (Gdk.ContentFormats second);
 		public GLib.Type match_gtype (Gdk.ContentFormats second);
 		public unowned string? match_mime_type (Gdk.ContentFormats second);
@@ -4964,6 +4966,8 @@ namespace Gdk {
 		public unowned Gdk.Seat get_seat ();
 		public Gdk.InputSource get_source ();
 		public unowned Gdk.Surface? get_surface_at_position (out double win_x, out double win_y);
+		[Version (since = "4.2")]
+		public uint32 get_timestamp ();
 		public unowned string? get_vendor_id ();
 		public bool caps_lock_state { get; }
 		public Pango.Direction direction { get; }
@@ -6783,9 +6787,9 @@ namespace Gtk {
 	public class BoolFilter : Gtk.Filter {
 		[CCode (has_construct_function = false)]
 		public BoolFilter (owned Gtk.Expression? expression);
-		public unowned Gtk.Expression get_expression ();
+		public unowned Gtk.Expression? get_expression ();
 		public bool get_invert ();
-		public void set_expression (Gtk.Expression expression);
+		public void set_expression (Gtk.Expression? expression);
 		public void set_invert (bool invert);
 		public Gtk.Expression expression { get; set; }
 		public bool invert { get; set; }
@@ -8714,12 +8718,14 @@ namespace Gtk {
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
 		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual bool get_surrounding (out string text, out int cursor_index);
+		[Version (since = "4.2")]
 		public virtual bool get_surrounding_with_selection (out string text, out int cursor_index, out int anchor_index);
 		public virtual void reset ();
 		public virtual void set_client_widget (Gtk.Widget? widget);
 		public virtual void set_cursor_location (Gdk.Rectangle area);
 		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual void set_surrounding (string text, int len, int cursor_index);
+		[Version (since = "4.2")]
 		public virtual void set_surrounding_with_selection (string text, int len, int cursor_index, int anchor_index);
 		public virtual void set_use_preedit (bool use_preedit);
 		[NoAccessorMethod]
@@ -8778,6 +8784,7 @@ namespace Gtk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_search_path ();
 		public string get_theme_name ();
+		public bool has_gicon (GLib.Icon gicon);
 		public bool has_icon (string icon_name);
 		public Gtk.IconPaintable lookup_by_gicon (GLib.Icon icon, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
 		public Gtk.IconPaintable lookup_icon (string icon_name, [CCode (array_length = false, array_null_terminated = true)] string[]? fallbacks, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
@@ -10923,11 +10930,11 @@ namespace Gtk {
 	public class StringFilter : Gtk.Filter {
 		[CCode (has_construct_function = false)]
 		public StringFilter (owned Gtk.Expression? expression);
-		public unowned Gtk.Expression get_expression ();
+		public unowned Gtk.Expression? get_expression ();
 		public bool get_ignore_case ();
 		public Gtk.StringFilterMatchMode get_match_mode ();
 		public unowned string? get_search ();
-		public void set_expression (Gtk.Expression expression);
+		public void set_expression (Gtk.Expression? expression);
 		public void set_ignore_case (bool ignore_case);
 		public void set_match_mode (Gtk.StringFilterMatchMode mode);
 		public void set_search (string? search);
@@ -12145,7 +12152,7 @@ namespace Gtk {
 		public GLib.ListModel observe_controllers ();
 		public unowned Gtk.Widget? pick (double x, double y, Gtk.PickFlags flags);
 		[CCode (cname = "gtk_widget_class_query_action")]
-		public class bool query_action (uint index_, out GLib.Type owner, out string action_name, out GLib.VariantType parameter_type, out string property_name);
+		public class bool query_action (uint index_, out GLib.Type owner, out string action_name, out GLib.VariantType? parameter_type, out string? property_name);
 		public void queue_allocate ();
 		public void queue_draw ();
 		public void queue_resize ();
@@ -13294,7 +13301,8 @@ namespace Gtk {
 		SNAPSHOT,
 		CONSTRAINTS,
 		BUILDER_OBJECTS,
-		A11Y
+		A11Y,
+		ICONFALLBACK
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_", type_id = "gtk_delete_type_get_type ()")]
 	public enum DeleteType {
