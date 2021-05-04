@@ -4567,6 +4567,8 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected Device ();
 			public unowned string? get_node_path ();
+			[Version (since = "4.4")]
+			public void* get_xkb_keymap ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
 		[GIR (name = "WaylandDisplay")]
@@ -4834,10 +4836,10 @@ namespace Gdk {
 		public bool contain_mime_type (string mime_type);
 		[CCode (has_construct_function = false)]
 		public ContentFormats.for_gtype (GLib.Type type);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public unowned GLib.Type[]? get_gtypes ();
-		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[]? get_mime_types (out size_t n_mime_types);
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		public unowned string[]? get_mime_types ();
 		public bool match (Gdk.ContentFormats second);
 		public GLib.Type match_gtype (Gdk.ContentFormats second);
 		public unowned string? match_mime_type (Gdk.ContentFormats second);
