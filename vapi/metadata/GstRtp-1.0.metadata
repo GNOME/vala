@@ -5,6 +5,8 @@ rtp_* name="rtp_(.+)"
 
 RTP_PAYLOAD_* parent="Gst.RTP.Payload" name="RTP_PAYLOAD_(.+)"
 
+rtp_buffer_* parent="Gst.RTP.Buffer" name="rtp_buffer_(.+)"
+buffer_*_rtp_source_meta parent="Gst.RTP.Buffer" name="buffer_(.+)"
 RTPBuffer
   .map unowned=false
 RTPHeaderExtension
@@ -30,6 +32,9 @@ RTCPPacket
   .xr_get_dlrr_block.nth out=false
   .xr_get_prt_by_seq.seq out=false
   .xr_get_rle_nth_chunk.nth out=false
+
+rtcp_sdes_name_to_type parent="Gst.RTCP.SDESType" name="from_string"
+rtcp_sdes_type_to_name parent="Gst.RTCP.SDESType" name="to_string" symbol_type="method" instance_idx=0
 
 // Backwards compatibility
 RTPBuffer
