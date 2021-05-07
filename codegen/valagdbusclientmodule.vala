@@ -694,6 +694,9 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (error_argument);
 				ccode.add_expression (ccall);
 			} else if (call_type == CallType.ASYNC) {
+				var callback_specified = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("_callback_"), new CCodeConstant ("NULL"));
+				ccode.open_if (callback_specified);
+
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message_with_reply"));
 				ccall.add_argument (connection);
 				ccall.add_argument (new CCodeIdentifier ("_message"));
@@ -714,6 +717,23 @@ public class Vala.GDBusClientModule : GDBusModule {
 				ccall.add_argument (res_wrapper);
 
 				ccode.add_expression (ccall);
+
+				ccode.add_else ();
+
+				var set_flags = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_message_set_flags"));
+				set_flags.add_argument (new CCodeIdentifier ("_message"));
+				set_flags.add_argument (new CCodeConstant ("G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED"));
+				ccode.add_expression (set_flags);
+
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_connection_send_message"));
+				ccall.add_argument (connection);
+				ccall.add_argument (new CCodeIdentifier ("_message"));
+				ccall.add_argument (new CCodeConstant ("G_DBUS_SEND_MESSAGE_FLAGS_NONE"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccode.add_expression (ccall);
+
+				ccode.close ();
 			}
 
 			// free D-Bus message

@@ -714,6 +714,7 @@ TESTS = \
 	dbus/async-bus.test \
 	dbus/async-connection.test \
 	dbus/async-errors.test \
+	dbus/async-no-reply.test \
 	dbus/connection.test \
 	dbus/dbus-name-missing.test \
 	dbus/dynamic-method.test \

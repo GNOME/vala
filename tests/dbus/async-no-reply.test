@@ -1,0 +1,95 @@
+Packages: gio-2.0
+D-Bus
+
+Program: client
+
+[DBus (name = "org.example.Test")]
+interface Test : Object {
+	public abstract async string[] list_messages () throws IOError;
+	public abstract async void post_message (string message) throws IOError;
+}
+
+MainLoop main_loop;
+
+async void run () {
+	Test test = yield Bus.get_proxy (BusType.SESSION, "org.example.Test", "/org/example/Test");
+
+	var events = new AsyncQueue<string> ();
+
+	DBusConnection connection = ((DBusProxy) test).g_connection;
+	connection.add_filter ((conn, message, incoming) => {
+		if (message.get_interface () == "org.example.Test" && message.get_member () != "ListMessages") {
+			switch (message.get_message_type ()) {
+			case DBusMessageType.METHOD_CALL:
+				events.push (message.get_flags ().to_string ());
+				break;
+			default:
+				assert_not_reached ();
+			}
+		}
+		return message;
+	});
+
+	string[] messages = yield test.list_messages ();
+	assert (messages.length == 0);
+
+	yield test.post_message ("round-trip");
+	assert (events.pop () == "G_DBUS_MESSAGE_FLAGS_NONE");
+	assert (events.try_pop () == null);
+
+	test.post_message.begin ("fire-and-forget");
+	assert (events.pop () == "G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED");
+	assert (events.try_pop () == null);
+
+	messages = yield test.list_messages ();
+	assert (messages.length == 2);
+	assert (messages[0] == "round-trip");
+	assert (messages[1] == "fire-and-forget");
+
+	main_loop.quit ();
+}
+
+void main () {
+	run.begin ();
+
+	main_loop = new MainLoop (null, false);
+	main_loop.run ();
+}
+
+Program: server
+
+[DBus (name = "org.example.Test")]
+class Test : Object {
+	private string[] messages = new string[0];
+
+	public async string[] list_messages () {
+		return messages;
+	}
+
+	public async void post_message (string message) {
+		messages += message;
+	}
+}
+
+MainLoop main_loop;
+
+void client_exit (Pid pid, int status) {
+	assert (status == 0);
+	main_loop.quit ();
+}
+
+void main () {
+	var conn = Bus.get_sync (BusType.SESSION);
+	conn.register_object ("/org/example/Test", new Test ());
+
+	var request_result = conn.call_sync ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "RequestName",
+	                                      new Variant ("(su)", "org.example.Test", 0x4), null, 0, -1);
+	assert ((uint) request_result.get_child_value (0) == 1);
+
+	Pid client_pid;
+	Process.spawn_async (null, { "dbus_async_no_reply_client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop ();
+	main_loop.run ();
+}
