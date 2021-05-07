@@ -19,6 +19,16 @@ void foo<G> (owned G g) {
 }
 
 void main () {
-	foo<string> ("foo");
-	bar<string> (new Bar<string> ("bar"));
+	{
+		foo<string> ("foo");
+	}
+	{
+		bar<string> (new Bar<string> ("bar"));
+	}
+	{
+		var bar = new Bar<string> ("bar");
+		var t = (owned) bar.g;
+		assert (bar.g == null);
+		assert (t == "bar");
+	}
 }
