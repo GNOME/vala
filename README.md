@@ -59,6 +59,11 @@ Install the following packages:
  * automake
  * libtool
 
+These additional packages are needed to generate the documentation:
+
+ * help2man when updating the man pages
+ * xsltproc
+ * weasyprint for PDF generation
 
 ### Step Two:
 Decide where the Vala compiler is to be found.

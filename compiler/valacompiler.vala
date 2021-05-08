@@ -153,7 +153,7 @@ class Vala.Compiler {
 		{ "pkg-config", 0, 0, OptionArg.STRING, ref pkg_config_command, "Use COMMAND as pkg-config command", "COMMAND" },
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
-		{ "profile", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_profile, "Use the given profile instead of the default, options are 'gobject' or 'posix'", "PROFILE" },
+		{ "profile", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_profile, "Minimum runtime dependency: 'gobject' (default) or 'posix' (minimal libc)", "PROFILE" },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "no-color", 0, 0, OptionArg.NONE, ref disable_colored_output, "Disable colored output, alias for --color=never", null },
@@ -521,7 +521,7 @@ class Vala.Compiler {
 		if (context.report.get_errors () > 0 || (fatal_warnings && context.report.get_warnings () > 0)) {
 			return quit ();
 		}
-		
+
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
 			if (cc_command == null && Environment.get_variable ("CC") != null) {
@@ -636,7 +636,7 @@ class Vala.Compiler {
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
-		
+
 		if (version) {
 			stdout.printf ("Vala %s\n", Vala.BUILD_VERSION);
 			return 0;
@@ -644,12 +644,12 @@ class Vala.Compiler {
 			stdout.printf ("%s\n", Vala.API_VERSION);
 			return 0;
 		}
-		
+
 		if (sources == null && fast_vapis == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;
 		}
-		
+
 		var compiler = new Compiler ();
 		return compiler.run ();
 	}
