@@ -23,6 +23,18 @@ or \fB--no-color\fR are declared then \fB--color\fR=\fIauto\fR is used where
 output is colored when stderr is a terminal.
 .RE
 
+/Minimum runtime dependency/
+.RS
+\fIgobject\fR enables GLib's GType runtime type system. The runtime environment
+will usually require libgobject and its small number of dependencies.
+\fIposix\fR removes the dependency on GLib and disables the runtime type
+system. The profile either generates alternative code or errors at compile time
+if a Vala language feature is used that requires the runtime type system. This
+is useful for writing code, for example, that targets microcontrollers or
+for extremely small system utilities or container images. The runtime
+environment will usually require a small subset of the ISO C standard library.
+.RE
+
 /Enable support for ABI stability/
 .RS
 This changes the current behaviour to output public members of classes and

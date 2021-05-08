@@ -79,7 +79,7 @@ public class ValaDoc : Object {
 
 		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
-		{ "profile", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_profile, "Use the given profile instead of the default, options are 'gobject' or 'posix'", "PROFILE" },
+		{ "profile", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_profile, "Minimum runtime dependency: 'gobject' (default) or 'posix' (minimal libc)", "PROFILE" },
 
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },

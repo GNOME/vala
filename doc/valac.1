@@ -172,7 +172,17 @@ Write code tree to FILE
 Keep temporary files
 .TP
 \fB\-\-profile\fR=\fI\,PROFILE\/\fR
-Use the given profile instead of the default, options are 'gobject' or 'posix'
+Minimum runtime dependency: 'gobject' (default) or 'posix' (minimal libc)
+.RS
+\fIgobject\fR enables GLib's GType runtime type system. The runtime environment
+will usually require libgobject and its small number of dependencies.
+\fIposix\fR removes the dependency on GLib and disables the runtime type
+system. The profile either generates alternative code or errors at compile time
+if a Vala language feature is used that requires the runtime type system. This
+is useful for writing code, for example, that targets microcontrollers or
+for extremely small system utilities or container images. The runtime
+environment will usually require a small subset of the ISO C standard library.
+.RE
 .TP
 \fB\-q\fR, \fB\-\-quiet\fR
 Do not print messages to the console
