@@ -27,24 +27,52 @@ using GLib;
  */
 public class Vala.CCodeIfSection : CCodeFragment {
 	/**
-	 * The expression
+	 * The conditional expression, or null if there is no condition.
 	 */
-	public string expression { get; set; }
+	public string? expression { get; set; }
 
-	public CCodeIfSection (string expr) {
+	CCodeIfSection? else_section;
+	bool is_else_section;
+
+	public CCodeIfSection (string? expr) {
 		expression = expr;
+		is_else_section = false;
+	}
+
+	public unowned CCodeIfSection append_else (string? expr = null) {
+		else_section = new CCodeIfSection (expr);
+		else_section.is_else_section = true;
+		return else_section;
 	}
 
 	public override void write (CCodeWriter writer) {
-		writer.write_string ("#if ");
-		writer.write_string (expression);
+		if (is_else_section) {
+			if (expression != null) {
+				writer.write_string ("#elif ");
+				writer.write_string (expression);
+			} else {
+				writer.write_string ("#else ");
+			}
+		} else if (expression != null) {
+			writer.write_string ("#if ");
+			writer.write_string (expression);
+		}
+		writer.write_newline ();
 		foreach (CCodeNode node in get_children ()) {
 			node.write_combined (writer);
 		}
-		writer.write_string ("#endif");
-		writer.write_newline ();
+		if (else_section != null) {
+			else_section.write_combined (writer);
+		} else {
+			writer.write_string ("#endif");
+			writer.write_newline ();
+		}
 	}
 
 	public override void write_declaration (CCodeWriter writer) {
+	}
+
+	public override void write_combined (CCodeWriter writer) {
+		write (writer);
 	}
 }
