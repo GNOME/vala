@@ -87,7 +87,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 				writer.write_string ("volatile ");
 			}
 			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
-				writer.write_string ("extern ");
+				writer.write_string ("VALA_EXTERN ");
 			}
 			if ((modifiers & CCodeModifiers.THREAD_LOCAL) != 0) {
 				writer.write_string ("thread_local ");

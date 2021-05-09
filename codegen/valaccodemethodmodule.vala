@@ -171,6 +171,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		} else if (context.hide_internal && m.is_internal_symbol () && !m.external) {
 			function.modifiers |= CCodeModifiers.INTERNAL;
+		} else if (!m.entry_point && !m.external) {
+			function.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 
 		if (m.entry_point) {
@@ -207,6 +210,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				function.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && m.is_internal_symbol ()) {
 				function.modifiers |= CCodeModifiers.INTERNAL;
+			} else {
+				function.modifiers |= CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -220,6 +226,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			if (m.is_variadic ()) {
 				// _constructv function
 				function = new CCodeFunction (get_ccode_constructv_name ((CreationMethod) m));
+
+				if (!m.is_private_symbol ()) {
+					function.modifiers |= CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
+				}
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 				generate_cparameters (m, decl_space, cparam_map, function);

@@ -52,6 +52,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		decl_space.add_type_definition (error_domain_define);
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, get_ccode_name (gquark_type.type_symbol));
+		cquark_fun.modifiers |= CCodeModifiers.EXTERN;
+		requires_vala_extern = true;
 
 		decl_space.add_function_declaration (cquark_fun);
 	}

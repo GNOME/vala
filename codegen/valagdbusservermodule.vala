@@ -1087,6 +1087,9 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		} else if (context.hide_internal && sym.is_internal_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.INTERNAL;
+		} else {
+			cfunc.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 		decl_space.add_function_declaration (cfunc);
 	}

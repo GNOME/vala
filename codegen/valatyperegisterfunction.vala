@@ -76,6 +76,8 @@ public abstract class Vala.TypeRegisterFunction {
 			} else if (context.hide_internal && get_accessibility () == SymbolAccessibility.INTERNAL) {
 				// avoid C warning as this function is not always used
 				fun.modifiers |= CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
+			} else {
+				fun.modifiers |= CCodeModifiers.EXTERN;
 			}
 
 			fun.is_declaration = true;
@@ -100,7 +102,7 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.is_declaration = false;
 
 			var get_fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
-			get_fun.modifiers = CCodeModifiers.CONST;
+			get_fun.modifiers = CCodeModifiers.CONST | CCodeModifiers.EXTERN;
 
 			get_fun.is_declaration = true;
 			declaration_fragment.append (get_fun.copy ());

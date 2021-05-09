@@ -110,6 +110,8 @@ public class Vala.CCodeFunction : CCodeNode {
 		writer.write_indent (line);
 		if (CCodeModifiers.INTERNAL in modifiers) {
 			writer.write_string (GNUC_INTERNAL);
+		} else if (is_declaration && CCodeModifiers.EXTERN in modifiers) {
+			writer.write_string ("VALA_EXTERN ");
 		}
 		if (!is_declaration && CCodeModifiers.NO_INLINE in modifiers) {
 			writer.write_string (GNUC_NO_INLINE);

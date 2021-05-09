@@ -366,6 +366,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public bool requires_array_n_elements;
 	public bool requires_clear_mutex;
 	public bool requires_memdup2;
+	public bool requires_vala_extern;
 
 	public Set<string> wrappers;
 	Set<Symbol> generated_external_symbols;
@@ -799,6 +800,24 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (fun);
 	}
 
+	/**
+	 * Define a macro hint for exporting a symbol in a portable way.
+	 */
+	void append_vala_extern_define (CCodeFile decl_space) {
+		var extern_define = new CCodeIfSection ("!defined(VALA_EXTERN)");
+
+		CCodeIfSection if_section;
+		if_section = new CCodeIfSection ("defined(_MSC_VER)");
+		extern_define.append (if_section);
+		if_section.append (new CCodeDefine ("VALA_EXTERN", "__declspec(dllexport) extern"));
+		if_section = if_section.append_else ("__GNUC__ >= 4");
+		if_section.append (new CCodeDefine ("VALA_EXTERN", "__attribute__((visibility(\"default\"))) extern"));
+		if_section = if_section.append_else ();
+		if_section.append (new CCodeDefine ("VALA_EXTERN", "extern"));
+
+		decl_space.add_define (extern_define);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
@@ -812,6 +831,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		requires_array_length = false;
 		requires_array_n_elements = false;
 		requires_clear_mutex = false;
+		requires_vala_extern = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
@@ -856,6 +876,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 		if (requires_memdup2) {
 			append_vala_memdup2 ();
+		}
+		if (requires_vala_extern) {
+			if (context.header_filename != null) {
+				if (!header_file.add_declaration ("VALA_EXTERN")) {
+					append_vala_extern_define (header_file);
+				}
+				cfile.add_include (source_file.get_cinclude_filename (), true);
+				internal_header_file.add_include (source_file.get_cinclude_filename (), true);
+			} else {
+				if (!cfile.add_declaration ("VALA_EXTERN")) {
+					append_vala_extern_define (cfile);
+					append_vala_extern_define (internal_header_file);
+				}
+			}
 		}
 
 		var comments = source_file.get_comments();
@@ -932,6 +966,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			regfun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 		} else if (context.hide_internal && en.is_internal_symbol ()) {
 			regfun.modifiers |= CCodeModifiers.INTERNAL;
+		} else {
+			regfun.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 
 		decl_space.add_function_declaration (regfun);
@@ -1054,6 +1091,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.modifiers = CCodeModifiers.STATIC;
 				} else {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				}
 
 				decl_space.add_constant_declaration (cdecl);
@@ -1148,6 +1186,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		} else {
 			cdecl.modifiers = CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 		if (f.version.deprecated) {
 			cdecl.modifiers |= CCodeModifiers.DEPRECATED;
@@ -1167,6 +1206,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				flock.modifiers = CCodeModifiers.STATIC;
 			} else {
 				flock.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 			decl_space.add_type_member_declaration (flock);
 		}
@@ -1184,6 +1224,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						cdecl.modifiers = CCodeModifiers.STATIC;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
+						requires_vala_extern = true;
 					}
 					decl_space.add_type_member_declaration (cdecl);
 				}
@@ -1199,6 +1240,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					cdecl.modifiers = CCodeModifiers.STATIC;
 				} else {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				}
 				decl_space.add_type_member_declaration (cdecl);
 
@@ -1209,6 +1251,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						cdecl.modifiers = CCodeModifiers.STATIC;
 					} else {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
+						requires_vala_extern = true;
 					}
 					decl_space.add_type_member_declaration (cdecl);
 				}
@@ -1358,6 +1401,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				var_def.add_declarator (var_decl);
 				if (!f.is_private_symbol ()) {
 					var_def.modifiers = CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				} else {
 					var_def.modifiers = CCodeModifiers.STATIC;
 				}
@@ -1381,6 +1425,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							len_def.add_declarator (new CCodeVariableDeclarator (get_variable_array_length_cname (f, dim), new CCodeConstant ("0")));
 							if (!f.is_private_symbol ()) {
 								len_def.modifiers = CCodeModifiers.EXTERN;
+								requires_vala_extern = true;
 							} else {
 								len_def.modifiers = CCodeModifiers.STATIC;
 							}
@@ -1403,6 +1448,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						target_def.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_name (f), new CCodeConstant ("NULL")));
 						if (!f.is_private_symbol ()) {
 							target_def.modifiers = CCodeModifiers.EXTERN;
+							requires_vala_extern = true;
 						} else {
 							target_def.modifiers = CCodeModifiers.STATIC;
 						}
@@ -1413,6 +1459,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 							target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_ccode_delegate_target_destroy_notify_name (f), new CCodeConstant ("NULL")));
 							if (!f.is_private_symbol ()) {
 								target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
+								requires_vala_extern = true;
 							} else {
 								target_destroy_notify_def.modifiers = CCodeModifiers.STATIC;
 							}
@@ -1709,6 +1756,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			function.modifiers |= CCodeModifiers.STATIC;
 		} else if (context.hide_internal && (prop.is_internal_symbol () || acc.access == SymbolAccessibility.INTERNAL)) {
 			function.modifiers |= CCodeModifiers.INTERNAL;
+		} else {
+			function.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 		decl_space.add_function_declaration (function);
 	}

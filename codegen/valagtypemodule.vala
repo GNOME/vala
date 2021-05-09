@@ -104,6 +104,10 @@ public class Vala.GTypeModule : GErrorModule {
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				ref_fun.modifiers = CCodeModifiers.INTERNAL;
 				unref_fun.modifiers = CCodeModifiers.INTERNAL;
+			} else {
+				ref_fun.modifiers = CCodeModifiers.EXTERN;
+				unref_fun.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			ref_fun.add_parameter (new CCodeParameter ("instance", "gpointer"));
@@ -125,6 +129,9 @@ public class Vala.GTypeModule : GErrorModule {
 				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -139,6 +146,9 @@ public class Vala.GTypeModule : GErrorModule {
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				// avoid C warning as this function is not always used
 				function.modifiers = CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -152,6 +162,9 @@ public class Vala.GTypeModule : GErrorModule {
 				function.modifiers = CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -165,6 +178,9 @@ public class Vala.GTypeModule : GErrorModule {
 			} else if (context.hide_internal && cl.is_internal_symbol ()) {
 				// avoid C warning as this function is not always used
 				function.modifiers = CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			decl_space.add_function_declaration (function);
@@ -175,6 +191,9 @@ public class Vala.GTypeModule : GErrorModule {
 					function.modifiers = CCodeModifiers.STATIC;
 				} else if (context.hide_internal && cl.is_internal_symbol ()) {
 					function.modifiers = CCodeModifiers.INTERNAL;
+				} else {
+					function.modifiers = CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				}
 
 				function.add_parameter (new CCodeParameter ("self", "%s *".printf (get_ccode_name (cl))));
@@ -189,6 +208,8 @@ public class Vala.GTypeModule : GErrorModule {
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (context, in_plugin, true);
 			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+
+			requires_vala_extern = true;
 		}
 
 		var base_class = cl;
@@ -2157,6 +2178,8 @@ public class Vala.GTypeModule : GErrorModule {
 		var type_fun = new InterfaceRegisterFunction (iface);
 		type_fun.init_from_type (context, in_plugin, true);
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
+
+		requires_vala_extern = true;
 	}
 
 	public override void visit_interface (Interface iface) {

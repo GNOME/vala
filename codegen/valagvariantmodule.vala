@@ -260,6 +260,8 @@ public class Vala.GVariantModule : GValueModule {
 		var from_string_func = new CCodeFunction (from_string_name, get_ccode_name (en));
 		from_string_func.add_parameter (new CCodeParameter ("str", "const char*"));
 		from_string_func.add_parameter (new CCodeParameter ("error", "GError**"));
+		from_string_func.modifiers |= CCodeModifiers.EXTERN;
+		requires_vala_extern = true;
 
 		return from_string_func;
 	}
@@ -644,6 +646,8 @@ public class Vala.GVariantModule : GValueModule {
 
 		var to_string_func = new CCodeFunction (to_string_name, "const char*");
 		to_string_func.add_parameter (new CCodeParameter ("value", get_ccode_name (en)));
+		to_string_func.modifiers |= CCodeModifiers.EXTERN;
+		requires_vala_extern = true;
 
 		return to_string_func;
 	}

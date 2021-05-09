@@ -358,6 +358,9 @@ public class Vala.GAsyncModule : GtkModule {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && m.is_internal_symbol ()) {
 				asyncfunc.modifiers |= CCodeModifiers.INTERNAL;
+			} else {
+				asyncfunc.modifiers |= CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			// do not generate _new functions for creation methods of abstract classes
@@ -375,6 +378,9 @@ public class Vala.GAsyncModule : GtkModule {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && m.is_internal_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.INTERNAL;
+			} else {
+				finishfunc.modifiers |= CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 
 			// do not generate _new functions for creation methods of abstract classes
@@ -392,6 +398,9 @@ public class Vala.GAsyncModule : GtkModule {
 					function.modifiers |= CCodeModifiers.STATIC;
 				} else if (context.hide_internal && m.is_internal_symbol ()) {
 					function.modifiers |= CCodeModifiers.INTERNAL;
+				} else {
+					function.modifiers |= CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				}
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
@@ -405,6 +414,9 @@ public class Vala.GAsyncModule : GtkModule {
 					function.modifiers |= CCodeModifiers.STATIC;
 				} else if (context.hide_internal && m.is_internal_symbol ()) {
 					function.modifiers |= CCodeModifiers.INTERNAL;
+				} else {
+					function.modifiers |= CCodeModifiers.EXTERN;
+					requires_vala_extern = true;
 				}
 
 				cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);

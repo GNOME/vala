@@ -67,6 +67,8 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 				var type_fun = new StructRegisterFunction (st);
 				type_fun.init_from_type (context, false, true);
 				decl_space.add_type_member_declaration (type_fun.get_declaration ());
+
+				requires_vala_extern = true;
 			}
 		}
 
@@ -104,6 +106,9 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		} else if (context.hide_internal && st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.INTERNAL;
+		} else {
+			function.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 		function.add_parameter (new CCodeParameter ("self", "const " + get_ccode_name (st) + "*"));
 		decl_space.add_function_declaration (function);
@@ -113,6 +118,9 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.modifiers = CCodeModifiers.STATIC;
 		} else if (context.hide_internal && st.is_internal_symbol ()) {
 			function.modifiers = CCodeModifiers.INTERNAL;
+		} else {
+			function.modifiers = CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 		function.add_parameter (new CCodeParameter ("self", get_ccode_name (st) + "*"));
 		decl_space.add_function_declaration (function);
@@ -123,6 +131,9 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 				function.modifiers = CCodeModifiers.STATIC;
 			} else if (context.hide_internal && st.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 			function.add_parameter (new CCodeParameter ("self", "const " + get_ccode_name (st) + "*"));
 			function.add_parameter (new CCodeParameter ("dest", get_ccode_name (st) + "*"));
@@ -133,6 +144,9 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 				function.modifiers = CCodeModifiers.STATIC;
 			} else if (context.hide_internal && st.is_internal_symbol ()) {
 				function.modifiers = CCodeModifiers.INTERNAL;
+			} else {
+				function.modifiers = CCodeModifiers.EXTERN;
+				requires_vala_extern = true;
 			}
 			function.add_parameter (new CCodeParameter ("self", get_ccode_name (st) + "*"));
 			decl_space.add_function_declaration (function);
