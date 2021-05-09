@@ -177,6 +177,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			function.modifiers |= CCodeModifiers.INTERNAL;
 		}
 
+		if (m.entry_point) {
+			function.modifiers |= CCodeModifiers.STATIC;
+		}
+
 		if (m.version.deprecated) {
 			if (context.profile == Profile.GOBJECT) {
 				decl_space.add_include ("glib.h");
@@ -421,6 +425,10 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m.is_inline) {
 			function.modifiers |= CCodeModifiers.INLINE;
+		}
+
+		if (m.entry_point) {
+			function.modifiers |= CCodeModifiers.STATIC;
 		}
 
 		var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
