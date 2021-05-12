@@ -52,6 +52,10 @@ test:
 test-asan:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check TEST_CFLAGS="$(TEST_CFLAGS) -g3 -fsanitize=address -fno-omit-frame-pointer"
 
+.PHONY: test-ubsan
+test-ubsan:
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) check TEST_CFLAGS="$(TEST_CFLAGS) -g3 -fsanitize=undefined"
+
 #if ENABLE_COVERAGE
 .PHONY: coverage coverage-report
 coverage:

@@ -159,6 +159,13 @@ if test "$enable_test_asan" = "yes"; then
 	TEST_CFLAGS="$TEST_CFLAGS -g3 -fsanitize=address -fno-omit-frame-pointer"
 fi
 
+AC_ARG_ENABLE(test-ubsan, AS_HELP_STRING([--enable-test-ubsan], [Enable Undefined Behavior Sanitizer analysis for tests]), enable_test_ubsan=$enableval, enable_test_ubsan=no)
+AM_CONDITIONAL(ENABLE_TEST_UBSAN, test x$enable_test_ubsan = xyes)
+
+if test "$enable_test_ubsan" = "yes"; then
+	TEST_CFLAGS="$TEST_CFLAGS -g3 -fsanitize=undefined"
+fi
+
 AC_SUBST(TEST_CFLAGS)
 
 
