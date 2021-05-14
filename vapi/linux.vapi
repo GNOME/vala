@@ -1,6 +1,6 @@
 /* linux.vapi
  *
- * Copyright (C) 2009-2015 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * Copyright (C) 2009-2021 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1008,6 +1008,122 @@ namespace Linux {
         GPS,
         FM,
         NFC
+    }
+
+    /*
+     * SocketCAN
+     */
+    [CCode (cheader_filename = "sys/socket.h")]
+    public const int AF_CAN;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_RAW;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_BCM;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_TP16;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_TP20;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_MCNET;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_ISOTP;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_J1939;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CAN_MAX_DLEN;
+    [CCode (cheader_filename = "linux/can.h")]
+    public const int CANFD_MAX_DLEN;
+
+    [CCode (cname = "guint32", cprefix = "CAN_RAW_", has_type_id = false, cheader_filename = "linux/can/raw.h")]
+    public enum CanRawOption {
+        FILTER,
+        ERR_FILTER,
+        LOOPBACK,
+        RECV_OWN_MSGS,
+        FD_FRAMES,
+        JOIN_FILTERS,
+    }
+    [CCode (cname = "struct can_filter", has_type_id = false, cheader_filename = "linux/can.h", destroy_function = "")]
+    public struct CanFilter {
+        uint32 can_id;
+        uint32 can_mask;
+    }
+    [CCode (cname = "struct can_frame", has_type_id = false, cheader_filename = "linux/can.h", destroy_function = "")]
+    public struct CanFrame {
+        uint32 can_id;
+        uint8 can_dlc;
+        uint8 data[8];
+    }
+    [CCode (cname = "struct canfd_frame", has_type_id = false, cheader_filename = "linux/can.h", destroy_function = "")]
+    public struct CanFdFrame {
+        uint32 can_id;
+        uint8 len;
+        uint8 flags;
+        uint8 data[64];
+    }
+    [CCode (cname = "struct tp", has_type_id = false, cheader_filename = "linux/can.h", destroy_function = "")]
+    public struct CanTransportAddress {
+        uint32 rx_id;
+        uint32 tx_id;
+    }
+    [CCode (cname = "struct sockaddr_can", has_type_id = false, cheader_filename = "linux/can.h", destroy_function = "")]
+    public struct SockAddrCan {
+        int can_family;
+        int can_ifindex;
+        [CCode (cname = "can_addr.tp")]
+        CanTransportAddress tp;
+    }
+    [CCode (cheader_filename = "linux/can/raw.h")]
+    public const int SOL_CAN_RAW;
+
+    /* ISOTP */
+    [CCode (cheader_filename = "linux/can/isotp.h")]
+    public const int SOL_CAN_ISOTP;
+
+    [CCode (cname = "guint32", cprefix = "CAN_ISOTP_", has_type_id = false, cheader_filename = "linux/can/isotp.h")]
+    public enum CanIsotpFlags {
+        LISTEN_MODE,
+        EXTEND_ADDR,
+        TX_PADDING,
+        RX_PADDING,
+        CHK_PAD_LEN,
+        CHK_PAD_DATA,
+        HALF_DUPLEX,
+        FORCE_TXSTMIN,
+        FORCE_RXSTMIN,
+        RX_EXT_ADDR,
+        WAIT_TX_DONE,
+        SF_BROADCAST,
+    }
+
+    [CCode (cname = "guint32", cprefix = "CAN_ISOTP_", has_type_id = false, cheader_filename = "linux/can/isotp.h")]
+    public enum CanIsotpOptionType {
+        OPTS,
+        RECV_FC,
+        TX_STMIN,
+        RX_STMIN,
+        LL_OPTS,
+    }
+    [CCode (cname = "struct can_isotp_options", has_type_id = false, cheader_filename = "linux/can/isotp.h", destroy_function = "")]
+    public struct CanIsotpOptions {
+        CanIsotpFlags flags;
+        uint32 frame_txtime;
+        uint8 ext_address;
+        uint8 txpad_content;
+        uint8 rxpad_content;
+        uint8 rx_ext_address;
+    }
+    [CCode (cname = "struct can_isotp_fc_options", has_type_id = false, cheader_filename = "linux/can/isotp.h", destroy_function = "")]
+    public struct CanIsotpFlowControlOptions {
+        uint8 bs;
+        uint8 stmin;
+        uint8 wftmax;
+    }
+    [CCode (cname = "struct can_isotp_ll_options", has_type_id = false, cheader_filename = "linux/can/isotp.h", destroy_function = "")]
+    public struct CanIsotpLowLevelOptions {
+        uint8 mtu;
+        uint8 tx_dl;
+        uint8 tx_flags;
     }
 
     /*
