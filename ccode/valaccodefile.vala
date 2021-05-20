@@ -32,6 +32,7 @@ public class Vala.CCodeFile {
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
 	CCodeFragment comments = new CCodeFragment ();
 	CCodeFragment feature_test_macros = new CCodeFragment ();
+	CCodeFragment define_directives = new CCodeFragment ();
 	CCodeFragment include_directives = new CCodeFragment ();
 	CCodeFragment type_declaration = new CCodeFragment ();
 	CCodeFragment type_definition = new CCodeFragment ();
@@ -68,6 +69,10 @@ public class Vala.CCodeFile {
 			include_directives.append (new CCodeIncludeDirective (filename, local));
 			includes.add (filename);
 		}
+	}
+
+	public void add_define (CCodeNode node) {
+		define_directives.append (node);
 	}
 
 	public void add_type_declaration (CCodeNode node) {
@@ -161,6 +166,8 @@ public class Vala.CCodeFile {
 			writer.write_newline ();
 			include_directives.write (writer);
 			writer.write_newline ();
+			define_directives.write (writer);
+			writer.write_newline ();
 			type_declaration.write_combined (writer);
 			writer.write_newline ();
 			type_definition.write_combined (writer);
@@ -186,6 +193,8 @@ public class Vala.CCodeFile {
 				once.append (new CCodeNewline ());
 			}
 
+			once.append (new CCodeNewline ());
+			once.append (define_directives);
 			once.append (new CCodeNewline ());
 			once.append (type_declaration);
 			once.append (new CCodeNewline ());
