@@ -702,7 +702,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				}
 			}
 
-			if (!external && !external_package && base_class != null && base_class != context.analyzer.gsource_type) {
+			if (!external && !external_package && base_class != null && !base_class.is_subtype_of (context.analyzer.gsource_type)) {
 				foreach (Field f in get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;

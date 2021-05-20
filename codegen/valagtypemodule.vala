@@ -63,7 +63,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
-		bool is_gsource = cl.base_class == gsource_type;
+		bool is_gsource = cl.is_subtype_of (gsource_type);
 
 		if (is_gtypeinstance) {
 			decl_space.add_include ("glib-object.h");
@@ -628,7 +628,7 @@ public class Vala.GTypeModule : GErrorModule {
 			begin_class_finalize_function (cl);
 			begin_finalize_function (cl);
 		} else {
-			if (cl.is_compact || cl.base_class == null || cl.base_class == gsource_type) {
+			if (cl.is_compact || cl.base_class == null || cl.is_subtype_of (gsource_type)) {
 				begin_instance_init_function (cl);
 				begin_finalize_function (cl);
 			}
@@ -768,7 +768,7 @@ public class Vala.GTypeModule : GErrorModule {
 				cfile.add_function (unref_fun);
 			}
 		} else {
-			if (cl.is_compact || cl.base_class == null || cl.base_class == gsource_type) {
+			if (cl.is_compact || cl.base_class == null || cl.is_subtype_of (gsource_type)) {
 				add_instance_init_function (cl);
 				add_finalize_function (cl);
 			}
@@ -1610,7 +1610,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		push_function (func);
 
-		bool is_gsource = cl.base_class == gsource_type;
+		bool is_gsource = cl.is_subtype_of (gsource_type);
 
 		if (cl.is_compact) {
 			// Add declaration, since the instance_init function is explicitly called
@@ -1756,7 +1756,7 @@ public class Vala.GTypeModule : GErrorModule {
 	private void begin_finalize_function (Class cl) {
 		push_context (instance_finalize_context);
 
-		bool is_gsource = cl.base_class == gsource_type;
+		bool is_gsource = cl.is_subtype_of (gsource_type);
 
 		if (!cl.is_compact || is_gsource) {
 			var fundamental_class = cl;
@@ -1850,7 +1850,7 @@ public class Vala.GTypeModule : GErrorModule {
 			pop_context ();
 
 			cfile.add_function (instance_finalize_context.ccode);
-		} else if (cl.base_class == gsource_type) {
+		} else if (cl.is_subtype_of (gsource_type)) {
 			cfile.add_function (instance_finalize_context.ccode);
 		}
 	}

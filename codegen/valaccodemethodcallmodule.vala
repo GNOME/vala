@@ -202,7 +202,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						type_param_index++;
 					}
 				}
-			} else if (current_class.base_class == gsource_type) {
+			} else if (current_class.is_subtype_of (gsource_type)) {
 				// g_source_new
 
 				string class_prefix = get_ccode_lower_case_name (current_class);
@@ -979,7 +979,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
-		if (m is CreationMethod && m.parent_symbol is Class && ((current_class.is_compact && current_class.base_class != null) || current_class.base_class == gsource_type)) {
+		if (m is CreationMethod && m.parent_symbol is Class && ((current_class.is_compact && current_class.base_class != null) || current_class.is_subtype_of (gsource_type))) {
 			var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (get_ccode_lower_case_name (current_class, null))));
 			cinitcall.add_argument (get_this_cexpression ());
 			if (!current_class.is_compact) {
