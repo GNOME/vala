@@ -86,7 +86,8 @@ Credentials
 DatagramBased
   .condition_check#virtual_method virtual name="datagram_condition_check" no_wrapper
   .condition_wait#virtual_method virtual name="datagram_condition_wait" no_wrapper
-  .create_source#virtual_method virtual name="datagram_create_source" no_wrapper
+  .create_source#method type="GLib.DatagramBasedSource"
+  .create_source#virtual_method virtual name="datagram_create_source" type="GLib.DatagramBasedSource" no_wrapper
   .receive_messages#virtual_method virtual name="datagram_receive_messages" no_wrapper
   .send_messages#virtual_method virtual name="datagram_send_messages" no_wrapper
 DataInputStream

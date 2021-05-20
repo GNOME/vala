@@ -1164,6 +1164,14 @@ namespace GLib {
 		public void set_byte_order (GLib.DataStreamByteOrder order);
 		public GLib.DataStreamByteOrder byte_order { get; set; }
 	}
+	[CCode (cheader_filename = "gio/gio.h", cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
+	[Compact]
+	public class DatagramBasedSource : GLib.Source {
+		[CCode (cname = "g_source_new")]
+		protected DatagramBasedSource ();
+		[CCode (cname = "g_source_set_callback")]
+		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.DatagramBasedSourceFunc func);
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_emblem_get_type ()")]
 	public class Emblem : GLib.Object, GLib.Icon {
 		[CCode (has_construct_function = false)]
@@ -3462,7 +3470,7 @@ namespace GLib {
 	public interface DatagramBased : GLib.Object {
 		public GLib.IOCondition condition_check (GLib.IOCondition condition);
 		public bool condition_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public GLib.Source create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
+		public GLib.DatagramBasedSource create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (vfunc_name = "condition_check")]
 		[NoWrapper]
 		public virtual GLib.IOCondition datagram_condition_check (GLib.IOCondition condition);
@@ -3471,7 +3479,7 @@ namespace GLib {
 		public virtual bool datagram_condition_wait (GLib.IOCondition condition, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (vfunc_name = "create_source")]
 		[NoWrapper]
-		public virtual GLib.Source datagram_create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
+		public virtual GLib.DatagramBasedSource datagram_create_source (GLib.IOCondition condition, GLib.Cancellable? cancellable = null);
 		[CCode (vfunc_name = "receive_messages")]
 		[NoWrapper]
 		public virtual int datagram_receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;

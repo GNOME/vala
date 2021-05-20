@@ -69,6 +69,15 @@ namespace GLib {
 		public async string? read_line_utf8_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, out size_t length = null) throws GLib.IOError;
 	}
 
+	[CCode (cheader_filename = "gio/gio.h", cname = "GSource", ref_function = "g_source_ref", unref_function = "g_source_unref")]
+	[Compact]
+	public class DatagramBasedSource : GLib.Source {
+		[CCode (cname = "g_source_new")]
+		protected DatagramBasedSource ();
+		[CCode (cname = "g_source_set_callback")]
+		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.DatagramBasedSourceFunc func);
+	}
+
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_file_monitor_get_type ()")]
 	public abstract class FileMonitor : GLib.Object {
 		[Version (deprecated_since = "2.46")]
