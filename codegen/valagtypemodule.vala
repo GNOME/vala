@@ -283,12 +283,11 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		bool has_struct_member = false;
 		if (context.abi_stability) {
 			foreach (Symbol s in cl.get_members ()) {
 				if (s is Method) {
 					var m = (Method) s;
-					generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
+					generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space);
 				} else if (s is Signal) {
 					var sig = (Signal) s;
 					if (sig.default_handler != null) {
@@ -300,10 +299,10 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 				} else if (s is Property) {
 					var prop = (Property) s;
-					generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
+					generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space);
 				} else if (s is Field) {
 					if (s.access != SymbolAccessibility.PRIVATE || cl.is_opaque) {
-						generate_struct_field_declaration ((Field) s, instance_struct, type_struct, decl_space, ref has_struct_member);
+						generate_struct_field_declaration ((Field) s, instance_struct, type_struct, decl_space);
 					}
 				} else {
 					Report.error (s.source_reference, "internal: Unsupported symbol");
@@ -311,7 +310,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		} else {
 			foreach (Method m in cl.get_methods ()) {
-				generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space, ref has_struct_member);
+				generate_struct_method_declaration (cl, m, instance_struct, type_struct, decl_space);
 			}
 
 			foreach (Signal sig in cl.get_signals ()) {
@@ -325,17 +324,17 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 
 			foreach (Property prop in cl.get_properties ()) {
-				generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
+				generate_struct_property_declaration (cl, prop, instance_struct, type_struct, decl_space);
 			}
 
 			foreach (Field f in cl.get_fields ()) {
 				if (f.access != SymbolAccessibility.PRIVATE || cl.is_opaque) {
-					generate_struct_field_declaration (f, instance_struct, type_struct, decl_space, ref has_struct_member);
+					generate_struct_field_declaration (f, instance_struct, type_struct, decl_space);
 				}
 			}
 		}
 
-		if (cl.is_compact && cl.base_class == null && !has_struct_member) {
+		if (cl.is_compact && cl.base_class == null && !compact_class_has_instance_struct_member (cl)) {
 			// add dummy member, C doesn't allow empty structs
 			instance_struct.add_field ("int", "dummy");
 		}
@@ -353,17 +352,43 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
-	void generate_struct_method_declaration (ObjectTypeSymbol type_sym, Method m, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+	bool compact_class_has_instance_struct_member (Class cl) {
+		assert (cl.is_compact);
+		foreach (Symbol s in cl.get_members ()) {
+			if (s is Method) {
+				unowned Method m = (Method) s;
+				if (m.is_abstract || m.is_virtual) {
+					return true;
+				}
+			} else if (s is Property) {
+				unowned Property prop = (Property) s;
+				if (prop.is_abstract || prop.is_virtual) {
+					return true;
+				}
+			} else if (s is Field) {
+				if (s.access != SymbolAccessibility.PRIVATE || cl.is_opaque) {
+					unowned Field f = (Field) s;
+					if (f.binding == MemberBinding.INSTANCE) {
+						return true;
+					}
+				}
+			} else {
+				Report.error (s.source_reference, "internal: Unsupported symbol");
+			}
+		}
+		return false;
+	}
+
+	void generate_struct_method_declaration (ObjectTypeSymbol type_sym, Method m, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space) {
 		unowned Class? cl = type_sym as Class;
 		if (type_sym is Interface || (cl != null && !cl.is_compact)) {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
 		} else if (cl != null && cl.is_compact && cl.base_class == null) {
 			generate_virtual_method_declaration (m, decl_space, instance_struct);
-			has_struct_member |= (m.is_abstract || m.is_virtual);
 		}
 	}
 
-	void generate_struct_property_declaration (ObjectTypeSymbol type_sym, Property prop, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+	void generate_struct_property_declaration (ObjectTypeSymbol type_sym, Property prop, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space) {
 		if (!prop.is_abstract && !prop.is_virtual) {
 			return;
 		}
@@ -400,7 +425,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 			if (cl != null && cl.is_compact && cl.base_class == null) {
 				instance_struct.add_declaration (vdecl);
-				has_struct_member = true;
 			}
 		}
 		if (prop.set_accessor != null) {
@@ -434,16 +458,14 @@ public class Vala.GTypeModule : GErrorModule {
 
 			if (cl != null && cl.is_compact && cl.base_class == null) {
 				instance_struct.add_declaration (vdecl);
-				has_struct_member = true;
 			}
 		}
 	}
 
-	void generate_struct_field_declaration (Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space, ref bool has_struct_member) {
+	void generate_struct_field_declaration (Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space) {
 		CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 		if (f.binding == MemberBinding.INSTANCE) {
 			append_field (instance_struct, f, decl_space);
-			has_struct_member = true;
 		} else if (f.binding == MemberBinding.CLASS) {
 			type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
 		}
@@ -515,10 +537,9 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		bool has_struct_member = false;
 		foreach (Field f in cl.get_fields ()) {
 			if (f.access == SymbolAccessibility.PRIVATE) {
-				generate_struct_field_declaration (f, instance_priv_struct, type_priv_struct, decl_space, ref has_struct_member);
+				generate_struct_field_declaration (f, instance_priv_struct, type_priv_struct, decl_space);
 			}
 			if (f.lock_used) {
 				if (f.binding == MemberBinding.INSTANCE) {
@@ -2151,13 +2172,12 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		bool has_struct_member = false;
 		foreach (Symbol sym in iface.get_virtuals ()) {
 			Method m;
 			Signal sig;
 			Property prop;
 			if ((m = sym as Method) != null) {
-				generate_struct_method_declaration (iface, m, instance_struct, type_struct, decl_space, ref has_struct_member);
+				generate_struct_method_declaration (iface, m, instance_struct, type_struct, decl_space);
 			} else if ((sig = sym as Signal) != null) {
 				if (sig.default_handler != null) {
 					if (sig.is_virtual) {
@@ -2167,7 +2187,7 @@ public class Vala.GTypeModule : GErrorModule {
 					}
 				}
 			} else if ((prop = sym as Property) != null) {
-				generate_struct_property_declaration (iface, prop, instance_struct, type_struct, decl_space, ref has_struct_member);
+				generate_struct_property_declaration (iface, prop, instance_struct, type_struct, decl_space);
 			} else {
 				Report.error (sym.source_reference, "internal: Unsupported symbol");
 			}
