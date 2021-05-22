@@ -89,7 +89,7 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
-		if (cl.is_compact && cl.base_class != null) {
+		if (!(!cl.is_compact || cl.base_class == null || compact_class_has_instance_struct_member (cl))) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition (get_ccode_name (cl.base_class), new CCodeVariableDeclarator (get_ccode_name (cl))));
 		} else {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (cl)), new CCodeVariableDeclarator (get_ccode_name (cl))));
@@ -339,8 +339,7 @@ public class Vala.GTypeModule : GErrorModule {
 			instance_struct.add_field ("int", "dummy");
 		}
 
-		if (!cl.is_compact || cl.base_class == null) {
-			// derived compact classes do not have a struct
+		if (!cl.is_compact || cl.base_class == null || compact_class_has_instance_struct_member (cl)) {
 			decl_space.add_type_definition (instance_struct);
 		}
 
