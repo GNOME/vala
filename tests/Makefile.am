@@ -26,6 +26,7 @@ GS_LOG_COMPILER = $(TEST_RUNNER)
 TEST_LOG_COMPILER = $(TEST_RUNNER)
 
 AM_TESTS_ENVIRONMENT = \
+	export UPDATE_EXPECTED=$(UPDATE_EXPECTED); \
 	export EXEEXT=$(EXEEXT); \
 	export CFLAGS='$(CFLAGS)'; \
 	export CPPFLAGS='$(CPPFLAGS)'; \
@@ -1285,4 +1286,5 @@ EXTRA_DIST = \
 	version/tests-extra-environment.sh \
 	$(TESTS) \
 	$(LINUX_TESTS) \
+	$(wildcard $(srcdir)/*/*.c-expected) \
 	$(NULL)

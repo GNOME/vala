@@ -4,6 +4,7 @@ NULL =
 
 LOG_COMPILER = $(abs_top_srcdir)/build-aux/testrunner.sh
 AM_TESTS_ENVIRONMENT = \
+	export UPDATE_EXPECTED=$(UPDATE_EXPECTED); \
 	export EXEEXT=$(EXEEXT); \
 	export CFLAGS='$(CFLAGS)'; \
 	export CPPFLAGS='$(CPPFLAGS)'; \

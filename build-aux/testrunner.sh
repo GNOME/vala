@@ -43,6 +43,7 @@ VALAC=$abs_top_builddir/compiler/valac$EXEEXT
 VALAFLAGS="$VALAFLAGS \
 	--vapidir $vapidir \
 	--enable-checking \
+	--disable-version-header \
 	--disable-warnings \
 	--save-temps \
 	--cc $CC \
@@ -156,8 +157,20 @@ function sourceend() {
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
 		if [ $DBUSTEST -eq 1 ]; then
+			echo "UPDATE_EXPECTED=$UPDATE_EXPECTED" >> prepare
 			if [ $ISSERVER -eq 1 ]; then
+				echo "if [ -n \"$UPDATE_EXPECTED\" ]; then" >> prepare
+				echo "	cp -p ${SOURCEFILE%.*}.c $abs_srcdir/${testfile%.*}_server.c-expected" >> prepare
+				echo "elif [ -f $abs_srcdir/${testfile%.*}_server.c-expected ]; then" >> prepare
+				echo "	diff -wu $abs_srcdir/${testfile%.*}_server.c-expected ${SOURCEFILE%.*}.c || exit 1" >> prepare
+				echo "fi" >> prepare
 				echo "./$ns$EXEEXT" >> check
+			else
+				echo "if [ -n \"$UPDATE_EXPECTED\" ]; then" >> prepare
+				echo "	cp -p ${SOURCEFILE%.*}.c $abs_srcdir/${testfile%.*}_client.c-expected" >> prepare
+				echo "elif [ -f $abs_srcdir/${testfile%.*}_client.c-expected ]; then" >> prepare
+				echo "	diff -wu $abs_srcdir/${testfile%.*}_client.c-expected ${SOURCEFILE%.*}.c || exit 1" >> prepare
+				echo "fi" >> prepare
 			fi
 		else
 			echo "./$ns$EXEEXT" >> check
@@ -183,6 +196,11 @@ case "$testfile" in
 	cat "$abs_srcdir/$testfile" > ./$SOURCEFILE
 	PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 	$VALAC $VALAFLAGS $PACKAGEFLAGS -o $testpath$EXEEXT $SOURCEFILE
+	if [ -n "$UPDATE_EXPECTED" ]; then
+		cp -p ${SOURCEFILE%.*}.c $abs_srcdir/${testfile%.*}.c-expected
+	elif [ -f $abs_srcdir/${testfile%.*}.c-expected ]; then
+		diff -wu $abs_srcdir/${testfile%.*}.c-expected ${SOURCEFILE%.*}.c || exit 1
+	fi
 	./$testpath$EXEEXT
 	;;
 *.test)
