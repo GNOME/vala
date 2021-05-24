@@ -1302,7 +1302,7 @@ namespace Linux {
     namespace Network {
 
         // interface consts, structs, and methods
-        [CCode (cname = "IFNAMSIZ", cheader_filename = "sys/socket.h,linux/if.h")]
+        [CCode (cname = "IFNAMSIZ", cheader_filename = "sys/socket.h,net/if.h")]
         public const int INTERFACE_NAME_SIZE;
 
         [CCode (cheader_filename = "net/if.h")]
@@ -1312,7 +1312,7 @@ namespace Linux {
         [CCode (cheader_filename = "net/if.h")]
         public IfNameindex if_nameindex ();
 
-        [CCode (cname = "int", cprefix = "IFF_", has_type_id = false, cheader_filename = "sys/socket.h,linux/if.h")]
+        [CCode (cname = "int", cprefix = "IFF_", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h")]
         public enum IfFlag {
             UP,
             BROADCAST,
@@ -1331,13 +1331,13 @@ namespace Linux {
             DYNAMIC
         }
 
-        [CCode (cname = "struct if_nameindex", has_type_id = false, cheader_filename = "sys/socket.h,linux/if.h", destroy_function = "if_freenameindex")]
+        [CCode (cname = "struct if_nameindex", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h", destroy_function = "if_freenameindex")]
         public struct IfNameindex {
             public uint if_index;
             public string if_name;
         }
 
-        [CCode (cname = "struct ifmap", has_type_id = false, cheader_filename = "sys/socket.h,linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifmap", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h", destroy_function = "")]
         public struct IfMap {
             public ulong mem_start;
             public ulong mem_end;
@@ -1347,7 +1347,7 @@ namespace Linux {
             public uchar port;
         }
 
-        [CCode (cname = "struct ifreq", has_type_id = false, cheader_filename = "netinet/in.h,linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifreq", has_type_id = false, cheader_filename = "netinet/in.h,net/if.h", destroy_function = "")]
         public struct IfReq {
             [CCode (array_length = false)]
             public char[] ifr_name;
@@ -1368,7 +1368,7 @@ namespace Linux {
             public char[] ifr_newname;
         }
 
-        [CCode (cname = "struct ifconf", has_type_id = false, cheader_filename = "sys/socket.h,linux/if.h", destroy_function = "")]
+        [CCode (cname = "struct ifconf", has_type_id = false, cheader_filename = "sys/socket.h,net/if.h", destroy_function = "")]
         public struct IfConf {
             public int ifc_len;
             public string ifc_buf;
