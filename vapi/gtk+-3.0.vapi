@@ -3094,6 +3094,11 @@ namespace Gtk {
 		public signal void show_hidden ();
 		public signal void up_folder ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_file_chooser_widget_accessible_get_type ()")]
+	public class FileChooserWidgetAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component {
+		[CCode (has_construct_function = false)]
+		protected FileChooserWidgetAccessible ();
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_filter_get_type ()")]
 	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
