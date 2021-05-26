@@ -229,6 +229,7 @@ TESTS = \
 	methods/nowrapper-no-vfunc.test \
 	methods/params-array.vala \
 	methods/params-array-abstract.test \
+	methods/params-array-preceding.test \
 	methods/params-array-with-throws.vala \
 	methods/print-attribute.vala \
 	methods/print-attribute-invalid.test \
