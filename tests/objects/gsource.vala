@@ -13,6 +13,13 @@ class FooSource : Source {
 	}
 }
 
+class ManamSource : Source {
+	public override bool dispatch (SourceFunc? callback) {
+		return false;
+	}
+}
+
 void main () {
 	var foo = new FooSource ();
+	var manam = new ManamSource ();
 }
