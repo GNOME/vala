@@ -77,6 +77,7 @@ Attribute
   .destroy destroys_instance
 AttrIterator
   .destroy destroys_instance
+  .get_font.language out
 Coverage
   .unref destroys_instance=false
 Item
