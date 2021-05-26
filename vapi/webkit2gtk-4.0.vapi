@@ -1329,6 +1329,7 @@ namespace WebKit {
 		public unowned WebKit.WebInspector get_inspector ();
 		[Version (since = "2.30")]
 		public bool get_is_muted ();
+		public bool get_is_web_process_responsive ();
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
 		public unowned WebKit.WebResource get_main_resource ();
@@ -1385,6 +1386,8 @@ namespace WebKit {
 		[NoWrapper]
 		public virtual bool show_option_menu (Gdk.Rectangle rectangle, WebKit.OptionMenu menu);
 		public void stop_loading ();
+		[Version (since = "2.34")]
+		public void terminate_web_process ();
 		[Version (since = "2.12")]
 		public void try_close ();
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -1418,6 +1421,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public bool is_playing_audio { get; }
+		[Version (since = "2.34")]
+		public bool is_web_process_responsive { get; }
 		[Version (since = "2.28")]
 		public uint64 page_id { get; }
 		[NoAccessorMethod]
@@ -1884,7 +1889,8 @@ namespace WebKit {
 	[Version (since = "2.20")]
 	public enum WebProcessTerminationReason {
 		CRASHED,
-		EXCEEDED_MEMORY_LIMIT
+		EXCEEDED_MEMORY_LIMIT,
+		TERMINATED_BY_API
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEBSITE_DATA_", type_id = "webkit_website_data_types_get_type ()")]
 	[Flags]
