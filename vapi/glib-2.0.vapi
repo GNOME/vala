@@ -2127,13 +2127,13 @@ namespace GLib {
 	[CCode (has_target = false)]
 	public delegate void SourceDummyMarshal ();
 
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate bool SourcePrepareFunc (Source source, out int timeout_);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate bool SourceCheckFunc (Source source);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate bool SourceDispatchFunc (Source source, SourceFunc? _callback);
-	[CCode (has_target = false)]
+	[CCode (has_target = false, has_typedef = false)]
 	public delegate void SourceFinalizeFunc (Source source);
 
 	[CCode (has_type_id = false)]
