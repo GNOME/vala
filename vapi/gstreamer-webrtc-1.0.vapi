@@ -130,18 +130,25 @@ namespace Gst {
 	public abstract class WebRTCRTPTransceiver : Gst.Object {
 		[CCode (array_length = false)]
 		public weak void* _padding[4];
-		public weak Gst.Caps codec_preferences;
-		public Gst.WebRTCRTPTransceiverDirection current_direction;
-		[Version (since = "1.20")]
-		public Gst.WebRTCKind kind;
-		public weak string mid;
 		public uint mline;
 		public bool stopped;
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPTransceiver ();
 		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.Caps codec_preferences { owned get; set; }
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.WebRTCRTPTransceiverDirection current_direction { get; }
+		[NoAccessorMethod]
 		[Version (since = "1.18")]
 		public Gst.WebRTCRTPTransceiverDirection direction { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public Gst.WebRTCKind kind { get; }
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public string mid { owned get; }
 		[NoAccessorMethod]
 		public uint mlineindex { get; construct; }
 		[NoAccessorMethod]

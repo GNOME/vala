@@ -16,6 +16,8 @@ namespace Gst {
 			public virtual Gst.FlowReturn create_output_buffer (Gst.Buffer outbuffer);
 			[NoWrapper]
 			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, bool at_least_one_alpha);
+			[Version (since = "1.20")]
+			public Gst.TaskPool get_execution_task_pool ();
 			[NoWrapper]
 			public virtual Gst.Caps update_caps (Gst.Caps caps);
 		}
@@ -45,6 +47,12 @@ namespace Gst {
 			public bool has_current_buffer ();
 			[NoWrapper]
 			public virtual bool prepare_frame (Gst.Video.Aggregator videoaggregator, Gst.Buffer buffer, Gst.Video.Frame prepared_frame);
+			[NoWrapper]
+			[Version (since = "1.20")]
+			public virtual void prepare_frame_finish (Gst.Video.Aggregator videoaggregator, Gst.Video.Frame prepared_frame);
+			[NoWrapper]
+			[Version (since = "1.20")]
+			public virtual void prepare_frame_start (Gst.Video.Aggregator videoaggregator, Gst.Buffer buffer, Gst.Video.Frame prepared_frame);
 			public void set_needs_alpha (bool needs_alpha);
 			[NoWrapper]
 			public virtual void update_conversion_info ();
@@ -54,6 +62,13 @@ namespace Gst {
 			public bool repeat_after_eos { get; set; }
 			[NoAccessorMethod]
 			public uint zorder { get; set; }
+		}
+		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_aggregator_parallel_convert_pad_get_type ()")]
+		[GIR (name = "VideoAggregatorParallelConvertPad")]
+		[Version (since = "1.20")]
+		public class AggregatorParallelConvertPad : Gst.Video.AggregatorConvertPad {
+			[CCode (has_construct_function = false)]
+			protected AggregatorParallelConvertPad ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", type_id = "gst_video_buffer_pool_get_type ()")]
 		[GIR (name = "VideoBufferPool")]
@@ -117,6 +132,8 @@ namespace Gst {
 		public class Converter {
 			[Version (since = "1.6")]
 			public void frame (Gst.Video.Frame src, Gst.Video.Frame dest);
+			[Version (since = "1.20")]
+			public void frame_finish ();
 			[Version (since = "1.6")]
 			public void free ();
 			public unowned Gst.Structure get_config ();
@@ -662,6 +679,13 @@ namespace Gst {
 			public size_t size;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoCodecAlphaMeta")]
+		[Version (since = "1.20")]
+		public struct CodecAlphaMeta {
+			public Gst.Meta meta;
+			public weak Gst.Buffer buffer;
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoColorPrimariesInfo")]
 		[Version (since = "1.6")]
 		public struct ColorPrimariesInfo {
@@ -674,39 +698,6 @@ namespace Gst {
 			public double Gy;
 			public double Bx;
 			public double By;
-		}
-		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
-		[GIR (name = "VideoColorVolumeTransformation")]
-		[Version (since = "1.20")]
-		public struct ColorVolumeTransformation {
-			public uint16 window_upper_left_corner_x;
-			public uint16 window_upper_left_corner_y;
-			public uint16 window_lower_right_corner_x;
-			public uint16 window_lower_right_corner_y;
-			public uint16 center_of_ellipse_x;
-			public uint16 center_of_ellipse_y;
-			public uint8 rotation_angle;
-			public uint16 semimajor_axis_internal_ellipse;
-			public uint16 semimajor_axis_external_ellipse;
-			public uint16 semiminor_axis_external_ellipse;
-			public uint8 overlap_process_option;
-			[CCode (array_length = false)]
-			public weak uint32 maxscl[3];
-			public uint32 average_maxrgb;
-			public uint8 num_distribution_maxrgb_percentiles;
-			[CCode (array_length = false)]
-			public weak uint8 distribution_maxrgb_percentages[16];
-			[CCode (array_length_cname = "num_distribution_maxrgb_percentiles", array_length_type = "guint8")]
-			public weak uint32 distribution_maxrgb_percentiles[16];
-			public uint16 fraction_bright_pixels;
-			public uint8 tone_mapping_flag;
-			public uint16 knee_point_x;
-			public uint16 knee_point_y;
-			public uint8 num_bezier_curve_anchors;
-			[CCode (array_length_cname = "num_bezier_curve_anchors", array_length_type = "guint8")]
-			public weak uint16 bezier_curve_anchors[16];
-			public uint8 color_saturation_mapping_flag;
-			public uint8 color_saturation_weight;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoColorimetry")]
@@ -803,36 +794,6 @@ namespace Gst {
 			[CCode (array_length = false)]
 			public weak Gst.Video.GLTextureType texture_type[4];
 			public bool upload (uint texture_id);
-		}
-		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
-		[GIR (name = "VideoHDR10Plus")]
-		[Version (since = "1.20")]
-		public struct HDR10Plus {
-			public uint8 application_identifier;
-			public uint8 application_version;
-			public uint8 num_windows;
-			[CCode (array_length = false)]
-			public weak Gst.Video.ColorVolumeTransformation processing_window[1];
-			public uint32 targeted_system_display_maximum_luminance;
-			public uint8 targeted_system_display_actual_peak_luminance_flag;
-			public uint8 num_rows_targeted_system_display_actual_peak_luminance;
-			public uint8 num_cols_targeted_system_display_actual_peak_luminance;
-			[CCode (array_length = false)]
-			public weak uint8 targeted_system_display_actual_peak_luminance[625];
-			public uint8 mastering_display_actual_peak_luminance_flag;
-			public uint8 num_rows_mastering_display_actual_peak_luminance;
-			public uint8 num_cols_mastering_display_actual_peak_luminance;
-			[CCode (array_length = false)]
-			public weak uint8 mastering_display_actual_peak_luminance[625];
-		}
-		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
-		[GIR (name = "VideoHDRMeta")]
-		[Version (since = "1.20")]
-		public struct HDRMeta {
-			public Gst.Meta meta;
-			public Gst.Video.HDRFormat format;
-			public uint8 data;
-			public size_t size;
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoMasteringDisplayInfo")]
@@ -1275,7 +1236,13 @@ namespace Gst {
 			[Version (since = "1.18")]
 			NV12_4L4,
 			[Version (since = "1.18")]
-			NV12_32L32
+			NV12_32L32,
+			[Version (since = "1.20")]
+			RGBP,
+			[Version (since = "1.20")]
+			BGRP,
+			[Version (since = "1.20")]
+			AV12
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_FORMAT_FLAG_", type_id = "gst_video_format_flags_get_type ()")]
 		[Flags]
@@ -1338,15 +1305,6 @@ namespace Gst {
 		public enum GammaMode {
 			NONE,
 			REMAP
-		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_HDR_FORMAT_", has_type_id = false)]
-		[GIR (name = "VideoHDRFormat")]
-		[Version (since = "1.20")]
-		public enum HDRFormat {
-			NONE,
-			HDR10,
-			HDR10_PLUS,
-			DOLBY_VISION
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_INTERLACE_MODE_", type_id = "gst_video_interlace_mode_get_type ()")]
 		[GIR (name = "VideoInterlaceMode")]
@@ -1645,6 +1603,9 @@ namespace Gst {
 		public const string CONVERTER_OPT_ALPHA_MODE;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_ALPHA_VALUE")]
 		public const string CONVERTER_OPT_ALPHA_VALUE;
+		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_ASYNC_TASKS")]
+		[Version (since = "1.20")]
+		public const string CONVERTER_OPT_ASYNC_TASKS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_BORDER_ARGB")]
 		public const string CONVERTER_OPT_BORDER_ARGB;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_CONVERTER_OPT_CHROMA_MODE")]
@@ -1699,18 +1660,6 @@ namespace Gst {
 		public const string FORMATS_ALL;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_FPS_RANGE")]
 		public const string FPS_RANGE;
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_HDR10_PLUS_MAX_BYTES")]
-		[Version (since = "1.20")]
-		public const int HDR10_PLUS_MAX_BYTES;
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_HDR10_PLUS_MAX_COLS_MD_APL")]
-		[Version (since = "1.20")]
-		public const int HDR10_PLUS_MAX_COLS_MD_APL;
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_HDR10_PLUS_MAX_ROWS_TSD_APL")]
-		[Version (since = "1.20")]
-		public const int HDR10_PLUS_MAX_ROWS_TSD_APL;
-		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_HDR10_PLUS_NUM_WINDOWS")]
-		[Version (since = "1.20")]
-		public const int HDR10_PLUS_NUM_WINDOWS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_MAX_COMPONENTS")]
 		public const int MAX_COMPONENTS;
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GST_VIDEO_MAX_PLANES")]
@@ -1779,11 +1728,11 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_caption_meta")]
 		[Version (since = "1.16")]
 		public static unowned Gst.Video.CaptionMeta? buffer_add_video_caption_meta (Gst.Buffer buffer, Gst.Video.CaptionType caption_type, [CCode (array_length_cname = "size", array_length_pos = 3.1, array_length_type = "gsize")] uint8[] data);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_codec_alpha_meta")]
+		[Version (since = "1.20")]
+		public static unowned Gst.Video.CodecAlphaMeta? buffer_add_video_codec_alpha_meta (Gst.Buffer buffer, owned Gst.Buffer alpha_buffer);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_gl_texture_upload_meta")]
 		public static unowned Gst.Video.GLTextureUploadMeta? buffer_add_video_gl_texture_upload_meta (Gst.Buffer buffer, Gst.Video.GLTextureOrientation texture_orientation, uint n_textures, Gst.Video.GLTextureType texture_type, [CCode (delegate_target_pos = 5.5)] Gst.Video.GLTextureUpload upload, GLib.BoxedCopyFunc user_data_copy, GLib.BoxedFreeFunc user_data_free);
-		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_hdr_meta")]
-		[Version (since = "1.20")]
-		public static unowned Gst.Video.HDRMeta? buffer_add_video_hdr_meta (Gst.Buffer buffer, Gst.Video.HDRFormat format, uint8 data, size_t size);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta")]
 		public static unowned Gst.Video.Meta? buffer_add_video_meta (Gst.Buffer buffer, Gst.Video.FrameFlags flags, Gst.Video.Format format, uint width, uint height);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_meta_full")]
@@ -1834,6 +1783,12 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (deprecated = true, deprecated_since = "1.20")]
 		public static unowned string chroma_to_string (Gst.Video.ChromaSite site);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static GLib.Type codec_alpha_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static unowned Gst.MetaInfo? codec_alpha_meta_get_info ();
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.18")]
 		public static Gst.Video.ColorMatrix color_matrix_from_iso (uint value);
@@ -1917,19 +1872,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.6")]
 		public static bool guess_framerate (Gst.ClockTime duration, out int dest_n, out int dest_d);
-		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.20")]
-		public static Gst.Video.HDRFormat hdr_format_from_string (string? format);
-		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.20")]
-		public static unowned string? hdr_format_to_string (Gst.Video.HDRFormat format);
-		[CCode (cheader_filename = "gst/video/video.h")]
-		public static GLib.Type hdr_meta_api_get_type ();
-		[CCode (cheader_filename = "gst/video/video.h")]
-		public static unowned Gst.MetaInfo? hdr_meta_get_info ();
-		[CCode (cheader_filename = "gst/video/video.h")]
-		[Version (since = "1.20")]
-		public static bool hdr_parse_hdr10_plus (uint8 data, size_t size, out Gst.Video.HDR10Plus hdr10_plus);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool info_from_caps (out unowned Gst.Video.Info info, Gst.Caps caps);
 		[CCode (cheader_filename = "gst/video/video.h")]

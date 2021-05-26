@@ -51,13 +51,23 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			public Gst.Caps get_caps ();
+			[Version (since = "1.20")]
+			public uint64 get_current_level_buffers ();
 			[Version (since = "1.2")]
 			public uint64 get_current_level_bytes ();
+			[Version (since = "1.20")]
+			public Gst.ClockTime get_current_level_time ();
 			[Version (since = "1.10")]
 			public Gst.ClockTime get_duration ();
 			public bool get_emit_signals ();
 			public void get_latency (out uint64 min, out uint64 max);
+			[Version (since = "1.20")]
+			public Gst.App.LeakyType get_leaky_type ();
+			[Version (since = "1.20")]
+			public uint64 get_max_buffers ();
 			public uint64 get_max_bytes ();
+			[Version (since = "1.20")]
+			public Gst.ClockTime get_max_time ();
 			public int64 get_size ();
 			public Gst.App.StreamType get_stream_type ();
 			public virtual Gst.FlowReturn push_buffer (owned Gst.Buffer buffer);
@@ -68,14 +78,24 @@ namespace Gst {
 			public void set_duration (Gst.ClockTime duration);
 			public void set_emit_signals (bool emit);
 			public void set_latency (uint64 min, uint64 max);
+			[Version (since = "1.20")]
+			public void set_leaky_type (Gst.App.LeakyType leaky);
+			[Version (since = "1.20")]
+			public void set_max_buffers (uint64 max);
 			public void set_max_bytes (uint64 max);
+			[Version (since = "1.20")]
+			public void set_max_time (Gst.ClockTime max);
 			public void set_size (int64 size);
 			public void set_stream_type (Gst.App.StreamType type);
 			[NoAccessorMethod]
 			public bool block { get; set; }
 			public Gst.Caps caps { owned get; set; }
+			[Version (since = "1.20")]
+			public uint64 current_level_buffers { get; }
 			[Version (since = "1.2")]
 			public uint64 current_level_bytes { get; }
+			[Version (since = "1.20")]
+			public uint64 current_level_time { get; }
 			[Version (since = "1.10")]
 			public uint64 duration { get; set; }
 			public bool emit_signals { get; set; }
@@ -86,9 +106,15 @@ namespace Gst {
 			public bool handle_segment_change { get; set; }
 			[NoAccessorMethod]
 			public bool is_live { get; set; }
+			[Version (since = "1.20")]
+			public Gst.App.LeakyType leaky_type { get; set; }
+			[Version (since = "1.20")]
+			public uint64 max_buffers { get; set; }
 			public uint64 max_bytes { get; set; }
 			[NoAccessorMethod]
 			public int64 max_latency { get; set; }
+			[Version (since = "1.20")]
+			public uint64 max_time { get; set; }
 			[NoAccessorMethod]
 			public int64 min_latency { get; set; }
 			[NoAccessorMethod]
@@ -108,6 +134,14 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public virtual signal Gst.FlowReturn push_sample (Gst.Sample sample);
 			public virtual signal bool seek_data (uint64 offset);
+		}
+		[CCode (cheader_filename = "gst/app/app.h", cprefix = "GST_APP_LEAKY_TYPE_", type_id = "gst_app_leaky_type_get_type ()")]
+		[GIR (name = "AppLeakyType")]
+		[Version (since = "1.20")]
+		public enum LeakyType {
+			NONE,
+			UPSTREAM,
+			DOWNSTREAM
 		}
 		[CCode (cheader_filename = "gst/app/app.h", cprefix = "GST_APP_STREAM_TYPE_", type_id = "gst_app_stream_type_get_type ()")]
 		[GIR (name = "AppStreamType")]
