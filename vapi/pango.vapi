@@ -66,7 +66,7 @@ namespace Pango {
 		public unowned Pango.Attribute? @get (Pango.AttrType type);
 		[Version (since = "1.2")]
 		public GLib.SList<Pango.Attribute> get_attrs ();
-		public void get_font (Pango.FontDescription desc, Pango.Language? language, owned GLib.SList<Pango.Attribute>? extra_attrs);
+		public void get_font (Pango.FontDescription desc, out unowned Pango.Language? language, owned GLib.SList<Pango.Attribute>? extra_attrs);
 		public bool next ();
 		public void range (out int start, out int end);
 	}
