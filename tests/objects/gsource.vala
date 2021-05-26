@@ -34,7 +34,14 @@ class BarSource : Source {
 	}
 }
 
+class ManamSource : Source {
+	public override bool dispatch (SourceFunc? callback) {
+		return false;
+	}
+}
+
 void main () {
 	var foo = new FooSource ();
 	var bar = new BarSource (1000);
+	var manam = new ManamSource ();
 }
