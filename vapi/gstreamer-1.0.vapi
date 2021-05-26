@@ -698,6 +698,9 @@ namespace Gst {
 		public void append_memory (owned Gst.Memory mem);
 		[DestroysInstance]
 		public Gst.Buffer append_region (owned Gst.Buffer buf2, ssize_t offset, ssize_t size);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.20")]
+		public Buffer.copy ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 		[Version (since = "1.6")]
 		public Gst.Buffer copy_deep ();
 		[CCode (instance_pos = 1.9)]
@@ -1312,6 +1315,7 @@ namespace Gst {
 		public unowned Gst.PadTemplate? get_pad_template (string name);
 		[Version (since = "1.14")]
 		public unowned GLib.List<Gst.PadTemplate> get_pad_template_list ();
+		[Version (deprecated = true, deprecated_since = "1.20")]
 		public Gst.Pad? get_request_pad (string name);
 		public Gst.ClockTime get_start_time ();
 		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
@@ -1347,6 +1351,8 @@ namespace Gst {
 		public void remove_property_notify_watch (ulong watch_id);
 		[CCode (vfunc_name = "request_new_pad")]
 		public virtual Gst.Pad? request_pad (Gst.PadTemplate templ, string? name, Gst.Caps? caps);
+		[Version (since = "1.20")]
+		public Gst.Pad? request_pad_simple (string name);
 		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
 		public virtual bool send_event (owned Gst.Event event);

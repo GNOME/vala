@@ -405,6 +405,9 @@ namespace GES {
 		protected Source ();
 		[NoWrapper]
 		[Version (since = "1.20")]
+		public virtual unowned Gst.Element create_source ();
+		[NoWrapper]
+		[Version (since = "1.20")]
 		public virtual bool select_pad (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_source_clip_get_type ()")]
@@ -749,6 +752,10 @@ namespace GES {
 		public virtual void changed ();
 		[Version (since = "1.18")]
 		public void clamp_control_source (string property_name);
+		[NoWrapper]
+		public virtual unowned Gst.Element create_element ();
+		[NoWrapper]
+		public virtual unowned Gst.Element create_gnl_object ();
 		[Version (deprecated = true, deprecated_since = "1.18")]
 		public bool edit (GLib.List<GES.Layer>? layers, GES.EditMode mode, GES.Edge edge, uint64 position);
 		public unowned GLib.HashTable<string,Gst.ControlBinding> get_all_control_bindings ();
@@ -768,7 +775,7 @@ namespace GES {
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
 		[Version (deprecated = true)]
 		public GLib.ParamSpec[] list_children_properties ();
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "1.14")]
 		public virtual bool lookup_child (string prop_name, out Gst.Element element, out GLib.ParamSpec pspec);
 		public bool remove_control_binding (string property_name);
 		public bool set_active (bool active);
