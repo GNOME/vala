@@ -39,7 +39,4 @@ namespace Gtk {
 		[CCode (delegate_target = false)]
 		public unowned Gtk.BuildableParserErrorFunc error;
 	}
-
-	[CCode (cname = "GTK_INVALID_LIST_POSITION")]
-	public const uint INVALID_LIST_POSITION;
 }

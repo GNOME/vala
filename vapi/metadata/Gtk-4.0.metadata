@@ -383,6 +383,7 @@ TreeViewColumn
   .new_with_attributes.title nullable
 TreeView
   .get_*_func skip=false
+INVALID_LIST_POSITION type="uint"
 
 editable_delegate_get_property skip
 editable_delegate_set_property skip

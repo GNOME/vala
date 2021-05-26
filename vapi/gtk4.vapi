@@ -4575,6 +4575,7 @@ namespace Gdk {
 		public class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
 			protected Display ();
+			public void* get_egl_display ();
 			public unowned string? get_startup_notification_id ();
 			public bool query_registry (string global);
 			public void set_cursor_theme (string name, int size);
@@ -4666,6 +4667,10 @@ namespace Gdk {
 			public void error_trap_pop_ignored ();
 			public void error_trap_push ();
 			public unowned Gdk.Surface get_default_group ();
+			[Version (since = "4.4")]
+			public void* get_egl_display ();
+			[Version (since = "4.4")]
+			public bool get_egl_version (out int major, out int minor);
 			public bool get_glx_version (out int major, out int minor);
 			public unowned Gdk.Monitor get_primary_monitor ();
 			public unowned Gdk.X11.Screen get_screen ();
@@ -4701,7 +4706,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_gl_context_get_type ()")]
 		[GIR (name = "X11GLContext")]
-		public class GLContext : Gdk.GLContext {
+		public abstract class GLContext : Gdk.GLContext {
 			[CCode (has_construct_function = false)]
 			protected GLContext ();
 		}
@@ -4823,7 +4828,7 @@ namespace Gdk {
 		public int get_priority ();
 		public void* get_task_data ();
 		public unowned GLib.Value? get_value ();
-		public void return_error (GLib.Error error);
+		public void return_error (owned GLib.Error error);
 		public void return_success ();
 		public void set_task_data (void* data, GLib.DestroyNotify notify);
 	}
@@ -4906,7 +4911,7 @@ namespace Gdk {
 		public int get_priority ();
 		public void* get_task_data ();
 		public unowned GLib.Value? get_value ();
-		public void return_error (GLib.Error error);
+		public void return_error (owned GLib.Error error);
 		public void return_success ();
 		public void set_task_data (void* data, GLib.DestroyNotify notify);
 	}
@@ -5358,7 +5363,7 @@ namespace Gdk {
 		protected Surface ();
 		public void beep ();
 		public Gdk.CairoContext create_cairo_context ();
-		public Gdk.GLContext create_gl_context () throws GLib.Error;
+		public Gdk.GLContext? create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		[DestroysInstance]
@@ -5916,7 +5921,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_serialize_async (GLib.OutputStream stream, string mime_type, GLib.Value value, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static unowned string intern_mime_type (string string);
+	public static unowned string? intern_mime_type (string string);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6069,7 +6074,7 @@ namespace Gsk {
 		public size_t get_args_size ();
 		public int get_n_textures ();
 		public int get_n_uniforms ();
-		public unowned string get_resource ();
+		public unowned string? get_resource ();
 		public unowned GLib.Bytes get_source ();
 		public unowned string get_uniform_name (int idx);
 		public int get_uniform_offset (int idx);
@@ -9595,7 +9600,7 @@ namespace Gtk {
 		public bool show_tabs { get; set; }
 		public Gtk.PositionType tab_pos { get; set; }
 		public signal bool change_current_page (int object);
-		public signal unowned Gtk.Notebook create_window (Gtk.Widget page);
+		public signal unowned Gtk.Notebook? create_window (Gtk.Widget page);
 		public signal bool focus_tab (Gtk.NotebookTab object);
 		public signal void move_focus_out (Gtk.DirectionType object);
 		public signal void page_added (Gtk.Widget child, uint page_num);
@@ -10007,7 +10012,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool use_full_page { get; set; }
 		public virtual signal void begin_print (Gtk.PrintContext context);
-		public virtual signal unowned GLib.Object create_custom_widget ();
+		public virtual signal unowned GLib.Object? create_custom_widget ();
 		public virtual signal void custom_widget_apply (Gtk.Widget widget);
 		public virtual signal void done (Gtk.PrintOperationResult result);
 		public virtual signal void draw_page (Gtk.PrintContext context, int page_nr);
@@ -11672,7 +11677,7 @@ namespace Gtk {
 		public TreePath.from_string (string path);
 		public int get_depth ();
 		[CCode (array_length_pos = 0.1, cname = "gtk_tree_path_get_indices_with_depth")]
-		public unowned int[] get_indices ();
+		public unowned int[]? get_indices ();
 		public bool is_ancestor (Gtk.TreePath descendant);
 		public bool is_descendant (Gtk.TreePath ancestor);
 		public void next ();
