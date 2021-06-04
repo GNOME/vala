@@ -1,3 +1,17 @@
+Vala 0.50.9
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + GArray, GByteArray and GPtrArray are reference counted
+    + Replace wrongly hard coded usage of G_OBJECT_GET_CLASS
+    + Mark entry point method implementation "_vala_main" as static
+    + Improve check for GLib.Source derived classes
+  - vala: Parameter following params-array parameter is not allowed
+
+ * Bindings:
+  - glib-2.0: Add missing has_typedef attributes on SourceFuncs delegates
+  - pango: Mark language parameter of AttrIterator.get_font() as out
+
 Vala 0.50.8
 ===========
  * Various improvements and bug fixes:
