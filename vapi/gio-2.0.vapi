@@ -3020,6 +3020,9 @@ namespace GLib {
 		protected TlsConnection ();
 		public bool emit_accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
 		public unowned GLib.TlsCertificate? get_certificate ();
+		[CCode (vfunc_name = "get_binding_data")]
+		[Version (since = "2.66")]
+		public virtual bool get_channel_binding_data (GLib.TlsChannelBindingType type, out unowned GLib.ByteArray data) throws GLib.TlsChannelBindingError;
 		[Version (since = "2.30")]
 		public unowned GLib.TlsDatabase? get_database ();
 		[Version (since = "2.30")]
@@ -3515,6 +3518,9 @@ namespace GLib {
 		public async bool close_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool emit_accept_certificate (GLib.TlsCertificate peer_cert, GLib.TlsCertificateFlags errors);
 		public unowned GLib.TlsCertificate? get_certificate ();
+		[CCode (vfunc_name = "get_binding_data")]
+		[Version (since = "2.66")]
+		public virtual bool get_channel_binding_data (GLib.TlsChannelBindingType type, out unowned GLib.ByteArray data) throws GLib.TlsChannelBindingError;
 		public unowned GLib.TlsDatabase? get_database ();
 		public unowned GLib.TlsInteraction? get_interaction ();
 		[Version (since = "2.60")]
@@ -4148,7 +4154,8 @@ namespace GLib {
 		FREEBSD_CMSGCRED,
 		OPENBSD_SOCKPEERCRED,
 		SOLARIS_UCRED,
-		NETBSD_UNPCBID
+		NETBSD_UNPCBID,
+		APPLE_XUCRED
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
@@ -4627,6 +4634,12 @@ namespace GLib {
 	public enum TlsCertificateRequestFlags {
 		NONE
 	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_CHANNEL_BINDING_TLS_", type_id = "g_tls_channel_binding_type_get_type ()")]
+	[Version (since = "2.66")]
+	public enum TlsChannelBindingType {
+		UNIQUE,
+		SERVER_END_POINT
+	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_DATABASE_LOOKUP_", type_id = "g_tls_database_lookup_flags_get_type ()")]
 	[Version (since = "2.30")]
 	public enum TlsDatabaseLookupFlags {
@@ -4827,6 +4840,15 @@ namespace GLib {
 		INTERNAL;
 		[CCode (cheader_filename = "gio/gio.h")]
 		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_CHANNEL_BINDING_ERROR_")]
+	[Version (since = "2.66")]
+	public errordomain TlsChannelBindingError {
+		NOT_IMPLEMENTED,
+		INVALID_STATE,
+		NOT_AVAILABLE,
+		NOT_SUPPORTED,
+		GENERAL_ERROR
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_ERROR_")]
 	[Version (since = "2.28")]

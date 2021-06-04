@@ -224,6 +224,9 @@ Socket
   .condition_wait throws="GLib.IOError"
   .connection_factory_create_connection parent="GLib.SocketConnection" name="factory_create_connection" symbol_type="function"
   .create_source skip=false type="GLib.SocketSource"
+  .receive.buffer out=false
+  .receive_from.buffer out=false
+  .receive_with_blocking.buffer out=false
 SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
@@ -375,6 +378,8 @@ Application
 Converter
   .convert.inbuf nullable=false
 DBusSubtreeVTable.enumerate skip=false
+DtlsConnection
+  .get_channel_binding_data#method virtual vfunc_name="get_binding_data" throws="GLib.TlsChannelBindingError"
 File
   .measure_disk_usage* skip=false
   .measure_disk_usage*.* default=()
@@ -394,5 +399,7 @@ TlsBackend
   .get_client_connection_type abstract
   .get_file_database_type abstract
   .get_server_connection_type abstract
+TlsConnection
+  .get_channel_binding_data#method virtual vfunc_name="get_binding_data" throws="GLib.TlsChannelBindingError"
 IOStream
   .splice_async finish_instance=false

@@ -3863,6 +3863,8 @@ namespace GLib {
 		public static bool get_contents (string filename, out string contents, out size_t length = null) throws FileError;
 		[Version (since = "2.8")]
 		public static bool set_contents (string filename, string contents, ssize_t length = -1) throws FileError;
+		[Version (since = "2.66")]
+		public static bool set_contents_full (string filename, string contents, ssize_t length = -1, FileSetContentsFlags flags = 0, int mode = 0666) throws FileError;
 		[CCode (cname = "g_file_get_contents")]
 		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "size_t")] out uint8[] contents) throws FileError;
 		[CCode (cname = "g_file_set_contents")]
@@ -3902,6 +3904,16 @@ namespace GLib {
 		[Version (since = "2.36")]
 		[CCode (cname = "g_close")]
 		public static bool close_checked (int fd) throws FileError;
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_FILE_SET_CONTENTS_", has_type_id = false)]
+	public enum FileSetContentsFlags {
+		NONE,
+		CONSISTENT,
+		DURABLE,
+		ONLY_EXISTING
 	}
 
 	[CCode (cname = "GStatBuf", cheader_filename = "glib/gstdio.h", has_type_id = false)]
@@ -3967,24 +3979,144 @@ namespace GLib {
 
 	/* URI Functions */
 
-	namespace Uri {
+	[Compact]
+	[CCode (ref_function = "g_uri_ref", unref_function = "g_uri_unref", type_id = "G_TYPE_URI")]
+	public class Uri {
+		[Version (since = "2.16")]
 		public const string RESERVED_CHARS_ALLOWED_IN_PATH;
+		[Version (since = "2.16")]
 		public const string RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT;
+		[Version (since = "2.16")]
 		public const string RESERVED_CHARS_ALLOWED_IN_USERINFO;
+		[Version (since = "2.16")]
 		public const string RESERVED_CHARS_GENERIC_DELIMITERS;
+		[Version (since = "2.16")]
 		public const string RESERVED_CHARS_SUBCOMPONENT_DELIMITERS;
 
+		[Version (since = "2.66")]
+		public static bool split (string uri_string, UriFlags flags, out string? scheme, out string? userinfo, out string? host, out int port, out string? path, out string? query, out string? fragment) throws UriError;
+		[Version (since = "2.66")]
+		public static bool split_with_user (string uri_string, UriFlags flags, out string? scheme, out string? user, out string? password, out string? auth_params, out string? host, out int port, out string? path, out string? query, out string? fragment) throws UriError;
+		[Version (since = "2.66")]
+		public static bool split_network (string uri_string, UriFlags flags, out string? scheme, out string? host, out int port) throws UriError;
+		[Version (since = "2.66")]
+		public static bool is_valid (string uri_string, UriFlags flags) throws UriError;
+		[Version (since = "2.66")]
+		public static string join (UriFlags flags, string scheme, string? userinfo, string? host, int port, string path, string? query, string? fragment);
+		[Version (since = "2.66")]
+		public static string join_with_user (UriFlags flags, string scheme, string? user, string? password, string? auth_params, string? host, int port, string path, string? query, string? fragment);
+
+		[Version (since = "2.66")]
+		public static Uri parse (string uri_string, UriFlags flags) throws UriError;
+		[Version (since = "2.66")]
+		public static Uri parse_relative (Uri? base_uri, string uri_string, UriFlags flags) throws UriError;
+		[Version (since = "2.66")]
+		public static string resolve_relative (string base_uri_string, string uri_string, UriFlags flags) throws UriError;
+		[Version (since = "2.66")]
+		public static Uri build (UriFlags flags, string scheme, string? userinfo, string? host, int port, string path, string? query, string? fragment);
+		[Version (since = "2.66")]
+		public static Uri build_with_user (UriFlags flags, string scheme, string? user, string? password, string? auth_params, string? host, int port, string path, string? query, string? fragment);
+
+		[Version (since = "2.66")]
+		public unowned string get_scheme ();
+		[Version (since = "2.66")]
+		public unowned string? get_userinfo ();
+		[Version (since = "2.66")]
+		public unowned string? get_user ();
+		[Version (since = "2.66")]
+		public unowned string? get_password ();
+		[Version (since = "2.66")]
+		public unowned string? get_auth_params ();
+		[Version (since = "2.66")]
+		public unowned string? get_host ();
+		[Version (since = "2.66")]
+		public int get_port ();
+		[Version (since = "2.66")]
+		public unowned string get_path ();
+		[Version (since = "2.66")]
+		public unowned string? get_query ();
+		[Version (since = "2.66")]
+		public unowned string? get_fragment ();
+		[Version (since = "2.66")]
+		public UriFlags get_flags ();
+
+		[Version (since = "2.66")]
+		public static HashTable<string,string> parse_params (string uri, size_t length = -1, string separators = "&;", UriParamsFlags flags = 0) throws UriError;
 		[Version (since = "2.16")]
 		public static string? parse_scheme (string uri);
+		[Version (since = "2.66")]
+		public static unowned string? peek_scheme (string uri);
 		[Version (since = "2.16")]
 		public static string escape_string (string unescaped, string? reserved_chars_allowed = null, bool allow_utf8 = true);
 		[Version (since = "2.16")]
 		public static string? unescape_string (string escaped_string, string? illegal_characters = null);
 		[Version (since = "2.16")]
 		public static string? unescape_segment (string? escaped_string, string? escaped_string_end, string? illegal_characters = null);
+		[Version (since = "2.66")]
+		public static Bytes? unescape_bytes (string escaped_string, size_t length = -1, string? illegal_characters = null) throws UriError;
+		[Version (since = "2.66")]
+		public static string? escape_bytes ([CCode (array_length_type = "gsize")] uint8[] unescaped, string? reserved_chars_allowed = null);
 		[Version (since = "2.6")]
 		[CCode (array_length = false, array_null_terminated = true)]
 		public static string[] list_extract_uris (string uri_list);
+	}
+
+	[Version (since = "2.66")]
+	public errordomain UriError {
+		FAILED,
+		BAD_SCHEME,
+		BAD_USER,
+		BAD_PASSWORD,
+		BAD_AUTH_PARAMS,
+		BAD_HOST,
+		BAD_PORT,
+		BAD_PATH,
+		BAD_QUERY,
+		BAD_FRAGMENT;
+		public static GLib.Quark quark ();
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_URI_FLAGS_", has_type_id = false)]
+	public enum UriFlags {
+		NONE,
+		PARSE_RELAXED,
+		HAS_PASSWORD,
+		HAS_AUTH_PARAMS,
+		ENCODED,
+		NON_DNS,
+		ENCODED_QUERY,
+		ENCODED_PATH,
+		ENCODED_FRAGMENT
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_URI_HIDE_", has_type_id = false)]
+	public enum UriHideFlags {
+		NONE,
+		USERINFO,
+		PASSWORD,
+		AUTH_PARAMS,
+		QUERY,
+		FRAGMENT
+	}
+
+	[Version (since = "2.66")]
+	public struct UriParamsIter {
+		public UriParamsIter (string @params, int length = -1, string separators = "&;", UriParamsFlags flags = 0);
+		public bool next (out string attribute = null, out string @value = null) throws Error;
+	}
+
+	[Flags]
+	[Version (since = "2.66")]
+	[CCode (cprefix = "G_URI_PARAMS_", has_type_id = false)]
+	public enum UriParamsFlags {
+		NONE,
+		CASE_INSENSITIVE,
+		WWW_FORM,
+		PARSE_RELAXED
 	}
 
 	/* Shell-related Utilities */
@@ -4511,24 +4643,48 @@ namespace GLib {
 		public string get_mime_type (string uri) throws BookmarkFileError;
 		public bool get_is_private (string uri) throws BookmarkFileError;
 		public bool get_icon (string uri, out string href, out string mime_type) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_added_date_time")]
 		public time_t get_added (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_added_date_time (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_modified_date_time")]
 		public time_t get_modified (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_modified_date_time (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_visited_date_time")]
 		public time_t get_visited (string uri) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public unowned DateTime get_visited_date_time (string uri) throws BookmarkFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_groups (string uri) throws BookmarkFileError;
 		[CCode (array_length_type = "gsize")]
 		public string[] get_applications (string uri) throws BookmarkFileError;
+		[Version (deprecated_since = "2.66", replacement = "get_application_info")]
 		public bool get_app_info (string uri, string name, out string exec, out uint count, out time_t stamp) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public bool get_application_info (string uri, string name, out string exec, out uint count, out unowned DateTime? stamp) throws BookmarkFileError;
 		public void set_title (string uri, string title);
 		public void set_description (string uri, string description);
 		public void set_mime_type (string uri, string mime_type);
 		public void set_is_private (string uri, bool is_private);
 		public void set_icon (string uri, string href, string mime_type);
+		[Version (deprecated_since = "2.66", replacement = "set_added_date_time")]
 		public void set_added (string uri, time_t added);
+		[Version (since = "2.66")]
+		public void set_added_date_time (string uri, DateTime added);
 		public void set_groups (string uri, string[] groups);
+		[Version (deprecated_since = "2.66", replacement = "set_modified_date_time")]
 		public void set_modified (string uri, time_t modified);
+		[Version (since = "2.66")]
+		public void set_modified_date_time (string uri, DateTime modified);
+		[Version (deprecated_since = "2.66", replacement = "set_visited_date_time")]
 		public void set_visited (string uri, time_t visited);
+		[Version (since = "2.66")]
+		public void set_visited_date_time (string uri, DateTime visited);
+		[Version (deprecated_since = "2.66", replacement = "set_application_info")]
 		public bool set_app_info (string uri, string name, string exec, int count, time_t stamp) throws BookmarkFileError;
+		[Version (since = "2.66")]
+		public bool set_application_info (string uri, string name, string exec, int count, DateTime? stamp) throws BookmarkFileError;
 		public void add_group (string uri, string group);
 		public void add_application (string uri, string name, string exec);
 		public bool remove_group (string uri, string group) throws BookmarkFileError;
@@ -5731,6 +5887,7 @@ namespace GLib {
 		public const uint @2_60;
 		public const uint @2_62;
 		public const uint @2_64;
+		public const uint @2_66;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
@@ -6322,7 +6479,13 @@ namespace GLib {
 		ELYMAIC,                /* Elym */
 		NANDINAGARI,            /* Nand */
 		NYIAKENG_PUACHUE_HMONG, /* Rohg */
-		WANCHO;                 /* Wcho */
+		WANCHO,                 /* Wcho */
+
+		/* Unicode 13.0 additions */
+		CHORASMIAN,             /* Chrs */
+		DIVES_AKURU,            /* Diak */
+		KHITAN_SMALL_SCRIPT,    /* Kits */
+		YEZIDI;                 /* Yezi */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
