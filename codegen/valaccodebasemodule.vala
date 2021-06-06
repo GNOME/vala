@@ -2935,6 +2935,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					}
 				}
 
+				if (list.size <= 0) {
+					clist.append (new CCodeConstant ("0"));
+				}
+
 				if (list.parent_node is Constant
 				    || (list.parent_node is Expression && ((Expression) list.parent_node).value_type is ArrayType)) {
 					set_cvalue (list, clist);
@@ -4400,6 +4404,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.target_type));
 					((GLibValue) expr.target_value).lvalue = false;
 				}
+			}
+
+			// Allow null to initialize non-null struct inside initializer list
+			if (expr is NullLiteral && expr.parent_node is InitializerList
+			    && expr.target_type != null && expr.target_type.is_real_non_null_struct_type ()) {
+				var clist = new CCodeInitializerList ();
+				clist.append (new CCodeConstant ("0"));
+				set_cvalue (expr, new CCodeCastExpression (clist, get_ccode_name (expr.target_type.type_symbol)));
 			}
 
 			if (!(expr.value_type is ValueType && !expr.value_type.nullable)) {
