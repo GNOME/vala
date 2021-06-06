@@ -124,6 +124,7 @@ TESTS = \
 	arrays/length-no-int-type.test \
 	arrays/struct-field-length-cname.vala \
 	arrays/struct-field-initializer.vala \
+	arrays/struct-initializer-null.vala \
 	arrays/struct-namespaced-initializer.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/resize.vala \
