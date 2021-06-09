@@ -1,3 +1,33 @@
+Vala 0.48.18
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + GArray, GByteArray and GPtrArray are reference counted
+    + Replace wrongly hard coded usage of G_OBJECT_GET_CLASS
+    + Mark entry point method implementation "_vala_main" as static
+    + Improve check for GLib.Source derived classes
+  - vala: Parameter following params-array parameter is not allowed
+
+ * Bindings:
+  - Update GLib bindings to 2.66 - Sync GLib symbol additions with 0.50.9
+  - glib-2.0: Add missing has_typedef attributes on SourceFuncs delegates
+  - pango: Mark language parameter of AttrIterator.get_font() as out
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Apply gconstpointer to gpointer cast to GenericType only
+    + Fix access to captured generics in async method of interfaces (2)
+    + Use if-clause for is_in_destructor() condition to be more clear
+    + Add missing "_return" label and "_inner_error*_" declaration in dtors
+    + Don't use G_GNUC_INTERNAL on implicit type specific fields
+  - vala:
+    + length-type of arrays must not be nullable
+    + Report a warning for unhandled errors in destructors
+  - parser:
+    + Minor semantic checks to improve error messages
+    + Allow empty member-initializer and accept trailing comma
+    + Include INTERR token in source_reference of parsed types
+
 Vala 0.48.17
 ============
  * Regression and bug fixes:
