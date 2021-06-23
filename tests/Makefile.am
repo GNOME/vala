@@ -343,6 +343,7 @@ TESTS = \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
+	structs/constructor-variadic.vala \
 	structs/constructor-wrong-name.test \
 	structs/default-gtype.vala \
 	structs/gmutex.vala \
@@ -442,7 +443,8 @@ TESTS = \
 	objects/compact-class-custom-ref.vala \
 	objects/constructor-abstract-public.test \
 	objects/constructor-inner-error.vala \
-	objects/constructor-variadic.test \
+	objects/constructor-variadic.vala \
+	objects/constructor-variadic-invalid.test \
 	objects/constructor-wrong-name.test \
 	objects/constructors.vala \
 	objects/destructors.vala \
