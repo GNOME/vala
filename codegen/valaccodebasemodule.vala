@@ -4869,7 +4869,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			} else if (st != null && get_ccode_name (st) == "va_list") {
 				creation_call.add_argument (instance);
 				if (get_ccode_name (m) == "va_start") {
-					if (in_creation_method) {
+					unowned Class? parent = current_method.parent_symbol as Class;
+					if (in_creation_method && parent != null && !parent.is_compact) {
 						creation_call = new CCodeFunctionCall (new CCodeIdentifier ("va_copy"));
 						creation_call.add_argument (instance);
 						creation_call.add_argument (new CCodeIdentifier ("_vala_va_list"));

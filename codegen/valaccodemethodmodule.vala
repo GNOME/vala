@@ -317,11 +317,6 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	 * with _new in visit_creation_method).
 	 */
 	public override void visit_method (Method m) {
-		string real_name = get_ccode_real_name (m);
-		if (m is CreationMethod && m.is_variadic ()) {
-			real_name = get_ccode_constructv_name ((CreationMethod) m);
-		}
-
 		push_context (new EmitContext (m));
 		push_line (m.source_reference);
 
@@ -330,14 +325,19 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		bool profile = m.get_attribute ("Profile") != null;
 
+		string real_name = get_ccode_real_name (m);
+
 		if (m is CreationMethod) {
-			var cl = current_type_symbol as Class;
+			unowned Class? cl =  m.parent_symbol as Class;
 			if (cl != null && !cl.is_compact) {
 				if (cl.base_class == null) {
 					in_fundamental_creation_method = true;
 				} else if (gobject_type != null && cl.is_subtype_of (gobject_type)) {
 					in_gobject_creation_method = true;
 				}
+			}
+			if (cl != null && !cl.is_compact && m.is_variadic ()) {
+				real_name = get_ccode_constructv_name ((CreationMethod) m);
 			}
 		}
 
@@ -1233,7 +1233,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_creation_method (CreationMethod m) {
 		push_line (m.source_reference);
 
-		ellipses_to_valist = true;
+		unowned Class? cl =  m.parent_symbol as Class;
+		if (cl != null && !cl.is_compact) {
+			ellipses_to_valist = true;
+		} else {
+			ellipses_to_valist = false;
+		}
 		visit_method (m);
 		ellipses_to_valist = false;
 
