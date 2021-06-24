@@ -51,7 +51,7 @@ public class Vala.CCodeIfSection : CCodeFragment {
 				writer.write_string ("#elif ");
 				writer.write_string (expression);
 			} else {
-				writer.write_string ("#else ");
+				writer.write_string ("#else");
 			}
 		} else if (expression != null) {
 			writer.write_string ("#if ");
