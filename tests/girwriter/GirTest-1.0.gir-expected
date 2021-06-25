@@ -31,10 +31,19 @@
 	<bitfield name="SkippedFlags" c:type="GirTestSkippedFlags" glib:type-name="GirTestSkippedFlags" glib:get-type="gir_test_skipped_flags_get_type" introspectable="0">
 		<member name="value1" c:identifier="GIR_TEST_SKIPPED_FLAGS_VALUE1" value="1"/>
 	</bitfield>
+	<enumeration name="RenamedEnumeration" c:type="GirTestNamedEnumeration" glib:type-name="GirTestNamedEnumeration" glib:get-type="gir_test_named_enumeration_get_type">
+		<member name="value1" c:identifier="GIR_TEST_NAMED_ENUMERATION_VALUE1" value="0"/>
+	</enumeration>
+	<bitfield name="RenamedBitfield" c:type="GirTestNamedBitfield" glib:type-name="GirTestNamedBitfield" glib:get-type="gir_test_named_bitfield_get_type">
+		<member name="value1" c:identifier="GIR_TEST_NAMED_BITFIELD_VALUE1" value="1"/>
+	</bitfield>
 	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:error-domain="gir-test-error-test-quark">
 		<member name="failed" c:identifier="GIR_TEST_ERROR_TEST_FAILED" value="0"/>
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
 		<member name="fishy" c:identifier="GIR_TEST_ERROR_TEST_FISHY" value="23"/>
+	</enumeration>
+	<enumeration name="RenamedError" c:type="GirTestNamedError" glib:error-domain="gir-test-named-error-quark">
+		<member name="failed" c:identifier="GIR_TEST_NAMED_ERROR_FAILED" value="0"/>
 	</enumeration>
 	<class name="TypeTest" c:type="GirTestTypeTest" c:symbol-prefix="typetest" glib:type-name="GirTestTypeTest" glib:get-type="gir_test_typetest_get_type" glib:type-struct="TypeTestClass" glib:fundamental="1" glib:ref-func="gir_test_typetest_ref" glib:unref-func="gir_test_typetest_unref" glib:set-value-func="gir_test_value_set_typetest" glib:get-value-func="gir_test_value_get_typetest">
 		<field name="parent_instance" readable="0" private="1">
@@ -1859,6 +1868,41 @@
 		</field>
 	</record>
 	<record name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate" disguised="1"/>
+	<class name="RenamedClass" c:type="GirTestNamedClass" c:symbol-prefix="namedclass" glib:type-name="GirTestNamedClass" glib:get-type="gir_test_namedclass_get_type" glib:type-struct="RenamedClassClass" glib:fundamental="1" glib:ref-func="gir_test_namedclass_ref" glib:unref-func="gir_test_namedclass_unref" glib:set-value-func="gir_test_value_set_namedclass" glib:get-value-func="gir_test_value_get_namedclass">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+		</field>
+		<field name="ref_count">
+			<type name="gint" c:type="volatile int"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="RenamedClassPrivate" c:type="GirTestNamedClassPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_namedclass_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.RenamedClass" c:type="GirTestNamedClass*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="RenamedClassClass" c:type="GirTestNamedClassClass" glib:is-gtype-struct-for="RenamedClass">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.TypeClass" c:type="GTypeClass"/>
+		</field>
+	</record>
+	<record name="RenamedClassPrivate" c:type="GirTestNamedClassPrivate" disguised="1"/>
+	<record name="RenamedCompactClass">
+		<field name="s">
+			<type name="utf8" c:type="gchar*"/>
+		</field>
+		<field name="i">
+			<type name="gint" c:type="gint"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_named_compactclass_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.RenamedCompactClass" c:type="GirTestNamedCompactClass*"/>
+			</return-value>
+		</constructor>
+	</record>
 	<class name="GenericsTest" c:type="GirTestGenericsTest" c:symbol-prefix="generics_test" glib:type-name="GirTestGenericsTest" glib:get-type="gir_test_generics_test_get_type" glib:type-struct="GenericsTestClass" glib:fundamental="1" glib:ref-func="gir_test_generics_test_ref" glib:unref-func="gir_test_generics_test_unref" glib:set-value-func="gir_test_value_set_generics_test" glib:get-value-func="gir_test_value_get_generics_test">
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.TypeInstance" c:type="GTypeInstance"/>
@@ -2683,6 +2727,14 @@
 			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
 		</field>
 	</record>
+	<interface name="RenamedInterface" c:type="GirTestNamedInterface" c:symbol-prefix="named_interface" glib:type-name="GirTestNamedInterface" glib:get-type="gir_test_named_interface_get_type" glib:type-struct="RenamedInterfaceIface">
+		<prerequisite name="GObject.Object"/>
+	</interface>
+	<record name="RenamedInterfaceIface" c:type="GirTestNamedInterfaceIface" glib:is-gtype-struct-for="RenamedInterface">
+		<field name="parent_iface" readable="0" private="1">
+			<type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+		</field>
+	</record>
 	<interface name="PrerequisiteTest" c:type="GirTestPrerequisiteTest" c:symbol-prefix="prerequisite_test" glib:type-name="GirTestPrerequisiteTest" glib:get-type="gir_test_prerequisite_test_get_type" glib:type-struct="PrerequisiteTestIface">
 		<prerequisite name="GirTest.InterfaceTest"/>
 	</interface>
@@ -2752,6 +2804,11 @@
 			<type name="gint" c:type="gint"/>
 		</field>
 	</record>
+	<record name="RenamedStruct" c:type="GirTestNamedStruct" c:symbol-prefix="named_struct" glib:type-name="GirTestNamedStruct" glib:get-type="gir_test_named_struct_get_type">
+		<field name="field_name">
+			<type name="gint" c:type="gint"/>
+		</field>
+	</record>
 	<callback name="DelegateTest" c:type="GirTestDelegateTest">
 		<return-value transfer-ownership="full">
 			<type name="gboolean" c:type="gboolean"/>
@@ -2812,11 +2869,105 @@
 			<type name="none" c:type="void"/>
 		</return-value>
 	</callback>
+	<callback name="RenamedDelegate" c:type="GirTestNamedDelegate">
+		<return-value transfer-ownership="full">
+			<type name="none" c:type="void"/>
+		</return-value>
+	</callback>
 	<constant name="CONSTANT_NUMBER" c:identifier="GIR_TEST_CONSTANT_NUMBER" value="42">
 		<type name="gint" c:type="gint"/>
 	</constant>
 	<constant name="CONSTANT_STRING" c:identifier="GIR_TEST_CONSTANT_STRING" value="const ♥ utf8">
 		<type name="utf8" c:type="const gchar*"/>
 	</constant>
+	<constant name="RENAMED_CONSTANT" c:identifier="GIR_TEST_NAMED_CONSTANT" value="23">
+		<type name="gint" c:type="gint"/>
+	</constant>
+	<function name="use_renamed_class" c:identifier="gir_test_use_renamed_class">
+		<return-value transfer-ownership="full">
+			<type name="GirTest.RenamedClass" c:type="GirTestNamedClass*"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedClass" c:type="GirTestNamedClass*"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_compact_class" c:identifier="gir_test_use_renamed_compact_class">
+		<return-value transfer-ownership="none">
+			<type name="GirTest.RenamedCompactClass" c:type="GirTestNamedCompactClass*"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedCompactClass" c:type="GirTestNamedCompactClass*"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_interface" c:identifier="gir_test_use_renamed_interface">
+		<return-value transfer-ownership="full">
+			<type name="GirTest.RenamedInterface" c:type="GirTestNamedInterface*"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedInterface" c:type="GirTestNamedInterface*"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_struct" c:identifier="gir_test_use_renamed_struct">
+		<return-value transfer-ownership="full" nullable="1">
+			<type name="GirTest.RenamedStruct" c:type="GirTestNamedStruct*"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedStruct" c:type="GirTestNamedStruct"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_enumeration" c:identifier="gir_test_use_renamed_enumeration">
+		<return-value transfer-ownership="full">
+			<type name="GirTest.RenamedEnumeration" c:type="GirTestNamedEnumeration"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedEnumeration" c:type="GirTestNamedEnumeration"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_flags" c:identifier="gir_test_use_renamed_flags">
+		<return-value transfer-ownership="full">
+			<type name="GirTest.RenamedBitfield" c:type="GirTestNamedBitfield"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedBitfield" c:type="GirTestNamedBitfield"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_delegate" c:identifier="gir_test_use_renamed_delegate">
+		<return-value transfer-ownership="none" closure="2" scope="call">
+			<type name="GirTest.RenamedDelegate" c:type="GirTestNamedDelegate"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none" closure="1" scope="call">
+				<type name="GirTest.RenamedDelegate" c:type="GirTestNamedDelegate"/>
+			</parameter>
+			<parameter name="param_target" transfer-ownership="none" nullable="1">
+				<type name="gpointer" c:type="void*"/>
+			</parameter>
+			<parameter name="result_target" direction="out" transfer-ownership="none" optional="1">
+				<type name="gpointer" c:type="void**"/>
+			</parameter>
+		</parameters>
+	</function>
+	<function name="use_renamed_error" c:identifier="gir_test_use_renamed_error">
+		<return-value transfer-ownership="full">
+			<type name="GirTest.RenamedError" c:type="GError*"/>
+		</return-value>
+		<parameters>
+			<parameter name="param" transfer-ownership="none">
+				<type name="GirTest.RenamedError" c:type="GError*"/>
+			</parameter>
+		</parameters>
+	</function>
 </namespace>
 </repository>
