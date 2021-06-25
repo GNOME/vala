@@ -57,6 +57,7 @@ namespace GirTest {
 	}
 
 	[GIR (visible = false)]
+	[Flags]
 	public enum SkippedFlags {
 		VALUE1
 	}
