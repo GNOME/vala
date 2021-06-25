@@ -192,6 +192,7 @@ namespace GirTest {
 		VALUE1
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	[Flags]
 	[GIR (visible = false)]
 	public enum SkippedFlags {
 		VALUE1
