@@ -28,9 +28,9 @@
 	<enumeration name="SkippedEnum" c:type="GirTestSkippedEnum" glib:type-name="GirTestSkippedEnum" glib:get-type="gir_test_skipped_enum_get_type" introspectable="0">
 		<member name="value1" c:identifier="GIR_TEST_SKIPPED_ENUM_VALUE1" value="0"/>
 	</enumeration>
-	<enumeration name="SkippedFlags" c:type="GirTestSkippedFlags" glib:type-name="GirTestSkippedFlags" glib:get-type="gir_test_skipped_flags_get_type" introspectable="0">
-		<member name="value1" c:identifier="GIR_TEST_SKIPPED_FLAGS_VALUE1" value="0"/>
-	</enumeration>
+	<bitfield name="SkippedFlags" c:type="GirTestSkippedFlags" glib:type-name="GirTestSkippedFlags" glib:get-type="gir_test_skipped_flags_get_type" introspectable="0">
+		<member name="value1" c:identifier="GIR_TEST_SKIPPED_FLAGS_VALUE1" value="1"/>
+	</bitfield>
 	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:error-domain="gir-test-error-test-quark">
 		<member name="failed" c:identifier="GIR_TEST_ERROR_TEST_FAILED" value="0"/>
 		<member name="smelly" c:identifier="GIR_TEST_ERROR_TEST_SMELLY" value="1"/>
