@@ -902,7 +902,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<enumeration name=\"%s\"", edomain.name);
+		buffer.append_printf ("<enumeration name=\"%s\"", get_gir_name (edomain));
 		write_ctype_attributes (edomain);
 		buffer.append_printf (" glib:error-domain=\"%s\"", get_ccode_quark_name (edomain));
 		write_symbol_attributes (edomain);
@@ -967,7 +967,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		string value = literal_expression_to_value_string (initializer);
 
 		write_indent ();
-		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, get_ccode_name (c));
+		buffer.append_printf ("<constant name=\"%s\" c:identifier=\"%s\"", get_gir_name (c), get_ccode_name (c));
 		buffer.append_printf (" value=\"%s\"", value);
 		write_symbol_attributes (c);
 		buffer.append_printf (">\n");
@@ -1228,7 +1228,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<callback name=\"%s\"", cb.name);
+		buffer.append_printf ("<callback name=\"%s\"", get_gir_name (cb));
 		buffer.append_printf (" c:type=\"%s\"", get_ccode_name (cb));
 		if (cb.tree_can_fail) {
 			buffer.append_printf (" throws=\"1\"");

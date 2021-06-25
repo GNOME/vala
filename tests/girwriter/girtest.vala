@@ -26,8 +26,15 @@ namespace GirTest {
 		public int field_name;
 	}
 
+	[GIR (name = "RenamedStruct")]
+	public struct NamedStruct {
+		public int field_name;
+	}
+
 	public const int CONSTANT_NUMBER = 42;
 	public const string CONSTANT_STRING = "const ♥ utf8";
+	[GIR (name = "RENAMED_CONSTANT")]
+	public const int NAMED_CONSTANT = 23;
 
 	public enum EnumTest {
 		VALUE1,
@@ -60,10 +67,26 @@ namespace GirTest {
 		VALUE1
 	}
 
+	[GIR (name = "RenamedEnumeration")]
+	public enum NamedEnumeration {
+		VALUE1
+	}
+
+	[GIR (name = "RenamedBitfield")]
+	[Flags]
+	public enum NamedBitfield {
+		VALUE1
+	}
+
 	public errordomain ErrorTest {
 		FAILED,
 		SMELLY,
 		FISHY = 23
+	}
+
+	[GIR (name = "RenamedError")]
+	public errordomain NamedError {
+		FAILED
 	}
 
 	public interface InterfaceTest : Object {
@@ -95,6 +118,10 @@ namespace GirTest {
 	public interface SkippedInterface {
 	}
 
+	[GIR (name = "RenamedInterface")]
+	public interface NamedInterface : Object {
+	}
+
 	public delegate bool DelegateTest (void* a, void* b);
 
 	public delegate bool DelegateErrorTest () throws ErrorTest;
@@ -103,6 +130,9 @@ namespace GirTest {
 
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
+
+	[GIR (name = "RenamedDelegate")]
+	public delegate void NamedDelegate ();
 
 	public class TypeTest {
 		public string some_property { get; set; }
@@ -336,6 +366,17 @@ namespace GirTest {
 	public class DeprecatedClassTest {
 	}
 
+	[GIR (name = "RenamedClass")]
+	public class NamedClass {
+	}
+
+	[GIR (name = "RenamedCompactClass")]
+	[Compact]
+	public class NamedCompactClass {
+		public string s;
+		public int i;
+	}
+
 	public class GenericsTest<G,T> {
 		public GenericsTest (owned DelegateTest cb) {
 		}
@@ -355,6 +396,31 @@ namespace GirTest {
 	namespace Nested {
 		public void function () {
 		}
+	}
+
+	public NamedClass use_renamed_class (NamedClass param) {
+		return param;
+	}
+	public unowned NamedCompactClass use_renamed_compact_class (NamedCompactClass param) {
+		return param;
+	}
+	public NamedInterface use_renamed_interface (NamedInterface param) {
+		return param;
+	}
+	public NamedStruct? use_renamed_struct (NamedStruct param) {
+		return param;
+	}
+	public NamedEnumeration use_renamed_enumeration (NamedEnumeration param) {
+		return param;
+	}
+	public NamedBitfield use_renamed_flags (NamedBitfield param) {
+		return param;
+	}
+	public unowned NamedDelegate use_renamed_delegate (NamedDelegate param) {
+		return param;
+	}
+	public NamedError use_renamed_error (NamedError param) {
+		return param;
 	}
 }
 
