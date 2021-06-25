@@ -141,6 +141,17 @@ namespace GirTest {
 		public virtual signal void signal_with_default_handlder (int i1);
 		public signal void some_signal (int param);
 	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedClass", lower_case_csuffix = "namedclass", type_id = "gir_test_namedclass_get_type ()")]
+	public class RenamedClass {
+		public int ref_count;
+		[CCode (has_construct_function = false)]
+		public RenamedClass ();
+	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedStruct", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_csuffix = "named_struct", type_id = "gir_test_named_struct_get_type ()")]
+	[Compact]
+	public class RenamedStruct {
+		public int field_name;
+	}
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sub_type_test_get_type ()")]
 	public class SubTypeTest : GirTest.TypeTest {
 		[CCode (array_length_cname = "array_field_length1")]
@@ -179,11 +190,21 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_prerequisite_test_get_type ()")]
 	public interface PrerequisiteTest : GirTest.InterfaceTest, GLib.Object {
 	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedInterface", lower_case_csuffix = "named_interface", type_id = "gir_test_named_interface_get_type ()")]
+	public interface RenamedInterface : GLib.Object {
+	}
 	[CCode (cheader_filename = "girtest.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gir_test_boxed_struct_get_type ()")]
 	public struct BoxedStruct {
 		public int field_name;
 		public int internal_field_name;
 		public void inv ();
+	}
+	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
+	public struct RenamedCompactClass {
+		public weak string s;
+		public int i;
+		[CCode (cname = "gir_test_named_compactclass_new", has_construct_function = false, type = "GirTestNamedCompactClass*")]
+		public RenamedCompactClass ();
 	}
 	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
 	public struct Struct {
@@ -210,11 +231,24 @@ namespace GirTest {
 		VALUE2,
 		VALUE3
 	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedBitfield", cprefix = "GIR_TEST_NAMED_BITFIELD_", type_id = "gir_test_named_bitfield_get_type ()")]
+	[Flags]
+	public enum RenamedBitfield {
+		VALUE1
+	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedEnumeration", cprefix = "GIR_TEST_NAMED_ENUMERATION_", type_id = "gir_test_named_enumeration_get_type ()")]
+	public enum RenamedEnumeration {
+		VALUE1
+	}
 	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ERROR_TEST_")]
 	public errordomain ErrorTest {
 		FAILED,
 		SMELLY,
 		FISHY
+	}
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedError", cprefix = "GIR_TEST_NAMED_ERROR_")]
+	public errordomain RenamedError {
+		FAILED
 	}
 	[CCode (cheader_filename = "girtest.h", has_target = false)]
 	public delegate bool DelegateErrorTest () throws GirTest.ErrorTest;
@@ -222,8 +256,28 @@ namespace GirTest {
 	public delegate bool DelegateGenericsTest (GLib.Type g_type, GLib.BoxedCopyFunc g_dup_func, GLib.DestroyNotify g_destroy_func, GLib.Type t_type, GLib.BoxedCopyFunc t_dup_func, GLib.DestroyNotify t_destroy_func, void* g, void* t);
 	[CCode (cheader_filename = "girtest.h", instance_pos = 2.9)]
 	public delegate bool DelegateTest (void* a, void* b);
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedDelegate", has_target = false)]
+	public delegate void RenamedDelegate ();
 	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_NUMBER")]
 	public const int CONSTANT_NUMBER;
 	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_STRING")]
 	public const string CONSTANT_STRING;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_NAMED_CONSTANT")]
+	public const int RENAMED_CONSTANT;
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedClass use_renamed_class (GirTest.RenamedClass param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static unowned GirTest.RenamedCompactClass? use_renamed_compact_class (GirTest.RenamedCompactClass param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static unowned GirTest.RenamedDelegate use_renamed_delegate ([CCode (delegate_target_pos = 1.5)] GirTest.RenamedDelegate param, out void* result_target);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedEnumeration use_renamed_enumeration (GirTest.RenamedEnumeration param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedError use_renamed_error (GirTest.RenamedError param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedBitfield use_renamed_flags (GirTest.RenamedBitfield param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedInterface use_renamed_interface (GirTest.RenamedInterface param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.RenamedStruct? use_renamed_struct (GirTest.RenamedStruct param);
 }

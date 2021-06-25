@@ -48,6 +48,19 @@ namespace GirTest {
 		public ImplementionTest ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedClass")]
+	public class NamedClass {
+		public NamedClass ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	[Compact]
+	[GIR (name = "RenamedCompactClass")]
+	public class NamedCompactClass {
+		public int i;
+		public string s;
+		public NamedCompactClass ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public class ObjectTest : GLib.Object {
 		public int field;
 		public int fixed_array_field[23];
@@ -142,6 +155,10 @@ namespace GirTest {
 		public signal void some_signal (int param);
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedInterface")]
+	public interface NamedInterface : GLib.Object {
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public interface PrerequisiteTest : GirTest.InterfaceTest {
 	}
 	[CCode (cheader_filename = "girtest.h")]
@@ -154,6 +171,11 @@ namespace GirTest {
 		public int internal_field_name;
 		public BoxedStruct ();
 		public void inv ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedStruct")]
+	public struct NamedStruct {
+		public int field_name;
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	[GIR (visible = false)]
@@ -180,6 +202,17 @@ namespace GirTest {
 		VALUE2,
 		VALUE3
 	}
+	[CCode (cheader_filename = "girtest.h")]
+	[Flags]
+	[GIR (name = "RenamedBitfield")]
+	public enum NamedBitfield {
+		VALUE1
+	}
+	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedEnumeration")]
+	public enum NamedEnumeration {
+		VALUE1
+	}
 	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
 	public enum PlainEnumTest {
 		VALUE1,
@@ -204,11 +237,19 @@ namespace GirTest {
 		FISHY
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedError")]
+	public errordomain NamedError {
+		FAILED
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateErrorTest () throws GirTest.ErrorTest;
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateTest (void* a, void* b);
+	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RenamedDelegate")]
+	public delegate void NamedDelegate ();
 	[CCode (cheader_filename = "girtest.h")]
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
@@ -216,6 +257,25 @@ namespace GirTest {
 	public const int CONSTANT_NUMBER;
 	[CCode (cheader_filename = "girtest.h")]
 	public const string CONSTANT_STRING;
+	[CCode (cheader_filename = "girtest.h")]
+	[GIR (name = "RENAMED_CONSTANT")]
+	public const int NAMED_CONSTANT;
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedClass use_renamed_class (GirTest.NamedClass param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static unowned GirTest.NamedCompactClass use_renamed_compact_class (GirTest.NamedCompactClass param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static unowned GirTest.NamedDelegate use_renamed_delegate (GirTest.NamedDelegate param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedEnumeration use_renamed_enumeration (GirTest.NamedEnumeration param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedError use_renamed_error (GirTest.NamedError param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedBitfield use_renamed_flags (GirTest.NamedBitfield param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedInterface use_renamed_interface (GirTest.NamedInterface param);
+	[CCode (cheader_filename = "girtest.h")]
+	public static GirTest.NamedStruct? use_renamed_struct (GirTest.NamedStruct param);
 }
 [CCode (cheader_filename = "girtest.h")]
 public enum InvalidEnum {
