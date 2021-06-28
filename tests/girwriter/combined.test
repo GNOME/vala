@@ -1,0 +1,54 @@
+Packages: combined
+GIRWriter
+
+Input:
+
+public Foo.Test use_combined_foo (Foo.Test param) {
+	return param;
+}
+public Bar.Test use_combined_bar (Bar.Test param) {
+	return param;
+}
+public Manam.Test use_combined_manam (Manam.Test param) {
+	return param;
+}
+
+Output:
+
+<include name="Foo" version="1.0"/>
+<include name="Bar" version="1.0"/>
+<include name="Manam" version="1.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.2" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+  <function name="use_combined_foo" c:identifier="test_use_combined_foo">
+    <return-value transfer-ownership="full">
+      <type name="Foo.Test" c:type="FooTest*"/>
+    </return-value>
+    <parameters>
+      <parameter name="param" transfer-ownership="none">
+        <type name="Foo.Test" c:type="FooTest*"/>
+      </parameter>
+    </parameters>
+  </function>
+  <function name="use_combined_bar" c:identifier="test_use_combined_bar">
+    <return-value transfer-ownership="full">
+      <type name="Bar.Test" c:type="BarTest*"/>
+    </return-value>
+    <parameters>
+      <parameter name="param" transfer-ownership="none">
+        <type name="Bar.Test" c:type="BarTest*"/>
+      </parameter>
+    </parameters>
+  </function>
+  <function name="use_combined_manam" c:identifier="test_use_combined_manam">
+    <return-value transfer-ownership="full">
+      <type name="Manam.Test" c:type="ManamTest*"/>
+    </return-value>
+    <parameters>
+      <parameter name="param" transfer-ownership="none">
+        <type name="Manam.Test" c:type="ManamTest*"/>
+      </parameter>
+    </parameters>
+  </function>
+</namespace>
