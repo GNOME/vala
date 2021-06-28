@@ -80,6 +80,8 @@ function testheader() {
 		run_prefix="dbus-run-session -- $run_prefix"
 	elif [ "$1" = "GIR" ]; then
 		GIRTEST=1
+	elif [ "$1" = "GIRWriter" ]; then
+		GIRWRITERTEST=1
 	fi
 }
 
@@ -115,6 +117,17 @@ EOF
 		elif [ "$1" = "Output:" ]; then
 			SOURCEFILE=$testpath.vapi.ref
 		fi
+	elif [ $GIRWRITERTEST -eq 1 ]; then
+		if [ "$1" = "Input:" ]; then
+			ns=$testpath
+			SOURCEFILE=$testpath.vala
+			cat <<EOF > $SOURCEFILE
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.2", lower_case_cprefix = "test_")]
+namespace Test {
+EOF
+		elif [ "$1" = "Output:" ]; then
+			SOURCEFILE=Test-1.2.gir.ref
+		fi
 	fi
 }
 
@@ -133,6 +146,12 @@ function sourceend() {
 		fi
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 		echo "$VAPIGEN $VAPIGENFLAGS $PACKAGEFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
+	elif [ $GIRWRITERTEST -eq 1 ]; then
+		if [ $PART -eq 1 ]; then
+			echo "}" >> $SOURCEFILE
+		fi
+		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -C --library test -H test.h --gir Test-1.2.gir $ns.vala && tail -n +4 Test-1.2.gir|sed '\$d'|diff -wu Test-1.2.gir.ref -" > check
 	else
 		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
 		echo "$VALAC $VALAFLAGS $PACKAGEFLAGS -o $ns$EXEEXT $SOURCEFILE" >> prepare
@@ -174,6 +193,7 @@ case "$testfile" in
 	INHEADER=1
 	INVALIDCODE=0
 	GIRTEST=0
+	GIRWRITERTEST=0
 	DBUSTEST=0
 	ISSERVER=0
 	while IFS="" read -r line; do
