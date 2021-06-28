@@ -124,6 +124,16 @@ public class Vala.GIRWriter : CodeVisitor {
 		public bool equal (GIRNamespace g) {
 			return ((ns == g.ns) && (version == g.version));
 		}
+
+		public static GIRNamespace for_symbol (Symbol sym) {
+			while (sym.parent_symbol != null && sym.parent_symbol.name != null) {
+				sym = sym.parent_symbol;
+			}
+			assert (sym is Namespace);
+			string gir_namespace = sym.get_attribute_string ("CCode", "gir_namespace");
+			string gir_version = sym.get_attribute_string ("CCode", "gir_version");
+			return GIRNamespace (gir_namespace, gir_version);
+		}
 	}
 
 	private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((EqualFunc<GIRNamespace>) GIRNamespace.equal);
@@ -300,7 +310,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (node is Namespace && ((Namespace) node).parent_symbol == context.root) {
 				var a = node.get_attribute ("CCode");
 				if (a != null && a.has_argument ("gir_namespace")) {
-					source_file.gir_namespace = a.get_string ("gir_namespace");
+					var new_gir = a.get_string ("gir_namespace");
+					var old_gir = source_file.gir_namespace;
+					if (old_gir != null && old_gir != new_gir) {
+						source_file.gir_ambiguous = true;
+					}
+					source_file.gir_namespace = new_gir;
 				}
 				if (a != null && a.has_argument ("gir_version")) {
 					source_file.gir_version = a.get_string ("gir_version");
@@ -1725,8 +1740,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			Namespace ns = parent as Namespace;
 			var ns_gir_name = ns.get_attribute_string ("GIR", "name") ?? ns.name;
 			if (ns_gir_name != null) {
-				if (type_symbol.source_reference.file.gir_namespace != null) {
-					GIRNamespace external = GIRNamespace (type_symbol.source_reference.file.gir_namespace, type_symbol.source_reference.file.gir_version);
+				unowned SourceFile source_file = type_symbol.source_reference.file;
+				if (source_file.gir_namespace != null) {
+					GIRNamespace external;
+					if (source_file.gir_ambiguous) {
+						external = GIRNamespace.for_symbol (type_symbol);
+					} else {
+						external = GIRNamespace (source_file.gir_namespace, source_file.gir_version);
+					}
 					if (!externals.contains (external)) {
 						externals.add (external);
 					}
@@ -1735,7 +1756,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						return gir_fullname;
 					}
 					var type_name = type_symbol.get_attribute_string ("GIR", "name") ?? type_symbol.name;
-					return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_name);
+					return "%s.%s".printf (external.ns, type_name);
 				} else {
 					unannotated_namespaces.add(ns);
 				}
