@@ -467,7 +467,12 @@ public class Vala.Namespace : Symbol {
 
 		var a = get_attribute ("CCode");
 		if (a != null && a.has_argument ("gir_namespace")) {
-			source_reference.file.gir_namespace = a.get_string ("gir_namespace");
+			var new_gir = a.get_string ("gir_namespace");
+			var old_gir = source_reference.file.gir_namespace;
+			if (old_gir != null && old_gir != new_gir) {
+				source_reference.file.gir_ambiguous = true;
+			}
+			source_reference.file.gir_namespace = new_gir;
 		}
 		if (a != null && a.has_argument ("gir_version")) {
 			source_reference.file.gir_version = a.get_string ("gir_version");

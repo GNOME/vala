@@ -105,6 +105,8 @@ public class Vala.SourceFile {
 
 	public string gir_version { get; set; }
 
+	public bool gir_ambiguous { get; set; }
+
 	/**
 	 * The context this source file belongs to.
 	 */
