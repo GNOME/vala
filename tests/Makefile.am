@@ -744,6 +744,7 @@ TESTS = \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
 	gir/union-transparent.test \
+	girwriter/combined.test \
 	gtktemplate/gtkcallback-incompatible.test \
 	gtktemplate/gtkcallback-unknown.test \
 	gtktemplate/gtkchild-field-incompatible-type.test \
@@ -1193,6 +1194,8 @@ LINUX_TESTS += \
 endif
 
 EXTRA_DIST = \
+	girwriter/tests-extra-environment.sh \
+	girwriter/combined.vapi \
 	gtktemplate/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
