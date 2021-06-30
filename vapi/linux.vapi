@@ -875,7 +875,24 @@ namespace Linux {
     [CCode (cprefix = "I2C_", lower_case_cprefix = "i2c_")]
     namespace I2C {
 
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int RETRIES;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int TIMEOUT;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
         const int SLAVE;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int SLAVE_FORCE;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int TENBIT;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int FUNCS;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int RDWR;
+        [CCode (cheader_filename = "linux/i2c-dev.h")]
+        const int PEC;
+        [CCode (cname = "SMBUS", cheader_filename = "linux/i2c-dev.h")]
+        const int SMBUS_TRANSFER;
 
         [CCode (cprefix = "", lower_case_cprefix = "i2c_smbus_")]
         namespace SMBUS {
