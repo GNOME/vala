@@ -87,7 +87,7 @@ namespace GLib {
 		public void add_invalidate_notifier (void* notify_data, GLib.ClosureNotify notify_func);
 		public void add_marshal_guards (void* pre_marshal_data, GLib.ClosureNotify pre_marshal_notify, void* post_marshal_data, GLib.ClosureNotify post_marshal_notify);
 		public void invalidate ();
-		public void invoke (out GLib.Value return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint);
+		public void invoke (ref GLib.Value return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint = null);
 		[CCode (has_construct_function = false)]
 		public Closure.object (uint sizeof_closure, GLib.Object object);
 		public unowned GLib.Closure @ref ();
