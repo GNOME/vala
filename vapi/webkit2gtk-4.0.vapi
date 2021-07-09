@@ -1374,6 +1374,8 @@ namespace WebKit {
 		public async WebKit.UserMessage send_message_to_page (WebKit.UserMessage message, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.8")]
 		public void set_background_color (Gdk.RGBA rgba);
+		[Version (since = "2.34")]
+		public void set_cors_allowlist ([CCode (array_length = false, array_null_terminated = true)] string[]? allowlist);
 		public void set_custom_charset (string? charset);
 		[Version (since = "2.8")]
 		public void set_editable (bool editable);
