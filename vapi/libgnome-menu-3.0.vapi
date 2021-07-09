@@ -92,7 +92,6 @@ namespace GMenu {
 		INCLUDE_NODISPLAY,
 		SHOW_ALL_SEPARATORS,
 		SORT_DISPLAY_NAME,
-		[CCode (cname = "GMENU_TREE_FLAGS_INCLUDE_UNALLOCATED,")]
 		INCLUDE_UNALLOCATED
 	}
 	[CCode (cheader_filename = "gmenu-tree.h", cprefix = "GMENU_TREE_ITEM_", has_type_id = false)]
