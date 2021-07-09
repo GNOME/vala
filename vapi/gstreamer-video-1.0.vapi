@@ -157,9 +157,13 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn drain ();
 			public Gst.FlowReturn drop_frame (owned Gst.Video.CodecFrame frame);
+			[Version (since = "1.20")]
+			public Gst.FlowReturn drop_subframe (owned Gst.Video.CodecFrame frame);
 			[NoWrapper]
 			public virtual Gst.FlowReturn finish ();
 			public Gst.FlowReturn finish_frame (owned Gst.Video.CodecFrame frame);
+			[Version (since = "1.20")]
+			public Gst.FlowReturn finish_subframe (owned Gst.Video.CodecFrame frame);
 			[NoWrapper]
 			public virtual bool flush ();
 			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
@@ -167,6 +171,8 @@ namespace Gst {
 			public int get_estimate_rate ();
 			public Gst.Video.CodecFrame get_frame (int frame_number);
 			public GLib.List<Gst.Video.CodecFrame> get_frames ();
+			[Version (since = "1.20")]
+			public uint get_input_subframe_index (Gst.Video.CodecFrame frame);
 			public void get_latency (out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 			public Gst.ClockTimeDiff get_max_decode_time (Gst.Video.CodecFrame frame);
 			public int get_max_errors ();
@@ -179,13 +185,19 @@ namespace Gst {
 			public bool get_packetized ();
 			[Version (since = "1.4")]
 			public size_t get_pending_frame_size ();
+			[Version (since = "1.20")]
+			public uint get_processed_subframe_index (Gst.Video.CodecFrame frame);
 			[Version (since = "1.0.3")]
 			public double get_qos_proportion ();
+			[Version (since = "1.20")]
+			public bool get_subframe_mode ();
 			[NoWrapper]
 			public virtual Gst.Caps getcaps (Gst.Caps filter);
 			[NoWrapper]
-			public virtual Gst.FlowReturn handle_frame (Gst.Video.CodecFrame frame);
+			public virtual Gst.FlowReturn handle_frame (owned Gst.Video.CodecFrame frame);
 			public Gst.FlowReturn have_frame ();
+			[Version (since = "1.20")]
+			public Gst.FlowReturn have_last_subframe (Gst.Video.CodecFrame frame);
 			public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 			public virtual bool negotiate ();
 			[NoWrapper]
@@ -215,6 +227,8 @@ namespace Gst {
 			public void set_needs_sync_point (bool enabled);
 			public Gst.Video.CodecState set_output_state (Gst.Video.Format fmt, uint width, uint height, Gst.Video.CodecState? reference);
 			public void set_packetized (bool packetized);
+			[Version (since = "1.20")]
+			public void set_subframe_mode (bool subframe_mode);
 			[Version (since = "1.6")]
 			public void set_use_default_pad_acceptcaps (bool use);
 			[NoWrapper]
@@ -444,7 +458,8 @@ namespace Gst {
 			public int width;
 			[CCode (has_construct_function = false)]
 			protected Sink ();
-			public static void center_rect (Gst.Video.Rectangle src, Gst.Video.Rectangle dst, Gst.Video.Rectangle result, bool scaling);
+			[Version (deprecated = true, deprecated_since = "1.20")]
+			public static void center_rect (Gst.Video.Rectangle src, Gst.Video.Rectangle dst, out Gst.Video.Rectangle result, bool scaling);
 			[NoWrapper]
 			[Version (since = "1.20")]
 			public virtual bool set_info (Gst.Caps caps, Gst.Video.Info info);
@@ -1771,6 +1786,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.16")]
 		public static Gst.Caps caption_type_to_caps (Gst.Video.CaptionType type);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.20")]
+		public static void center_rect (Gst.Video.Rectangle src, Gst.Video.Rectangle dst, out Gst.Video.Rectangle result, bool scaling);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (deprecated = true, deprecated_since = "1.20")]
 		public static Gst.Video.ChromaSite chroma_from_string (string s);

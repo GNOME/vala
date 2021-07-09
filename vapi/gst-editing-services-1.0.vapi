@@ -304,6 +304,9 @@ namespace GES {
 		public bool move (GES.Marker marker, Gst.ClockTime position);
 		public bool remove (GES.Marker marker);
 		public uint size ();
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public GES.MarkerFlags flags { get; set construct; }
 		public signal void marker_added (uint64 position, GES.Marker marker);
 		public signal void marker_moved (uint64 previous_position, uint64 new_position, GES.Marker marker);
 		public signal void marker_removed (GES.Marker marker);
@@ -1044,6 +1047,13 @@ namespace GES {
 		NOT_ENOUGH_INTERNAL_CONTENT,
 		INVALID_OVERLAP_IN_TRACK,
 		INVALID_EFFECT_BIN_DESCRIPTION
+	}
+	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_MARKER_FLAG_", type_id = "ges_marker_flags_get_type ()")]
+	[Flags]
+	[Version (since = "1.20")]
+	public enum MarkerFlags {
+		NONE,
+		SNAPPABLE
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_META_", type_id = "ges_meta_flag_get_type ()")]
 	[Flags]
