@@ -4,13 +4,8 @@
 namespace Gst {
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_dtls_transport", type_id = "gst_webrtc_dtls_transport_get_type ()")]
 	public class WebRTCDTLSTransport : Gst.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
-		public weak Gst.Element dtlssrtpdec;
-		public weak Gst.Element dtlssrtpenc;
 		[CCode (has_construct_function = false)]
-		public WebRTCDTLSTransport (uint session_id);
-		public void set_transport (Gst.WebRTCICETransport ice);
+		protected WebRTCDTLSTransport ();
 		[NoAccessorMethod]
 		public string certificate { owned get; set; }
 		[NoAccessorMethod]
@@ -27,9 +22,6 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_data_channel", type_id = "gst_webrtc_data_channel_get_type ()")]
 	[Version (since = "1.18")]
 	public abstract class WebRTCDataChannel : GLib.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
-		public GLib.Mutex @lock;
 		[CCode (has_construct_function = false)]
 		protected WebRTCDataChannel ();
 		[NoAccessorMethod]
@@ -55,39 +47,22 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.WebRTCDataChannelState ready_state { get; }
 		[HasEmitter]
-		public virtual signal void close ();
-		[HasEmitter]
+		public signal void close ();
 		public signal void on_buffered_amount_low ();
-		[HasEmitter]
 		public signal void on_close ();
-		[HasEmitter]
 		public signal void on_error (GLib.Error error);
-		[HasEmitter]
 		public signal void on_message_data (GLib.Bytes? data);
-		[HasEmitter]
-		public signal void on_message_string (string? str);
-		[HasEmitter]
+		public signal void on_message_string (string? data);
 		public signal void on_open ();
 		[HasEmitter]
-		public virtual signal void send_data (GLib.Bytes? data);
+		public signal void send_data (GLib.Bytes? data);
 		[HasEmitter]
-		public virtual signal void send_string (string? str);
+		public signal void send_string (string? str);
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice_transport", type_id = "gst_webrtc_ice_transport_get_type ()")]
 	public abstract class WebRTCICETransport : Gst.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
-		public Gst.WebRTCICERole role;
-		public weak Gst.Element sink;
-		public weak Gst.Element src;
 		[CCode (has_construct_function = false)]
 		protected WebRTCICETransport ();
-		public void connection_state_change (Gst.WebRTCICEConnectionState new_state);
-		[NoWrapper]
-		public virtual bool gather_candidates ();
-		public void gathering_state_change (Gst.WebRTCICEGatheringState new_state);
-		public void new_candidate (uint stream_id, Gst.WebRTCICEComponent component, string attr);
-		public void selected_pair_change ();
 		[NoAccessorMethod]
 		public Gst.WebRTCICEComponent component { get; construct; }
 		[NoAccessorMethod]
@@ -98,24 +73,17 @@ namespace Gst {
 		public signal void on_selected_candidate_pair_change ();
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_receiver", type_id = "gst_webrtc_rtp_receiver_get_type ()")]
-	[Version (since = "1.16")]
 	public class WebRTCRTPReceiver : Gst.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
 		[CCode (has_construct_function = false)]
-		public WebRTCRTPReceiver ();
+		protected WebRTCRTPReceiver ();
 		[NoAccessorMethod]
 		[Version (since = "1.20")]
 		public Gst.WebRTCDTLSTransport transport { owned get; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_sender", type_id = "gst_webrtc_rtp_sender_get_type ()")]
-	[Version (since = "1.16")]
 	public class WebRTCRTPSender : Gst.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
-		public weak GLib.Array<void*> send_encodings;
 		[CCode (has_construct_function = false)]
-		public WebRTCRTPSender ();
+		protected WebRTCRTPSender ();
 		[Version (since = "1.20")]
 		public void set_priority (Gst.WebRTCPriorityType priority);
 		[NoAccessorMethod]
@@ -126,12 +94,7 @@ namespace Gst {
 		public Gst.WebRTCDTLSTransport transport { owned get; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_transceiver", type_id = "gst_webrtc_rtp_transceiver_get_type ()")]
-	[Version (since = "1.16")]
 	public abstract class WebRTCRTPTransceiver : Gst.Object {
-		[CCode (array_length = false)]
-		public weak void* _padding[4];
-		public uint mline;
-		public bool stopped;
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPTransceiver ();
 		[NoAccessorMethod]

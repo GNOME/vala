@@ -731,6 +731,8 @@ namespace Gst {
 			public void set_ulpfec_pt (uint pt);
 			public GLib.List<Gst.RTSPServer.StreamTransport> transport_filter (Gst.RTSPServer.StreamTransportFilterFunc? func);
 			public bool unblock_linked ();
+			[Version (since = "1.20")]
+			public void unblock_rtcp ();
 			public bool update_crypto (uint ssrc, Gst.Caps? crypto);
 			[Version (since = "1.16")]
 			public bool verify_mcast_ttl (uint ttl);

@@ -45,6 +45,9 @@ namespace Gst {
 			public virtual Gst.Buffer convert_buffer (Gst.Audio.Info in_info, Gst.Audio.Info out_info, Gst.Buffer buffer);
 			[NoWrapper]
 			public virtual void update_conversion_info ();
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool qos_messages { get; set; }
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_base_sink_get_type ()")]
 		[GIR (name = "AudioBaseSink")]

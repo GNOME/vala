@@ -366,7 +366,6 @@ namespace Gst {
 		[GIR (name = "RTPHeaderExtension")]
 		[Version (since = "1.20")]
 		public abstract class HeaderExtension : Gst.Element {
-			public uint ext_id;
 			[CCode (has_construct_function = false)]
 			protected HeaderExtension ();
 			public static Gst.RTP.HeaderExtension? create_from_uri (string uri);
@@ -375,7 +374,7 @@ namespace Gst {
 			public string get_sdp_caps_field_name ();
 			public virtual Gst.RTP.HeaderExtensionFlags get_supported_flags ();
 			public unowned string get_uri ();
-			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize", type = "const guint8*")] uint8[] data, Gst.Buffer buffer);
+			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, Gst.Buffer buffer);
 			public virtual bool set_attributes_from_caps (Gst.Caps caps);
 			public bool set_attributes_from_caps_simple_sdp (Gst.Caps caps);
 			public virtual bool set_caps_from_attributes (Gst.Caps caps);
@@ -386,7 +385,8 @@ namespace Gst {
 			public class void set_uri (string uri);
 			public void set_wants_update_non_rtp_src_caps (bool state);
 			public virtual bool update_non_rtp_src_caps (Gst.Caps caps);
-			public virtual size_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "gsize", type = "guint8*")] uint8[] data);
+			public bool wants_update_non_rtp_src_caps ();
+			public virtual size_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[GIR (name = "RTPBuffer")]
@@ -444,6 +444,8 @@ namespace Gst {
 			public static Gst.Buffer new_copy_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 			public static Gst.Buffer new_take_data ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize")] owned uint8[] data);
 			public void pad_to (uint len);
+			[Version (since = "1.20")]
+			public void remove_extension_data ();
 			public void set_csrc (uint8 idx, uint32 csrc);
 			public void set_extension (bool extension);
 			public bool set_extension_data (uint16 bits, uint16 length);

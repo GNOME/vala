@@ -636,7 +636,7 @@ namespace Gst {
 		[Version (since = "1.10")]
 		public Gst.ElementFlags get_suppressed_flags ();
 		[NoWrapper]
-		public virtual void handle_message (Gst.Message message);
+		public virtual void handle_message (owned Gst.Message message);
 		[Version (since = "1.18")]
 		public Gst.Iterator? iterate_all_by_element_factory_name (string factory_name);
 		public Gst.Iterator? iterate_all_by_interface (GLib.Type iface);
@@ -698,9 +698,6 @@ namespace Gst {
 		public void append_memory (owned Gst.Memory mem);
 		[DestroysInstance]
 		public Gst.Buffer append_region (owned Gst.Buffer buf2, ssize_t offset, ssize_t size);
-		[CCode (has_construct_function = false)]
-		[Version (since = "1.20")]
-		public Buffer.copy ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 		[Version (since = "1.6")]
 		public Gst.Buffer copy_deep ();
 		[CCode (instance_pos = 1.9)]
@@ -739,6 +736,9 @@ namespace Gst {
 		public bool map (out Gst.MapInfo info, Gst.MapFlags flags);
 		public bool map_range (uint idx, int length, out Gst.MapInfo info, Gst.MapFlags flags);
 		public int memcmp (size_t offset, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] mem);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.20")]
+		public Buffer.memdup ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "gsize")] uint8[] data);
 		public size_t memset (size_t offset, uint8 val, size_t size);
 		public uint n_memory ();
 		[CCode (has_construct_function = false, simple_generics = true)]

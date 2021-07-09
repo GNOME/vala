@@ -801,7 +801,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool filter_meta (Gst.Query query, GLib.Type api, Gst.Structure @params);
 			[NoWrapper]
-			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
+			public virtual Gst.Caps fixate_caps (Gst.PadDirection direction, Gst.Caps caps, owned Gst.Caps othercaps);
 			[NoWrapper]
 			public virtual Gst.FlowReturn generate_output (out Gst.Buffer outbuf);
 			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
@@ -830,9 +830,9 @@ namespace Gst {
 			public void set_prefer_passthrough (bool prefer_passthrough);
 			public void set_qos_enabled (bool enabled);
 			[NoWrapper]
-			public virtual bool sink_event (Gst.Event event);
+			public virtual bool sink_event (owned Gst.Event event);
 			[NoWrapper]
-			public virtual bool src_event (Gst.Event event);
+			public virtual bool src_event (owned Gst.Event event);
 			[NoWrapper]
 			public virtual bool start ();
 			[NoWrapper]
