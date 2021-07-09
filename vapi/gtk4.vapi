@@ -4575,6 +4575,7 @@ namespace Gdk {
 		public class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
 			protected Display ();
+			[Version (since = "4.4")]
 			public void* get_egl_display ();
 			public unowned string? get_startup_notification_id ();
 			public bool query_registry (string global);
@@ -7842,6 +7843,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public DropTarget (GLib.Type type, Gdk.DragAction actions);
 		public Gdk.DragAction get_actions ();
+		[Version (since = "4.4")]
+		public unowned Gdk.Drop? get_current_drop ();
+		[Version (deprecated = true, deprecated_since = "4.4")]
 		public unowned Gdk.Drop? get_drop ();
 		public Gdk.ContentFormats? get_formats ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
@@ -7853,7 +7857,8 @@ namespace Gtk {
 		public void set_gtypes ([CCode (array_length_cname = "n_types", array_length_pos = 1.1, array_length_type = "gsize")] GLib.Type[]? types);
 		public void set_preload (bool preload);
 		public Gdk.DragAction actions { get; set; }
-		public Gdk.Drop drop { get; }
+		[Version (since = "4.4")]
+		public Gdk.Drop current_drop { get; }
 		public Gdk.ContentFormats formats { owned get; }
 		public bool preload { get; set; }
 		public GLib.Value value { get; }
@@ -8267,6 +8272,8 @@ namespace Gtk {
 		public void add_mime_type (string mime_type);
 		public void add_pattern (string pattern);
 		public void add_pixbuf_formats ();
+		[Version (since = "4.4")]
+		public void add_suffix (string suffix);
 		[CCode (has_construct_function = false)]
 		public FileFilter.from_gvariant (GLib.Variant variant);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -8789,11 +8796,12 @@ namespace Gtk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_search_path ();
 		public string get_theme_name ();
+		[Version (since = "4.2")]
 		public bool has_gicon (GLib.Icon gicon);
 		public bool has_icon (string icon_name);
 		public Gtk.IconPaintable lookup_by_gicon (GLib.Icon icon, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
 		public Gtk.IconPaintable lookup_icon (string icon_name, [CCode (array_length = false, array_null_terminated = true)] string[]? fallbacks, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
-		public void set_resource_path (string path);
+		public void set_resource_path ([CCode (array_length = false, array_null_terminated = true)] string[]? path);
 		public void set_search_path ([CCode (array_length = false, array_null_terminated = true)] string[]? path);
 		public void set_theme_name (string? theme_name);
 		[NoAccessorMethod]
@@ -9371,7 +9379,12 @@ namespace Gtk {
 		public void set_muted (bool muted);
 		public void set_playing (bool playing);
 		public void set_volume (double volume);
-		public void unprepared ();
+		[Version (since = "4.4")]
+		public void stream_ended ();
+		[Version (since = "4.4")]
+		public void stream_prepared (bool has_audio, bool has_video, bool seekable, int64 duration);
+		[Version (since = "4.4")]
+		public void stream_unprepared ();
 		public virtual void unrealize (Gdk.Surface surface);
 		public void update (int64 timestamp);
 		[NoWrapper]
@@ -9399,15 +9412,21 @@ namespace Gtk {
 	public class MenuButton : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public MenuButton ();
+		[Version (since = "4.4")]
+		public bool get_always_show_arrow ();
 		public Gtk.ArrowType get_direction ();
 		public bool get_has_frame ();
 		public unowned string get_icon_name ();
 		public unowned string get_label ();
 		public unowned GLib.MenuModel? get_menu_model ();
 		public unowned Gtk.Popover? get_popover ();
+		[Version (since = "4.4")]
+		public bool get_primary ();
 		public bool get_use_underline ();
 		public void popdown ();
 		public void popup ();
+		[Version (since = "4.4")]
+		public void set_always_show_arrow (bool always_show_arrow);
 		public void set_create_popup_func (owned Gtk.MenuButtonCreatePopupFunc? func);
 		public void set_direction (Gtk.ArrowType direction);
 		public void set_has_frame (bool has_frame);
@@ -9415,13 +9434,17 @@ namespace Gtk {
 		public void set_label (string label);
 		public void set_menu_model (GLib.MenuModel? menu_model);
 		public void set_popover (Gtk.Widget? popover);
+		public void set_primary (bool primary);
 		public void set_use_underline (bool use_underline);
+		[Version (since = "4.4")]
+		public bool always_show_arrow { get; set; }
 		public Gtk.ArrowType direction { get; set; }
 		public bool has_frame { get; set; }
 		public string icon_name { get; set; }
 		public string label { get; set; }
 		public GLib.MenuModel menu_model { get; set; }
 		public Gtk.Popover popover { get; set; }
+		public bool primary { get; set; }
 		public bool use_underline { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_message_dialog_get_type ()")]
@@ -9835,6 +9858,11 @@ namespace Gtk {
 		public string placeholder_text { owned get; set; }
 		public bool show_peek_icon { get; set; }
 		public signal void activate ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_password_entry_buffer_get_type ()")]
+	public class PasswordEntryBuffer : Gtk.EntryBuffer {
+		[CCode (has_construct_function = false, type = "GtkEntryBuffer*")]
+		public PasswordEntryBuffer ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_picture_get_type ()")]
 	public class Picture : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
@@ -10912,7 +10940,7 @@ namespace Gtk {
 		public Gtk.Stack stack { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_stack_switcher_get_type ()")]
-	public class StackSwitcher : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
+	public class StackSwitcher : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public StackSwitcher ();
 		public unowned Gtk.Stack? get_stack ();
@@ -11046,6 +11074,8 @@ namespace Gtk {
 	public class Text : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Editable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Text ();
+		[Version (since = "4.4")]
+		public void compute_cursor_extents (size_t position, out Graphene.Rect strong, out Graphene.Rect @weak);
 		public bool get_activates_default ();
 		public unowned Pango.AttrList? get_attributes ();
 		public unowned Gtk.EntryBuffer get_buffer ();
@@ -11448,12 +11478,16 @@ namespace Gtk {
 		public int get_left_margin ();
 		public void get_line_at_y (out Gtk.TextIter target_iter, int y, out int line_top);
 		public void get_line_yrange (Gtk.TextIter iter, out int y, out int height);
+		[Version (since = "4.4")]
+		public unowned Pango.Context get_ltr_context ();
 		public bool get_monospace ();
 		public bool get_overwrite ();
 		public int get_pixels_above_lines ();
 		public int get_pixels_below_lines ();
 		public int get_pixels_inside_wrap ();
 		public int get_right_margin ();
+		[Version (since = "4.4")]
+		public unowned Pango.Context get_rtl_context ();
 		public Pango.TabArray? get_tabs ();
 		public int get_top_margin ();
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
@@ -11888,7 +11922,7 @@ namespace Gtk {
 		public virtual signal bool expand_collapse_cursor_row (bool logical, bool expand, bool open_all);
 		public virtual signal bool move_cursor (Gtk.MovementStep step, int count, bool extend, bool modify);
 		[HasEmitter]
-		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
+		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn? column);
 		public virtual signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
 		public virtual signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
 		public virtual signal bool select_all ();
