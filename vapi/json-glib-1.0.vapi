@@ -19,7 +19,7 @@ namespace Json {
 		[Version (since = "0.8")]
 		public void add_null_element ();
 		[Version (since = "0.8")]
-		public void add_object_element (owned Json.Object value);
+		public void add_object_element (owned Json.Object? value);
 		[Version (since = "0.8")]
 		public void add_string_element (string value);
 		[Version (since = "0.6")]
@@ -35,7 +35,7 @@ namespace Json {
 		[Version (since = "0.8")]
 		public double get_double_element (uint index_);
 		public unowned Json.Node get_element (uint index_);
-		public GLib.List<weak Json.Node> get_elements ();
+		public GLib.List<weak Json.Node>? get_elements ();
 		[Version (since = "0.8")]
 		public int64 get_int_element (uint index_);
 		public uint get_length ();
@@ -58,7 +58,6 @@ namespace Json {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h", type_id = "json_builder_get_type ()")]
-	[Version (since = "0.12")]
 	public class Builder : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Builder ();
@@ -171,7 +170,7 @@ namespace Json {
 		public void set_int (int64 value);
 		public void set_object (Json.Object? object);
 		[Version (since = "0.8")]
-		public void set_parent (Json.Node parent);
+		public void set_parent (Json.Node? parent);
 		public void set_string (string value);
 		public void set_value (GLib.Value value);
 		public void take_array (owned Json.Array array);
@@ -192,7 +191,7 @@ namespace Json {
 		[Version (since = "0.8")]
 		public void foreach_member (Json.ObjectForeach func);
 		[Version (since = "0.8")]
-		public unowned Json.Array get_array_member (string member_name);
+		public unowned Json.Array? get_array_member (string member_name);
 		[Version (since = "0.8")]
 		public bool get_boolean_member (string member_name);
 		[Version (since = "1.6")]
@@ -425,7 +424,7 @@ namespace Json {
 	public static Json.Node? boxed_serialize (GLib.Type gboxed_type, void* boxed);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_from_data", since = "0.4")]
-	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
+	public static GLib.Object? construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "1.2")]
 	public static Json.Node? from_string (string str) throws GLib.Error;
@@ -434,7 +433,7 @@ namespace Json {
 	public static GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.10")]
-	public static GLib.Object gobject_from_data (GLib.Type gtype, string data, ssize_t length = -1) throws GLib.Error;
+	public static GLib.Object? gobject_from_data (GLib.Type gtype, string data, ssize_t length = -1) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (since = "0.10")]
 	public static Json.Node gobject_serialize (GLib.Object gobject);
