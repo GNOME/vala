@@ -103,6 +103,9 @@ namespace GLib {
 		[Version (since = "2.26")]
 		public static bool is_address (string string);
 		[CCode (cheader_filename = "gio/gio.h")]
+		[Version (since = "2.70")]
+		public static bool is_error_name (string string);
+		[CCode (cheader_filename = "gio/gio.h")]
 		[Version (since = "2.26")]
 		public static bool is_guid (string string);
 		[CCode (cheader_filename = "gio/gio.h")]
@@ -970,7 +973,7 @@ namespace GLib {
 		public DBusObjectManagerServer (string object_path);
 		public void export (GLib.DBusObjectSkeleton object);
 		public void export_uniquely (GLib.DBusObjectSkeleton object);
-		public GLib.DBusConnection get_connection ();
+		public GLib.DBusConnection? get_connection ();
 		[Version (since = "2.34")]
 		public bool is_exported (GLib.DBusObjectSkeleton object);
 		public void set_connection (GLib.DBusConnection? connection);
@@ -1044,7 +1047,7 @@ namespace GLib {
 		public GLib.DBusProxyFlags get_flags ();
 		public unowned GLib.DBusInterfaceInfo? get_interface_info ();
 		public unowned string get_interface_name ();
-		public unowned string get_name ();
+		public unowned string? get_name ();
 		public string? get_name_owner ();
 		public unowned string get_object_path ();
 		[CCode (cname = "g_dbus_proxy_new", finish_name = "g_dbus_proxy_new_finish")]
@@ -3028,7 +3031,19 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.68")]
 		public TlsCertificate.from_pkcs11_uris (string pkcs11_uri, string? private_key_pkcs11_uri) throws GLib.Error;
+		[Version (since = "2.70")]
+		public GLib.GenericArray<weak GLib.Bytes>? get_dns_names ();
+		[Version (since = "2.70")]
+		public GLib.GenericArray<weak GLib.InetAddress>? get_ip_addresses ();
 		public unowned GLib.TlsCertificate? get_issuer ();
+		[Version (since = "2.70")]
+		public string? get_issuer_name ();
+		[Version (since = "2.70")]
+		public GLib.DateTime? get_not_valid_after ();
+		[Version (since = "2.70")]
+		public GLib.DateTime? get_not_valid_before ();
+		[Version (since = "2.70")]
+		public string? get_subject_name ();
 		[Version (since = "2.34")]
 		public bool is_same (GLib.TlsCertificate cert_two);
 		public static GLib.List<GLib.TlsCertificate> list_new_from_file (string file) throws GLib.Error;
@@ -3037,17 +3052,29 @@ namespace GLib {
 		public GLib.ByteArray certificate { owned get; construct; }
 		[NoAccessorMethod]
 		public string certificate_pem { owned get; construct; }
+		[Version (since = "2.70")]
+		public GLib.GenericArray<void*> dns_names { owned get; }
+		[Version (since = "2.70")]
+		public GLib.GenericArray<void*> ip_addresses { owned get; }
 		public GLib.TlsCertificate issuer { get; construct; }
+		[Version (since = "2.70")]
+		public string issuer_name { owned get; }
+		[Version (since = "2.70")]
+		public GLib.DateTime not_valid_after { owned get; }
+		[Version (since = "2.70")]
+		public GLib.DateTime not_valid_before { owned get; }
 		[NoAccessorMethod]
 		[Version (since = "2.68")]
 		public string pkcs11_uri { owned get; construct; }
 		[NoAccessorMethod]
-		public GLib.ByteArray private_key { construct; }
+		public GLib.ByteArray private_key { owned get; construct; }
 		[NoAccessorMethod]
-		public string private_key_pem { construct; }
+		public string private_key_pem { owned get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.68")]
 		public string private_key_pkcs11_uri { owned get; construct; }
+		[Version (since = "2.70")]
+		public string subject_name { owned get; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_tls_connection_get_type ()")]
 	[Version (since = "2.28")]
@@ -3059,14 +3086,18 @@ namespace GLib {
 		[CCode (vfunc_name = "get_binding_data")]
 		[Version (since = "2.66")]
 		public virtual bool get_channel_binding_data (GLib.TlsChannelBindingType type, out unowned GLib.ByteArray data) throws GLib.TlsChannelBindingError;
+		[Version (since = "2.70")]
+		public string? get_ciphersuite_name ();
 		[Version (since = "2.30")]
 		public unowned GLib.TlsDatabase? get_database ();
 		[Version (since = "2.30")]
 		public unowned GLib.TlsInteraction? get_interaction ();
 		[Version (since = "2.60")]
-		public unowned string? get_negotiated_protocol ();
+		public virtual unowned string? get_negotiated_protocol ();
 		public unowned GLib.TlsCertificate? get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
+		[Version (since = "2.70")]
+		public GLib.TlsProtocolVersion get_protocol_version ();
 		[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
 		public bool get_require_close_notify ();
@@ -3093,6 +3124,8 @@ namespace GLib {
 		[NoAccessorMethod]
 		public GLib.IOStream base_io_stream { owned get; construct; }
 		public GLib.TlsCertificate certificate { get; set; }
+		[Version (since = "2.70")]
+		public string ciphersuite_name { owned get; }
 		[Version (since = "2.30")]
 		public GLib.TlsDatabase database { get; set; }
 		[Version (since = "2.30")]
@@ -3101,6 +3134,8 @@ namespace GLib {
 		public string negotiated_protocol { get; }
 		public GLib.TlsCertificate peer_certificate { get; }
 		public GLib.TlsCertificateFlags peer_certificate_errors { get; }
+		[Version (since = "2.70")]
+		public GLib.TlsProtocolVersion protocol_version { get; }
 		[Version (deprecated = true, deprecated_since = "2.60", since = "2.28")]
 		public GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
 		public bool require_close_notify { get; set construct; }
@@ -3449,9 +3484,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_object_manager_get_type ()")]
 	public interface DBusObjectManager : GLib.Object {
 		[Version (since = "2.30")]
-		public abstract GLib.DBusInterface get_interface (string object_path, string interface_name);
+		public abstract GLib.DBusInterface? get_interface (string object_path, string interface_name);
 		[Version (since = "2.30")]
-		public abstract GLib.DBusObject get_object (string object_path);
+		public abstract GLib.DBusObject? get_object (string object_path);
 		[Version (since = "2.30")]
 		public abstract unowned string get_object_path ();
 		[Version (since = "2.30")]
@@ -3558,12 +3593,16 @@ namespace GLib {
 		[CCode (vfunc_name = "get_binding_data")]
 		[Version (since = "2.66")]
 		public virtual bool get_channel_binding_data (GLib.TlsChannelBindingType type, out unowned GLib.ByteArray data) throws GLib.TlsChannelBindingError;
+		[Version (since = "2.70")]
+		public string? get_ciphersuite_name ();
 		public unowned GLib.TlsDatabase? get_database ();
 		public unowned GLib.TlsInteraction? get_interaction ();
 		[Version (since = "2.60")]
 		public abstract unowned string? get_negotiated_protocol ();
 		public unowned GLib.TlsCertificate? get_peer_certificate ();
 		public GLib.TlsCertificateFlags get_peer_certificate_errors ();
+		[Version (since = "2.70")]
+		public GLib.TlsProtocolVersion get_protocol_version ();
 		[Version (deprecated = true, deprecated_since = "2.64.", since = "2.48")]
 		public GLib.TlsRehandshakeMode get_rehandshake_mode ();
 		public bool get_require_close_notify ();
@@ -3588,6 +3627,9 @@ namespace GLib {
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificate certificate { get; set; }
 		[ConcreteAccessor]
+		[Version (since = "2.70")]
+		public abstract string ciphersuite_name { owned get; }
+		[ConcreteAccessor]
 		public abstract GLib.TlsDatabase database { get; set; }
 		[ConcreteAccessor]
 		public abstract GLib.TlsInteraction interaction { get; set; }
@@ -3597,6 +3639,9 @@ namespace GLib {
 		public abstract GLib.TlsCertificate peer_certificate { get; }
 		[ConcreteAccessor]
 		public abstract GLib.TlsCertificateFlags peer_certificate_errors { get; }
+		[ConcreteAccessor]
+		[Version (since = "2.70")]
+		public abstract GLib.TlsProtocolVersion protocol_version { get; }
 		[ConcreteAccessor]
 		[Version (deprecated = true, deprecated_since = "2.60", since = "2.48")]
 		public abstract GLib.TlsRehandshakeMode rehandshake_mode { get; set construct; }
@@ -4707,7 +4752,22 @@ namespace GLib {
 		NONE,
 		RETRY,
 		MANY_TRIES,
-		FINAL_TRY
+		FINAL_TRY,
+		PKCS11_USER,
+		PKCS11_SECURITY_OFFICER,
+		PKCS11_CONTEXT_SPECIFIC
+	}
+	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_PROTOCOL_VERSION_", type_id = "g_tls_protocol_version_get_type ()")]
+	[Version (since = "2.70")]
+	public enum TlsProtocolVersion {
+		UNKNOWN,
+		SSL_3_0,
+		TLS_1_0,
+		TLS_1_1,
+		TLS_1_2,
+		TLS_1_3,
+		DTLS_1_0,
+		DTLS_1_2
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TLS_REHANDSHAKE_", type_id = "g_tls_rehandshake_mode_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "2.60.", since = "2.28")]
