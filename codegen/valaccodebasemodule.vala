@@ -4358,9 +4358,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			type = pointer_type.base_type;
 		}
 
-		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
-		ccall.add_argument (get_cvalue (stmt.expression));
-		ccode.add_expression (ccall);
+		ccode.add_expression (destroy_value (new GLibValue (type, get_cvalue (stmt.expression))));
 	}
 
 	static bool is_compact_class_destructor_call (Expression expr) {
