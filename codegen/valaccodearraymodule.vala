@@ -915,7 +915,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			cfile.add_include ("stdarg.h");
 		}
 
-		if (!(m is CreationMethod)) {
+		if (!(m is CreationMethod) || m.parent_symbol is Struct) {
 			ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_va_list_%s".printf (get_ccode_name (local))));
 			var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
 			vastart.add_argument (new CCodeIdentifier ("_va_list_%s".printf (get_ccode_name (local))));
