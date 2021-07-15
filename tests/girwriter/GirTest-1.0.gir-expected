@@ -97,7 +97,7 @@
 		<field name="priv" readable="0" private="1">
 			<type name="SubTypeTestPrivate" c:type="GirTestSubTypeTestPrivate*"/>
 		</field>
-		<field name="array_field">
+		<field name="array_field" writable="1">
 			<array c:type="gchar**">
 				<type name="utf8" c:type="gchar*"/>
 			</array>
@@ -105,7 +105,7 @@
 		<field name="array_field_length1">
 			<type name="gint" c:type="gint"/>
 		</field>
-		<field name="delegate_field">
+		<field name="delegate_field" writable="1">
 			<type name="GirTest.DelegateTest" c:type="GirTestDelegateTest"/>
 		</field>
 		<field name="delegate_field_target">
@@ -133,18 +133,18 @@
 		<field name="priv" readable="0" private="1">
 			<type name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate*"/>
 		</field>
-		<field name="field">
+		<field name="field" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
-		<field name="internal_field">
+		<field name="internal_field" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
-		<field name="fixed_array_field">
+		<field name="fixed_array_field" writable="1">
 			<array fixed-size="23" c:type="gint*">
 				<type name="gint" c:type="gint"/>
 			</array>
 		</field>
-		<field name="nullable_field" allow-none="1">
+		<field name="nullable_field" writable="1" allow-none="1">
 			<type name="utf8" c:type="gchar*"/>
 		</field>
 		<constructor name="new" c:identifier="gir_test_object_test_new">
@@ -1812,10 +1812,10 @@
 	</record>
 	<record name="ImplementionTestPrivate" c:type="GirTestImplementionTestPrivate" disguised="1"/>
 	<record name="CompactClass">
-		<field name="s">
+		<field name="s" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</field>
-		<field name="i">
+		<field name="i" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 		<constructor name="new" c:identifier="gir_test_compactclass_new">
@@ -1891,10 +1891,10 @@
 	</record>
 	<record name="RenamedClassPrivate" c:type="GirTestNamedClassPrivate" disguised="1"/>
 	<record name="RenamedCompactClass">
-		<field name="s">
+		<field name="s" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</field>
-		<field name="i">
+		<field name="i" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 		<constructor name="new" c:identifier="gir_test_named_compactclass_new">
@@ -2744,10 +2744,10 @@
 		</field>
 	</record>
 	<record name="BoxedStruct" c:type="GirTestBoxedStruct" c:symbol-prefix="boxed_struct" glib:type-name="GirTestBoxedStruct" glib:get-type="gir_test_boxed_struct_get_type">
-		<field name="field_name">
+		<field name="field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
-		<field name="internal_field_name">
+		<field name="internal_field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 		<function name="init" c:identifier="gir_test_boxed_struct_init">
@@ -2772,10 +2772,10 @@
 		</method>
 	</record>
 	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
-		<field name="field_name">
+		<field name="field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
-		<field name="internal_field_name">
+		<field name="internal_field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 		<function name="init" c:identifier="gir_test_struct_init">
@@ -2800,12 +2800,12 @@
 		</method>
 	</record>
 	<record name="SkippedStruct" c:type="GirTestSkippedStruct" c:symbol-prefix="skipped_struct" glib:type-name="GirTestSkippedStruct" glib:get-type="gir_test_skipped_struct_get_type" introspectable="0">
-		<field name="field_name">
+		<field name="field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 	</record>
 	<record name="RenamedStruct" c:type="GirTestNamedStruct" c:symbol-prefix="named_struct" glib:type-name="GirTestNamedStruct" glib:get-type="gir_test_named_struct_get_type">
-		<field name="field_name">
+		<field name="field_name" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
 	</record>
