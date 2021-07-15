@@ -29,7 +29,7 @@ public class Vala.Destructor : Subroutine {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
-	public Parameter this_parameter { get; set; }
+	public Parameter? this_parameter { get; set; }
 
 	/**
 	 * Specifies whether this is an instance or a class destructor.

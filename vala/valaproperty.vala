@@ -69,7 +69,7 @@ public class Vala.Property : Symbol, Lockable {
 	/**
 	 * Represents the generated `this` parameter in this property.
 	 */
-	public Parameter this_parameter { get; set; }
+	public Parameter? this_parameter { get; set; }
 
 	/**
 	 * Specifies whether automatic accessor code generation should be

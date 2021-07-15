@@ -136,7 +136,7 @@ public class Vala.Method : Subroutine, Callable {
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
-	public Parameter this_parameter { get; set; }
+	public Parameter? this_parameter { get; set; }
 
 	/**
 	 * Specifies whether this method expects printf-style format arguments.
