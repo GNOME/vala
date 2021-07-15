@@ -4044,6 +4044,10 @@ namespace GLib {
 		public unowned string? get_fragment ();
 		[Version (since = "2.66")]
 		public UriFlags get_flags ();
+		[Version (since = "2.66")]
+		public string to_string ();
+		[Version (since = "2.66")]
+		public string to_string_partial (UriHideFlags flags);
 
 		[Version (since = "2.66")]
 		public static HashTable<string,string> parse_params (string uri, size_t length = -1, string separators = "&;", UriParamsFlags flags = 0) throws UriError;
