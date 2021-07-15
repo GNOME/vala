@@ -342,6 +342,7 @@ TESTS = \
 	structs/struct-static-field-initializer.test \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
+	structs/constructor-params-array.vala \
 	structs/constructor-variadic.vala \
 	structs/constructor-wrong-name.test \
 	structs/default-gtype.vala \
