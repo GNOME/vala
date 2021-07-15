@@ -1021,7 +1021,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		buffer.append_printf ("<field name=\"%s\"", get_ccode_name (f));
+		buffer.append_printf ("<field name=\"%s\" writable=\"1\"", get_ccode_name (f));
 		if (f.variable_type.nullable) {
 			buffer.append_printf (" nullable=\"1\"");
 		}
