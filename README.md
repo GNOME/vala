@@ -77,9 +77,9 @@ bootstrapping or cross-compiling) then a source tarball or the vala-bootstrap
 module contain pre-compiled C files from the Vala sources. These can be used
 to bootstrap `valac`.
 
-Source tarballs can be downloaded via:
+Current releases of source tarballs can be downloaded via:
 
-https://wiki.gnome.org/Projects/Vala/Release
+https://wiki.gnome.org/Projects/Vala
 
 or the vala-bootstrap module is available at:
 
@@ -129,7 +129,7 @@ To use `valac` from a bootstrapped build detailed in step two use:
 ```sh
 git clone https://gitlab.gnome.org/GNOME/vala
 cd vala
-VALAC=/opt/vala-bootstrap/bin/vala ./autogen.sh
+VALAC=/opt/vala-bootstrap/bin/valac ./autogen.sh
 make && sudo make install
 ```
 
