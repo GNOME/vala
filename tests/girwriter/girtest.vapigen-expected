@@ -202,9 +202,8 @@ namespace GirTest {
 	public struct BoxedStruct {
 		public int field_name;
 		public int internal_field_name;
-		[CCode (cname = "gir_test_boxed_struct_init_foo")]
-		public void foo (int param1, int param2);
-		public static GirTest.BoxedStruct init ();
+		public BoxedStruct ();
+		public BoxedStruct.foo (int param1, int param2);
 		public void inv ();
 	}
 	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedCompactClass", has_type_id = false)]
@@ -218,9 +217,8 @@ namespace GirTest {
 	public struct Struct {
 		public int field_name;
 		public int internal_field_name;
-		[CCode (cname = "gir_test_struct_init_foo")]
-		public void foo (int param1, int param2);
-		public static GirTest.Struct init ();
+		public Struct ();
+		public Struct.foo (int param1, int param2);
 		public void inv ();
 	}
 	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ENUM_TEST_", type_id = "gir_test_enum_test_get_type ()")]

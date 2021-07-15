@@ -1207,8 +1207,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 
 			if (constructor && ret_is_struct) {
-				// struct constructor has its result as first parameter
-				write_param_or_return (return_type, "parameter", ref index, false, "result", return_comment, ParameterDirection.OUT, constructor, true);
+				// struct constructor has a caller-allocates / out-parameter as instance
+				write_param_or_return (return_type, "instance-parameter", ref index, false, "self", return_comment, ParameterDirection.OUT, constructor, true);
 			}
 
 			if (type_params != null) {
@@ -1422,12 +1422,14 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		bool is_struct = m.parent_symbol is Struct;
 		// GI doesn't like constructors that return void type
-		string tag_name = is_struct ? "function" : "constructor";
+		string tag_name = is_struct ? "method" : "constructor";
 
 		if (m.parent_symbol is Class && m == ((Class)m.parent_symbol).default_construction_method ||
 			m.parent_symbol is Struct && m == ((Struct)m.parent_symbol).default_construction_method) {
 			string m_name = is_struct ? "init" : "new";
 			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m_name, get_ccode_name (m));
+		} else if (is_struct) {
+			buffer.append_printf ("<%s name=\"init_%s\" c:identifier=\"%s\"", tag_name, m.name, get_ccode_name (m));
 		} else {
 			buffer.append_printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, get_ccode_name (m));
 		}
@@ -1565,7 +1567,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		unowned DelegateType? delegate_type = type as DelegateType;
 		unowned ArrayType? array_type = type as ArrayType;
 
-		if (type != null && ((type.value_owned && delegate_type == null) || (constructor && !type.type_symbol.is_subtype_of (ginitiallyunowned_type)))) {
+		if (type != null && ((type.value_owned && delegate_type == null) || (constructor
+		    && !(type.type_symbol is Struct || type.type_symbol.is_subtype_of (ginitiallyunowned_type))))) {
 			var any_owned = false;
 			foreach (var generic_arg in type.get_type_arguments ()) {
 				any_owned |= generic_arg.value_owned;

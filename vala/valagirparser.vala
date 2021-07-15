@@ -3475,10 +3475,29 @@ public class Vala.GirParser : CodeVisitor {
 							}
 							pop_metadata ();
 							continue;
-						} else {
-							//TODO can more be done here?
-							m.binding = MemberBinding.STATIC;
+						} else if (current.parent.symbol is Struct
+						    && caller_allocates && param.direction == ParameterDirection.OUT) {
+							// struct methods that have instance parameters with 'out' direction are usually creation methods
+							string? cm_name = m.name;
+							if (cm_name != null && (cm_name == "init" || cm_name.has_prefix ("init_"))) {
+								if (cm_name == "init") {
+									cm_name = null;
+								} else if (cm_name.has_prefix ("init_")) {
+									cm_name = cm_name.substring ("init_".length);
+								}
+								s = new CreationMethod (null, cm_name, m.source_reference, m.comment);
+								s.access = SymbolAccessibility.PUBLIC;
+								current.symbol = s;
+								pop_metadata ();
+								continue;
+							}
+						} else if (current.parent.symbol is Class && ((Class) current.parent.symbol).is_compact
+						    && caller_allocates && param.direction == ParameterDirection.OUT) {
+							pop_metadata ();
+							continue;
 						}
+						//TODO can more be done here?
+						m.binding = MemberBinding.STATIC;
 					}
 				}
 
