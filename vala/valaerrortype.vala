@@ -79,22 +79,6 @@ public class Vala.ErrorType : ReferenceType {
 		return et.error_code == error_code;
 	}
 
-	public override string to_qualified_string (Scope? scope) {
-		string result;
-
-		if (error_domain == null) {
-			result = "GLib.Error";
-		} else {
-			result = error_domain.get_full_name ();
-		}
-
-		if (nullable) {
-			result += "?";
-		}
-
-		return result;
-	}
-
 	public override DataType copy () {
 		var result = new ErrorType (error_domain, error_code, source_reference);
 		result.value_owned = value_owned;
