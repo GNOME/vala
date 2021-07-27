@@ -684,6 +684,9 @@ namespace GLib {
 		public bool is_derived ();
 		[CCode (cname = "G_TYPE_IS_ENUM")]
 		public bool is_enum ();
+		[CCode (cname = "G_TYPE_IS_FINAL")]
+		[Version (since = "2.70")]
+		public bool is_final ();
 		[CCode (cname = "G_TYPE_IS_FLAGS")]
 		public bool is_flags ();
 		[CCode (cname = "G_TYPE_IS_FUNDAMENTAL")]
@@ -900,7 +903,9 @@ namespace GLib {
 	[Flags]
 	public enum TypeFlags {
 		ABSTRACT,
-		VALUE_ABSTRACT
+		VALUE_ABSTRACT,
+		[Version (since = "2.70")]
+		FINAL
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_TYPE_FLAG_", has_type_id = false)]
 	[Flags]

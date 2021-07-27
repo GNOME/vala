@@ -606,11 +606,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				Report.error (source_reference, "Sealed class `%s' cannot be abstract", get_full_name ());
 				return false;
 			}
-			if (!external_package) {
-				error = true;
-				Report.error (source_reference, "Sealed classes are not fully supported yet");
-				return false;
-			}
 		}
 
 		/* process enums first to avoid order problems in C code */

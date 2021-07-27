@@ -122,6 +122,10 @@ namespace GirTest {
 		public signal void some_signal (int param);
 	}
 	[CCode (cheader_filename = "girtest.h")]
+	public sealed class SealedObjectTest : GLib.Object {
+		public SealedObjectTest ();
+	}
+	[CCode (cheader_filename = "girtest.h")]
 	[GIR (visible = false)]
 	public class SkippedClass {
 		public SkippedClass ();

@@ -92,6 +92,8 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string get_type_flags () {
 		if (class_reference.is_abstract) {
 			return "G_TYPE_FLAG_ABSTRACT";
+		} else if (CodeContext.get ().require_glib_version (2, 70) && class_reference.is_sealed) {
+			return "G_TYPE_FLAG_FINAL";
 		} else {
 			return "0";
 		}

@@ -1,0 +1,57 @@
+GIRWriter
+
+Input:
+
+public class Test.Foo {
+}
+public sealed class Test.Bar : Test.Foo {
+}
+
+Output:
+
+<include name="GObject" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.2" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+  <class name="TestFoo" c:type="TestTestFoo" c:symbol-prefix="foo" glib:type-name="TestTestFoo" glib:get-type="test_test_foo_get_type" glib:type-struct="TestFooClass" glib:fundamental="1" glib:ref-func="test_test_foo_ref" glib:unref-func="test_test_foo_unref" glib:set-value-func="test_test_value_set_foo" glib:get-value-func="test_test_value_get_foo">
+    <field name="parent_instance" readable="0" private="1">
+      <type name="GObject.TypeInstance" c:type="GTypeInstance"/>
+    </field>
+    <field name="ref_count">
+      <type name="gint" c:type="volatile int"/>
+    </field>
+    <field name="priv" readable="0" private="1">
+      <type name="TestFooPrivate" c:type="TestTestFooPrivate*"/>
+    </field>
+    <constructor name="new" c:identifier="test_test_foo_new">
+      <return-value transfer-ownership="full">
+        <type name="Test.Foo" c:type="TestTestFoo*"/>
+      </return-value>
+    </constructor>
+  </class>
+  <record name="TestFooClass" c:type="TestTestFooClass" glib:is-gtype-struct-for="TestFoo">
+    <field name="parent_class" readable="0" private="1">
+      <type name="GObject.TypeClass" c:type="GTypeClass"/>
+    </field>
+  </record>
+  <record name="TestFooPrivate" c:type="TestTestFooPrivate" disguised="1"/>
+  <class name="TestBar" c:type="TestTestBar" c:symbol-prefix="bar" glib:type-name="TestTestBar" glib:get-type="test_test_bar_get_type" glib:type-struct="TestBarClass" parent="Test.Foo" final="1">
+    <field name="parent_instance" readable="0" private="1">
+      <type name="Test.Foo" c:type="TestTestFoo"/>
+    </field>
+    <field name="priv" readable="0" private="1">
+      <type name="TestBarPrivate" c:type="TestTestBarPrivate*"/>
+    </field>
+    <constructor name="new" c:identifier="test_test_bar_new">
+      <return-value transfer-ownership="full">
+        <type name="Test.Bar" c:type="TestTestBar*"/>
+      </return-value>
+    </constructor>
+  </class>
+  <record name="TestBarClass" c:type="TestTestBarClass" glib:is-gtype-struct-for="TestBar">
+    <field name="parent_class" readable="0" private="1">
+      <type name="Test.FooClass" c:type="TestTestFooClass"/>
+    </field>
+  </record>
+  <record name="TestBarPrivate" c:type="TestTestBarPrivate" disguised="1"/>
+</namespace>

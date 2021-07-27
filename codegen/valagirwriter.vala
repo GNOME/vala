@@ -445,6 +445,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			if (cl.is_abstract) {
 				buffer.append_printf (" abstract=\"1\"");
 			}
+			if (cl.is_sealed) {
+				buffer.append_printf (" final=\"1\"");
+			}
 			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;

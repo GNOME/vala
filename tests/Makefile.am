@@ -772,6 +772,7 @@ TESTS = \
 	gir/symbol-type-csuffix.test \
 	gir/union.test \
 	gir/union-transparent.test \
+	girwriter/class-final.test \
 	girwriter/combined.test \
 	gtktemplate/gtkcallback-incompatible.test \
 	gtktemplate/gtkcallback-unknown.test \
@@ -891,6 +892,7 @@ TESTS = \
 	parser/property-set-redefined.test \
 	parser/qualified-member-access.vala \
 	parser/qualified-symbol-access.vala \
+	parser/sealed-class.vala \
 	parser/signal-no-class.test \
 	parser/signal-no-static.test \
 	parser/statement-keyword-as-identifier.vala \

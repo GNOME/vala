@@ -1791,6 +1791,25 @@
 		</field>
 	</record>
 	<record name="AbstractObjectTestPrivate" c:type="GirTestAbstractObjectTestPrivate" disguised="1"/>
+	<class name="SealedObjectTest" c:type="GirTestSealedObjectTest" c:symbol-prefix="sealed_object_test" glib:type-name="GirTestSealedObjectTest" glib:get-type="gir_test_sealed_object_test_get_type" glib:type-struct="SealedObjectTestClass" parent="GObject.Object" final="1">
+		<field name="parent_instance" readable="0" private="1">
+			<type name="GObject.Object" c:type="GObject"/>
+		</field>
+		<field name="priv" readable="0" private="1">
+			<type name="SealedObjectTestPrivate" c:type="GirTestSealedObjectTestPrivate*"/>
+		</field>
+		<constructor name="new" c:identifier="gir_test_sealed_object_test_new">
+			<return-value transfer-ownership="full">
+				<type name="GirTest.SealedObjectTest" c:type="GirTestSealedObjectTest*"/>
+			</return-value>
+		</constructor>
+	</class>
+	<record name="SealedObjectTestClass" c:type="GirTestSealedObjectTestClass" glib:is-gtype-struct-for="SealedObjectTest">
+		<field name="parent_class" readable="0" private="1">
+			<type name="GObject.ObjectClass" c:type="GObjectClass"/>
+		</field>
+	</record>
+	<record name="SealedObjectTestPrivate" c:type="GirTestSealedObjectTestPrivate" disguised="1"/>
 	<class name="ImplementionTest" c:type="GirTestImplementionTest" c:symbol-prefix="implemention_test" glib:type-name="GirTestImplementionTest" glib:get-type="gir_test_implemention_test_get_type" glib:type-struct="ImplementionTestClass" parent="GObject.Object">
 		<implements name="GirTest.InterfaceTest"/>
 		<field name="parent_instance" readable="0" private="1">

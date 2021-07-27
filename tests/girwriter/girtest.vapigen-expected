@@ -152,6 +152,11 @@ namespace GirTest {
 	public class RenamedStruct {
 		public int field_name;
 	}
+	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sealed_object_test_get_type ()")]
+	public sealed class SealedObjectTest : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SealedObjectTest ();
+	}
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_sub_type_test_get_type ()")]
 	public class SubTypeTest : GirTest.TypeTest {
 		[CCode (array_length_cname = "array_field_length1")]

@@ -371,6 +371,9 @@ namespace GirTest {
 		public abstract void method_implicit_params (int[] param1, owned DelegateTest param2);
 	}
 
+	public sealed class SealedObjectTest : Object {
+	}
+
 	public interface PrerequisiteTest : InterfaceTest {
 	}
 
