@@ -735,6 +735,7 @@ TESTS = \
 	gir/async-result-pos.test \
 	gir/async-sync-out.test \
 	gir/class.test \
+	gir/class-final.test \
 	gir/constant.test \
 	gir/delegate-alias-without-target.test \
 	gir/delegate-anonymous.test \
