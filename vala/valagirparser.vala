@@ -2947,7 +2947,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (current.new_symbol) {
 			cl = new Class (current.name, current.source_reference);
 			cl.is_abstract = metadata.get_bool (ArgumentType.ABSTRACT, reader.get_attribute ("abstract") == "1");
-			cl.is_sealed = metadata.get_bool (ArgumentType.SEALED, false);
+			cl.is_sealed = metadata.get_bool (ArgumentType.SEALED, reader.get_attribute ("final") == "1");
 			if (metadata.has_argument (ArgumentType.TYPE_GET_FUNCTION)) {
 				cl.set_attribute_string ("CCode", "type_get_function", metadata.get_string (ArgumentType.TYPE_GET_FUNCTION));
 			}
