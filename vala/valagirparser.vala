@@ -2480,7 +2480,7 @@ public class Vala.GirParser : CodeVisitor {
 					calculate_common_prefix (ref common_prefix, old_current.get_cname ());
 				}
 			} else if (reader.name == "function") {
-				skip_element ();
+				parse_method ("function");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else {
@@ -2940,7 +2940,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else if (reader.name == "function") {
-				skip_element ();
+				parse_method ("function");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "union") {
@@ -3584,7 +3584,7 @@ public class Vala.GirParser : CodeVisitor {
 					unref_method = old_current;
 				}
 			} else if (reader.name == "function") {
-				skip_element ();
+				parse_method ("function");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "union") {
@@ -3673,7 +3673,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "method") {
 				parse_method ("method");
 			} else if (reader.name == "function") {
-				skip_element ();
+				parse_method ("function");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "record") {

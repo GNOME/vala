@@ -170,6 +170,7 @@ namespace GirTest {
 		public int field_name;
 		public int internal_field_name;
 		public BoxedStruct ();
+		public BoxedStruct.foo (int param1, int param2);
 		public void inv ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
@@ -187,6 +188,7 @@ namespace GirTest {
 		public int field_name;
 		public int internal_field_name;
 		public Struct ();
+		public Struct.foo (int param1, int param2);
 		public void inv ();
 	}
 	[CCode (cheader_filename = "girtest.h")]

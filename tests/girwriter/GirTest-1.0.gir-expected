@@ -2760,6 +2760,22 @@
 				</parameter>
 			</parameters>
 		</function>
+		<function name="foo" c:identifier="gir_test_boxed_struct_init_foo">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</parameter>
+			</parameters>
+		</function>
 		<method name="inv" c:identifier="gir_test_boxed_struct_inv">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
@@ -2783,6 +2799,22 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
+			</parameters>
+		</function>
+		<function name="foo" c:identifier="gir_test_struct_init_foo">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<parameter name="param1" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
+				<parameter name="param2" transfer-ownership="none">
+					<type name="gint" c:type="gint"/>
+				</parameter>
 				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
 					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
 				</parameter>

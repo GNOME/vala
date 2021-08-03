@@ -7,6 +7,11 @@ namespace GirTest {
 		public BoxedStruct () {
 		}
 
+		public BoxedStruct.foo (int param1, int param2) {
+			field_name = param1;
+			internal_field_name = param2;
+		}
+
 		public void inv () {
 		}
 	}
@@ -17,6 +22,11 @@ namespace GirTest {
 		internal int internal_field_name;
 
 		public Struct () {
+		}
+
+		public Struct.foo (int param1, int param2) {
+			field_name = param1;
+			internal_field_name = param2;
 		}
 
 		public void inv () {
