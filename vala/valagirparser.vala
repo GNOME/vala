@@ -3244,6 +3244,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = current.name;
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
+		current.deprecated_replacement = reader.get_attribute ("moved-to");
 
 		next ();
 
