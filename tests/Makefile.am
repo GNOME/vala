@@ -129,6 +129,7 @@ TESTS = \
 	arrays/struct-namespaced-initializer.vala \
 	arrays/incompatible-integer-elements.test \
 	arrays/resize.vala \
+	arrays/resize-constant.test \
 	arrays/resize-local-size.vala \
 	arrays/resize-local-size-captured.vala \
 	arrays/resize-unowned-invalid.test \
