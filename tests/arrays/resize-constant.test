@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	const int[] foo = { 1, 2, 3 };
+	foo.resize (2);
+}

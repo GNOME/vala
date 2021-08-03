@@ -488,14 +488,20 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
-			if (symbol_reference is ArrayResizeMethod && inner.symbol_reference is Variable) {
-				// require the real type with its original value_owned attritubte
-				var inner_type = context.analyzer.get_value_type_for_symbol (inner.symbol_reference, true) as ArrayType;
-				if (inner_type != null && inner_type.inline_allocated) {
-					Report.error (source_reference, "`resize' is not supported for arrays with fixed length");
-					error = true;
-				} else if (inner_type != null && !inner_type.value_owned) {
-					Report.error (source_reference, "`resize' is not allowed for unowned array references");
+			if (symbol_reference is ArrayResizeMethod) {
+				if (inner.symbol_reference is Variable) {
+					// require the real type with its original value_owned attritubte
+					var inner_type = context.analyzer.get_value_type_for_symbol (inner.symbol_reference, true) as ArrayType;
+					if (inner_type != null && inner_type.inline_allocated) {
+						Report.error (source_reference, "`resize' is not supported for arrays with fixed length");
+						error = true;
+					} else if (inner_type != null && !inner_type.value_owned) {
+						Report.error (source_reference, "`resize' is not allowed for unowned array references");
+						error = true;
+					}
+				} else if (inner.symbol_reference is Constant) {
+					// disallow resize() for const array
+					Report.error (source_reference, "`resize' is not allowed for constant arrays");
 					error = true;
 				}
 			}
