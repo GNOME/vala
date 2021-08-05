@@ -1192,6 +1192,11 @@ public class Vala.GIRWriter : CodeVisitor {
 				}
 			}
 
+			if (constructor && ret_is_struct) {
+				// struct constructor has its result as first parameter
+				write_param_or_return (return_type, "parameter", ref index, false, "result", return_comment, ParameterDirection.OUT, constructor, true);
+			}
+
 			if (type_params != null) {
 				foreach (var p in type_params) {
 					write_type_parameter (p, "parameter");
@@ -1205,10 +1210,10 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_implicit_params (param.variable_type, ref index, get_ccode_array_length (param), get_ccode_name (param), param.direction);
 			}
 
-			if (ret_is_struct) {
+			if (!constructor && ret_is_struct) {
 				// struct returns are converted to parameters
 				write_param_or_return (return_type, "parameter", ref index, false, "result", return_comment, ParameterDirection.OUT, constructor, true);
-			} else {
+			} else if (!constructor) {
 				write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 			}
 
