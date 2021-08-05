@@ -245,7 +245,9 @@ namespace Gst {
 		OFFER,
 		PRANSWER,
 		ANSWER,
-		ROLLBACK
+		ROLLBACK;
+		[CCode (cname = "gst_webrtc_sdp_type_to_string")]
+		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_SIGNALING_STATE_", type_id = "gst_webrtc_signaling_state_get_type ()")]
 	public enum WebRTCSignalingState {
@@ -274,5 +276,6 @@ namespace Gst {
 		CERTIFICATE
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h")]
+	[Version (replacement = "WebRTCSDPType.to_string")]
 	public static unowned string webrtc_sdp_type_to_string (Gst.WebRTCSDPType type);
 }

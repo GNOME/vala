@@ -366,6 +366,12 @@ namespace Gst {
 			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, bool initialized);
 			[CCode (cname = "gst_byte_writer_init_with_size")]
 			public void init_with_size (uint size, bool fixed);
+			[CCode (cname = "gst_byte_writer_new")]
+			public static Gst.Base.ByteWriter @new ();
+			[CCode (cname = "gst_byte_writer_new_with_data")]
+			public static Gst.Base.ByteWriter new_with_data (uint8 data, uint size, bool initialized);
+			[CCode (cname = "gst_byte_writer_new_with_size")]
+			public static Gst.Base.ByteWriter new_with_size (uint size, bool fixed);
 			[CCode (cname = "gst_byte_writer_put_buffer")]
 			public bool put_buffer (Gst.Buffer buffer, size_t offset, ssize_t size);
 			[CCode (cname = "gst_byte_writer_put_data")]

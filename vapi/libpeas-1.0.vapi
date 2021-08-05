@@ -95,6 +95,7 @@ namespace Peas {
 	[CCode (cheader_filename = "libpeas/peas.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "peas_plugin_info_get_type ()")]
 	[Compact]
 	public class PluginInfo {
+		public static GLib.Quark error_quark ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_authors ();
 		public unowned string get_copyright ();
@@ -133,6 +134,7 @@ namespace Peas {
 		LOADER_NOT_FOUND,
 		DEP_NOT_FOUND,
 		DEP_LOADING_FAILED;
+		[Version (replacement = "PluginInfo.error_quark")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 3.9)]

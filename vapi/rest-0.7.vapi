@@ -261,4 +261,10 @@ namespace Rest {
 	public delegate void ProxyCallContinuousCallback (Rest.ProxyCall call, string buf, size_t len, GLib.Error? error, GLib.Object? weak_object);
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = 5.9)]
 	public delegate void ProxyCallUploadCallback (Rest.ProxyCall call, size_t total, size_t uploaded, GLib.Error? error, GLib.Object? weak_object);
+	[CCode (cheader_filename = "rest/oauth-proxy-call.h,rest/oauth-proxy.h,rest/oauth2-proxy-call.h,rest/oauth2-proxy.h,rest/rest-enum-types.h,rest/rest-param.h,rest/rest-params.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-xml-node.h,rest/rest-xml-parser.h")]
+	[Version (replacement = "ProxyCallError.quark")]
+	public static GLib.Quark proxy_call_error_quark ();
+	[CCode (cheader_filename = "rest/oauth-proxy-call.h,rest/oauth-proxy.h,rest/oauth2-proxy-call.h,rest/oauth2-proxy.h,rest/rest-enum-types.h,rest/rest-param.h,rest/rest-params.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-xml-node.h,rest/rest-xml-parser.h")]
+	[Version (replacement = "ProxyError.quark")]
+	public static GLib.Quark proxy_error_quark ();
 }

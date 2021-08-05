@@ -5,8 +5,8 @@ rtp_* name="rtp_(.+)"
 
 RTP_PAYLOAD_* parent="Gst.RTP.Payload" name="RTP_PAYLOAD_(.+)"
 
-rtp_buffer_* parent="Gst.RTP.Buffer" name="rtp_buffer_(.+)"
-buffer_*_rtp_source_meta parent="Gst.RTP.Buffer" name="buffer_(.+)"
+//rtp_buffer_* parent="Gst.RTP.Buffer" name="rtp_buffer_(.+)"
+//buffer_*_rtp_source_meta parent="Gst.RTP.Buffer" name="buffer_(.+)"
 RTPBuffer
   .map unowned=false
 RTPHeaderExtension
@@ -19,9 +19,10 @@ RTCP* parent="Gst.RTCP" name="RTCP(.+)"
 RTCP_* parent="Gst.RTCP" name="RTCP_(.+)"
 rtcp_* parent="Gst.RTCP" name="rtcp_(.+)"
 
-rtcp_buffer_* parent="Gst.RTCP.Buffer" name="rtcp_buffer_(.+)"
-rtcp_buffer_new_take_data.data owned
-rtcp_buffer_map.rtcp out
+//rtcp_buffer_* parent="Gst.RTCP.Buffer" name="rtcp_buffer_(.+)"
+RTCPBuffer
+  .new_take_data.data owned
+  .map.rtcp out
 
 RTCPPacket
   .rtcp nullable

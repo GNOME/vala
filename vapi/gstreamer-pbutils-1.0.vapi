@@ -323,7 +323,9 @@ namespace Gst {
 			STARTED_OK,
 			INTERNAL_FAILURE,
 			HELPER_MISSING,
-			INSTALL_IN_PROGRESS
+			INSTALL_IN_PROGRESS;
+			[CCode (cname = "gst_install_plugins_return_get_name")]
+			public unowned string get_name ();
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShaderFunc", has_target = false)]
 		public delegate void AudioVisualizerShaderFunc (Gst.PbUtils.AudioVisualizer scope, Gst.Video.Frame s, Gst.Video.Frame d);
@@ -402,6 +404,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_installation_in_progress")]
 		public static bool install_plugins_installation_in_progress ();
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_return_get_name")]
+		[Version (replacement = "InstallPluginsReturn.get_name")]
 		public static unowned string install_plugins_return_get_name (Gst.PbUtils.InstallPluginsReturn ret);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_install_plugins_supported")]
 		public static bool install_plugins_supported ();

@@ -84,12 +84,14 @@ namespace Gst {
 		public struct AddressMeta {
 			public Gst.Meta meta;
 			public weak GLib.SocketAddress addr;
+			public static unowned Gst.MetaInfo? get_info ();
 		}
 		[CCode (cheader_filename = "gst/net/net.h", has_type_id = false)]
 		[GIR (name = "NetControlMessageMeta")]
 		public struct ControlMessageMeta {
 			public Gst.Meta meta;
 			public weak GLib.SocketControlMessage message;
+			public static unowned Gst.MetaInfo? get_info ();
 		}
 		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpStatisticsCallback", instance_pos = 2.9)]
 		public delegate bool PtpStatisticsCallback (uint8 domain, Gst.Structure stats);
@@ -106,6 +108,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static GLib.Type address_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/net.h")]
+		[Version (replacement = "NetAddressMeta.get_info")]
 		public static unowned Gst.MetaInfo? address_meta_get_info ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_buffer_add_net_address_meta")]
 		public static unowned Gst.Net.AddressMeta? buffer_add_net_address_meta (Gst.Buffer buffer, GLib.SocketAddress addr);
@@ -116,6 +119,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/net.h")]
 		public static GLib.Type control_message_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/net/net.h")]
+		[Version (replacement = "NetControlMessageMeta.get_info")]
 		public static unowned Gst.MetaInfo? control_message_meta_get_info ();
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_deinit")]
 		[Version (since = "1.6")]
@@ -135,6 +139,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/net/net.h", cname = "gst_ptp_statistics_callback_remove")]
 		[Version (since = "1.6")]
 		public static void ptp_statistics_callback_remove (ulong id);
+		[CCode (cheader_filename = "gst/net/net.h")]
+		[Version (replacement = "NetTimePacket.receive")]
+		public static Gst.Net.TimePacket time_packet_receive (GLib.Socket socket, out GLib.SocketAddress src_address) throws GLib.Error;
 		[CCode (cheader_filename = "gst/net/net.h")]
 		[Version (since = "1.18")]
 		public static bool utils_set_socket_tos (GLib.Socket socket, int qos_dscp);

@@ -339,6 +339,7 @@ namespace Graphene {
 	public struct Rect {
 		public Graphene.Point origin;
 		public Graphene.Size size;
+		[Version (replacement = "Rect.alloc", since = "1.0")]
 		public static Graphene.Rect? alloc ();
 		public bool contains_point (Graphene.Point p);
 		public bool contains_rect (Graphene.Rect b);
@@ -676,4 +677,79 @@ namespace Graphene {
 	[CCode (cheader_filename = "graphene-gobject.h", cname = "GRAPHENE_VEC4_LEN")]
 	[Version (since = "1.0")]
 	public const int VEC4_LEN;
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.empty", since = "1.2")]
+	public static unowned Graphene.Box? box_empty ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.infinite", since = "1.2")]
+	public static unowned Graphene.Box? box_infinite ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.minus_one", since = "1.2")]
+	public static unowned Graphene.Box? box_minus_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.one", since = "1.2")]
+	public static unowned Graphene.Box? box_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.one_minus_one", since = "1.2")]
+	public static unowned Graphene.Box? box_one_minus_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Box.zero", since = "1.2")]
+	public static unowned Graphene.Box? box_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Point3D.zero", since = "1.0")]
+	public static unowned Graphene.Point3D? point3d_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Point.zero", since = "1.0")]
+	public static unowned Graphene.Point? point_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Rect.zero", since = "1.4")]
+	public static unowned Graphene.Rect? rect_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Size.zero", since = "1.0")]
+	public static unowned Graphene.Size? size_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec2.one", since = "1.0")]
+	public static unowned Graphene.Vec2? vec2_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec2.x_axis", since = "1.0")]
+	public static unowned Graphene.Vec2? vec2_x_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec2.y_axis", since = "1.0")]
+	public static unowned Graphene.Vec2? vec2_y_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec2.zero", since = "1.0")]
+	public static unowned Graphene.Vec2? vec2_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec3.one", since = "1.0")]
+	public static unowned Graphene.Vec3? vec3_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec3.x_axis", since = "1.0")]
+	public static unowned Graphene.Vec3? vec3_x_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec3.y_axis", since = "1.0")]
+	public static unowned Graphene.Vec3? vec3_y_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec3.z_axis", since = "1.0")]
+	public static unowned Graphene.Vec3? vec3_z_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec3.zero", since = "1.0")]
+	public static unowned Graphene.Vec3? vec3_zero ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.one", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_one ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.w_axis", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_w_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.x_axis", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_x_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.y_axis", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_y_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.z_axis", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_z_axis ();
+	[CCode (cheader_filename = "graphene-gobject.h")]
+	[Version (replacement = "Vec4.zero", since = "1.0")]
+	public static unowned Graphene.Vec4? vec4_zero ();
 }

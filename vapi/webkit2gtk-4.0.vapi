@@ -2016,21 +2016,51 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h", cname = "WEBKIT_MINOR_VERSION")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "DownloadError.quark")]
+	public static GLib.Quark download_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "FaviconDatabaseError.quark")]
+	public static GLib.Quark favicon_database_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_major_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_micro_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint get_minor_version ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "JavascriptError.quark")]
+	public static GLib.Quark javascript_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.32")]
 	public static unowned string media_key_system_permission_get_name (WebKit.MediaKeySystemPermissionRequest request);
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "NetworkError.quark")]
+	public static GLib.Quark network_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "PluginError.quark")]
+	public static GLib.Quark plugin_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "PolicyError.quark")]
+	public static GLib.Quark policy_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "PrintError.quark")]
+	public static GLib.Quark print_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "SnapshotError.quark")]
+	public static GLib.Quark snapshot_error_quark ();
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.24")]
 	public static string? uri_for_display (string uri);
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "UserContentFilterError.quark")]
+	public static GLib.Quark user_content_filter_error_quark ();
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.8")]
 	public static bool user_media_permission_is_for_audio_device (WebKit.UserMediaPermissionRequest request);
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.8")]
 	public static bool user_media_permission_is_for_video_device (WebKit.UserMediaPermissionRequest request);
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (replacement = "UserMessageError.quark")]
+	public static GLib.Quark user_message_error_quark ();
 }

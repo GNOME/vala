@@ -205,6 +205,7 @@ namespace Gst {
 			public Gst.SDP.Result add_time (string start, string stop, [CCode (array_length = false, array_null_terminated = true)] string[] repeat);
 			public Gst.SDP.Result add_zone (string adj_time, string typed_time);
 			public string as_text ();
+			public static string as_uri (string scheme, Gst.SDP.Message msg);
 			public uint attributes_len ();
 			[Version (since = "1.8")]
 			public Gst.SDP.Result attributes_to_caps (Gst.Caps caps);
@@ -244,8 +245,13 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_zone (int idx, Gst.SDP.Zone zone);
 			public uint medias_len ();
+			public static Gst.SDP.Result @new (out Gst.SDP.Message msg);
+			[Version (since = "1.16")]
+			public static Gst.SDP.Result new_from_text (string text, out Gst.SDP.Message msg);
+			public static Gst.SDP.Result parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.SDP.Message msg);
 			[Version (since = "1.8.1")]
 			public Gst.SDP.Result parse_keymgmt (out Gst.SDP.MIKEYMessage mikey);
+			public static Gst.SDP.Result parse_uri (string uri, Gst.SDP.Message msg);
 			public uint phones_len ();
 			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_attribute (uint idx);
@@ -385,6 +391,7 @@ namespace Gst {
 			public Gst.SDP.Result insert_connection (int idx, Gst.SDP.Connection conn);
 			[Version (since = "1.2")]
 			public Gst.SDP.Result insert_format (int idx, string format);
+			public static Gst.SDP.Result @new (out Gst.SDP.Media media);
 			[Version (since = "1.8.1")]
 			public Gst.SDP.Result parse_keymgmt (out Gst.SDP.MIKEYMessage mikey);
 			[Version (since = "1.2")]
@@ -406,6 +413,8 @@ namespace Gst {
 			public Gst.SDP.Result set_information (string information);
 			public Gst.SDP.Result set_key (string type, string data);
 			public Gst.SDP.Result set_media (string med);
+			[Version (since = "1.8")]
+			public static Gst.SDP.Result set_media_from_caps (Gst.Caps caps, Gst.SDP.Media media);
 			public Gst.SDP.Result set_port_info (uint port, uint num_ports);
 			public Gst.SDP.Result set_proto (string proto);
 			public Gst.SDP.Result uninit ();
@@ -575,20 +584,25 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public static string make_keymgmt (string uri, string base64);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMedia.new")]
 		public static Gst.SDP.Result media_new (out Gst.SDP.Media media);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
-		[Version (since = "1.8")]
+		[Version (replacement = "SDPMedia.set_media_from_caps", since = "1.8")]
 		public static Gst.SDP.Result media_set_media_from_caps (Gst.Caps caps, Gst.SDP.Media media);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMessage.as_uri")]
 		public static string message_as_uri (string scheme, Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMessage.new")]
 		public static Gst.SDP.Result message_new (out Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
-		[Version (since = "1.16")]
+		[Version (replacement = "SDPMessage.new_from_text", since = "1.16")]
 		public static Gst.SDP.Result message_new_from_text (string text, out Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMessage.parse_buffer")]
 		public static Gst.SDP.Result message_parse_buffer ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMessage.parse_uri")]
 		public static Gst.SDP.Result message_parse_uri (string uri, Gst.SDP.Message msg);
 	}
 }

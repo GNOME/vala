@@ -35,4 +35,13 @@ namespace GLib {
 	public delegate unowned string ModuleCheckInit (GLib.Module module);
 	[CCode (cheader_filename = "gmodule.h", has_target = false)]
 	public delegate void ModuleUnload (GLib.Module module);
+	[CCode (cheader_filename = "gmodule.h")]
+	[Version (replacement = "Module.build_path")]
+	public static string module_build_path (string? directory, string module_name);
+	[CCode (cheader_filename = "gmodule.h")]
+	[Version (replacement = "Module.error")]
+	public static unowned string module_error ();
+	[CCode (cheader_filename = "gmodule.h")]
+	[Version (replacement = "Module.supported")]
+	public static bool module_supported ();
 }

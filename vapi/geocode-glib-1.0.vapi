@@ -264,4 +264,7 @@ namespace Geocode {
 		INTERNAL_SERVER;
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "geocode-glib/geocode-glib.h")]
+	[Version (replacement = "Error.quark")]
+	public static GLib.Quark error_quark ();
 }

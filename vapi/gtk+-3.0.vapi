@@ -1068,14 +1068,10 @@ namespace Gtk {
 		public weak Gtk.BindingEntry set_next;
 		public weak Gtk.BindingSignal signals;
 		public static void add_signal (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, uint n_args, ...);
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "3.0")]
 		public static GLib.TokenType add_signal_from_string (Gtk.BindingSet binding_set, string signal_desc);
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		public static void add_signall (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, [CCode (type = "GSList*")] GLib.SList<Gtk.BindingArg?> binding_args);
-		[CCode (cheader_filename = "gtk/gtk.h")]
+		public static void add_signall (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, GLib.SList<Gtk.BindingArg?> binding_args);
 		public static void remove (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "2.12")]
 		public static void skip (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
 	}
@@ -1094,8 +1090,8 @@ namespace Gtk {
 		[Version (deprecated = true, deprecated_since = "3.0")]
 		public void add_path (Gtk.PathType path_type, string path_pattern, Gtk.PathPriorityType priority);
 		[CCode (cheader_filename = "gtk/gtk.h")]
+		[Version (replacement = "BindingSet.by_class")]
 		public static unowned Gtk.BindingSet by_class ([CCode (type = "gpointer")] GLib.ObjectClass object_class);
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static unowned Gtk.BindingSet? find (string set_name);
 		public static unowned Gtk.BindingSet @new (string name);
 	}
@@ -5515,7 +5511,6 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public PaperSize.from_ppd (string ppd_name, string ppd_display_name, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "2.10")]
 		public static unowned string get_default ();
 		[Version (since = "2.10")]
@@ -5532,7 +5527,6 @@ namespace Gtk {
 		public double get_height (Gtk.Unit unit);
 		[Version (since = "2.10")]
 		public unowned string get_name ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "2.12")]
 		public static GLib.List<Gtk.PaperSize> get_paper_sizes (bool include_custom);
 		[Version (since = "2.10")]
@@ -8852,18 +8846,17 @@ namespace Gtk {
 		public TreeRowReference (Gtk.TreeModel model, Gtk.TreePath path);
 		[Version (since = "2.2")]
 		public Gtk.TreeRowReference copy ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		[DestroysInstance]
 		public void free ();
 		[Version (since = "2.8")]
 		public unowned Gtk.TreeModel get_model ();
 		public Gtk.TreePath? get_path ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static void inserted (GLib.Object proxy, Gtk.TreePath path);
 		[CCode (has_construct_function = false)]
 		public TreeRowReference.proxy (GLib.Object proxy, Gtk.TreeModel model, Gtk.TreePath path);
 		[CCode (cheader_filename = "gtk/gtk.h")]
+		[Version (replacement = "TreeRowReference.reordered")]
 		public static void reordered (GLib.Object proxy, Gtk.TreePath path, Gtk.TreeIter iter, [CCode (array_length = false)] int[] new_order);
 		public bool valid ();
 	}
@@ -11479,7 +11472,18 @@ namespace Gtk {
 		LARGE_TOOLBAR,
 		BUTTON,
 		DND,
-		DIALOG
+		DIALOG;
+		[Version (deprecated = true, deprecated_since = "3.10")]
+		public static int from_name (string name);
+		[Version (deprecated = true, deprecated_since = "3.10")]
+		public static unowned string get_name (int size);
+		public static bool lookup (int size, out int width, out int height);
+		[Version (deprecated = true, deprecated_since = "3.10", since = "2.2")]
+		public static bool lookup_for_settings (Gtk.Settings settings, int size, out int width, out int height);
+		[Version (deprecated = true, deprecated_since = "3.10")]
+		public static int register (string name, int width, int height);
+		[Version (deprecated = true, deprecated_since = "3.10")]
+		public static void register_alias (string alias, int target);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_VIEW_", type_id = "gtk_icon_view_drop_position_get_type ()")]
 	public enum IconViewDropPosition {
@@ -12230,7 +12234,6 @@ namespace Gtk {
 		INVALID_PROPERTY,
 		INVALID_SIGNAL,
 		INVALID_ID;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PROVIDER_ERROR_")]
@@ -12241,7 +12244,6 @@ namespace Gtk {
 		NAME,
 		DEPRECATED,
 		UNKNOWN_VALUE;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_FILE_CHOOSER_ERROR_")]
@@ -12250,7 +12252,6 @@ namespace Gtk {
 		BAD_FILENAME,
 		ALREADY_EXISTS,
 		INCOMPLETE_HOSTNAME;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "2.4")]
 		public static GLib.Quark quark ();
 	}
@@ -12258,7 +12259,6 @@ namespace Gtk {
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
@@ -12267,7 +12267,6 @@ namespace Gtk {
 		INTERNAL_ERROR,
 		NOMEM,
 		INVALID_FILE;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		[Version (since = "2.10")]
 		public static GLib.Quark quark ();
 	}
@@ -12276,7 +12275,6 @@ namespace Gtk {
 	public errordomain RecentChooserError {
 		NOT_FOUND,
 		INVALID_URI;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
@@ -12289,7 +12287,6 @@ namespace Gtk {
 		READ,
 		WRITE,
 		UNKNOWN;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -12815,10 +12812,28 @@ namespace Gtk {
 	[Version (deprecated = true, deprecated_since = "3.10", since = "2.6")]
 	public static bool alternative_dialog_button_order (Gdk.Screen? screen);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BindingEntry.add_signal_from_string", since = "3.0")]
+	public static GLib.TokenType binding_entry_add_signal_from_string (Gtk.BindingSet binding_set, string signal_desc);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BindingEntry.add_signall")]
+	public static void binding_entry_add_signall (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers, string signal_name, [CCode (type = "GSList*")] GLib.SList<Gtk.BindingArg?> binding_args);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BindingEntry.remove")]
+	public static void binding_entry_remove (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BindingEntry.skip", since = "2.12")]
+	public static void binding_entry_skip (Gtk.BindingSet binding_set, uint keyval, Gdk.ModifierType modifiers);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BindingSet.find")]
+	public static unowned Gtk.BindingSet? binding_set_find (string set_name);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool bindings_activate (GLib.Object object, uint keyval, Gdk.ModifierType modifiers);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.4")]
 	public static bool bindings_activate_event (GLib.Object object, Gdk.EventKey event);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BuilderError.quark")]
+	public static GLib.Quark builder_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static bool cairo_should_draw_window (Cairo.Context cr, Gdk.Window window);
@@ -12827,6 +12842,9 @@ namespace Gtk {
 	public static void cairo_transform_to_window (Cairo.Context cr, Gtk.Widget widget, Gdk.Window window);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string? check_version (uint required_major, uint required_minor, uint required_micro);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "CssProviderError.quark")]
+	public static GLib.Quark css_provider_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static void device_grab_add (Gtk.Widget widget, Gdk.Device device, bool block_others);
@@ -12939,6 +12957,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool events_pending ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "FileChooserError.quark", since = "2.4")]
+	public static GLib.Quark file_chooser_error_quark ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "3.0")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -12996,6 +13017,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated_since = "3.10")]
 	public static void icon_size_register_alias (string alias, Gtk.IconSize target);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "IconThemeError.quark")]
+	public static GLib.Quark icon_theme_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -13082,7 +13106,16 @@ namespace Gtk {
 	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static void paint_vline (Gtk.Style style, Cairo.Context cr, Gtk.StateType state_type, Gtk.Widget? widget, string? detail, int y1_, int y2_, int x);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PaperSize.get_default", since = "2.10")]
+	public static unowned string paper_size_get_default ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PaperSize.get_paper_sizes", since = "2.12")]
+	public static GLib.List<Gtk.PaperSize> paper_size_get_paper_sizes (bool include_custom);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool parse_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PrintError.quark", since = "2.10")]
+	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (since = "2.10")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
@@ -13154,6 +13187,12 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (deprecated = true, deprecated_since = "3.0")]
 	public static void rc_set_default_files ([CCode (array_length = false, array_null_terminated = true)] string[] filenames);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "RecentChooserError.quark")]
+	public static GLib.Quark recent_chooser_error_quark ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "RecentManagerError.quark")]
+	public static GLib.Quark recent_manager_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void render_icon_surface (Gtk.StyleContext context, Cairo.Context cr, Cairo.Surface surface, double x, double y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -13273,6 +13312,12 @@ namespace Gtk {
 	public static void test_widget_wait_for_draw (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out unowned Gtk.TreeModel? tree_model, out Gtk.TreePath? path);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "TreeRowReference.deleted")]
+	public static void tree_row_reference_deleted (GLib.Object proxy, Gtk.TreePath path);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "TreeRowReference.inserted")]
+	public static void tree_row_reference_inserted (GLib.Object proxy, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_set_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
 }

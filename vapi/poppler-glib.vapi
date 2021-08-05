@@ -1512,6 +1512,9 @@ namespace Poppler {
 	[Version (since = "0.12")]
 	public static bool date_parse (string date, long timet);
 	[CCode (cheader_filename = "poppler.h")]
+	[Version (replacement = "Error.quark")]
+	public static GLib.Quark error_quark ();
+	[CCode (cheader_filename = "poppler.h")]
 	public static Poppler.Backend get_backend ();
 	[CCode (cheader_filename = "poppler.h")]
 	public static unowned string get_version ();

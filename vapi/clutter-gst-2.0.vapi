@@ -90,6 +90,6 @@ namespace ClutterGst {
 	[Version (since = "1.0")]
 	public static Clutter.InitError init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string parameter_string, [CCode (array_length = false, type = "GOptionEntry*")] GLib.OptionEntry[]? entries = null, string? translation_domain = null) throws GLib.Error;
 	[CCode (cheader_filename = "clutter-gst/clutter-gst.h")]
-	[Version (since = "1.4")]
+	[Version (replacement = "Player.class_init", since = "1.4")]
 	public static void player_class_init (GLib.ObjectClass object_class);
 }

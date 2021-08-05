@@ -453,6 +453,15 @@ namespace Json {
 	[Version (since = "0.14")]
 	public static string gvariant_serialize_data (GLib.Variant variant, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (replacement = "ParserError.quark")]
+	public static GLib.Quark parser_error_quark ();
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (replacement = "PathError.quark")]
+	public static GLib.Quark path_error_quark ();
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[Version (replacement = "ReaderError.quark")]
+	public static GLib.Quark reader_error_quark ();
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	[Version (deprecated = true, deprecated_since = "0.10", replacement = "Json.gobject_to_data")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]

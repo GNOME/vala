@@ -924,6 +924,12 @@ namespace Atspi {
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static bool deregister_keystroke_listener (Atspi.DeviceListener listener, GLib.Array<Atspi.KeyDefinition>? key_set, Atspi.KeyMaskType modmask, Atspi.KeyEventMask event_types) throws GLib.Error;
 	[CCode (cheader_filename = "atspi/atspi.h")]
+	[Version (replacement = "Event.main")]
+	public static void event_main ();
+	[CCode (cheader_filename = "atspi/atspi.h")]
+	[Version (replacement = "Event.quit")]
+	public static void event_quit ();
+	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static int exit ();
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static bool generate_keyboard_event (long keyval, string? keystring, Atspi.KeySynthType synth_type) throws GLib.Error;
@@ -943,6 +949,9 @@ namespace Atspi {
 	public static bool register_device_event_listener (Atspi.DeviceListener listener, Atspi.DeviceEventMask event_types, void* filter) throws GLib.Error;
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static bool register_keystroke_listener (Atspi.DeviceListener listener, GLib.Array<Atspi.KeyDefinition>? key_set, Atspi.KeyMaskType modmask, Atspi.KeyEventMask event_types, Atspi.KeyListenerSyncType sync_type) throws GLib.Error;
+	[CCode (cheader_filename = "atspi/atspi.h")]
+	[Version (replacement = "Role.get_name")]
+	public static string role_get_name (Atspi.Role role);
 	[CCode (cheader_filename = "atspi/atspi.h")]
 	public static void set_main_context (GLib.MainContext cnx);
 	[CCode (cheader_filename = "atspi/atspi.h")]

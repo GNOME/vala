@@ -167,15 +167,21 @@ namespace GClue {
 		AUTO_DELETE
 	}
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Client.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo client_interface_info ();
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Client.override_properties")]
 	public static uint client_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Location.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo location_interface_info ();
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Location.override_properties")]
 	public static uint location_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Manager.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo manager_interface_info ();
 	[CCode (cheader_filename = "geoclue.h")]
+	[Version (replacement = "Manager.override_properties")]
 	public static uint manager_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 }

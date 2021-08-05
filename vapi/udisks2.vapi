@@ -941,53 +941,78 @@ namespace UDisks {
 	[CCode (cheader_filename = "udisks/udisks.h", cname = "UDISKS_MINOR_VERSION")]
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Block.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo block_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Block.override_properties")]
 	public static uint block_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "DriveAta.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo drive_ata_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "DriveAta.override_properties")]
 	public static uint drive_ata_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Drive.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo drive_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Drive.override_properties")]
 	public static uint drive_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Encrypted.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo encrypted_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Encrypted.override_properties")]
 	public static uint encrypted_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Error.quark")]
+	public static GLib.Quark error_quark ();
+	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Filesystem.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo filesystem_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Filesystem.override_properties")]
 	public static uint filesystem_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Job.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo job_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Job.override_properties")]
 	public static uint job_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Loop.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo loop_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Loop.override_properties")]
 	public static uint loop_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Manager.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo manager_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Manager.override_properties")]
 	public static uint manager_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
-	[Version (since = "2.0.0")]
+	[Version (replacement = "MDRaid.interface_info", since = "2.0.0")]
 	public static unowned GLib.DBusInterfaceInfo mdraid_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
-	[Version (since = "2.0.0")]
+	[Version (replacement = "MDRaid.override_properties", since = "2.0.0")]
 	public static uint mdraid_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Partition.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo partition_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Partition.override_properties")]
 	public static uint partition_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "PartitionTable.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo partition_table_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "PartitionTable.override_properties")]
 	public static uint partition_table_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Swapspace.interface_info")]
 	public static unowned GLib.DBusInterfaceInfo swapspace_interface_info ();
 	[CCode (cheader_filename = "udisks/udisks.h")]
+	[Version (replacement = "Swapspace.override_properties")]
 	public static uint swapspace_override_properties (GLib.ObjectClass klass, uint property_id_begin);
 }

@@ -217,7 +217,18 @@ namespace Polkit {
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h")]
+	[Version (replacement = "Error.quark")]
+	public static GLib.Quark error_quark ();
+	[CCode (cheader_filename = "polkit/polkit.h")]
+	[Version (replacement = "Identity.from_string")]
 	public static Polkit.Identity? identity_from_string (string str) throws GLib.Error;
 	[CCode (cheader_filename = "polkit/polkit.h")]
+	[Version (replacement = "ImplicitAuthorization.from_string")]
+	public static bool implicit_authorization_from_string (string string, Polkit.ImplicitAuthorization out_implicit_authorization);
+	[CCode (cheader_filename = "polkit/polkit.h")]
+	[Version (replacement = "ImplicitAuthorization.to_string")]
+	public static unowned string implicit_authorization_to_string (Polkit.ImplicitAuthorization implicit_authorization);
+	[CCode (cheader_filename = "polkit/polkit.h")]
+	[Version (replacement = "Subject.from_string")]
 	public static Polkit.Subject subject_from_string (string str) throws GLib.Error;
 }

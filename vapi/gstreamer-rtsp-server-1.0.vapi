@@ -846,6 +846,8 @@ namespace Gst {
 			public weak Gst.RTSPServer.Stream stream;
 			public weak Gst.RTSP.Message response;
 			public weak Gst.RTSPServer.StreamTransport trans;
+			[CCode (cname = "gst_rtsp_context_get_current")]
+			public static unowned Gst.RTSPServer.Context? get_current ();
 			[CCode (cname = "gst_rtsp_context_pop_current")]
 			public void pop_current ();
 			[CCode (cname = "gst_rtsp_context_push_current")]

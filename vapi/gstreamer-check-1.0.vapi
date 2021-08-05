@@ -175,6 +175,8 @@ namespace Gst {
 			public Gst.FlowReturn src_crank_and_push_many (int cranks, int pushes);
 			[CCode (cname = "gst_harness_src_push_event")]
 			public bool src_push_event ();
+			[CCode (cname = "gst_harness_stress_thread_stop")]
+			public static uint stress_thread_stop (Gst.Check.HarnessThread t);
 			[CCode (cname = "gst_harness_take_all_data_as_buffer")]
 			[Version (since = "1.14")]
 			public Gst.Buffer take_all_data_as_buffer ();
@@ -233,7 +235,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void element_push_buffer_list (string element_name, owned GLib.List<Gst.Buffer> buffer_in, Gst.Caps caps_in, owned GLib.List<Gst.Buffer> buffer_out, Gst.Caps caps_out, Gst.FlowReturn last_flow_return);
 		[CCode (cheader_filename = "gst/check/check.h", cname = "gst_harness_stress_thread_stop")]
-		[Version (since = "1.6")]
+		[Version (replacement = "Harness.stress_thread_stop", since = "1.6")]
 		public static uint harness_stress_thread_stop (Gst.Check.HarnessThread t);
 		[CCode (cheader_filename = "gst/check/check.h")]
 		public static void init (int argc, string argv);

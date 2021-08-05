@@ -43,6 +43,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static bool is_colored ();
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "DebugLevel.get_name")]
 		public static unowned string level_get_name (Gst.DebugLevel level);
 		[CCode (cheader_filename = "gst/gst.h")]
 		[PrintfFormat]
@@ -366,6 +367,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_is_fixed")]
 		public static bool is_fixed (string tag);
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_list_copy_value")]
+		[Version (replacement = "TagList.copy_value")]
 		public static bool list_copy_value (out GLib.Value dest, Gst.TagList list, string tag);
 		[CCode (cheader_filename = "gst/gst.h", cname = "gst_tag_merge_strings_with_comma")]
 		public static void merge_strings_with_comma (out GLib.Value dest, GLib.Value src);
@@ -378,30 +380,37 @@ namespace Gst {
 	}
 	namespace URI {
 		[CCode (cheader_filename = "gst/gst.h")]
-		[Version (deprecated = true)]
+		[Version (deprecated = true, replacement = "Uri.construct")]
 		public static string @construct (string protocol, string location);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "URIError.quark")]
 		public static GLib.Quark error_quark ();
 		[CCode (cheader_filename = "gst/gst.h")]
-		[Version (since = "1.6")]
+		[Version (replacement = "Uri.from_string", since = "1.6")]
 		public static Gst.Uri? from_string (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
-		[Version (since = "1.18")]
+		[Version (replacement = "Uri.from_string_escaped", since = "1.18")]
 		public static Gst.Uri? from_string_escaped (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.get_location")]
 		public static string? get_location (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.get_protocol")]
 		public static string? get_protocol (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.has_protocol")]
 		public static bool has_protocol (string uri, string protocol);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.is_valid")]
 		public static bool is_valid (string uri);
 		[CCode (cheader_filename = "gst/gst.h")]
-		[Version (since = "1.6")]
+		[Version (replacement = "Uri.join_strings", since = "1.6")]
 		public static string join_strings (string base_uri, string ref_uri);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.protocol_is_supported")]
 		public static bool protocol_is_supported (Gst.URIType type, string protocol);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (replacement = "Uri.protocol_is_valid")]
 		public static bool protocol_is_valid (string protocol);
 	}
 	namespace Util {
@@ -2136,6 +2145,7 @@ namespace Gst {
 	[Compact]
 	public class Poll {
 		[CCode (has_construct_function = false)]
+		[Version (replacement = "Poll.new")]
 		public Poll (bool controllable);
 		public bool add_fd (Gst.PollFD fd);
 		public bool fd_can_read (Gst.PollFD fd);
@@ -2158,6 +2168,7 @@ namespace Gst {
 		public bool set_controllable (bool controllable);
 		public void set_flushing (bool flushing);
 		[CCode (has_construct_function = false)]
+		[Version (replacement = "Poll.new_timer")]
 		public Poll.timer ();
 		public int wait (Gst.ClockTime timeout);
 		public bool write_control ();
@@ -2552,6 +2563,7 @@ namespace Gst {
 		public void add_value (Gst.TagMergeMode mode, string tag, GLib.Value value);
 		public void add_values (Gst.TagMergeMode mode, string tag, ...);
 		public Gst.TagList copy ();
+		public static bool copy_value (out GLib.Value dest, Gst.TagList list, string tag);
 		[CCode (has_construct_function = false)]
 		public TagList.empty ();
 		public void @foreach (Gst.TagForeachFunc func);
@@ -2715,14 +2727,21 @@ namespace Gst {
 		public bool append_path (string relative_path);
 		[Version (since = "1.6")]
 		public bool append_path_segment (string path_segment);
+		[Version (deprecated = true)]
+		public static string @construct (string protocol, string location);
 		[Version (since = "1.6")]
 		public bool equal (Gst.Uri second);
+		[Version (since = "1.6")]
+		public static Gst.Uri? from_string (string uri);
+		[Version (since = "1.18")]
+		public static Gst.Uri? from_string_escaped (string uri);
 		[Version (since = "1.6")]
 		public Gst.Uri from_string_with_base (string uri);
 		[Version (since = "1.6")]
 		public unowned string? get_fragment ();
 		[Version (since = "1.6")]
 		public unowned string? get_host ();
+		public static string? get_location (string uri);
 		[Version (since = "1.12")]
 		public GLib.HashTable<string,string>? get_media_fragment_table ();
 		[Version (since = "1.6")]
@@ -2733,6 +2752,7 @@ namespace Gst {
 		public string? get_path_string ();
 		[Version (since = "1.6")]
 		public uint get_port ();
+		public static string? get_protocol (string uri);
 		[Version (since = "1.6")]
 		public GLib.List<weak string> get_query_keys ();
 		[Version (since = "1.6")]
@@ -2744,12 +2764,16 @@ namespace Gst {
 		public unowned string? get_scheme ();
 		[Version (since = "1.6")]
 		public unowned string? get_userinfo ();
+		public static bool has_protocol (string uri, string protocol);
 		[Version (since = "1.6")]
 		public bool is_normalized ();
+		public static bool is_valid (string uri);
 		[Version (since = "1.6")]
 		public bool is_writable ();
 		[Version (since = "1.6")]
 		public Gst.Uri? join (Gst.Uri? ref_uri);
+		[Version (since = "1.6")]
+		public static string join_strings (string base_uri, string ref_uri);
 		[DestroysInstance]
 		[ReturnsModifiedPointer]
 		[Version (since = "1.6")]
@@ -2758,6 +2782,8 @@ namespace Gst {
 		public Gst.Uri new_with_base (string? scheme, string? userinfo, string? host, uint port, string? path, string? query, string? fragment);
 		[Version (since = "1.6")]
 		public bool normalize ();
+		public static bool protocol_is_supported (Gst.URIType type, string protocol);
+		public static bool protocol_is_valid (string protocol);
 		[Version (since = "1.6")]
 		public bool query_has_key (string query_key);
 		[Version (since = "1.6")]
@@ -3263,7 +3289,8 @@ namespace Gst {
 		LOG,
 		TRACE,
 		MEMDUMP,
-		COUNT
+		COUNT;
+		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_ELEMENT_FLAG_", type_id = "gst_element_flags_get_type ()")]
 	[Flags]
@@ -3349,14 +3376,14 @@ namespace Gst {
 		TIME,
 		BUFFERS,
 		PERCENT;
-		[CCode (cname = "gst_formats_contains")]
-		public static bool contains ([CCode (array_length = false, array_null_terminated = true)] Gst.Format[] formats, Gst.Format format);
 		public static Gst.Format get_by_nick (string nick);
 		public unowned Gst.FormatDefinition? get_details ();
 		public unowned string? get_name ();
 		public static Gst.Iterator iterate_definitions ();
 		public static Gst.Format register (string nick, string description);
 		public GLib.Quark to_quark ();
+		[CCode (cname = "gst_formats_contains")]
+		public static bool contains ([CCode (array_length = false, array_null_terminated = true)] Gst.Format[] formats, Gst.Format format);
 	}
 	[CCode (cheader_filename = "gst/gst.h", cprefix = "GST_GAP_FLAG_MISSING_", type_id = "gst_gap_flags_get_type ()")]
 	[Flags]
@@ -3972,7 +3999,8 @@ namespace Gst {
 		UNSUPPORTED_PROTOCOL,
 		BAD_URI,
 		BAD_STATE,
-		BAD_REFERENCE
+		BAD_REFERENCE;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", instance_pos = 2.9)]
 	public delegate bool BufferForeachMetaFunc (Gst.Buffer buffer, out Gst.Meta? meta);
@@ -4253,6 +4281,18 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h", cname = "GST_TIME_ARGS", use_inplace = true)]
 	public static uint TIME_ARGS (Gst.ClockTime t);
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Buffer.get_max_memory", since = "1.2")]
+	public static uint buffer_get_max_memory ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "CapsFeatures.from_string", since = "1.2")]
+	public static Gst.CapsFeatures? caps_features_from_string (string features);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Caps.from_string")]
+	public static Gst.Caps? caps_from_string (string string);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "CoreError.quark")]
+	public static GLib.Quark core_error_quark ();
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.12")]
@@ -4260,9 +4300,36 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static string error_get_message (GLib.Quark domain, int code);
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "EventType.get_flags")]
+	public static Gst.EventTypeFlags event_type_get_flags (Gst.EventType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "EventType.get_name")]
+	public static unowned string event_type_get_name (Gst.EventType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "EventType.to_quark")]
+	public static GLib.Quark event_type_to_quark (Gst.EventType type);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static string filename_to_uri (string filename) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark flow_to_quark (Gst.FlowReturn ret);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.get_by_nick")]
+	public static Gst.Format format_get_by_nick (string nick);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.get_details")]
+	public static unowned Gst.FormatDefinition? format_get_details (Gst.Format format);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.get_name")]
+	public static unowned string? format_get_name (Gst.Format format);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.iterate_definitions")]
+	public static Gst.Iterator format_iterate_definitions ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.register")]
+	public static Gst.Format format_register (string nick, string description);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Format.to_quark")]
+	public static GLib.Quark format_to_quark (Gst.Format format);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.14")]
 	public static unowned string? get_main_executable_path ();
@@ -4277,36 +4344,119 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "LibraryError.quark")]
+	public static GLib.Quark library_error_quark ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "MessageType.get_name")]
+	public static unowned string message_type_get_name (Gst.MessageType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "MessageType.to_quark")]
+	public static GLib.Quark message_type_to_quark (Gst.MessageType type);
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.api_type_get_tags", since = "1.2")]
+	public static unowned string[] meta_api_type_get_tags (GLib.Type api);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.api_type_has_tag")]
+	public static bool meta_api_type_has_tag (GLib.Type api, GLib.Quark tag);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.api_type_register")]
+	public static GLib.Type meta_api_type_register (string api, [CCode (array_length = false, array_null_terminated = true)] string[] tags);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.get_info")]
+	public static unowned Gst.MetaInfo? meta_get_info (string impl);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.register")]
+	public static unowned Gst.MetaInfo? meta_register (GLib.Type api, string impl, size_t size, [CCode (scope = "async")] Gst.MetaInitFunction init_func, [CCode (scope = "async")] Gst.MetaFreeFunction free_func, [CCode (scope = "async")] Gst.MetaTransformFunction transform_func);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Meta.register_custom", since = "1.20")]
+	public static unowned Gst.MetaInfo? meta_register_custom (string name, [CCode (array_length = false, array_null_terminated = true)] string[] tags, owned Gst.CustomMetaTransformFunction? transform_func);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "MiniObject.replace")]
+	public static bool mini_object_replace (ref Gst.MiniObject? olddata, Gst.MiniObject? newdata);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "MiniObject.take")]
+	public static bool mini_object_take (ref Gst.MiniObject olddata, Gst.MiniObject newdata);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "PadMode.get_name")]
+	public static unowned string pad_mode_get_name (Gst.PadMode mode);
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.14")]
 	public static GLib.ParamSpec param_spec_array (string name, string nick, string blurb, GLib.ParamSpec element_spec, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.ParamSpec? param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "ParentBufferMeta.get_info", since = "1.6")]
+	public static unowned Gst.MetaInfo? parent_buffer_meta_get_info ();
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_bin_from_description_full", returns_floating_reference = true)]
 	public static Gst.Element parse_bin_from_description (string bin_description, bool ghost_unlinked_pads, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "ParseError.quark")]
+	public static GLib.Quark parse_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launch_full", returns_floating_reference = true)]
 	public static Gst.Element parse_launch (string pipeline_description, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h", cname = "gst_parse_launchv_full", returns_floating_reference = true)]
 	public static Gst.Element parse_launchv ([CCode (array_length = false, array_null_terminated = true)] string[] argv, Gst.ParseContext? context = null, Gst.ParseFlags flags = Gst.ParseFlags.NONE) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "PluginError.quark")]
+	public static GLib.Quark plugin_error_quark ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Preset.get_app_dir")]
 	public static unowned string? preset_get_app_dir ();
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Preset.set_app_dir")]
 	public static bool preset_set_app_dir (string app_dir);
 	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/gst.h")]
 	[Version (since = "1.14")]
 	public static string[]? protection_filter_systems_by_available_decryptors ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
 	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "ProtectionMeta.get_info")]
+	public static unowned Gst.MetaInfo? protection_meta_get_info ();
+	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.6")]
 	public static unowned string? protection_select_system ([CCode (array_length = false, array_null_terminated = true)] string[] system_identifiers);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "QueryType.get_flags")]
+	public static Gst.QueryTypeFlags query_type_get_flags (Gst.QueryType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "QueryType.get_name")]
+	public static unowned string query_type_get_name (Gst.QueryType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "QueryType.to_quark")]
+	public static GLib.Quark query_type_to_quark (Gst.QueryType type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "ReferenceTimestampMeta.get_info", since = "1.14")]
+	public static unowned Gst.MetaInfo? reference_timestamp_meta_get_info ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "ResourceError.quark")]
+	public static GLib.Quark resource_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool segtrap_is_enabled ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void segtrap_set_enabled (bool enabled);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "StateChange.get_name", since = "1.14")]
+	public static unowned string state_change_get_name (Gst.StateChange transition);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "StreamError.quark")]
+	public static GLib.Quark stream_error_quark ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "StreamType.get_name", since = "1.10")]
+	public static unowned string stream_type_get_name (Gst.StreamType stype);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "Structure.take", since = "1.18")]
+	public static bool structure_take (ref Gst.Structure? oldstr_ptr, owned Gst.Structure? newstr);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "TocEntryType.get_nick")]
+	public static unowned string toc_entry_type_get_nick (Gst.TocEntryType type);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.18")]
 	public static GLib.List<Gst.Tracer> tracing_get_active_tracers ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.8")]
 	public static void tracing_register_hook (Gst.Tracer tracer, string detail, [CCode (scope = "async")] GLib.Callback func);
+	[CCode (cheader_filename = "gst/gst.h")]
+	[Version (replacement = "TypeFind.register")]
+	public static bool type_find_register (Gst.Plugin? plugin, string name, uint rank, [CCode (delegate_target_pos = 6.1, destroy_notify_pos = 6.2)] owned Gst.TypeFindFunction func, string? extensions, Gst.Caps? possible_caps);
 	[CCode (cheader_filename = "gst/gst.h")]
 	[Version (since = "1.18")]
 	public static bool type_is_plugin_api (GLib.Type type, out Gst.PluginAPIFlags? flags);

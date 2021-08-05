@@ -31,7 +31,8 @@ namespace Soup {
 		[GIR (name = "XMLRPCError")]
 		public errordomain Error {
 			ARGUMENTS,
-			RETVAL
+			RETVAL;
+			public static GLib.Quark quark ();
 		}
 		[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_XMLRPC_FAULT_")]
 		[GIR (name = "XMLRPCFault")]
@@ -45,7 +46,8 @@ namespace Soup {
 			SERVER_ERROR_INTERNAL_XML_RPC_ERROR,
 			APPLICATION_ERROR,
 			SYSTEM_ERROR,
-			TRANSPORT_ERROR
+			TRANSPORT_ERROR;
+			public static GLib.Quark quark ();
 		}
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		[PrintfFormat]
@@ -63,6 +65,7 @@ namespace Soup {
 		[Version (since = "2.52")]
 		public static string build_response (GLib.Variant value) throws GLib.Error;
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Version (replacement = "XMLRPCError.quark")]
 		public static GLib.Quark error_quark ();
 		[CCode (cheader_filename = "libsoup/soup.h", sentinel = "G_TYPE_INVALID")]
 		[Version (deprecated = true)]
@@ -71,6 +74,7 @@ namespace Soup {
 		[Version (deprecated = true)]
 		public static bool extract_method_response (string method_response, int length, ...) throws Soup.XMLRPC.Fault;
 		[CCode (cheader_filename = "libsoup/soup.h")]
+		[Version (replacement = "XMLRPCFault.quark")]
 		public static GLib.Quark fault_quark ();
 		[CCode (cheader_filename = "libsoup/soup.h")]
 		[Version (since = "2.52")]
@@ -1303,7 +1307,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
 	public struct MessageHeadersIter {
-		public static void init (out Soup.MessageHeadersIter iter, Soup.MessageHeaders hdrs);
+		public void init (Soup.MessageHeaders hdrs);
 		public static bool next (ref Soup.MessageHeadersIter iter, out unowned string name, out unowned string value);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
@@ -1970,6 +1974,9 @@ namespace Soup {
 	[Version (since = "2.42")]
 	public static bool check_version (uint major, uint minor, uint micro);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "Cookie.parse", since = "2.24")]
+	public static Soup.Cookie? cookie_parse (string header, Soup.URI origin);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.24")]
 	public static GLib.SList<Soup.Cookie> cookies_from_request (Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -2032,6 +2039,21 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark http_error_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "MessageHeadersIter.init")]
+	public static void message_headers_iter_init (out Soup.MessageHeadersIter iter, Soup.MessageHeaders hdrs);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "RequestError.quark")]
+	public static GLib.Quark request_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "RequesterError.quark")]
+	public static GLib.Quark requester_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "Status.get_phrase")]
+	public static unowned string status_get_phrase (uint status_code);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "Status.proxify", since = "2.26")]
+	public static uint status_proxify (uint status_code);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (void* v1, void* v2);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint str_case_hash (void* key);
@@ -2039,8 +2061,20 @@ namespace Soup {
 	[Version (since = "2.40")]
 	public static bool tld_domain_is_public_suffix (string domain);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "TLDError.quark")]
+	public static GLib.Quark tld_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.40")]
 	public static unowned string tld_get_base_domain (string hostname) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "URI.decode")]
+	public static string uri_decode (string part);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "URI.encode")]
+	public static string uri_encode (string part, string? escape_extra);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "URI.normalize")]
+	public static string uri_normalize (string part, string? unescape_extra);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (deprecated = true)]
 	public static void value_array_append (GLib.ValueArray array, GLib.Type type, ...);
@@ -2098,6 +2132,9 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.68")]
 	public static bool websocket_client_verify_handshake_with_extensions (Soup.Message msg, GLib.GenericArray<GLib.TypeClass>? supported_extensions, out GLib.List<Soup.WebsocketExtension> accepted_extensions) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	[Version (replacement = "WebsocketError.get_quark")]
+	public static GLib.Quark websocket_error_get_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	[Version (since = "2.50")]
 	public static bool websocket_server_check_handshake (Soup.Message msg, string? origin, [CCode (array_length = false, array_null_terminated = true)] string[]? protocols) throws GLib.Error;

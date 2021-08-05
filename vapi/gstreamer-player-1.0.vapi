@@ -252,4 +252,16 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/player/player.h", has_target = false)]
 	public delegate void PlayerSignalDispatcherFunc (void* data);
+	[CCode (cheader_filename = "gst/player/player.h")]
+	[Version (replacement = "PlayerColorBalanceType.get_name")]
+	public static unowned string player_color_balance_type_get_name (Gst.PlayerColorBalanceType type);
+	[CCode (cheader_filename = "gst/player/player.h")]
+	[Version (replacement = "PlayerError.get_name")]
+	public static unowned string player_error_get_name (Gst.PlayerError error);
+	[CCode (cheader_filename = "gst/player/player.h")]
+	[Version (replacement = "PlayerError.quark")]
+	public static GLib.Quark player_error_quark ();
+	[CCode (cheader_filename = "gst/player/player.h")]
+	[Version (replacement = "PlayerState.get_name")]
+	public static unowned string player_state_get_name (Gst.PlayerState state);
 }

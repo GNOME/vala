@@ -55,13 +55,13 @@ namespace Pango {
 	[Version (since = "1.14")]
 	public static void cairo_error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	[Version (since = "1.10")]
+	[Version (replacement = "FontMap.get_default", since = "1.10")]
 	public static unowned Pango.FontMap cairo_font_map_get_default ();
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	[Version (since = "1.10")]
+	[Version (replacement = "FontMap.new", since = "1.10")]
 	public static Pango.FontMap cairo_font_map_new ();
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	[Version (since = "1.18")]
+	[Version (replacement = "FontMap.new_for_font_type", since = "1.18")]
 	public static Pango.FontMap? cairo_font_map_new_for_font_type (Cairo.FontType fonttype);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	[Version (since = "1.10")]

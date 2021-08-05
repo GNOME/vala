@@ -1280,6 +1280,12 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static void deinit ();
 	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (replacement = "Edge.name", since = "1.16")]
+	public static unowned string edge_name (GES.Edge edge);
+	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (replacement = "EditMode.name", since = "1.18")]
+	public static unowned string edit_mode_name (GES.EditMode mode);
+	[CCode (cheader_filename = "ges/ges.h")]
 	[Version (since = "1.18")]
 	public static unowned GES.Asset find_formatter_for_uri (string uri);
 	[CCode (cheader_filename = "ges/ges.h")]
@@ -1296,6 +1302,9 @@ namespace GES {
 	public static bool pspec_equal ([CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_1, [CCode (type = "gconstpointer")] GLib.ParamSpec key_spec_2);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static uint pspec_hash (void* key_spec);
+	[CCode (cheader_filename = "ges/ges.h")]
+	[Version (replacement = "TrackType.name")]
+	public static unowned string track_type_name (GES.TrackType type);
 	[CCode (cheader_filename = "ges/ges.h")]
 	public static bool validate_register_action_types ();
 	[CCode (cheader_filename = "ges/ges.h")]

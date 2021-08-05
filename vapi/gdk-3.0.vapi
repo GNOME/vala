@@ -6682,6 +6682,12 @@ namespace Gdk {
 	[Version (deprecated = true, deprecated_since = "3.16")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Atom.intern")]
+	public static Gdk.Atom atom_intern (string atom_name, bool only_if_exists);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Atom.intern_static_string", since = "2.10")]
+	public static Gdk.Atom atom_intern_static_string (string atom_name);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (deprecated = true, deprecated_since = "3.22", since = "2.8")]
@@ -6717,6 +6723,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.10")]
 	public static Cairo.Surface cairo_surface_create_from_pixbuf (Gdk.Pixbuf pixbuf, int scale, Gdk.Window? for_window);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (deprecated = true, deprecated_since = "3.14", replacement = "Color.parse")]
+	public static bool color_parse (string spec, out Gdk.Color color);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.0")]
 	public static void disable_multidevice ();
@@ -6758,6 +6767,18 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void error_trap_push ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Event.get")]
+	public static Gdk.Event? event_get ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Event.handler_set")]
+	public static void event_handler_set (owned Gdk.EventFunc func);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Event.peek")]
+	public static Gdk.Event? event_peek ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "Event.request_motions", since = "2.12")]
+	public static void event_request_motions (Gdk.EventMotion event);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (since = "3.0")]
 	public static bool events_get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6782,6 +6803,9 @@ namespace Gdk {
 	public static unowned string get_program_class ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "GLError.quark")]
+	public static GLib.Quark gl_error_quark ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]

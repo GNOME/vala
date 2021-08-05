@@ -5132,16 +5132,16 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Event ();
 		[CCode (cname = "gdk_events_get_angle")]
-		public static bool get_angle (Gdk.Event event1, Gdk.Event event2, out double angle);
+		public bool get_angle (Gdk.Event event2, out double angle);
 		public bool get_axes ([CCode (array_length_cname = "n_axes", array_length_pos = 1.1, array_length_type = "guint")] out unowned double[] axes);
 		public bool get_axis (Gdk.AxisUse axis_use, out double value);
 		[CCode (cname = "gdk_events_get_center")]
-		public static bool get_center (Gdk.Event event1, Gdk.Event event2, out double x, out double y);
+		public bool get_center (Gdk.Event event2, out double x, out double y);
 		public unowned Gdk.Device? get_device ();
 		public unowned Gdk.DeviceTool? get_device_tool ();
 		public unowned Gdk.Display? get_display ();
 		[CCode (cname = "gdk_events_get_distance")]
-		public static bool get_distance (Gdk.Event event1, Gdk.Event event2, out double distance);
+		public bool get_distance (Gdk.Event event2, out double distance);
 		public unowned Gdk.EventSequence get_event_sequence ();
 		public Gdk.EventType get_event_type ();
 		[CCode (array_length_pos = 0.1, array_length_type = "guint")]
@@ -5481,6 +5481,7 @@ namespace Gdk {
 		public virtual double get_intrinsic_aspect_ratio ();
 		public virtual int get_intrinsic_height ();
 		public virtual int get_intrinsic_width ();
+		[Version (replacement = "Paintable.new_empty")]
 		public static Gdk.Paintable new_empty (int intrinsic_width, int intrinsic_height);
 		public abstract void snapshot (Gdk.Snapshot snapshot, double width, double height);
 		[HasEmitter]
@@ -5922,6 +5923,12 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static async bool content_serialize_async (GLib.OutputStream stream, string mime_type, GLib.Value value, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "DragAction.is_unique")]
+	public static bool drag_action_is_unique (Gdk.DragAction action);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "GLError.quark")]
+	public static GLib.Quark gl_error_quark ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static unowned string? intern_mime_type (string string);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
@@ -5949,6 +5956,9 @@ namespace Gdk {
 	public static void set_allowed_backends (string backends);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint32 wc);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "VulkanError.quark")]
+	public static GLib.Quark vulkan_error_quark ();
 }
 [CCode (cprefix = "Gsk", gir_namespace = "Gsk", gir_version = "4.0", lower_case_cprefix = "gsk_")]
 namespace Gsk {
@@ -6423,6 +6433,12 @@ namespace Gsk {
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", error_pos = 2.8, instance_pos = 2.9)]
 	public delegate void ParseErrorFunc (Gsk.ParseLocation start, Gsk.ParseLocation end) throws GLib.Error;
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (replacement = "SerializationError.quark")]
+	public static GLib.Quark serialization_error_quark ();
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (replacement = "Transform.parse")]
+	public static bool transform_parse (string string, out Gsk.Transform out_transform);
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
@@ -9817,7 +9833,6 @@ namespace Gtk {
 		public PaperSize.from_key_file (GLib.KeyFile key_file, string? group_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PaperSize.from_ppd (string ppd_name, string ppd_display_name, double width, double height);
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static unowned string get_default ();
 		public double get_default_bottom_margin (Gtk.Unit unit);
 		public double get_default_left_margin (Gtk.Unit unit);
@@ -9826,7 +9841,6 @@ namespace Gtk {
 		public unowned string get_display_name ();
 		public double get_height (Gtk.Unit unit);
 		public unowned string get_name ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.List<Gtk.PaperSize> get_paper_sizes (bool include_custom);
 		public unowned string get_ppd_name ();
 		public double get_width (Gtk.Unit unit);
@@ -11730,17 +11744,16 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TreeRowReference (Gtk.TreeModel model, Gtk.TreePath path);
 		public Gtk.TreeRowReference copy ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		[DestroysInstance]
 		public void free ();
 		public unowned Gtk.TreeModel get_model ();
 		public Gtk.TreePath? get_path ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static void inserted (GLib.Object proxy, Gtk.TreePath path);
 		[CCode (has_construct_function = false)]
 		public TreeRowReference.proxy (GLib.Object proxy, Gtk.TreeModel model, Gtk.TreePath path);
 		[CCode (cheader_filename = "gtk/gtk.h")]
+		[Version (replacement = "TreeRowReference.reordered")]
 		public static void reordered (GLib.Object proxy, Gtk.TreePath path, Gtk.TreeIter iter, [CCode (array_length = false)] int[] new_order);
 		public bool valid ();
 	}
@@ -12844,12 +12857,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
 	public struct BitsetIter {
 		public uint get_value ();
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		public static bool init_at (out Gtk.BitsetIter iter, Gtk.Bitset @set, uint target, out uint value);
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		public static bool init_first (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		public static bool init_last (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
+		public bool init_at (Gtk.Bitset @set, uint target, out uint value);
+		public bool init_first (Gtk.Bitset @set, out uint value);
+		public bool init_last (Gtk.Bitset @set, out uint value);
 		public bool is_valid ();
 		public bool next (out uint value);
 		public bool previous (out uint value);
@@ -13056,7 +13066,6 @@ namespace Gtk {
 		VALUE_MIN,
 		VALUE_NOW,
 		VALUE_TEXT;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_RELATION_", type_id = "gtk_accessible_relation_get_type ()")]
@@ -13079,7 +13088,6 @@ namespace Gtk {
 		ROW_INDEX_TEXT,
 		ROW_SPAN,
 		SET_SIZE;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_ROLE_", type_id = "gtk_accessible_role_get_type ()")]
@@ -13180,7 +13188,6 @@ namespace Gtk {
 		INVALID,
 		PRESSED,
 		SELECTED;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public void init_value (GLib.Value value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ACCESSIBLE_TRISTATE_", type_id = "gtk_accessible_tristate_get_type ()")]
@@ -13573,7 +13580,6 @@ namespace Gtk {
 		SMALLER,
 		EQUAL,
 		LARGER;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static Gtk.Ordering from_cmpfunc (int cmpfunc_result);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ORIENTATION_", type_id = "gtk_orientation_get_type ()")]
@@ -14001,7 +14007,6 @@ namespace Gtk {
 		INVALID_SIGNAL,
 		INVALID_ID,
 		INVALID_FUNCTION;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CONSTRAINT_VFL_PARSER_ERROR_INVALID_")]
@@ -14012,7 +14017,6 @@ namespace Gtk {
 		METRIC,
 		PRIORITY,
 		RELATION;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_CSS_PARSER_ERROR_")]
@@ -14031,14 +14035,12 @@ namespace Gtk {
 		BAD_FILENAME,
 		ALREADY_EXISTS,
 		INCOMPLETE_HOSTNAME;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ICON_THEME_")]
 	public errordomain IconThemeError {
 		NOT_FOUND,
 		FAILED;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_PRINT_ERROR_")]
@@ -14047,7 +14049,6 @@ namespace Gtk {
 		INTERNAL_ERROR,
 		NOMEM,
 		INVALID_FILE;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_RECENT_MANAGER_ERROR_")]
@@ -14059,7 +14060,6 @@ namespace Gtk {
 		READ,
 		WRITE,
 		UNKNOWN;
-		[CCode (cheader_filename = "gtk/gtk.h")]
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", instance_pos = 1.9)]
@@ -14299,13 +14299,40 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool accelerator_valid (uint keyval, Gdk.ModifierType modifiers);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "AccessibleProperty.init_value")]
+	public static void accessible_property_init_value (Gtk.AccessibleProperty property, GLib.Value value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "AccessibleRelation.init_value")]
+	public static void accessible_relation_init_value (Gtk.AccessibleRelation relation, GLib.Value value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "AccessibleState.init_value")]
+	public static void accessible_state_init_value (Gtk.AccessibleState state, GLib.Value value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BitsetIter.init_at")]
+	public static bool bitset_iter_init_at (out Gtk.BitsetIter iter, Gtk.Bitset @set, uint target, out uint value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BitsetIter.init_first")]
+	public static bool bitset_iter_init_first (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BitsetIter.init_last")]
+	public static bool bitset_iter_init_last (out Gtk.BitsetIter iter, Gtk.Bitset @set, out uint value);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "BuilderError.quark")]
+	public static GLib.Quark builder_error_quark ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string? check_version (uint required_major, uint required_minor, uint required_micro);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "ConstraintVflParserError.quark")]
+	public static GLib.Quark constraint_vfl_parser_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void disable_setlocale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static int distribute_natural_allocation (int extra_space, [CCode (array_length_cname = "n_requested_sizes", array_length_pos = 1.5, array_length_type = "guint")] Gtk.RequestedSize[] sizes);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool drag_check_threshold (Gtk.Widget widget, int start_x, int start_y, int current_x, int current_y);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "FileChooserError.quark")]
+	public static GLib.Quark file_chooser_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint get_binary_age ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14325,17 +14352,36 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void hsv_to_rgb (float h, float s, float v, out float r, out float g, out float b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "IconThemeError.quark")]
+	public static GLib.Quark icon_theme_error_quark ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool init_check ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "Native.get_for_surface")]
 	public static unowned Gtk.Native native_get_for_surface (Gdk.Surface surface);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "Ordering.from_cmpfunc")]
+	public static Gtk.Ordering ordering_from_cmpfunc (int cmpfunc_result);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PaperSize.get_default")]
+	public static unowned string paper_size_get_default ();
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PaperSize.get_paper_sizes")]
+	public static GLib.List<Gtk.PaperSize> paper_size_get_paper_sizes (bool include_custom);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "PrintError.quark")]
+	public static GLib.Quark print_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.PageSetup print_run_page_setup_dialog (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void print_run_page_setup_dialog_async (Gtk.Window? parent, Gtk.PageSetup? page_setup, Gtk.PrintSettings settings, [CCode (scope = "async")] Gtk.PageSetupDoneFunc done_cb);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "RecentManagerError.quark")]
+	public static GLib.Quark recent_manager_error_quark ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void rgb_to_hsv (float r, float g, float b, out float h, out float s, out float v);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -14368,6 +14414,12 @@ namespace Gtk {
 	public static Gdk.ContentProvider tree_create_row_drag_content (Gtk.TreeModel tree_model, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool tree_get_row_drag_data (GLib.Value value, out unowned Gtk.TreeModel? tree_model, out Gtk.TreePath? path);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "TreeRowReference.deleted")]
+	public static void tree_row_reference_deleted (GLib.Object proxy, Gtk.TreePath path);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "TreeRowReference.inserted")]
+	public static void tree_row_reference_inserted (GLib.Object proxy, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.Expression? value_dup_expression (GLib.Value value);
 	[CCode (cheader_filename = "gtk/gtk.h")]

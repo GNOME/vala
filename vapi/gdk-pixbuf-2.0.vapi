@@ -411,4 +411,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", cname = "GDK_PIXDATA_HEADER_LENGTH")]
 	[Version (deprecated = true, deprecated_since = "2.32")]
 	public const int PIXDATA_HEADER_LENGTH;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[Version (replacement = "PixbufError.quark")]
+	public static GLib.Quark pixbuf_error_quark ();
 }

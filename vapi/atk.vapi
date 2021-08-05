@@ -571,6 +571,7 @@ namespace Atk {
 	public struct Attribute {
 		public string name;
 		public string value;
+		public static void set_free (Atk.AttributeSet attrib_set);
 	}
 	[CCode (cheader_filename = "atk/atk.h", has_type_id = false)]
 	public struct KeyEventStruct {
@@ -659,11 +660,8 @@ namespace Atk {
 		ERROR_MESSAGE,
 		ERROR_FOR,
 		LAST_DEFINED;
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.RelationType for_name (string name);
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.RelationType register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_ROLE_", type_id = "atk_role_get_type ()")]
@@ -797,13 +795,9 @@ namespace Atk {
 		MARK,
 		SUGGESTION,
 		LAST_DEFINED;
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.Role for_name (string name);
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_localized_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		[Version (deprecated = true)]
 		public static Atk.Role register (string name);
 	}
@@ -865,11 +859,8 @@ namespace Atk {
 		READ_ONLY,
 		COLLAPSED,
 		LAST_DEFINED;
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.StateType for_name (string name);
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.StateType register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_ATTR_", type_id = "atk_text_attribute_get_type ()")]
@@ -904,13 +895,9 @@ namespace Atk {
 		STYLE,
 		TEXT_POSITION,
 		LAST_DEFINED;
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.TextAttribute for_name (string name);
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string? get_value (int index_);
-		[CCode (cheader_filename = "atk/atk.h")]
 		public static Atk.TextAttribute register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h", cprefix = "ATK_TEXT_BOUNDARY_", type_id = "atk_text_boundary_get_type ()")]
@@ -956,9 +943,7 @@ namespace Atk {
 		VERY_GOOD,
 		BEST,
 		LAST_DEFINED;
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_localized_name ();
-		[CCode (cheader_filename = "atk/atk.h")]
 		public unowned string get_name ();
 	}
 	[CCode (cheader_filename = "atk/atk.h", has_target = false)]
@@ -1008,4 +993,52 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	[Version (since = "2.8")]
 	public static uint get_minor_version ();
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "RelationType.for_name")]
+	public static Atk.RelationType relation_type_for_name (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "RelationType.get_name")]
+	public static unowned string relation_type_get_name (Atk.RelationType type);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "RelationType.register")]
+	public static Atk.RelationType relation_type_register (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "Role.for_name")]
+	public static Atk.Role role_for_name (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "Role.get_localized_name")]
+	public static unowned string role_get_localized_name (Atk.Role role);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "Role.get_name")]
+	public static unowned string role_get_name (Atk.Role role);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (deprecated = true, replacement = "Role.register")]
+	public static Atk.Role role_register (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "StateType.for_name")]
+	public static Atk.StateType state_type_for_name (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "StateType.get_name")]
+	public static unowned string state_type_get_name (Atk.StateType type);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "StateType.register")]
+	public static Atk.StateType state_type_register (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "TextAttribute.for_name")]
+	public static Atk.TextAttribute text_attribute_for_name (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "TextAttribute.get_name")]
+	public static unowned string text_attribute_get_name (Atk.TextAttribute attr);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "TextAttribute.get_value")]
+	public static unowned string? text_attribute_get_value (Atk.TextAttribute attr, int index_);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "TextAttribute.register")]
+	public static Atk.TextAttribute text_attribute_register (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "ValueType.get_localized_name")]
+	public static unowned string value_type_get_localized_name (Atk.ValueType value_type);
+	[CCode (cheader_filename = "atk/atk.h")]
+	[Version (replacement = "ValueType.get_name")]
+	public static unowned string value_type_get_name (Atk.ValueType value_type);
 }

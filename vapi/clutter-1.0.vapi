@@ -9060,6 +9060,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h", cname = "CLUTTER_VERSION_S")]
 	public const string VERSION_S;
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "ActorBox.alloc", since = "1.12")]
+	public static Clutter.ActorBox? actor_box_alloc ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void base_init ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "1.12")]
@@ -9077,11 +9080,26 @@ namespace Clutter {
 	[Version (deprecated = true, deprecated_since = "1.10", since = "0.8")]
 	public static void clear_glyph_cache ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Color.get_static", since = "1.6")]
+	public static unowned Clutter.Color? color_get_static (Clutter.StaticColor color);
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "1.14")]
 	public static void disable_accessibility ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "0.4")]
 	public static void do_event (Clutter.Event event);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Event.add_filter", since = "1.18")]
+	public static uint event_add_filter (Clutter.Stage? stage, [CCode (delegate_target_pos = 2.2, destroy_notify_pos = 2.1)] owned Clutter.EventFilterFunc func);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Event.get", since = "0.4")]
+	public static Clutter.Event event_get ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Event.peek", since = "0.4")]
+	public static unowned Clutter.Event event_peek ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Event.remove_filter", since = "1.18")]
+	public static void event_remove_filter (uint id);
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "0.4")]
 	public static bool events_pending ();
@@ -9146,7 +9164,13 @@ namespace Clutter {
 	[Version (deprecated = true, deprecated_since = "1.10", since = "0.8")]
 	public static void grab_pointer_for_device (Clutter.Actor actor, int id_);
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "ImageError.quark")]
+	public static GLib.Quark image_error_quark ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static Clutter.InitError init ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "InitError.quark")]
+	public static GLib.Quark init_error_quark ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "0.2")]
 	public static Clutter.InitError init_with_args ([CCode (array_length_cname = "argc", array_length_pos = 0.5)] ref unowned string[]? argv, string? parameter_string, [CCode (array_length = false)] GLib.OptionEntry[]? entries, string? translation_domain) throws GLib.Error;
@@ -9159,6 +9183,18 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static void main_quit ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Matrix.alloc", since = "1.12")]
+	public static Clutter.Matrix? matrix_alloc ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Point.zero", since = "1.12")]
+	public static unowned Clutter.Point? point_zero ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "Rect.zero", since = "1.12")]
+	public static unowned Clutter.Rect? rect_zero ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "ScriptError.quark")]
+	public static GLib.Quark script_error_quark ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (deprecated = true, deprecated_since = "1.10", since = "0.6")]
 	public static void set_default_frame_rate (uint frames_per_sec);
 	[CCode (cheader_filename = "clutter/clutter.h")]
@@ -9170,6 +9206,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "1.16")]
 	public static void set_windowing_backend (string backend_type);
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "ShaderError.quark")]
+	public static GLib.Quark shader_error_quark ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "1.18")]
 	public static void test_add_data_full (string test_path, owned GLib.TestDataFunc test_func);
@@ -9187,6 +9226,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "1.18")]
 	public static int test_run ();
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	[Version (replacement = "TextureError.quark")]
+	public static GLib.Quark texture_error_quark ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	[Version (since = "0.6")]
 	public static void ungrab_keyboard ();
