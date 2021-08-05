@@ -198,7 +198,7 @@ namespace GirTest {
 		public int field_name;
 		public int internal_field_name;
 		[CCode (cname = "gir_test_boxed_struct_init_foo")]
-		public static GirTest.BoxedStruct foo (int param1, int param2);
+		public void foo (int param1, int param2);
 		public static GirTest.BoxedStruct init ();
 		public void inv ();
 	}
@@ -214,7 +214,7 @@ namespace GirTest {
 		public int field_name;
 		public int internal_field_name;
 		[CCode (cname = "gir_test_struct_init_foo")]
-		public static GirTest.Struct foo (int param1, int param2);
+		public void foo (int param1, int param2);
 		public static GirTest.Struct init ();
 		public void inv ();
 	}

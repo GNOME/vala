@@ -2765,14 +2765,14 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</parameter>
 				<parameter name="param1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
 				<parameter name="param2" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
-				</parameter>
-				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
-					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
 				</parameter>
 			</parameters>
 		</function>
@@ -2809,14 +2809,14 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
 				<parameter name="param1" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
 				</parameter>
 				<parameter name="param2" transfer-ownership="none">
 					<type name="gint" c:type="gint"/>
-				</parameter>
-				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
-					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
 				</parameter>
 			</parameters>
 		</function>
