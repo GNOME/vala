@@ -1430,7 +1430,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				add_generic_accessor_function ("get_%s_dup_func".printf (p.name.ascii_down ()),
 				                               "GBoxedCopyFunc",
-				                               get_dup_func_expression (p_data_type, null),
+				                               get_dup_func_expression (p_data_type, p_data_type.source_reference),
 				                               p, cl, iface);
 
 				add_generic_accessor_function ("get_%s_destroy_func".printf (p.name.ascii_down ()),

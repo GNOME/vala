@@ -427,7 +427,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		// still required for vapigen
 		if (unresolved_type.unresolved_symbol.name == "void") {
-			return new VoidType ();
+			return new VoidType (unresolved_type.source_reference);
 		}
 
 		var sym = resolve_symbol (unresolved_type.unresolved_symbol);

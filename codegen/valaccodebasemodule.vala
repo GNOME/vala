@@ -2924,7 +2924,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				}
 			} else {
 				// duplicating non-reference counted objects may cause side-effects (and performance issues)
-				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.type_symbol.name));
+				Report.error (source_reference, "duplicating `%s' instance, use unowned variable or explicitly invoke copy method".printf (type.type_symbol.name));
 				return new CCodeInvalidExpression();
 			}
 
@@ -4796,7 +4796,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), get_type_id_expression (type_arg, is_chainup));
 			if (requires_copy (type_arg)) {
-				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
+				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference ?? expr.source_reference, is_chainup);
 				if (dup_func == null) {
 					// type doesn't contain a copy function
 					expr.error = true;
