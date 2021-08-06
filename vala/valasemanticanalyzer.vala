@@ -998,6 +998,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return generic_type;
 		}
 		actual_type = actual_type.copy ();
+		actual_type.source_reference = generic_type.source_reference;
 		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
 		return actual_type;
 	}

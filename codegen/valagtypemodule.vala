@@ -1478,7 +1478,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 				add_generic_accessor_function ("get_%s".printf (get_ccode_copy_function (p)),
 				                               "GBoxedCopyFunc",
-				                               get_dup_func_expression (p_data_type, null),
+				                               get_dup_func_expression (p_data_type, p_data_type.source_reference),
 				                               p, cl, iface);
 
 				add_generic_accessor_function ("get_%s".printf (get_ccode_destroy_function (p)),
