@@ -41,6 +41,12 @@ enum  {
 static guint test_signals[TEST_NUM_SIGNALS] = {0};
 typedef GDBusProxy TestProxy;
 typedef GDBusProxyClass TestProxyClass;
+enum  {
+	TEST_PROXY_0_PROPERTY,
+	TEST_PROXY_TEST_PROPERTY_PROPERTY,
+	TEST_PROXY_NUM_PROPERTIES
+};
+static GParamSpec* test_proxy_properties[TEST_PROXY_NUM_PROPERTIES];
 #define _g_free0(var) (var = (g_free (var), NULL))
 
 #define TYPE_TEST_RAW (test_raw_get_type ())
@@ -59,6 +65,12 @@ enum  {
 static guint test_raw_signals[TEST_RAW_NUM_SIGNALS] = {0};
 typedef GDBusProxy TestRawProxy;
 typedef GDBusProxyClass TestRawProxyClass;
+enum  {
+	TEST_RAW_PROXY_0_PROPERTY,
+	TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY,
+	TEST_RAW_PROXY_NUM_PROPERTIES
+};
+static GParamSpec* test_raw_proxy_properties[TEST_RAW_PROXY_NUM_PROPERTIES];
 #define _g_variant_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_unref (var), NULL)))
 typedef struct _Block1Data Block1Data;
 #define _g_main_loop_unref0(var) ((var == NULL) ? NULL : (var = (g_main_loop_unref (var), NULL)))
@@ -108,12 +120,24 @@ VALA_EXTERN gchar* test_get_test_property (Test* self);
 VALA_EXTERN void test_set_test_property (Test* self,
                              const gchar* value);
 static GType test_get_type_once (void);
+static GParamSpec * _vala_test_find_property_from_dbus_name (const gchar * dbus_property_name);
+static void test_proxy_get_property (GObject* object,
+                              guint property_id,
+                              GValue* value,
+                              GParamSpec* pspec);
+static void test_proxy_set_property (GObject* object,
+                              guint property_id,
+                              const GValue* value,
+                              GParamSpec* pspec);
 static void test_proxy_g_signal (GDBusProxy* proxy,
                           const gchar* sender_name,
                           const gchar* signal_name,
                           GVariant* parameters);
 static void _dbus_handle_test_test_signal (Test* self,
                                     GVariant* parameters);
+static void test_proxy_g_properties_changed (GDBusProxy* proxy,
+                                      GVariant* changed_properties,
+                                      const gchar* const* invalidated_properties);
 static gint test_proxy_test_method (Test* self,
                              gint j,
                              gint k,
@@ -154,6 +178,9 @@ static void _dbus_test_set_test_property (Test* self,
 static void _dbus_test_test_signal (GObject* _sender,
                              gint i,
                              gpointer* _data);
+static void _test_notify_test_property (GObject * gobject,
+                                 GParamSpec * pspec,
+                                 gpointer user_data);
 static void _test_unregister_object (gpointer user_data);
 VALA_EXTERN GType test_raw_proxy_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN guint test_raw_register_object (void* object,
@@ -170,12 +197,24 @@ VALA_EXTERN GVariant* test_raw_get_test_property (TestRaw* self);
 VALA_EXTERN void test_raw_set_test_property (TestRaw* self,
                                  GVariant* value);
 static GType test_raw_get_type_once (void);
+static GParamSpec * _vala_test_raw_find_property_from_dbus_name (const gchar * dbus_property_name);
+static void test_raw_proxy_get_property (GObject* object,
+                                  guint property_id,
+                                  GValue* value,
+                                  GParamSpec* pspec);
+static void test_raw_proxy_set_property (GObject* object,
+                                  guint property_id,
+                                  const GValue* value,
+                                  GParamSpec* pspec);
 static void test_raw_proxy_g_signal (GDBusProxy* proxy,
                               const gchar* sender_name,
                               const gchar* signal_name,
                               GVariant* parameters);
 static void _dbus_handle_test_raw_test_signal (TestRaw* self,
                                         GVariant* parameters);
+static void test_raw_proxy_g_properties_changed (GDBusProxy* proxy,
+                                          GVariant* changed_properties,
+                                          const gchar* const* invalidated_properties);
 static GVariant* test_raw_proxy_test_method (TestRaw* self,
                                       GVariant* j,
                                       GVariant* k,
@@ -216,6 +255,9 @@ static void _dbus_test_raw_set_test_property (TestRaw* self,
 static void _dbus_test_raw_test_signal (GObject* _sender,
                                  GVariant* i,
                                  gpointer* _data);
+static void _test_raw_notify_test_property (GObject * gobject,
+                                     GParamSpec * pspec,
+                                     gpointer user_data);
 static void _test_raw_unregister_object (gpointer user_data);
 VALA_EXTERN void test_raw (TestRaw* test);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
@@ -315,6 +357,7 @@ static void
 test_default_init (TestIface * iface,
                    gpointer iface_data)
 {
+	g_object_interface_install_property (iface, g_param_spec_string ("test-property", "test-property", "test-property", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	test_signals[TEST_TEST_SIGNAL_SIGNAL] = g_signal_new ("test-signal", TYPE_TEST, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
@@ -348,7 +391,59 @@ G_DEFINE_TYPE_EXTENDED (TestProxy, test_proxy, G_TYPE_DBUS_PROXY, 0, G_IMPLEMENT
 static void
 test_proxy_class_init (TestProxyClass* klass)
 {
-	G_DBUS_PROXY_CLASS (klass)->g_signal = test_proxy_g_signal;
+	GDBusProxyClass * proxy_class = G_DBUS_PROXY_CLASS (klass);
+	GObjectClass * object_class = G_OBJECT_CLASS (klass);
+	proxy_class->g_signal = test_proxy_g_signal;
+	proxy_class->g_properties_changed = test_proxy_g_properties_changed;
+	object_class->get_property = test_proxy_get_property;
+	object_class->set_property = test_proxy_set_property;
+	g_object_class_override_property (object_class, TEST_PROXY_TEST_PROPERTY_PROPERTY, "test-property");
+	test_proxy_properties[TEST_PROXY_TEST_PROPERTY_PROPERTY] = g_object_class_find_property (object_class, "test-property");
+}
+
+static GParamSpec *
+_vala_test_find_property_from_dbus_name (const gchar * dbus_property_name)
+{
+	if (g_strcmp0 (dbus_property_name, "TestProperty") == 0) {
+		return test_proxy_properties[TEST_PROXY_TEST_PROPERTY_PROPERTY];
+	}
+	return NULL;
+}
+
+static void
+test_proxy_get_property (GObject* object,
+                         guint property_id,
+                         GValue* value,
+                         GParamSpec* pspec)
+{
+	Test * self;
+	GVariant * variant;
+	const gchar * dbus_property_name = NULL;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST, Test);
+	switch (property_id) {
+		case TEST_PROXY_TEST_PROPERTY_PROPERTY:
+		g_value_take_string (value, test_dbus_proxy_get_test_property (self));
+		break;
+		default:
+		return;
+	}
+}
+
+static void
+test_proxy_set_property (GObject* object,
+                         guint property_id,
+                         const GValue* value,
+                         GParamSpec* pspec)
+{
+	Test * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST, Test);
+	switch (property_id) {
+		case TEST_PROXY_TEST_PROPERTY_PROPERTY:
+		test_dbus_proxy_set_test_property (self, g_value_get_string (value));
+		break;
+		default:
+		return;
+	}
 }
 
 static void
@@ -373,6 +468,31 @@ test_proxy_g_signal (GDBusProxy* proxy,
 {
 	if (strcmp (signal_name, "TestSignal") == 0) {
 		_dbus_handle_test_test_signal ((Test*) proxy, parameters);
+	}
+}
+
+static void
+test_proxy_g_properties_changed (GDBusProxy* proxy,
+                                 GVariant* changed_properties,
+                                 const gchar* const* invalidated_properties)
+{
+	GVariantIter * iter;
+	const gchar * key;
+	GParamSpec * pspec;
+	guint n;
+	g_variant_get (changed_properties, "a{sv}", &iter);
+	while (g_variant_iter_next (iter, "{&sv}", &key, NULL)) {
+		pspec = _vala_test_find_property_from_dbus_name (key);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
+	g_variant_iter_free (iter);
+	for (n = 0; invalidated_properties[n] != NULL; n++) {
+		pspec = _vala_test_find_property_from_dbus_name (invalidated_properties[n]);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
 	}
 }
 
@@ -614,6 +734,27 @@ _dbus_test_test_signal (GObject* _sender,
 	g_dbus_connection_emit_signal (_connection, NULL, _path, "org.example.Test", "TestSignal", _arguments, NULL);
 }
 
+static void
+_test_notify_test_property (GObject * gobject,
+                            GParamSpec * pspec,
+                            gpointer user_data)
+{
+	gpointer* data = user_data;
+	GError* error = NULL;
+	GVariant* parameters = NULL;
+	GVariant* variant = NULL;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	Test * self;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	self = G_TYPE_CHECK_INSTANCE_CAST (gobject, TYPE_TEST, Test);
+	variant = _dbus_test_get_test_property (self);
+	g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", variant);
+	parameters = g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder);
+	g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", parameters, &error);
+}
+
 guint
 test_register_object (gpointer object,
                       GDBusConnection* connection,
@@ -631,6 +772,7 @@ test_register_object (gpointer object,
 		return 0;
 	}
 	g_signal_connect (object, "test-signal", (GCallback) _dbus_test_test_signal, data);
+	g_signal_connect (object, "notify::test-property", (GCallback) _test_notify_test_property, data);
 	return result;
 }
 
@@ -640,6 +782,7 @@ _test_unregister_object (gpointer user_data)
 	gpointer* data;
 	data = user_data;
 	g_signal_handlers_disconnect_by_func (data[0], _dbus_test_test_signal, data);
+	g_signal_handlers_disconnect_by_func (data[0], _test_notify_test_property, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);
@@ -689,6 +832,7 @@ static void
 test_raw_default_init (TestRawIface * iface,
                        gpointer iface_data)
 {
+	g_object_interface_install_property (iface, g_param_spec_variant ("test-property", "test-property", "test-property", G_VARIANT_TYPE_ANY, NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	test_raw_signals[TEST_RAW_TEST_SIGNAL_SIGNAL] = g_signal_new ("test-signal", TYPE_TEST_RAW, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VARIANT, G_TYPE_NONE, 1, G_TYPE_VARIANT);
 }
 
@@ -722,7 +866,59 @@ G_DEFINE_TYPE_EXTENDED (TestRawProxy, test_raw_proxy, G_TYPE_DBUS_PROXY, 0, G_IM
 static void
 test_raw_proxy_class_init (TestRawProxyClass* klass)
 {
-	G_DBUS_PROXY_CLASS (klass)->g_signal = test_raw_proxy_g_signal;
+	GDBusProxyClass * proxy_class = G_DBUS_PROXY_CLASS (klass);
+	GObjectClass * object_class = G_OBJECT_CLASS (klass);
+	proxy_class->g_signal = test_raw_proxy_g_signal;
+	proxy_class->g_properties_changed = test_raw_proxy_g_properties_changed;
+	object_class->get_property = test_raw_proxy_get_property;
+	object_class->set_property = test_raw_proxy_set_property;
+	g_object_class_override_property (object_class, TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY, "test-property");
+	test_raw_proxy_properties[TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY] = g_object_class_find_property (object_class, "test-property");
+}
+
+static GParamSpec *
+_vala_test_raw_find_property_from_dbus_name (const gchar * dbus_property_name)
+{
+	if (g_strcmp0 (dbus_property_name, "TestProperty") == 0) {
+		return test_raw_proxy_properties[TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY];
+	}
+	return NULL;
+}
+
+static void
+test_raw_proxy_get_property (GObject* object,
+                             guint property_id,
+                             GValue* value,
+                             GParamSpec* pspec)
+{
+	TestRaw * self;
+	GVariant * variant;
+	const gchar * dbus_property_name = NULL;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST_RAW, TestRaw);
+	switch (property_id) {
+		case TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY:
+		g_value_take_variant (value, test_raw_dbus_proxy_get_test_property (self));
+		break;
+		default:
+		return;
+	}
+}
+
+static void
+test_raw_proxy_set_property (GObject* object,
+                             guint property_id,
+                             const GValue* value,
+                             GParamSpec* pspec)
+{
+	TestRaw * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST_RAW, TestRaw);
+	switch (property_id) {
+		case TEST_RAW_PROXY_TEST_PROPERTY_PROPERTY:
+		test_raw_dbus_proxy_set_test_property (self, g_value_get_variant (value));
+		break;
+		default:
+		return;
+	}
 }
 
 static void
@@ -745,6 +941,31 @@ test_raw_proxy_g_signal (GDBusProxy* proxy,
 {
 	if (strcmp (signal_name, "TestSignal") == 0) {
 		_dbus_handle_test_raw_test_signal ((TestRaw*) proxy, parameters);
+	}
+}
+
+static void
+test_raw_proxy_g_properties_changed (GDBusProxy* proxy,
+                                     GVariant* changed_properties,
+                                     const gchar* const* invalidated_properties)
+{
+	GVariantIter * iter;
+	const gchar * key;
+	GParamSpec * pspec;
+	guint n;
+	g_variant_get (changed_properties, "a{sv}", &iter);
+	while (g_variant_iter_next (iter, "{&sv}", &key, NULL)) {
+		pspec = _vala_test_raw_find_property_from_dbus_name (key);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
+	g_variant_iter_free (iter);
+	for (n = 0; invalidated_properties[n] != NULL; n++) {
+		pspec = _vala_test_raw_find_property_from_dbus_name (invalidated_properties[n]);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
 	}
 }
 
@@ -977,6 +1198,27 @@ _dbus_test_raw_test_signal (GObject* _sender,
 	g_dbus_connection_emit_signal (_connection, NULL, _path, "org.example.Test", "TestSignal", _arguments, NULL);
 }
 
+static void
+_test_raw_notify_test_property (GObject * gobject,
+                                GParamSpec * pspec,
+                                gpointer user_data)
+{
+	gpointer* data = user_data;
+	GError* error = NULL;
+	GVariant* parameters = NULL;
+	GVariant* variant = NULL;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	TestRaw * self;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	self = G_TYPE_CHECK_INSTANCE_CAST (gobject, TYPE_TEST_RAW, TestRaw);
+	variant = _dbus_test_raw_get_test_property (self);
+	g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", variant);
+	parameters = g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder);
+	g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", parameters, &error);
+}
+
 guint
 test_raw_register_object (gpointer object,
                           GDBusConnection* connection,
@@ -994,6 +1236,7 @@ test_raw_register_object (gpointer object,
 		return 0;
 	}
 	g_signal_connect (object, "test-signal", (GCallback) _dbus_test_raw_test_signal, data);
+	g_signal_connect (object, "notify::test-property", (GCallback) _test_raw_notify_test_property, data);
 	return result;
 }
 
@@ -1003,6 +1246,7 @@ _test_raw_unregister_object (gpointer user_data)
 	gpointer* data;
 	data = user_data;
 	g_signal_handlers_disconnect_by_func (data[0], _dbus_test_raw_test_signal, data);
+	g_signal_handlers_disconnect_by_func (data[0], _test_raw_notify_test_property, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);

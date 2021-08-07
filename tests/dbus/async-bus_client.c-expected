@@ -35,6 +35,11 @@ typedef struct _TestIface TestIface;
 #define TYPE_TEST_PROXY (test_proxy_get_type ())
 typedef GDBusProxy TestProxy;
 typedef GDBusProxyClass TestProxyClass;
+enum  {
+	TEST_PROXY_0_PROPERTY,
+	TEST_PROXY_NUM_PROPERTIES
+};
+static GParamSpec* test_proxy_properties[TEST_PROXY_NUM_PROPERTIES];
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_main_loop_unref0(var) ((var == NULL) ? NULL : (var = (g_main_loop_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
@@ -60,10 +65,22 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN gint test_get_test (Test* self,
                     GError** error);
 static GType test_get_type_once (void);
+static GParamSpec * _vala_test_find_property_from_dbus_name (const gchar * dbus_property_name);
+static void test_proxy_get_property (GObject* object,
+                              guint property_id,
+                              GValue* value,
+                              GParamSpec* pspec);
+static void test_proxy_set_property (GObject* object,
+                              guint property_id,
+                              const GValue* value,
+                              GParamSpec* pspec);
 static void test_proxy_g_signal (GDBusProxy* proxy,
                           const gchar* sender_name,
                           const gchar* signal_name,
                           GVariant* parameters);
+static void test_proxy_g_properties_changed (GDBusProxy* proxy,
+                                      GVariant* changed_properties,
+                                      const gchar* const* invalidated_properties);
 static gint test_proxy_get_test (Test* self,
                           GError** error);
 static void test_proxy_test_interface_init (TestIface* iface);
@@ -160,7 +177,48 @@ G_DEFINE_TYPE_EXTENDED (TestProxy, test_proxy, G_TYPE_DBUS_PROXY, 0, G_IMPLEMENT
 static void
 test_proxy_class_init (TestProxyClass* klass)
 {
-	G_DBUS_PROXY_CLASS (klass)->g_signal = test_proxy_g_signal;
+	GDBusProxyClass * proxy_class = G_DBUS_PROXY_CLASS (klass);
+	GObjectClass * object_class = G_OBJECT_CLASS (klass);
+	proxy_class->g_signal = test_proxy_g_signal;
+	proxy_class->g_properties_changed = test_proxy_g_properties_changed;
+	object_class->get_property = test_proxy_get_property;
+	object_class->set_property = test_proxy_set_property;
+}
+
+static GParamSpec *
+_vala_test_find_property_from_dbus_name (const gchar * dbus_property_name)
+{
+	return NULL;
+}
+
+static void
+test_proxy_get_property (GObject* object,
+                         guint property_id,
+                         GValue* value,
+                         GParamSpec* pspec)
+{
+	Test * self;
+	GVariant * variant;
+	const gchar * dbus_property_name = NULL;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST, Test);
+	switch (property_id) {
+		default:
+		return;
+	}
+}
+
+static void
+test_proxy_set_property (GObject* object,
+                         guint property_id,
+                         const GValue* value,
+                         GParamSpec* pspec)
+{
+	Test * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_TEST, Test);
+	switch (property_id) {
+		default:
+		return;
+	}
 }
 
 static void
@@ -169,6 +227,31 @@ test_proxy_g_signal (GDBusProxy* proxy,
                      const gchar* signal_name,
                      GVariant* parameters)
 {
+}
+
+static void
+test_proxy_g_properties_changed (GDBusProxy* proxy,
+                                 GVariant* changed_properties,
+                                 const gchar* const* invalidated_properties)
+{
+	GVariantIter * iter;
+	const gchar * key;
+	GParamSpec * pspec;
+	guint n;
+	g_variant_get (changed_properties, "a{sv}", &iter);
+	while (g_variant_iter_next (iter, "{&sv}", &key, NULL)) {
+		pspec = _vala_test_find_property_from_dbus_name (key);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
+	g_variant_iter_free (iter);
+	for (n = 0; invalidated_properties[n] != NULL; n++) {
+		pspec = _vala_test_find_property_from_dbus_name (invalidated_properties[n]);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
 }
 
 static void
