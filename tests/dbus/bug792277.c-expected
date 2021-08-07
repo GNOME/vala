@@ -35,6 +35,11 @@ typedef struct _IFooIface IFooIface;
 #define TYPE_IFOO_PROXY (ifoo_proxy_get_type ())
 typedef GDBusProxy IFooProxy;
 typedef GDBusProxyClass IFooProxyClass;
+enum  {
+	IFOO_PROXY_0_PROPERTY,
+	IFOO_PROXY_NUM_PROPERTIES
+};
+static GParamSpec* ifoo_proxy_properties[IFOO_PROXY_NUM_PROPERTIES];
 
 #define TYPE_FOO (foo_get_type ())
 #define FOO(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_FOO, Foo))
@@ -83,10 +88,22 @@ VALA_EXTERN void ifoo_method1 (IFoo* self,
                    GError** error);
 VALA_EXTERN void ifoo_method2 (IFoo* self);
 static GType ifoo_get_type_once (void);
+static GParamSpec * _vala_ifoo_find_property_from_dbus_name (const gchar * dbus_property_name);
+static void ifoo_proxy_get_property (GObject* object,
+                              guint property_id,
+                              GValue* value,
+                              GParamSpec* pspec);
+static void ifoo_proxy_set_property (GObject* object,
+                              guint property_id,
+                              const GValue* value,
+                              GParamSpec* pspec);
 static void ifoo_proxy_g_signal (GDBusProxy* proxy,
                           const gchar* sender_name,
                           const gchar* signal_name,
                           GVariant* parameters);
+static void ifoo_proxy_g_properties_changed (GDBusProxy* proxy,
+                                      GVariant* changed_properties,
+                                      const gchar* const* invalidated_properties);
 static void ifoo_proxy_method0 (IFoo* self,
                          GError** error);
 static void ifoo_proxy_method1 (IFoo* self,
@@ -263,7 +280,48 @@ G_DEFINE_TYPE_EXTENDED (IFooProxy, ifoo_proxy, G_TYPE_DBUS_PROXY, 0, G_IMPLEMENT
 static void
 ifoo_proxy_class_init (IFooProxyClass* klass)
 {
-	G_DBUS_PROXY_CLASS (klass)->g_signal = ifoo_proxy_g_signal;
+	GDBusProxyClass * proxy_class = G_DBUS_PROXY_CLASS (klass);
+	GObjectClass * object_class = G_OBJECT_CLASS (klass);
+	proxy_class->g_signal = ifoo_proxy_g_signal;
+	proxy_class->g_properties_changed = ifoo_proxy_g_properties_changed;
+	object_class->get_property = ifoo_proxy_get_property;
+	object_class->set_property = ifoo_proxy_set_property;
+}
+
+static GParamSpec *
+_vala_ifoo_find_property_from_dbus_name (const gchar * dbus_property_name)
+{
+	return NULL;
+}
+
+static void
+ifoo_proxy_get_property (GObject* object,
+                         guint property_id,
+                         GValue* value,
+                         GParamSpec* pspec)
+{
+	IFoo * self;
+	GVariant * variant;
+	const gchar * dbus_property_name = NULL;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_IFOO, IFoo);
+	switch (property_id) {
+		default:
+		return;
+	}
+}
+
+static void
+ifoo_proxy_set_property (GObject* object,
+                         guint property_id,
+                         const GValue* value,
+                         GParamSpec* pspec)
+{
+	IFoo * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_IFOO, IFoo);
+	switch (property_id) {
+		default:
+		return;
+	}
 }
 
 static void
@@ -272,6 +330,31 @@ ifoo_proxy_g_signal (GDBusProxy* proxy,
                      const gchar* signal_name,
                      GVariant* parameters)
 {
+}
+
+static void
+ifoo_proxy_g_properties_changed (GDBusProxy* proxy,
+                                 GVariant* changed_properties,
+                                 const gchar* const* invalidated_properties)
+{
+	GVariantIter * iter;
+	const gchar * key;
+	GParamSpec * pspec;
+	guint n;
+	g_variant_get (changed_properties, "a{sv}", &iter);
+	while (g_variant_iter_next (iter, "{&sv}", &key, NULL)) {
+		pspec = _vala_ifoo_find_property_from_dbus_name (key);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
+	g_variant_iter_free (iter);
+	for (n = 0; invalidated_properties[n] != NULL; n++) {
+		pspec = _vala_ifoo_find_property_from_dbus_name (invalidated_properties[n]);
+		if (pspec != NULL) {
+			g_object_notify_by_pspec ((GObject *) proxy, pspec);
+		}
+	}
 }
 
 static void

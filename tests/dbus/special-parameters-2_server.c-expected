@@ -90,6 +90,7 @@ struct _UnitClass {
 
 struct _UnitPrivate {
 	gchar* _name;
+	void* _dbus_registrations;
 };
 
 static gint Manager_private_offset;
@@ -150,6 +151,13 @@ static gboolean manager_dbus_interface_set_property (GDBusConnection* connection
                                               GError** error,
                                               gpointer user_data);
 static void _manager_unregister_object (gpointer user_data);
+static void _unit_emit_properties_changed (Unit * self,
+                                    gpointer * data,
+                                    guint n_pspecs,
+                                    GParamSpec ** pspecs);
+static void _unit_dispatch_properties_changed (GObject * gobject,
+                                        guint n_pspecs,
+                                        GParamSpec ** pspecs);
 VALA_EXTERN const gchar* unit_get_name (Unit* self);
 static void unit_finalize (GObject * obj);
 static GType unit_get_type_once (void);
@@ -466,6 +474,46 @@ unit_get_instance_private (Unit* self)
 	return G_STRUCT_MEMBER_P (self, Unit_private_offset);
 }
 
+static void
+_unit_emit_properties_changed (Unit * self,
+                               gpointer * data,
+                               guint n_pspecs,
+                               GParamSpec ** pspecs)
+{
+	guint i;
+	gboolean has_changes = FALSE;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	for (i = 0; i < n_pspecs; i++) {
+		if (g_strcmp0 (pspecs[i]->name, "name") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "Name", _dbus_unit_get_name (self));
+			has_changes = TRUE;
+		}
+	}
+	if (has_changes) {
+		g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", g_variant_new ("(sa{sv}as)", "org.example.Test.Unit", &changed_builder, &invalidated_builder), NULL);
+	} else {
+		g_variant_builder_clear (&changed_builder);
+		g_variant_builder_clear (&invalidated_builder);
+	}
+}
+
+static void
+_unit_dispatch_properties_changed (GObject * gobject,
+                                   guint n_pspecs,
+                                   GParamSpec ** pspecs)
+{
+	GSList* registration;
+	Unit * self;
+	G_OBJECT_CLASS (unit_parent_class)->dispatch_properties_changed (gobject, n_pspecs, pspecs);
+	self = UNIT (gobject);
+	for (registration = self->priv->_dbus_registrations; registration != NULL; registration = registration->next) {
+		_unit_emit_properties_changed (self, registration->data, n_pspecs, pspecs);
+	}
+}
+
 Unit*
 unit_construct (GType object_type)
 {
@@ -517,6 +565,7 @@ unit_class_init (UnitClass * klass,
 	G_OBJECT_CLASS (klass)->set_property = _vala_unit_set_property;
 	G_OBJECT_CLASS (klass)->finalize = unit_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), UNIT_NAME_PROPERTY, unit_properties[UNIT_NAME_PROPERTY] = g_param_spec_string ("name", "name", "name", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
+	G_OBJECT_CLASS (klass)->dispatch_properties_changed = _unit_dispatch_properties_changed;
 }
 
 static void
@@ -675,6 +724,7 @@ unit_register_object (gpointer object,
 {
 	guint result;
 	gpointer *data;
+	Unit * self;
 	data = g_new (gpointer, 3);
 	data[0] = g_object_ref (object);
 	data[1] = g_object_ref (connection);
@@ -683,6 +733,8 @@ unit_register_object (gpointer object,
 	if (!result) {
 		return 0;
 	}
+	self = UNIT (object);
+	self->priv->_dbus_registrations = g_slist_prepend (self->priv->_dbus_registrations, data);
 	return result;
 }
 
@@ -690,7 +742,10 @@ static void
 _unit_unregister_object (gpointer user_data)
 {
 	gpointer* data;
+	Unit * self;
 	data = user_data;
+	self = UNIT (data[0]);
+	self->priv->_dbus_registrations = g_slist_remove (self->priv->_dbus_registrations, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);

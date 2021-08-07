@@ -88,6 +88,7 @@ struct _TestClass {
 
 struct _TestPrivate {
 	gchar* _test_property;
+	void* _dbus_registrations;
 };
 
 struct _TestRaw {
@@ -101,6 +102,7 @@ struct _TestRawClass {
 
 struct _TestRawPrivate {
 	GVariant* _test_property;
+	void* _dbus_registrations;
 };
 
 static gint Test_private_offset;
@@ -116,6 +118,13 @@ VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
                             const gchar* path,
                             GError** error);
+static void _test_emit_properties_changed (Test * self,
+                                    gpointer * data,
+                                    guint n_pspecs,
+                                    GParamSpec ** pspecs);
+static void _test_dispatch_properties_changed (GObject * gobject,
+                                        guint n_pspecs,
+                                        GParamSpec ** pspecs);
 VALA_EXTERN gint test_test_method (Test* self,
                        gint j,
                        gint k);
@@ -173,6 +182,13 @@ VALA_EXTERN guint test_raw_register_object (void* object,
                                 GDBusConnection* connection,
                                 const gchar* path,
                                 GError** error);
+static void _test_raw_emit_properties_changed (TestRaw * self,
+                                        gpointer * data,
+                                        guint n_pspecs,
+                                        GParamSpec ** pspecs);
+static void _test_raw_dispatch_properties_changed (GObject * gobject,
+                                            guint n_pspecs,
+                                            GParamSpec ** pspecs);
 VALA_EXTERN GVariant* test_raw_test_method (TestRaw* self,
                                 GVariant* j,
                                 GVariant* k);
@@ -279,6 +295,46 @@ test_get_instance_private (Test* self)
 	return G_STRUCT_MEMBER_P (self, Test_private_offset);
 }
 
+static void
+_test_emit_properties_changed (Test * self,
+                               gpointer * data,
+                               guint n_pspecs,
+                               GParamSpec ** pspecs)
+{
+	guint i;
+	gboolean has_changes = FALSE;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	for (i = 0; i < n_pspecs; i++) {
+		if (g_strcmp0 (pspecs[i]->name, "test-property") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", _dbus_test_get_test_property (self));
+			has_changes = TRUE;
+		}
+	}
+	if (has_changes) {
+		g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder), NULL);
+	} else {
+		g_variant_builder_clear (&changed_builder);
+		g_variant_builder_clear (&invalidated_builder);
+	}
+}
+
+static void
+_test_dispatch_properties_changed (GObject * gobject,
+                                   guint n_pspecs,
+                                   GParamSpec ** pspecs)
+{
+	GSList* registration;
+	Test * self;
+	G_OBJECT_CLASS (test_parent_class)->dispatch_properties_changed (gobject, n_pspecs, pspecs);
+	self = TEST (gobject);
+	for (registration = self->priv->_dbus_registrations; registration != NULL; registration = registration->next) {
+		_test_emit_properties_changed (self, registration->data, n_pspecs, pspecs);
+	}
+}
+
 gint
 test_test_method (Test* self,
                   gint j,
@@ -347,6 +403,7 @@ test_class_init (TestClass * klass,
 	G_OBJECT_CLASS (klass)->set_property = _vala_test_set_property;
 	G_OBJECT_CLASS (klass)->finalize = test_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TEST_TEST_PROPERTY_PROPERTY, test_properties[TEST_TEST_PROPERTY_PROPERTY] = g_param_spec_string ("test-property", "test-property", "test-property", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	G_OBJECT_CLASS (klass)->dispatch_properties_changed = _test_dispatch_properties_changed;
 	test_signals[TEST_TEST_SIGNAL_SIGNAL] = g_signal_new ("test-signal", TYPE_TEST, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
@@ -565,6 +622,7 @@ test_register_object (gpointer object,
 {
 	guint result;
 	gpointer *data;
+	Test * self;
 	data = g_new (gpointer, 3);
 	data[0] = g_object_ref (object);
 	data[1] = g_object_ref (connection);
@@ -574,6 +632,8 @@ test_register_object (gpointer object,
 		return 0;
 	}
 	g_signal_connect (object, "test-signal", (GCallback) _dbus_test_test_signal, data);
+	self = TEST (object);
+	self->priv->_dbus_registrations = g_slist_prepend (self->priv->_dbus_registrations, data);
 	return result;
 }
 
@@ -581,8 +641,11 @@ static void
 _test_unregister_object (gpointer user_data)
 {
 	gpointer* data;
+	Test * self;
 	data = user_data;
 	g_signal_handlers_disconnect_by_func (data[0], _dbus_test_test_signal, data);
+	self = TEST (data[0]);
+	self->priv->_dbus_registrations = g_slist_remove (self->priv->_dbus_registrations, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);
@@ -593,6 +656,46 @@ static inline gpointer
 test_raw_get_instance_private (TestRaw* self)
 {
 	return G_STRUCT_MEMBER_P (self, TestRaw_private_offset);
+}
+
+static void
+_test_raw_emit_properties_changed (TestRaw * self,
+                                   gpointer * data,
+                                   guint n_pspecs,
+                                   GParamSpec ** pspecs)
+{
+	guint i;
+	gboolean has_changes = FALSE;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	for (i = 0; i < n_pspecs; i++) {
+		if (g_strcmp0 (pspecs[i]->name, "test-property") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", _dbus_test_raw_get_test_property (self));
+			has_changes = TRUE;
+		}
+	}
+	if (has_changes) {
+		g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder), NULL);
+	} else {
+		g_variant_builder_clear (&changed_builder);
+		g_variant_builder_clear (&invalidated_builder);
+	}
+}
+
+static void
+_test_raw_dispatch_properties_changed (GObject * gobject,
+                                       guint n_pspecs,
+                                       GParamSpec ** pspecs)
+{
+	GSList* registration;
+	TestRaw * self;
+	G_OBJECT_CLASS (test_raw_parent_class)->dispatch_properties_changed (gobject, n_pspecs, pspecs);
+	self = TEST_RAW (gobject);
+	for (registration = self->priv->_dbus_registrations; registration != NULL; registration = registration->next) {
+		_test_raw_emit_properties_changed (self, registration->data, n_pspecs, pspecs);
+	}
 }
 
 static gint
@@ -704,6 +807,7 @@ test_raw_class_init (TestRawClass * klass,
 	G_OBJECT_CLASS (klass)->set_property = _vala_test_raw_set_property;
 	G_OBJECT_CLASS (klass)->finalize = test_raw_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TEST_RAW_TEST_PROPERTY_PROPERTY, test_raw_properties[TEST_RAW_TEST_PROPERTY_PROPERTY] = g_param_spec_variant ("test-property", "test-property", "test-property", G_VARIANT_TYPE_ANY, NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	G_OBJECT_CLASS (klass)->dispatch_properties_changed = _test_raw_dispatch_properties_changed;
 	test_raw_signals[TEST_RAW_TEST_SIGNAL_SIGNAL] = g_signal_new ("test-signal", TYPE_TEST_RAW, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VARIANT, G_TYPE_NONE, 1, G_TYPE_VARIANT);
 }
 
@@ -917,6 +1021,7 @@ test_raw_register_object (gpointer object,
 {
 	guint result;
 	gpointer *data;
+	TestRaw * self;
 	data = g_new (gpointer, 3);
 	data[0] = g_object_ref (object);
 	data[1] = g_object_ref (connection);
@@ -926,6 +1031,8 @@ test_raw_register_object (gpointer object,
 		return 0;
 	}
 	g_signal_connect (object, "test-signal", (GCallback) _dbus_test_raw_test_signal, data);
+	self = TEST_RAW (object);
+	self->priv->_dbus_registrations = g_slist_prepend (self->priv->_dbus_registrations, data);
 	return result;
 }
 
@@ -933,8 +1040,11 @@ static void
 _test_raw_unregister_object (gpointer user_data)
 {
 	gpointer* data;
+	TestRaw * self;
 	data = user_data;
 	g_signal_handlers_disconnect_by_func (data[0], _dbus_test_raw_test_signal, data);
+	self = TEST_RAW (data[0]);
+	self->priv->_dbus_registrations = g_slist_remove (self->priv->_dbus_registrations, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);

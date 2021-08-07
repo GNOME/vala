@@ -66,6 +66,7 @@ struct _TestPrivate {
 	gchar* _test_property;
 	gint _test_int_property;
 	GVariantType* _test_signature_property;
+	void* _dbus_registrations;
 };
 
 static gint Test_private_offset;
@@ -79,6 +80,13 @@ VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
                             const gchar* path,
                             GError** error);
+static void _test_emit_properties_changed (Test * self,
+                                    gpointer * data,
+                                    guint n_pspecs,
+                                    GParamSpec ** pspecs);
+static void _test_dispatch_properties_changed (GObject * gobject,
+                                        guint n_pspecs,
+                                        GParamSpec ** pspecs);
 VALA_EXTERN void test_test_void (Test* self);
 VALA_EXTERN gint test_test_int (Test* self,
                     gint i,
@@ -203,6 +211,54 @@ static inline gpointer
 test_get_instance_private (Test* self)
 {
 	return G_STRUCT_MEMBER_P (self, Test_private_offset);
+}
+
+static void
+_test_emit_properties_changed (Test * self,
+                               gpointer * data,
+                               guint n_pspecs,
+                               GParamSpec ** pspecs)
+{
+	guint i;
+	gboolean has_changes = FALSE;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	for (i = 0; i < n_pspecs; i++) {
+		if (g_strcmp0 (pspecs[i]->name, "test-property") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", _dbus_test_get_test_property (self));
+			has_changes = TRUE;
+		}
+		if (g_strcmp0 (pspecs[i]->name, "test-int-property") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "TestIntProperty", _dbus_test_get_test_int_property (self));
+			has_changes = TRUE;
+		}
+		if (g_strcmp0 (pspecs[i]->name, "test-signature-property") == 0) {
+			g_variant_builder_add (&changed_builder, "{sv}", "TestSignatureProperty", _dbus_test_get_test_signature_property (self));
+			has_changes = TRUE;
+		}
+	}
+	if (has_changes) {
+		g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder), NULL);
+	} else {
+		g_variant_builder_clear (&changed_builder);
+		g_variant_builder_clear (&invalidated_builder);
+	}
+}
+
+static void
+_test_dispatch_properties_changed (GObject * gobject,
+                                   guint n_pspecs,
+                                   GParamSpec ** pspecs)
+{
+	GSList* registration;
+	Test * self;
+	G_OBJECT_CLASS (test_parent_class)->dispatch_properties_changed (gobject, n_pspecs, pspecs);
+	self = TEST (gobject);
+	for (registration = self->priv->_dbus_registrations; registration != NULL; registration = registration->next) {
+		_test_emit_properties_changed (self, registration->data, n_pspecs, pspecs);
+	}
 }
 
 void
@@ -433,6 +489,7 @@ test_class_init (TestClass * klass,
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TEST_TEST_PROPERTY_PROPERTY, test_properties[TEST_TEST_PROPERTY_PROPERTY] = g_param_spec_string ("test-property", "test-property", "test-property", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TEST_TEST_INT_PROPERTY_PROPERTY, test_properties[TEST_TEST_INT_PROPERTY_PROPERTY] = g_param_spec_int ("test-int-property", "test-int-property", "test-int-property", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TEST_TEST_SIGNATURE_PROPERTY_PROPERTY, test_properties[TEST_TEST_SIGNATURE_PROPERTY_PROPERTY] = g_param_spec_boxed ("test-signature-property", "test-signature-property", "test-signature-property", G_TYPE_VARIANT_TYPE, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	G_OBJECT_CLASS (klass)->dispatch_properties_changed = _test_dispatch_properties_changed;
 }
 
 static void
@@ -792,6 +849,7 @@ test_register_object (gpointer object,
 {
 	guint result;
 	gpointer *data;
+	Test * self;
 	data = g_new (gpointer, 3);
 	data[0] = g_object_ref (object);
 	data[1] = g_object_ref (connection);
@@ -800,6 +858,8 @@ test_register_object (gpointer object,
 	if (!result) {
 		return 0;
 	}
+	self = TEST (object);
+	self->priv->_dbus_registrations = g_slist_prepend (self->priv->_dbus_registrations, data);
 	return result;
 }
 
@@ -807,7 +867,10 @@ static void
 _test_unregister_object (gpointer user_data)
 {
 	gpointer* data;
+	Test * self;
 	data = user_data;
+	self = TEST (data[0]);
+	self->priv->_dbus_registrations = g_slist_remove (self->priv->_dbus_registrations, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);
