@@ -140,6 +140,9 @@ static gboolean test_dbus_interface_set_property (GDBusConnection* connection,
                                            gpointer user_data);
 static void _dbus_test_set_test_property (Test* self,
                                    GVariant* _value);
+static void _test_notify_test_property (GObject * gobject,
+                                 GParamSpec * pspec,
+                                 gpointer user_data);
 static void _test_unregister_object (gpointer user_data);
 VALA_EXTERN void client_exit (GPid pid,
                   gint status);
@@ -739,6 +742,27 @@ test_dbus_interface_set_property (GDBusConnection* connection,
 	return FALSE;
 }
 
+static void
+_test_notify_test_property (GObject * gobject,
+                            GParamSpec * pspec,
+                            gpointer user_data)
+{
+	gpointer* data = user_data;
+	GError* error = NULL;
+	GVariant* parameters = NULL;
+	GVariant* variant = NULL;
+	GVariantBuilder changed_builder;
+	GVariantBuilder invalidated_builder;
+	Test * self;
+	g_variant_builder_init (&changed_builder, G_VARIANT_TYPE_VARDICT);
+	g_variant_builder_init (&invalidated_builder, G_VARIANT_TYPE_STRING_ARRAY);
+	self = G_TYPE_CHECK_INSTANCE_CAST (gobject, TYPE_TEST, Test);
+	variant = _dbus_test_get_test_property (self);
+	g_variant_builder_add (&changed_builder, "{sv}", "TestProperty", variant);
+	parameters = g_variant_new ("(sa{sv}as)", "org.example.Test", &changed_builder, &invalidated_builder);
+	g_dbus_connection_emit_signal ((GDBusConnection *) data[1], NULL, (const gchar *) data[2], "org.freedesktop.DBus.Properties", "PropertiesChanged", parameters, &error);
+}
+
 guint
 test_register_object (gpointer object,
                       GDBusConnection* connection,
@@ -755,6 +779,7 @@ test_register_object (gpointer object,
 	if (!result) {
 		return 0;
 	}
+	g_signal_connect (object, "notify::test-property", (GCallback) _test_notify_test_property, data);
 	return result;
 }
 
@@ -763,6 +788,7 @@ _test_unregister_object (gpointer user_data)
 {
 	gpointer* data;
 	data = user_data;
+	g_signal_handlers_disconnect_by_func (data[0], _test_notify_test_property, data);
 	g_object_unref (data[0]);
 	g_object_unref (data[1]);
 	g_free (data[2]);
