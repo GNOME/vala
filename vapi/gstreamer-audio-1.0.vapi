@@ -366,6 +366,8 @@ namespace Gst {
 			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 			public Gst.Audio.Info copy ();
 			public void free ();
+			public bool from_caps (Gst.Caps caps);
+			public void init ();
 			[Version (since = "1.2")]
 			public bool is_equal (Gst.Audio.Info other);
 			public void set_format (Gst.Audio.Format format, int rate, int channels, [CCode (array_length = false)] Gst.Audio.ChannelPosition position[64]);
@@ -537,6 +539,7 @@ namespace Gst {
 			public int n_planes;
 			public void* planes;
 			public weak Gst.Buffer buffer;
+			public bool map (Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);
 			public void unmap ();
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", has_type_id = false)]

@@ -392,6 +392,8 @@ namespace Gst {
 			public Gst.Video.Info copy ();
 			[Version (since = "1.6")]
 			public void free ();
+			public bool from_caps (Gst.Caps caps);
+			public void init ();
 			public bool is_equal (Gst.Video.Info other);
 			public bool set_format (Gst.Video.Format format, uint width, uint height);
 			[Version (since = "1.16")]
@@ -798,6 +800,8 @@ namespace Gst {
 			public Gst.MapInfo map_info[4];
 			public bool copy (Gst.Video.Frame src);
 			public bool copy_plane (Gst.Video.Frame src, uint plane);
+			public bool map (Gst.Video.Info info, Gst.Buffer buffer, Gst.MapFlags flags);
+			public bool map_id (Gst.Video.Info info, Gst.Buffer buffer, int id, Gst.MapFlags flags);
 			public void unmap ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
