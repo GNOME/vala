@@ -1498,6 +1498,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_NETWORK_MONITOR_EXTENSION_POINT_NAME")]
 		[Version (since = "2.30")]
 		public const string NETWORK_MONITOR;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_POWER_PROFILE_MONITOR_EXTENSION_POINT_NAME")]
+		[Version (since = "2.70")]
+		public const string POWER_PROFILE_MONITOR;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_PROXY_EXTENSION_POINT_NAME")]
 		[Version (since = "2.26")]
 		public const string PROXY;
@@ -2014,6 +2017,8 @@ namespace GLib {
 		public void add_button (string label, string detailed_action);
 		public void add_button_with_target_value (string label, string action, GLib.Variant? target);
 		public void set_body (string? body);
+		[Version (since = "2.70")]
+		public void set_category (string? category);
 		public void set_default_action (string detailed_action);
 		public void set_default_action_and_target_value (string action, GLib.Variant? target);
 		public void set_icon (GLib.Icon icon);
@@ -3963,6 +3968,14 @@ namespace GLib {
 		[Version (since = "2.60")]
 		public abstract GLib.PollableReturn writev_nonblocking_fn ([CCode (array_length_cname = "n_vectors", array_length_pos = 1.5, array_length_type = "gsize")] GLib.OutputVector[] vectors, out size_t bytes_written) throws GLib.Error;
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_cname = "GPowerProfileMonitorInterface", type_id = "g_power_profile_monitor_get_type ()")]
+	[Version (since = "2.70")]
+	public interface PowerProfileMonitor : GLib.Initable, GLib.Object {
+		public static GLib.PowerProfileMonitor dup_default ();
+		public bool get_power_saver_enabled ();
+		[ConcreteAccessor]
+		public abstract bool power_saver_enabled { get; }
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GProxyInterface", type_id = "g_proxy_get_type ()")]
 	[Version (since = "2.26")]
 	public interface Proxy : GLib.Object {
@@ -5122,6 +5135,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (since = "2.34")]
 	public static bool pollable_stream_write_all (GLib.OutputStream stream, [CCode (array_length_cname = "count", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Version (replacement = "PowerProfileMonitor.dup_default", since = "2.70")]
+	public static GLib.PowerProfileMonitor power_profile_monitor_dup_default ();
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "ResolverError.quark", since = "2.22")]
 	public static GLib.Quark resolver_error_quark ();

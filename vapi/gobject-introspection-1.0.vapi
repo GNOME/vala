@@ -132,6 +132,8 @@ namespace GI {
 		public GI.StructInfo? get_class_struct ();
 		public GI.ConstantInfo get_constant (int n);
 		public GI.FieldInfo get_field (int n);
+		[Version (since = "1.70")]
+		public bool get_final ();
 		public bool get_fundamental ();
 		public unowned string? get_get_value_function ();
 		public unowned GI.ObjectInfoGetValueFunction? get_get_value_function_pointer ();
@@ -161,7 +163,9 @@ namespace GI {
 	[Compact]
 	public class PropertyInfo : GI.BaseInfo {
 		public GLib.ParamFlags get_flags ();
+		public GI.FunctionInfo? get_getter ();
 		public GI.Transfer get_ownership_transfer ();
+		public GI.FunctionInfo? get_setter ();
 		public GI.TypeInfo get_type ();
 	}
 	[CCode (cheader_filename = "girepository.h", type_id = "g_base_info_gtype_get_type ()")]

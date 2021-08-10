@@ -3,5 +3,7 @@ pid_read_resource_usage parent="Wnck.ResourceUsage" name="pid_read"
     .usage out unowned=false
 xid_read_resource_usage parent="Wnck.ResourceUsage" name="xid_read"
     .usage out unowned=false
+Handle skip
+IconCache skip
 Tasklist
 	.task_*_notify#signal.windows type="GLib.List<unowned Wnck.Window>"

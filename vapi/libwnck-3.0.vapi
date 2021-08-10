@@ -162,6 +162,7 @@ namespace Wnck {
 		public Tasklist ();
 		[Version (since = "3.24.0")]
 		public bool get_scroll_enabled ();
+		[Version (deprecated = true, deprecated_since = "3.42")]
 		public int get_size_hint_list (int n_elements);
 		[Version (since = "2.12")]
 		public void set_button_relief (Gtk.ReliefStyle relief);

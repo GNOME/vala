@@ -312,6 +312,7 @@ namespace Gnome {
 		public GLib.List<weak string> get_layouts_for_language (string language_code);
 		[Version (since = "3.6")]
 		public GLib.List<weak string> get_options_for_group (string group_id);
+		public signal void layouts_changed ();
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr.h", has_type_id = false)]
 	public struct RRCTM {
