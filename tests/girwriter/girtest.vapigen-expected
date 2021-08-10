@@ -199,7 +199,7 @@ namespace GirTest {
 		public int internal_field_name;
 		public void inv ();
 	}
-	[CCode (cheader_filename = "girtest.h", has_type_id = false)]
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedCompactClass", has_type_id = false)]
 	public struct RenamedCompactClass {
 		public weak string s;
 		public int i;
