@@ -609,6 +609,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else {
 			write_indent ();
 			buffer.append_printf ("<record name=\"%s\"", get_gir_name (cl));
+			write_ctype_attributes (cl);
 			write_symbol_attributes (cl);
 			buffer.append_printf (">\n");
 			indent++;
