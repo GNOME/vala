@@ -1726,7 +1726,7 @@
 		</field>
 	</record>
 	<record name="ImplementionTestPrivate" c:type="GirTestImplementionTestPrivate" disguised="1"/>
-	<record name="CompactClass">
+	<record name="CompactClass" c:type="GirTestCompactClass">
 		<field name="s" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</field>
@@ -1805,7 +1805,7 @@
 		</field>
 	</record>
 	<record name="RenamedClassPrivate" c:type="GirTestNamedClassPrivate" disguised="1"/>
-	<record name="RenamedCompactClass">
+	<record name="RenamedCompactClass" c:type="GirTestNamedCompactClass">
 		<field name="s" writable="1">
 			<type name="utf8" c:type="gchar*"/>
 		</field>
