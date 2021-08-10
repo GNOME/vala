@@ -510,6 +510,8 @@ namespace GES {
 		public Timeline.audio_video ();
 		public bool commit ();
 		public bool commit_sync ();
+		[Version (since = "1.20")]
+		public void freeze_commit ();
 		[CCode (has_construct_function = false)]
 		public Timeline.from_uri (string uri) throws GLib.Error;
 		public bool get_auto_transition ();
@@ -536,6 +538,8 @@ namespace GES {
 		public bool save_to_uri (string uri, GES.Asset? formatter_asset, bool overwrite) throws GLib.Error;
 		public void set_auto_transition (bool auto_transition);
 		public void set_snapping_distance (Gst.ClockTime snapping_distance);
+		[Version (since = "1.20")]
+		public void thaw_commit ();
 		public bool auto_transition { get; set; }
 		public uint64 duration { get; }
 		public uint64 snapping_distance { get; set; }

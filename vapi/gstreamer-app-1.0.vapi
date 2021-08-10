@@ -34,10 +34,14 @@ namespace Gst {
 			public bool wait_on_eos { get; set; }
 			public virtual signal Gst.FlowReturn new_preroll ();
 			public virtual signal Gst.FlowReturn new_sample ();
+			[Version (since = "1.20")]
+			public signal bool new_serialized_event ();
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_preroll ();
 			[HasEmitter]
 			public virtual signal Gst.Sample pull_sample ();
+			[Version (since = "1.20")]
+			public virtual signal Gst.MiniObject try_pull_object (uint64 timeout);
 			[HasEmitter]
 			[Version (since = "1.10")]
 			public virtual signal Gst.Sample try_pull_preroll (uint64 timeout);

@@ -9,9 +9,6 @@ RTP_PAYLOAD_* parent="Gst.RTP.Payload" name="RTP_PAYLOAD_(.+)"
 //buffer_*_rtp_source_meta parent="Gst.RTP.Buffer" name="buffer_(.+)"
 RTPBuffer
   .map unowned=false
-RTPHeaderExtension
-  .read.data array array_length_idx=2
-  .write.data array array_length_idx=4
 RTPSourceMeta
   .append_csrc.csrc array array_length_idx=1
 
