@@ -1,3 +1,39 @@
+Vala 0.52.5
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Allow null to initialize non-null struct inside initializer list [#594]
+    + Implementing GLib.Source.prepare/check is optional since 2.36
+    + Fix variadic constructors for compact classes and structs [#1195]
+    + Use detroy_value() for delete statement [#1201]
+    + Fix params-array in constructor for struct [#1202]
+  - vala:
+    + Rely on DataType.to_qualified_string() for error-types [#1206]
+    + Disallow resize() for constant arrays [#944]
+  - Recognize multiple valid CCode.gir_namespace/_version in VAPI files [#1189]
+  - Slightly improve source_reference for get_dup_func_expression()
+  - girwriter:
+    + Respect GIR.name for constants, errordomains and delegates [#1196]
+    + Add explicit writable attribute to all field elements
+    + Fix position of "result" parameter for struct constructor
+    + Write missing c:type attribute of compact class record
+  - girparser: Add support for "final" class attribute
+  - tests/girwriter: Add missing [Flags] annotation
+  - testrunner: Add support for girwriter tests
+  - docs: Update bootstrap instructions in README.md
+
+ * Bindings:
+  - Partly revert "gstreamer: Update from 1.19.0+ git master" [#1210]
+  - glib-2.0: expected_type and return value of VariantDict.lookup_value()
+    is nullable
+  - glib-2.0: Add Uri.to_string/to_string_partial() (since 2.66)
+  - gobject-2.0: Fix the Closure.invoke() signature
+  - gstreamer: Update from 1.19.0+ git master
+  - gtk4: Update to 4.3.2+04f3c805
+  - linux: Substitute linux/if.h with net/if.h
+  - linux: Fix some bindings errors
+  - linux: Fix i2c-dev constants
+
 Vala 0.52.4
 ===========
  * Various improvements and bug fixes:
