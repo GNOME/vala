@@ -266,6 +266,7 @@ TESTS = \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
+	control-flow/null-conditional-bool.vala \
 	control-flow/pre-post-increment.vala \
 	control-flow/pre-post-increment-field.vala \
 	control-flow/pre-post-increment-local.vala \
