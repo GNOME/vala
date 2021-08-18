@@ -49,28 +49,10 @@ valadbusgen_LDADD = \
 	$(top_builddir)/vala/libvala@PACKAGE_SUFFIX@.la \
 	$(NULL)
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = valadbusgen@PACKAGE_SUFFIX@.pc
-
-valadbusgen@PACKAGE_SUFFIX@.pc: valadbusgen.pc
-	cp $< $@
-
 EXTRA_DIST = \
 	$(valadbusgen_VALASOURCES) \
 	valadbusgen.vala.stamp \
 	$(NULL)
-
-CLEANFILES = \
-	valadbusgen@PACKAGE_SUFFIX@.pc
-	$(NULL)
-
-if ENABLE_UNVERSIONED
-install-exec-hook:
-	cd $(DESTDIR)$(bindir) && $(LN_S) -f valadbusgen@PACKAGE_SUFFIX@$(EXEEXT) valadbusgen$(EXEEXT)
-
-install-data-hook:
-	cd $(DESTDIR)$(pkgconfigdir) && $(LN_S) -f valadbusgen@PACKAGE_SUFFIX@.pc valadbusgen.pc
-endif
 
 MAINTAINERCLEANFILES = \
 	$(valadbusgen_VALASOURCES:.vala=.c) \
