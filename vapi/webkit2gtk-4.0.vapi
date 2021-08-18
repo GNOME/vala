@@ -31,6 +31,8 @@ namespace WebKit {
 		public bool can_save_credentials ();
 		[Version (since = "2.2")]
 		public void cancel ();
+		[Version (since = "2.34")]
+		public GLib.TlsPasswordFlags get_certificate_pin_flags ();
 		[Version (since = "2.2")]
 		public unowned string get_host ();
 		[Version (since = "2.2")]
@@ -189,8 +191,16 @@ namespace WebKit {
 		public Credential (string username, string password, WebKit.CredentialPersistence persistence);
 		[Version (since = "2.2")]
 		public WebKit.Credential copy ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.34")]
+		public Credential.for_certificate (GLib.TlsCertificate? certificate, WebKit.CredentialPersistence persistence);
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.34")]
+		public Credential.for_certificate_pin (string pin, WebKit.CredentialPersistence persistence);
 		[Version (since = "2.2")]
 		public void free ();
+		[Version (since = "2.34")]
+		public unowned GLib.TlsCertificate get_certificate ();
 		[Version (since = "2.2")]
 		public unowned string get_password ();
 		[Version (since = "2.2")]
@@ -475,6 +485,37 @@ namespace WebKit {
 	public class MediaKeySystemPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected MediaKeySystemPermissionRequest ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_memory_pressure_settings_get_type ()")]
+	[Compact]
+	public class MemoryPressureSettings {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.34")]
+		public MemoryPressureSettings ();
+		[Version (since = "2.34")]
+		public WebKit.MemoryPressureSettings copy ();
+		[Version (since = "2.34")]
+		public void free ();
+		[Version (since = "2.34")]
+		public double get_conservative_threshold ();
+		[Version (since = "2.34")]
+		public double get_kill_threshold ();
+		[Version (since = "2.34")]
+		public uint get_memory_limit ();
+		[Version (since = "2.34")]
+		public double get_poll_interval ();
+		[Version (since = "2.34")]
+		public double get_strict_threshold ();
+		[Version (since = "2.34")]
+		public void set_conservative_threshold (double value);
+		[Version (since = "2.34")]
+		public void set_kill_threshold (double value);
+		[Version (since = "2.34")]
+		public void set_memory_limit (uint memory_limit);
+		[Version (since = "2.34")]
+		public void set_poll_interval (double value);
+		[Version (since = "2.34")]
+		public void set_strict_threshold (double value);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_mime_info_ref", type_id = "webkit_mime_info_get_type ()", unref_function = "webkit_mime_info_unref")]
 	[Compact]
@@ -1244,6 +1285,9 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.10.", since = "2.8")]
 		public string local_storage_directory { owned get; construct; }
 		[NoAccessorMethod]
+		[Version (since = "2.34")]
+		public WebKit.MemoryPressureSettings memory_pressure_settings { construct; }
+		[NoAccessorMethod]
 		[Version (since = "2.28")]
 		public bool process_swap_on_cross_site_navigation_enabled { get; construct; }
 		[Version (since = "2.30")]
@@ -1317,8 +1361,12 @@ namespace WebKit {
 		public unowned WebKit.BackForwardList get_back_forward_list ();
 		[Version (since = "2.8")]
 		public Gdk.RGBA get_background_color ();
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState get_camera_capture_state ();
 		public unowned WebKit.WebContext get_context ();
 		public unowned string get_custom_charset ();
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState get_display_capture_state ();
 		[Version (since = "2.10")]
 		public unowned WebKit.EditorState get_editor_state ();
 		public double get_estimated_load_progress ();
@@ -1333,6 +1381,8 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
 		public unowned WebKit.WebResource get_main_resource ();
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState get_microphone_capture_state ();
 		public uint64 get_page_id ();
 		[Version (since = "2.12")]
 		public WebKit.WebViewSessionState get_session_state ();
@@ -1375,14 +1425,20 @@ namespace WebKit {
 		[Version (since = "2.8")]
 		public void set_background_color (Gdk.RGBA rgba);
 		[Version (since = "2.34")]
+		public void set_camera_capture_state (WebKit.MediaCaptureState state);
+		[Version (since = "2.34")]
 		public void set_cors_allowlist ([CCode (array_length = false, array_null_terminated = true)] string[]? allowlist);
 		public void set_custom_charset (string? charset);
+		[Version (since = "2.34")]
+		public void set_display_capture_state (WebKit.MediaCaptureState state);
 		[Version (since = "2.8")]
 		public void set_editable (bool editable);
 		[Version (since = "2.28")]
 		public void set_input_method_context (WebKit.InputMethodContext? context);
 		[Version (since = "2.30")]
 		public void set_is_muted (bool muted);
+		[Version (since = "2.34")]
+		public void set_microphone_capture_state (WebKit.MediaCaptureState state);
 		public void set_settings (WebKit.Settings settings);
 		public void set_zoom_level (double zoom_level);
 		[NoWrapper]
@@ -1405,6 +1461,10 @@ namespace WebKit {
 		public WebView.with_user_content_manager (WebKit.UserContentManager user_content_manager);
 		[Version (since = "2.28")]
 		public WebKit.AutomationBrowsingContextPresentation automation_presentation_type { get; construct; }
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState camera_capture_state { get; set; }
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState display_capture_state { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "2.8")]
 		public bool editable { get; set; }
@@ -1425,6 +1485,8 @@ namespace WebKit {
 		public bool is_playing_audio { get; }
 		[Version (since = "2.34")]
 		public bool is_web_process_responsive { get; }
+		[Version (since = "2.34")]
+		public WebKit.MediaCaptureState microphone_capture_state { get; set; }
 		[Version (since = "2.28")]
 		public uint64 page_id { get; }
 		[NoAccessorMethod]
@@ -1457,8 +1519,8 @@ namespace WebKit {
 		public virtual signal bool load_failed_with_tls_errors (string failing_uri, GLib.TlsCertificate certificate, GLib.TlsCertificateFlags errors);
 		public virtual signal void mouse_target_changed (WebKit.HitTestResult hit_test_result, uint modifiers);
 		[CCode (cname = "show-option-menu")]
-		[Version (since = "2.28")]
-		public signal bool on_show_option_menu (WebKit.OptionMenu object, Gdk.Event p0, Gdk.Rectangle p1);
+		[Version (since = "2.18")]
+		public signal bool on_show_option_menu (WebKit.OptionMenu menu, Gdk.Event event, Gdk.Rectangle rectangle);
 		public virtual signal bool permission_request (WebKit.PermissionRequest permission_request);
 		public virtual signal bool print (WebKit.PrintOperation print_operation);
 		public virtual signal void ready_to_show ();
@@ -1566,6 +1628,8 @@ namespace WebKit {
 		public async bool remove (WebKit.WebsiteDataTypes types, GLib.List<WebKit.WebsiteData> website_data, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.30")]
 		public void set_itp_enabled (bool enabled);
+		[Version (since = "2.34")]
+		public static void set_memory_pressure_settings (WebKit.MemoryPressureSettings settings);
 		[Version (since = "2.32")]
 		public void set_network_proxy_settings (WebKit.NetworkProxyMode proxy_mode, WebKit.NetworkProxySettings? proxy_settings);
 		[Version (since = "2.30")]
@@ -1646,6 +1710,7 @@ namespace WebKit {
 		NEGOTIATE,
 		CLIENT_CERTIFICATE_REQUESTED,
 		SERVER_TRUST_EVALUATION_REQUESTED,
+		CLIENT_CERTIFICATE_PIN_REQUESTED,
 		UNKNOWN
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_AUTOMATION_BROWSING_CONTEXT_PRESENTATION_", type_id = "webkit_automation_browsing_context_presentation_get_type ()")]
@@ -1807,6 +1872,13 @@ namespace WebKit {
 		REDIRECTED,
 		COMMITTED,
 		FINISHED
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_MEDIA_CAPTURE_STATE_", type_id = "webkit_media_capture_state_get_type ()")]
+	[Version (since = "2.34")]
+	public enum MediaCaptureState {
+		NONE,
+		ACTIVE,
+		MUTED
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NAVIGATION_TYPE_", type_id = "webkit_navigation_type_get_type ()")]
 	public enum NavigationType {
@@ -2057,6 +2129,9 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.8")]
 	public static bool user_media_permission_is_for_audio_device (WebKit.UserMediaPermissionRequest request);
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
+	[Version (since = "2.34")]
+	public static bool user_media_permission_is_for_display_device (WebKit.UserMediaPermissionRequest request);
 	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Version (since = "2.8")]
 	public static bool user_media_permission_is_for_video_device (WebKit.UserMediaPermissionRequest request);
