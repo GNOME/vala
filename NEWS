@@ -1,3 +1,46 @@
+Vala 0.53.1
+===========
+ * Highlights:
+  - Support explicit nullable var-type declarations [#1146]
+  - Add support for variadic delegates [#160]
+  - Add support for sealed classes [#278]
+  - Add support for null-safe access operator [#522]
+  - Emit external creation methods in bindings
+  - Introduce VALA_EXPORT for public symbols to improve portability
+  - girwriter:
+    + Use "optional" and "nullable" instead of deprecated "allow-none"
+    + Improve struct creation method binding
+  - girparser:
+    + Improve instance method detection [#1210]
+    + Never skip "function" elements
+    + Add "move-to" value of functions as Version.replacement
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use ssize_t for length variables in common array helper functions
+    + Fix support for public fields on GLib.Source subclasses
+  - vala:
+    + Add Profile.LIBC as synonym for POSIX and accept "libc" profile
+    + Improve semantic check of simple type structs
+    + Refactor UnresolvedSymbol/Type constructors
+    + Properly check GLib.Object naming convention for properties
+    + Add foreach statement support for GLib.GenericArray
+  - build: Add "test-asan" make target for convenience
+  - build: Add --enable-test-ubsan configure option and "test-ubsan" make target
+  - build: Use jing to verify generated GIR file, if available
+  - testrunner: Allow checking generated C sources
+
+ * Bindings:
+  - Remove gedit-2.20 and webkit-1.0 bindings
+  - gio-2.0,glib-2.0: Add new symbols from 2.69.0
+  - gio-2.0: Improve DatagramBased.create_source() binding
+  - glib-2.0: Wrap TimeZone.identifier() constuctor for proper error support
+  - gstreamer-rtp-1.0: Fix some bindings errors [#1177]
+  - gstreamer: Update from 1.19.0+ git master
+  - javascriptcoregtk-4.0: Fix JSC.Class.add_property() binding
+  - linux: Add SocketCAN bindings, and ISOTP constants and options
+  - webkit2gtk-4.0: Update to 2.33.3
+
 Vala 0.52.5
 ===========
  * Various improvements and bug fixes:
