@@ -1,0 +1,18 @@
+# Source file listing for libgee
+libgee_la_VALASOURCES = \
+	arraylist.vala \
+	collection.vala \
+	hashmap.vala \
+	hashset.vala \
+	iterable.vala \
+	mapiterator.vala \
+	iterator.vala \
+	list.vala \
+	map.vala \
+	set.vala \
+	timsort.vala \
+	$(NULL)
+
+geeinclude_HEADERS = \
+	valagee.h \
+	$(NULL)

@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.common
+include Makefile.sources
 
 NULL =
 
@@ -26,18 +27,9 @@ noinst_PROGRAMS = \
 
 BUILT_SOURCES = vapigen.vala.stamp vapicheck.vala.stamp
 
-vapigen_VALASOURCES = \
-	valagidlparser.vala \
-	valavapigen.vala \
-	$(NULL)
-
 vapigen_SOURCES = \
 	vapigen.vala.stamp \
 	$(vapigen_VALASOURCES:.vala=.c) \
-	$(NULL)
-
-vapicheck_VALASOURCES = \
-	valavapicheck.vala \
 	$(NULL)
 
 vapicheck_SOURCES = \

@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.common
+include Makefile.sources
 
 NULL =
 
@@ -17,10 +18,6 @@ BUILT_SOURCES = valac.vala.stamp
 
 bin_PROGRAMS = \
 	valac \
-	$(NULL)
-
-valac_VALASOURCES = \
-	valacompiler.vala \
 	$(NULL)
 
 valac_SOURCES = \

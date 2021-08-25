@@ -1,0 +1,9 @@
+# Source file listing for vapigen/vapicheck
+vapigen_VALASOURCES = \
+	valagidlparser.vala \
+	valavapigen.vala \
+	$(NULL)
+
+vapicheck_VALASOURCES = \
+	valavapicheck.vala \
+	$(NULL)

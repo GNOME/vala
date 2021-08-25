@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.common
+include Makefile.sources
 
 NULL =
 
@@ -22,40 +23,6 @@ libvalaccodegen_ladir = $(pkglibdir)
 libvalaccodegen_la_LDFLAGS = \
 	-no-undefined \
 	-avoid-version \
-	$(NULL)
-
-libvalaccodegen_la_VALASOURCES = \
-	valaccode.vala \
-	valaccodearraymodule.vala \
-	valaccodeassignmentmodule.vala \
-	valaccodeattribute.vala \
-	valaccodebasemodule.vala \
-	valaccodecompiler.vala \
-	valaccodecontrolflowmodule.vala \
-	valaccodedelegatemodule.vala \
-	valaccodememberaccessmodule.vala \
-	valaccodemethodcallmodule.vala \
-	valaccodemethodmodule.vala \
-	valaccodestructmodule.vala \
-	valaclassregisterfunction.vala \
-	valactype.vala \
-	valaenumregisterfunction.vala \
-	valagasyncmodule.vala \
-	valagdbusclientmodule.vala \
-	valagdbusmodule.vala \
-	valagdbusservermodule.vala \
-	valagerrormodule.vala \
-	valagirwriter.vala \
-	valaglibvalue.vala \
-	valagobjectmodule.vala \
-	valagtkmodule.vala \
-	valagsignalmodule.vala \
-	valagtypemodule.vala \
-	valagvaluemodule.vala \
-	valagvariantmodule.vala \
-	valainterfaceregisterfunction.vala \
-	valastructregisterfunction.vala \
-	valatyperegisterfunction.vala \
 	$(NULL)
 
 libvalaccodegen_la_SOURCES = \

@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.common
+include Makefile.sources
 
 NULL =
 
@@ -14,30 +15,12 @@ noinst_LTLIBRARIES = \
 	libgee.la \
 	$(NULL)
 
-libgee_la_VALASOURCES = \
-	arraylist.vala \
-	collection.vala \
-	hashmap.vala \
-	hashset.vala \
-	iterable.vala \
-	mapiterator.vala \
-	iterator.vala \
-	list.vala \
-	map.vala \
-	set.vala \
-	timsort.vala \
-	$(NULL)
-
 libgee_la_SOURCES = \
 	gee.vala.stamp \
 	$(libgee_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
 geeincludedir = $(includedir)/vala@PACKAGE_SUFFIX@
-
-geeinclude_HEADERS = \
-	valagee.h \
-	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
 	$(VALA_V)$(VALAC) \

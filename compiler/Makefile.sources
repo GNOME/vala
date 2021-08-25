@@ -1,0 +1,4 @@
+# Source file listing for valac
+valac_VALASOURCES = \
+	valacompiler.vala \
+	$(NULL)
