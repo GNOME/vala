@@ -274,6 +274,9 @@ AC_CONFIG_FILES([Makefile
            valadoc/doclets/gtkdoc/Makefile
            valadoc/icons/Makefile
            valadoc/tests/Makefile
+           win32/Makefile
+           win32/config-msvc.mak
+           win32/config.h.win32
 ])
 
 AC_OUTPUT

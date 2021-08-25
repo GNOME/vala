@@ -1,0 +1,147 @@
+# NMake Makefile portion for enabling features for Windows builds
+
+# Please do not change anything beneath this line unless maintaining the NMake Makefiles
+OUTDIR = vs$(VSVER)\$(CFG)\$(PLAT)
+LIB_SUFFIX = @PACKAGE_SUFFIX@
+VALA_PKG_VERSION = @VALA_MAJOR_VERSION@.@VALA_MINOR_VERSION@.@VALA_MICRO_VERSION@
+
+# Make bin, include and library directories of configurable
+!ifndef BINDIR
+BINDIR=$(PREFIX)\bin
+!endif
+
+!ifndef LIBDIR
+LIBDIR=$(PREFIX)\lib
+!endif
+
+!ifndef INCLUDEDIR
+INCLUDEDIR=$(PREFIX)\include
+!endif
+
+!ifndef VALAC
+VALAC = valac
+!endif
+
+!ifndef VAPIGEN
+VAPIGEN = vapigen
+!endif
+
+LDFLAGS = $(LDFLAGS) /libpath:$(LIBDIR)
+
+# These are the base minimum libraries required for building Vala.
+
+# Visual Studio 2015 and later supports the /utf-8 compiler flag
+# that prevents C4819 warnings/errors on non-Western locales
+!if $(VSVER) > 12
+EXTRA_BASE_CFLAGS = /utf-8
+!else
+EXTRA_BASE_CFLAGS =
+!endif
+
+BASE_CFLAGS =				\
+	$(CFLAGS_ADD)			\
+	/DHAVE_CONFIG_H			\
+	/DWIN32					\
+	/FImsvc_recommended_pragmas.h	\
+	$(EXTRA_BASE_CFLAGS)
+
+BASE_DEP_INCLUDES =			\
+	/I$(INCLUDEDIR)\gio-win32-2.0	\
+	/I$(INCLUDEDIR)\glib-2.0	\
+	/I$(LIBDIR)\glib-2.0\include	\
+	/I$(INCLUDEDIR)
+
+BASE_DEP_LIBS =			\
+	gobject-2.0.lib		\
+	gmodule-2.0.lib		\
+	glib-2.0.lib
+
+LIBVALA_LOG_DOMAIN = /DG_LOG_DOMAIN=\"vala\"
+LIBVALA_CCODE_LOG_DOMAIN = /DG_LOG_DOMAIN=\"vala-ccode\"
+LIBVALA_CODEGEN_LOG_DOMAIN = /DG_LOG_DOMAIN=\"vala-ccodegen\"
+VALAC_LOG_DOMAIN = /DG_LOG_DOMAIN=\"valac\"
+VAPIGEN_LOG_DOMAIN = /DG_LOG_DOMAIN=\"vapigen\"
+
+VALA_BASE_INCLUDES =	\
+	/I.\compat			\
+	/I.				\
+	$(BASE_DEP_INCLUDES)
+
+LIBVALA_CFLAGS =				\
+	$(BASE_CFLAGS)				\
+	$(LIBVALA_LOG_DOMAIN)	\
+	/DPACKAGE_DATADIR=\"$(INSTALLPREFIX:\=/)/share/vala$(LIB_SUFFIX)\"
+
+LIBVALA_CCODE_CFLAGS = $(BASE_CFLAGS) $(LIBVALA_CCODE_LOG_DOMAIN)
+LIBVALA_CODEGEN_CFLAGS = $(BASE_CFLAGS) $(LIBVALA_CODEGEN_LOG_DOMAIN)
+VALAC_CFLAGS = $(BASE_CFLAGS) $(VALAC_LOG_DOMAIN)
+VAPIGEN_CFLAGS = $(BASE_CFLAGS) $(VAPIGEN_LOG_DOMAIN)
+
+# Set include paths according to whether we regenerate the C sources
+!ifndef REGEN_C_SOURCES
+LIBGEE_INCLUDES = /I..\gee
+LIBVALA_INCLUDES = /I..\vala
+LIBVALA_CCODE_INCLUDES = /I..\ccode
+LIBVALA_CODEGEN_INCLUDES = /I..\codegen
+GOBJECT_INTROSPECTION_INCLUDES = /I..\gobject-introspection
+
+LIBGEE_HEADER = ..\gee\valagee.h
+LIBVALA_HEADER = ..\vala\vala.h
+VALA_VAPI = ..\vala\libvala$(LIB_SUFFIX).vapi
+!else
+LIBGEE_INCLUDES = /Ivs$(VSVER)\$(CFG)\$(PLAT)\gee
+LIBVALA_INCLUDES = /Ivs$(VSVER)\$(CFG)\$(PLAT)\vala
+LIBVALA_CCODE_INCLUDES = /Ivs$(VSVER)\$(CFG)\$(PLAT)\ccode
+LIBVALA_CODEGEN_INCLUDES = /Ivs$(VSVER)\$(CFG)\$(PLAT)\codegen
+GOBJECT_INTROSPECTION_INCLUDES =	\
+	/Ivs$(VSVER)\$(CFG)\$(PLAT)\gobject-introspection	\
+	/I..\gobject-introspection
+
+LIBGEE_HEADER = vs$(VSVER)\$(CFG)\$(PLAT)\gee\valagee.h
+LIBVALA_HEADER = vs$(VSVER)\$(CFG)\$(PLAT)\vala\vala.h
+VALA_VAPI = vs$(VSVER)\$(CFG)\$(PLAT)\libvala$(LIB_SUFFIX).vapi
+!endif
+
+GOBJECT_INTROSPECTION_BUILD_INCLUDES =	\
+	$(GOBJECT_INTROSPECTION_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+LIBVALA_BUILD_INCLUDES =	\
+	$(LIBGEE_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+LIBVALA_BUILD_CCODE_INCLUDES =	\
+	$(LIBGEE_INCLUDES)	\
+	$(LIBVALA_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+LIBVALA_BUILD_CODEGEN_INCLUDES =	\
+	$(LIBGEE_INCLUDES)	\
+	$(LIBVALA_CCODE_INCLUDES)	\
+	$(LIBVALA_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+VALA_FULL_INCLUDES =	\
+	$(LIBGEE_INCLUDES)	\
+	$(LIBVALA_CCODE_INCLUDES)	\
+	$(LIBVALA_INCLUDES)	\
+	$(LIBVALA_CODEGEN_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+VAPIGEN_INCLUDES =	\
+	$(LIBGEE_INCLUDES)	\
+	$(LIBVALA_CCODE_INCLUDES)	\
+	$(LIBVALA_INCLUDES)	\
+	$(GOBJECT_INTROSPECTION_INCLUDES)	\
+	$(VALA_BASE_INCLUDES)
+
+VALA_LIB = vs$(VSVER)\$(CFG)\$(PLAT)\vala$(LIB_SUFFIX).lib
+VALA_CODEGEN_LIB = vs$(VSVER)\$(CFG)\$(PLAT)\valaccodegen.lib
+VALA_DLL = $(VALA_LIB:.lib=.dll)
+VALA_CODEGEN_DLL = $(VALA_CODEGEN_LIB:.lib=.dll)
+GEN_INTROSPECT = vs$(VSVER)\$(CFG)\$(PLAT)\gen-introspect.exe
+VALAC_EXE = vs$(VSVER)\$(CFG)\$(PLAT)\valac.exe
+VAPIGEN = vs$(VSVER)\$(CFG)\$(PLAT)\vapigen.exe
+VAPICHECK = vs$(VSVER)\$(CFG)\$(PLAT)\vapicheck.exe
+
+BUILT_PROGRAMS = $(VALAC_EXE) $(VAPIGEN) $(VAPICHECK) $(GEN_INTROSPECT)

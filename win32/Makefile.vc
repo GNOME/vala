@@ -1,0 +1,62 @@
+# NMake Makefile for building Vala on Windows
+
+# The items below this line should not be changed, unless one is maintaining
+# the NMake Makefiles.  Customizations can be done in the following NMake Makefile
+# portions (please see comments in the these files to see what can be customized):
+#
+# detectenv-msvc.mak
+# config-msvc.mak
+!include detectenv-msvc.mak
+
+# Include the Makefile portions with the source listings
+!include ..\gee\Makefile.sources
+!include ..\vala\Makefile.sources
+!include ..\ccode\Makefile.sources
+!include ..\codegen\Makefile.sources
+!include ..\compiler\Makefile.sources
+!include ..\gobject-introspection\Makefile.sources
+!include ..\vapigen\Makefile.sources
+
+# Include the Makefile portion that enables features based on user input
+!include config-msvc.mak
+
+!if "$(VALID_CFGSET)" == "TRUE"
+
+# We need Visual Studio 2008 or later
+!if $(VCVERSION) < 1500
+VALID_MSC = FALSE
+!else
+VALID_MSC = TRUE
+!endif
+
+!if "$(VALID_MSC)" == "TRUE"
+
+# Include the Makefile portion to convert the source and header lists
+# into the lists we need for compilation and introspection
+
+all: $(BUILT_PROGRAMS)
+
+# Include the build rules for sources, DLLs and executables
+!include create-lists-msvc.mak
+!include build-rules-msvc.mak
+
+# Include the rules for build directory creation and code generation
+!include generate-msvc.mak
+
+
+!include install-msvc.mak
+
+!else # "$(VALID_MSC)" == "TRUE"
+all:
+	@echo You need Visual Studio 2008 or later.
+
+!endif # "$(VALID_MSC)" == "TRUE"
+
+!else # "$(VALID_CFGSET)" == "TRUE"
+all: help
+	@echo You need to specify a valid configuration, via CFG=release or CFG=debug
+!endif # "$(VALID_CFGSET)" == "TRUE"
+
+!include info-msvc.mak
+
+.SUFFIXES: .vala .c .obj .dll .exe

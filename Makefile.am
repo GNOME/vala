@@ -13,6 +13,7 @@ SUBDIRS = \
 	doc \
 	gobject-introspection \
 	vapigen \
+	win32	\
 	$(NULL)
 
 if ENABLE_VALADOC
