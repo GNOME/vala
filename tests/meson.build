@@ -1416,6 +1416,7 @@ vala_flags = [
 	'-X', '-O0',
 	'-X', '-pipe',
 	'-X', '-lm',
+	'-X', '-lgmodule-2.0', # undefined reference to `g_module_open_full'
 	'-X', '-DGETTEXT_PACKAGE="valac"',
 ]
 
