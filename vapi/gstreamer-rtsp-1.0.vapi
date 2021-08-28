@@ -42,6 +42,8 @@ namespace Gst {
 			public Gst.RTSP.Result do_tunnel (Gst.RTSP.Connection conn2);
 			public Gst.RTSP.Result flush (bool flush);
 			public Gst.RTSP.Result free ();
+			[Version (since = "1.20")]
+			public bool get_ignore_x_server_reply ();
 			public unowned string get_ip ();
 			public unowned GLib.Socket get_read_socket ();
 			public bool get_remember_session_id ();
@@ -89,6 +91,8 @@ namespace Gst {
 			[Version (since = "1.18")]
 			public void set_content_length_limit (uint limit);
 			public void set_http_mode (bool enable);
+			[Version (since = "1.20")]
+			public void set_ignore_x_server_reply (bool ignore);
 			public void set_ip (string ip);
 			public Gst.RTSP.Result set_proxy (string host, uint port);
 			public Gst.RTSP.Result set_qos_dscp (uint qos_dscp);

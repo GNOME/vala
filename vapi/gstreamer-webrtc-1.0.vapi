@@ -119,6 +119,19 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.WebRTCRTPSender sender { owned get; construct; }
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_sctp_transport", type_id = "gst_webrtc_sctp_transport_get_type ()")]
+	public abstract class WebRTCSCTPTransport : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected WebRTCSCTPTransport ();
+		[NoAccessorMethod]
+		public uint max_channels { get; }
+		[NoAccessorMethod]
+		public uint64 max_message_size { get; }
+		[NoAccessorMethod]
+		public Gst.WebRTCSCTPTransportState state { get; }
+		[NoAccessorMethod]
+		public Gst.WebRTCDTLSTransport transport { owned get; }
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_csuffix = "webrtc_session_description", type_id = "gst_webrtc_session_description_get_type ()")]
 	[Compact]
 	public class WebRTCSessionDescription {

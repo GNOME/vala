@@ -112,7 +112,11 @@ namespace Gst {
 			public weak Gst.Caps allocation_caps;
 			public weak Gst.Caps caps;
 			public weak Gst.Buffer codec_data;
+			[Version (since = "1.20")]
+			public Gst.Video.ContentLightLevel content_light_level;
 			public weak Gst.Video.Info info;
+			[Version (since = "1.20")]
+			public Gst.Video.MasteringDisplayInfo mastering_display_info;
 			public unowned Gst.Video.CodecState @ref ();
 			public void unref ();
 		}
@@ -411,7 +415,7 @@ namespace Gst {
 		[GIR (name = "VideoOverlayComposition")]
 		public class OverlayComposition : Gst.MiniObject {
 			[CCode (has_construct_function = false)]
-			public OverlayComposition (Gst.Video.OverlayRectangle rectangle);
+			public OverlayComposition (Gst.Video.OverlayRectangle? rectangle);
 			public void add_rectangle (Gst.Video.OverlayRectangle rectangle);
 			public bool blend (Gst.Video.Frame video_buf);
 			public Gst.Video.OverlayComposition copy ();

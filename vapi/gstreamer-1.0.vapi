@@ -1399,6 +1399,10 @@ namespace Gst {
 		public bool can_src_any_caps (Gst.Caps caps);
 		[CCode (returns_floating_reference = true)]
 		public Gst.Element? create (string? name);
+		[Version (since = "1.20")]
+		public unowned Gst.Element? create_valist (string? first, va_list? properties);
+		[Version (since = "1.20")]
+		public unowned Gst.Element? create_with_properties (uint n, string? names, GLib.Value? values);
 		public static Gst.ElementFactory? find (string name);
 		public GLib.Type get_element_type ();
 		public unowned string? get_metadata (string key);
@@ -1415,6 +1419,10 @@ namespace Gst {
 		public bool list_is_type (Gst.ElementFactoryListType type);
 		[CCode (returns_floating_reference = true)]
 		public static Gst.Element? make (string factoryname, string? name);
+		[Version (since = "1.20")]
+		public static unowned Gst.Element? make_valist (string factoryname, string? first, va_list? properties);
+		[Version (since = "1.20")]
+		public static unowned Gst.Element? make_with_properties (string factoryname, uint n, string? names, GLib.Value? values);
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_event_ref", type_id = "gst_event_get_type ()", unref_function = "gst_event_unref")]
 	[Compact]

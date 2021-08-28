@@ -327,6 +327,19 @@ namespace Gst {
 			[CCode (cname = "gst_install_plugins_return_get_name")]
 			public unowned string get_name ();
 		}
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstPbUtilsCapsDescriptionFlags", cprefix = "GST_PBUTILS_CAPS_DESCRIPTION_FLAG_", type_id = "gst_pb_utils_caps_description_flags_get_type ()")]
+		[Flags]
+		[GIR (name = "PbUtilsCapsDescriptionFlags")]
+		[Version (since = "1.20")]
+		public enum PbUtilsCapsDescriptionFlags {
+			CONTAINER,
+			AUDIO,
+			VIDEO,
+			IMAGE,
+			SUBTITLE,
+			TAG,
+			GENERIC
+		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShaderFunc", has_target = false)]
 		public delegate void AudioVisualizerShaderFunc (Gst.PbUtils.AudioVisualizer scope, Gst.Video.Frame s, Gst.Video.Frame d);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstInstallPluginsResultFunc", instance_pos = 1.9)]
@@ -386,6 +399,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_encoding_list_available_categories")]
 		public static GLib.List<string> encoding_list_available_categories ();
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+		[Version (since = "1.20")]
+		public static Gst.PbUtils.PbUtilsCapsDescriptionFlags get_caps_description_flags (Gst.Caps caps);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_codec_description (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_decoder_description (Gst.Caps caps);
@@ -393,6 +409,9 @@ namespace Gst {
 		public static string get_element_description (string factory_name);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_encoder_description (Gst.Caps caps);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+		[Version (since = "1.20")]
+		public static string? get_file_extension_from_caps (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_sink_description (string protocol);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
