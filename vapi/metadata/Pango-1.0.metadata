@@ -22,8 +22,6 @@ AttrDataCopyFunc skip
 // Fields
 AttrColor
   .color unowned=false
-EngineInfo
-  .scripts array unowned=false array_length_field="n_scripts"
 GlyphString
   .glyphs unowned=false array_length_field="num_glyphs"
   .log_clusters array unowned=false array_length_field="num_glyphs"
@@ -41,16 +39,11 @@ Attribute
 Coverage
   .copy skip=false
 Font
-  .find_shaper skip=false
   .get_coverage skip=false
 
 // Variadic
 TabArray
   .new_with_positions skip=false
-
-// Contains only function pointers without typedefs
-IncludedModule skip
-module_register skip
 
 read_line
   .stream type="GLib.FileStream"
