@@ -4800,7 +4800,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public bool is_local ();
-		public async GLib.InputStream? read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
+		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -6075,11 +6075,6 @@ namespace Gsk {
 		public DebugNode (Gsk.RenderNode child, owned string message);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned string get_message ();
-	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_renderer_get_type ()")]
-	public class GLRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
-		public GLRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_get_type ()")]
 	public class GLShader : GLib.Object {
@@ -8800,7 +8795,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkIMContext*")]
 		public IMMulticontext ();
 		public unowned string get_context_id ();
-		public void set_context_id (string context_id);
+		public void set_context_id (string? context_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_paintable_get_type ()")]
 	public class IconPaintable : GLib.Object, Gdk.Paintable {
@@ -11383,6 +11378,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool letter_spacing_set { get; set; }
 		[NoAccessorMethod]
+		public float line_height { get; set; }
+		[NoAccessorMethod]
+		public bool line_height_set { get; set; }
+		[NoAccessorMethod]
 		public string name { owned get; construct; }
 		[NoAccessorMethod]
 		public Pango.Overline overline { get; set; }
@@ -11423,6 +11422,11 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool scale_set { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "4.6")]
+		public bool sentence { get; set; }
+		[NoAccessorMethod]
+		public bool sentence_set { get; set; }
+		[NoAccessorMethod]
 		public Pango.ShowFlags show_spaces { get; set; }
 		[NoAccessorMethod]
 		public bool show_spaces_set { get; set; }
@@ -11453,6 +11457,11 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool tabs_set { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "4.6")]
+		public Pango.TextTransform text_transform { get; set; }
+		[NoAccessorMethod]
+		public bool text_transform_set { get; set; }
+		[NoAccessorMethod]
 		public Pango.Underline underline { get; set; }
 		[NoAccessorMethod]
 		public Gdk.RGBA underline_rgba { owned get; set; }
@@ -11468,6 +11477,11 @@ namespace Gtk {
 		public int weight { get; set; }
 		[NoAccessorMethod]
 		public bool weight_set { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "4.6")]
+		public bool word { get; set; }
+		[NoAccessorMethod]
+		public bool word_set { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WrapMode wrap_mode { get; set; }
 		[NoAccessorMethod]
@@ -11640,11 +11654,17 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public TreeExpander ();
 		public unowned Gtk.Widget? get_child ();
+		[Version (since = "4.6")]
+		public bool get_indent_for_icon ();
 		public GLib.Object? get_item ();
 		public unowned Gtk.TreeListRow? get_list_row ();
 		public void set_child (Gtk.Widget? child);
+		[Version (since = "4.6")]
+		public void set_indent_for_icon (bool indent_for_icon);
 		public void set_list_row (Gtk.TreeListRow? list_row);
 		public Gtk.Widget child { get; set; }
+		[Version (since = "4.6")]
+		public bool indent_for_icon { get; set; }
 		public GLib.Object item { owned get; }
 		public Gtk.TreeListRow list_row { get; set; }
 	}
@@ -12229,7 +12249,7 @@ namespace Gtk {
 		public GLib.ListModel observe_controllers ();
 		public unowned Gtk.Widget? pick (double x, double y, Gtk.PickFlags flags);
 		[CCode (cname = "gtk_widget_class_query_action")]
-		public class bool query_action (uint index_, out GLib.Type owner, out string action_name, out GLib.VariantType? parameter_type, out string? property_name);
+		public class bool query_action (uint index_, out GLib.Type owner, out unowned string action_name, out unowned GLib.VariantType? parameter_type, out unowned string? property_name);
 		public void queue_allocate ();
 		public void queue_draw ();
 		public void queue_resize ();
