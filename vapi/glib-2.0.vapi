@@ -1636,28 +1636,28 @@ namespace GLib {
 
 	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
 	namespace Math {
-		[CCode (cname = "G_E")]
+		[CCode (cname = "G_E", cheader_filename = "glib.h")]
 		public const double E;
 
-		[CCode (cname = "G_PI")]
+		[CCode (cname = "G_PI", cheader_filename = "glib.h")]
 		public const double PI;
 
-		[CCode (cname = "G_LN2")]
+		[CCode (cname = "G_LN2", cheader_filename = "glib.h")]
 		public const double LN2;
 
-		[CCode (cname = "G_LN10")]
+		[CCode (cname = "G_LN10", cheader_filename = "glib.h")]
 		public const double LN10;
 
-		[CCode (cname = "G_PI_2")]
+		[CCode (cname = "G_PI_2", cheader_filename = "glib.h")]
 		public const double PI_2;
 
-		[CCode (cname = "G_PI_4")]
+		[CCode (cname = "G_PI_4", cheader_filename = "glib.h")]
 		public const double PI_4;
 
-		[CCode (cname = "G_SQRT2")]
+		[CCode (cname = "G_SQRT2", cheader_filename = "glib.h")]
 		public const double SQRT2;
 
-		[CCode (cname = "G_LOG_2_BASE_10")]
+		[CCode (cname = "G_LOG_2_BASE_10", cheader_filename = "glib.h")]
 		public const double LOG_2_BASE_10;
 
 		/* generated from <bits/mathcalls.h> of glibc */
