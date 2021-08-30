@@ -27,11 +27,22 @@ struct _Foo {
 VALA_EXTERN void foo_free (Foo * self);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_free)
 static void foo_instance_init (Foo * self);
-VALA_EXTERN Foo* foo_new (void);
-VALA_EXTERN gint foo_get_bar (Foo* self);
+VALA_EXTERN void foo_manam (Foo* self);
 VALA_EXTERN void foo_set_bar (Foo* self,
                   gint value);
+VALA_EXTERN gint foo_get_bar (Foo* self);
+VALA_EXTERN Foo* foo_new (void);
 static void _vala_main (void);
+
+void
+foo_manam (Foo* self)
+{
+	gint _tmp0_;
+	g_return_if_fail (self != NULL);
+	foo_set_bar (self, 23);
+	_tmp0_ = self->_bar;
+	_vala_assert (_tmp0_ == 23, "bar == 23");
+}
 
 Foo*
 foo_new (void)
@@ -79,6 +90,7 @@ _vala_main (void)
 	gint _tmp2_;
 	_tmp0_ = foo_new ();
 	foo = _tmp0_;
+	foo_manam (foo);
 	foo_set_bar (foo, 42);
 	_tmp1_ = foo_get_bar (foo);
 	_tmp2_ = _tmp1_;

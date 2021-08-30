@@ -248,8 +248,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			    prop.base_property == null &&
 			    prop.base_interface_property == null &&
 			    !(prop.property_type is ArrayType || prop.property_type is DelegateType)) {
-				CCodeExpression inst;
-				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
+				CCodeExpression inst = pub_inst;
+				if (!((Class) current_type_symbol).is_compact) {
+					inst = new CCodeMemberAccess.pointer (inst, "priv");
+				}
 				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, get_ccode_name (prop.field)));
 			} else if (!get_ccode_no_accessor_method (prop)) {
 				string getter_cname;
