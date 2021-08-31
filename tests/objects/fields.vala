@@ -32,6 +32,11 @@ class Faz : Foo {
 		assert (private_class_field == 42);
 		private_class_field = 24;
 		assert (private_class_field == 24);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+		public_base_class_field = 42;
 	}
 
 	static construct {
@@ -42,6 +47,11 @@ class Faz : Foo {
 		assert (private_class_field == 42);
 		private_class_field = 24;
 		assert (private_class_field == 24);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+		public_base_class_field = 42;
 	}
 
 	public void action () {
@@ -132,6 +142,11 @@ class Baz : Bar {
 		assert (private_class_field == 42);
 		private_class_field = 24;
 		assert (private_class_field == 24);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+		public_base_class_field = 42;
 	}
 
 	static construct {
@@ -142,6 +157,11 @@ class Baz : Bar {
 		assert (private_class_field == 42);
 		private_class_field = 24;
 		assert (private_class_field == 24);
+
+		assert (public_base_class_field == 42);
+		public_base_class_field = 24;
+		assert (public_base_class_field == 24);
+		public_base_class_field = 42;
 	}
 
 	public void action () {
