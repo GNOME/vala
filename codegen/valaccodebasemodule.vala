@@ -2622,7 +2622,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			cast = call;
 		} else {
 			// Accessing the member from a static or class constructor
-			cast = new CCodeIdentifier ("klass");
+			if (current_class == cl) {
+				cast = new CCodeIdentifier ("klass");
+			} else {
+				call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (cl)));
+				call.add_argument (new CCodeIdentifier ("klass"));
+				cast = call;
+			}
 		}
 		return cast;
 	}

@@ -701,6 +701,10 @@ faz_base_init (FazClass * klass)
 	_vala_assert (FAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 42, "private_class_field == 42");
 	FAZ_GET_CLASS_PRIVATE (klass)->private_class_field = 24;
 	_vala_assert (FAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 24, "private_class_field == 24");
+	_vala_assert (FOO_CLASS (klass)->public_base_class_field == 42, "public_base_class_field == 42");
+	FOO_CLASS (klass)->public_base_class_field = 24;
+	_vala_assert (FOO_CLASS (klass)->public_base_class_field == 24, "public_base_class_field == 24");
+	FOO_CLASS (klass)->public_base_class_field = 42;
 }
 
 static void
@@ -722,6 +726,10 @@ faz_class_init (FazClass * klass,
 	_vala_assert (FAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 42, "private_class_field == 42");
 	FAZ_GET_CLASS_PRIVATE (klass)->private_class_field = 24;
 	_vala_assert (FAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 24, "private_class_field == 24");
+	_vala_assert (FOO_CLASS (klass)->public_base_class_field == 42, "public_base_class_field == 42");
+	FOO_CLASS (klass)->public_base_class_field = 24;
+	_vala_assert (FOO_CLASS (klass)->public_base_class_field == 24, "public_base_class_field == 24");
+	FOO_CLASS (klass)->public_base_class_field = 42;
 }
 
 static void
@@ -1000,6 +1008,10 @@ baz_base_init (BazClass * klass)
 	_vala_assert (BAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 42, "private_class_field == 42");
 	BAZ_GET_CLASS_PRIVATE (klass)->private_class_field = 24;
 	_vala_assert (BAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 24, "private_class_field == 24");
+	_vala_assert (BAR_CLASS (klass)->public_base_class_field == 42, "public_base_class_field == 42");
+	BAR_CLASS (klass)->public_base_class_field = 24;
+	_vala_assert (BAR_CLASS (klass)->public_base_class_field == 24, "public_base_class_field == 24");
+	BAR_CLASS (klass)->public_base_class_field = 42;
 }
 
 static void
@@ -1021,6 +1033,10 @@ baz_class_init (BazClass * klass,
 	_vala_assert (BAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 42, "private_class_field == 42");
 	BAZ_GET_CLASS_PRIVATE (klass)->private_class_field = 24;
 	_vala_assert (BAZ_GET_CLASS_PRIVATE (klass)->private_class_field == 24, "private_class_field == 24");
+	_vala_assert (BAR_CLASS (klass)->public_base_class_field == 42, "public_base_class_field == 42");
+	BAR_CLASS (klass)->public_base_class_field = 24;
+	_vala_assert (BAR_CLASS (klass)->public_base_class_field == 24, "public_base_class_field == 24");
+	BAR_CLASS (klass)->public_base_class_field = 42;
 }
 
 static void
