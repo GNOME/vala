@@ -170,7 +170,21 @@ namespace Gst {
 			LOC,
 			TOOL,
 			NOTE,
-			PRIV;
+			PRIV,
+			[Version (since = "1.20")]
+			H323_CADDR,
+			[Version (since = "1.20")]
+			APSI,
+			[Version (since = "1.20")]
+			RGRP,
+			[Version (since = "1.20")]
+			RTP_STREAM_ID,
+			[Version (since = "1.20")]
+			REPAIRED_RTP_STREAM_ID,
+			[Version (since = "1.20")]
+			CCID,
+			[Version (since = "1.20")]
+			MID;
 			[CCode (cname = "gst_rtcp_sdes_name_to_type")]
 			public static Gst.RTCP.SDESType from_string (string name);
 			[CCode (cname = "gst_rtcp_sdes_type_to_name")]

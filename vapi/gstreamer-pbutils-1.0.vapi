@@ -31,6 +31,9 @@ namespace Gst {
 				public static uint8 get_level_idc (string level);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile")]
 				public static unowned string get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] sps);
+				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile_flags_level")]
+				[Version (since = "1.20")]
+				public static bool get_profile_flags_level (uint8 codecs_data, uint len, uint8 profile, uint8 flags, uint8 level);
 			}
 			namespace MPEG4Video {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_caps_set_level_and_profile")]
@@ -364,6 +367,9 @@ namespace Gst {
 		public const int PLUGINS_BASE_VERSION_NANO;
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static bool add_codec_description_to_tag_list (Gst.TagList taglist, string? codec_tag, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_caps_get_mime_codec")]
+		[Version (since = "1.20")]
+		public static string codec_utils_caps_get_mime_codec (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h265_caps_set_level_tier_and_profile")]
 		[Version (since = "1.4")]
 		public static bool codec_utils_h265_caps_set_level_tier_and_profile (Gst.Caps caps, [CCode (array_length_cname = "len", array_length_pos = 2.1, array_length_type = "guint")] uint8[] profile_tier_level);
