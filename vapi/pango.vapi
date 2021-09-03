@@ -379,8 +379,11 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_item_get_type ()")]
 	[Compact]
 	public class GlyphItem {
+		public int end_x_offset;
 		public weak Pango.GlyphString glyphs;
 		public weak Pango.Item item;
+		public int start_x_offset;
+		public int y_offset;
 		[Version (since = "1.2")]
 		public GLib.SList<Pango.GlyphItem> apply_attrs (string text, Pango.AttrList list);
 		[Version (since = "1.20")]
@@ -412,6 +415,8 @@ namespace Pango {
 		[Version (since = "1.14")]
 		public int get_width ();
 		public void index_to_x (string text, int length, Pango.Analysis analysis, int index_, bool trailing, out int x_pos);
+		[Version (since = "1.50")]
+		public void index_to_x_full (string text, int length, Pango.Analysis analysis, Pango.LogAttr? attrs, int index_, bool trailing, out int x_pos);
 		public void set_size (int new_len);
 		public void x_to_index (string text, int length, Pango.Analysis analysis, int x_pos, out int index_, out int trailing);
 	}
@@ -558,6 +563,7 @@ namespace Pango {
 		public unowned Pango.LayoutLine get_line_readonly ();
 		public void get_line_yrange (out int y0_, out int y1_);
 		public unowned Pango.LayoutRun? get_run ();
+		public int get_run_baseline ();
 		public void get_run_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		[Version (since = "1.16")]
 		public unowned Pango.LayoutRun? get_run_readonly ();
@@ -730,6 +736,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	public struct GlyphVisAttr {
 		public uint is_cluster_start;
+		public uint is_color;
 	}
 	[CCode (cheader_filename = "pango/pango.h", has_type_id = false)]
 	public struct LogAttr {
@@ -827,10 +834,19 @@ namespace Pango {
 		ABSOLUTE_LINE_HEIGHT,
 		TEXT_TRANSFORM,
 		WORD,
-		SENTENCE;
+		SENTENCE,
+		BASELINE_SHIFT,
+		FONT_SCALE;
 		[Version (since = "1.22")]
 		public unowned string? get_name ();
 		public static Pango.AttrType register (string name);
+	}
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BASELINE_SHIFT_", type_id = "pango_baseline_shift_get_type ()")]
+	[Version (since = "1.50")]
+	public enum BaselineShift {
+		NONE,
+		SUPERSCRIPT,
+		SUBSCRIPT
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_BIDI_TYPE_", type_id = "pango_bidi_type_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.44", since = "1.22")]
@@ -895,6 +911,12 @@ namespace Pango {
 		SIZE,
 		GRAVITY,
 		VARIATIONS
+	}
+	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_FONT_SCALE_", type_id = "pango_font_scale_get_type ()")]
+	public enum FontScale {
+		NONE,
+		SUPERSCRIPT,
+		SUBSCRIPT
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_", type_id = "pango_gravity_get_type ()")]
 	[Version (since = "1.16")]
@@ -1188,6 +1210,9 @@ namespace Pango {
 	public static Pango.Attribute attr_background_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.50")]
+	public static Pango.Attribute attr_baseline_shift_new (int shift);
+	[CCode (cheader_filename = "pango/pango.h")]
+	[Version (since = "1.50")]
 	public static void attr_break (string text, int length, Pango.AttrList attr_list, int offset, [CCode (array_length_cname = "attrs_len", array_length_pos = 5.1)] Pango.LogAttr[] attrs);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.4")]
@@ -1197,6 +1222,9 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (replacement = "AttrFontDesc.new")]
 	public static Pango.Attribute attr_font_desc_new (Pango.FontDescription desc);
+	[CCode (cheader_filename = "pango/pango.h")]
+	[Version (since = "1.50")]
+	public static Pango.Attribute attr_font_scale_new (Pango.FontScale scale);
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (since = "1.38")]
 	public static Pango.Attribute attr_foreground_alpha_new (uint16 alpha);

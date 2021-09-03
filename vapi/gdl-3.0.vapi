@@ -237,6 +237,9 @@ namespace Gdl {
 		public virtual void present (Gdl.DockObject? child);
 		public virtual void reduce ();
 		public virtual bool reorder (Gdl.DockObject child, Gdl.DockPlacement new_position, GLib.Value? other_data);
+		[CCode (cname = "gdl_dock_object_class_set_is_compound")]
+		[Version (since = "3.6")]
+		public class void set_is_compound (bool is_compound);
 		[Version (since = "3.6")]
 		public void set_long_name (string name);
 		[Version (since = "3.6")]
