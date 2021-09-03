@@ -6447,6 +6447,14 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h")]
 	[Version (replacement = "Transform.parse")]
 	public static bool transform_parse (string string, out Gsk.Transform out_transform);
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	public static Gsk.RenderNode? value_dup_render_node (GLib.Value value);
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	public static unowned Gsk.RenderNode? value_get_render_node (ref GLib.Value value);
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	public static void value_set_render_node (ref GLib.Value value, Gsk.RenderNode node);
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	public static void value_take_render_node (ref GLib.Value value, owned Gsk.RenderNode? node);
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
@@ -8798,7 +8806,7 @@ namespace Gtk {
 		public void set_context_id (string? context_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_paintable_get_type ()")]
-	public class IconPaintable : GLib.Object, Gdk.Paintable {
+	public class IconPaintable : GLib.Object, Gdk.Paintable, Gtk.SymbolicPaintable {
 		[CCode (has_construct_function = false)]
 		protected IconPaintable ();
 		[CCode (has_construct_function = false)]
@@ -10525,6 +10533,9 @@ namespace Gtk {
 		public string gtk_font_name { owned get; set; }
 		[NoAccessorMethod]
 		public uint gtk_fontconfig_timestamp { get; set; }
+		[NoAccessorMethod]
+		[Version (since = "4.6")]
+		public bool gtk_hint_font_metrics { get; set; }
 		[NoAccessorMethod]
 		public string gtk_icon_theme_name { owned get; set; }
 		[NoAccessorMethod]
@@ -12830,6 +12841,10 @@ namespace Gtk {
 	public interface StyleProvider : GLib.Object {
 		public signal void gtk_private_changed ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSymbolicPaintableInterface", type_id = "gtk_symbolic_paintable_get_type ()")]
+	public interface SymbolicPaintable : Gdk.Paintable, GLib.Object {
+		public abstract void snapshot_symbolic (Gdk.Snapshot snapshot, double width, double height, [CCode (array_length_cname = "n_colors", array_length_pos = 4.1, array_length_type = "gsize")] Gdk.RGBA[] colors);
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_drag_dest_get_type ()")]
 	public interface TreeDragDest : GLib.Object {
 		public abstract bool drag_data_received (Gtk.TreePath dest, GLib.Value value);
@@ -13954,6 +13969,13 @@ namespace Gtk {
 		RECURSE,
 		SHOW_STYLE,
 		SHOW_CHANGE
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYMBOLIC_COLOR_", type_id = "gtk_symbolic_color_get_type ()")]
+	public enum SymbolicColor {
+		FOREGROUND,
+		ERROR,
+		WARNING,
+		SUCCESS
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYSTEM_SETTING_", type_id = "gtk_system_setting_get_type ()")]
 	public enum SystemSetting {

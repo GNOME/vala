@@ -9,3 +9,10 @@ GLShader
 ParseErrorFunc skip
 RenderNode
 	.deserialize skip=false
+
+// Vala-specific, not really bugs
+/////////////////////////////////
+
+value_get_render_node.value ref
+value_set_render_node.value ref
+value_take_render_node.value ref
