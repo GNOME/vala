@@ -1,3 +1,17 @@
+Vala 0.53.2
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Fix property access inside opaque compact class
+    + Add missing cast to access base-class members in class/static ctor [#1221]
+
+ * Bindings:
+  - glib-2.0: Current constants in GLib.Math are part of glib.h [#1220]
+  - glib-2.0: Add RefString since 2.58 [#723]
+  - gstreamer: Update from 1.19.0+ git master
+  - gtk4: Update to 4.5.0~e681fdd9
+  - vapi: Update GIR-based bindings
+
 Vala 0.53.1
 ===========
  * Highlights:
