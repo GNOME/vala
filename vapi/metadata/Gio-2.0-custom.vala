@@ -84,12 +84,6 @@ namespace GLib {
 		public GLib.MainContext context { construct; }
 	}
 
-	[Compact]
-	public class IOModuleScope {
-		[CCode (has_construct_function = false)]
-		public IOModuleScope (GLib.IOModuleScopeFlags flags);
-	}
-
 	public class MemoryOutputStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
@@ -98,6 +92,15 @@ namespace GLib {
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {
 		[NoWrapper]
 		public abstract GLib.Mount get_mount_for_mount_path (string mount_path, GLib.Cancellable? cancellable = null);
+	}
+
+	public abstract class OutputStream : GLib.Object {
+		[Version (since = "2.40")]
+		[CCode (error_pos = 2.8, sentinel = "")]
+		public bool printf (out size_t bytes_written, GLib.Cancellable? cancellable, string format, ...) throws GLib.Error;
+		[Version (since = "2.40")]
+		[CCode (error_pos = 2.8)]
+		public bool vprintf (out size_t bytes_written, GLib.Cancellable? cancellable, string format, va_list args) throws GLib.Error;
 	}
 
 	[Compact]
@@ -131,6 +134,11 @@ namespace GLib {
 	public class SocketSource : GLib.Source {
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned SocketSourceFunc func);
+	}
+
+	public class SubprocessLauncher : GLib.Object {
+		[CCode (error_pos = 0.8)]
+		public GLib.Subprocess spawn (string argv0, ...) throws GLib.Error;
 	}
 
 	public class Task : GLib.Object {
@@ -171,6 +179,13 @@ namespace GLib {
 		public virtual bool to_tokens (GLib.GenericArray<string> tokens, out int out_version);
 		[NoWrapper]
 		public virtual GLib.Icon? from_tokens (string[] tokens, int version) throws GLib.Error;
+	}
+
+	public errordomain DBusError {
+		[CCode (error_pos = 0.8, sentinel = "")]
+		public static void set_dbus_error (string dbus_error_name, string dbus_error_message, string? format, ...) throws GLib.DBusError;
+		[CCode (error_pos = 0.8)]
+		public static void set_dbus_error_valist (string dbus_error_name, string dbus_error_message, string? format, va_list var_args) throws GLib.DBusError;
 	}
 
 	public errordomain IOError {

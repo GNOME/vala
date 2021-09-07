@@ -1483,6 +1483,7 @@ namespace GLib {
 		public unowned string get_name ();
 		public int get_priority ();
 		public GLib.Type get_type ();
+		public GLib.TypeClass ref_class ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Compact]
@@ -1855,6 +1856,8 @@ namespace GLib {
 		[Version (since = "2.34")]
 		public MenuItem.from_model (GLib.MenuModel model, int item_index);
 		[Version (since = "2.34")]
+		public bool get_attribute (string attribute, string format_string, ...);
+		[Version (since = "2.34")]
 		public GLib.Variant? get_attribute_value (string attribute, GLib.VariantType? expected_type);
 		[Version (since = "2.34")]
 		public GLib.MenuModel? get_link (string link);
@@ -2015,11 +2018,13 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public Notification (string title);
 		public void add_button (string label, string detailed_action);
+		public void add_button_with_target (string label, string action, string? target_format, ...);
 		public void add_button_with_target_value (string label, string action, GLib.Variant? target);
 		public void set_body (string? body);
 		[Version (since = "2.70")]
 		public void set_category (string? category);
 		public void set_default_action (string detailed_action);
+		public void set_default_action_and_target (string action, string? target_format, ...);
 		public void set_default_action_and_target_value (string action, GLib.Variant? target);
 		public void set_icon (GLib.Icon icon);
 		public void set_priority (GLib.NotificationPriority priority);
@@ -2041,9 +2046,15 @@ namespace GLib {
 		public bool is_closed ();
 		[Version (since = "2.24")]
 		public bool is_closing ();
+		[CCode (error_pos = 2.8, sentinel = "")]
+		[Version (since = "2.40")]
+		public bool printf (out size_t bytes_written, GLib.Cancellable? cancellable, string format, ...) throws GLib.Error;
 		public bool set_pending () throws GLib.Error;
 		public virtual ssize_t splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		[CCode (error_pos = 2.8)]
+		[Version (since = "2.40")]
+		public bool vprintf (out size_t bytes_written, GLib.Cancellable? cancellable, string format, va_list args) throws GLib.Error;
 		[CCode (vfunc_name = "write_fn")]
 		public abstract ssize_t write ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public bool write_all ([CCode (array_length_cname = "count", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.IOError;
@@ -2350,6 +2361,9 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[Version (since = "2.28")]
 		public static GLib.SettingsBackend get_default ();
+		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
+		[NoWrapper]
+		public virtual GLib.Permission get_permission (string path);
 		[CCode (cheader_filename = "gio/gsettingsbackend.h", feature_test_macro = "G_SETTINGS_ENABLE_BACKEND")]
 		[NoWrapper]
 		public virtual bool get_writable (string key);
@@ -2899,6 +2913,8 @@ namespace GLib {
 		public void set_stdin_file_path (string path);
 		public void set_stdout_file_path (string? path);
 		public void setenv (string variable, string value, bool overwrite);
+		[CCode (error_pos = 0.8)]
+		public GLib.Subprocess spawn (string argv0, ...) throws GLib.Error;
 		public GLib.Subprocess spawnv ([CCode (array_length = false, array_null_terminated = true)] string[] argv) throws GLib.Error;
 		public void take_fd (int source_fd, int target_fd);
 		public void take_stderr_fd (int fd);
@@ -3256,6 +3272,8 @@ namespace GLib {
 		protected Vfs ();
 		[NoWrapper]
 		public virtual void add_writable_namespaces (GLib.FileAttributeInfoList list);
+		[NoWrapper]
+		public virtual GLib.Icon deserialize_icon (GLib.Variant value);
 		public static unowned GLib.Vfs get_default ();
 		public virtual GLib.File get_file_for_path (string path);
 		public virtual GLib.File get_file_for_uri (string uri);
@@ -4878,6 +4896,10 @@ namespace GLib {
 		UNKNOWN_INTERFACE,
 		UNKNOWN_PROPERTY,
 		PROPERTY_READ_ONLY;
+		[CCode (error_pos = 0.8, sentinel = "")]
+		public static void set_dbus_error (string dbus_error_name, string dbus_error_message, string? format, ...) throws GLib.DBusError;
+		[CCode (error_pos = 0.8)]
+		public static void set_dbus_error_valist (string dbus_error_name, string dbus_error_message, string? format, va_list var_args) throws GLib.DBusError;
 		public static string encode_gerror (GLib.Error error);
 		public static string? get_remote_error (GLib.Error error);
 		public static bool is_remote_error (GLib.Error error);
