@@ -57,6 +57,7 @@ SettingsBackend
   .* cheader_filename="gio/gsettingsbackend.h" feature_test_macro="G_SETTINGS_ENABLE_BACKEND"
   .changed_tree.tree type="GLib.Tree<string,GLib.Variant>"
   .flatten_tree.tree type="GLib.Tree<string,GLib.Variant>"
+  .get_permission unowned=false skip=false
   .write_tree.tree type="GLib.Tree<string,GLib.Variant>"
 
 Action
@@ -133,6 +134,10 @@ File
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
   .replace_contents_bytes_async finish_name="g_file_replace_contents_finish"
+IOExtension
+  .ref_class skip=false
+IOModuleScope
+  .new skip=false symbol_type="constructor"
 io_error_from_errno type="int" name="io_error__from_errno"
 IOStream
   .close virtual vfunc_name="close_fn" throws="GLib.IOError"
@@ -173,6 +178,7 @@ MemoryOutputStream
   .destroy_function skip=false type="GLib.DestroyNotify?"
   .realloc_function skip=false type="GLib.ReallocFunc?"
 MenuItem
+  .get_attribute skip=false
   .set_action_and_target skip=false
   .set_attribute skip=false
 MenuModel
@@ -180,6 +186,9 @@ MenuModel
   .get_item_attributes.attributes out type="GLib.HashTable<string,GLib.Variant>?"
 Mount
   .get_sort_key#virtual_method virtual
+Notification
+  .add_button_with_target skip=false
+  .set_default_action_and_target skip=false
 OutputStream
   .close abstract vfunc_name="close_fn" throws="GLib.IOError"
   .close_finish throws="GLib.IOError"
@@ -252,6 +261,7 @@ TlsPassword
   .set_value#virtual_method.value owned
   .set_value#virtual_method.destroy default=GLib.free
 Vfs
+  .deserialize_icon skip=false unowned=false
   // TODO: should probably be a simple generic
   .local_file_add_info.extra_data default=null
   .local_file_add_info.free_extra_data nullable default=null
