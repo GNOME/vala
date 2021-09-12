@@ -165,10 +165,9 @@ public class Vala.CastExpression : Expression {
 		// FIXME: check whether cast is allowed
 
 		if (type_reference is VoidType) {
-			Report.warning (source_reference, "Casting to `void' is not supported");
-			context.analyzer.replaced_nodes.add (this);
-			parent_node.replace_expression (this, inner);
-			return inner.check (context);
+			Report.error (source_reference, "Casting to `void' is not allowed");
+			error = true;
+			return false;
 		}
 
 		if (type_reference is DelegateType && inner.value_type is MethodType) {

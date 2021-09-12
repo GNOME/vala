@@ -980,7 +980,7 @@ TESTS = \
 	semantic/assignment-signal-incompatible-type.test \
 	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
-	semantic/cast-void-not-allowed.vala \
+	semantic/cast-void-not-allowed.test \
 	semantic/chainup-gobject-incompatible-type-property.test \
 	semantic/chainup-gobject-unknown-property.test \
 	semantic/chainup-gobject-unsupported-type-property.test \
