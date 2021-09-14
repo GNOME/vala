@@ -933,6 +933,7 @@ TESTS = \
 	semantic/assignment-signal-incompatible-type.test \
 	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
+	semantic/cast-void-not-allowed.vala \
 	semantic/chainup-gobject-incompatible-type-property.test \
 	semantic/chainup-gobject-unknown-property.test \
 	semantic/chainup-gobject-unsupported-type-property.test \
@@ -1028,7 +1029,6 @@ TESTS = \
 	semantic/localvariable-var-static-access-instance-property.test \
 	semantic/localvariable-var-without-initializer.test \
 	semantic/localvariable-void.test \
-	semantic/localvariable-void-initializer.test \
 	semantic/member-access-async-callback-invalid.test \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-capture-valist-parameter.test \

@@ -1,5 +1,0 @@
-Invalid Code
-
-void main () {
-	var foo = (void) "foo";
-}
