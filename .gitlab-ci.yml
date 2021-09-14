@@ -104,7 +104,7 @@ fedora-clang-x86_64:
 
 ubuntu-clang-x86_64:
   stage: build
-  image: ubuntu:devel
+  image: ubuntu:latest
   except:
     - tags
   variables:
