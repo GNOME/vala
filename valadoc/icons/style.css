@@ -329,6 +329,7 @@ h2, h3 {
     width: 16px;
     margin-right: 6px;
     vertical-align: middle;
+    padding-left: 0em !important;
 }
 
 .navi_main .abstract_class > a, .navi_inline .abstract_class > a {
@@ -423,18 +424,24 @@ code {
 .brief_description a.abstract_class {
     background-image: url(abstractclass.svg);
     font-style: italic;
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .abstract_method::before,
 .description a.abstract_method,
 .brief_description a.abstract_method {
     background-image: url(abstractmethod.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .abstract_property::before,
 .description a.abstract_property,
 .brief_description a.abstract_property {
     background-image: url(abstractproperty.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .class::before,
@@ -442,12 +449,16 @@ code {
 .description a.class,
 .brief_description a.class {
     background-image: url(class.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .constant::before,
 .description a.constant,
 .brief_description a.constant {
     background-image: url(constant.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .creation_method::before,
@@ -466,6 +477,8 @@ code {
 
 .document::before {
     background-image: url(document.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .enum::before,
@@ -486,6 +499,8 @@ code {
 .description a.errorcode,
 .brief_description a.errorcode {
     background-image: url(errorcode.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .errordomain::before,
@@ -493,6 +508,8 @@ code {
 .description a.errordomain,
 .brief_description a.errordomain {
     background-image: url(errordomain.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .field::before,
@@ -500,6 +517,8 @@ code {
 .description a.field,
 .brief_description a.field {
     background-image: url(field.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .interface::before,
@@ -507,12 +526,16 @@ code {
 .description a.interface,
 .brief_description a.interface {
     background-image: url(interface.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .method::before,
 .description a.method,
 .brief_description a.method {
     background-image: url(method.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .namespace::before,
@@ -520,14 +543,18 @@ code {
 .description a.namespace,
 .brief_description a.namespace {
     background-image: url(namespace.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .package::before {
     background-image: url(package.svg);
+    background-repeat: no-repeat;
 }
 
 .package_index::before {
     background-image: url(packages.svg);
+    background-repeat: no-repeat;
 }
 
 .property::before,
@@ -535,6 +562,8 @@ code {
 .description a.property,
 .brief_description a.property {
     background-image: url(property.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .signal::before,
@@ -542,12 +571,16 @@ code {
 .description a.signal,
 .brief_description a.signal {
     background-image: url(signal.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .static_method::before,
 .description a.static_method,
 .brief_description a.static_method {
     background-image: url(staticmethod.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .struct::before,
@@ -555,16 +588,22 @@ code {
 .description a.struct,
 .brief_description a.struct {
     background-image: url(struct.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .virtual_method::before,
 .description a.virtual_method,
 .brief_description a.virtual_method {
     background-image: url(virtualmethod.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
 
 .virtual_property::before,
 .description a.virtual_property,
 .brief_description a.virtual_property {
     background-image: url(virtualproperty.svg);
+    background-repeat: no-repeat;
+    padding-left: 1.5em;
 }
