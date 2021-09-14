@@ -164,6 +164,13 @@ public class Vala.CastExpression : Expression {
 
 		// FIXME: check whether cast is allowed
 
+		if (type_reference is VoidType) {
+			Report.warning (source_reference, "Casting to `void' is not supported");
+			context.analyzer.replaced_nodes.add (this);
+			parent_node.replace_expression (this, inner);
+			return inner.check (context);
+		}
+
 		if (type_reference is DelegateType && inner.value_type is MethodType) {
 			if (target_type != null) {
 				inner.value_type.value_owned = target_type.value_owned;
