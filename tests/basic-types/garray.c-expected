@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <float.h>
+#include <math.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
@@ -78,6 +80,8 @@ static void _foo_struct_free0_ (gpointer var);
 static void _vala_FooStruct_free_function_content_of (gpointer data);
 VALA_EXTERN void test_struct_garray (void);
 VALA_EXTERN void test_object_garray (void);
+VALA_EXTERN GArray* check_gvalue_garray (GArray* vals);
+VALA_EXTERN void test_gvalue_garray (void);
 static void _vala_main (void);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
@@ -565,6 +569,65 @@ test_object_garray (void)
 	_g_object_unref0 (foo);
 }
 
+GArray*
+check_gvalue_garray (GArray* vals)
+{
+	GArray* result = NULL;
+	g_return_val_if_fail (vals != NULL, NULL);
+	_vala_assert (g_strcmp0 (g_value_get_string (&g_array_index (vals, GValue, (guint) 0)), "foo") == 0, "vals.index (0) == \"foo\"");
+	_vala_assert (g_value_get_int (&g_array_index (vals, GValue, (guint) 1)) == 42, "vals.index (1) == 42");
+	_vala_assert (g_value_get_double (&g_array_index (vals, GValue, (guint) 2)) == 3.1415, "vals.index (2) == 3.1415");
+	result = vals;
+	return result;
+}
+
+void
+test_gvalue_garray (void)
+{
+	{
+		GArray* foo = NULL;
+		GArray* _tmp0_;
+		GValue _tmp1_ = {0};
+		GValue _tmp2_ = {0};
+		GValue _tmp3_ = {0};
+		_tmp0_ = g_array_new (TRUE, TRUE, sizeof (GValue));
+		g_array_set_clear_func (_tmp0_, (GDestroyNotify) g_value_unset);
+		foo = _tmp0_;
+		g_value_init (&_tmp1_, G_TYPE_STRING);
+		g_value_set_string (&_tmp1_, "foo");
+		g_array_append_val (foo, _tmp1_);
+		g_value_init (&_tmp2_, G_TYPE_INT);
+		g_value_set_int (&_tmp2_, 42);
+		g_array_append_val (foo, _tmp2_);
+		g_value_init (&_tmp3_, G_TYPE_DOUBLE);
+		g_value_set_double (&_tmp3_, 3.1415);
+		g_array_append_val (foo, _tmp3_);
+		check_gvalue_garray (foo);
+		_g_array_unref0 (foo);
+	}
+	{
+		GArray* foo = NULL;
+		GArray* _tmp4_;
+		GValue _tmp5_ = {0};
+		GValue _tmp6_ = {0};
+		GValue _tmp7_ = {0};
+		_tmp4_ = g_array_new (TRUE, TRUE, sizeof (GValue));
+		g_array_set_clear_func (_tmp4_, (GDestroyNotify) g_value_unset);
+		foo = _tmp4_;
+		g_value_init (&_tmp5_, G_TYPE_STRING);
+		g_value_set_string (&_tmp5_, "foo");
+		g_array_append_val (foo, _tmp5_);
+		g_value_init (&_tmp6_, G_TYPE_INT);
+		g_value_set_int (&_tmp6_, 42);
+		g_array_append_val (foo, _tmp6_);
+		g_value_init (&_tmp7_, G_TYPE_DOUBLE);
+		g_value_set_double (&_tmp7_, 3.1415);
+		g_array_append_val (foo, _tmp7_);
+		check_gvalue_garray (foo);
+		_g_array_unref0 (foo);
+	}
+}
+
 static void
 _vala_main (void)
 {
@@ -572,6 +635,7 @@ _vala_main (void)
 	test_int_garray ();
 	test_struct_garray ();
 	test_object_garray ();
+	test_gvalue_garray ();
 }
 
 int
