@@ -1293,6 +1293,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public void check_type (DataType type) {
+		// Allow any type-argument for GLib.Array
+		if (context != null && context.profile == Profile.GOBJECT
+		    && type.type_symbol == garray_type.type_symbol) {
+			return;
+		}
+
 		foreach (var type_arg in type.get_type_arguments ()) {
 			check_type (type_arg);
 			check_type_argument (type_arg);

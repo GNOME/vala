@@ -89,9 +89,34 @@ void test_object_garray () {
 	assert (foo.ref_count == 1);
 }
 
+unowned Array<Value> check_gvalue_garray (Array<Value> vals) {
+	assert (vals.index (0) == "foo");
+	assert (vals.index (1) == 42);
+	assert (vals.index (2) == 3.1415);
+	return vals;
+}
+
+void test_gvalue_garray () {
+	{
+		var foo = new Array<Value> ();
+		foo.append_val ("foo");
+		foo.append_val (42);
+		foo.append_val (3.1415);
+		check_gvalue_garray (foo);
+	}
+	{
+		Array<Value> foo = new Array<Value> ();
+		foo.append_val ("foo");
+		foo.append_val (42);
+		foo.append_val (3.1415);
+		check_gvalue_garray (foo);
+	}
+}
+
 void main () {
 	test_garray ();
 	test_int_garray ();
 	test_struct_garray ();
 	test_object_garray ();
+	test_gvalue_garray ();
 }
