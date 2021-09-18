@@ -2,6 +2,8 @@
  * generated from errors_catch_in_finally.vala, do not modify */
 
 #include <glib.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)

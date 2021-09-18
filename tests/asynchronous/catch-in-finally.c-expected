@@ -4,6 +4,8 @@
 #include <glib.h>
 #include <gio/gio.h>
 #include <glib-object.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)

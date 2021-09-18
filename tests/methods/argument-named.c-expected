@@ -4,6 +4,8 @@
 #include <glib-object.h>
 #include <glib.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
 #include <gobject/gvaluecollector.h>
 
 #if !defined(VALA_EXTERN)
