@@ -397,6 +397,7 @@ TESTS = \
 	delegates/fields.vala \
 	delegates/fields-no-target.vala \
 	delegates/gclosure-conversion.vala \
+	delegates/implicit-local-variable.vala \
 	delegates/incompatible.test \
 	delegates/incompatible-assignment.test \
 	delegates/incompatible-initializer.test \

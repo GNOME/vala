@@ -3912,6 +3912,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public void emit_temp_var (LocalVariable local, bool on_error = false) {
+		generate_type_declaration (local.variable_type, cfile);
+
 		var init = (!local.name.has_prefix ("*") && local.init);
 		if (is_in_coroutine ()) {
 			closure_struct.add_field (get_ccode_name (local.variable_type), local.name, 0, get_ccode_declarator_suffix (local.variable_type));
