@@ -232,39 +232,42 @@ public class Vala.Report {
 	 * Pretty-print the actual line of offending code if possible.
 	 */
 	private void report_source (SourceReference source) {
-		if (source.begin.line != source.end.line) {
-			// FIXME Cannot report multi-line issues currently
-			return;
-		}
-
-		string offending_line = source.file.get_source_line (source.begin.line);
-
-		if (offending_line != null) {
-			stderr.printf ("%s\n", offending_line);
-			int idx;
-
-			/* We loop in this manner so that we don't fall over on differing
-			 * tab widths. This means we get the ^s in the right places.
-			 */
-			for (idx = 1; idx < source.begin.column; ++idx) {
-				if (offending_line[idx - 1] == '\t') {
-					stderr.printf ("\t");
-				} else {
-					stderr.printf (" ");
-				}
-			}
-
+		for (int idx = source.begin.line; idx <= source.end.line; idx++) {
+			string offending_line = source.file.get_source_line (idx);
+			stderr.printf ("%5d | %s\n", idx, offending_line);
+			stderr.printf ("      | ");
 			stderr.puts (caret_color_start);
-			for (idx = source.begin.column; idx <= source.end.column; ++idx) {
-				if (offending_line[idx - 1] == '\t') {
-					stderr.printf ("\t");
+			for (int jdx = 0; jdx < offending_line.length; jdx++) {
+				if (offending_line[jdx] == '\t') {
+					stderr.putc ('\t');
+					continue;
+				}
+				bool caret = false;
+				unowned SourceLocation begin = source.begin;
+				unowned SourceLocation end = source.end;
+				if (begin.line == idx && end.line == idx) {
+					if (begin.column <= jdx + 1 <= end.column) {
+						caret = true;
+					}
+				} else if (begin.line == idx && begin.column <= jdx + 1) {
+					caret = true;
+				} else if (begin.line < idx < end.line) {
+					caret = true;
+				} else if (end.line == idx && end.column >= jdx + 1) {
+					caret = true;
+				}
+				if (caret) {
+					if (begin.line == idx && begin.column == jdx + 1) {
+						stderr.putc ('^');
+					} else {
+						stderr.putc ('~');
+					}
 				} else {
-					stderr.printf ("^");
+					stderr.putc (' ');
 				}
 			}
 			stderr.puts (caret_color_end);
-
-			stderr.printf ("\n");
+			stderr.putc ('\n');
 		}
 	}
 
