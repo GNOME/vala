@@ -694,7 +694,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return false;
 		}
 		// sealed classes are special
-		if (sym is Class && ((Class) sym).is_sealed) {
+		if (!sym.external_package && sym is Class && ((Class) sym).is_sealed) {
 			return false;
 		}
 		if (sym.external_package || in_generated_header
