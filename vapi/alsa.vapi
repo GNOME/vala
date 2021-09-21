@@ -1,6 +1,6 @@
 /* asound.vapi
  *
- * Copyright (C) 2009-2018 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * Copyright (C) 2009-2021 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@
  * Author:
  *  Dr. Michael 'Mickey' Lauer
  *  Wayne Blaszczyk
+ *  Nikola Hadžić
  */
 
 [CCode (lower_case_cprefix = "snd_", cheader_filename = "alsa/asoundlib.h")]
@@ -33,6 +34,165 @@ namespace Alsa {
         public uchar subcode[147];
         public uchar pad;
         public uchar dig_subframe[4];
+    }
+
+    [CCode (cname = "int", cprefix = "SND_INPUT_", has_type_id = false)]
+    public enum InputType
+    {
+        STDIO,
+        BUFFER
+    }
+
+    [Compact]
+    [CCode (cprefix = "snd_input_", cname = "snd_input_t", free_function = "snd_input_close")]
+    public class Input
+    {
+        public static int stdio_open(out Input input, string file, string mode);
+        public static int stdio_attach(out Input input, Posix.FILE file, int close = 1);
+        public static int buffer_open(out Input input, [CCode (array_length = false)] char[] buffer, ssize_t size);
+
+        [ScanfFormat]
+        public int scanf(string format, ...);
+        [CCode (array_length = false)]
+        public char[] gets([CCode (array_length = false)] char[] str, size_t size);
+        public int getc();
+        public int ungetc(int c);
+    }
+
+    [CCode (cname = "int", cprefix = "SND_OUTPUT_", has_type_id = false)]
+    public enum OutputType
+    {
+        STDIO,
+        BUFFER
+    }
+
+    [Compact]
+    [CCode (cprefix = "snd_output_", cname = "snd_output_t", free_function = "snd_output_close")]
+    public class Output
+    {
+        public static int stdio_open(out Output output, string file, string mode);
+        public static int stdio_attach(out Output output, Posix.FILE file, int close = 1);
+        public static int buffer_open(out Output output);
+
+        public size_t buffer_string([CCode (array_length = false)] out unowned char[] buffer);
+        public size_t buffer_steal([CCode (array_length = false)] out char[] buffer);
+        [PrintfFormat]
+        public int printf(string format, ...);
+        public int puts(string str);
+        public int putc(int c);
+        public int flush();
+    }
+
+    [CCode (cname = "int", cprefix = "SND_CONFIG_TYPE_", has_type_id = false)]
+    public enum ConfigType
+    {
+        INTEGER,
+        INTEGER64,
+        REAL,
+        STRING,
+        POINTER,
+        COMPOUND
+    }
+
+
+    [Compact]
+    [CCode (cprefix = "snd_config_", cname = "snd_config_t", ref_function = "snd_config_ref", ref_function_void = true, unref_function = "snd_config_unref")]
+    public class Config
+    {
+        [Compact]
+        [CCode (cprefix = "snd_config_iterator_", cname = "struct _snd_config_iterator", free_function = "")]
+        public class Iterator
+        {
+            public static Iterator first(Config config);
+            public static Iterator end(Config config);
+
+            public Iterator next();
+            public Config entry();
+        }
+
+        [Compact]
+        [CCode (cprefix = "snd_config_update_", cname = "snd_config_update_t", free_function = "snd_config_update_free")]
+        public class Update
+        {
+            [CCode (cname = "snd_config_update")]
+            public static int global();
+            [CCode (cname = "snd_config_update_ref")]
+            public static int ref_global(out Config top);
+            public static int free_global();
+
+            public static int r(out Config top, out Update update, string? cfgs = null);
+        }
+
+        public static string topdir();
+
+        public static int top(out Config config);
+
+        public static int make(out Config config, string id, ConfigType type);
+        public static int make_integer(out Config config, string id);
+        public static int make_integer64(out Config config, string id);
+        public static int make_real(out Config config, string id);
+        public static int make_string(out Config config, string id);
+        public static int make_pointer(out Config config, string id);
+        public static int make_compound(out Config config, string id, int join = 0);
+        public static int make_path(out Config config, Config root, string key, int join = 0, int @override = 0);
+
+        public static int imake_integer(out Config config, string id, long @value);
+        public static int imake_integer64(out Config config, string id, int64 @value);
+        public static int imake_real(out Config config, string id, double @value);
+        public static int imake_string(out Config config, string id, string? @value);
+        public static int imake_safe_string(out Config config, string id, string? @value);
+        public static int imake_pointer(out Config config, string id, [CCode (array_length = false)] uint8[] pointer);
+
+        public static int get_bool_ascii(string ascii);
+        public static int get_ctl_iface_ascii(string ascii);
+
+        public static int @delete(owned Config config);
+        public static int merge(owned Config src, Config? dst, int @override = 0);
+
+        public void @ref();
+        public void unref();
+
+        public ConfigType get_type();
+        public int is_array();
+        public int is_empty();
+
+        public int set_id(string id);
+        public int get_id(out string id);
+        public int set_integer(long @value);
+        public int get_integer(out long @value);
+        public int set_integer64(int64 @value);
+        public int get_integer64(out int64 @value);
+        public int set_real(double @value);
+        public int get_ireal(out double @value);
+        public int get_real(out double @value);
+        public int set_string(string? @value);
+        public int get_string(out unowned string? @value);
+        public int set_ascii(string @value);
+        public int get_ascii(out string @value);
+        public int set_pointer([CCode (array_length = false)] uint8[] pointer);
+        public int get_pointer([CCode (array_length = false)] out unowned uint8[] pointer);
+
+        public int test_id(string id);
+
+        public int get_bool();
+        public int get_card();
+        public int get_ctl_iface();
+
+        public int load(Input input);
+        public int load_override(Input input);
+        public int save(Output output);
+        public int search(string keys, out Config? result);
+        public int searchv(out Config? result, ...);
+        public int search_definition(string? @base, string name, out Config result);
+        public int expand(Config root, string? args, Config private_data, out Config result);
+        public int evaluate(Config root, Config private_data, out Config? result = null);
+        public int add(Config child);
+        public int add_before(Config child);
+        public int add_after(Config child);
+        public int remove();
+        [CCode (instance_pos = 1)]
+        public int copy([CCode (pos = 0)] out Config dst);
+        public int delete_compound_members();
     }
 
     [CCode (cname = "int", cprefix = "SND_CTL_", cheader_filename = "alsa/control.h", has_type_id = false)]
@@ -51,6 +211,7 @@ namespace Alsa {
         public static int alloc (out CardInfo info);
 
         public unowned string get_id();
+        public unowned string get_name();
         public unowned string get_longname();
 
         public unowned string get_mixername();
@@ -61,6 +222,17 @@ namespace Alsa {
     [CCode (cprefix = "snd_ctl_", cname = "snd_ctl_t", free_function = "snd_ctl_close")]
     public class Card
     {
+        [CCode (cname = "snd_card_load")]
+        public static int load(int card);
+        [CCode (cname = "snd_card_next")]
+        public static int next(ref int card);
+        [CCode (cname = "snd_card_get_index")]
+        public static int get_index(string name);
+        [CCode (cname = "snd_card_get_name")]
+        public static int get_name(int card, out string name);
+        [CCode (cname = "snd_card_get_longname")]
+        public static int get_longname(int card, out string name);
+
         public static int open (out Card card, string name = "default", CardOpenType t = 0);
 
         public int card_info (CardInfo info);
@@ -72,6 +244,10 @@ namespace Alsa {
         public int get_dB_range (ElemId eid, out long min, out long max);
         public int convert_to_dB (ElemId eid, long volume, out long gain);
         public int convert_from_dB (ElemId eid, long gain, out long value, int xdir);
+
+        public int pcm_info(PcmInfo info);
+        public int pcm_next_device(ref int device);
+        public int pcm_prefer_subdevice(int subdev);
     }
 
     [Compact]
@@ -405,7 +581,7 @@ namespace Alsa {
     [CCode (cname = "snd_pcm_info_t", cprefix = "snd_pcm_info_")]
     public class PcmInfo
     {
-        public static int alloca( out PcmInfo info );
+        public static int alloca( out unowned PcmInfo info );
         public static int malloc( out PcmInfo info );
         public void free();
         public void copy( PcmInfo source );
@@ -413,9 +589,9 @@ namespace Alsa {
         public uint get_subdevice();
         public PcmStream get_stream();
         public int get_card();
-        public string get_id();
-        public string get_name();
-        public string get_subdevice_name();
+        public unowned string get_id();
+        public unowned string get_name();
+        public unowned string get_subdevice_name();
         public PcmClass get_class();
         public PcmSubclass get_subclass();
         public uint get_subdevices_count();
@@ -430,7 +606,7 @@ namespace Alsa {
     [CCode (cname = "snd_pcm_hw_params_t", cprefix = "snd_pcm_hw_params_", free_function = "snd_pcm_hw_params_free")]
     public class PcmHardwareParams
     {
-        public static int alloca( out PcmHardwareParams params );
+        public static int alloca( out unowned PcmHardwareParams params );
         public static int malloc( out PcmHardwareParams params );
         public void free();
         public void copy( PcmHardwareParams source );
@@ -526,7 +702,7 @@ namespace Alsa {
 
         public int close();
         [CCode (cname = "snd_pcm_name")]
-        public string get_name();
+        public unowned string get_name();
         [CCode (cname = "snd_pcm_type")]
         public PcmType get_type();
         [CCode (cname = "snd_pcm_stream")]
@@ -690,7 +866,7 @@ namespace Alsa {
     {
         public int ver;
         public MixerAbstractionLevel @abstract;
-        public string device;
+        public unowned string device;
         public PcmDevice playback_pcm;
         public PcmDevice capture_pcm;
     }
@@ -952,7 +1128,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_client_info_t", cprefix = "snd_seq_client_info_", free_function = "")]
     public class SeqClientInfo
     {
-        public static int alloca( out SeqClientInfo info );
+        public static int alloca( out unowned SeqClientInfo info );
         public static int malloc( out SeqClientInfo info );
         public void free();
         public void copy( SeqClientInfo source );
@@ -1138,7 +1314,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_port_info_t", cprefix = "snd_seq_port_info_", free_function = "")]
     public class SeqPortInfo
     {
-        public static int alloca( out SeqPortInfo info );
+        public static int alloca( out unowned SeqPortInfo info );
         public static int malloc( out SeqPortInfo info );
         public void free();
         public void copy( SeqPortInfo source );
@@ -1183,7 +1359,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_query_subscribe_t", cprefix = "snd_seq_query_subscribe_")]
     public class SeqQuerySubscribe
     {
-        public static int alloca( out SeqQuerySubscribe subscribe );
+        public static int alloca( out unowned SeqQuerySubscribe subscribe );
         public static int malloc( out SeqQuerySubscribe subscribe );
         public void free();
         public void copy( SeqQuerySubscribe source );
