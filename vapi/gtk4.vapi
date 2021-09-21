@@ -5236,7 +5236,7 @@ namespace Gdk {
 		public Gdk.GLContext shared_context { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_gl_texture_get_type ()")]
-	public class GLTexture : Gdk.Texture, Gdk.Paintable {
+	public class GLTexture : Gdk.Texture, Gdk.Paintable, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false, type = "GdkTexture*")]
 		public GLTexture (Gdk.GLContext context, uint id, int width, int height, GLib.DestroyNotify destroy, void* data);
 		public void release ();
@@ -5262,7 +5262,7 @@ namespace Gdk {
 		public Gdk.KeyMatch matches (uint keyval, Gdk.ModifierType modifiers);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_memory_texture_get_type ()")]
-	public class MemoryTexture : Gdk.Texture, Gdk.Paintable {
+	public class MemoryTexture : Gdk.Texture, Gdk.Paintable, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false, type = "GdkTexture*")]
 		public MemoryTexture (int width, int height, Gdk.MemoryFormat format, GLib.Bytes bytes, size_t stride);
 	}
@@ -5413,19 +5413,32 @@ namespace Gdk {
 		public signal bool render (Cairo.Region region);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_texture_get_type ()")]
-	public abstract class Texture : GLib.Object, Gdk.Paintable {
+	public abstract class Texture : GLib.Object, Gdk.Paintable, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false)]
 		protected Texture ();
 		public void download ([CCode (array_length = false)] uint8[] data, size_t stride);
+		[Version (since = "4.6")]
+		public void download_float ([CCode (array_length = false)] float[] data, size_t stride);
 		[CCode (cname = "gdk_texture_new_for_pixbuf")]
 		public static Gdk.Texture for_pixbuf (Gdk.Pixbuf pixbuf);
+		[CCode (cname = "gdk_texture_new_from_bytes")]
+		[Version (since = "4.6")]
+		public static Gdk.Texture from_bytes (GLib.Bytes bytes) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_file")]
 		public static Gdk.Texture from_file (GLib.File file) throws GLib.Error;
+		[CCode (cname = "gdk_texture_new_from_filename")]
+		public static Gdk.Texture from_filename (string path) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_resource")]
 		public static Gdk.Texture from_resource (string resource_path);
 		public int get_height ();
 		public int get_width ();
 		public bool save_to_png (string filename);
+		[Version (since = "4.6")]
+		public GLib.Bytes save_to_png_bytes ();
+		[Version (since = "4.6")]
+		public bool save_to_tiff (string filename);
+		[Version (since = "4.6")]
+		public GLib.Bytes save_to_tiff_bytes ();
 		public int height { get; construct; }
 		public int width { get; construct; }
 	}
@@ -5774,6 +5787,12 @@ namespace Gdk {
 		A8B8G8R8,
 		R8G8B8,
 		B8G8R8,
+		R16G16B16,
+		R16G16B16A16_PREMULTIPLIED,
+		R16G16B16_FLOAT,
+		R16G16B16A16_FLOAT_PREMULTIPLIED,
+		R32G32B32_FLOAT,
+		R32G32B32A32_FLOAT_PREMULTIPLIED,
 		N_FORMATS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_modifier_type_get_type ()")]
@@ -5889,6 +5908,15 @@ namespace Gdk {
 		LINK_FAILED;
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TEXTURE_ERROR_")]
+	[Version (since = "4.6")]
+	public errordomain TextureError {
+		TOO_LARGE,
+		CORRUPT_IMAGE,
+		UNSUPPORTED_CONTENT,
+		UNSUPPORTED_FORMAT;
+		public static GLib.Quark quark ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_VULKAN_ERROR_")]
 	public errordomain VulkanError {
 		UNSUPPORTED,
@@ -5918,6 +5946,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_PRIORITY_REDRAW")]
 	public const int PRIORITY_REDRAW;
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (deprecated = true, deprecated_since = "4.6")]
 	public static void cairo_draw_from_gl (Cairo.Context cr, Gdk.Surface surface, int source, int source_type, int buffer_scale, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
@@ -5972,6 +6001,9 @@ namespace Gdk {
 	public static Gdk.Pixbuf? pixbuf_get_from_texture (Gdk.Texture texture);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_allowed_backends (string backends);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[Version (replacement = "TextureError.quark")]
+	public static GLib.Quark texture_error_quark ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint32 wc);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6292,7 +6324,12 @@ namespace Gsk {
 		public Gsk.Transform scale (float factor_x, float factor_y);
 		[DestroysInstance]
 		public Gsk.Transform scale_3d (float factor_x, float factor_y, float factor_z);
+		[DestroysInstance]
+		[Version (since = "4.6")]
+		public Gsk.Transform skew (float skew_x, float skew_y);
 		public void to_2d (out float out_xx, out float out_yx, out float out_xy, out float out_yy, out float out_dx, out float out_dy);
+		[Version (since = "4.6")]
+		public void to_2d_components (out float out_skew_x, out float out_skew_y, out float out_scale_x, out float out_scale_y, out float out_angle, out float out_dx, out float out_dy);
 		public void to_affine (out float out_scale_x, out float out_scale_y, out float out_dx, out float out_dy);
 		public Graphene.Matrix to_matrix ();
 		public string to_string ();
@@ -9453,6 +9490,8 @@ namespace Gtk {
 		public MenuButton ();
 		[Version (since = "4.4")]
 		public bool get_always_show_arrow ();
+		[Version (since = "4.6")]
+		public unowned Gtk.Widget? get_child ();
 		public Gtk.ArrowType get_direction ();
 		public bool get_has_frame ();
 		public unowned string get_icon_name ();
@@ -9466,6 +9505,8 @@ namespace Gtk {
 		public void popup ();
 		[Version (since = "4.4")]
 		public void set_always_show_arrow (bool always_show_arrow);
+		[Version (since = "4.6")]
+		public void set_child (Gtk.Widget? child);
 		public void set_create_popup_func (owned Gtk.MenuButtonCreatePopupFunc? func);
 		public void set_direction (Gtk.ArrowType direction);
 		public void set_has_frame (bool has_frame);
@@ -9478,6 +9519,8 @@ namespace Gtk {
 		public void set_use_underline (bool use_underline);
 		[Version (since = "4.4")]
 		public bool always_show_arrow { get; set; }
+		[Version (since = "4.6")]
+		public Gtk.Widget child { get; set; }
 		public Gtk.ArrowType direction { get; set; }
 		public bool has_frame { get; set; }
 		public string icon_name { get; set; }
@@ -12498,6 +12541,8 @@ namespace Gtk {
 		public bool resizable { get; set; }
 		public string startup_id { set; }
 		public string title { get; set; }
+		[Version (since = "4.6")]
+		public Gtk.Widget titlebar { get; set; }
 		public Gtk.Window transient_for { get; set construct; }
 		public virtual signal void activate_default ();
 		public virtual signal void activate_focus ();
