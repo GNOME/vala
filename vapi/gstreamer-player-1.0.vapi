@@ -24,10 +24,10 @@ namespace Gst {
 		public double get_color_balance (Gst.PlayerColorBalanceType type);
 		[Version (since = "1.10")]
 		public Gst.Structure get_config ();
-		public Gst.PlayerAudioInfo get_current_audio_track ();
-		public Gst.PlayerSubtitleInfo get_current_subtitle_track ();
-		public Gst.PlayerVideoInfo get_current_video_track ();
-		public string get_current_visualization ();
+		public Gst.PlayerAudioInfo? get_current_audio_track ();
+		public Gst.PlayerSubtitleInfo? get_current_subtitle_track ();
+		public Gst.PlayerVideoInfo? get_current_video_track ();
+		public string? get_current_visualization ();
 		public Gst.ClockTime get_duration ();
 		public Gst.PlayerMediaInfo get_media_info ();
 		[Version (since = "1.10")]
@@ -39,12 +39,12 @@ namespace Gst {
 		public Gst.ClockTime get_position ();
 		public double get_rate ();
 		public static unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams (Gst.PlayerMediaInfo info);
-		public string get_subtitle_uri ();
+		public string? get_subtitle_uri ();
 		[Version (since = "1.16")]
 		public int64 get_subtitle_video_offset ();
-		public string get_uri ();
+		public string? get_uri ();
 		[Version (since = "1.12")]
-		public Gst.Sample get_video_snapshot (Gst.PlayerSnapshotFormat format, Gst.Structure? config);
+		public Gst.Sample? get_video_snapshot (Gst.PlayerSnapshotFormat format, Gst.Structure? config);
 		public static unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams (Gst.PlayerMediaInfo info);
 		public double get_volume ();
 		public bool has_color_balance ();

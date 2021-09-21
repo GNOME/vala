@@ -424,7 +424,7 @@ namespace Gst {
 			public void set_wants_update_non_rtp_src_caps (bool state);
 			public virtual bool update_non_rtp_src_caps (Gst.Caps caps);
 			public bool wants_update_non_rtp_src_caps ();
-			public virtual size_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data);
+			public virtual ssize_t write (Gst.Buffer input_meta, Gst.RTP.HeaderExtensionFlags write_flags, Gst.Buffer output, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "gsize")] uint8[] data);
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", has_type_id = false)]
 		[GIR (name = "RTPBuffer")]

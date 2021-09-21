@@ -54,10 +54,10 @@ namespace Gst {
 			public int64 get_audio_video_offset ();
 			public double get_color_balance (Gst.Play.ColorBalanceType type);
 			public Gst.Structure get_config ();
-			public Gst.Play.AudioInfo get_current_audio_track ();
-			public Gst.Play.SubtitleInfo get_current_subtitle_track ();
-			public Gst.Play.VideoInfo get_current_video_track ();
-			public string get_current_visualization ();
+			public Gst.Play.AudioInfo? get_current_audio_track ();
+			public Gst.Play.SubtitleInfo? get_current_subtitle_track ();
+			public Gst.Play.VideoInfo? get_current_video_track ();
+			public string? get_current_visualization ();
 			public Gst.ClockTime get_duration ();
 			public Gst.Play.MediaInfo get_media_info ();
 			public Gst.Bus get_message_bus ();
@@ -71,7 +71,7 @@ namespace Gst {
 			public string get_subtitle_uri ();
 			public int64 get_subtitle_video_offset ();
 			public string get_uri ();
-			public Gst.Sample get_video_snapshot (Gst.Play.SnapshotFormat format, Gst.Structure? config);
+			public Gst.Sample? get_video_snapshot (Gst.Play.SnapshotFormat format, Gst.Structure? config);
 			public static unowned GLib.List<Gst.Play.VideoInfo> get_video_streams (Gst.Play.MediaInfo info);
 			public double get_volume ();
 			public bool has_color_balance ();
