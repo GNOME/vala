@@ -152,10 +152,16 @@ public class Vala.Parameter : Variable {
 		if (!ellipsis) {
 			variable_type.check (context);
 
-			if (params_array && !(variable_type is ArrayType)) {
-				error = true;
-				Report.error (source_reference, "parameter array expected");
-				return false;
+			if (params_array) {
+				if (!(variable_type is ArrayType)) {
+					error = true;
+					Report.error (source_reference, "parameter array expected");
+					return false;
+				} else if (((ArrayType) variable_type).rank != 1) {
+					error = true;
+					Report.error (source_reference, "multi-dimensional parameter array not allowed");
+					return false;
+				}
 			}
 
 			if (has_attribute_argument ("CCode", "scope") && variable_type is DelegateType) {
