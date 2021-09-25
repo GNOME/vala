@@ -92,10 +92,10 @@ https://gitlab.gnome.org/Archive/vala-bootstrap
 
 
 Here is an example on how to download and compile from a Vala release tarball.
-In this example it is release version 0.42.3:
+In this example it is release version 0.48.19:
 
 ```sh
-curl --silent --show-error --location https://download.gnome.org/sources/vala/0.42/vala-0.42.3.tar.xz --output vala-bootstrap.tar.xz
+curl --silent --show-error --location https://download.gnome.org/sources/vala/0.48/vala-0.48.19.tar.xz --output vala-bootstrap.tar.xz
 tar --extract --file vala-bootstrap.tar.xz
 cd vala-bootstrap
 ./configure --prefix=/opt/vala-bootstrap
@@ -149,10 +149,10 @@ git clean -dfx
 make && sudo make install
 ```
 
-If you wish to build a specific release, for example 0.40.11:
+If you wish to build a specific release, for example 0.54.1:
 
 ```sh
-git checkout 0.40.11
+git checkout 0.54.1
 git clean -dfx
 ./autogen.sh
 make && sudo make install
