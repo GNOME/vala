@@ -69,7 +69,7 @@ fedora-gcc-x86_64:
     - tags
   before_script:
     - dnf update -y
-    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala
+    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala weasyprint
   script:
     - git fetch --tags
     - ./autogen.sh --prefix=$HOME/vala-installed --enable-coverage
@@ -77,12 +77,15 @@ fedora-gcc-x86_64:
     - make install
     - make -j4 coverage-report VERBOSE=1
     - make -C doc internal-api-docs
+    - make -C doc/manual html pdf
   coverage: '/^\s+lines\.+:\s+([\d.]+\%)\s+/'
   artifacts:
     name: "vala-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
     paths:
       - "coverage"
       - "doc/internal-apis"
+      - "doc/manual/html"
+      - "doc/manual/manual.pdf"
     expire_in: 2 days
 
 fedora-clang-x86_64:
@@ -173,7 +176,9 @@ pages:
     - mkdir public
     - mv coverage public/.
     - mv doc/internal-apis public/docs
-    - echo "<html><body><h1>Vala</h1><ul><li><a href="docs/index.html">Documentation</a></li><li><a href="coverage/index.html">Coverage</a></li></ul></body></html>" > public/index.html
+    - mv doc/manual/html public/manual
+    - mv doc/manual/manual.pdf public/manual.pdf
+    - echo "<html><body><h1>Vala</h1><ul><li><a href="manual/index.html">Manual</a> [<a href="manual.pdf">pdf</a>]</li><li><a href="docs/index.html">Documentation</a></li><li><a href="coverage/index.html">Coverage</a></li></ul></body></html>" > public/index.html
   artifacts:
     name: "vala-${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}"
     paths:
