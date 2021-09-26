@@ -1354,6 +1354,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	void check_type_argument (DataType type_arg) {
 		if (type_arg is GenericType
+		    || type_arg is NullType
 		    || type_arg is PointerType
 		    || type_arg is VoidType
 		    || is_reference_type_argument (type_arg)
