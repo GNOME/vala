@@ -49,19 +49,6 @@ public class Vala.RealLiteral : Literal {
 		visitor.visit_expression (this);
 	}
 
-	/**
-	 * Returns the type name of the value this literal represents.
-	 *
-	 * @return the name of literal type
-	 */
-	public string get_type_name () {
-		if (value.has_suffix ("f") || value.has_suffix ("F")) {
-			return "float";
-		}
-
-		return "double";
-	}
-
 	public override bool is_pure () {
 		return true;
 	}
@@ -77,7 +64,14 @@ public class Vala.RealLiteral : Literal {
 
 		checked = true;
 
-		var st = (Struct) context.root.scope.lookup (get_type_name ());
+		string type_name;
+		if (value.has_suffix ("f") || value.has_suffix ("F")) {
+			type_name ="float";
+		} else {
+			type_name = "double";
+		}
+
+		var st = (Struct) context.root.scope.lookup (type_name);
 		// ensure attributes are already processed
 		st.check (context);
 
