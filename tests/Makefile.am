@@ -40,9 +40,11 @@ AM_TESTS_ENVIRONMENT = \
 
 TESTS = \
 	basic-types/gassert.vala \
+	basic-types/integer-literals.vala \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
 	basic-types/escape-chars.vala \
+	basic-types/float-literals.vala \
 	basic-types/floats.vala \
 	basic-types/floats-boxed-cast.vala \
 	basic-types/boolean.vala \
