@@ -29,14 +29,17 @@ public class Vala.GenericType : DataType {
 	/**
 	 * The referred generic type parameter.
 	 */
-	public weak TypeParameter type_parameter { get; set; }
+	public weak TypeParameter type_parameter {
+		get {
+			return (TypeParameter) type_symbol;
+		}
+	}
 
 	GenericDupField? dup_field;
 	GenericDestroyField? destroy_field;
 
 	public GenericType (TypeParameter type_parameter, SourceReference? source_reference = null) {
-		this.type_parameter = type_parameter;
-		this.source_reference = source_reference;
+		base.with_symbol (type_parameter, source_reference);
 		// type parameters are always considered nullable
 		this.nullable = true;
 	}

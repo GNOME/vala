@@ -5901,7 +5901,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
 			CCodeFunctionCall ccheck;
-			if (type.type_symbol == null || type.type_symbol.external_package) {
+			if (type is GenericType || type.type_symbol == null || type.type_symbol.external_package) {
 				ccheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
 				ccheck.add_argument ((CCodeExpression) ccodenode);
 				ccheck.add_argument (get_type_id_expression (type));

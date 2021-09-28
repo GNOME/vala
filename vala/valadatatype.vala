@@ -525,9 +525,8 @@ public abstract class Vala.DataType : CodeNode {
 
 	public void replace_type_parameter (TypeParameter old_type_param, TypeParameter new_type_param) {
 		if (this is GenericType) {
-			unowned GenericType generic_type = (GenericType) this;
-			if (generic_type.type_parameter == old_type_param) {
-				generic_type.type_parameter = new_type_param;
+			if (symbol == old_type_param) {
+				symbol = new_type_param;
 			}
 			return;
 		}

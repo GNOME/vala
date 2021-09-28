@@ -35,6 +35,7 @@ public class Vala.TypeParameter : TypeSymbol {
 	 */
 	public TypeParameter (string name, SourceReference? source_reference = null) {
 		base (name, source_reference);
+		access = SymbolAccessibility.PUBLIC;
 	}
 
 	public override void accept (CodeVisitor visitor) {

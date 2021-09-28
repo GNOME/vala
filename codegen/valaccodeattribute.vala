@@ -798,6 +798,22 @@ public class Vala.CCodeAttribute : AttributeCache {
 				} else {
 					return name;
 				}
+			} else if (sym is TypeParameter) {
+				assert (node is GenericType);
+				var type = (GenericType) node;
+				if (type.value_owned) {
+					if (CodeContext.get ().profile == Profile.GOBJECT) {
+						return "gpointer";
+					} else {
+						return "void *";
+					}
+				} else {
+					if (CodeContext.get ().profile == Profile.GOBJECT) {
+						return "gconstpointer";
+					} else {
+						return "const void *";
+					}
+				}
 			} else {
 				return "%s%s".printf (get_ccode_prefix (sym.parent_symbol), sym.name);
 			}
