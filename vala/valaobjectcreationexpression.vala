@@ -231,11 +231,11 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				if (((Class) type).is_error_base) {
 					type_reference = new ErrorType (null, null, source_reference);
 				} else {
-					type_reference = new ObjectType ((Class) type);
+					type_reference = new ObjectType ((Class) type, source_reference);
 				}
 			} else if (type_sym is Struct) {
 				type = (TypeSymbol) type_sym;
-				type_reference = new StructValueType ((Struct) type);
+				type_reference = new StructValueType ((Struct) type, source_reference);
 			} else if (type_sym is ErrorCode) {
 				type = (TypeSymbol) type_sym;
 				type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
