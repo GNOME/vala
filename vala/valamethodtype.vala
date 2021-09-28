@@ -32,12 +32,12 @@ public class Vala.MethodType : CallableType {
 		}
 	}
 
-	public MethodType (Method method_symbol) {
-		base (method_symbol);
+	public MethodType (Method method_symbol, SourceReference? source_reference = null) {
+		base (method_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		return new MethodType (method_symbol);
+		return new MethodType (method_symbol, source_reference);
 	}
 
 	public override bool compatible (DataType target_type) {

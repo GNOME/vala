@@ -32,8 +32,8 @@ public abstract class Vala.CallableType : DataType {
 		}
 	}
 
-	protected CallableType (Symbol symbol) {
-		base.with_symbol (symbol);
+	protected CallableType (Symbol symbol, SourceReference? source_reference = null) {
+		base.with_symbol (symbol, source_reference);
 	}
 
 	public override bool is_invokable () {

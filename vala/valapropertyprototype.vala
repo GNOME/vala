@@ -30,12 +30,12 @@ public class Vala.PropertyPrototype : DataType {
 		}
 	}
 
-	public PropertyPrototype (Property property_symbol) {
-		base.with_symbol (property_symbol);
+	public PropertyPrototype (Property property_symbol, SourceReference? source_reference = null) {
+		base.with_symbol (property_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		var result = new PropertyPrototype (property_symbol);
+		var result = new PropertyPrototype (property_symbol, source_reference);
 		return result;
 	}
 

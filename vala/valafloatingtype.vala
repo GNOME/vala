@@ -26,13 +26,12 @@ using GLib;
  * A floating-point type.
  */
 public class Vala.FloatingType : ValueType {
-	public FloatingType (Struct type_symbol) {
-		base (type_symbol);
+	public FloatingType (Struct type_symbol, SourceReference? source_reference = null) {
+		base (type_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		var result = new FloatingType ((Struct) type_symbol);
-		result.source_reference = source_reference;
+		var result = new FloatingType ((Struct) type_symbol, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		return result;

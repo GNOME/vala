@@ -36,12 +36,12 @@ public class Vala.SignalType : CallableType {
 	Method? connect_after_method;
 	Method? disconnect_method;
 
-	public SignalType (Signal signal_symbol) {
-		base (signal_symbol);
+	public SignalType (Signal signal_symbol, SourceReference? source_reference = null) {
+		base (signal_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		return new SignalType (signal_symbol);
+		return new SignalType (signal_symbol, source_reference);
 	}
 
 	public override bool compatible (DataType target_type) {

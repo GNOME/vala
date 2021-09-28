@@ -32,12 +32,12 @@ public class Vala.FieldPrototype : DataType {
 		}
 	}
 
-	public FieldPrototype (Field field_symbol) {
-		base.with_symbol (field_symbol);
+	public FieldPrototype (Field field_symbol, SourceReference? source_reference = null) {
+		base.with_symbol (field_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		var result = new FieldPrototype (field_symbol);
+		var result = new FieldPrototype (field_symbol, source_reference);
 		return result;
 	}
 

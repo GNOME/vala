@@ -35,8 +35,8 @@ public class Vala.ClassType : ReferenceType {
 		}
 	}
 
-	public ClassType (Class class_symbol) {
-		base (class_symbol);
+	public ClassType (Class class_symbol, SourceReference? source_reference = null) {
+		base (class_symbol, source_reference);
 	}
 
 	public override DataType copy () {

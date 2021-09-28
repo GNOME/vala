@@ -27,9 +27,8 @@ using GLib;
  */
 public class Vala.NullType : ReferenceType {
 	public NullType (SourceReference? source_reference = null) {
-		base (null);
+		base (null, source_reference);
 		this.nullable = true;
-		this.source_reference = source_reference;
 	}
 
 	public override bool compatible (DataType target_type) {

@@ -32,7 +32,8 @@ public class Vala.UnresolvedType : DataType {
 	 */
 	public UnresolvedSymbol unresolved_symbol { get; set; }
 
-	public UnresolvedType () {
+	public UnresolvedType (SourceReference? source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	/**
@@ -42,9 +43,9 @@ public class Vala.UnresolvedType : DataType {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public UnresolvedType.from_symbol (UnresolvedSymbol symbol, SourceReference? source = null) {
+	public UnresolvedType.from_symbol (UnresolvedSymbol symbol, SourceReference? source_reference = null) {
 		this.unresolved_symbol = symbol;
-		source_reference = source;
+		this.source_reference = source_reference;
 	}
 
 	/**
@@ -64,8 +65,7 @@ public class Vala.UnresolvedType : DataType {
 	}
 
 	public override DataType copy () {
-		var result = new UnresolvedType ();
-		result.source_reference = source_reference;
+		var result = new UnresolvedType (source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;

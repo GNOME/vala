@@ -44,9 +44,8 @@ public class Vala.ErrorType : ReferenceType {
 	public bool dynamic_error { get; set; }
 
 	public ErrorType (ErrorDomain? error_domain, ErrorCode? error_code, SourceReference? source_reference = null) {
-		base ((Symbol) error_domain ?? CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("Error"));
+		base ((Symbol) error_domain ?? CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("Error"), source_reference);
 		this.error_code = error_code;
-		this.source_reference = source_reference;
 	}
 
 	public override bool compatible (DataType target_type) {

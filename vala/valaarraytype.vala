@@ -84,10 +84,9 @@ public class Vala.ArrayType : ReferenceType {
 	private ArrayCopyMethod copy_method;
 
 	public ArrayType (DataType element_type, int rank, SourceReference? source_reference = null) {
-		base (null);
+		base (null, source_reference);
 		this.element_type = element_type;
 		this.rank = rank;
-		this.source_reference = source_reference;
 	}
 
 	public override Symbol? get_member (string member_name) {

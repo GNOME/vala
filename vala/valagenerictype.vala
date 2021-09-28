@@ -34,8 +34,9 @@ public class Vala.GenericType : DataType {
 	GenericDupField? dup_field;
 	GenericDestroyField? destroy_field;
 
-	public GenericType (TypeParameter type_parameter) {
+	public GenericType (TypeParameter type_parameter, SourceReference? source_reference = null) {
 		this.type_parameter = type_parameter;
+		this.source_reference = source_reference;
 		// type parameters are always considered nullable
 		this.nullable = true;
 	}

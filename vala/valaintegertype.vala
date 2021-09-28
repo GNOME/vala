@@ -29,15 +29,14 @@ public class Vala.IntegerType : ValueType {
 	string? literal_value;
 	string? literal_type_name;
 
-	public IntegerType (Struct type_symbol, string? literal_value = null, string? literal_type_name = null) {
-		base (type_symbol);
+	public IntegerType (Struct type_symbol, string? literal_value = null, string? literal_type_name = null, SourceReference? source_reference = null) {
+		base (type_symbol, source_reference);
 		this.literal_value = literal_value;
 		this.literal_type_name = literal_type_name;
 	}
 
 	public override DataType copy () {
-		var result = new IntegerType ((Struct) type_symbol, literal_value, literal_type_name);
-		result.source_reference = source_reference;
+		var result = new IntegerType ((Struct) type_symbol, literal_value, literal_type_name, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		return result;

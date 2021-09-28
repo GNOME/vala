@@ -35,12 +35,12 @@ public class Vala.InterfaceType : ReferenceType {
 		}
 	}
 
-	public InterfaceType (Interface interface_symbol) {
-		base (interface_symbol);
+	public InterfaceType (Interface interface_symbol, SourceReference? source_reference = null) {
+		base (interface_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		var result = new InterfaceType (interface_symbol);
+		var result = new InterfaceType (interface_symbol, source_reference);
 		result.source_reference = source_reference;
 		result.value_owned = value_owned;
 		result.nullable = nullable;

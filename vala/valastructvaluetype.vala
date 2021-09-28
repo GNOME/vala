@@ -26,8 +26,8 @@ using GLib;
  * A struct value type.
  */
 public class Vala.StructValueType : ValueType {
-	public StructValueType (Struct type_symbol) {
-		base (type_symbol);
+	public StructValueType (Struct type_symbol, SourceReference? source_reference = null) {
+		base (type_symbol, source_reference);
 	}
 
 	public override bool is_invokable () {
@@ -58,8 +58,7 @@ public class Vala.StructValueType : ValueType {
 	}
 
 	public override DataType copy () {
-		var result = new StructValueType ((Struct) type_symbol);
-		result.source_reference = source_reference;
+		var result = new StructValueType ((Struct) type_symbol, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 

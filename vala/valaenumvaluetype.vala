@@ -28,13 +28,12 @@ using GLib;
 public class Vala.EnumValueType : ValueType {
 	private Method? to_string_method;
 
-	public EnumValueType (Enum type_symbol) {
-		base (type_symbol);
+	public EnumValueType (Enum type_symbol, SourceReference? source_reference = null) {
+		base (type_symbol, source_reference);
 	}
 
 	public override DataType copy () {
-		var result = new EnumValueType ((Enum) type_symbol);
-		result.source_reference = source_reference;
+		var result = new EnumValueType ((Enum) type_symbol, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 

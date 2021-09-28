@@ -37,8 +37,8 @@ public class Vala.DelegateType : CallableType {
 	DelegateTargetField? target_field;
 	DelegateDestroyField? destroy_field;
 
-	public DelegateType (Delegate delegate_symbol) {
-		base (delegate_symbol);
+	public DelegateType (Delegate delegate_symbol, SourceReference? source_reference = null) {
+		base (delegate_symbol, source_reference);
 		this.is_called_once = (delegate_symbol.get_attribute_string ("CCode", "scope") == "async");
 	}
 
@@ -68,8 +68,7 @@ public class Vala.DelegateType : CallableType {
 	}
 
 	public override DataType copy () {
-		var result = new DelegateType (delegate_symbol);
-		result.source_reference = source_reference;
+		var result = new DelegateType (delegate_symbol, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 
