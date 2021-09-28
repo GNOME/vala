@@ -232,10 +232,12 @@ public class Vala.ObjectCreationExpression : Expression {
 					type_reference = new ErrorType (null, null, source_reference);
 				} else {
 					type_reference = new ObjectType ((Class) type);
+					type_reference.source_reference = source_reference;
 				}
 			} else if (type_sym is Struct) {
 				type = (TypeSymbol) type_sym;
 				type_reference = new StructValueType ((Struct) type);
+				type_reference.source_reference = source_reference;
 			} else if (type_sym is ErrorCode) {
 				type = (TypeSymbol) type_sym;
 				type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
