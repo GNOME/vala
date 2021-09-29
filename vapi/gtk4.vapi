@@ -4792,7 +4792,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public bool is_local ();
-		public async GLib.InputStream? read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
+		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -4821,7 +4821,7 @@ namespace Gdk {
 		public int get_priority ();
 		public void* get_task_data ();
 		public unowned GLib.Value? get_value ();
-		public void return_error (GLib.Error error);
+		public void return_error (owned GLib.Error error);
 		public void return_success ();
 		public void set_task_data (void* data, GLib.DestroyNotify notify);
 	}
@@ -4834,10 +4834,10 @@ namespace Gdk {
 		public bool contain_mime_type (string mime_type);
 		[CCode (has_construct_function = false)]
 		public ContentFormats.for_gtype (GLib.Type type);
-		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
 		public unowned GLib.Type[]? get_gtypes ();
-		[CCode (array_length = false, array_null_terminated = true)]
-		public unowned string[]? get_mime_types (out size_t n_mime_types);
+		[CCode (array_length = true, array_length_pos = 0.1, array_length_type = "gsize", array_null_terminated = true)]
+		public unowned string[]? get_mime_types ();
 		public bool match (Gdk.ContentFormats second);
 		public GLib.Type match_gtype (Gdk.ContentFormats second);
 		public unowned string? match_mime_type (Gdk.ContentFormats second);
@@ -4904,7 +4904,7 @@ namespace Gdk {
 		public int get_priority ();
 		public void* get_task_data ();
 		public unowned GLib.Value? get_value ();
-		public void return_error (GLib.Error error);
+		public void return_error (owned GLib.Error error);
 		public void return_success ();
 		public void set_task_data (void* data, GLib.DestroyNotify notify);
 	}
@@ -7610,10 +7610,10 @@ namespace Gtk {
 	public class ConstraintGuide : GLib.Object, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
 		public ConstraintGuide ();
-		public void get_max_size (int? width, int? height);
-		public void get_min_size (int? width, int? height);
+		public void get_max_size (out int width, out int height);
+		public void get_min_size (out int width, out int height);
 		public unowned string? get_name ();
-		public void get_nat_size (int? width, int? height);
+		public void get_nat_size (out int width, out int height);
 		public Gtk.ConstraintStrength get_strength ();
 		public void set_max_size (int width, int height);
 		public void set_min_size (int width, int height);
@@ -8781,7 +8781,7 @@ namespace Gtk {
 		public bool has_icon (string icon_name);
 		public Gtk.IconPaintable lookup_by_gicon (GLib.Icon icon, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
 		public Gtk.IconPaintable lookup_icon (string icon_name, [CCode (array_length = false, array_null_terminated = true)] string[]? fallbacks, int size, int scale, Gtk.TextDirection direction, Gtk.IconLookupFlags flags);
-		public void set_resource_path (string path);
+		public void set_resource_path ([CCode (array_length = false, array_null_terminated = true)] string[]? path);
 		public void set_search_path ([CCode (array_length = false, array_null_terminated = true)] string[]? path);
 		public void set_theme_name (string? theme_name);
 		[NoAccessorMethod]
@@ -12145,7 +12145,7 @@ namespace Gtk {
 		public GLib.ListModel observe_controllers ();
 		public unowned Gtk.Widget? pick (double x, double y, Gtk.PickFlags flags);
 		[CCode (cname = "gtk_widget_class_query_action")]
-		public class bool query_action (uint index_, out GLib.Type owner, out string action_name, out GLib.VariantType parameter_type, out string property_name);
+		public class bool query_action (uint index_, out GLib.Type owner, out unowned string action_name, out unowned GLib.VariantType? parameter_type, out unowned string? property_name);
 		public void queue_allocate ();
 		public void queue_draw ();
 		public void queue_resize ();
