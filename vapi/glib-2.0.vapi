@@ -6099,6 +6099,7 @@ namespace GLib {
 		public const uint @2_66;
 		public const uint @2_68;
 		public const uint @2_70;
+		public const uint @2_72;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
@@ -6696,7 +6697,14 @@ namespace GLib {
 		CHORASMIAN,             /* Chrs */
 		DIVES_AKURU,            /* Diak */
 		KHITAN_SMALL_SCRIPT,    /* Kits */
-		YEZIDI;                 /* Yezi */
+		YEZIDI,                 /* Yezi */
+
+		/* Unicode 14.0 additions */
+		CYPRO_MINOAN,           /* Cpmn */
+		OLD_UYGHUR,             /* Ougr */
+		TANGSA,                 /* Tnsa */
+		TOTO,                   /* Toto */
+		VITHKUQI;               /* Vith */
 
 		[CCode (cname = "g_unicode_script_to_iso15924")]
 		public uint32 to_iso15924 ();
