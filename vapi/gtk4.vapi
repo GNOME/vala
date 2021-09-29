@@ -4800,7 +4800,7 @@ namespace Gdk {
 		public unowned Gdk.Display get_display ();
 		public unowned Gdk.ContentFormats get_formats ();
 		public bool is_local ();
-		public async GLib.InputStream? read_async (string mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
+		public async GLib.InputStream? read_async ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types, int io_priority, GLib.Cancellable? cancellable, out unowned string out_mime_type) throws GLib.Error;
 		public async string? read_text_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async Gdk.Texture? read_texture_async (GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Value? read_value_async (GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -7634,10 +7634,10 @@ namespace Gtk {
 	public class ConstraintGuide : GLib.Object, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
 		public ConstraintGuide ();
-		public void get_max_size (int? width, int? height);
-		public void get_min_size (int? width, int? height);
+		public void get_max_size (out int width, out int height);
+		public void get_min_size (out int width, out int height);
 		public unowned string? get_name ();
-		public void get_nat_size (int? width, int? height);
+		public void get_nat_size (out int width, out int height);
 		public Gtk.ConstraintStrength get_strength ();
 		public void set_max_size (int width, int height);
 		public void set_min_size (int width, int height);
@@ -12213,7 +12213,7 @@ namespace Gtk {
 		public GLib.ListModel observe_controllers ();
 		public unowned Gtk.Widget? pick (double x, double y, Gtk.PickFlags flags);
 		[CCode (cname = "gtk_widget_class_query_action")]
-		public class bool query_action (uint index_, out GLib.Type owner, out string action_name, out GLib.VariantType? parameter_type, out string? property_name);
+		public class bool query_action (uint index_, out GLib.Type owner, out unowned string action_name, out unowned GLib.VariantType? parameter_type, out unowned string? property_name);
 		public void queue_allocate ();
 		public void queue_draw ();
 		public void queue_resize ();
