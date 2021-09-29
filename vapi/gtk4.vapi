@@ -7693,10 +7693,10 @@ namespace Gtk {
 	public class ConstraintGuide : GLib.Object, Gtk.ConstraintTarget {
 		[CCode (has_construct_function = false)]
 		public ConstraintGuide ();
-		public void get_max_size (int? width, int? height);
-		public void get_min_size (int? width, int? height);
+		public void get_max_size (out int width, out int height);
+		public void get_min_size (out int width, out int height);
 		public unowned string? get_name ();
-		public void get_nat_size (int? width, int? height);
+		public void get_nat_size (out int width, out int height);
 		public Gtk.ConstraintStrength get_strength ();
 		public void set_max_size (int width, int height);
 		public void set_min_size (int width, int height);
