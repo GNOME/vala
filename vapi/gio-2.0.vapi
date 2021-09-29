@@ -1527,7 +1527,6 @@ namespace GLib {
 	public class IOModule : GLib.TypeModule, GLib.TypePlugin {
 		[CCode (has_construct_function = false)]
 		public IOModule (string filename);
-		public void load ();
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_load_all_in_directory")]
 		public static GLib.List<GLib.IOModule> load_all_in_directory (string dirname);
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_load_all_in_directory_with_scope")]
@@ -1542,7 +1541,6 @@ namespace GLib {
 		[CCode (cheader_filename = "gio/gio.h", cname = "g_io_modules_scan_all_in_directory_with_scope")]
 		[Version (since = "2.30")]
 		public static void scan_all_in_directory_with_scope (string dirname, GLib.IOModuleScope scope);
-		public void unload ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Compact]
@@ -2569,9 +2567,9 @@ namespace GLib {
 	[Version (since = "2.36")]
 	public class SimpleProxyResolver : GLib.Object, GLib.ProxyResolver {
 		[CCode (has_construct_function = false, type = "GProxyResolver*")]
-		public SimpleProxyResolver (string? default_proxy, string? ignore_hosts);
+		public SimpleProxyResolver (string? default_proxy, [CCode (array_length = false, array_null_terminated = true)] string[]? ignore_hosts);
 		public void set_default_proxy (string default_proxy);
-		public void set_ignore_hosts (string ignore_hosts);
+		public void set_ignore_hosts ([CCode (array_length = false, array_null_terminated = true)] string[] ignore_hosts);
 		public void set_uri_proxy (string uri_scheme, string proxy);
 		[NoAccessorMethod]
 		public string default_proxy { owned get; set; }
