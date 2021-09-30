@@ -42,6 +42,7 @@ public class Vala.Parser : CodeVisitor {
 	const int BUFFER_SIZE = 32;
 
 	static List<TypeParameter> _empty_type_parameter_list;
+	static int next_local_func_id = 0;
 
 	struct TokenInfo {
 		public TokenType type;
@@ -1754,7 +1755,12 @@ public class Vala.Parser : CodeVisitor {
 						stmt = parse_expression_statement ();
 					} else {
 						is_decl = true;
-						parse_local_variable_declarations (block);
+						bool is_local_func = is_local_function ();
+						if (is_local_func) {
+							parse_local_function_declaration (block);
+						} else {
+							parse_local_variable_declarations (block);
+						}
 					}
 					break;
 				}
@@ -1865,6 +1871,22 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		default:
 			break;
+		}
+
+		rollback (begin);
+		return false;
+	}
+
+	bool is_local_function () {
+		var begin = get_location ();
+
+		try {
+			skip_type ();
+			if (accept (TokenType.IDENTIFIER) && accept (TokenType.OPEN_PARENS)) {
+				rollback (begin);
+				return true;
+			}
+		} catch {
 		}
 
 		rollback (begin);
@@ -2082,6 +2104,43 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		return new Constant (id, type, initializer, src);
+	}
+
+	void parse_local_function_declaration (Block block) throws ParseError {
+		var begin = get_location ();
+		var type = parse_type (true, false);
+		var sym = parse_symbol_name ();
+
+		expect (TokenType.OPEN_PARENS);
+		List<Parameter> params = new ArrayList<Parameter> ();
+		if (current () != TokenType.CLOSE_PARENS) {
+			do {
+				params.add (parse_parameter ());
+			} while (accept (TokenType.COMMA));
+		}
+		expect (TokenType.CLOSE_PARENS);
+
+		var src = get_src (begin);
+
+		var d = new Delegate ("_LocalFunc%i_".printf (next_local_func_id++), type, src);
+		foreach (var param in params) {
+			d.add_parameter (param);
+		}
+		context.root.add_delegate (d);
+
+		var lambda = new LambdaExpression.with_statement_body (parse_block (), src);
+		foreach (var p in params) {
+			var param = new Parameter (p.name, null, p.source_reference);
+			param.direction = p.direction;
+			lambda.add_parameter (param);
+		}
+
+		if (!context.experimental) {
+			Report.warning (src, "local functions are experimental");
+		}
+
+		var local = new LocalVariable (new DelegateType (d), sym.name, lambda, src);
+		block.add_statement (new DeclarationStatement (local, src));
 	}
 
 	Statement parse_expression_statement () throws ParseError {

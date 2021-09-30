@@ -174,6 +174,7 @@ TESTS = \
 	methods/ellipsis-preceding.test \
 	methods/extern.vala \
 	methods/iterator.vala \
+	methods/local-functions.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-out-free-on-error.vala \
 	methods/parameter-ref-array-resize.vala \
