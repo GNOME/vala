@@ -384,18 +384,18 @@ public class Vala.SymbolResolver : CodeVisitor {
 		return has_base_struct_cycle (base_struct, loop_st);
 	}
 
-	DataType get_type_for_struct (Struct st, Struct base_struct) {
+	DataType get_type_for_struct (Struct st, Struct base_struct, SourceReference? source_reference) {
 		if (st.base_type != null) {
 			// make sure that base type is resolved
 
 			if (has_base_struct_cycle (st, st)) {
 				// recursive declaration in base type
-				return new StructValueType (st);
+				return new StructValueType (st, source_reference);
 			}
 
 			if (current_scope == st.scope) {
 				// recursive declaration in generic base type
-				return new StructValueType (st);
+				return new StructValueType (st, source_reference);
 			}
 
 			var old_scope = current_scope;
@@ -407,18 +407,18 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		if (base_struct.base_struct != null) {
-			return get_type_for_struct (st, base_struct.base_struct);
+			return get_type_for_struct (st, base_struct.base_struct, source_reference);
 		}
 
 		// attributes are not processed yet, access them directly
 		if (base_struct.get_attribute ("BooleanType") != null) {
-			return new BooleanType (st);
+			return new BooleanType (st, source_reference);
 		} else if (base_struct.get_attribute ("IntegerType") != null) {
-			return new IntegerType (st);
+			return new IntegerType (st, null, null, source_reference);
 		} else if (base_struct.get_attribute ("FloatingType") != null) {
-			return new FloatingType (st);
+			return new FloatingType (st, source_reference);
 		} else {
-			return new StructValueType (st);
+			return new StructValueType (st, source_reference);
 		}
 	}
 
@@ -440,23 +440,23 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		if (sym is TypeParameter) {
-			type = new GenericType ((TypeParameter) sym);
+			type = new GenericType ((TypeParameter) sym, unresolved_type.source_reference);
 		} else if (sym is TypeSymbol) {
 			if (sym is Delegate) {
-				type = new DelegateType ((Delegate) sym);
+				type = new DelegateType ((Delegate) sym, unresolved_type.source_reference);
 			} else if (sym is Class) {
 				unowned Class cl = (Class) sym;
 				if (cl.is_error_base) {
 					type = new ErrorType (null, null, unresolved_type.source_reference);
 				} else {
-					type = new ObjectType (cl);
+					type = new ObjectType (cl, unresolved_type.source_reference);
 				}
 			} else if (sym is Interface) {
-				type = new ObjectType ((Interface) sym);
+				type = new ObjectType ((Interface) sym, unresolved_type.source_reference);
 			} else if (sym is Struct) {
-				type = get_type_for_struct ((Struct) sym, (Struct) sym);
+				type = get_type_for_struct ((Struct) sym, (Struct) sym, unresolved_type.source_reference);
 			} else if (sym is Enum) {
-				type = new EnumValueType ((Enum) sym);
+				type = new EnumValueType ((Enum) sym, unresolved_type.source_reference);
 			} else if (sym is ErrorDomain) {
 				type = new ErrorType ((ErrorDomain) sym, null, unresolved_type.source_reference);
 			} else if (sym is ErrorCode) {
