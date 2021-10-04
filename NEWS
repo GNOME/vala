@@ -1,3 +1,24 @@
+Vala 0.52.6
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Fix property access inside opaque compact class
+    + Add type declaration for implicit temporary local variable
+  - vala:
+    + Warn about unsupported cast to void and drop it [#1070]
+    + Don't restrict element type of GLib.Array [#1227]
+    + Multi-dimensional params-array not allowed [#1230]
+    + Accept NullType as generic type argument
+    + Set source references of created DataType instances in OCE
+  - valadoc: Correctly format background of inline @link's [#1226]
+
+ * Bindings:
+  - gio-2.0: Unhide a few usable symbols which are marked not introspectable [#1222]
+  - gio-2.0: Backport fixes from 0.54.2
+  - glib-2.0: Current constants in GLib.Math are part of glib.h [#1220]
+  - glib-2.0: Add RefString since 2.58 [#723]
+  - gtk4: Backport fixes from 0.54.2
+
 Vala 0.52.5
 ===========
  * Various improvements and bug fixes:
