@@ -88,6 +88,9 @@ public class Vala.GirParser : CodeVisitor {
 		FLOATING,
 		TYPE_ID,
 		TYPE_GET_FUNCTION,
+		REF_FUNCTION,
+		REF_SINK_FUNCTION,
+		UNREF_FUNCTION,
 		RETURN_VOID,
 		RETURNS_MODIFIED_POINTER,
 		DELEGATE_TARGET_CNAME,
@@ -2969,6 +2972,16 @@ public class Vala.GirParser : CodeVisitor {
 
 		cl.access = SymbolAccessibility.PUBLIC;
 
+		if (metadata.has_argument (ArgumentType.REF_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "ref_function", metadata.get_string (ArgumentType.REF_FUNCTION));
+		}
+		if (metadata.has_argument (ArgumentType.REF_SINK_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "ref_sink_function", metadata.get_string (ArgumentType.REF_SINK_FUNCTION));
+		}
+		if (metadata.has_argument (ArgumentType.UNREF_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "unref_function", metadata.get_string (ArgumentType.UNREF_FUNCTION));
+		}
+
 		next ();
 
 		cl.comment = parse_symbol_doc ();
@@ -3530,6 +3543,15 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (metadata.has_argument (ArgumentType.BASE_TYPE)) {
 			cl.add_base_type (parse_type_from_string (metadata.get_string (ArgumentType.BASE_TYPE), true, metadata.get_source_reference (ArgumentType.BASE_TYPE)));
+		}
+		if (metadata.has_argument (ArgumentType.REF_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "ref_function", metadata.get_string (ArgumentType.REF_FUNCTION));
+		}
+		if (metadata.has_argument (ArgumentType.REF_SINK_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "ref_sink_function", metadata.get_string (ArgumentType.REF_SINK_FUNCTION));
+		}
+		if (metadata.has_argument (ArgumentType.UNREF_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "unref_function", metadata.get_string (ArgumentType.UNREF_FUNCTION));
 		}
 
 		next ();
