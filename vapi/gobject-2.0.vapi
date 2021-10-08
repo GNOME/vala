@@ -67,7 +67,7 @@ namespace GLib {
 		public void add_invalidate_notifier (void* notify_data);
 		public void add_marshal_guards (void* pre_marshal_data);
 		public void invalidate ();
-		public void invoke (ref GLib.Value return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint = null);
+		public void invoke (out GLib.Value return_value, [CCode (array_length_cname = "n_param_values", array_length_pos = 1.5, array_length_type = "guint")] GLib.Value[] param_values, void* invocation_hint);
 		[CCode (has_construct_function = false)]
 		public Closure.object (uint sizeof_closure, GLib.Object object);
 		public unowned GLib.Closure @ref ();
@@ -113,7 +113,7 @@ namespace GLib {
 		[Version (since = "2.54")]
 		public static string to_string (GLib.Type flags_type, uint value);
 	}
-	[CCode (cheader_filename = "glib-object.h", type_id = "g_initially_unowned_get_type ()")]
+	[CCode (cheader_filename = "glib-object.h", ref_sink_function = "g_object_ref_sink", type_id = "g_initially_unowned_get_type ()")]
 	public class InitiallyUnowned : GLib.Object {
 		public GLib.Datalist qdata;
 		public uint ref_count;
@@ -204,6 +204,8 @@ namespace GLib {
 		public void setv ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] string[] names, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5, array_length_type = "guint")] GLib.Value[] values);
 		public void* steal_data (string key);
 		public void* steal_qdata (GLib.Quark quark);
+		[Version (since = "2.70")]
+		public GLib.Object take_ref ();
 		public void thaw_notify ();
 		public void unref ();
 		[CCode (has_construct_function = false)]
@@ -383,6 +385,7 @@ namespace GLib {
 		public (unowned GLib.ParamSpec)[] list (GLib.Type owner_type);
 		public GLib.List<weak GLib.ParamSpec> list_owned (GLib.Type owner_type);
 		public unowned GLib.ParamSpec? lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
+		public static GLib.ParamSpecPool @new (bool type_prefixing);
 		public void remove (GLib.ParamSpec pspec);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_STRING")]
@@ -460,13 +463,22 @@ namespace GLib {
 		[CCode (cname = "g_type_class_add_private")]
 		[Version (deprecated = true, deprecated_since = "2.58", since = "2.4")]
 		public void add_private (size_t private_size);
+		[CCode (cname = "g_type_class_adjust_private_offset")]
+		public static void adjust_private_offset (void* g_class, int private_size_or_offset);
 		[CCode (cname = "g_type_class_get_instance_private_offset")]
 		[Version (since = "2.38")]
 		public int get_instance_private_offset ();
 		[CCode (cname = "g_type_class_get_private")]
 		public void* get_private (GLib.Type private_type);
+		[CCode (cname = "g_type_class_peek")]
+		public static unowned GLib.TypeClass peek (GLib.Type type);
 		[CCode (cname = "g_type_class_peek_parent")]
 		public unowned GLib.TypeClass peek_parent ();
+		[CCode (cname = "g_type_class_peek_static")]
+		[Version (since = "2.4")]
+		public static unowned GLib.TypeClass peek_static (GLib.Type type);
+		[CCode (cname = "g_type_class_ref")]
+		public static unowned GLib.TypeClass @ref (GLib.Type type);
 		[CCode (cname = "g_type_class_unref")]
 		public void unref ();
 		[CCode (cname = "g_type_class_unref_uncached")]
@@ -519,6 +531,59 @@ namespace GLib {
 	public struct CClosure {
 		public weak GLib.Closure closure;
 		public void* callback;
+		public static void marshal_BOOLEAN__BOXED_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_BOOLEAN__BOXED_BOXEDv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_BOOLEAN__FLAGS (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_BOOLEAN__FLAGSv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_STRING__OBJECT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_STRING__OBJECT_POINTERv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__BOOLEAN (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__BOOLEANv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__BOXEDv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__CHAR (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__CHARv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__DOUBLE (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__DOUBLEv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__ENUM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__ENUMv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__FLAGS (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__FLAGSv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__FLOAT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__FLOATv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__INTv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__LONG (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__LONGv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__OBJECTv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__PARAM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__PARAMv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__POINTERv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__STRINGv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__UCHAR (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__UCHARv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__UINT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__UINT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__UINT_POINTERv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__UINTv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__ULONG (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__ULONGv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		[Version (since = "2.26")]
+		public static void marshal_VOID__VARIANT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__VARIANTv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static void marshal_VOID__VOID (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__VOIDv (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		[Version (since = "2.30")]
+		public static void marshal_generic (GLib.Closure closure, GLib.Value return_gvalue, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		[Version (since = "2.30")]
+		public static void marshal_generic_va (GLib.Closure closure, GLib.Value? return_value, GLib.TypeInstance instance, va_list args_list, void* marshal_data, [CCode (array_length_cname = "n_params", array_length_pos = 5.5)] GLib.Type[] param_types);
+		public static unowned GLib.Closure @new ([CCode (delegate_target_pos = 1.5)] GLib.Callback? callback_func, GLib.ClosureNotify destroy_data);
+		public static GLib.Closure new_object (GLib.Callback callback_func, GLib.Object object);
+		public static GLib.Closure new_object_swap (GLib.Callback callback_func, GLib.Object object);
+		public static unowned GLib.Closure new_swap ([CCode (delegate_target_pos = 1.5)] GLib.Callback? callback_func, GLib.ClosureNotify destroy_data);
 	}
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
 	public struct ClosureNotifyData {
@@ -629,81 +694,88 @@ namespace GLib {
 	public struct Type : size_t {
 		public static void add_class_cache_func (void* cache_data, GLib.TypeClassCacheFunc cache_func);
 		[Version (since = "2.24")]
-		public static void add_class_private (GLib.Type class_type, size_t private_size);
-		public static int add_instance_private (GLib.Type class_type, size_t private_size);
+		public void add_class_private (size_t private_size);
+		public int add_instance_private (size_t private_size);
 		[Version (since = "2.4")]
 		public static void add_interface_check (void* check_data, GLib.TypeInterfaceCheckFunc check_func);
-		public static void add_interface_dynamic (GLib.Type instance_type, GLib.Type interface_type, GLib.TypePlugin plugin);
-		public static void add_interface_static (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo info);
+		public void add_interface_dynamic (GLib.Type interface_type, GLib.TypePlugin plugin);
+		public void add_interface_static (GLib.Type interface_type, GLib.InterfaceInfo info);
 		public static unowned GLib.TypeClass check_class_cast (GLib.TypeClass g_class, GLib.Type is_a_type);
 		public static bool check_class_is_a (GLib.TypeClass g_class, GLib.Type is_a_type);
 		public static bool check_instance (GLib.TypeInstance instance);
 		public static unowned GLib.TypeInstance check_instance_cast (GLib.TypeInstance instance, GLib.Type iface_type);
 		public static bool check_instance_is_a (GLib.TypeInstance instance, GLib.Type iface_type);
 		public static bool check_instance_is_fundamentally_a (GLib.TypeInstance instance, GLib.Type fundamental_type);
-		public static bool check_is_value_type (GLib.Type type);
+		public bool check_is_value_type ();
 		public static bool check_value (GLib.Value value);
 		public static bool check_value_holds (GLib.Value value, GLib.Type type);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		public static GLib.Type[] children (GLib.Type type);
+		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
+		public GLib.Type[] children ();
+		[Version (replacement = "TypeClass.adjust_private_offset")]
 		public static void class_adjust_private_offset (void* g_class, int private_size_or_offset);
-		public static unowned GLib.TypeClass class_peek (GLib.Type type);
+		[Version (replacement = "TypeClass.peek")]
+		public unowned GLib.TypeClass class_peek ();
+		[Version (replacement = "TypeClass.peek_static", since = "2.4")]
+		public unowned GLib.TypeClass class_peek_static ();
+		[Version (replacement = "TypeClass.ref")]
+		public unowned GLib.TypeClass class_ref ();
+		public unowned GLib.TypeInstance create_instance ();
 		[Version (since = "2.4")]
-		public static unowned GLib.TypeClass class_peek_static (GLib.Type type);
-		public static unowned GLib.TypeClass class_ref (GLib.Type type);
-		public static unowned GLib.TypeInstance create_instance (GLib.Type type);
+		public unowned GLib.TypeInterface? default_interface_peek ();
 		[Version (since = "2.4")]
-		public static unowned GLib.TypeInterface? default_interface_peek (GLib.Type g_type);
-		[Version (since = "2.4")]
-		public static unowned GLib.TypeInterface? default_interface_ref (GLib.Type g_type);
+		public unowned GLib.TypeInterface? default_interface_ref ();
 		[Version (since = "2.4")]
 		public static void default_interface_unref (GLib.TypeInterface g_iface);
-		public static uint depth (GLib.Type type);
+		public uint depth ();
 		[Version (since = "2.34")]
-		public static void ensure (GLib.Type type);
+		public void ensure ();
 		public static void free_instance (GLib.TypeInstance instance);
 		public static GLib.Type from_name (string name);
-		public static GLib.Type fundamental (GLib.Type type_id);
+		public GLib.Type fundamental ();
 		public static GLib.Type fundamental_next ();
 		[Version (since = "2.44")]
-		public static int get_instance_count (GLib.Type type);
-		public static unowned GLib.TypePlugin get_plugin (GLib.Type type);
-		public static void* get_qdata (GLib.Type type, GLib.Quark quark);
+		public int get_instance_count ();
+		public unowned GLib.TypePlugin get_plugin ();
+		public void* get_qdata (GLib.Quark quark);
 		[Version (since = "2.36")]
 		public static uint get_type_registration_serial ();
 		[Version (deprecated = true, deprecated_since = "2.36")]
 		public static void init ();
 		[Version (deprecated = true, deprecated_since = "2.36")]
 		public static void init_with_debug_flags (GLib.TypeDebugFlags debug_flags);
-		public static void interface_add_prerequisite (GLib.Type interface_type, GLib.Type prerequisite_type);
-		public static unowned GLib.TypePlugin interface_get_plugin (GLib.Type instance_type, GLib.Type interface_type);
-		[Version (since = "2.68")]
-		public static GLib.Type interface_instantiatable_prerequisite (GLib.Type interface_type);
+		[Version (replacement = "TypeInterface.add_prerequisite")]
+		public void interface_add_prerequisite (GLib.Type prerequisite_type);
+		[Version (replacement = "TypeInterface.get_plugin")]
+		public unowned GLib.TypePlugin interface_get_plugin (GLib.Type interface_type);
+		[Version (replacement = "TypeInterface.instantiatable_prerequisite", since = "2.68")]
+		public GLib.Type interface_instantiatable_prerequisite ();
+		[Version (replacement = "TypeInterface.peek")]
 		public static unowned GLib.TypeInterface? interface_peek (GLib.TypeClass instance_class, GLib.Type iface_type);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		[Version (since = "2.2")]
-		public static GLib.Type[] interface_prerequisites (GLib.Type interface_type);
-		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
-		public static GLib.Type[] interfaces (GLib.Type type);
-		public static bool is_a (GLib.Type type, GLib.Type is_a_type);
-		public static unowned string name (GLib.Type type);
+		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
+		[Version (replacement = "TypeInterface.prerequisites", since = "2.2")]
+		public GLib.Type[] interface_prerequisites ();
+		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
+		public GLib.Type[] interfaces ();
+		public bool is_a (GLib.Type is_a_type);
+		public unowned string name ();
 		public static unowned string name_from_class (GLib.TypeClass g_class);
 		public static unowned string name_from_instance (GLib.TypeInstance instance);
-		public static GLib.Type next_base (GLib.Type leaf_type, GLib.Type root_type);
-		public static GLib.Type parent (GLib.Type type);
-		public static GLib.Quark qname (GLib.Type type);
-		public static GLib.TypeQuery query (GLib.Type type);
-		public static GLib.Type register_dynamic (GLib.Type parent_type, string type_name, GLib.TypePlugin plugin, GLib.TypeFlags flags);
-		public static GLib.Type register_fundamental (GLib.Type type_id, string type_name, GLib.TypeInfo info, GLib.TypeFundamentalInfo finfo, GLib.TypeFlags flags);
-		public static GLib.Type register_static (GLib.Type parent_type, string type_name, GLib.TypeInfo info, GLib.TypeFlags flags);
+		public GLib.Type next_base (GLib.Type root_type);
+		public GLib.Type parent ();
+		public GLib.Quark qname ();
+		public GLib.TypeQuery query ();
+		public GLib.Type register_dynamic (string type_name, GLib.TypePlugin plugin, GLib.TypeFlags flags);
+		public GLib.Type register_fundamental (string type_name, GLib.TypeInfo info, GLib.TypeFundamentalInfo finfo, GLib.TypeFlags flags);
+		public GLib.Type register_static (string type_name, GLib.TypeInfo info, GLib.TypeFlags flags);
 		[Version (since = "2.12")]
-		public static GLib.Type register_static_simple (GLib.Type parent_type, string type_name, uint class_size, GLib.ClassInitFunc class_init, uint instance_size, GLib.InstanceInitFunc instance_init, GLib.TypeFlags flags);
+		public GLib.Type register_static_simple (string type_name, uint class_size, GLib.ClassInitFunc class_init, uint instance_size, GLib.InstanceInitFunc instance_init, GLib.TypeFlags flags);
 		public static void remove_class_cache_func (void* cache_data, GLib.TypeClassCacheFunc cache_func);
 		[Version (since = "2.4")]
 		public static void remove_interface_check (void* check_data, GLib.TypeInterfaceCheckFunc check_func);
-		public static void set_qdata (GLib.Type type, GLib.Quark quark, void* data);
-		public static bool test_flags (GLib.Type type, uint flags);
-		public static unowned GLib.TypeValueTable? value_table_peek (GLib.Type type);
+		public void set_qdata (GLib.Quark quark, void* data);
+		public bool test_flags (uint flags);
+		[Version (replacement = "TypeValueTable.peek")]
+		public unowned GLib.TypeValueTable? value_table_peek ();
 	}
 	[CCode (cheader_filename = "glib-object.h")]
 	public struct TypeCValue {
@@ -729,8 +801,20 @@ namespace GLib {
 	public struct TypeInterface {
 		public GLib.Type g_type;
 		public GLib.Type g_instance_type;
+		[CCode (cname = "g_type_interface_add_prerequisite")]
+		public static void add_prerequisite (GLib.Type interface_type, GLib.Type prerequisite_type);
+		[CCode (cname = "g_type_interface_get_plugin")]
+		public static unowned GLib.TypePlugin get_plugin (GLib.Type instance_type, GLib.Type interface_type);
+		[CCode (cname = "g_type_interface_instantiatable_prerequisite")]
+		[Version (since = "2.68")]
+		public static GLib.Type instantiatable_prerequisite (GLib.Type interface_type);
+		[CCode (cname = "g_type_interface_peek")]
+		public static unowned GLib.TypeInterface? peek (GLib.TypeClass instance_class, GLib.Type iface_type);
 		[CCode (cname = "g_type_interface_peek_parent")]
 		public unowned GLib.TypeInterface? peek_parent ();
+		[CCode (array_length_pos = 1.1, array_length_type = "guint", cname = "g_type_interface_prerequisites")]
+		[Version (since = "2.2")]
+		public static GLib.Type[] prerequisites (GLib.Type interface_type);
 	}
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
 	public struct TypePluginClass {
@@ -757,6 +841,8 @@ namespace GLib {
 		public weak GLib.TypeValueTableCollectValueFunc collect_value;
 		public weak string lcopy_format;
 		public weak GLib.TypeValueTableLcopyValueFunc lcopy_value;
+		[CCode (cname = "g_type_value_table_peek")]
+		public static unowned GLib.TypeValueTable? peek (GLib.Type type);
 	}
 	[CCode (cheader_filename = "glib-object.h", copy_function = "g_boxed_copy", destroy_function = "g_value_unset", free_function = "g_boxed_free", get_value_function = "g_value_get_boxed", marshaller_type_name = "BOXED", set_value_function = "g_value_set_boxed", take_value_function = "g_value_take_boxed", type_id = "G_TYPE_VALUE", type_signature = "v")]
 	public struct Value {
@@ -956,7 +1042,6 @@ namespace GLib {
 	public enum TypeFlags {
 		ABSTRACT,
 		VALUE_ABSTRACT,
-		[Version (since = "2.70")]
 		FINAL
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_TYPE_FLAG_", has_type_id = false)]
@@ -1098,4 +1183,13 @@ namespace GLib {
 	public static void source_set_dummy_callback (GLib.Source source);
 	[CCode (cheader_filename = "glib-object.h")]
 	public static string strdup_value_contents (GLib.Value value);
+	[CCode (cheader_filename = "glib-object.h")]
+	[Version (replacement = "Value.register_transform_func")]
+	public static void value_register_transform_func (GLib.Type src_type, GLib.Type dest_type, GLib.ValueTransform transform_func);
+	[CCode (cheader_filename = "glib-object.h")]
+	[Version (replacement = "Value.type_compatible")]
+	public static bool value_type_compatible (GLib.Type src_type, GLib.Type dest_type);
+	[CCode (cheader_filename = "glib-object.h")]
+	[Version (replacement = "Value.type_transformable")]
+	public static bool value_type_transformable (GLib.Type src_type, GLib.Type dest_type);
 }

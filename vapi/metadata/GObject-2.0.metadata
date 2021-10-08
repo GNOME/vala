@@ -20,6 +20,8 @@ Object.finalize skip
 Object.dispose skip
 Object.run_dispose name="dispose"
 
+InitiallyUnowned ref_sink_function="g_object_ref_sink"
+
 signal_* name="signal_(.+)" parent="GLib.Signal"
 signal_handlers_* name="signal_handlers_(.+)" parent="GLib.SignalHandler"
 signal_handler_* name="signal_handler_(.+)" parent="GLib.SignalHandler"
