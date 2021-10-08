@@ -38,6 +38,8 @@ flags_get_first_value name="flags_(.+)" parent="GLib.FlagsClass" symbol_type="me
 flags_get_value* name="flags_(.+)" parent="GLib.FlagsClass" symbol_type="method" instance_idx=0
 flags_register_static.const_static_values array
 
+TypeClass
+	.ref name="class_ref" parent="GLib.Type"
 type_* name="type_(.+)" parent="GLib.Type"
 
 Binding.unbind destroys_instance

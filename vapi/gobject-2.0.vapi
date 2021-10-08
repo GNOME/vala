@@ -689,93 +689,60 @@ namespace GLib {
 		[CCode (array_length_cname = "n_params", array_length_type = "guint")]
 		public weak GLib.Type[] param_types;
 	}
-	[CCode (cheader_filename = "glib-object.h")]
-	[SimpleType]
-	public struct Type : size_t {
-		public static void add_class_cache_func (void* cache_data, GLib.TypeClassCacheFunc cache_func);
-		[Version (since = "2.24")]
-		public void add_class_private (size_t private_size);
-		public int add_instance_private (size_t private_size);
-		[Version (since = "2.4")]
-		public static void add_interface_check (void* check_data, GLib.TypeInterfaceCheckFunc check_func);
-		public void add_interface_dynamic (GLib.Type interface_type, GLib.TypePlugin plugin);
-		public void add_interface_static (GLib.Type interface_type, GLib.InterfaceInfo info);
-		public static unowned GLib.TypeClass check_class_cast (GLib.TypeClass g_class, GLib.Type is_a_type);
-		public static bool check_class_is_a (GLib.TypeClass g_class, GLib.Type is_a_type);
-		public static bool check_instance (GLib.TypeInstance instance);
-		public static unowned GLib.TypeInstance check_instance_cast (GLib.TypeInstance instance, GLib.Type iface_type);
-		public static bool check_instance_is_a (GLib.TypeInstance instance, GLib.Type iface_type);
-		public static bool check_instance_is_fundamentally_a (GLib.TypeInstance instance, GLib.Type fundamental_type);
-		public bool check_is_value_type ();
-		public static bool check_value (GLib.Value value);
-		public static bool check_value_holds (GLib.Value value, GLib.Type type);
-		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
-		public GLib.Type[] children ();
-		[Version (replacement = "TypeClass.adjust_private_offset")]
-		public static void class_adjust_private_offset (void* g_class, int private_size_or_offset);
-		[Version (replacement = "TypeClass.peek")]
-		public unowned GLib.TypeClass class_peek ();
-		[Version (replacement = "TypeClass.peek_static", since = "2.4")]
-		public unowned GLib.TypeClass class_peek_static ();
-		[Version (replacement = "TypeClass.ref")]
-		public unowned GLib.TypeClass class_ref ();
-		public unowned GLib.TypeInstance create_instance ();
-		[Version (since = "2.4")]
-		public unowned GLib.TypeInterface? default_interface_peek ();
-		[Version (since = "2.4")]
-		public unowned GLib.TypeInterface? default_interface_ref ();
-		[Version (since = "2.4")]
-		public static void default_interface_unref (GLib.TypeInterface g_iface);
-		public uint depth ();
-		[Version (since = "2.34")]
-		public void ensure ();
-		public static void free_instance (GLib.TypeInstance instance);
-		public static GLib.Type from_name (string name);
-		public GLib.Type fundamental ();
-		public static GLib.Type fundamental_next ();
-		[Version (since = "2.44")]
-		public int get_instance_count ();
-		public unowned GLib.TypePlugin get_plugin ();
-		public void* get_qdata (GLib.Quark quark);
-		[Version (since = "2.36")]
-		public static uint get_type_registration_serial ();
-		[Version (deprecated = true, deprecated_since = "2.36")]
-		public static void init ();
-		[Version (deprecated = true, deprecated_since = "2.36")]
-		public static void init_with_debug_flags (GLib.TypeDebugFlags debug_flags);
-		[Version (replacement = "TypeInterface.add_prerequisite")]
-		public void interface_add_prerequisite (GLib.Type prerequisite_type);
-		[Version (replacement = "TypeInterface.get_plugin")]
-		public unowned GLib.TypePlugin interface_get_plugin (GLib.Type interface_type);
-		[Version (replacement = "TypeInterface.instantiatable_prerequisite", since = "2.68")]
-		public GLib.Type interface_instantiatable_prerequisite ();
-		[Version (replacement = "TypeInterface.peek")]
-		public static unowned GLib.TypeInterface? interface_peek (GLib.TypeClass instance_class, GLib.Type iface_type);
-		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
-		[Version (replacement = "TypeInterface.prerequisites", since = "2.2")]
-		public GLib.Type[] interface_prerequisites ();
-		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
-		public GLib.Type[] interfaces ();
-		public bool is_a (GLib.Type is_a_type);
-		public unowned string name ();
-		public static unowned string name_from_class (GLib.TypeClass g_class);
-		public static unowned string name_from_instance (GLib.TypeInstance instance);
-		public GLib.Type next_base (GLib.Type root_type);
-		public GLib.Type parent ();
-		public GLib.Quark qname ();
-		public GLib.TypeQuery query ();
-		public GLib.Type register_dynamic (string type_name, GLib.TypePlugin plugin, GLib.TypeFlags flags);
-		public GLib.Type register_fundamental (string type_name, GLib.TypeInfo info, GLib.TypeFundamentalInfo finfo, GLib.TypeFlags flags);
-		public GLib.Type register_static (string type_name, GLib.TypeInfo info, GLib.TypeFlags flags);
-		[Version (since = "2.12")]
-		public GLib.Type register_static_simple (string type_name, uint class_size, GLib.ClassInitFunc class_init, uint instance_size, GLib.InstanceInitFunc instance_init, GLib.TypeFlags flags);
-		public static void remove_class_cache_func (void* cache_data, GLib.TypeClassCacheFunc cache_func);
-		[Version (since = "2.4")]
-		public static void remove_interface_check (void* check_data, GLib.TypeInterfaceCheckFunc check_func);
-		public void set_qdata (GLib.Quark quark, void* data);
-		public bool test_flags (uint flags);
-		[Version (replacement = "TypeValueTable.peek")]
-		public unowned GLib.TypeValueTable? value_table_peek ();
+	[CCode (cheader_filename = "glib-object.h", get_value_function = "g_value_get_gtype", marshaller_type_name = "GTYPE", set_value_function = "g_value_set_gtype", type_id = "G_TYPE_GTYPE")]
+	[GIR (fullname = "GType")]
+	public struct Type : ulong {
+		public const GLib.Type BOOLEAN;
+		public const GLib.Type BOXED;
+		public const GLib.Type CHAR;
+		public const GLib.Type DOUBLE;
+		public const GLib.Type ENUM;
+		public const GLib.Type FLAGS;
+		public const GLib.Type FLOAT;
+		public const GLib.Type INT;
+		public const GLib.Type INT64;
+		public const GLib.Type INTERFACE;
+		public const GLib.Type INVALID;
+		public const GLib.Type LONG;
+		public const GLib.Type NONE;
+		public const GLib.Type OBJECT;
+		public const GLib.Type PARAM;
+		public const GLib.Type POINTER;
+		public const GLib.Type STRING;
+		public const GLib.Type UCHAR;
+		public const GLib.Type UINT;
+		public const GLib.Type UINT64;
+		public const GLib.Type ULONG;
+		public const GLib.Type VARIANT;
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public static GLib.Type from_instance (void* instance);
+		[CCode (cname = "G_TYPE_IS_ABSTRACT")]
+		public bool is_abstract ();
+		[CCode (cname = "G_TYPE_IS_CLASSED")]
+		public bool is_classed ();
+		[CCode (cname = "G_TYPE_IS_DEEP_DERIVABLE")]
+		public bool is_deep_derivable ();
+		[CCode (cname = "G_TYPE_IS_DERIVABLE")]
+		public bool is_derivable ();
+		[CCode (cname = "G_TYPE_IS_DERIVED")]
+		public bool is_derived ();
+		[CCode (cname = "G_TYPE_IS_ENUM")]
+		public bool is_enum ();
+		[CCode (cname = "G_TYPE_IS_FINAL")]
+		[Version (since = "2.70")]
+		public bool is_final ();
+		[CCode (cname = "G_TYPE_IS_FLAGS")]
+		public bool is_flags ();
+		[CCode (cname = "G_TYPE_IS_FUNDAMENTAL")]
+		public bool is_fundamental ();
+		[CCode (cname = "G_TYPE_IS_INSTANTIATABLE")]
+		public bool is_instantiatable ();
+		[CCode (cname = "G_TYPE_IS_INTERFACE")]
+		public bool is_interface ();
+		[CCode (cname = "G_TYPE_IS_OBJECT")]
+		public bool is_object ();
+		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
+		public bool is_value_type ();
 	}
 	[CCode (cheader_filename = "glib-object.h")]
 	public struct TypeCValue {
