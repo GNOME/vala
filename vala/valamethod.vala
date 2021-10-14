@@ -842,6 +842,7 @@ public class Vala.Method : Subroutine, Callable {
 
 		var optional_param = false;
 		var params_array_param = false;
+		var ellipsis_param = false;
 		foreach (Parameter param in parameters) {
 			if (!param.check (context)) {
 				error = true;
@@ -866,11 +867,18 @@ public class Vala.Method : Subroutine, Callable {
 				optional_param = true;
 			}
 
+			// Disallow parameter after params array or ellipsis
 			if (params_array_param) {
 				Report.error (param.source_reference, "parameter follows params-array parameter");
 			} else if (param.params_array) {
 				params_array_param = true;
 			}
+			if (ellipsis_param) {
+				Report.error (param.source_reference, "parameter follows ellipsis parameter");
+			} else if (param.ellipsis) {
+				ellipsis_param = true;
+			}
+
 			// Add local variable to provide access to params arrays which will be constructed out of the given va-args
 			if (param.params_array && body != null) {
 				if (params_array_var != null) {
