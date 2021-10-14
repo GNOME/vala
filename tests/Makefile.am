@@ -60,6 +60,7 @@ TESTS = \
 	basic-types/sizeof.vala \
 	basic-types/garray.vala \
 	basic-types/glists.vala \
+	basic-types/glists_remove.vala \
 	basic-types/gptrarray.vala \
 	basic-types/gvariants.vala \
 	basic-types/gvariants-hashtable-missing-type-arguments.test \
