@@ -169,6 +169,7 @@ TESTS = \
 	methods/lambda.vala \
 	methods/closures.vala \
 	methods/contains.vala \
+	methods/ellipsis-preceding.test \
 	methods/extern.vala \
 	methods/iterator.vala \
 	methods/parameter-fixed-array-initializer.vala \
