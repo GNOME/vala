@@ -826,6 +826,28 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		}
 
+		// Transform and add free function argument to GLib.[List,Queue,SList].remove[_all] calls
+		unowned DataType? collection_type = null;
+		if (ma != null && ma.inner != null) {
+			collection_type = ma.inner.value_type;
+		}
+		if (collection_type != null
+		    && (collection_type.type_symbol == glist_type || collection_type.type_symbol == gslist_type || collection_type.type_symbol == gqueue_type)
+		    && (ma.member_name == "remove" || ma.member_name == "remove_all")
+		    //FIXME Perform stricter type argument check earlier
+		    && collection_type.check_type_arguments (context)) {
+			var remove_method = (Method) collection_type.type_symbol.scope.lookup (ma.member_name + "_full");
+			var type_arg = collection_type.get_type_arguments ()[0];
+			if (remove_method != null && requires_destroy (type_arg)) {
+				// only add them once per source file
+				if (add_generated_external_symbol (remove_method)) {
+					visit_method (remove_method);
+				}
+				ccall.call = new CCodeIdentifier (get_ccode_name (remove_method));
+				ccall.add_argument (get_destroy0_func_expression (type_arg));
+			}
+		}
+
 		if (return_result_via_out_param) {
 			ccode.add_expression (ccall_expr);
 			ccall_expr = out_param_ref;

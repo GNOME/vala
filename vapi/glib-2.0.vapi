@@ -4893,12 +4893,42 @@ namespace GLib {
 		public void insert_sorted (owned G data, CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
+		[CCode (cname = "vala_g_list_remove_full")]
+		[ReturnsModifiedPointer ()]
+		public unowned List<G> remove_full (G data, FreeFunc? func) {
+			unowned List<G>? l = this;
+			while (l != null) {
+				if (((!) l).data != data) {
+					l = ((!) l).next;
+				} else {
+					func (((!) l).data);
+					delete_link ((!) l);
+					break;
+				}
+			}
+			return this;
+		}
 		[ReturnsModifiedPointer ()]
 		public void remove_link (List<G> llink);
 		[ReturnsModifiedPointer ()]
 		public void delete_link (List<G> link_);
 		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
+		[CCode (cname = "vala_g_list_remove_all_full")]
+		[ReturnsModifiedPointer ()]
+		public unowned List<G> remove_all_full (G data, FreeFunc? func) {
+			unowned List<G>? l = this;
+			while (l != null) {
+				if (((!) l).data != data) {
+					l = ((!) l).next;
+				} else {
+					func (((!) l).data);
+					delete_link ((!) l);
+					l = this;
+				}
+			}
+			return this;
+		}
 
 		public uint length ();
 		public List<unowned G> copy ();
@@ -4955,12 +4985,42 @@ namespace GLib {
 		public void insert_sorted (owned G data, CompareFunc<G> compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
+		[CCode (cname = "vala_g_slist_remove_full")]
+		[ReturnsModifiedPointer ()]
+		public unowned SList<G> remove_full (G data, FreeFunc? func) {
+			unowned SList<G>? l = this;
+			while (l != null) {
+				if (((!) l).data != data) {
+					l = ((!) l).next;
+				} else {
+					func (((!) l).data);
+					delete_link ((!) l);
+					break;
+				}
+			}
+			return this;
+		}
 		[ReturnsModifiedPointer ()]
 		public void remove_link (SList<G> llink);
 		[ReturnsModifiedPointer ()]
 		public void delete_link (SList<G> link_);
 		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
+		[CCode (cname = "vala_g_slist_remove_all_full")]
+		[ReturnsModifiedPointer ()]
+		public unowned SList<G> remove_all_full (G data, FreeFunc? func) {
+			unowned SList<G>? l = this;
+			while (l != null) {
+				if (((!) l).data != data) {
+					l = ((!) l).next;
+				} else {
+					func (((!) l).data);
+					delete_link ((!) l);
+					l = this;
+				}
+			}
+			return this;
+		}
 
 		public uint length ();
 		public SList<unowned G> copy ();
@@ -5054,8 +5114,33 @@ namespace GLib {
 		public int index (G data);
 		[Version (since = "2.4")]
 		public bool remove (G data);
+		[CCode (cname = "vala_g_queue_remove_full")]
+		public bool remove_full (G data, FreeFunc? func) {
+			unowned List<G>? l = head.find (data);
+			if (l != null) {
+				func (((!) l).data);
+				delete_link ((!) l);
+				return true;
+			} else {
+				return false;
+			}
+		}
 		[Version (since = "2.4")]
 		public uint remove_all (G data);
+		[CCode (cname = "vala_g_queue_remove_all_full")]
+		public uint remove_all_full (G data, FreeFunc? func) {
+			var old_length = length;
+			unowned List<G>? l = head;
+			while (l != null) {
+				unowned List<G>? next = ((!) l).next;
+				if (((!) l).data == data) {
+					func (((!) l).data);
+					delete_link ((!) l);
+				}
+				l = next;
+			}
+			return old_length - length;
+		}
 		[Version (since = "2.4")]
 		public void delete_link (List<G> link);
 		[Version (since = "2.4")]
