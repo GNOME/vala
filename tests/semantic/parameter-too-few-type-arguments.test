@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo<G,T> {
+}
+
+void bar (Foo<string> foo) {
+}
+
+void main () {
+}
