@@ -169,7 +169,7 @@ public class Vala.ArrayList<G> : List<G> {
 		// concurrent modification protection
 		public int _stamp = 0;
 
-		public Iterator (ArrayList list) {
+		public Iterator (ArrayList<G> list) {
 			this.list = list;
 		}
 

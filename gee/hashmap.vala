@@ -195,7 +195,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public KeySet (HashMap map) {
+		public KeySet (HashMap<K,V> map) {
 			this.map = map;
 		}
 
@@ -243,7 +243,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public MapIterator (HashMap map) {
+		public MapIterator (HashMap<K,V> map) {
 			this.map = map;
 		}
 
@@ -287,7 +287,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public KeyIterator (HashMap map) {
+		public KeyIterator (HashMap<K,V> map) {
 			this.map = map;
 		}
 
@@ -340,7 +340,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public ValueCollection (HashMap map) {
+		public ValueCollection (HashMap<K,V> map) {
 			this.map = map;
 		}
 
@@ -395,7 +395,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public ValueIterator (HashMap map) {
+		public ValueIterator (HashMap<K,V> map) {
 			this.map = map;
 		}
 
