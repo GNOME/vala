@@ -1082,6 +1082,8 @@ TESTS = \
 	semantic/method-private-virtual.test \
 	semantic/method-protected.test \
 	semantic/method-return-accessibility.test \
+	semantic/method-return-too-few-type-arguments.test \
+	semantic/method-return-too-many-type-arguments.test \
 	semantic/method-return-valist.test \
 	semantic/method-too-few-type-arguments.test \
 	semantic/method-too-many-type-arguments.test \
@@ -1102,6 +1104,8 @@ TESTS = \
 	semantic/parameter-out-default.test \
 	semantic/parameter-params.test \
 	semantic/parameter-ref-default.test \
+	semantic/parameter-too-few-type-arguments.test \
+	semantic/parameter-too-many-type-arguments.test \
 	semantic/parameter-void.test \
 	semantic/params-array-multiple.test \
 	semantic/params-array-objectcreation-multiple.test \
