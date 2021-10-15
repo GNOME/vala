@@ -825,10 +825,6 @@ public class Vala.Method : Subroutine, Callable {
 			source_reference.file.context.module_init_method = this;
 		}
 
-		if (return_type != null) {
-			return_type.check (context);
-		}
-
 		if (parameters.size == 1 && parameters[0].ellipsis && body != null && binding != MemberBinding.INSTANCE) {
 			// accept just `...' for external methods and instance methods
 			error = true;
