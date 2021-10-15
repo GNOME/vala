@@ -49,6 +49,17 @@ public abstract class Vala.ValueType : DataType {
 	}
 
 	public override bool check (CodeContext context) {
-		return type_symbol.check (context);
+		if (!type_symbol.check (context)) {
+			error = true;
+			return false;
+		}
+
+		// check whether there is the expected amount of type-arguments
+		if (!check_type_arguments (context, true)) {
+			error = true;
+			return false;
+		}
+
+		return true;
 	}
 }
