@@ -103,7 +103,7 @@ namespace GirTest {
 		public static void none_inout (ref unowned GirTest.ObjectTest obj);
 		public static void none_out (out unowned GirTest.ObjectTest obj);
 		public static unowned GirTest.ObjectTest none_return ();
-		public GLib.EqualFunc simple_delegate_return ();
+		public GLib.EqualFunc<string> simple_delegate_return ();
 		public void simple_throw () throws GirTest.ErrorTest;
 		[GIR (visible = false)]
 		public void skipped_method ();

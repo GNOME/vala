@@ -296,7 +296,7 @@ namespace GirTest {
 			return new int[8];
 		}
 
-		public EqualFunc simple_delegate_return () {
+		public EqualFunc<string> simple_delegate_return () {
 			return str_equal;
 		}
 
