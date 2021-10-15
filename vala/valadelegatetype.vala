@@ -95,11 +95,13 @@ public class Vala.DelegateType : CallableType {
 		}
 
 		if (!delegate_symbol.check (context)) {
+			error = true;
 			return false;
 		}
 
 		// check whether there is the expected amount of type-arguments
 		if (!check_type_arguments (context, true)) {
+			error = true;
 			return false;
 		}
 
