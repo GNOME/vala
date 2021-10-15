@@ -200,7 +200,7 @@ public class Vala.HashSet<G> : Set<G> {
 		// concurrent modification protection
 		private int _stamp = 0;
 
-		public Iterator (HashSet set) {
+		public Iterator (HashSet<G> set) {
 			this.set = set;
 		}
 
