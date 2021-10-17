@@ -1,6 +1,8 @@
 Invalid Code
 
 struct Foo {
+	public int i;
+
 	public Foo () {
 		base ();
 	}
