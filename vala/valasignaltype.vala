@@ -56,11 +56,13 @@ public class Vala.SignalType : CallableType {
 		var type_sym = (ObjectTypeSymbol) signal_symbol.parent_symbol;
 		var sender_type = SemanticAnalyzer.get_data_type_for_symbol (type_sym);
 		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
+		result.source_reference = source_reference;
 		result.value_owned = true;
 
 		if (result.delegate_symbol.has_type_parameters ()) {
 			foreach (var type_param in type_sym.get_type_parameters ()) {
 				var type_arg = new GenericType (type_param);
+				type_arg.source_reference = source_reference;
 				type_arg.value_owned = true;
 				result.add_type_argument (type_arg);
 			}
@@ -72,11 +74,11 @@ public class Vala.SignalType : CallableType {
 	unowned Method get_connect_method () {
 		if (connect_method == null) {
 			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
-			connect_method = new Method ("connect", ulong_type);
+			connect_method = new Method ("connect", ulong_type, source_reference);
 			connect_method.access = SymbolAccessibility.PUBLIC;
 			connect_method.external = true;
 			connect_method.owner = signal_symbol.scope;
-			connect_method.add_parameter (new Parameter ("handler", get_handler_type ()));
+			connect_method.add_parameter (new Parameter ("handler", get_handler_type (), source_reference));
 		}
 		return connect_method;
 	}
@@ -84,22 +86,22 @@ public class Vala.SignalType : CallableType {
 	unowned Method get_connect_after_method () {
 		if (connect_after_method == null) {
 			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
-			connect_after_method = new Method ("connect_after", ulong_type);
+			connect_after_method = new Method ("connect_after", ulong_type, source_reference);
 			connect_after_method.access = SymbolAccessibility.PUBLIC;
 			connect_after_method.external = true;
 			connect_after_method.owner = signal_symbol.scope;
-			connect_after_method.add_parameter (new Parameter ("handler", get_handler_type ()));
+			connect_after_method.add_parameter (new Parameter ("handler", get_handler_type (), source_reference));
 		}
 		return connect_after_method;
 	}
 
 	unowned Method get_disconnect_method () {
 		if (disconnect_method == null) {
-			disconnect_method = new Method ("disconnect", new VoidType ());
+			disconnect_method = new Method ("disconnect", new VoidType (), source_reference);
 			disconnect_method.access = SymbolAccessibility.PUBLIC;
 			disconnect_method.external = true;
 			disconnect_method.owner = signal_symbol.scope;
-			disconnect_method.add_parameter (new Parameter ("handler", get_handler_type ()));
+			disconnect_method.add_parameter (new Parameter ("handler", get_handler_type (), source_reference));
 		}
 		return disconnect_method;
 	}

@@ -109,9 +109,9 @@ public class Vala.AddressofExpression : Expression {
 		}
 
 		if (inner.value_type.is_reference_type_or_type_parameter ()) {
-			value_type = new PointerType (new PointerType (inner.value_type));
+			value_type = new PointerType (new PointerType (inner.value_type), source_reference);
 		} else {
-			value_type = new PointerType (inner.value_type);
+			value_type = new PointerType (inner.value_type, source_reference);
 		}
 
 		return !error;

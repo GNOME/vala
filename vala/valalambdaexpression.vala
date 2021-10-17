@@ -264,6 +264,7 @@ public class Vala.LambdaExpression : Expression {
 		method.check (context);
 
 		value_type = new MethodType (method);
+		value_type.source_reference = source_reference;
 		value_type.value_owned = target_type.value_owned;
 
 		return !error;

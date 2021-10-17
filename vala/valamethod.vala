@@ -1232,11 +1232,12 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
+		callback_type.source_reference = source_reference;
 		callback_type.nullable = true;
 		callback_type.value_owned = true;
 		callback_type.is_called_once = true;
 
-		var callback_param = new Parameter ("_callback_", callback_type);
+		var callback_param = new Parameter ("_callback_", callback_type, source_reference);
 		callback_param.initializer = new NullLiteral (source_reference);
 		callback_param.initializer.target_type = callback_type.copy ();
 		callback_param.set_attribute_double ("CCode", "pos", -1);
@@ -1259,7 +1260,7 @@ public class Vala.Method : Subroutine, Callable {
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
-		var result_param = new Parameter ("_res_", result_type);
+		var result_param = new Parameter ("_res_", result_type, source_reference);
 		result_param.set_attribute_double ("CCode", "pos", get_attribute_double ("CCode", "async_result_pos", 0.1));
 		params.add (result_param);
 

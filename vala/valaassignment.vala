@@ -229,7 +229,7 @@ public class Vala.Assignment : Expression {
 			// FIXME: only do this if the backend doesn't support
 			// the assignment natively
 
-			var old_value = new MemberAccess (ma.inner, ma.member_name);
+			var old_value = new MemberAccess (ma.inner, ma.member_name, source_reference);
 
 			BinaryOperator bop;
 
