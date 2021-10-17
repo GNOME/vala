@@ -1114,7 +1114,7 @@ public class Vala.Parser : CodeVisitor {
 		unowned ObjectCreationExpression? object_creation = expr as ObjectCreationExpression;
 		if (call == null && object_creation == null) {
 			Report.error (expr.source_reference, "syntax error, expected method call");
-			throw new ParseError.SYNTAX ("expected method call");
+			expr.error = true;
 		}
 
 		if (call != null) {
