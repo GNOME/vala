@@ -925,7 +925,7 @@ TESTS = \
 	parser/with-no-block.test \
 	parser/with-no-expression.test \
 	parser/yield-method.test \
-	parser/yield-return.test \
+	parser/yield-return-invalid.test \
 	parser/yield-return.vala \
 	parser/bug728574.vala \
 	parser/bug749576.vala \
