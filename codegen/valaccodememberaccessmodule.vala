@@ -113,20 +113,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_delegate_target (expr, delegate_target);
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
-			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
-				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
-			}
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is DelegateTargetField) {
-			if (!((DelegateType) expr.inner.value_type).delegate_symbol.has_target) {
-				Report.error (expr.source_reference, "unsupported use of target field of delegate without target");
-			}
 			CCodeExpression delegate_target_destroy_notify;
 			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify));
 		} else if (expr.symbol_reference is DelegateDestroyField) {
-			if (!((DelegateType) expr.inner.value_type).delegate_symbol.has_target) {
-				Report.error (expr.source_reference, "unsupported use of destroy field of delegate without target");
-			}
 			CCodeExpression delegate_target_destroy_notify;
 			get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify);
 			set_cvalue (expr, delegate_target_destroy_notify);

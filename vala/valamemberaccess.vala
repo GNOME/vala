@@ -1041,6 +1041,23 @@ public class Vala.MemberAccess : Expression {
 			value_type.check (context);
 		}
 
+		if (symbol_reference is ArrayLengthField) {
+			if (inner.value_type is ArrayType && ((ArrayType) inner.value_type).rank > 1 && !(parent_node is ElementAccess)) {
+				Report.error (source_reference, "unsupported use of length field of multi-dimensional array");
+				error = true;
+			}
+		} else if (symbol_reference is DelegateTargetField) {
+			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
+				Report.error (source_reference, "unsupported use of target field of delegate without target");
+				error = true;
+			}
+		} else if (symbol_reference is DelegateDestroyField) {
+			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
+				Report.error (source_reference, "unsupported use of destroy field of delegate without target");
+				error = true;
+			}
+		}
+
 		// Provide some extra information for the code generator
 		if (!tainted_access) {
 			tainted_access = is_tainted ();
