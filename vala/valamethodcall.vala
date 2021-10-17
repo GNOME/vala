@@ -301,6 +301,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 					return false;
 				}
 				call.value_type = new ObjectType (context.analyzer.object_type);
+				call.value_type.source_reference = source_reference;
 				mtype = call.value_type;
 			}
 		}
@@ -567,6 +568,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 					}
 				}
 				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
+				dynamic_sig.handler.target_type.source_reference = source_reference;
 			}
 
 			if (m != null && m.has_type_parameters ()) {
@@ -632,6 +634,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 				unowned MemberAccess ma = (MemberAccess) call;
 				if (ma.member_name == "end") {
 					mtype = new MethodType (m.get_end_method ());
+					mtype.source_reference = source_reference;
 				}
 			}
 		}

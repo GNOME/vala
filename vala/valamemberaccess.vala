@@ -458,7 +458,7 @@ public class Vala.MemberAccess : Expression {
 						}
 						var m = new DynamicMethod (inner.value_type, member_name, ret_type, source_reference);
 						m.invocation = invoc;
-						var err = new ErrorType (null, null);
+						var err = new ErrorType (null, null, m.source_reference);
 						err.dynamic_error = true;
 						m.add_error_type (err);
 						m.access = SymbolAccessibility.PUBLIC;
@@ -947,10 +947,13 @@ public class Vala.MemberAccess : Expression {
 				// required when using instance methods as delegates in constants
 				// TODO replace by MethodPrototype
 				value_type = context.analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
+				value_type.source_reference = source_reference;
 			} else if (symbol_reference is Field) {
 				value_type = new FieldPrototype ((Field) symbol_reference);
+				value_type.source_reference = source_reference;
 			} else if (symbol_reference is Property) {
 				value_type = new PropertyPrototype ((Property) symbol_reference);
+				value_type.source_reference = source_reference;
 			} else {
 				error = true;
 				value_type = new InvalidType ();
@@ -1001,6 +1004,7 @@ public class Vala.MemberAccess : Expression {
 			    inner != null && inner.value_type == null && inner_ma.type_argument_list.size > 0) {
 				// support static methods in generic classes
 				inner.value_type = new ObjectType ((ObjectTypeSymbol) m.parent_symbol);
+				inner.value_type.source_reference = source_reference;
 
 				foreach (var type_argument in inner_ma.type_argument_list) {
 					inner.value_type.add_type_argument (type_argument);

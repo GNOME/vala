@@ -178,7 +178,7 @@ public class Vala.SliceExpression : Expression {
 		} else {
 			var slice_method = container.value_type.get_member ("slice") as Method;
 			if (slice_method != null) {
-				var slice_call = new MethodCall (new MemberAccess (container, "slice"));
+				var slice_call = new MethodCall (new MemberAccess (container, "slice", source_reference), source_reference);
 				slice_call.add_argument (start);
 				slice_call.add_argument (stop);
 				slice_call.target_type = this.target_type;
