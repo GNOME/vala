@@ -104,7 +104,7 @@ public class Vala.Signal : Symbol, Callable {
 	public Delegate get_delegate (DataType sender_type, CodeNode node_reference) {
 		var actual_return_type = return_type.get_actual_type (sender_type, null, node_reference);
 
-		var generated_delegate = new Delegate (null, actual_return_type);
+		var generated_delegate = new Delegate (null, actual_return_type, source_reference);
 		generated_delegate.access = SymbolAccessibility.PUBLIC;
 		generated_delegate.owner = scope;
 

@@ -300,7 +300,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 					Report.error (source_reference, "chain up to `GLib.Object' not supported");
 					return false;
 				}
-				call.value_type = new ObjectType (context.analyzer.object_type);
+				call.value_type = new ObjectType (context.analyzer.object_type, source_reference);
 				mtype = call.value_type;
 			}
 		}
@@ -566,7 +566,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 						dynamic_sig.add_parameter (param.copy ());
 					}
 				}
-				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this));
+				dynamic_sig.handler.target_type = new DelegateType (dynamic_sig.get_delegate (new ObjectType ((ObjectTypeSymbol) dynamic_sig.parent_symbol), this), source_reference);
 			}
 
 			if (m != null && m.has_type_parameters ()) {
@@ -631,7 +631,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 			if (m != null && m.coroutine) {
 				unowned MemberAccess ma = (MemberAccess) call;
 				if (ma.member_name == "end") {
-					mtype = new MethodType (m.get_end_method ());
+					mtype = new MethodType (m.get_end_method (), source_reference);
 				}
 			}
 		}
