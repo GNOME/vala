@@ -1004,6 +1004,8 @@ TESTS = \
 	semantic/field-non-constant.test \
 	semantic/field-owned-to-unowned.test \
 	semantic/field-static-instance-access.test \
+	semantic/field-too-few-type-arguments.test \
+	semantic/field-too-many-type-arguments.test \
 	semantic/field-valist.test \
 	semantic/field-void.test \
 	semantic/floating-reference.vala \
@@ -1113,6 +1115,8 @@ TESTS = \
 	semantic/property-struct-override.test \
 	semantic/property-struct-protected.test \
 	semantic/property-struct-virtual.test \
+	semantic/property-too-few-type-arguments.test \
+	semantic/property-too-many-type-arguments.test \
 	semantic/property-void.test \
 	semantic/reference-transfer-not-supported.test \
 	semantic/reference-transfer-unavailable.test \

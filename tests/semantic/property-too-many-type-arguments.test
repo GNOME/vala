@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo<G> {
+}
+
+class Bar {
+	public Foo<string,int> foo { get; set; }
+}
+
+void main () {
+}
