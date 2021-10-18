@@ -325,6 +325,7 @@ TESTS = \
 	enums/in-inference.vala \
 	enums/no_gtype_to_string.vala \
 	enums/switch.vala \
+	enums/bug614424.vala \
 	enums/bug666035.vala \
 	enums/bug666035-1.test \
 	enums/bug666035-2.test \
