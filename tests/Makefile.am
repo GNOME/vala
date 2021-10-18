@@ -412,6 +412,7 @@ TESTS = \
 	delegates/instance-method-to-no-target-2.test \
 	delegates/lambda-incompatible.test \
 	delegates/lambda-mixed-instance-static.vala \
+	delegates/lambda-outer-constant.test \
 	delegates/lambda-shared-closure.vala \
 	delegates/member-target-destroy.vala \
 	delegates/reference_transfer.vala \
@@ -1045,7 +1046,9 @@ TESTS = \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-capture-valist-parameter.test \
 	semantic/member-access-capture-valist-variable.test \
+	semantic/member-access-not-found.test \
 	semantic/member-access-protected-invalid.test \
+	semantic/member-access-this-invalid.test \
 	semantic/member-access-undefined.test \
 	semantic/member-access-static-with-instance.vala \
 	semantic/member-access-static-transformed-qualified.vala \
