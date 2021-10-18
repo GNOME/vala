@@ -1,0 +1,11 @@
+Invalid Code
+
+delegate void FooFunc ();
+
+void main () {
+	const int FOO = 23;
+
+	FooFunc foo = () => {
+		var i = FOO;
+	};
+}

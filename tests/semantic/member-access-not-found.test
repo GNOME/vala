@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {
+}
+
+void main () {
+	var foo = new Foo ();
+	foo.get_bar ();
+}
