@@ -987,6 +987,8 @@ TESTS = \
 	semantic/creation-method-errordomain.test \
 	semantic/creation-method-interface.test \
 	semantic/creation-method-namespace.test \
+	semantic/delegate-access-destroy-invalid.test \
+	semantic/delegate-access-target-invalid.test \
 	semantic/delegate-error-accessibility.test \
 	semantic/delegate-return-valist.test \
 	semantic/delegate-too-few-type-arguments.test \
