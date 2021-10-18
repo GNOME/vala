@@ -1,0 +1,9 @@
+Invalid Code
+
+[CCode (has_target = false)]
+delegate void Foo ();
+
+void main () {
+	Foo foo = null;
+	var d = foo.destroy;
+}
