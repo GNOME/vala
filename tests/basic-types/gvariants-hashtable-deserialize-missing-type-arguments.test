@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	Variant v = null;
+	var foo = (HashTable) v;
+}
