@@ -63,7 +63,8 @@ TESTS = \
 	basic-types/glists_remove.vala \
 	basic-types/gptrarray.vala \
 	basic-types/gvariants.vala \
-	basic-types/gvariants-hashtable-missing-type-arguments.test \
+	basic-types/gvariants-hashtable-deserialize-missing-type-arguments.test \
+	basic-types/gvariants-hashtable-serialize-missing-type-arguments.test \
 	basic-types/gvariants-unboxing-safe.vala \
 	basic-types/null.vala \
 	basic-types/bug570846.test \

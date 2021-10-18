@@ -1,0 +1,6 @@
+Invalid Code
+
+void main () {
+	HashTable foo = null;
+	Variant v = foo;
+}
