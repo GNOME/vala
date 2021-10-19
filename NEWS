@@ -1,3 +1,16 @@
+Vala 0.54.2
+===========
+ * Various improvements and bug fixes:
+  - vala:
+    + Multi-dimensional params-array not allowed [#1230]
+    + Accept NullType as generic type argument
+    + Set source references of created DataType instances in OCE
+
+ * Bindings:
+  - gio-2.0: Update to 2.71.0~a0d2efdc
+  - glib-2.0: Update 2.70 symbols
+  - gtk4: Update to 4.5.0~da5efea6
+
 Vala 0.54.1
 ===========
  * Regression and bug fixes:
