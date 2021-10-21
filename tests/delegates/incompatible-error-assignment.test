@@ -1,0 +1,18 @@
+Invalid Code
+
+errordomain FooError {
+	FAIL;
+}
+
+errordomain BarError {
+	FAIL;
+}
+
+delegate void FooFunc () throws FooError;
+
+delegate void BarFunc () throws BarError;
+
+void main () {
+	FooFunc f = () => { throw new FooError.FAIL (""); };
+	BarFunc b = f;
+}
