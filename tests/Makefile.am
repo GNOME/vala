@@ -413,6 +413,7 @@ TESTS = \
 	delegates/implicit-local-variable.vala \
 	delegates/incompatible.test \
 	delegates/incompatible-assignment.test \
+	delegates/incompatible-error-assignment.test \
 	delegates/incompatible-initializer.test \
 	delegates/incompatible-target.test \
 	delegates/instance-method-to-no-target.test \
