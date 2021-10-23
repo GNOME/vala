@@ -1,0 +1,9 @@
+Invalid Code
+
+int foo () {
+	return 23;
+}
+
+void main () {
+	++foo ();
+}
