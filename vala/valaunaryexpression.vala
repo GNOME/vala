@@ -128,14 +128,6 @@ public class Vala.UnaryExpression : Expression {
 		return st.is_integer_type ();
 	}
 
-	MemberAccess? find_member_access (Expression expr) {
-		if (expr is MemberAccess) {
-			return (MemberAccess) expr;
-		}
-
-		return null;
-	}
-
 	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		inner.get_error_types (collection, source_reference);
 	}
@@ -211,8 +203,7 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			var ma = find_member_access (inner);
-			if (ma == null) {
+			if (!(inner is MemberAccess)) {
 				error = true;
 				Report.error (source_reference, "Prefix operators not supported for this expression");
 				return false;
