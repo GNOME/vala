@@ -624,6 +624,7 @@ TESTS = \
 	errors/catch-in-finally.vala \
 	errors/catch-no-error-type.test \
 	errors/default-gtype.vala \
+	errors/delegate-throws-no-error-type.test \
 	errors/errors.vala \
 	errors/errorcode.vala \
 	errors/errordomain.vala \
@@ -632,6 +633,7 @@ TESTS = \
 	errors/invalid-type-check.test \
 	errors/loops.vala \
 	errors/method-throws.vala \
+	errors/method-throws-no-error-type.test \
 	errors/unhandled.vala \
 	errors/bug567181.vala \
 	errors/bug579101.vala \
