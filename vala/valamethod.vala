@@ -924,6 +924,10 @@ public class Vala.Method : Subroutine, Callable {
 
 		if (error_types != null) {
 			foreach (DataType error_type in error_types) {
+				if (!(error_type is ErrorType)) {
+					error = true;
+					Report.error (error_type.source_reference, "`%s' is not an error type", error_type.to_string ());
+				}
 				error_type.check (context);
 
 				// check whether error type is at least as accessible as the method
