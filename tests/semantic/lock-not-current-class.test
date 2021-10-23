@@ -1,0 +1,14 @@
+Invalid Code
+
+class Bar {
+	public int bar;
+}
+
+class Foo {
+	void foo (Bar bar) {
+		lock (bar.bar);
+	}
+}
+
+void main () {
+}

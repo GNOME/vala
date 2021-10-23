@@ -1061,6 +1061,8 @@ TESTS = \
 	semantic/localvariable-var-static-access-instance-property.test \
 	semantic/localvariable-var-without-initializer.test \
 	semantic/localvariable-void.test \
+	semantic/lock-not-current-class.test \
+	semantic/lock-not-lockable.test \
 	semantic/member-access-async-callback-invalid.test \
 	semantic/member-access-capture-out.test \
 	semantic/member-access-capture-valist-parameter.test \
@@ -1174,6 +1176,8 @@ TESTS = \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
 	semantic/unary-unsupported-out-ref.test \
+	semantic/unlock-not-current-class.test \
+	semantic/unlock-not-lockable.test \
 	semantic/with-array.test \
 	semantic/with-buildin.vala \
 	semantic/with-class.test \
