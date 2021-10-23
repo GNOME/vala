@@ -1,0 +1,6 @@
+Invalid Code
+
+delegate void FooFunc () throws int;
+
+void main () {
+}
