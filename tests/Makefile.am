@@ -622,6 +622,7 @@ TESTS = \
 	objects/with-nested-unambigous-signal.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
+	errors/catch-no-error-type.test \
 	errors/default-gtype.vala \
 	errors/errors.vala \
 	errors/errorcode.vala \
