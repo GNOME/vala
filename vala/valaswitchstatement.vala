@@ -93,7 +93,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		foreach (SwitchSection section in sections) {
 			section.get_error_types (collection, source_reference);
 		}

@@ -206,7 +206,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 			return false;
 		}
 
-		var method_error_types = new ArrayList<DataType> ();
+		var method_error_types = new ArrayList<ErrorType> ();
 		m.get_error_types (method_error_types);
 
 		// method must throw error if the delegate does
@@ -215,10 +215,10 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 
 		// method may throw less but not more errors than the delegate
-		foreach (DataType method_error_type in method_error_types) {
+		foreach (var method_error_type in method_error_types) {
 			bool match = false;
 			if (error_types != null) {
-				foreach (DataType delegate_error_type in error_types) {
+				foreach (var delegate_error_type in error_types) {
 					if (method_error_type.compatible (delegate_error_type)) {
 						match = true;
 						break;
@@ -250,7 +250,7 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		}
 
 		if (error_types != null) {
-			foreach (DataType error_type in error_types) {
+			foreach (var error_type in error_types) {
 				error_type.accept (visitor);
 			}
 		}
@@ -272,15 +272,15 @@ public class Vala.Delegate : TypeSymbol, Callable {
 		error_type.parent_node = this;
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		if (error_types != null) {
 			foreach (var error_type in error_types) {
 				if (source_reference != null) {
-					var type = error_type.copy ();
+					var type = (ErrorType) error_type.copy ();
 					type.source_reference = source_reference;
 					collection.add (type);
 				} else {
-					collection.add (error_type);
+					collection.add ((ErrorType) error_type);
 				}
 			}
 		}

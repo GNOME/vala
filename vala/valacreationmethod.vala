@@ -61,7 +61,7 @@ public class Vala.CreationMethod : Method {
 		}
 
 		if (error_types != null) {
-			foreach (DataType error_type in error_types) {
+			foreach (var error_type in error_types) {
 				error_type.accept (visitor);
 			}
 		}
@@ -143,7 +143,7 @@ public class Vala.CreationMethod : Method {
 		}
 
 		if (error_types != null) {
-			foreach (DataType error_type in error_types) {
+			foreach (var error_type in error_types) {
 				error_type.check (context);
 
 				// check whether error type is at least as accessible as the creation method
@@ -215,18 +215,18 @@ public class Vala.CreationMethod : Method {
 
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null && !body.error) {
-			var body_errors = new ArrayList<DataType> ();
+			var body_errors = new ArrayList<ErrorType> ();
 			body.get_error_types (body_errors);
-			foreach (DataType body_error_type in body_errors) {
+			foreach (var body_error_type in body_errors) {
 				bool can_propagate_error = false;
 				if (error_types != null) {
-					foreach (DataType method_error_type in error_types) {
+					foreach (var method_error_type in error_types) {
 						if (body_error_type.compatible (method_error_type)) {
 							can_propagate_error = true;
 						}
 					}
 				}
-				if (!can_propagate_error && !((ErrorType) body_error_type).dynamic_error) {
+				if (!can_propagate_error && !body_error_type.dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}

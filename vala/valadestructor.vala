@@ -79,10 +79,10 @@ public class Vala.Destructor : Subroutine {
 		}
 
 		if (body != null && !body.error) {
-			var body_errors = new ArrayList<DataType> ();
+			var body_errors = new ArrayList<ErrorType> ();
 			body.get_error_types (body_errors);
-			foreach (DataType body_error_type in body_errors) {
-				if (!((ErrorType) body_error_type).dynamic_error) {
+			foreach (var body_error_type in body_errors) {
+				if (!body_error_type.dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}

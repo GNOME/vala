@@ -167,13 +167,13 @@ public class Vala.DelegateType : CallableType {
 		}
 
 		// target-delegate may throw less but not more errors than the delegate
-		var error_types = new ArrayList<DataType> ();
+		var error_types = new ArrayList<ErrorType> ();
 		delegate_symbol.get_error_types (error_types);
-		foreach (DataType error_type in error_types) {
+		foreach (var error_type in error_types) {
 			bool match = false;
-			var delegate_error_types = new ArrayList<DataType> ();
+			var delegate_error_types = new ArrayList<ErrorType> ();
 			dt_target.delegate_symbol.get_error_types (delegate_error_types);
-			foreach (DataType delegate_error_type in delegate_error_types) {
+			foreach (var delegate_error_type in delegate_error_types) {
 				if (error_type.compatible (delegate_error_type)) {
 					match = true;
 					break;

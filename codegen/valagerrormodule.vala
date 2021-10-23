@@ -203,21 +203,21 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				append_local_free (current_symbol, null, current_try);
 			}
 
-			var error_types = new ArrayList<DataType> ();
+			var error_types = new ArrayList<ErrorType> ();
 			node.get_error_types (error_types);
 
 			bool has_general_catch_clause = false;
 
 			if (!is_in_catch) {
-				var handled_error_types = new ArrayList<DataType> ();
+				var handled_error_types = new ArrayList<ErrorType> ();
 				foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 					// keep track of unhandled error types
-					foreach (DataType node_error_type in error_types) {
+					foreach (var node_error_type in error_types) {
 						if (clause.error_type == null || node_error_type.compatible (clause.error_type)) {
 							handled_error_types.add (node_error_type);
 						}
 					}
-					foreach (DataType handled_error_type in handled_error_types) {
+					foreach (var handled_error_type in handled_error_types) {
 						error_types.remove (handled_error_type);
 					}
 					handled_error_types.clear ();
@@ -273,9 +273,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// current method can fail, propagate error
 			CCodeBinaryExpression ccond = null;
 
-			var error_types = new ArrayList<DataType> ();
+			var error_types = new ArrayList<ErrorType> ();
 			current_method.get_error_types (error_types);
-			foreach (DataType error_type in error_types) {
+			foreach (var error_type in error_types) {
 				// If GLib.Error is allowed we propagate everything
 				if (error_type.equals (gerror_type)) {
 					ccond = null;
@@ -284,7 +284,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 				// Check the allowed error domains to propagate
 				var domain_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer
-					(get_inner_error_cexpression (), "domain"), new CCodeIdentifier (get_ccode_upper_case_name (((ErrorType) error_type).error_domain)));
+					(get_inner_error_cexpression (), "domain"), new CCodeIdentifier (get_ccode_upper_case_name (error_type.error_domain)));
 				if (ccond == null) {
 					ccond = domain_check;
 				} else {

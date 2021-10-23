@@ -94,9 +94,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.has_error_type_parameter ()) {
-			var error_types = new ArrayList<DataType> ();
+			var error_types = new ArrayList<ErrorType> ();
 			m.get_error_types (error_types);
-			foreach (DataType error_type in error_types) {
+			foreach (var error_type in error_types) {
 				generate_type_declaration (error_type, decl_space);
 			}
 

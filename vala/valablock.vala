@@ -183,7 +183,7 @@ public class Vala.Block : Symbol, Statement {
 		return !error;
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		// use get_statements () instead of statement_list to not miss errors within StatementList objects
 		foreach (Statement stmt in get_statements ()) {
 			stmt.get_error_types (collection, source_reference);

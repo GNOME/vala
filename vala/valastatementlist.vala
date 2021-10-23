@@ -48,7 +48,7 @@ public class Vala.StatementList : CodeNode, Statement {
 		list.insert (index, stmt);
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		foreach (var stmt in list) {
 			stmt.get_error_types (collection, source_reference);
 		}

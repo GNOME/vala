@@ -104,7 +104,7 @@ public class Vala.ConditionalExpression : Expression {
 		return condition.is_accessible (sym) && true_expression.is_accessible (sym) && false_expression.is_accessible (sym);
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		condition.get_error_types (collection, source_reference);
 		true_expression.get_error_types (collection, source_reference);
 		false_expression.get_error_types (collection, source_reference);

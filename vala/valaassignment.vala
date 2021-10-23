@@ -105,7 +105,7 @@ public class Vala.Assignment : Expression {
 		return left.is_accessible (sym) && right.is_accessible (sym);
 	}
 
-	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
 		left.get_error_types (collection, source_reference);
 		right.get_error_types (collection, source_reference);
 	}
