@@ -3515,6 +3515,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			string id = parse_identifier ();
 			comment = scanner.pop_comment ();
 			var ec = new ErrorCode (id, get_src (code_begin), comment);
+			ec.access = SymbolAccessibility.PUBLIC;
 			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
