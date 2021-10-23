@@ -1172,6 +1172,7 @@ TESTS = \
 	semantic/type-argument-ownership-mismatch.test \
 	semantic/unary-invalid-instance-member-access.test \
 	semantic/unary-unsupported-complement.test \
+	semantic/unary-unsupported-decrement.test \
 	semantic/unary-unsupported-increment.test \
 	semantic/unary-unsupported-minus.test \
 	semantic/unary-unsupported-negation.test \
