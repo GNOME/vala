@@ -3326,6 +3326,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 
 			var ec = new ErrorCode (id, get_src (code_begin), comment);
+			ec.access = SymbolAccessibility.PUBLIC;
 			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
