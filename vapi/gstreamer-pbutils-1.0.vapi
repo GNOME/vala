@@ -33,7 +33,7 @@ namespace Gst {
 				public static unowned string get_profile ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] sps);
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_h264_get_profile_flags_level")]
 				[Version (since = "1.20")]
-				public static bool get_profile_flags_level (uint8 codecs_data, uint len, uint8 profile, uint8 flags, uint8 level);
+				public static bool get_profile_flags_level ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "guint", type = "const guint8*")] uint8[] codec_data, out uint8 profile, out uint8 flags, out uint8 level);
 			}
 			namespace MPEG4Video {
 				[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_mpeg4video_caps_set_level_and_profile")]
@@ -101,6 +101,8 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected DiscovererContainerInfo ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams ();
+			[Version (since = "1.20")]
+			public unowned Gst.TagList get_tags ();
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", lower_case_cprefix = "gst_discoverer_info_", type_id = "gst_discoverer_info_get_type ()")]
 		[GIR (name = "DiscovererInfo")]
@@ -126,6 +128,7 @@ namespace Gst {
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_stream_list ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams (GLib.Type streamtype);
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_subtitle_streams ();
+			[Version (deprecated = true, deprecated_since = "1.20")]
 			public unowned Gst.TagList get_tags ();
 			public unowned Gst.Toc get_toc ();
 			public unowned string get_uri ();
@@ -144,6 +147,8 @@ namespace Gst {
 			public Gst.PbUtils.DiscovererStreamInfo get_next ();
 			public Gst.PbUtils.DiscovererStreamInfo get_previous ();
 			public unowned string get_stream_id ();
+			[Version (since = "1.20")]
+			public int get_stream_number ();
 			public unowned string get_stream_type_nick ();
 			public unowned Gst.TagList get_tags ();
 			public unowned Gst.Toc get_toc ();

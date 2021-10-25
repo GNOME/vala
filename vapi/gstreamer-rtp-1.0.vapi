@@ -407,16 +407,19 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected HeaderExtension ();
 			public static Gst.RTP.HeaderExtension? create_from_uri (string uri);
+			public Gst.RTP.HeaderExtensionDirection get_direction ();
 			public uint get_id ();
 			public virtual size_t get_max_size (Gst.Buffer input_meta);
 			public string get_sdp_caps_field_name ();
 			public virtual Gst.RTP.HeaderExtensionFlags get_supported_flags ();
 			public unowned string get_uri ();
 			public virtual bool read (Gst.RTP.HeaderExtensionFlags read_flags, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, Gst.Buffer buffer);
-			public virtual bool set_attributes_from_caps (Gst.Caps caps);
-			public bool set_attributes_from_caps_simple_sdp (Gst.Caps caps);
+			[NoWrapper]
+			public virtual bool set_attributes (Gst.RTP.HeaderExtensionDirection direction, string attributes);
+			public bool set_attributes_from_caps (Gst.Caps caps);
 			public virtual bool set_caps_from_attributes (Gst.Caps caps);
-			public bool set_caps_from_attributes_simple_sdp (Gst.Caps caps);
+			public bool set_caps_from_attributes_helper (Gst.Caps caps, string attributes);
+			public void set_direction (Gst.RTP.HeaderExtensionDirection direction);
 			public void set_id (uint ext_id);
 			public virtual bool set_non_rtp_sink_caps (Gst.Caps caps);
 			[CCode (cname = "gst_rtp_header_extension_class_set_uri")]
@@ -534,6 +537,17 @@ namespace Gst {
 		public enum BufferMapFlags {
 			SKIP_PADDING,
 			LAST
+		}
+		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_HEADER_EXTENSION_DIRECTION_", type_id = "gst_rtp_header_extension_direction_get_type ()")]
+		[Flags]
+		[GIR (name = "RTPHeaderExtensionDirection")]
+		[Version (since = "1.20")]
+		public enum HeaderExtensionDirection {
+			INACTIVE,
+			SENDONLY,
+			RECVONLY,
+			SENDRECV,
+			INHERITED
 		}
 		[CCode (cheader_filename = "gst/rtp/rtp.h", cprefix = "GST_RTP_HEADER_EXTENSION_", type_id = "gst_rtp_header_extension_flags_get_type ()")]
 		[Flags]

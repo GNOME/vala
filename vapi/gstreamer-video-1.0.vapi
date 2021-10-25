@@ -199,6 +199,9 @@ namespace Gst {
 			public virtual Gst.Caps getcaps (Gst.Caps filter);
 			[NoWrapper]
 			public virtual Gst.FlowReturn handle_frame (owned Gst.Video.CodecFrame frame);
+			[NoWrapper]
+			[Version (since = "1.20")]
+			public virtual bool handle_missing_data (Gst.ClockTime timestamp, Gst.ClockTime duration);
 			public Gst.FlowReturn have_frame ();
 			[Version (since = "1.20")]
 			public Gst.FlowReturn have_last_subframe (Gst.Video.CodecFrame frame);
@@ -249,6 +252,12 @@ namespace Gst {
 			public virtual bool stop ();
 			[NoWrapper]
 			public virtual bool transform_meta (Gst.Video.CodecFrame frame, Gst.Meta meta);
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public Gst.Video.DecoderRequestSyncPointFlags automatic_request_sync_point_flags { get; set; }
+			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool automatic_request_sync_points { get; set; }
 			[NoAccessorMethod]
 			[Version (since = "1.20")]
 			public bool discard_corrupted_frames { get; set; }
@@ -614,6 +623,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", type_cname = "GstVideoOrientationInterface", type_id = "gst_video_orientation_get_type ()")]
 		[GIR (name = "VideoOrientation")]
 		public interface Orientation : GLib.Object {
+			[Version (since = "1.20")]
+			public static bool from_tag (Gst.TagList taglist, Gst.Video.OrientationMethod method);
 			public abstract bool get_hcenter (out int center);
 			public abstract bool get_hflip (out bool flip);
 			public abstract bool get_vcenter (out int center);
@@ -1074,7 +1085,7 @@ namespace Gst {
 			[Version (since = "1.20")]
 			public string? to_string ();
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_CODEC_FRAME_FLAG_", type_id = "gst_video_codec_frame_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoCodecFrameFlags")]
 		public enum CodecFrameFlags {
@@ -1139,7 +1150,7 @@ namespace Gst {
 			@16_235;
 			public void offsets (Gst.Video.FormatInfo info, [CCode (array_length = false)] out unowned int offset[4], [CCode (array_length = false)] out unowned int scale[4]);
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DECODER_REQUEST_SYNC_POINT_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_DECODER_REQUEST_SYNC_POINT_", type_id = "gst_video_decoder_request_sync_point_flags_get_type ()")]
 		[Flags]
 		[GIR (name = "VideoDecoderRequestSyncPointFlags")]
 		[Version (since = "1.20")]
@@ -1345,7 +1356,7 @@ namespace Gst {
 			NO_REF,
 			LAST
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_ORIENTATION_X_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_ORIENTATION_X_", type_id = "gst_video_gl_texture_orientation_get_type ()")]
 		[GIR (name = "VideoGLTextureOrientation")]
 		public enum GLTextureOrientation {
 			NORMAL_Y_NORMAL,
@@ -1353,7 +1364,7 @@ namespace Gst {
 			FLIP_Y_NORMAL,
 			FLIP_Y_FLIP
 		}
-		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_TYPE_", has_type_id = false)]
+		[CCode (cheader_filename = "gst/video/video.h", cprefix = "GST_VIDEO_GL_TEXTURE_TYPE_", type_id = "gst_video_gl_texture_type_get_type ()")]
 		[GIR (name = "VideoGLTextureType")]
 		public enum GLTextureType {
 			LUMINANCE,
@@ -2097,6 +2108,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_query_set_commandsv")]
 		[Version (replacement = "Navigation.query_set_commandsv")]
 		public static void navigation_query_set_commandsv (Gst.Query query, [CCode (array_length_cname = "n_cmds", array_length_pos = 1.5)] Gst.Video.NavigationCommand[] cmds);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoOrientation.from_tag", since = "1.20")]
+		public static bool orientation_from_tag (Gst.TagList taglist, Gst.Video.OrientationMethod method);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type overlay_composition_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]

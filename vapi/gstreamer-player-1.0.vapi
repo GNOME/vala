@@ -11,13 +11,13 @@ namespace Gst {
 		[Version (since = "1.12")]
 		public static bool config_get_seek_accurate (Gst.Structure config);
 		[Version (since = "1.10")]
-		public static string config_get_user_agent (Gst.Structure config);
+		public static string? config_get_user_agent (Gst.Structure config);
 		[Version (since = "1.10")]
 		public static void config_set_position_update_interval (Gst.Structure config, uint interval);
 		[Version (since = "1.12")]
 		public static void config_set_seek_accurate (Gst.Structure config, bool accurate);
 		[Version (since = "1.10")]
-		public static void config_set_user_agent (Gst.Structure config, string agent);
+		public static void config_set_user_agent (Gst.Structure config, string? agent);
 		public static unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams (Gst.PlayerMediaInfo info);
 		[Version (since = "1.10")]
 		public int64 get_audio_video_offset ();
@@ -29,7 +29,7 @@ namespace Gst {
 		public Gst.PlayerVideoInfo? get_current_video_track ();
 		public string? get_current_visualization ();
 		public Gst.ClockTime get_duration ();
-		public Gst.PlayerMediaInfo get_media_info ();
+		public Gst.PlayerMediaInfo? get_media_info ();
 		[Version (since = "1.10")]
 		public Gst.Video.MultiviewFlags get_multiview_flags ();
 		[Version (since = "1.10")]
@@ -66,13 +66,13 @@ namespace Gst {
 		public void set_rate (double rate);
 		public bool set_subtitle_track (int stream_index);
 		public void set_subtitle_track_enabled (bool enabled);
-		public void set_subtitle_uri (string uri);
+		public void set_subtitle_uri (string? uri);
 		[Version (since = "1.16")]
 		public void set_subtitle_video_offset (int64 offset);
-		public void set_uri (string uri);
+		public void set_uri (string? uri);
 		public bool set_video_track (int stream_index);
 		public void set_video_track_enabled (bool enabled);
-		public bool set_visualization (string name);
+		public bool set_visualization (string? name);
 		public void set_visualization_enabled (bool enabled);
 		public void set_volume (double val);
 		public void stop ();
@@ -122,7 +122,7 @@ namespace Gst {
 		protected PlayerAudioInfo ();
 		public int get_bitrate ();
 		public int get_channels ();
-		public unowned string get_language ();
+		public unowned string? get_language ();
 		public int get_max_bitrate ();
 		public int get_sample_rate ();
 	}
@@ -138,9 +138,9 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected PlayerMediaInfo ();
 		public unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams ();
-		public unowned string get_container_format ();
+		public unowned string? get_container_format ();
 		public Gst.ClockTime get_duration ();
-		public unowned Gst.Sample get_image_sample ();
+		public unowned Gst.Sample? get_image_sample ();
 		[Version (since = "1.12")]
 		public uint get_number_of_audio_streams ();
 		[Version (since = "1.12")]
@@ -151,8 +151,8 @@ namespace Gst {
 		public uint get_number_of_video_streams ();
 		public unowned GLib.List<Gst.PlayerStreamInfo> get_stream_list ();
 		public unowned GLib.List<Gst.PlayerSubtitleInfo> get_subtitle_streams ();
-		public unowned Gst.TagList get_tags ();
-		public unowned string get_title ();
+		public unowned Gst.TagList? get_tags ();
+		public unowned string? get_title ();
 		public unowned string get_uri ();
 		public unowned GLib.List<Gst.PlayerVideoInfo> get_video_streams ();
 		public bool is_live ();
@@ -162,17 +162,17 @@ namespace Gst {
 	public abstract class PlayerStreamInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PlayerStreamInfo ();
-		public unowned Gst.Caps get_caps ();
-		public unowned string get_codec ();
+		public unowned Gst.Caps? get_caps ();
+		public unowned string? get_codec ();
 		public int get_index ();
 		public unowned string get_stream_type ();
-		public unowned Gst.TagList get_tags ();
+		public unowned Gst.TagList? get_tags ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_subtitle_info_get_type ()")]
 	public class PlayerSubtitleInfo : Gst.PlayerStreamInfo {
 		[CCode (has_construct_function = false)]
 		protected PlayerSubtitleInfo ();
-		public unowned string get_language ();
+		public unowned string? get_language ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_video_info_get_type ()")]
 	public class PlayerVideoInfo : Gst.PlayerStreamInfo {

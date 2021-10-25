@@ -20,6 +20,9 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint64 discont_wait { get; set; }
 			[NoAccessorMethod]
+			[Version (since = "1.20")]
+			public bool ignore_inactive_pads { get; set; }
+			[NoAccessorMethod]
 			public uint64 output_buffer_duration { get; set; }
 			[NoAccessorMethod]
 			[Version (since = "1.18")]

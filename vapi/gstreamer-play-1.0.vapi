@@ -11,7 +11,7 @@ namespace Gst {
 			protected AudioInfo ();
 			public int get_bitrate ();
 			public int get_channels ();
-			public unowned string get_language ();
+			public unowned string? get_language ();
 			public int get_max_bitrate ();
 			public int get_sample_rate ();
 		}
@@ -22,17 +22,17 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected MediaInfo ();
 			public unowned GLib.List<Gst.Play.AudioInfo> get_audio_streams ();
-			public unowned string get_container_format ();
+			public unowned string? get_container_format ();
 			public Gst.ClockTime get_duration ();
-			public unowned Gst.Sample get_image_sample ();
+			public unowned Gst.Sample? get_image_sample ();
 			public uint get_number_of_audio_streams ();
 			public uint get_number_of_streams ();
 			public uint get_number_of_subtitle_streams ();
 			public uint get_number_of_video_streams ();
 			public unowned GLib.List<Gst.Play.StreamInfo> get_stream_list ();
 			public unowned GLib.List<Gst.Play.SubtitleInfo> get_subtitle_streams ();
-			public unowned Gst.TagList get_tags ();
-			public unowned string get_title ();
+			public unowned Gst.TagList? get_tags ();
+			public unowned string? get_title ();
 			public unowned string get_uri ();
 			public unowned GLib.List<Gst.Play.VideoInfo> get_video_streams ();
 			public bool is_live ();
@@ -46,10 +46,10 @@ namespace Gst {
 			public Play (owned Gst.Play.VideoRenderer? video_renderer);
 			public static uint config_get_position_update_interval (Gst.Structure config);
 			public static bool config_get_seek_accurate (Gst.Structure config);
-			public static string config_get_user_agent (Gst.Structure config);
+			public static string? config_get_user_agent (Gst.Structure config);
 			public static void config_set_position_update_interval (Gst.Structure config, uint interval);
 			public static void config_set_seek_accurate (Gst.Structure config, bool accurate);
-			public static void config_set_user_agent (Gst.Structure config, string agent);
+			public static void config_set_user_agent (Gst.Structure config, string? agent);
 			public static unowned GLib.List<Gst.Play.AudioInfo> get_audio_streams (Gst.Play.MediaInfo info);
 			public int64 get_audio_video_offset ();
 			public double get_color_balance (Gst.Play.ColorBalanceType type);
@@ -59,7 +59,7 @@ namespace Gst {
 			public Gst.Play.VideoInfo? get_current_video_track ();
 			public string? get_current_visualization ();
 			public Gst.ClockTime get_duration ();
-			public Gst.Play.MediaInfo get_media_info ();
+			public Gst.Play.MediaInfo? get_media_info ();
 			public Gst.Bus get_message_bus ();
 			public Gst.Video.MultiviewFlags get_multiview_flags ();
 			public Gst.Video.MultiviewFramePacking get_multiview_mode ();
@@ -68,9 +68,9 @@ namespace Gst {
 			public Gst.ClockTime get_position ();
 			public double get_rate ();
 			public static unowned GLib.List<Gst.Play.SubtitleInfo> get_subtitle_streams (Gst.Play.MediaInfo info);
-			public string get_subtitle_uri ();
+			public string? get_subtitle_uri ();
 			public int64 get_subtitle_video_offset ();
-			public string get_uri ();
+			public string? get_uri ();
 			public Gst.Sample? get_video_snapshot (Gst.Play.SnapshotFormat format, Gst.Structure? config);
 			public static unowned GLib.List<Gst.Play.VideoInfo> get_video_streams (Gst.Play.MediaInfo info);
 			public double get_volume ();
@@ -90,12 +90,12 @@ namespace Gst {
 			public void set_rate (double rate);
 			public bool set_subtitle_track (int stream_index);
 			public void set_subtitle_track_enabled (bool enabled);
-			public void set_subtitle_uri (string uri);
+			public void set_subtitle_uri (string? uri);
 			public void set_subtitle_video_offset (int64 offset);
-			public void set_uri (string uri);
+			public void set_uri (string? uri);
 			public bool set_video_track (int stream_index);
 			public void set_video_track_enabled (bool enabled);
-			public bool set_visualization (string name);
+			public bool set_visualization (string? name);
 			public void set_visualization_enabled (bool enabled);
 			public void set_volume (double val);
 			public void stop ();
@@ -156,11 +156,11 @@ namespace Gst {
 		public abstract class StreamInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected StreamInfo ();
-			public unowned Gst.Caps get_caps ();
-			public unowned string get_codec ();
+			public unowned Gst.Caps? get_caps ();
+			public unowned string? get_codec ();
 			public int get_index ();
 			public unowned string get_stream_type ();
-			public unowned Gst.TagList get_tags ();
+			public unowned Gst.TagList? get_tags ();
 		}
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_subtitle_info_get_type ()")]
 		[GIR (name = "PlaySubtitleInfo")]
@@ -168,7 +168,7 @@ namespace Gst {
 		public class SubtitleInfo : Gst.Play.StreamInfo {
 			[CCode (has_construct_function = false)]
 			protected SubtitleInfo ();
-			public unowned string get_language ();
+			public unowned string? get_language ();
 		}
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_video_info_get_type ()")]
 		[GIR (name = "PlayVideoInfo")]
@@ -245,7 +245,7 @@ namespace Gst {
 			public unowned string get_name ();
 			public static void parse_buffering_percent (Gst.Message msg, out uint percent);
 			public static void parse_duration_updated (Gst.Message msg, out Gst.ClockTime duration);
-			public static void parse_error (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+			public static void parse_error (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 			public static void parse_media_info_updated (Gst.Message msg, out Gst.Play.MediaInfo info);
 			public static void parse_muted_changed (Gst.Message msg, out bool muted);
 			public static void parse_position_updated (Gst.Message msg, out Gst.ClockTime position);
@@ -253,7 +253,7 @@ namespace Gst {
 			public static void parse_type (Gst.Message msg, out Gst.Play.Message type);
 			public static void parse_video_dimensions_changed (Gst.Message msg, out uint width, out uint height);
 			public static void parse_volume_changed (Gst.Message msg, out double volume);
-			public static void parse_warning (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+			public static void parse_warning (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		}
 		[CCode (cheader_filename = "gst/play/play.h", cprefix = "GST_PLAY_THUMBNAIL_", has_type_id = false)]
 		[GIR (name = "PlaySnapshotFormat")]
@@ -305,7 +305,7 @@ namespace Gst {
 		public static void play_message_parse_duration_updated (Gst.Message msg, out Gst.ClockTime duration);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_error")]
 		[Version (replacement = "PlayMessage.parse_error", since = "1.20")]
-		public static void play_message_parse_error (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+		public static void play_message_parse_error (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_media_info_updated")]
 		[Version (replacement = "PlayMessage.parse_media_info_updated", since = "1.20")]
 		public static void play_message_parse_media_info_updated (Gst.Message msg, out Gst.Play.MediaInfo info);
@@ -329,7 +329,7 @@ namespace Gst {
 		public static void play_message_parse_volume_changed (Gst.Message msg, out double volume);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_warning")]
 		[Version (replacement = "PlayMessage.parse_warning", since = "1.20")]
-		public static void play_message_parse_warning (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+		public static void play_message_parse_warning (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_state_get_name")]
 		[Version (replacement = "PlayState.get_name", since = "1.20")]
 		public static unowned string play_state_get_name (Gst.Play.State state);

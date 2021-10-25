@@ -553,6 +553,8 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			public Session (string sessionid);
 			public void allow_expire ();
+			[Version (since = "1.20")]
+			public Gst.RTSPServer.SessionMedia? dup_media (string path, out int matched);
 			public GLib.List<Gst.RTSPServer.SessionMedia> filter (Gst.RTSPServer.SessionFilterFunc? func);
 			public string? get_header ();
 			public unowned Gst.RTSPServer.SessionMedia? get_media (string path, out int matched);

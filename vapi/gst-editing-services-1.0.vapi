@@ -147,7 +147,7 @@ namespace GES {
 		[Version (since = "1.18")]
 		public Gst.ClockTime get_frame_time (GES.FrameNumber frame_number);
 		[Version (since = "1.18")]
-		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
+		public virtual bool get_natural_framerate (out int framerate_n, out int framerate_d);
 		public GES.TrackType get_supported_formats ();
 		public void set_supported_formats (GES.TrackType supportedformats);
 		public GES.TrackType supported_formats { get; set construct; }
@@ -156,8 +156,9 @@ namespace GES {
 	public class CommandLineFormatter : GES.Formatter, GES.Extractable {
 		[CCode (has_construct_function = false)]
 		protected CommandLineFormatter ();
-		public static string get_help (int nargs, string commands);
-		[Version (since = "1.20")]
+		[Version (since = "1.10")]
+		public static string get_help ([CCode (array_length_cname = "nargs", array_length_pos = 0.5)] string[] commands);
+		[Version (since = "1.10")]
 		public static string get_timeline_uri (GES.Timeline timeline);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_container_get_type ()")]
@@ -201,7 +202,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_effect_clip_get_type ()")]
 	public class EffectClip : GES.BaseEffectClip, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
-		public EffectClip (string video_bin_description, string audio_bin_description);
+		public EffectClip (string? video_bin_description, string? audio_bin_description);
 		[NoAccessorMethod]
 		public string audio_bin_description { owned get; construct; }
 		[NoAccessorMethod]
@@ -809,7 +810,7 @@ namespace GES {
 		[CCode (has_construct_function = false)]
 		protected TrackElementAsset ();
 		[Version (since = "1.18")]
-		public virtual bool get_natural_framerate (int framerate_n, int framerate_d);
+		public virtual bool get_natural_framerate (out int framerate_n, out int framerate_d);
 		public GES.TrackType get_track_type ();
 		public void set_track_type (GES.TrackType type);
 		public GES.TrackType track_type { get; set construct; }
@@ -944,7 +945,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_cname = "GESMetaContainerInterface", type_id = "ges_meta_container_get_type ()")]
 	public interface MetaContainer : GLib.Object {
 		public bool add_metas_from_string (string str);
-		public bool check_meta_registered (string meta_item, out GES.MetaFlag? flags, out GLib.Type? type);
+		public bool check_meta_registered (string meta_item, out GES.MetaFlag flags, out GLib.Type type);
 		public void @foreach (GES.MetaForeachFunc func);
 		public bool get_boolean (string meta_item, out bool dest);
 		public bool get_date (string meta_item, out GLib.Date dest);

@@ -76,6 +76,8 @@ namespace Gst {
 			public virtual Gst.FlowReturn flush ();
 			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 			public Gst.BufferPool? get_buffer_pool ();
+			[Version (since = "1.20")]
+			public bool get_ignore_inactive_pads ();
 			public Gst.ClockTime get_latency ();
 			[NoWrapper]
 			public virtual Gst.ClockTime get_next_time ();
@@ -89,6 +91,8 @@ namespace Gst {
 			public virtual bool propose_allocation (Gst.Base.AggregatorPad pad, Gst.Query decide_query, Gst.Query query);
 			[Version (since = "1.18")]
 			public void selected_samples (Gst.ClockTime pts, Gst.ClockTime dts, Gst.ClockTime duration, Gst.Structure? info);
+			[Version (since = "1.20")]
+			public void set_ignore_inactive_pads (bool ignore);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 			public void set_src_caps (Gst.Caps caps);
 			[Version (since = "1.16")]
@@ -143,6 +147,8 @@ namespace Gst {
 			[Version (since = "1.14.1")]
 			public bool has_buffer ();
 			public bool is_eos ();
+			[Version (since = "1.20")]
+			public bool is_inactive ();
 			public Gst.Buffer? peek_buffer ();
 			public Gst.Buffer? pop_buffer ();
 			[NoWrapper]
