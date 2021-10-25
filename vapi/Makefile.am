@@ -172,6 +172,7 @@ dist_vapi_DATA = \
 	hildon-fm-2.deps \
 	hildon-fm-2.vapi \
 	javascriptcoregtk-4.0.vapi \
+	javascriptcoregtk-5.0.vapi \
 	json-glib-1.0.deps \
 	json-glib-1.0.vapi \
 	libarchive.deps \
@@ -289,8 +290,12 @@ dist_vapi_DATA = \
 	v4l2.vapi \
 	webkit2gtk-4.0.vapi \
 	webkit2gtk-4.0.deps \
+	webkit2gtk-5.0.vapi \
+	webkit2gtk-5.0.deps \
 	webkit2gtk-web-extension-4.0.vapi \
 	webkit2gtk-web-extension-4.0.deps \
+	webkit2gtk-web-extension-5.0.vapi \
+	webkit2gtk-web-extension-5.0.deps \
 	x11.vapi \
 	xcb.vapi \
 	xcb-icccm.vapi \
@@ -387,6 +392,7 @@ GIR_BINDINGS = \
 	gudev-1.0 \
 	harfbuzz-gobject \
 	javascriptcoregtk-4.0 \
+	javascriptcoregtk-5.0 \
 	json-glib-1.0 \
 	libgeoclue-2.0 \
 	libgnome-menu-3.0 \
@@ -408,7 +414,9 @@ GIR_BINDINGS = \
 	rest-extras-0.7 \
 	udisks2 \
 	webkit2gtk-4.0 \
+	webkit2gtk-5.0 \
 	webkit2gtk-web-extension-4.0 \
+	webkit2gtk-web-extension-5.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 
@@ -634,6 +642,9 @@ hildon-fm-2:
 javascriptcoregtk-4.0:
 	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-4.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-4.0-custom.vala $(GIRDIR)/JavaScriptCore-4.0.gir
 
+javascriptcoregtk-5.0:
+	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-5.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-5.0-custom.vala $(GIRDIR)/JavaScriptCore-5.0.gir
+
 json-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) --pkg gio-2.0 $(METADATADIR)/Json-1.0-custom.vala $(GIRDIR)/Json-1.0.gir
 
@@ -730,5 +741,11 @@ unique-1.0:
 webkit2gtk-4.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-2.4 $(GIRDIR)/WebKit2-4.0.gir
 
+webkit2gtk-5.0:
+	$(GENVAPI) --library $(srcdir)/webkit2gtk-5.0 --metadatadir $(METADATADIR) --pkg gtk4 --pkg libsoup-3.0 $(GIRDIR)/WebKit2-5.0.gir
+
 webkit2gtk-web-extension-4.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-web-extension-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 $(METADATADIR)/WebKit2WebExtension-4.0-custom.vala $(GIRDIR)/WebKit2WebExtension-4.0.gir
+
+webkit2gtk-web-extension-5.0:
+	$(GENVAPI) --library $(srcdir)/webkit2gtk-web-extension-5.0 --metadatadir $(METADATADIR) --pkg gtk4 $(METADATADIR)/WebKit2WebExtension-5.0-custom.vala $(GIRDIR)/WebKit2WebExtension-5.0.gir

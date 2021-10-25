@@ -1,0 +1,23 @@
+DOM* parent="WebKit.DOM" name="DOM(.+)"
+
+DOMEventTarget.add_event_listener skip
+_ContextMenu skip
+_ContextMenuItem skip
+
+DOMEventTarget.add_event_listener_with_closure abstract vfunc_name="add_event_listener"
+DOMEventTarget.add_event_listener_with_closure.handler type="owned WebKit.DOM.EventTargetFunc"
+DOMEventTarget.remove_event_listener_with_closure abstract vfunc_name="remove_event_listener"
+DOMEventTarget.remove_event_listener_with_closure.handler type="owned WebKit.DOM.EventTargetFunc"
+
+Frame
+  .get_js_context type="JSC.Context"
+  .get_js_context_for_script_world type="JSC.Context"
+  .get_js_value_for_dom_object type="JSC.Value"
+  .get_js_value_for_dom_object_in_script_world type="JSC.Value"
+
+DOMNode
+  .for_js_value.value type="JSC.Value"
+
+URIRequest.get_http_headers unowned
+URIResponse.get_http_headers unowned
+
