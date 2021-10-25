@@ -218,6 +218,8 @@ dist_vapi_DATA = \
 	libsexy.vapi \
 	libsoup-2.4.deps \
 	libsoup-2.4.vapi \
+	libsoup-3.0.deps \
+	libsoup-3.0.vapi \
 	libunwind-generic.vapi \
 	libusb.vapi \
 	libusb-1.0.deps \
@@ -394,6 +396,7 @@ GIR_BINDINGS = \
 	libpeas-1.0 \
 	libpeas-gtk-1.0 \
 	libsoup-2.4 \
+	libsoup-3.0 \
 	libwnck-3.0 \
 	packagekit-glib2 \
 	pango \
@@ -678,6 +681,9 @@ libsexy:
 
 libsoup-2.4:
 	$(GENVAPI) --library $(srcdir)/libsoup-2.4 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-2.4-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-2.4.gir
+
+libsoup-3.0:
+	$(GENVAPI) --library $(srcdir)/libsoup-3.0 --metadatadir $(METADATADIR) $(METADATADIR)/Soup-3.0-custom.vala --pkg gio-2.0 $(GIRDIR)/Soup-3.0.gir
 
 libwnck-1.0:
 	$(GENVAPI) --library $(srcdir)/libwnck-1.0 $(PACKAGESDIR)/libwnck-1.0/libwnck-1.0.gi

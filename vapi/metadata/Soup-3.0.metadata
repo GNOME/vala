@@ -1,0 +1,29 @@
+// Behave like Soup.Form is a class with methods
+form_* parent="Soup.Form" name="form_(.+)"
+form_* skip=false
+form_encode_datalist.form_data_set type_arguments="string"
+
+// Enum prefix differs from type name
+HTTPVersion.http_* name="http_(.+)"
+
+// Conflicts with signal method
+AuthDomain.accepts#method name="accepts_authorization"
+
+Message
+    // Vala can use these C style methods
+    .add_header_handler skip=false
+    .add_header_handler.callback closure=-1
+    .add_status_code_handler skip=false
+    .add_status_code_handler.callback closure=-1
+
+// Constructor overrides
+Server.new skip=false
+Session.new_with_options skip=false
+AuthDomainBasic.new skip=false
+AuthDomainDigest.new skip=false
+// Factory method
+Auth.new symbol_type="function"
+
+
+// Simplify memory management
+MessageBody.append deprecated_since="2.32" replacement="MessageBody.append_take"
