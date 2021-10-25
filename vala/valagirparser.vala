@@ -3944,7 +3944,7 @@ public class Vala.GirParser : CodeVisitor {
 				deleg.add_parameter (param.copy ());
 			}
 
-			var error_types = new ArrayList<ErrorType> ();
+			var error_types = new ArrayList<DataType> ();
 			orig.get_error_types (error_types, alias.source_reference);
 			foreach (var error_type in error_types) {
 				deleg.add_error_type (error_type.copy ());
@@ -4448,9 +4448,9 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			}
 
-			var error_types = new ArrayList<ErrorType> ();
+			var error_types = new ArrayList<DataType> ();
 			finish_method.get_error_types (error_types, method.source_reference);
-			foreach (var error_type in error_types) {
+			foreach (DataType error_type in error_types) {
 				method.add_error_type (error_type);
 			}
 			finish_method_node.processed = true;

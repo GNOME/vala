@@ -908,10 +908,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			var last_block = current_block;
 
 			// exceptional control flow
-			var error_types = new ArrayList<ErrorType> ();
+			var error_types = new ArrayList<DataType> ();
 			node.get_error_types (error_types);
-			foreach (var error_type in error_types) {
-				unowned Class? error_class = error_type.type_symbol as Class;
+			foreach (DataType error_data_type in error_types) {
+				unowned ErrorType? error_type = error_data_type as ErrorType;
+				unowned Class? error_class = error_data_type.type_symbol as Class;
 				current_block = last_block;
 				unreachable_reported = true;
 

@@ -225,10 +225,10 @@ public class Vala.LambdaExpression : Expression {
 			return false;
 		}
 
-		var error_types = new ArrayList<ErrorType> ();
+		var error_types = new ArrayList<DataType> ();
 		cb.get_error_types (error_types);
 		foreach (var error_type in error_types) {
-			method.add_error_type ((ErrorType) error_type.copy ());
+			method.add_error_type (error_type.copy ());
 		}
 
 		if (expression_body != null) {

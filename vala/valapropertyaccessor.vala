@@ -245,10 +245,10 @@ public class Vala.PropertyAccessor : Subroutine {
 		}
 
 		if (body != null && !body.error) {
-			var error_types = new ArrayList<ErrorType> ();
+			var error_types = new ArrayList<DataType> ();
 			body.get_error_types (error_types);
-			foreach (var body_error_type in error_types) {
-				if (!body_error_type.dynamic_error) {
+			foreach (DataType body_error_type in error_types) {
+				if (!((ErrorType) body_error_type).dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string ());
 				}
 			}

@@ -104,8 +104,8 @@ public class Vala.TryStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
-		var error_types = new ArrayList<ErrorType> ();
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+		var error_types = new ArrayList<DataType> ();
 		body.get_error_types (error_types, source_reference);
 
 		foreach (CatchClause clause in catch_clauses) {

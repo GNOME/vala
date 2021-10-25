@@ -421,12 +421,12 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		/* this method may throw less but not more errors than the base method */
-		var base_method_errors = new ArrayList<ErrorType> ();
+		var base_method_errors = new ArrayList<DataType> ();
 		base_method.get_error_types (base_method_errors);
 		if (error_types != null) {
-			foreach (var method_error_type in error_types) {
+			foreach (DataType method_error_type in error_types) {
 			bool match = false;
-				foreach (var base_method_error_type in base_method_errors) {
+				foreach (DataType base_method_error_type in base_method_errors) {
 				if (method_error_type.compatible (base_method_error_type)) {
 					match = true;
 					break;
@@ -563,15 +563,15 @@ public class Vala.Method : Subroutine, Callable {
 		error_type.parent_node = this;
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		if (error_types != null) {
 			foreach (var error_type in error_types) {
 				if (source_reference != null) {
-					var type = (ErrorType) error_type.copy ();
+					var type = error_type.copy ();
 					type.source_reference = source_reference;
 					collection.add (type);
 				} else {
-					collection.add ((ErrorType) error_type);
+					collection.add (error_type);
 				}
 			}
 		}
@@ -1034,18 +1034,19 @@ public class Vala.Method : Subroutine, Callable {
 
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null && !body.error) {
-			var body_errors = new ArrayList<ErrorType> ();
+			var body_errors = new ArrayList<DataType> ();
 			body.get_error_types (body_errors);
-			foreach (var body_error_type in body_errors) {
+			foreach (DataType body_error_type in body_errors) {
 				bool can_propagate_error = false;
 				if (error_types != null) {
-					foreach (var method_error_type in error_types) {
+					foreach (DataType method_error_type in error_types) {
 					if (body_error_type.compatible (method_error_type)) {
 						can_propagate_error = true;
 					}
 				}
 				}
-				if (!can_propagate_error && !body_error_type.dynamic_error) {
+				bool is_dynamic_error = body_error_type is ErrorType && ((ErrorType) body_error_type).dynamic_error;
+				if (!can_propagate_error && !is_dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}
@@ -1060,10 +1061,13 @@ public class Vala.Method : Subroutine, Callable {
 				bool throws_gerror = false;
 				bool throws_gioerror = false;
 				bool throws_gdbuserror = false;
-				var error_types = new ArrayList<ErrorType> ();
+				var error_types = new ArrayList<DataType> ();
 				get_error_types (error_types);
-				foreach (var error_type in error_types) {
-					unowned ErrorDomain? error_domain = error_type.error_domain;
+				foreach (DataType error_type in error_types) {
+					if (!(error_type is ErrorType)) {
+						continue;
+					}
+					unowned ErrorDomain? error_domain = ((ErrorType) error_type).error_domain;
 					if (error_domain == null) {
 						throws_gerror = true;
 						break;

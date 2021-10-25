@@ -70,7 +70,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		if (return_expression != null) {
 			return_expression.get_error_types (collection, source_reference);
 		}

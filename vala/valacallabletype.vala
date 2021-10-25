@@ -126,13 +126,13 @@ public abstract class Vala.CallableType : DataType {
 		builder.append_c (')');
 
 		// Append error-types
-		var error_types = new ArrayList<ErrorType> ();
+		var error_types = new ArrayList<DataType> ();
 		callable_symbol.get_error_types (error_types);
 		if (error_types.size > 0) {
 			builder.append (" throws ");
 
 			bool first = true;
-			foreach (var type in error_types) {
+			foreach (DataType type in error_types) {
 				if (!first) {
 					builder.append (", ");
 				} else {

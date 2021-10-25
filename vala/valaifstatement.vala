@@ -102,7 +102,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		condition.get_error_types (collection, source_reference);
 		true_statement.get_error_types (collection, source_reference);
 		if (false_statement != null) {

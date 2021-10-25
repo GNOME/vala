@@ -142,7 +142,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 		return call.is_accessible (sym);
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		if (source_reference == null) {
 			source_reference = this.source_reference;
 		}

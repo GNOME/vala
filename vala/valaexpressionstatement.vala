@@ -87,7 +87,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		return !error;
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		expression.get_error_types (collection, source_reference);
 	}
 

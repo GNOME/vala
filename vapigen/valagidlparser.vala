@@ -1827,9 +1827,9 @@ public class Vala.GIdlParser : CodeVisitor {
 							m.add_parameter (async_param);
 						}
 					}
-					var error_types = new ArrayList<ErrorType> ();
+					var error_types = new ArrayList<DataType> ();
 					finish_method.get_error_types (error_types, m.source_reference);
-					foreach (var error_type in error_types) {
+					foreach (DataType error_type in error_types) {
 						m.add_error_type (error_type);
 					}
 					finish_methods.add (finish_method);

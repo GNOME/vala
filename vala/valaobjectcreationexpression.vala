@@ -565,7 +565,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 		return !error;
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		if (symbol_reference is Method) {
 			if (source_reference == null) {
 				source_reference = this.source_reference;

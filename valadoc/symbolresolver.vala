@@ -38,10 +38,10 @@ public class Valadoc.SymbolResolver : Visitor {
 	}
 
 	private void resolve_thrown_list (Symbol symbol, Vala.Symbol vala_symbol) {
-		var error_types = new Vala.ArrayList<Vala.ErrorType> ();
+		var error_types = new Vala.ArrayList<Vala.DataType> ();
 		vala_symbol.get_error_types (error_types);
-		foreach (var type in error_types) {
-			unowned Vala.ErrorDomain? vala_edom = type.error_domain;
+		foreach (Vala.DataType type in error_types) {
+			unowned Vala.ErrorDomain? vala_edom = ((Vala.ErrorType) type).error_domain;
 			Symbol? edom = symbol_map.get (vala_edom);
 			symbol.add_child (edom ?? glib_error);
 		}

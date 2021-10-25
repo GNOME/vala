@@ -72,14 +72,14 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		if (error) {
 			return;
 		}
 		if (source_reference == null) {
 			source_reference = this.source_reference;
 		}
-		var error_type = (ErrorType) error_expression.value_type.copy ();
+		var error_type = error_expression.value_type.copy ();
 		error_type.source_reference = source_reference;
 		collection.add (error_type);
 	}

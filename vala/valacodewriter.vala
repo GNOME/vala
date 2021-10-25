@@ -731,7 +731,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_params (cb.get_parameters ());
 
-		var error_types = new ArrayList<ErrorType> ();
+		var error_types = new ArrayList<DataType> ();
 		cb.get_error_types (error_types);
 		write_error_domains (error_types);
 
@@ -849,7 +849,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_params (m.get_parameters ());
 
-		var error_types = new ArrayList<ErrorType> ();
+		var error_types = new ArrayList<DataType> ();
 		m.get_error_types (error_types);
 		write_error_domains (error_types);
 

@@ -63,7 +63,7 @@ public abstract class Vala.CodeNode {
 	 */
 	public bool tree_can_fail {
 		get {
-			var error_types = new ArrayList<ErrorType> ();
+			var error_types = new ArrayList<DataType> ();
 			get_error_types (error_types);
 			return error_types.size > 0;
 		}
@@ -409,7 +409,7 @@ public abstract class Vala.CodeNode {
 	public virtual void get_used_variables (Collection<Variable> collection) {
 	}
 
-	public virtual void get_error_types (Collection<ErrorType> collection, SourceReference? source_reference = null) {
+	public virtual void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 	}
 
 	public static string get_temp_name () {
