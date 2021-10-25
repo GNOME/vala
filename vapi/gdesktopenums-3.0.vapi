@@ -23,6 +23,12 @@ namespace GDesktop {
 		@24H,
 		@12H
 	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_COLOR_SCHEME_", has_type_id = false)]
+	public enum ColorScheme {
+		DEFAULT,
+		PREFER_DARK,
+		PREFER_LIGHT
+	}
 	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_DEVICE_SEND_EVENTS_", has_type_id = false)]
 	public enum DeviceSendEvents {
 		ENABLED,

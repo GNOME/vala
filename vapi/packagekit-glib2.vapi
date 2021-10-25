@@ -369,6 +369,8 @@ namespace Pk {
 		public Details ();
 		[Version (since = "0.8.12")]
 		public unowned string get_description ();
+		[Version (since = "1.2.4")]
+		public uint64 get_download_size ();
 		[Version (since = "0.8.12")]
 		public Pk.Group get_group ();
 		[Version (since = "0.8.12")]
@@ -384,6 +386,9 @@ namespace Pk {
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public string description { owned get; set; }
+		[NoAccessorMethod]
+		[Version (since = "1.2.4")]
+		public uint64 download_size { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public Pk.Group group { get; set; }
@@ -538,6 +543,8 @@ namespace Pk {
 		public unowned string get_name ();
 		[Version (since = "0.5.4")]
 		public unowned string get_summary ();
+		[Version (since = "1.2.4")]
+		public Pk.Info get_update_severity ();
 		[Version (since = "0.6.4")]
 		public unowned string get_version ();
 		[Version (since = "0.5.0")]
@@ -582,6 +589,8 @@ namespace Pk {
 		public void set_info (Pk.Info info);
 		[Version (since = "0.8.14")]
 		public void set_summary (string summary);
+		[Version (since = "1.2.4")]
+		public void set_update_severity (Pk.Info update_severity);
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public string description { owned get; set; }
@@ -621,6 +630,8 @@ namespace Pk {
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public Pk.Restart update_restart { get; set; }
+		[Version (since = "1.2.4")]
+		public Pk.Info update_severity { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "0.5.4")]
 		public Pk.UpdateState update_state { get; set; }
@@ -1537,6 +1548,7 @@ namespace Pk {
 		UNTRUSTED,
 		TRUSTED,
 		UNAVAILABLE,
+		CRITICAL,
 		LAST;
 		[CCode (cname = "pk_info_enum_from_string")]
 		[Version (since = "0.5.0")]
@@ -1609,6 +1621,13 @@ namespace Pk {
 		public static Pk.OfflineAction from_string (string action);
 		[Version (since = "0.9.6")]
 		public unowned string to_string ();
+	}
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_OFFLINE_FLAGS_", type_id = "pk_offline_flags_get_type ()")]
+	[Flags]
+	[Version (since = "1.2.5")]
+	public enum OfflineFlags {
+		NONE,
+		INTERACTIVE
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cprefix = "PK_PACKAGE_SACK_SORT_TYPE_", type_id = "pk_package_sack_sort_type_get_type ()")]
 	public enum PackageSackSortType {
@@ -1865,6 +1884,7 @@ namespace Pk {
 		INVALID_FILE,
 		NOT_SUPPORTED,
 		DECLINED_SIMULATION,
+		DECLINED_INTERACTION,
 		LAST;
 		[Version (since = "0.5.2")]
 		public static GLib.Quark quark ();
@@ -1988,8 +2008,14 @@ namespace Pk {
 	[Version (since = "0.9.6")]
 	public static bool offline_cancel (GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.2.5")]
+	public static bool offline_cancel_with_flags (Pk.OfflineFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "0.9.6")]
 	public static bool offline_clear_results (GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.2.5")]
+	public static bool offline_clear_results_with_flags (Pk.OfflineFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (replacement = "OfflineError.quark", since = "0.9.6")]
 	public static GLib.Quark offline_error_quark ();
@@ -2029,6 +2055,12 @@ namespace Pk {
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	[Version (since = "1.0.12")]
 	public static bool offline_trigger_upgrade (Pk.OfflineAction action, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.2.5")]
+	public static bool offline_trigger_upgrade_with_flags (Pk.OfflineAction action, Pk.OfflineFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
+	[Version (since = "1.2.5")]
+	public static bool offline_trigger_with_flags (Pk.OfflineAction action, Pk.OfflineFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]
 	public static void polkit_agent_close ();
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h")]

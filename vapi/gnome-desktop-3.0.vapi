@@ -40,7 +40,7 @@ namespace Gnome {
 		public static string normalize_locale (string locale);
 		[CCode (cheader_filename = "libgnome-desktop/gnome-languages.h", cname = "gnome_parse_locale")]
 		[Version (since = "3.8")]
-		public static bool parse_locale (string locale, out string language_codep, out string country_codep, out string codesetp, out string modifierp);
+		public static bool parse_locale (string locale, out string language_codep, out string? country_codep, out string? codesetp, out string? modifierp);
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-bg.h", type_id = "gnome_bg_get_type ()")]
 	public class BG : GLib.Object {
@@ -305,7 +305,7 @@ namespace Gnome {
 		[Version (since = "3.18")]
 		public GLib.List<weak string> get_languages_for_layout (string layout_id);
 		[Version (since = "3.6")]
-		public bool get_layout_info (string id, out unowned string display_name, out unowned string short_name, out unowned string xkb_layout, out unowned string xkb_variant);
+		public bool get_layout_info (string id, out unowned string? display_name, out unowned string? short_name, out unowned string? xkb_layout, out unowned string? xkb_variant);
 		[Version (since = "3.8")]
 		public GLib.List<weak string> get_layouts_for_country (string country_code);
 		[Version (since = "3.8")]

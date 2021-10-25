@@ -379,6 +379,8 @@ namespace GLib {
 		[HasEmitter]
 		[Version (since = "2.36")]
 		public virtual signal void launch_failed (string startup_notify_id);
+		[Version (since = "2.72")]
+		public virtual signal void launch_started (GLib.AppInfo info, GLib.Variant? platform_data);
 		[Version (since = "2.36")]
 		public virtual signal void launched (GLib.AppInfo info, GLib.Variant platform_data);
 	}
