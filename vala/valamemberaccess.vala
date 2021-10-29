@@ -459,7 +459,11 @@ public class Vala.MemberAccess : Expression {
 							unowned MemberAccess? arg = s.handler as MemberAccess;
 							if (arg == null || !arg.check (context) || !(arg.symbol_reference is Method)) {
 								error = true;
-								Report.error (s.handler.source_reference, "Invalid handler for `%s'".printf (s.get_full_name ()));
+								if (s.handler is LambdaExpression) {
+									Report.error (s.handler.source_reference, "Lambdas are not allowed for dynamic signals");
+								} else {
+									Report.error (s.handler.source_reference, "Cannot infer call signature for dynamic signal `%s' from given expression".printf (s.get_full_name ()));
+								}
 							}
 						}
 						s.access = SymbolAccessibility.PUBLIC;
