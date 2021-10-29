@@ -1,0 +1,8 @@
+Invalid Code
+
+void main () {
+	dynamic Object? foo = null;
+	foo.on_bar.connect ((baz) => {
+		// lambdas are not allowed
+	});
+}
