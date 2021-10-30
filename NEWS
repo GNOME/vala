@@ -1,3 +1,19 @@
+Vala 0.54.3
+===========
+ * Various improvements and bug fixes:
+  - codegen: Actually free data when using "remove(_all)"
+    on GLib.Queue/(S)List [#1238]
+  - vala:
+    + Parameter following ellipsis parameter is not allowed [#1237]
+    + More thorough check of ValueType and set CodeNode.error on failure
+    + Really check compatiblity of error types for delegate symbol
+    + Correctly output signature of callable throwing error
+    + Report error for non ErrorType in throws
+    + Implement CodeWriter.visit_foreach_statement()/visit_catch_clause()
+  - parser: Make sure ErrorCodes are accessible as needed
+  - girparser: Add support for "ref_/ref_sink_/unref_function"
+    metadata for classes [#1233]
+
 Vala 0.54.2
 ===========
  * Various improvements and bug fixes:
