@@ -3531,6 +3531,14 @@ public class Vala.GirParser : CodeVisitor {
 			} else {
 				cl.is_compact = true;
 			}
+			if (metadata.has_argument (ArgumentType.SEALED) && metadata.get_bool (ArgumentType.SEALED)) {
+				if (cl.is_compact) {
+					cl.set_attribute_bool ("Compact", "opaque", true);
+				} else {
+					cl.is_sealed = true;
+				}
+			}
+
 			current.symbol = cl;
 		} else {
 			cl = (Class) current.symbol;
