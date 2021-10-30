@@ -291,6 +291,8 @@ formats_contains parent="Gst.Format" name="contains"
 // Structs as generic type arguments
 ElementFactory.get_static_pad_templates type_arguments="Gst.StaticPadTemplate?"
 
+Uri compact=false sealed
+
 // Custom
 Buffer
   .copy_into skip

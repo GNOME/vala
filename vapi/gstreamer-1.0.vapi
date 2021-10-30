@@ -2752,8 +2752,7 @@ namespace Gst {
 		public bool has_function ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", ref_function = "gst_uri_ref", type_id = "gst_uri_get_type ()", unref_function = "gst_uri_unref")]
-	[Compact]
-	public class Uri {
+	public sealed class Uri {
 		[CCode (has_construct_function = false)]
 		[Version (since = "1.6")]
 		public Uri (string? scheme, string? userinfo, string? host, uint port, string? path, string? query, string? fragment);
