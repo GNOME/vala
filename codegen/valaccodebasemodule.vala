@@ -6801,18 +6801,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return "";
 	}
 
-	public virtual string get_dynamic_signal_connect_wrapper_name (DynamicSignal node) {
-		return "";
-	}
-
-	public virtual string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal node) {
-		return "";
-	}
-
-	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
-		return "";
-	}
-
 	public virtual string get_array_length_cname (string array_cname, int dim) {
 		return "";
 	}

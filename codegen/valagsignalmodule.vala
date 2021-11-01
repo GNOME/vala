@@ -611,25 +611,19 @@ public class Vala.GSignalModule : GObjectModule {
 
 		if (!disconnect) {
 			// connect
-			if (sig is DynamicSignal) {
-				if (!after)
-					connect_func = get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
-				else
-					connect_func = get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
+			if (!(sig is DynamicSignal) && ((m != null && m.closure) || (dt != null && dt.value_owned))) {
+				connect_func = "g_signal_connect_data";
+			} else if (m != null && in_gobject_instance (m)) {
+				connect_func = "g_signal_connect_object";
+			} else if (!after) {
+				connect_func = "g_signal_connect";
 			} else {
-				if ((m != null && m.closure) || (dt != null && dt.value_owned)) {
-					connect_func = "g_signal_connect_data";
-				} else if (m != null && in_gobject_instance (m)) {
-					connect_func = "g_signal_connect_object";
-				} else if (!after) {
-					connect_func = "g_signal_connect";
-				} else
-					connect_func = "g_signal_connect_after";
+				connect_func = "g_signal_connect_after";
 			}
 		} else {
 			// disconnect
 			if (sig is DynamicSignal) {
-				connect_func = get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
+				connect_func = "VALA_UNSUPPORTED";
 			} else {
 				connect_func = "g_signal_handlers_disconnect_matched";
 			}
@@ -742,8 +736,7 @@ public class Vala.GSignalModule : GObjectModule {
 			} else if (handler is LambdaExpression) {
 				ccall.add_argument (get_this_cexpression ());
 			}
-			if (!disconnect && !(sig is DynamicSignal)
-			    && in_gobject_instance (m)) {
+			if (!disconnect && in_gobject_instance (m)) {
 				// g_signal_connect_object
 
 				// fifth argument: connect_flags

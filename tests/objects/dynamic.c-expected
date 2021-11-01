@@ -122,28 +122,12 @@ static inline void _dynamic_set_prop0 (GObject* obj,
 static inline gchar* _dynamic_get_prop1 (GObject* obj);
 static void _sig_after_cb_dynamic_sig0_ (GObject* _sender,
                                   gpointer self);
-gulong _dynamic_sig1_connect_after (gpointer obj,
-                                    const char * signal_name,
-                                    GCallback handler,
-                                    gpointer data);
-static void _sig_cb_dynamic_sig2_ (GObject* _sender,
+static void _sig_cb_dynamic_sig1_ (GObject* _sender,
                             gpointer self);
-gulong _dynamic_sig3_connect (gpointer obj,
-                              const char * signal_name,
-                              GCallback handler,
-                              gpointer data);
-static void _bar_sig_after_cb_dynamic_sig4_ (GObject* _sender,
+static void _bar_sig_after_cb_dynamic_sig2_ (GObject* _sender,
                                       gpointer self);
-gulong _dynamic_sig5_connect_after (gpointer obj,
-                                    const char * signal_name,
-                                    GCallback handler,
-                                    gpointer data);
-static void _bar_sig_cb_dynamic_sig6_ (GObject* _sender,
+static void _bar_sig_cb_dynamic_sig3_ (GObject* _sender,
                                 gpointer self);
-gulong _dynamic_sig7_connect (gpointer obj,
-                              const char * signal_name,
-                              GCallback handler,
-                              gpointer data);
 
 static inline gpointer
 foo_get_instance_private (Foo* self)
@@ -391,61 +375,25 @@ _sig_after_cb_dynamic_sig0_ (GObject* _sender,
 	sig_after_cb ();
 }
 
-gulong
-_dynamic_sig1_connect_after (gpointer obj,
-                             const char * signal_name,
-                             GCallback handler,
-                             gpointer data)
-{
-	return g_signal_connect_after (obj, signal_name, handler, data);
-}
-
 static void
-_sig_cb_dynamic_sig2_ (GObject* _sender,
+_sig_cb_dynamic_sig1_ (GObject* _sender,
                        gpointer self)
 {
 	sig_cb ();
 }
 
-gulong
-_dynamic_sig3_connect (gpointer obj,
-                       const char * signal_name,
-                       GCallback handler,
-                       gpointer data)
-{
-	return g_signal_connect (obj, signal_name, handler, data);
-}
-
 static void
-_bar_sig_after_cb_dynamic_sig4_ (GObject* _sender,
+_bar_sig_after_cb_dynamic_sig2_ (GObject* _sender,
                                  gpointer self)
 {
 	bar_sig_after_cb ((Bar*) self);
 }
 
-gulong
-_dynamic_sig5_connect_after (gpointer obj,
-                             const char * signal_name,
-                             GCallback handler,
-                             gpointer data)
-{
-	return g_signal_connect_object (obj, signal_name, handler, data, G_CONNECT_AFTER);
-}
-
 static void
-_bar_sig_cb_dynamic_sig6_ (GObject* _sender,
+_bar_sig_cb_dynamic_sig3_ (GObject* _sender,
                            gpointer self)
 {
 	bar_sig_cb ((Bar*) self);
-}
-
-gulong
-_dynamic_sig7_connect (gpointer obj,
-                       const char * signal_name,
-                       GCallback handler,
-                       gpointer data)
-{
-	return g_signal_connect_object (obj, signal_name, handler, data, 0);
 }
 
 static void
@@ -473,9 +421,9 @@ _vala_main (void)
 		s = _tmp3_;
 		_vala_assert (g_strcmp0 (s, "foo") == 0, "s == \"foo\"");
 		success = FALSE;
-		_tmp4_ = _dynamic_sig1_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
+		_tmp4_ = g_signal_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
 		id1 = _tmp4_;
-		_tmp5_ = _dynamic_sig3_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig2_, NULL);
+		_tmp5_ = g_signal_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig1_, NULL);
 		id2 = _tmp5_;
 		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
 		_vala_assert (success, "success");
@@ -506,9 +454,9 @@ _vala_main (void)
 		_tmp8_ = bar_new ();
 		bar = _tmp8_;
 		bar->success = FALSE;
-		_tmp9_ = _dynamic_sig5_connect_after (foo, "sig", (GCallback) _bar_sig_after_cb_dynamic_sig4_, bar);
+		_tmp9_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_after_cb_dynamic_sig2_, bar, G_CONNECT_AFTER);
 		id1 = _tmp9_;
-		_tmp10_ = _dynamic_sig7_connect (foo, "sig", (GCallback) _bar_sig_cb_dynamic_sig6_, bar);
+		_tmp10_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_cb_dynamic_sig3_, bar, 0);
 		id2 = _tmp10_;
 		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
 		_vala_assert (bar->success, "bar.success");
