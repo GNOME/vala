@@ -38,6 +38,22 @@ enum  {
 	FOO_NUM_SIGNALS
 };
 static guint foo_signals[FOO_NUM_SIGNALS] = {0};
+
+#define TYPE_BAR (bar_get_type ())
+#define BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BAR, Bar))
+#define BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_BAR, BarClass))
+#define IS_BAR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_BAR))
+#define IS_BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_BAR))
+#define BAR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_BAR, BarClass))
+
+typedef struct _Bar Bar;
+typedef struct _BarClass BarClass;
+typedef struct _BarPrivate BarPrivate;
+enum  {
+	BAR_0_PROPERTY,
+	BAR_NUM_PROPERTIES
+};
+static GParamSpec* bar_properties[BAR_NUM_PROPERTIES];
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
@@ -57,8 +73,19 @@ struct _FooPrivate {
 	gchar* _prop;
 };
 
+struct _Bar {
+	GObject parent_instance;
+	BarPrivate * priv;
+	gboolean success;
+};
+
+struct _BarClass {
+	GObjectClass parent_class;
+};
+
 static gint Foo_private_offset;
 static gpointer foo_parent_class = NULL;
+static gpointer bar_parent_class = NULL;
 VALA_EXTERN gboolean success;
 gboolean success = FALSE;
 
@@ -79,6 +106,14 @@ static void _vala_foo_set_property (GObject * object,
                              guint property_id,
                              const GValue * value,
                              GParamSpec * pspec);
+VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
+VALA_EXTERN void bar_sig_cb (Bar* self);
+VALA_EXTERN void bar_sig_after_cb (Bar* self);
+VALA_EXTERN Bar* bar_new (void);
+VALA_EXTERN Bar* bar_construct (GType object_type);
+static void bar_finalize (GObject * obj);
+static GType bar_get_type_once (void);
 VALA_EXTERN void sig_cb (void);
 VALA_EXTERN void sig_after_cb (void);
 static void _vala_main (void);
@@ -94,6 +129,18 @@ gulong _dynamic_sig1_connect_after (gpointer obj,
 static void _sig_cb_dynamic_sig2_ (GObject* _sender,
                             gpointer self);
 gulong _dynamic_sig3_connect (gpointer obj,
+                              const char * signal_name,
+                              GCallback handler,
+                              gpointer data);
+static void _bar_sig_after_cb_dynamic_sig4_ (GObject* _sender,
+                                      gpointer self);
+gulong _dynamic_sig5_connect_after (gpointer obj,
+                                    const char * signal_name,
+                                    GCallback handler,
+                                    gpointer data);
+static void _bar_sig_cb_dynamic_sig6_ (GObject* _sender,
+                                gpointer self);
+gulong _dynamic_sig7_connect (gpointer obj,
                               const char * signal_name,
                               GCallback handler,
                               gpointer data);
@@ -233,6 +280,78 @@ _vala_foo_set_property (GObject * object,
 }
 
 void
+bar_sig_cb (Bar* self)
+{
+	g_return_if_fail (IS_BAR (self));
+	self->success = TRUE;
+}
+
+void
+bar_sig_after_cb (Bar* self)
+{
+	g_return_if_fail (IS_BAR (self));
+	_vala_assert (self->success, "success");
+}
+
+Bar*
+bar_construct (GType object_type)
+{
+	Bar * self = NULL;
+	self = (Bar*) g_object_new (object_type, NULL);
+	return self;
+}
+
+Bar*
+bar_new (void)
+{
+	return bar_construct (TYPE_BAR);
+}
+
+static void
+bar_class_init (BarClass * klass,
+                gpointer klass_data)
+{
+	bar_parent_class = g_type_class_peek_parent (klass);
+	G_OBJECT_CLASS (klass)->finalize = bar_finalize;
+}
+
+static void
+bar_instance_init (Bar * self,
+                   gpointer klass)
+{
+	self->success = FALSE;
+}
+
+static void
+bar_finalize (GObject * obj)
+{
+	Bar * self;
+	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_BAR, Bar);
+	G_OBJECT_CLASS (bar_parent_class)->finalize (obj);
+}
+
+static GType
+bar_get_type_once (void)
+{
+	static const GTypeInfo g_define_type_info = { sizeof (BarClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) bar_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (Bar), 0, (GInstanceInitFunc) bar_instance_init, NULL };
+	GType bar_type_id;
+	bar_type_id = g_type_register_static (G_TYPE_OBJECT, "Bar", &g_define_type_info, 0);
+	return bar_type_id;
+}
+
+GType
+bar_get_type (void)
+{
+	static volatile gsize bar_type_id__volatile = 0;
+	if (g_once_init_enter (&bar_type_id__volatile)) {
+		GType bar_type_id;
+		bar_type_id = bar_get_type_once ();
+		g_once_init_leave (&bar_type_id__volatile, bar_type_id);
+	}
+	return bar_type_id__volatile;
+}
+
+void
 sig_cb (void)
 {
 	success = TRUE;
@@ -298,43 +417,110 @@ _dynamic_sig3_connect (gpointer obj,
 }
 
 static void
+_bar_sig_after_cb_dynamic_sig4_ (GObject* _sender,
+                                 gpointer self)
+{
+	bar_sig_after_cb ((Bar*) self);
+}
+
+gulong
+_dynamic_sig5_connect_after (gpointer obj,
+                             const char * signal_name,
+                             GCallback handler,
+                             gpointer data)
+{
+	return g_signal_connect_object (obj, signal_name, handler, data, G_CONNECT_AFTER);
+}
+
+static void
+_bar_sig_cb_dynamic_sig6_ (GObject* _sender,
+                           gpointer self)
+{
+	bar_sig_cb ((Bar*) self);
+}
+
+gulong
+_dynamic_sig7_connect (gpointer obj,
+                       const char * signal_name,
+                       GCallback handler,
+                       gpointer data)
+{
+	return g_signal_connect_object (obj, signal_name, handler, data, 0);
+}
+
+static void
 _vala_main (void)
 {
-	Foo* real = NULL;
-	Foo* _tmp0_;
-	GObject* foo = NULL;
-	GObject* _tmp1_;
-	gchar* s = NULL;
-	gchar* _tmp2_;
-	gchar* _tmp3_;
-	gulong id1 = 0UL;
-	gulong _tmp4_;
-	gulong id2 = 0UL;
-	gulong _tmp5_;
-	_tmp0_ = foo_new ();
-	real = _tmp0_;
-	_tmp1_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
-	foo = _tmp1_;
-	_dynamic_set_prop0 (foo, "foo");
-	_tmp2_ = _dynamic_get_prop1 (foo);
-	_tmp3_ = _tmp2_;
-	s = _tmp3_;
-	_vala_assert (g_strcmp0 (s, "foo") == 0, "s == \"foo\"");
-	success = FALSE;
-	_tmp4_ = _dynamic_sig1_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
-	id1 = _tmp4_;
-	_tmp5_ = _dynamic_sig3_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig2_, NULL);
-	id2 = _tmp5_;
-	g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
-	_vala_assert (success, "success");
-	success = FALSE;
-	g_signal_handler_disconnect (foo, id1);
-	g_signal_handler_disconnect (foo, id2);
-	g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
-	_vala_assert (!success, "!success");
-	_g_free0 (s);
-	_g_object_unref0 (foo);
-	_g_object_unref0 (real);
+	{
+		Foo* real = NULL;
+		Foo* _tmp0_;
+		GObject* foo = NULL;
+		GObject* _tmp1_;
+		gchar* s = NULL;
+		gchar* _tmp2_;
+		gchar* _tmp3_;
+		gulong id1 = 0UL;
+		gulong _tmp4_;
+		gulong id2 = 0UL;
+		gulong _tmp5_;
+		_tmp0_ = foo_new ();
+		real = _tmp0_;
+		_tmp1_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
+		foo = _tmp1_;
+		_dynamic_set_prop0 (foo, "foo");
+		_tmp2_ = _dynamic_get_prop1 (foo);
+		_tmp3_ = _tmp2_;
+		s = _tmp3_;
+		_vala_assert (g_strcmp0 (s, "foo") == 0, "s == \"foo\"");
+		success = FALSE;
+		_tmp4_ = _dynamic_sig1_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
+		id1 = _tmp4_;
+		_tmp5_ = _dynamic_sig3_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig2_, NULL);
+		id2 = _tmp5_;
+		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
+		_vala_assert (success, "success");
+		success = FALSE;
+		g_signal_handler_disconnect (foo, id1);
+		g_signal_handler_disconnect (foo, id2);
+		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
+		_vala_assert (!success, "!success");
+		_g_free0 (s);
+		_g_object_unref0 (foo);
+		_g_object_unref0 (real);
+	}
+	{
+		Foo* real = NULL;
+		Foo* _tmp6_;
+		GObject* foo = NULL;
+		GObject* _tmp7_;
+		Bar* bar = NULL;
+		Bar* _tmp8_;
+		gulong id1 = 0UL;
+		gulong _tmp9_;
+		gulong id2 = 0UL;
+		gulong _tmp10_;
+		_tmp6_ = foo_new ();
+		real = _tmp6_;
+		_tmp7_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
+		foo = _tmp7_;
+		_tmp8_ = bar_new ();
+		bar = _tmp8_;
+		bar->success = FALSE;
+		_tmp9_ = _dynamic_sig5_connect_after (foo, "sig", (GCallback) _bar_sig_after_cb_dynamic_sig4_, bar);
+		id1 = _tmp9_;
+		_tmp10_ = _dynamic_sig7_connect (foo, "sig", (GCallback) _bar_sig_cb_dynamic_sig6_, bar);
+		id2 = _tmp10_;
+		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
+		_vala_assert (bar->success, "bar.success");
+		bar->success = FALSE;
+		g_signal_handler_disconnect (foo, id1);
+		g_signal_handler_disconnect (foo, id2);
+		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
+		_vala_assert (!bar->success, "!bar.success");
+		_g_object_unref0 (bar);
+		_g_object_unref0 (foo);
+		_g_object_unref0 (real);
+	}
 }
 
 int
