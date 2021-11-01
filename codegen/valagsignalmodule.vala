@@ -486,36 +486,20 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
-			if (expr.parent_node is MethodCall) {
-				// detailed signal emission
-				var sig = (Signal) expr.symbol_reference;
-				var ma = (MemberAccess) expr.container;
-
-				var detail_expr = expr.get_indices ().get (0);
-
-				CCodeFunctionCall ccall;
-				if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
-					var detail_cexpr = get_detail_cexpression (detail_expr, expr);
-
-					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
-					ccall.add_argument (get_cvalue (ma.inner));
-					ccall.add_argument (get_signal_id_cexpression (sig));
-					ccall.add_argument (detail_cexpr);
-				} else {
-					var signal_name_cexpr = get_signal_name_cexpression (sig, detail_expr, expr);
-
-					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-					ccall.add_argument (get_cvalue (ma.inner));
-					ccall.add_argument (signal_name_cexpr);
-				}
-
-				set_cvalue (expr, ccall);
-			} else {
-				// signal connect or disconnect
-			}
-		} else {
+		if (!(expr.container is MemberAccess && expr.container.symbol_reference is Signal)) {
 			base.visit_element_access (expr);
+			return;
+		}
+
+		if (expr.parent_node is MethodCall) {
+			// detailed signal emission
+			unowned Signal sig = (Signal) expr.symbol_reference;
+			unowned MemberAccess ma = (MemberAccess) expr.container;
+			var detail_expr = expr.get_indices ().get (0);
+
+			set_cvalue (expr, emit_signal (sig, ma, detail_expr));
+		} else {
+			// signal connect or disconnect
 		}
 	}
 
@@ -528,57 +512,64 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_member_access (MemberAccess expr) {
-		if (expr.symbol_reference is Signal) {
-			CCodeExpression pub_inst = null;
-
-			if (expr.inner != null) {
-				pub_inst = get_cvalue (expr.inner);
-			}
-
-			var sig = (Signal) expr.symbol_reference;
-			var cl = (TypeSymbol) sig.parent_symbol;
-
-			if (expr.inner is BaseAccess && sig.is_virtual) {
-				var m = sig.default_handler;
-				var base_class = (Class) m.parent_symbol;
-				var vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_class)));
-				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
-
-				set_cvalue (expr, new CCodeMemberAccess.pointer (vcast, m.name));
-				return;
-			}
-
-			if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
-				ccall.add_argument (pub_inst);
-				ccall.add_argument (get_signal_id_cexpression (sig));
-				ccall.add_argument (new CCodeConstant ("0"));
-
-				set_cvalue (expr, ccall);
-			} else if (get_ccode_has_emitter (sig)) {
-				string emitter_func;
-				if (sig.emitter != null) {
-					if (!sig.external_package && expr.source_reference.file != sig.source_reference.file) {
-						generate_method_declaration (sig.emitter, cfile);
-					}
-					emitter_func = get_ccode_lower_case_name (sig.emitter);
-				} else {
-					emitter_func = "%s_%s".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (sig));
-				}
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (emitter_func));
-
-				ccall.add_argument (pub_inst);
-				set_cvalue (expr, ccall);
-			} else {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-				ccall.add_argument (pub_inst);
-
-				ccall.add_argument (get_signal_canonical_constant (sig));
-
-				set_cvalue (expr, ccall);
-			}
-		} else {
+		if (!(expr.symbol_reference is Signal)) {
 			base.visit_member_access (expr);
+			return;
+		}
+
+		unowned Signal sig = (Signal) expr.symbol_reference;
+
+		set_cvalue (expr, emit_signal (sig, expr));
+	}
+
+	CCodeExpression emit_signal (Signal sig, MemberAccess expr, Expression? detail_expr = null) {
+		CCodeExpression pub_inst = null;
+
+		if (expr.inner != null) {
+			pub_inst = get_cvalue (expr.inner);
+		}
+
+		if (expr.inner is BaseAccess && sig.is_virtual) {
+			var m = sig.default_handler;
+			var base_class = (Class) m.parent_symbol;
+			var vcast = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_type_function (base_class)));
+			vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (get_ccode_lower_case_name (current_class))));
+			return new CCodeMemberAccess.pointer (vcast, m.name);
+		}
+
+		if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
+			ccall.add_argument (pub_inst);
+			ccall.add_argument (get_signal_id_cexpression (sig));
+			if (detail_expr == null) {
+				ccall.add_argument (new CCodeConstant ("0"));
+			} else {
+				ccall.add_argument (get_detail_cexpression (detail_expr, expr));
+			}
+			return ccall;
+		} else if (get_ccode_has_emitter (sig)) {
+			string emitter_func;
+			if (sig.emitter != null) {
+				if (!sig.external_package && expr.source_reference.file != sig.source_reference.file) {
+					generate_method_declaration (sig.emitter, cfile);
+				}
+				emitter_func = get_ccode_lower_case_name (sig.emitter);
+			} else {
+				unowned TypeSymbol sym = (TypeSymbol) sig.parent_symbol;
+				emitter_func = "%s_%s".printf (get_ccode_lower_case_name (sym), get_ccode_lower_case_name (sig));
+			}
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (emitter_func));
+			ccall.add_argument (pub_inst);
+			return ccall;
+		} else {
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+			ccall.add_argument (pub_inst);
+			if (detail_expr == null) {
+				ccall.add_argument (get_signal_canonical_constant (sig));
+			} else {
+				ccall.add_argument (get_signal_name_cexpression (sig, detail_expr, expr));
+			}
+			return ccall;
 		}
 	}
 
