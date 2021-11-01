@@ -515,6 +515,7 @@ TESTS = \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
+	objects/signals-dynamic-invalid-disconnect.test \
 	objects/signals-dymanic-invalid-handler.test \
 	objects/signals-dynamic-lambda-handler.test \
 	objects/signals-error-marshal.vala \

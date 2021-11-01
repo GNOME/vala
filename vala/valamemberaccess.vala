@@ -469,6 +469,9 @@ public class Vala.MemberAccess : Expression {
 						s.access = SymbolAccessibility.PUBLIC;
 						dynamic_object_type.type_symbol.scope.add (null, s);
 						symbol_reference = s;
+					} else if (ma.member_name == "disconnect") {
+						error = true;
+						Report.error (ma.source_reference, "Use SignalHandler.disconnect() to disconnect from dynamic signal");
 					}
 				}
 				if (symbol_reference == null) {

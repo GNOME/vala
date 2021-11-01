@@ -1,0 +1,15 @@
+Invalid Code
+
+class Foo : Object {
+	public signal void sig ();
+}
+
+void sig_cb () {
+}
+
+void main () {
+	var real = new Foo ();
+	dynamic Object foo = real;
+
+	foo.sig.disconnect (sig_cb);
+}
