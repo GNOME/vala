@@ -1577,8 +1577,6 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_statements (Block block) throws ParseError {
 		while (current () != TokenType.CLOSE_BRACE
-		       && current () != TokenType.CASE
-		       && current () != TokenType.DEFAULT
 		       && current () != TokenType.EOF) {
 			try {
 				Statement stmt = null;
@@ -1597,6 +1595,15 @@ public class Vala.Parser : CodeVisitor {
 					break;
 				case TokenType.SWITCH:
 					stmt = parse_switch_statement ();
+					break;
+				case TokenType.CASE:
+				case TokenType.DEFAULT:
+					if (block is SwitchSection) {
+						// begin a new switch case
+						return;
+					} else {
+						stmt = parse_switch_section_statement ();
+					}
 					break;
 				case TokenType.WHILE:
 					stmt = parse_while_statement ();

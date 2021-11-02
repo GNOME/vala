@@ -884,6 +884,7 @@ TESTS = \
 	parser/signal-no-static.test \
 	parser/statement-outside-root.test \
 	parser/switch-statement.vala \
+	parser/switch-section-outside-switch.test \
 	parser/template.vala \
 	parser/tuple.vala \
 	parser/unsupported-property-async.test \
