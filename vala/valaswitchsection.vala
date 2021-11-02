@@ -88,6 +88,12 @@ public class Vala.SwitchSection : Block {
 			return !error;
 		}
 
+		if (!(parent_node is SwitchStatement)) {
+			Report.error (source_reference, "no enclosing switch statement found");
+			error = true;
+			return false;
+		}
+
 		foreach (SwitchLabel label in get_labels ()) {
 			label.check (context);
 		}
