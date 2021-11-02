@@ -2182,26 +2182,32 @@ public class Vala.Parser : CodeVisitor {
 		var stmt = new SwitchStatement (condition, get_src (begin));
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
-			begin = get_location ();
-			var section = new SwitchSection (get_src (begin));
-			do {
-				if (accept (TokenType.CASE)) {
-					section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
-					while (current () == TokenType.COMMA) {
-						expect (TokenType.COMMA);
-						section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
-					}
-				} else {
-					expect (TokenType.DEFAULT);
-					section.add_label (new SwitchLabel.with_default (get_src (begin)));
-				}
-				expect (TokenType.COLON);
-			} while (current () == TokenType.CASE || current () == TokenType.DEFAULT);
-			parse_statements (section);
-			stmt.add_section (section);
+			stmt.add_section ((SwitchSection) parse_switch_section_statement ());
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return stmt;
+	}
+
+	Statement parse_switch_section_statement () throws ParseError {
+		var begin = get_location ();
+		var section = new SwitchSection (get_src (begin));
+		do {
+			if (accept (TokenType.CASE)) {
+				section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+				while (current () == TokenType.COMMA) {
+					expect (TokenType.COMMA);
+					section.add_label (new SwitchLabel (parse_expression (), get_src (begin)));
+				}
+				expect (TokenType.COLON);
+			} else if (accept (TokenType.DEFAULT)) {
+				section.add_label (new SwitchLabel.with_default (get_src (begin)));
+				expect (TokenType.COLON);
+			} else {
+				throw new ParseError.SYNTAX ("expected `case' or `default' switch label");
+			}
+		} while (current () == TokenType.CASE || current () == TokenType.DEFAULT);
+		parse_statements (section);
+		return section;
 	}
 
 	Statement parse_while_statement () throws ParseError {
