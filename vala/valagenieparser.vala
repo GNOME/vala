@@ -506,6 +506,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 		bool value_owned = owned_by_default;
+		bool is_nullable = false;
 
 		if (owned_by_default) {
 			if (accept (TokenType.UNOWNED)) {
@@ -562,6 +563,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 				sym = parse_symbol_name ();
 			}
 
+			is_nullable = accept (TokenType.INTERR);
+
 			type_arg_list = parse_type_argument_list (false);
 
 			type = new UnresolvedType.from_symbol (sym, get_src (begin));
@@ -577,7 +580,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 		if (!(type is PointerType)) {
-			type.nullable = accept (TokenType.INTERR);
+			type.nullable = is_nullable;
 		}
 
 		if (is_array) {
