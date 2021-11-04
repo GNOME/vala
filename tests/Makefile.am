@@ -1234,6 +1234,7 @@ TESTS = \
 	version/since-method.test \
 	version/since-parameter.test \
 	genie/class.gs \
+	genie/class-property.gs \
 	genie/control-flow-if-do.gs \
 	genie/control-flow-if-else.gs \
 	genie/control-flow-if-else-if.gs \
