@@ -3121,6 +3121,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 					if (accept_block ()) {
 						block = parse_block ();
 						prop.external = false;
+					} else {
+						accept (TokenType.EOL);
 					}
 					prop.get_accessor = new PropertyAccessor (true, false, false, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.get_accessor, attribs);
@@ -3146,6 +3148,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 					if (accept_block ()) {
 						block = parse_block ();
 						prop.external = false;
+					} else {
+						accept (TokenType.EOL);
 					}
 					prop.set_accessor = new PropertyAccessor (false, !readonly, _construct, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.set_accessor, attribs);
