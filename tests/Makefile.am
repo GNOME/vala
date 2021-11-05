@@ -1234,10 +1234,10 @@ TESTS = \
 	version/since-method.test \
 	version/since-parameter.test \
 	genie/class.gs \
-	genie/class-field.gs
-	genie/class-init.gs
+	genie/class-field.gs \
+	genie/class-init.gs \
 	genie/class-property.gs \
-	genie/class-signal.gs
+	genie/class-signal.gs \
 	genie/constant.gs \
 	genie/control-flow-if-do.gs \
 	genie/control-flow-if-else.gs \
@@ -1256,7 +1256,7 @@ TESTS = \
 	genie/indentation-with-spaces.gs \
 	genie/init.gs \
 	genie/init-int.gs \
-	genie/interface.gs
+	genie/interface.gs \
 	genie/literal-boolean-assignment.gs \
 	genie/literal-boolean.gs \
 	genie/literal-character.gs \
