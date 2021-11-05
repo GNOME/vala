@@ -1212,7 +1212,11 @@ TESTS = \
 	version/since-method.test \
 	version/since-parameter.test \
 	genie/class.gs \
+	genie/class-field.gs \
+	genie/class-init.gs \
 	genie/class-property.gs \
+	genie/class-signal.gs \
+	genie/constant.gs \
 	genie/control-flow-if-do.gs \
 	genie/control-flow-if-else.gs \
 	genie/control-flow-if-else-if.gs \
@@ -1222,6 +1226,7 @@ TESTS = \
 	genie/control-flow-if-less-than.gs \
 	genie/enum.gs \
 	genie/enum-with-keyword-values.gs \
+	genie/exception.gs \
 	genie/function.gs \
 	genie/function-returns-closure.gs \
 	genie/function-with-argument.gs \
@@ -1229,6 +1234,7 @@ TESTS = \
 	genie/indentation-with-spaces.gs \
 	genie/init.gs \
 	genie/init-int.gs \
+	genie/interface.gs \
 	genie/literal-boolean-assignment.gs \
 	genie/literal-boolean.gs \
 	genie/literal-character.gs \
