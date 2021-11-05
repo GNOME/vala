@@ -267,9 +267,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.EOL:
 		case TokenType.ENUM:
 		case TokenType.ENSURES:
-		case TokenType.ERRORDOMAIN:
 		case TokenType.EVENT:
 		case TokenType.EXCEPT:
+		case TokenType.EXCEPTION:
 		case TokenType.EXTERN:
 		case TokenType.FALSE:
 		case TokenType.FINAL:
@@ -2447,7 +2447,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return parse_method_declaration (attrs);
 		case TokenType.ENUM:
 			return parse_enum_declaration (attrs);
-		case TokenType.ERRORDOMAIN:
+		case TokenType.EXCEPTION:
 			return parse_errordomain_declaration (attrs);
 		case TokenType.FINAL:
 			return parse_destructor_declaration (attrs);
@@ -2539,7 +2539,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.DEF:
 			case TokenType.DELEGATE:
 			case TokenType.ENUM:
-			case TokenType.ERRORDOMAIN:
+			case TokenType.EXCEPTION:
 			case TokenType.FINAL:
 			case TokenType.INTERFACE:
 			case TokenType.NAMESPACE:
@@ -3494,7 +3494,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Symbol parse_errordomain_declaration (List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
-		expect (TokenType.ERRORDOMAIN);
+		expect (TokenType.EXCEPTION);
 		var flags = parse_type_declaration_modifiers ();
 
 		var sym = parse_symbol_name ();

@@ -669,7 +669,7 @@ public class Vala.Genie.Scanner {
 				if (matches (begin, "construct")) return TokenType.CONSTRUCT;
 				break;
 			case 'e':
-				if (matches (begin, "exception")) return TokenType.ERRORDOMAIN;
+				if (matches (begin, "exception")) return TokenType.EXCEPTION;
 				break;
 			case 'i':
 				if (matches (begin, "interface")) return TokenType.INTERFACE;
