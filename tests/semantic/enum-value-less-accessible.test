@@ -1,0 +1,10 @@
+Invalid Code
+
+const int BAR = 42;
+
+public enum Foo {
+	FOO = BAR
+}
+
+void main () {
+}

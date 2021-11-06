@@ -1,0 +1,8 @@
+Invalid Code
+
+const int BAR = 42;
+
+public const int FOO = BAR;
+
+void main () {
+}

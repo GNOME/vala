@@ -168,6 +168,12 @@ public class Vala.Constant : Symbol {
 					Report.error (value.source_reference, "Value must be constant");
 					return false;
 				}
+
+				// check whether initializer is at least as accessible as the constant
+				if (!value.is_accessible (this)) {
+					error = true;
+					Report.error (value.source_reference, "value is less accessible than constant `%s'", get_full_name ());
+				}
 			}
 		} else {
 			if (value != null) {

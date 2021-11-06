@@ -1029,6 +1029,7 @@ TESTS = \
 	semantic/constant-reassignment-member.test \
 	semantic/constant-type-less-accessible.test \
 	semantic/constant-value.test \
+	semantic/constant-value-less-accessible.test \
 	semantic/constant-value-missing.test \
 	semantic/constant-value-type.test \
 	semantic/constant-void.test \
@@ -1047,6 +1048,7 @@ TESTS = \
 	semantic/delete-unsupported.test \
 	semantic/element-access-index-invalid.test \
 	semantic/enum-empty.test \
+	semantic/enum-value-less-accessible.test \
 	semantic/errordomain-empty.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
