@@ -1,9 +1,10 @@
 Invalid Code
 
-class Bar {
+struct Bar {
+	public int i;
 }
 
-public class Foo : Bar {
+class Foo : Bar {
 }
 
 void main () {
