@@ -170,6 +170,15 @@ public class Vala.CastExpression : Expression {
 			return false;
 		}
 
+		// Allow casting to array or pointer type
+		if (!(type_reference is ArrayType || type_reference is PointerType)) {
+			if (!type_reference.is_real_struct_type () && inner.value_type.is_real_struct_type ()
+			    && (context.profile != Profile.GOBJECT || !(is_gvariant (context, inner.value_type) || is_gvalue (context, inner.value_type)))) {
+				error = true;
+				Report.error (source_reference, "Casting of struct `%s' to `%s' is not allowed", inner.value_type.to_qualified_string (), type_reference.to_qualified_string ());
+			}
+		}
+
 		if (type_reference is DelegateType && inner.value_type is MethodType) {
 			if (target_type != null) {
 				inner.value_type.value_owned = target_type.value_owned;

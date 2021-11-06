@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Foo {
+	public int i;
+}
+
+void main () {
+	Foo foo = { 42 };
+	int bar = (int) foo;
+}

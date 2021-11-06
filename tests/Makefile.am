@@ -345,6 +345,8 @@ TESTS = \
 	enums/bug763831.vala \
 	enums/bug780050.vala \
 	structs/cast-struct-boxed.vala \
+	structs/cast-struct-to-class.test \
+	structs/cast-struct-to-simple-struct.test \
 	structs/struct_only.vala \
 	structs/struct-base-types.vala \
 	structs/struct-boxed-cast.vala \
