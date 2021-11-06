@@ -1028,6 +1028,7 @@ TESTS = \
 	semantic/errordomain-empty.test \
 	semantic/field-accessibility.test \
 	semantic/field-compact-static.test \
+	semantic/field-constant.vala \
 	semantic/field-external.test \
 	semantic/field-incompatible.test \
 	semantic/field-interface.test \

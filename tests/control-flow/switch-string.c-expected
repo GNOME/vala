@@ -37,26 +37,29 @@ foo (void)
 	const gchar* _tmp1_;
 	GQuark _tmp3_ = 0U;
 	static GQuark _tmp2_label0 = 0;
+	static GQuark _tmp2_label1 = 0;
+	static GQuark _tmp2_label2 = 0;
+	static GQuark _tmp2_label3 = 0;
 	gchar* result = NULL;
 	_tmp0_ = g_strdup ("foo");
 	foo = _tmp0_;
 	_tmp1_ = foo;
 	_tmp3_ = (NULL == _tmp1_) ? 0 : g_quark_from_string (_tmp1_);
-	if (_tmp3_ == g_quark_from_string (FOO)) {
+	if (_tmp3_ == ((0 != _tmp2_label0) ? _tmp2_label0 : (_tmp2_label0 = g_quark_from_static_string (FOO)))) {
 		switch (0) {
 			default:
 			{
 				break;
 			}
 		}
-	} else if ((_tmp3_ == g_quark_from_string (BAR)) || (_tmp3_ == g_quark_from_string (MANAM))) {
+	} else if ((_tmp3_ == ((0 != _tmp2_label1) ? _tmp2_label1 : (_tmp2_label1 = g_quark_from_static_string (BAR)))) || (_tmp3_ == ((0 != _tmp2_label2) ? _tmp2_label2 : (_tmp2_label2 = g_quark_from_static_string (MANAM))))) {
 		switch (0) {
 			default:
 			{
 				g_assert_not_reached ();
 			}
 		}
-	} else if (_tmp3_ == ((0 != _tmp2_label0) ? _tmp2_label0 : (_tmp2_label0 = g_quark_from_static_string ("minim")))) {
+	} else if (_tmp3_ == ((0 != _tmp2_label3) ? _tmp2_label3 : (_tmp2_label3 = g_quark_from_static_string ("minim")))) {
 		switch (0) {
 			default:
 			{
@@ -85,20 +88,22 @@ bar (void)
 	gchar* _tmp1_;
 	GQuark _tmp3_ = 0U;
 	static GQuark _tmp2_label0 = 0;
+	static GQuark _tmp2_label1 = 0;
+	static GQuark _tmp2_label2 = 0;
 	gchar* _tmp4_;
 	gchar* result = NULL;
 	_tmp0_ = get_bar ();
 	_tmp1_ = _tmp0_;
 	_tmp3_ = (NULL == _tmp1_) ? 0 : g_quark_from_string (_tmp1_);
 	g_free (_tmp1_);
-	if (_tmp3_ == g_quark_from_string (BAR)) {
+	if (_tmp3_ == ((0 != _tmp2_label0) ? _tmp2_label0 : (_tmp2_label0 = g_quark_from_static_string (BAR)))) {
 		switch (0) {
 			default:
 			{
 				break;
 			}
 		}
-	} else if ((_tmp3_ == g_quark_from_string (FOO)) || (_tmp3_ == ((0 != _tmp2_label0) ? _tmp2_label0 : (_tmp2_label0 = g_quark_from_static_string ("minim"))))) {
+	} else if ((_tmp3_ == ((0 != _tmp2_label1) ? _tmp2_label1 : (_tmp2_label1 = g_quark_from_static_string (FOO)))) || (_tmp3_ == ((0 != _tmp2_label2) ? _tmp2_label2 : (_tmp2_label2 = g_quark_from_static_string ("minim"))))) {
 		switch (0) {
 			default:
 			{
