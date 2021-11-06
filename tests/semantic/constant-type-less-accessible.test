@@ -1,0 +1,10 @@
+Invalid Code
+
+struct Bar {
+	public int i;
+}
+
+public const Bar FOO = { 42 };
+
+void main () {
+}

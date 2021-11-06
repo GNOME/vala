@@ -121,6 +121,12 @@ public class Vala.Constant : Symbol {
 			return false;
 		}
 
+		// check whether constant type is at least as accessible as the constant
+		if (!context.analyzer.is_type_accessible (this, type_reference)) {
+			error = true;
+			Report.error (source_reference, "constant type `%s' is less accessible than constant `%s'", type_reference.to_string (), get_full_name ());
+		}
+
 		if (!external) {
 			if (value == null) {
 				// constants from fast-vapi files are special

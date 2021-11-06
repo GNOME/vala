@@ -1012,6 +1012,7 @@ TESTS = \
 	semantic/constant-pointer.test \
 	semantic/constant-reassignment-element.test \
 	semantic/constant-reassignment-member.test \
+	semantic/constant-type-less-accessible.test \
 	semantic/constant-value.test \
 	semantic/constant-value-missing.test \
 	semantic/constant-value-type.test \
@@ -1173,6 +1174,7 @@ TESTS = \
 	semantic/signal-disconnect-empty-invalid.test \
 	semantic/signal-disconnect-invalid.test \
 	semantic/signal-return-valist.test \
+	semantic/struct-base-type-less-accessible.test \
 	semantic/struct-field-initializer.test \
 	semantic/struct-invalid-base.test \
 	semantic/struct-recursive.test \
