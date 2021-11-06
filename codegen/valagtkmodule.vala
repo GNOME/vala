@@ -187,7 +187,13 @@ public class Vala.GtkModule : GSignalModule {
 
 				if (current_class != null) {
 					if (signal_name == null || handler_name == null) {
-						Report.error (node.source_reference, "Invalid signal in ui file `%s'", ui_file);
+						if (signal_name != null) {
+							Report.error (node.source_reference, "Invalid signal `%s' without handler in ui file `%s'", signal_name, ui_file);
+						} else if (handler_name != null) {
+							Report.error (node.source_reference, "Invalid signal without name in ui file `%s'", ui_file);
+						} else {
+							Report.error (node.source_reference, "Invalid signal without name and handler in ui file `%s'", ui_file);
+						}
 						current_token = reader.read_token (null, null);
 						continue;
 					}
