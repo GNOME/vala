@@ -1233,6 +1233,7 @@ TESTS = \
 	version/since-local-variable.test \
 	version/since-method.test \
 	version/since-parameter.test \
+	genie/case.gs \
 	genie/class.gs \
 	genie/class-field.gs \
 	genie/class-init.gs \
@@ -1246,9 +1247,13 @@ TESTS = \
 	genie/control-flow-if.gs \
 	genie/control-flow-if-identity.gs \
 	genie/control-flow-if-less-than.gs \
+	genie/do-while.gs \
 	genie/enum.gs \
 	genie/enum-with-keyword-values.gs \
 	genie/exception.gs \
+	genie/for-downto.gs \
+	genie/for-in.gs \
+	genie/for-to.gs \
 	genie/function.gs \
 	genie/function-returns-closure.gs \
 	genie/function-with-argument.gs \
@@ -1256,6 +1261,7 @@ TESTS = \
 	genie/indentation-with-spaces.gs \
 	genie/init.gs \
 	genie/init-int.gs \
+	genie/initializer-list.gs \
 	genie/interface.gs \
 	genie/literal-boolean-assignment.gs \
 	genie/literal-boolean.gs \
@@ -1302,8 +1308,13 @@ TESTS = \
 	genie/preparser.gs \
 	genie/preparser-not.gs \
 	genie/preparser-or-expression.gs \
+	genie/print.gs \
+	genie/sizeof.gs \
 	genie/struct.gs \
 	genie/struct-after-class.gs \
+	genie/try-except-finally.gs \
+	genie/typeof.gs \
+	genie/while.gs \
 	glib/conditional-glib-api.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
