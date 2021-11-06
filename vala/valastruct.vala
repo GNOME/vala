@@ -512,7 +512,7 @@ public class Vala.Struct : TypeSymbol {
 			}
 
 			// check whether base type is at least as accessible as the struct
-			if (!context.analyzer.is_type_accessible (this, base_type)) {
+			if (!base_type.is_accessible (this)) {
 				error = true;
 				Report.error (source_reference, "base type `%s' is less accessible than struct `%s'", base_type.to_string (), get_full_name ());
 			}

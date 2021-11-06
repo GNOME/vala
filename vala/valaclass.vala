@@ -553,7 +553,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 
 			// check whether base type is at least as accessible as the class
-			if (!context.analyzer.is_type_accessible (this, base_type_reference)) {
+			if (!base_type_reference.is_accessible (this)) {
 				error = true;
 				Report.error (source_reference, "base type `%s' is less accessible than class `%s'", base_type_reference.to_string (), get_full_name ());
 				return false;

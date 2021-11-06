@@ -172,7 +172,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		foreach (DataType prerequisite_reference in get_prerequisites ()) {
 			// check whether prerequisite is at least as accessible as the interface
-			if (!context.analyzer.is_type_accessible (this, prerequisite_reference)) {
+			if (!prerequisite_reference.is_accessible (this)) {
 				error = true;
 				Report.error (source_reference, "prerequisite `%s' is less accessible than interface `%s'", prerequisite_reference.to_string (), get_full_name ());
 				return false;

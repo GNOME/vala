@@ -263,11 +263,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		file.check (context);
 	}
 
-	// check whether type is at least as accessible as the specified symbol
-	public bool is_type_accessible (Symbol sym, DataType type) {
-		return type.is_accessible (sym);
-	}
-
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
 		if (sym is Field) {
 			unowned Field f = (Field) sym;

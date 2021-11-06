@@ -147,7 +147,7 @@ public class Vala.CreationMethod : Method {
 				error_type.check (context);
 
 				// check whether error type is at least as accessible as the creation method
-				if (!context.analyzer.is_type_accessible (this, error_type)) {
+				if (!error_type.is_accessible (this)) {
 					error = true;
 					Report.error (source_reference, "error type `%s' is less accessible than creation method `%s'", error_type.to_string (), get_full_name ());
 					return false;

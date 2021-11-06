@@ -122,7 +122,7 @@ public class Vala.Constant : Symbol {
 		}
 
 		// check whether constant type is at least as accessible as the constant
-		if (!context.analyzer.is_type_accessible (this, type_reference)) {
+		if (!type_reference.is_accessible (this)) {
 			error = true;
 			Report.error (source_reference, "constant type `%s' is less accessible than constant `%s'", type_reference.to_string (), get_full_name ());
 		}

@@ -520,7 +520,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		// check whether property type is at least as accessible as the property
-		if (!context.analyzer.is_type_accessible (this, property_type)) {
+		if (!property_type.is_accessible (this)) {
 			error = true;
 			Report.error (source_reference, "property type `%s' is less accessible than property `%s'", property_type.to_string (), get_full_name ());
 		}
