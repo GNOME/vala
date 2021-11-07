@@ -8,6 +8,7 @@
 
 #define FOO "string constant"
 #define BAR _ ("translated string constant")
+
 static void _vala_main (void);
 
 static void

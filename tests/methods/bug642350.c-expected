@@ -7,6 +7,7 @@
 #include <glib/gi18n-lib.h>
 #include <glib-object.h>
 
+#define BAZ N_ ("bar")
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -61,7 +62,6 @@ static gpointer bar_parent_class = NULL;
 VALA_EXTERN gchar* bar_foo;
 gchar* bar_foo = NULL;
 
-#define BAZ N_ ("bar")
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);

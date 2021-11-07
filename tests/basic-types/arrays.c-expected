@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <glib-object.h>
 
+#define FOO 2
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -91,7 +92,6 @@ VALA_EXTERN gint* pass_helper (gint* a,
 static gint* _vala_array_dup8 (gint* self,
                         gssize length);
 VALA_EXTERN void test_array_pass (void);
-#define FOO 2
 VALA_EXTERN void test_static_array (void);
 VALA_EXTERN void test_reference_transfer (void);
 VALA_EXTERN void test_length_assignment (void);

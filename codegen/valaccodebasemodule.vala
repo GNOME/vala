@@ -1106,8 +1106,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					add_symbol_declaration (decl_space, m, get_ccode_name (m));
 				}
 
-				var cdefine = new CCodeMacroReplacement.with_expression (get_ccode_name (c), get_cvalue (c.value));
-				decl_space.add_type_member_declaration (cdefine);
+				var cdefine = new CCodeDefine.with_expression (get_ccode_name (c), get_cvalue (c.value));
+				decl_space.add_define (cdefine);
 			}
 		}
 	}

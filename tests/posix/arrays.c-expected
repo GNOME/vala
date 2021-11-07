@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define FOO 2
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -85,7 +86,6 @@ VALA_EXTERN int* pass_helper (int* a,
 static int* _vala_array_dup8 (int* self,
                        ssize_t length);
 VALA_EXTERN void test_array_pass (void);
-#define FOO 2
 VALA_EXTERN void test_static_array (void);
 VALA_EXTERN void test_reference_transfer (void);
 VALA_EXTERN void test_length_assignment (void);

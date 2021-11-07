@@ -5,6 +5,8 @@
 #include <glib.h>
 #include <string.h>
 
+#define FOO_FOO 23
+#define BAR FOO_FOO
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -32,8 +34,6 @@ Foo foo_static_field = {0};
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
-#define FOO_FOO 23
-#define BAR FOO_FOO
 static void _vala_main (void);
 
 Foo*

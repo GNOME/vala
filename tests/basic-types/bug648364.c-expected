@@ -4,9 +4,10 @@
 #include <glib.h>
 #include <string.h>
 
+#define foo 3
+
 #define _g_free0(var) ((var == NULL) ? NULL : (var = (g_free (var), NULL)))
 
-#define foo 3
 static void _vala_main (void);
 static gint* _int_dup (gint* self);
 
