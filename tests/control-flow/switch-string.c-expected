@@ -5,6 +5,9 @@
 #include <string.h>
 #include <glib.h>
 
+#define FOO "foo"
+#define BAR "bar"
+#define MANAM "manam"
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -21,9 +24,6 @@
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
-#define FOO "foo"
-#define BAR "bar"
-#define MANAM "manam"
 VALA_EXTERN gchar* foo (void);
 VALA_EXTERN gchar* get_bar (void);
 VALA_EXTERN gchar* bar (void);

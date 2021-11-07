@@ -5,6 +5,8 @@
 #include <string.h>
 #include <glib.h>
 
+#define TEST 23
+
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -12,7 +14,6 @@
 
 static void _vala_main (gchar** args,
                  gint args_length1);
-#define TEST 23
 
 static void
 _vala_main (gchar** args,

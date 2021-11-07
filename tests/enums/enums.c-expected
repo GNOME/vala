@@ -5,6 +5,7 @@
 #include <glib.h>
 #include <stdio.h>
 
+#define MAMAN_FOOISH_FOO 2
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
 #define VALA_EXTERN __declspec(dllexport) extern
@@ -60,7 +61,6 @@ static gpointer maman_bar_parent_class = NULL;
 VALA_EXTERN GType maman_foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType maman_fooish_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN gint maman_fooish_something (MamanFooish self);
-#define MAMAN_FOOISH_FOO 2
 VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 VALA_EXTERN void maman_bar_run (MamanBar* self);

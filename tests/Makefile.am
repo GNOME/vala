@@ -949,6 +949,11 @@ TESTS = \
 	resolver/peek-inner-types-ambiguous.test \
 	resolver/peek-inner-types.vala \
 	resolver/struct-base-cycle.test \
+	ordering/constant-class.vala \
+	ordering/constant-constant.vala \
+	ordering/constant-enum.vala \
+	ordering/constant-field.vala \
+	ordering/constant-struct.vala \
 	ordering/delegate-class.vala \
 	ordering/delegate-enum.vala \
 	ordering/delegate-interface.vala \
