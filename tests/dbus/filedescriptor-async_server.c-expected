@@ -430,8 +430,7 @@ _dbus_test_test_in (Test* self,
 		g_set_error_literal (&error, G_IO_ERROR, G_IO_ERROR_FAILED, "FD List is NULL");
 	}
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	test_test_in (self, _ready_data->i, (GAsyncReadyCallback) _dbus_test_test_in_ready, _ready_data);
@@ -457,8 +456,7 @@ _dbus_test_test_in_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	result = test_test_in_finish ((Test*) source_object, _res_, &j, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

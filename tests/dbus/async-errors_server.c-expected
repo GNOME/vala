@@ -668,8 +668,7 @@ _dbus_test_test_void_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	test_test_void_finish ((Test*) source_object, _res_, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -717,8 +716,7 @@ _dbus_test_test_int_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	result = test_test_int_finish ((Test*) source_object, _res_, &j, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -770,8 +768,7 @@ _dbus_test_test_string_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	result = test_test_string_finish ((Test*) source_object, _res_, &t, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -818,8 +815,7 @@ _dbus_test_test_cancellable_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	test_test_cancellable_finish ((Test*) source_object, _res_, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

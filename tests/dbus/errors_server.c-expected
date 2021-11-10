@@ -312,8 +312,7 @@ _dbus_test_test_void (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_void (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -345,8 +344,7 @@ _dbus_test_test_int (Test* self,
 	g_variant_unref (_tmp0_);
 	result = test_test_int (self, i, &j, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -380,8 +378,7 @@ _dbus_test_test_string (Test* self,
 	g_variant_unref (_tmp1_);
 	result = test_test_string (self, s, &t, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -413,8 +410,7 @@ _dbus_test_test_cancellable (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_cancellable (self, NULL, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -439,8 +435,7 @@ _dbus_test_test_custom_error (Test* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	test_test_custom_error (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

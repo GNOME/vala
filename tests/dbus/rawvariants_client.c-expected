@@ -492,8 +492,7 @@ _dbus_test_test_method (Test* self,
 	g_variant_unref (_tmp5_);
 	result = test_test_method (self, j, k, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -853,8 +852,7 @@ _dbus_test_raw_test_method (TestRaw* self,
 	k = g_variant_iter_next_value (&_arguments_iter);
 	result = test_raw_test_method (self, j, k, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

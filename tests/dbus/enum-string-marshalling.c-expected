@@ -591,8 +591,7 @@ _dbus_test_test1 (Test* self,
 	_ready_data->e = foo_enum_from_string (g_variant_get_string (_tmp0_, NULL), &error);
 	g_variant_unref (_tmp0_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	test_test1 (self, _ready_data->e, (GAsyncReadyCallback) _dbus_test_test1_ready, _ready_data);
@@ -613,8 +612,7 @@ _dbus_test_test1_ready (GObject * source_object,
 	invocation = _ready_data->_invocation_;
 	test_test1_finish ((Test*) source_object, _res_, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		goto _error;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -645,14 +643,12 @@ _dbus_test_test2 (Test* self,
 	e = foo_enum_from_string (g_variant_get_string (_tmp1_, NULL), &error);
 	g_variant_unref (_tmp1_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	test_test2 (self, e, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -685,8 +681,7 @@ _dbus_test_test3 (Test* self,
 	e1 = foo_enum_from_string (g_variant_get_string (_tmp2_, NULL), &error);
 	g_variant_unref (_tmp2_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_tmp3_ = g_variant_iter_next_value (&_arguments_iter);
@@ -696,14 +691,12 @@ _dbus_test_test3 (Test* self,
 	e2 = foo_enum_from_string (g_variant_get_string (_tmp4_, NULL), &error);
 	g_variant_unref (_tmp4_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	test_test3 (self, e1, fd, e2, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -732,8 +725,7 @@ _dbus_test_test4 (Test* self,
 	e = foo_enum_from_string (g_variant_get_string (_tmp5_, NULL), &error);
 	g_variant_unref (_tmp5_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	test_test4 (self, e);
@@ -762,8 +754,7 @@ _dbus_test_test5 (Test* self,
 	_ready_data->e = foo_enum_from_string (g_variant_get_string (_tmp6_, NULL), &error);
 	g_variant_unref (_tmp6_);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	test_test5 (self, _ready_data->e, (GAsyncReadyCallback) _dbus_test_test5_ready, _ready_data);

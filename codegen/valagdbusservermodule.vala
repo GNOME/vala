@@ -176,14 +176,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 					ccode.open_if (new CCodeIdentifier ("error"));
 
-					var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
+					var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_take_error"));
 					return_error.add_argument (new CCodeIdentifier ("invocation"));
 					return_error.add_argument (new CCodeIdentifier ("error"));
 					ccode.add_expression (return_error);
-
-					var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
-					free_error.add_argument (new CCodeIdentifier ("error"));
-					ccode.add_expression (free_error);
 
 					if (need_goto_label || requires_destroy (owned_type)) {
 						ccode.add_goto ("_error");
@@ -291,14 +287,10 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (m.tree_can_fail) {
 				ccode.open_if (new CCodeIdentifier ("error"));
 
-				var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_return_gerror"));
+				var return_error = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_method_invocation_take_error"));
 				return_error.add_argument (new CCodeIdentifier ("invocation"));
 				return_error.add_argument (new CCodeIdentifier ("error"));
 				ccode.add_expression (return_error);
-
-				var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
-				free_error.add_argument (new CCodeIdentifier ("error"));
-				ccode.add_expression (free_error);
 
 				if (need_goto_label) {
 					ccode.add_goto ("_error");

@@ -212,8 +212,7 @@ _dbus_test_do_foo (Test* self,
 	g_variant_unref (_tmp0_);
 	result = test_do_foo (self, i, &s, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));

@@ -365,8 +365,7 @@ _dbus_ifoo_method0 (IFoo* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	ifoo_method0 (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -391,8 +390,7 @@ _dbus_ifoo_method1 (IFoo* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	ifoo_method1 (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -572,8 +570,7 @@ _dbus_foo_method0 (Foo* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	foo_method0 (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
@@ -598,8 +595,7 @@ _dbus_foo_method1 (Foo* self,
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	foo_method1 (self, &error);
 	if (error) {
-		g_dbus_method_invocation_return_gerror (invocation, error);
-		g_error_free (error);
+		g_dbus_method_invocation_take_error (invocation, error);
 		return;
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
