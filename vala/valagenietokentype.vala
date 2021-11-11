@@ -220,7 +220,7 @@ public enum Vala.Genie.TokenType {
 		case ELSE: return "`else'";
 		case ENUM: return "`enum'";
 		case ENSURES: return "`ensures'";
-		case ERRORDOMAIN: return "`errordomain'";
+		case ERRORDOMAIN: return "`exception'";
 		case EOF: return "end of file";
 		case EOL: return "end of line";
 		case EVENT: return "event";
