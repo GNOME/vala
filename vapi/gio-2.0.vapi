@@ -3819,7 +3819,7 @@ namespace GLib {
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public virtual async GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract GLib.File resolve_relative_path (string relative_path);
+		public abstract GLib.File? resolve_relative_path (string relative_path);
 		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, void* value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_byte_string (string attribute, string value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_int32 (string attribute, int32 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -4393,7 +4393,8 @@ namespace GLib {
 		DO_NOT_CONNECT_SIGNALS,
 		DO_NOT_AUTO_START,
 		GET_INVALIDATED_PROPERTIES,
-		DO_NOT_AUTO_START_AT_CONSTRUCTION
+		DO_NOT_AUTO_START_AT_CONSTRUCTION,
+		NO_MATCH_RULE
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_SEND_MESSAGE_FLAGS_", type_id = "g_dbus_send_message_flags_get_type ()")]
 	[Flags]

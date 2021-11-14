@@ -160,6 +160,7 @@ namespace Pango {
 		public unowned Pango.AttrShape? as_shape ();
 		[Version (since = "1.50")]
 		public unowned Pango.AttrSize? as_size ();
+		[Version (since = "1.50")]
 		public unowned Pango.AttrString? as_string ();
 		public Pango.Attribute copy ();
 		[DestroysInstance]
@@ -244,8 +245,9 @@ namespace Pango {
 		[Version (since = "1.10")]
 		public virtual unowned Pango.FontMap? get_font_map ();
 		public virtual void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.50")]
-		public unowned Pango.Language? get_languages ();
+		public unowned Pango.Language[]? get_languages ();
 		public virtual Pango.FontMetrics get_metrics (Pango.Language? language);
 		[Version (since = "1.44")]
 		public bool has_char (unichar wc);
@@ -373,7 +375,7 @@ namespace Pango {
 	public class FontsetSimple : Pango.Fontset {
 		[CCode (has_construct_function = false)]
 		public FontsetSimple (Pango.Language language);
-		public void append (Pango.Font font);
+		public void append (owned Pango.Font font);
 		public int size ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_item_get_type ()")]
@@ -563,6 +565,7 @@ namespace Pango {
 		public unowned Pango.LayoutLine get_line_readonly ();
 		public void get_line_yrange (out int y0_, out int y1_);
 		public unowned Pango.LayoutRun? get_run ();
+		[Version (since = "1.50")]
 		public int get_run_baseline ();
 		public void get_run_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		[Version (since = "1.16")]
@@ -755,6 +758,7 @@ namespace Pango {
 		public uint is_word_boundary;
 		public uint break_inserts_hyphen;
 		public uint break_removes_preceding;
+		public uint reserved;
 	}
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_matrix_get_type ()")]
 	[Version (since = "1.6")]
@@ -913,10 +917,12 @@ namespace Pango {
 		VARIATIONS
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_FONT_SCALE_", type_id = "pango_font_scale_get_type ()")]
+	[Version (since = "1.50")]
 	public enum FontScale {
 		NONE,
 		SUPERSCRIPT,
-		SUBSCRIPT
+		SUBSCRIPT,
+		SMALL_CAPS
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_GRAVITY_", type_id = "pango_gravity_get_type ()")]
 	[Version (since = "1.16")]
@@ -1081,6 +1087,7 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_SHAPE_", type_id = "pango_shape_flags_get_type ()")]
 	[Flags]
+	[Version (since = "1.44")]
 	public enum ShapeFlags {
 		NONE,
 		ROUND_POSITIONS
@@ -1138,7 +1145,12 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_VARIANT_", type_id = "pango_variant_get_type ()")]
 	public enum Variant {
 		NORMAL,
-		SMALL_CAPS
+		SMALL_CAPS,
+		ALL_SMALL_CAPS,
+		PETITE_CAPS,
+		ALL_PETITE_CAPS,
+		UNICASE,
+		TITLE_CAPS
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_WEIGHT_", type_id = "pango_weight_get_type ()")]
 	public enum Weight {

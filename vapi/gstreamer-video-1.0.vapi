@@ -624,7 +624,7 @@ namespace Gst {
 		[GIR (name = "VideoOrientation")]
 		public interface Orientation : GLib.Object {
 			[Version (since = "1.20")]
-			public static bool from_tag (Gst.TagList taglist, Gst.Video.OrientationMethod method);
+			public static bool from_tag (Gst.TagList taglist, out Gst.Video.OrientationMethod method);
 			public abstract bool get_hcenter (out int center);
 			public abstract bool get_hflip (out bool flip);
 			public abstract bool get_vcenter (out int center);
@@ -1310,7 +1310,23 @@ namespace Gst {
 			[Version (since = "1.20")]
 			BGRP,
 			[Version (since = "1.20")]
-			AV12;
+			AV12,
+			[Version (since = "1.20")]
+			ARGB64_LE,
+			[Version (since = "1.20")]
+			ARGB64_BE,
+			[Version (since = "1.20")]
+			RGBA64_LE,
+			[Version (since = "1.20")]
+			RGBA64_BE,
+			[Version (since = "1.20")]
+			BGRA64_LE,
+			[Version (since = "1.20")]
+			BGRA64_BE,
+			[Version (since = "1.20")]
+			ABGR64_LE,
+			[Version (since = "1.20")]
+			ABGR64_BE;
 			public static Gst.Video.Format from_fourcc (uint32 fourcc);
 			public static Gst.Video.Format from_masks (int depth, int bpp, int endianness, uint red_mask, uint green_mask, uint blue_mask, uint alpha_mask);
 			public static Gst.Video.Format from_string (string format);
@@ -2110,7 +2126,7 @@ namespace Gst {
 		public static void navigation_query_set_commandsv (Gst.Query query, [CCode (array_length_cname = "n_cmds", array_length_pos = 1.5)] Gst.Video.NavigationCommand[] cmds);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoOrientation.from_tag", since = "1.20")]
-		public static bool orientation_from_tag (Gst.TagList taglist, Gst.Video.OrientationMethod method);
+		public static bool orientation_from_tag (Gst.TagList taglist, out Gst.Video.OrientationMethod method);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static GLib.Type overlay_composition_meta_api_get_type ();
 		[CCode (cheader_filename = "gst/video/video.h")]

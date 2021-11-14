@@ -5020,7 +5020,7 @@ namespace Gdk {
 		public void beep ();
 		public void close ();
 		[Version (since = "4.6")]
-		public Gdk.GLContext? create_gl_context () throws GLib.Error;
+		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public bool device_is_grabbed (Gdk.Device device);
 		public void flush ();
 		public Gdk.AppLaunchContext get_app_launch_context ();
@@ -5441,6 +5441,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_texture_new_from_file")]
 		public static Gdk.Texture from_file (GLib.File file) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_filename")]
+		[Version (since = "4.6")]
 		public static Gdk.Texture from_filename (string path) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_resource")]
 		public static Gdk.Texture from_resource (string resource_path);
@@ -6515,12 +6516,16 @@ namespace Gsk {
 	[Version (replacement = "Transform.parse")]
 	public static bool transform_parse (string string, out Gsk.Transform out_transform);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static Gsk.RenderNode? value_dup_render_node (GLib.Value value);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static unowned Gsk.RenderNode? value_get_render_node (ref GLib.Value value);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static void value_set_render_node (ref GLib.Value value, Gsk.RenderNode node);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static void value_take_render_node (ref GLib.Value value, owned Gsk.RenderNode? node);
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
@@ -7661,6 +7666,8 @@ namespace Gtk {
 		public bool popup_fixed_width { get; set; }
 		[NoAccessorMethod]
 		public bool popup_shown { get; }
+		[Version (since = "4.6")]
+		public virtual signal void activate ();
 		public virtual signal void changed ();
 		public virtual signal string format_entry_text (string path);
 		public signal void move_active (Gtk.ScrollType scroll_type);
@@ -7946,6 +7953,8 @@ namespace Gtk {
 		public GLib.Object selected_item { get; }
 		[Version (since = "4.6")]
 		public bool show_arrow { get; set; }
+		[Version (since = "4.6")]
+		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_get_type ()")]
 	public class DropTarget : Gtk.EventController {
@@ -12927,6 +12936,7 @@ namespace Gtk {
 		public signal void gtk_private_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSymbolicPaintableInterface", type_id = "gtk_symbolic_paintable_get_type ()")]
+	[Version (since = "4.6")]
 	public interface SymbolicPaintable : Gdk.Paintable, GLib.Object {
 		public abstract void snapshot_symbolic (Gdk.Snapshot snapshot, double width, double height, [CCode (array_length_cname = "n_colors", array_length_pos = 4.1, array_length_type = "gsize")] Gdk.RGBA[] colors);
 	}
@@ -14056,6 +14066,7 @@ namespace Gtk {
 		SHOW_CHANGE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYMBOLIC_COLOR_", type_id = "gtk_symbolic_color_get_type ()")]
+	[Version (since = "4.6")]
 	public enum SymbolicColor {
 		FOREGROUND,
 		ERROR,
