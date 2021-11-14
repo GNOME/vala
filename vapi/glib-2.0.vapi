@@ -1931,10 +1931,20 @@ namespace GLib {
 		public const int LOW;
 	}
 
+	[Version (since = "2.72")]
+	[CCode (has_type_id = false)]
+	[Flags]
+	public enum MainContextFlags {
+		NONE,
+		OWNERLESS_POLLING
+	}
+
 	[Compact]
 	[CCode (ref_function = "g_main_context_ref", unref_function = "g_main_context_unref", type_id = "G_TYPE_MAIN_CONTEXT")]
 	public class MainContext {
 		public MainContext ();
+		[Version (since = "2.72")]
+		public MainContext.with_flags (MainContextFlags flags);
 		public static unowned MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
