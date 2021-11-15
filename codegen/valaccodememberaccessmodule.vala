@@ -185,8 +185,10 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					s = current_method.get_full_name ();
 				}
 				set_cvalue (expr, new CCodeConstant ("\"%s\"".printf (s)));
-			} else {
+			} else if (c.type_reference.is_non_null_simple_type ()) {
 				set_cvalue (expr, new CCodeConstant (get_ccode_name (c)));
+			} else {
+				set_cvalue (expr, new CCodeConstantIdentifier (get_ccode_name (c)));
 			}
 
 			if (array_type != null) {

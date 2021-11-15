@@ -27,6 +27,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodecomment.vala \
 	valaccodeconditionalexpression.vala \
 	valaccodeconstant.vala \
+	valaccodeconstantidentifier.vala \
 	valaccodecontinuestatement.vala \
 	valaccodedeclaration.vala \
 	valaccodedeclarator.vala \

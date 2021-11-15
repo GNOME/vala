@@ -100,6 +100,7 @@ TESTS = \
 	basic-types/bug788775.vala \
 	constants/array-type-invalid.test \
 	constants/glog.vala \
+	constants/member-access.vala \
 	constants/strings.vala \
 	namespace/unique.vala \
 	arrays/cast-silent-invalid.test \

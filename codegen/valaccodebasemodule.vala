@@ -1427,7 +1427,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public static bool is_constant_ccode_expression (CCodeExpression cexpr) {
-		if (cexpr is CCodeConstant) {
+		if (cexpr is CCodeConstant || cexpr is CCodeConstantIdentifier) {
 			return true;
 		} else if (cexpr is CCodeCastExpression) {
 			var ccast = (CCodeCastExpression) cexpr;
@@ -6147,7 +6147,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			result.value_type.nullable = false;
 			if (!result.lvalue || !result.value_type.equals (value.value_type)) {
 				result.cvalue = get_implicit_cast_expression (result.cvalue, value.value_type, result.value_type, node);
-				result = (GLibValue) store_temp_value (result, node);
+				if (!(result.cvalue is CCodeConstantIdentifier)) {
+					result = (GLibValue) store_temp_value (result, node);
+				}
 			}
 			result.cvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result.cvalue);
 			result.lvalue = false;
