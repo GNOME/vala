@@ -321,6 +321,7 @@ TESTS = \
 	enums/default-gtype.vala \
 	enums/enum_only.vala \
 	enums/enum-no-gtype.vala \
+	enums/enum-gtype-too-short.test \
 	enums/enums.vala \
 	enums/flags.vala \
 	enums/from-0-literal.vala \
@@ -339,6 +340,7 @@ TESTS = \
 	structs/struct-base-types.vala \
 	structs/struct-boxed-cast.vala \
 	structs/struct-empty-still.test \
+	structs/struct-gtype-too-short.test \
 	structs/struct-initializer-list-in-array.vala \
 	structs/struct-initializer-list-nested.vala \
 	structs/struct-no-gtype.vala \
@@ -387,7 +389,6 @@ TESTS = \
 	structs/bug690380.vala \
 	structs/bug694140.vala \
 	structs/bug749952.vala \
-	structs/bug764041.test \
 	structs/bug775761.vala \
 	structs/bug777194.vala \
 	structs/bug777194-2.vala \
@@ -437,6 +438,7 @@ TESTS = \
 	objects/class-ccode-cprefix.vala \
 	objects/class_only.vala \
 	objects/class-destroysinstance.vala \
+	objects/class-gtype-too-short.test \
 	objects/class-inner-types.vala \
 	objects/class-new-no-override.vala \
 	objects/class-vfunc-base-access.vala \
@@ -468,6 +470,7 @@ TESTS = \
 	objects/interface_only.vala \
 	objects/interface-async-base-access.vala \
 	objects/interface-base-access.vala \
+	objects/interface-gtype-too-short.test \
 	objects/interface-inner-types.vala \
 	objects/interfaces.vala \
 	objects/interface-abstract-async-override.vala \
