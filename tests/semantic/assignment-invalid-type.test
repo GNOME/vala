@@ -1,0 +1,7 @@
+Invalid Code
+
+string bar;
+
+void main () {
+	bar = string;
+}

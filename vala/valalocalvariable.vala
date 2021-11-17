@@ -205,6 +205,10 @@ public class Vala.LocalVariable : Variable {
 					Report.error (source_reference, "expression type not allowed as initializer");
 					return false;
 				}
+			} else if (initializer.value_type == null) {
+				error = true;
+				Report.error (source_reference, "expression type not allowed as initializer");
+				return false;
 			}
 
 			if (!initializer.value_type.compatible (variable_type)) {

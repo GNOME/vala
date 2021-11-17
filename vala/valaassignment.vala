@@ -291,6 +291,10 @@ public class Vala.Assignment : Expression {
 					Report.error (source_reference, "Assignment: Invalid assignment attempt");
 					return false;
 				}
+			} else if (ma.symbol_reference is Variable && right.value_type == null) {
+				error = true;
+				Report.error (source_reference, "Assignment: Invalid assignment attempt");
+				return false;
 			} else if (ma.symbol_reference is Variable) {
 				unowned Variable variable = (Variable) ma.symbol_reference;
 				unowned ArrayType? variable_array_type = variable.variable_type as ArrayType;
