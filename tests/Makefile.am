@@ -981,6 +981,7 @@ TESTS = \
 	semantic/assignment-same-variable.vala \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
+	semantic/assignment-invalid-type.test \
 	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
 	semantic/cast-void-not-allowed.test \
@@ -1073,6 +1074,7 @@ TESTS = \
 	semantic/foreach-next-value-void.test \
 	semantic/foreach-next-void.test \
 	semantic/foreach-wrong-types.test \
+	semantic/initializer-invalid-type.test \
 	semantic/initializer-unknown-type.test \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
