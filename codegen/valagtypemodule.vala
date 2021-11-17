@@ -2358,6 +2358,12 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (get_ccode_has_type_id (st)) {
+			if (get_ccode_name (st).length < 3) {
+				st.error = true;
+				Report.error (st.source_reference, "Struct name `%s' is too short", get_ccode_name (st));
+				return;
+			}
+
 			push_line (st.source_reference);
 			var type_fun = new StructRegisterFunction (st);
 			type_fun.init_from_type (context, false, false);
@@ -2370,6 +2376,12 @@ public class Vala.GTypeModule : GErrorModule {
 		base.visit_enum (en);
 
 		if (get_ccode_has_type_id (en)) {
+			if (get_ccode_name (en).length < 3) {
+				en.error = true;
+				Report.error (en.source_reference, "Enum name `%s' is too short", get_ccode_name (en));
+				return;
+			}
+
 			push_line (en.source_reference);
 			var type_fun = new EnumRegisterFunction (en);
 			type_fun.init_from_type (context, false, false);

@@ -1,0 +1,8 @@
+Invalid Code
+
+struct S {
+	public int i;
+}
+
+void main () {
+}
