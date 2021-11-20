@@ -184,7 +184,7 @@ public class Vala.GAsyncModule : GtkModule {
 		if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 			Method base_method;
 
-			if (m.overrides) {
+			if (m.overrides && m.base_method != null) {
 				base_method = m.base_method;
 			} else {
 				base_method = m.base_interface_method;
