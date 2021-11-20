@@ -3,6 +3,7 @@
 
 #include <glib-object.h>
 #include <glib.h>
+#include <gio/gio.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_MSC_VER)
@@ -21,6 +22,8 @@
 
 typedef struct _IFoo IFoo;
 typedef struct _IFooIface IFooIface;
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+typedef struct _IfooBarData IfooBarData;
 
 #define TYPE_BAR (bar_get_type ())
 #define BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BAR, Bar))
@@ -37,7 +40,8 @@ enum  {
 	BAR_NUM_PROPERTIES
 };
 static GParamSpec* bar_properties[BAR_NUM_PROPERTIES];
-#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+typedef struct _BarBarData BarBarData;
+#define _g_main_loop_unref0(var) ((var == NULL) ? NULL : (var = (g_main_loop_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -46,6 +50,17 @@ static GParamSpec* bar_properties[BAR_NUM_PROPERTIES];
 struct _IFooIface {
 	GTypeInterface parent_iface;
 	gint (*foo) (IFoo* self);
+	void (*bar) (IFoo* self, GAsyncReadyCallback _callback_, gpointer _user_data_);
+	gint (*bar_finish) (IFoo* self, GAsyncResult* _res_);
+};
+
+struct _IfooBarData {
+	int _state_;
+	GObject* _source_object_;
+	GAsyncResult* _res_;
+	GTask* _async_result;
+	IFoo* self;
+	gint result;
 };
 
 struct _Bar {
@@ -57,20 +72,51 @@ struct _BarClass {
 	GObjectClass parent_class;
 };
 
+struct _BarBarData {
+	int _state_;
+	GObject* _source_object_;
+	GAsyncResult* _res_;
+	GTask* _async_result;
+	Bar* self;
+	gint result;
+};
+
 static gpointer bar_parent_class = NULL;
 static IFooIface * bar_ifoo_parent_iface = NULL;
+VALA_EXTERN GMainLoop* loop;
+GMainLoop* loop = NULL;
 
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN gint ifoo_foo (IFoo* self);
 static gint ifoo_real_foo (IFoo* self);
+static void ifoo_real_bar_data_free (gpointer _data);
+static void ifoo_real_bar (IFoo* self,
+                    GAsyncReadyCallback _callback_,
+                    gpointer _user_data_);
+VALA_EXTERN void ifoo_bar (IFoo* self,
+               GAsyncReadyCallback _callback_,
+               gpointer _user_data_);
+VALA_EXTERN gint ifoo_bar_finish (IFoo* self,
+                      GAsyncResult* _res_);
+static gboolean ifoo_real_bar_co (IfooBarData* _data_);
 static GType ifoo_get_type_once (void);
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 static gint bar_real_foo (IFoo* base);
+static void bar_real_bar_data_free (gpointer _data);
+static void bar_real_bar (IFoo* base,
+                   GAsyncReadyCallback _callback_,
+                   gpointer _user_data_);
+static gboolean bar_real_bar_co (BarBarData* _data_);
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);
 static GType bar_get_type_once (void);
 static void _vala_main (void);
+static void __lambda4_ (GObject* o,
+                 GAsyncResult* a);
+static void ___lambda4__gasync_ready_callback (GObject* source_object,
+                                        GAsyncResult* res,
+                                        gpointer self);
 
 static gint
 ifoo_real_foo (IFoo* self)
@@ -91,10 +137,90 @@ ifoo_foo (IFoo* self)
 }
 
 static void
+ifoo_real_bar_data_free (gpointer _data)
+{
+	IfooBarData* _data_;
+	_data_ = _data;
+	_g_object_unref0 (_data_->self);
+	g_slice_free (IfooBarData, _data_);
+}
+
+static gpointer
+_g_object_ref0 (gpointer self)
+{
+	return self ? g_object_ref (self) : NULL;
+}
+
+static void
+ifoo_real_bar (IFoo* self,
+               GAsyncReadyCallback _callback_,
+               gpointer _user_data_)
+{
+	IfooBarData* _data_;
+	IFoo* _tmp0_;
+	_data_ = g_slice_new0 (IfooBarData);
+	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_task_data (_data_->_async_result, _data_, ifoo_real_bar_data_free);
+	_tmp0_ = _g_object_ref0 (self);
+	_data_->self = _tmp0_;
+	ifoo_real_bar_co (_data_);
+}
+
+static gint
+ifoo_real_bar_finish (IFoo* self,
+                      GAsyncResult* _res_)
+{
+	gint result;
+	IfooBarData* _data_;
+	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
+	result = _data_->result;
+	return result;
+}
+
+static gboolean
+ifoo_real_bar_co (IfooBarData* _data_)
+{
+	switch (_data_->_state_) {
+		case 0:
+		goto _state_0;
+		default:
+		g_assert_not_reached ();
+	}
+	_state_0:
+	g_assert_not_reached ();
+}
+
+void
+ifoo_bar (IFoo* self,
+          GAsyncReadyCallback _callback_,
+          gpointer _user_data_)
+{
+	IFooIface* _iface_;
+	_iface_ = IFOO_GET_INTERFACE (self);
+	if (_iface_->bar) {
+		_iface_->bar (self, _callback_, _user_data_);
+	}
+}
+
+gint
+ifoo_bar_finish (IFoo* self,
+                 GAsyncResult* _res_)
+{
+	IFooIface* _iface_;
+	_iface_ = IFOO_GET_INTERFACE (self);
+	if (_iface_->bar_finish) {
+		return _iface_->bar_finish (self, _res_);
+	}
+	return -1;
+}
+
+static void
 ifoo_default_init (IFooIface * iface,
                    gpointer iface_data)
 {
 	iface->foo = ifoo_real_foo;
+	iface->bar = ifoo_real_bar;
+	iface->bar_finish = ifoo_real_bar_finish;
 }
 
 static GType
@@ -129,6 +255,64 @@ bar_real_foo (IFoo* base)
 	return result;
 }
 
+static void
+bar_real_bar_data_free (gpointer _data)
+{
+	BarBarData* _data_;
+	_data_ = _data;
+	_g_object_unref0 (_data_->self);
+	g_slice_free (BarBarData, _data_);
+}
+
+static void
+bar_real_bar (IFoo* base,
+              GAsyncReadyCallback _callback_,
+              gpointer _user_data_)
+{
+	Bar * self;
+	BarBarData* _data_;
+	Bar* _tmp0_;
+	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
+	_data_ = g_slice_new0 (BarBarData);
+	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_task_data (_data_->_async_result, _data_, bar_real_bar_data_free);
+	_tmp0_ = _g_object_ref0 (self);
+	_data_->self = _tmp0_;
+	bar_real_bar_co (_data_);
+}
+
+static gint
+bar_bar_finish (IFoo* base,
+                GAsyncResult* _res_)
+{
+	gint result;
+	BarBarData* _data_;
+	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
+	result = _data_->result;
+	return result;
+}
+
+static gboolean
+bar_real_bar_co (BarBarData* _data_)
+{
+	switch (_data_->_state_) {
+		case 0:
+		goto _state_0;
+		default:
+		g_assert_not_reached ();
+	}
+	_state_0:
+	_data_->result = 23;
+	g_task_return_pointer (_data_->_async_result, _data_, NULL);
+	if (_data_->_state_ != 0) {
+		while (!g_task_get_completed (_data_->_async_result)) {
+			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+		}
+	}
+	g_object_unref (_data_->_async_result);
+	return FALSE;
+}
+
 Bar*
 bar_construct (GType object_type)
 {
@@ -156,6 +340,8 @@ bar_ifoo_interface_init (IFooIface * iface,
 {
 	bar_ifoo_parent_iface = g_type_interface_peek_parent (iface);
 	iface->foo = (gint (*) (IFoo*)) bar_real_foo;
+	iface->bar = (void (*) (IFoo*, GAsyncReadyCallback, gpointer)) bar_real_bar;
+	iface->bar_finish = (gint (*) (IFoo*, GAsyncResult*)) bar_bar_finish;
 }
 
 static void
@@ -188,13 +374,41 @@ bar_get_type (void)
 }
 
 static void
+__lambda4_ (GObject* o,
+            GAsyncResult* a)
+{
+	GMainLoop* _tmp0_;
+	g_return_if_fail ((o == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT));
+	g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (a, g_async_result_get_type ()));
+	_vala_assert (ifoo_bar_finish (G_TYPE_CHECK_INSTANCE_CAST (G_TYPE_CHECK_INSTANCE_CAST (o, TYPE_BAR, Bar), TYPE_IFOO, IFoo), a) == 23, "((Bar) o).bar.end (a) == 23");
+	_tmp0_ = loop;
+	g_main_loop_quit (_tmp0_);
+}
+
+static void
+___lambda4__gasync_ready_callback (GObject* source_object,
+                                   GAsyncResult* res,
+                                   gpointer self)
+{
+	__lambda4_ (source_object, res);
+}
+
+static void
 _vala_main (void)
 {
 	Bar* bar = NULL;
 	Bar* _tmp0_;
+	GMainLoop* _tmp1_;
+	GMainLoop* _tmp2_;
 	_tmp0_ = bar_new ();
 	bar = _tmp0_;
 	_vala_assert (ifoo_foo (G_TYPE_CHECK_INSTANCE_CAST (bar, TYPE_IFOO, IFoo)) == 42, "bar.foo () == 42");
+	_tmp1_ = g_main_loop_new (NULL, FALSE);
+	_g_main_loop_unref0 (loop);
+	loop = _tmp1_;
+	ifoo_bar (G_TYPE_CHECK_INSTANCE_CAST (bar, TYPE_IFOO, IFoo), ___lambda4__gasync_ready_callback, NULL);
+	_tmp2_ = loop;
+	g_main_loop_run (_tmp2_);
 	_g_object_unref0 (bar);
 }
 
