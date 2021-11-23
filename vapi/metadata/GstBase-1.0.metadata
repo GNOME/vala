@@ -19,6 +19,14 @@ ByteReader struct=false
 Adapter
   .map skip
   .take skip
+BaseParse
+  .convert.dest_value out
+  .handle_frame.skipsize out
+BaseSink
+  .get_times.start out
+  .get_times.end out
+BitWriter
+  .put_bytes.data array array_length_idx=1
 
 // Backwards compatibility
 Adapter
