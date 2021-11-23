@@ -1241,6 +1241,7 @@ TESTS = \
 	version/since-parameter.test \
 	genie/case.gs \
 	genie/class.gs \
+	genie/class-abstract.gs \
 	genie/class-field.gs \
 	genie/class-init.gs \
 	genie/class-property.gs \
