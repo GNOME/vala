@@ -3675,7 +3675,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		CreationMethod method;
 
 		expect (TokenType.CONSTRUCT);
-		parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ();
 
 		if (accept (TokenType.OPEN_PARENS)) {
 			/* create default name using class name */
@@ -3707,8 +3707,20 @@ public class Vala.Genie.Parser : CodeVisitor {
 				method.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
-		method.access = SymbolAccessibility.PUBLIC;
+
+		if (ModifierFlags.PRIVATE in flags) {
+			method.access = SymbolAccessibility.PRIVATE;
+		} else if (ModifierFlags.PROTECTED in flags) {
+			method.access = SymbolAccessibility.PROTECTED;
+		} else {
+			method.access = SymbolAccessibility.PUBLIC;
+		}
+
 		set_attributes (method, attrs);
+
+		if (ModifierFlags.ASYNC in flags) {
+			method.coroutine = true;
+		}
 
 		if (accept_block ()) {
 			method.body = parse_block ();
