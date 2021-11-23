@@ -1,0 +1,5 @@
+[wrap-git]
+directory = vala-bootstrap
+url = https://gitlab.gnome.org/ricotz/vala-bootstrap.git
+revision = master
+depth = 1
