@@ -510,7 +510,7 @@ namespace Gst {
 			protected Parse ();
 			public bool add_index_entry (uint64 offset, Gst.ClockTime ts, bool key, bool force);
 			[NoWrapper]
-			public virtual bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+			public virtual bool convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, out int64 dest_value);
 			public bool convert_default (Gst.Format src_format, int64 src_value, Gst.Format dest_format, out int64 dest_value);
 			[NoWrapper]
 			public virtual Gst.FlowReturn detect (Gst.Buffer buffer);
@@ -520,7 +520,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.Caps get_sink_caps (Gst.Caps filter);
 			[NoWrapper]
-			public virtual Gst.FlowReturn handle_frame (Gst.Base.ParseFrame frame, int skipsize);
+			public virtual Gst.FlowReturn handle_frame (Gst.Base.ParseFrame frame, out int skipsize);
 			[Version (since = "1.6")]
 			public void merge_tags (Gst.TagList? tags, Gst.TagMergeMode mode);
 			[NoWrapper]
@@ -626,7 +626,7 @@ namespace Gst {
 			public bool get_sync ();
 			public uint64 get_throttle_time ();
 			[NoWrapper]
-			public virtual void get_times (Gst.Buffer buffer, Gst.ClockTime start, Gst.ClockTime end);
+			public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 			public Gst.ClockTimeDiff get_ts_offset ();
 			public bool is_async_enabled ();
 			public bool is_last_sample_enabled ();
@@ -714,9 +714,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, Gst.Buffer buf);
+			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, out Gst.Buffer buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (uint64 offset, uint size, out Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (uint64 offset, uint size, ref Gst.Buffer buf);
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			[NoWrapper]
@@ -734,7 +734,7 @@ namespace Gst {
 			public virtual Gst.Caps get_caps (Gst.Caps? filter);
 			public bool get_do_timestamp ();
 			[NoWrapper]
-			public virtual bool get_size (uint64 size);
+			public virtual bool get_size (out uint64 size);
 			[NoWrapper]
 			public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 			public bool is_async ();
@@ -887,7 +887,7 @@ namespace Gst {
 			[CCode (cname = "gst_bit_writer_put_bits_uint8")]
 			public bool put_bits_uint8 (uint8 value, uint nbits);
 			[CCode (cname = "gst_bit_writer_put_bytes")]
-			public bool put_bytes (uint8 data, uint nbytes);
+			public bool put_bytes ([CCode (array_length_cname = "nbytes", array_length_pos = 1.1, array_length_type = "guint", type = "const guint8*")] uint8[] data);
 			[CCode (cname = "gst_bit_writer_reset")]
 			public void reset ();
 			[CCode (cname = "gst_bit_writer_reset_and_get_buffer")]
