@@ -121,7 +121,7 @@ namespace Gst {
 			[NoAccessorMethod]
 			public Gst.Video.MultiviewFramePacking video_multiview_mode { get; set; }
 			[NoAccessorMethod]
-			public Gst.Play.VideoRenderer video_renderer { construct; }
+			public Gst.Play.VideoRenderer video_renderer { owned get; set; }
 			public double volume { get; set; }
 		}
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_signal_adapter_get_type ()")]

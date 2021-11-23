@@ -54,6 +54,9 @@ namespace Gst {
 		[Version (since = "1.18")]
 		public static string log_get_line (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, Gst.DebugMessage message);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.20")]
+		public static void log_literal (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string message_string);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static void log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object? object, string format, va_list args);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void print_stack_trace ();
@@ -1395,6 +1398,8 @@ namespace Gst {
 		public virtual void state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public static unowned string state_get_name (Gst.State state);
 		public bool sync_state_with_parent ();
+		[Version (since = "1.20")]
+		public static void type_set_skip_documentation (GLib.Type type);
 		public void unlink (Gst.Element dest);
 		public void unlink_many (params Gst.Element[] elements);
 		public void unlink_pads (string srcpadname, Gst.Element dest, string destpadname);
@@ -1423,6 +1428,8 @@ namespace Gst {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[]? get_metadata_keys ();
 		public uint get_num_pad_templates ();
+		[Version (since = "1.20")]
+		public bool get_skip_documentation ();
 		public unowned GLib.List<Gst.StaticPadTemplate?> get_static_pad_templates ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_uri_protocols ();

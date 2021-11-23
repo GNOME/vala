@@ -726,9 +726,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, Gst.Buffer buf);
+			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, out Gst.Buffer buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (uint64 offset, uint size, out Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (uint64 offset, uint size, ref Gst.Buffer buf);
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			[NoWrapper]
@@ -746,7 +746,7 @@ namespace Gst {
 			public virtual Gst.Caps get_caps (Gst.Caps? filter);
 			public bool get_do_timestamp ();
 			[NoWrapper]
-			public virtual bool get_size (uint64 size);
+			public virtual bool get_size (out uint64 size);
 			[NoWrapper]
 			public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
 			public bool is_async ();
