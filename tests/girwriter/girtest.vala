@@ -14,6 +14,10 @@ namespace GirTest {
 
 		public void inv () {
 		}
+
+		public BoxedStruct ret () {
+			return this;
+		}
 	}
 
 	[CCode (has_type_id = false)]
@@ -31,6 +35,10 @@ namespace GirTest {
 
 		public void inv () {
 		}
+
+		public Struct ret () {
+			return this;
+		}
 	}
 
 	[GIR (visible = false)]
@@ -47,6 +55,13 @@ namespace GirTest {
 	public const string CONSTANT_STRING = "const ♥ utf8";
 	[GIR (name = "RENAMED_CONSTANT")]
 	public const int NAMED_CONSTANT = 23;
+
+	public const bool TRUE_LITERAL = true;
+	public const bool FALSE_LITERAL = false;
+	public const char CHAR_LITERAL = 'y';
+	public const double REAL_LITERAL = 3.1415;
+	public const float FLOAT_LITERAL = -3.1415f;
+	public const int INTEGER_LITERAL = -42;
 
 	public enum EnumTest {
 		VALUE1,
