@@ -2805,6 +2805,19 @@
 				</instance-parameter>
 			</parameters>
 		</method>
+		<method name="ret" c:identifier="gir_test_boxed_struct_ret">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" nullable="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</instance-parameter>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</parameter>
+			</parameters>
+		</method>
 	</record>
 	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
 		<field name="field_name" writable="1">
@@ -2847,6 +2860,19 @@
 				<instance-parameter name="self" transfer-ownership="none" nullable="1">
 					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
 				</instance-parameter>
+			</parameters>
+		</method>
+		<method name="ret" c:identifier="gir_test_struct_ret">
+			<return-value transfer-ownership="none">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" nullable="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</instance-parameter>
+				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
 			</parameters>
 		</method>
 	</record>
@@ -2932,6 +2958,24 @@
 		<type name="utf8" c:type="const gchar*"/>
 	</constant>
 	<constant name="RENAMED_CONSTANT" c:identifier="GIR_TEST_NAMED_CONSTANT" value="23">
+		<type name="gint" c:type="gint"/>
+	</constant>
+	<constant name="TRUE_LITERAL" c:identifier="GIR_TEST_TRUE_LITERAL" value="true">
+		<type name="gboolean" c:type="gboolean"/>
+	</constant>
+	<constant name="FALSE_LITERAL" c:identifier="GIR_TEST_FALSE_LITERAL" value="false">
+		<type name="gboolean" c:type="gboolean"/>
+	</constant>
+	<constant name="CHAR_LITERAL" c:identifier="GIR_TEST_CHAR_LITERAL" value="y">
+		<type name="gint8" c:type="gchar"/>
+	</constant>
+	<constant name="REAL_LITERAL" c:identifier="GIR_TEST_REAL_LITERAL" value="3.1415">
+		<type name="gdouble" c:type="gdouble"/>
+	</constant>
+	<constant name="FLOAT_LITERAL" c:identifier="GIR_TEST_FLOAT_LITERAL" value="-3.1415f">
+		<type name="gfloat" c:type="gfloat"/>
+	</constant>
+	<constant name="INTEGER_LITERAL" c:identifier="GIR_TEST_INTEGER_LITERAL" value="-42">
 		<type name="gint" c:type="gint"/>
 	</constant>
 	<function name="use_renamed_class" c:identifier="gir_test_use_renamed_class">

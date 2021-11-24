@@ -205,6 +205,7 @@ namespace GirTest {
 		public BoxedStruct ();
 		public BoxedStruct.foo (int param1, int param2);
 		public void inv ();
+		public GirTest.BoxedStruct ret ();
 	}
 	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedCompactClass", has_type_id = false)]
 	public struct RenamedCompactClass {
@@ -220,6 +221,7 @@ namespace GirTest {
 		public Struct ();
 		public Struct.foo (int param1, int param2);
 		public void inv ();
+		public GirTest.Struct ret ();
 	}
 	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ENUM_TEST_", type_id = "gir_test_enum_test_get_type ()")]
 	public enum EnumTest {
@@ -267,12 +269,24 @@ namespace GirTest {
 	public delegate bool DelegateTest (void* a, void* b);
 	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedDelegate", has_target = false)]
 	public delegate void RenamedDelegate ();
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CHAR_LITERAL")]
+	public const int8 CHAR_LITERAL;
 	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_NUMBER")]
 	public const int CONSTANT_NUMBER;
 	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_CONSTANT_STRING")]
 	public const string CONSTANT_STRING;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_FALSE_LITERAL")]
+	public const bool FALSE_LITERAL;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_FLOAT_LITERAL")]
+	public const float FLOAT_LITERAL;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_INTEGER_LITERAL")]
+	public const int INTEGER_LITERAL;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_REAL_LITERAL")]
+	public const double REAL_LITERAL;
 	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_NAMED_CONSTANT")]
 	public const int RENAMED_CONSTANT;
+	[CCode (cheader_filename = "girtest.h", cname = "GIR_TEST_TRUE_LITERAL")]
+	public const bool TRUE_LITERAL;
 	[CCode (cheader_filename = "girtest.h")]
 	public static GirTest.RenamedClass use_renamed_class (GirTest.RenamedClass param);
 	[CCode (cheader_filename = "girtest.h")]
