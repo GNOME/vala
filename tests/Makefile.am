@@ -246,6 +246,7 @@ TESTS = \
 	methods/printf-invalid.test \
 	methods/printf-constructor.vala \
 	methods/printf-constructor-invalid.test \
+	methods/profile.vala \
 	methods/varargs-delegate.vala \
 	methods/varargs-delegate-without-target.vala \
 	methods/varargs-gvalue.vala \
