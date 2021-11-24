@@ -83,6 +83,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"GtkCallback", "name", "",
 
 		"ModuleInit", "",
+		"Profile", "",
 
 		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "",
 
