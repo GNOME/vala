@@ -170,6 +170,7 @@ namespace GirTest {
 		public int field_name;
 		public BoxedStruct ();
 		public void inv ();
+		public GirTest.BoxedStruct ret ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	[GIR (name = "RenamedStruct")]
@@ -186,6 +187,7 @@ namespace GirTest {
 		public int field_name;
 		public Struct ();
 		public void inv ();
+		public GirTest.Struct ret ();
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public enum EnumTest {
@@ -252,12 +254,24 @@ namespace GirTest {
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
 	[CCode (cheader_filename = "girtest.h")]
+	public const char CHAR_LITERAL;
+	[CCode (cheader_filename = "girtest.h")]
 	public const int CONSTANT_NUMBER;
 	[CCode (cheader_filename = "girtest.h")]
 	public const string CONSTANT_STRING;
 	[CCode (cheader_filename = "girtest.h")]
+	public const bool FALSE_LITERAL;
+	[CCode (cheader_filename = "girtest.h")]
+	public const float FLOAT_LITERAL;
+	[CCode (cheader_filename = "girtest.h")]
+	public const int INTEGER_LITERAL;
+	[CCode (cheader_filename = "girtest.h")]
 	[GIR (name = "RENAMED_CONSTANT")]
 	public const int NAMED_CONSTANT;
+	[CCode (cheader_filename = "girtest.h")]
+	public const double REAL_LITERAL;
+	[CCode (cheader_filename = "girtest.h")]
+	public const bool TRUE_LITERAL;
 	[CCode (cheader_filename = "girtest.h")]
 	public static GirTest.NamedClass use_renamed_class (GirTest.NamedClass param);
 	[CCode (cheader_filename = "girtest.h")]
