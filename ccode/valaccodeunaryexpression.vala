@@ -67,8 +67,8 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 			writer.write_string ("&");
 			inner.write_inner (writer);
 			break;
-		case CCodeUnaryOperator.PREFIX_INCREMENT: writer.write_string ("++"); break;
-		case CCodeUnaryOperator.PREFIX_DECREMENT: writer.write_string ("--"); break;
+		case CCodeUnaryOperator.PREFIX_INCREMENT: writer.write_string ("++"); inner.write_inner (writer); break;
+		case CCodeUnaryOperator.PREFIX_DECREMENT: writer.write_string ("--"); inner.write_inner (writer); break;
 		case CCodeUnaryOperator.POSTFIX_INCREMENT: inner.write_inner (writer); writer.write_string ("++"); break;
 		case CCodeUnaryOperator.POSTFIX_DECREMENT: inner.write_inner (writer); writer.write_string ("--"); break;
 		default: assert_not_reached ();
