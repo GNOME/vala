@@ -97,6 +97,12 @@ public class Vala.CreationMethod : Method {
 			this_parameter.check (context);
 		}
 
+		if (coroutine && !external_package && !context.has_package ("gio-2.0")) {
+			error = true;
+			Report.error (source_reference, "gio-2.0 package required for async constructors");
+			return false;
+		}
+
 		var old_source_file = context.analyzer.current_source_file;
 		var old_symbol = context.analyzer.current_symbol;
 
