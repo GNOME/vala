@@ -543,6 +543,7 @@ TESTS = \
 	objects/signals-dynamic-lambda-handler.test \
 	objects/signals-error-marshal.vala \
 	objects/signals-fundamental-return.vala \
+	objects/signals-generic-return.vala \
 	objects/signals-gobject-return.vala \
 	objects/signals-lambda-delegate.vala \
 	objects/signals-prototype-access.vala \
