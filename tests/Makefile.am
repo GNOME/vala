@@ -197,8 +197,8 @@ TESTS = \
 	methods/bug599892.vala \
 	methods/bug613483.vala \
 	methods/bug615450.test \
-	methods/bug620673.test \
 	methods/bug620673.vala \
+	methods/bug620673-2.test \
 	methods/bug622570.vala \
 	methods/bug626783.vala \
 	methods/bug634753.vala \
@@ -738,8 +738,8 @@ TESTS = \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/value-pointer-type-access.vala \
-	generics/bug640330.test \
 	generics/bug640330.vala \
+	generics/bug640330-2.test \
 	generics/bug694765-1.vala \
 	generics/bug694765-2.vala \
 	generics/bug694765-3.vala \
