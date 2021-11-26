@@ -1064,10 +1064,31 @@ namespace WebKit {
 		public void finish (GLib.InputStream stream, int64 stream_length, string? content_type);
 		[Version (since = "2.2")]
 		public void finish_error (GLib.Error error);
+		[Version (since = "2.36")]
+		public void finish_with_response (WebKit.URISchemeResponse response);
+		public Soup.MessageHeaders get_http_headers ();
+		[Version (since = "2.36")]
+		public unowned string get_http_method ();
 		public unowned string get_path ();
 		public unowned string get_scheme ();
 		public unowned string get_uri ();
 		public unowned WebKit.WebView get_web_view ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_uri_scheme_response_get_type ()")]
+	public class URISchemeResponse : GLib.Object {
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.36")]
+		public URISchemeResponse (GLib.InputStream input_stream, int64 stream_length);
+		[Version (since = "2.36")]
+		public void set_content_type (string content_type);
+		public void set_http_headers (Soup.MessageHeaders headers);
+		[Version (since = "2.36")]
+		public void set_status (uint status_code, string? reason_phrase);
+		[NoAccessorMethod]
+		[Version (since = "2.36")]
+		public GLib.InputStream stream { construct; }
+		[NoAccessorMethod]
+		public int64 stream_length { construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_content_filter_ref", type_id = "webkit_user_content_filter_get_type ()", unref_function = "webkit_user_content_filter_unref")]
 	[Compact]
