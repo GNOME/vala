@@ -56,6 +56,10 @@ test-asan:
 test-ubsan:
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) check TEST_CFLAGS="$(TEST_CFLAGS) -g3 -fsanitize=undefined"
 
+.PHONY: test-update
+test-update:
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) check UPDATE_EXPECTED=1
+
 #if ENABLE_COVERAGE
 .PHONY: coverage coverage-report
 coverage:
