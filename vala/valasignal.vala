@@ -115,7 +115,7 @@ public class Vala.Signal : Symbol, Callable {
 
 		generated_delegate.sender_type = sender_param_type;
 
-		bool is_generic = false;
+		bool is_generic = actual_return_type.is_generic ();
 
 		foreach (Parameter param in parameters) {
 			var actual_param = param.copy ();
@@ -133,8 +133,11 @@ public class Vala.Signal : Symbol, Callable {
 				generated_delegate.add_type_parameter (new TypeParameter (type_param.name, type_param.source_reference));
 			}
 
-			// parameter types must refer to the delegate type parameters
+			// return type and parameter types must refer to the delegate type parameters
 			// instead of to the class type parameters
+			foreach (var type_param in generated_delegate.get_type_parameters ()) {
+				actual_return_type.replace_type_parameter (cl.get_type_parameters ().get (cl.get_type_parameter_index (type_param.name)), type_param);
+			}
 			foreach (var param in generated_delegate.get_parameters ()) {
 				foreach (var type_param in generated_delegate.get_type_parameters ()) {
 					param.variable_type.replace_type_parameter (cl.get_type_parameters ().get (cl.get_type_parameter_index (type_param.name)), type_param);

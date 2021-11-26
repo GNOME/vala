@@ -242,7 +242,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		CCodeFunctionCall fc;
 
-		if (return_type.type_symbol != null || return_type is ArrayType) {
+		if (return_type.type_symbol != null || return_type is ArrayType || return_type is GenericType) {
 			ccode.add_declaration (get_value_type_name_from_type_reference (return_type), new CCodeVariableDeclarator ("v_return"));
 
 			fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
@@ -318,7 +318,7 @@ public class Vala.GSignalModule : GObjectModule {
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
 
-		if (return_type.type_symbol != null || return_type is ArrayType) {
+		if (return_type.type_symbol != null || return_type is ArrayType || return_type is GenericType) {
 			ccode.add_assignment (new CCodeIdentifier ("v_return"), fc);
 
 			CCodeFunctionCall set_fc;
