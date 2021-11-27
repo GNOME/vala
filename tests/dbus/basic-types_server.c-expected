@@ -74,7 +74,7 @@ VALA_EXTERN gint test_test_int (Test* self,
                     gint* j);
 VALA_EXTERN gchar* test_test_string (Test* self,
                          const gchar* s,
-                         gchar* * t);
+                         gchar** t);
 VALA_EXTERN Test* test_new (void);
 VALA_EXTERN Test* test_construct (GType object_type);
 VALA_EXTERN gchar* test_get_test_property (Test* self);
@@ -201,7 +201,7 @@ test_test_int (Test* self,
 gchar*
 test_test_string (Test* self,
                   const gchar* s,
-                  gchar* * t)
+                  gchar** t)
 {
 	gchar* _vala_t = NULL;
 	gchar* _tmp0_;

@@ -46,7 +46,7 @@ struct _TestIface {
 	GTypeInterface parent_iface;
 	void (*test_void) (Test* self, GError** error);
 	gint (*test_int) (Test* self, gint i, gint* j, GError** error);
-	gchar* (*test_string) (Test* self, const gchar* s, gchar* * t, GError** error);
+	gchar* (*test_string) (Test* self, const gchar* s, gchar** t, GError** error);
 	void (*test_cancellable) (Test* self, GCancellable* cancellable, GError** error);
 	void (*test_custom_error) (Test* self, GError** error);
 };
@@ -66,7 +66,7 @@ VALA_EXTERN gint test_test_int (Test* self,
                     GError** error);
 VALA_EXTERN gchar* test_test_string (Test* self,
                          const gchar* s,
-                         gchar* * t,
+                         gchar** t,
                          GError** error);
 VALA_EXTERN void test_test_cancellable (Test* self,
                             GCancellable* cancellable,
@@ -86,7 +86,7 @@ static gint test_proxy_test_int (Test* self,
                           GError** error);
 static gchar* test_proxy_test_string (Test* self,
                                const gchar* s,
-                               gchar* * t,
+                               gchar** t,
                                GError** error);
 static void test_proxy_test_cancellable (Test* self,
                                   GCancellable* cancellable,
@@ -201,7 +201,7 @@ test_test_int (Test* self,
 gchar*
 test_test_string (Test* self,
                   const gchar* s,
-                  gchar* * t,
+                  gchar** t,
                   GError** error)
 {
 	TestIface* _iface_;
@@ -363,7 +363,7 @@ test_proxy_test_int (Test* self,
 static gchar*
 test_proxy_test_string (Test* self,
                         const gchar* s,
-                        gchar* * t,
+                        gchar** t,
                         GError** error)
 {
 	GDBusMessage *_message;

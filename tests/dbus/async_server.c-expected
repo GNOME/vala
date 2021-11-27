@@ -137,7 +137,7 @@ VALA_EXTERN void test_test_string (Test* self,
                        gpointer _user_data_);
 VALA_EXTERN gchar* test_test_string_finish (Test* self,
                                 GAsyncResult* _res_,
-                                gchar* * t);
+                                gchar** t);
 static gboolean test_test_string_co (TestTestStringData* _data_);
 static gboolean _test_test_string_co_gsource_func (gpointer self);
 VALA_EXTERN Test* test_new (void);
@@ -410,7 +410,7 @@ test_test_string (Test* self,
 gchar*
 test_test_string_finish (Test* self,
                          GAsyncResult* _res_,
-                         gchar* * t)
+                         gchar** t)
 {
 	gchar* result;
 	TestTestStringData* _data_;

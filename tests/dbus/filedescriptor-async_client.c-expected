@@ -42,7 +42,7 @@ typedef struct _RunData RunData;
 struct _TestIface {
 	GTypeInterface parent_iface;
 	void (*test_in) (Test* self, GUnixInputStream* i, GAsyncReadyCallback _callback_, gpointer _user_data_);
-	GUnixInputStream* (*test_in_finish) (Test* self, GAsyncResult* _res_, GUnixInputStream* * j, GError** error);
+	GUnixInputStream* (*test_in_finish) (Test* self, GAsyncResult* _res_, GUnixInputStream** j, GError** error);
 };
 
 struct _TestTestInReadyData {
@@ -123,7 +123,7 @@ VALA_EXTERN void test_test_in (Test* self,
                    gpointer _user_data_);
 VALA_EXTERN GUnixInputStream* test_test_in_finish (Test* self,
                                        GAsyncResult* _res_,
-                                       GUnixInputStream* * j,
+                                       GUnixInputStream** j,
                                        GError** error);
 static GType test_get_type_once (void);
 static void test_proxy_g_signal (GDBusProxy* proxy,
@@ -139,7 +139,7 @@ static void test_proxy_test_in_async (Test* self,
                                gpointer _user_data_);
 static GUnixInputStream* test_proxy_test_in_finish (Test* self,
                                              GAsyncResult* _res_,
-                                             GUnixInputStream* * j,
+                                             GUnixInputStream** j,
                                              GError** error);
 static void test_proxy_test_interface_init (TestIface* iface);
 static void _dbus_test_test_in (Test* self,
@@ -210,7 +210,7 @@ test_test_in (Test* self,
 GUnixInputStream*
 test_test_in_finish (Test* self,
                      GAsyncResult* _res_,
-                     GUnixInputStream* * j,
+                     GUnixInputStream** j,
                      GError** error)
 {
 	TestIface* _iface_;
@@ -314,7 +314,7 @@ test_proxy_test_in_async (Test* self,
 static GUnixInputStream*
 test_proxy_test_in_finish (Test* self,
                            GAsyncResult* _res_,
-                           GUnixInputStream* * j,
+                           GUnixInputStream** j,
                            GError** error)
 {
 	GUnixFDList* _fd_list;

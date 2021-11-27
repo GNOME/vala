@@ -39,7 +39,7 @@ struct _TestIface {
 	GTypeInterface parent_iface;
 	void (*test_void) (Test* self, GError** error);
 	gint (*test_int) (Test* self, gint i, gint* j, GError** error);
-	gchar* (*test_string) (Test* self, const gchar* s, gchar* * t, GError** error);
+	gchar* (*test_string) (Test* self, const gchar* s, gchar** t, GError** error);
 	gchar* (*get_test_property) (Test* self);
 	void (*set_test_property) (Test* self, const gchar* value);
 	gint (*get_test_int_property) (Test* self);
@@ -60,7 +60,7 @@ VALA_EXTERN gint test_test_int (Test* self,
                     GError** error);
 VALA_EXTERN gchar* test_test_string (Test* self,
                          const gchar* s,
-                         gchar* * t,
+                         gchar** t,
                          GError** error);
 VALA_EXTERN gchar* test_get_test_property (Test* self);
 VALA_EXTERN void test_set_test_property (Test* self,
@@ -81,7 +81,7 @@ static gint test_proxy_test_int (Test* self,
                           GError** error);
 static gchar* test_proxy_test_string (Test* self,
                                const gchar* s,
-                               gchar* * t,
+                               gchar** t,
                                GError** error);
 static gchar* test_dbus_proxy_get_test_property (Test* self);
 static void test_dbus_proxy_set_test_property (Test* self,
@@ -184,7 +184,7 @@ test_test_int (Test* self,
 gchar*
 test_test_string (Test* self,
                   const gchar* s,
-                  gchar* * t,
+                  gchar** t,
                   GError** error)
 {
 	TestIface* _iface_;
@@ -371,7 +371,7 @@ test_proxy_test_int (Test* self,
 static gchar*
 test_proxy_test_string (Test* self,
                         const gchar* s,
-                        gchar* * t,
+                        gchar** t,
                         GError** error)
 {
 	GDBusMessage *_message;

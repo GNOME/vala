@@ -62,7 +62,7 @@ VALA_EXTERN guint test_register_object (void* object,
                             GError** error);
 VALA_EXTERN gint test_do_foo (Test* self,
                   gint i,
-                  gchar* * s,
+                  gchar** s,
                   GError** error);
 VALA_EXTERN Test* test_new (void);
 VALA_EXTERN Test* test_construct (GType object_type);
@@ -123,7 +123,7 @@ static const GDBusInterfaceVTable _test_dbus_interface_vtable = {test_dbus_inter
 gint
 test_do_foo (Test* self,
              gint i,
-             gchar* * s,
+             gchar** s,
              GError** error)
 {
 	gchar* _vala_s = NULL;

@@ -85,8 +85,8 @@ static gboolean test_dbus_interface_set_property (GDBusConnection* connection,
                                            GError** error,
                                            gpointer user_data);
 static void _test_unregister_object (gpointer user_data);
-VALA_EXTERN void create_streams (GUnixInputStream* * input,
-                     GUnixOutputStream* * output,
+VALA_EXTERN void create_streams (GUnixInputStream** input,
+                     GUnixOutputStream** output,
                      GError** error);
 static void _vala_main (void);
 
@@ -356,8 +356,8 @@ _test_unregister_object (gpointer user_data)
 }
 
 void
-create_streams (GUnixInputStream* * input,
-                GUnixOutputStream* * output,
+create_streams (GUnixInputStream** input,
+                GUnixOutputStream** output,
                 GError** error)
 {
 	GUnixInputStream* _vala_input = NULL;

@@ -359,7 +359,7 @@ static GType maman_bar_get_type_once (void);
 VALA_EXTERN GType maman_sub_bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanSubBar, g_object_unref)
 static void maman_sub_bar_real_do_virtual_action (MamanBar* base);
-static void maman_sub_bar_accept_ref_string (gchar* * str);
+static void maman_sub_bar_accept_ref_string (gchar** str);
 static void maman_sub_bar_test_classes_methods_ref_parameters (void);
 static gint maman_sub_bar_main (void);
 VALA_EXTERN MamanSubBar* maman_sub_bar_new (void);
@@ -373,10 +373,10 @@ VALA_EXTERN MamanSubFooBar* maman_sub_foo_bar_construct (GType object_type);
 VALA_EXTERN GType maman_foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void maman_foo_do_action (MamanFoo* self);
 VALA_EXTERN void maman_base_access_test (void);
-VALA_EXTERN void test_out (gchar* * bar);
-VALA_EXTERN void test_out_weak (const gchar* * bar);
-VALA_EXTERN void test_ref (gchar* * bar);
-VALA_EXTERN void test_ref_weak (const gchar* * bar);
+VALA_EXTERN void test_out (gchar** bar);
+VALA_EXTERN void test_out_weak (const gchar** bar);
+VALA_EXTERN void test_ref (gchar** bar);
+VALA_EXTERN void test_ref_weak (const gchar** bar);
 VALA_EXTERN void test_out_array_no_length (gchar*** bar);
 VALA_EXTERN void maman_class_test_run_test (void);
 static GType maman_sub_bar_get_type_once (void);
@@ -553,7 +553,7 @@ maman_sub_bar_real_do_virtual_action (MamanBar* base)
 }
 
 static void
-maman_sub_bar_accept_ref_string (gchar* * str)
+maman_sub_bar_accept_ref_string (gchar** str)
 {
 	g_return_if_fail (*str != NULL);
 }
@@ -1394,7 +1394,7 @@ maman_base_access_test (void)
 }
 
 void
-test_out (gchar* * bar)
+test_out (gchar** bar)
 {
 	gchar* _vala_bar = NULL;
 	gchar* _tmp0_;
@@ -1409,7 +1409,7 @@ test_out (gchar* * bar)
 }
 
 void
-test_out_weak (const gchar* * bar)
+test_out_weak (const gchar** bar)
 {
 	const gchar* _vala_bar = NULL;
 	_vala_bar = "hello";
@@ -1419,7 +1419,7 @@ test_out_weak (const gchar* * bar)
 }
 
 void
-test_ref (gchar* * bar)
+test_ref (gchar** bar)
 {
 	gchar* _tmp0_;
 	g_return_if_fail (*bar != NULL);
@@ -1430,7 +1430,7 @@ test_ref (gchar* * bar)
 }
 
 void
-test_ref_weak (const gchar* * bar)
+test_ref_weak (const gchar** bar)
 {
 	g_return_if_fail (*bar != NULL);
 	_vala_assert (g_strcmp0 (*bar, "hello") == 0, "bar == \"hello\"");

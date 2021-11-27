@@ -67,7 +67,7 @@ double_parse (const gchar* str)
 static gboolean
 double_try_parse (const gchar* str,
                   gdouble* _result_,
-                  const gchar* * unparsed)
+                  const gchar** unparsed)
 {
 	gdouble _vala__result_ = 0.0;
 	const gchar* _vala_unparsed = NULL;
@@ -223,7 +223,7 @@ float_parse (const gchar* str)
 static gboolean
 float_try_parse (const gchar* str,
                  gfloat* _result_,
-                 const gchar* * unparsed)
+                 const gchar** unparsed)
 {
 	gfloat _vala__result_ = 0.0F;
 	const gchar* _vala_unparsed = NULL;

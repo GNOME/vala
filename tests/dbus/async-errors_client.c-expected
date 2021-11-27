@@ -44,7 +44,7 @@ struct _TestIface {
 	void (*test_int) (Test* self, gint i, GAsyncReadyCallback _callback_, gpointer _user_data_);
 	gint (*test_int_finish) (Test* self, GAsyncResult* _res_, gint* j, GError** error);
 	void (*test_string) (Test* self, const gchar* s, GAsyncReadyCallback _callback_, gpointer _user_data_);
-	gchar* (*test_string_finish) (Test* self, GAsyncResult* _res_, gchar* * t, GError** error);
+	gchar* (*test_string_finish) (Test* self, GAsyncResult* _res_, gchar** t, GError** error);
 	void (*test_cancellable) (Test* self, GCancellable* cancellable, GAsyncReadyCallback _callback_, gpointer _user_data_);
 	void (*test_cancellable_finish) (Test* self, GAsyncResult* _res_, GError** error);
 };
@@ -122,7 +122,7 @@ VALA_EXTERN void test_test_string (Test* self,
                        gpointer _user_data_);
 VALA_EXTERN gchar* test_test_string_finish (Test* self,
                                 GAsyncResult* _res_,
-                                gchar* * t,
+                                gchar** t,
                                 GError** error);
 VALA_EXTERN void test_test_cancellable (Test* self,
                             GCancellable* cancellable,
@@ -159,7 +159,7 @@ static void test_proxy_test_string_async (Test* self,
                                    gpointer _user_data_);
 static gchar* test_proxy_test_string_finish (Test* self,
                                       GAsyncResult* _res_,
-                                      gchar* * t,
+                                      gchar** t,
                                       GError** error);
 static void test_proxy_test_cancellable_async (Test* self,
                                         GCancellable* cancellable,
@@ -318,7 +318,7 @@ test_test_string (Test* self,
 gchar*
 test_test_string_finish (Test* self,
                          GAsyncResult* _res_,
-                         gchar* * t,
+                         gchar** t,
                          GError** error)
 {
 	TestIface* _iface_;
@@ -545,7 +545,7 @@ test_proxy_test_string_async (Test* self,
 static gchar*
 test_proxy_test_string_finish (Test* self,
                                GAsyncResult* _res_,
-                               gchar* * t,
+                               gchar** t,
                                GError** error)
 {
 	GAsyncResult *_inner_res;

@@ -92,7 +92,7 @@ VALA_EXTERN void foo_async (Manam* i,
                 GAsyncReadyCallback _callback_,
                 gpointer _user_data_);
 VALA_EXTERN void foo_finish (GAsyncResult* _res_,
-                 Manam* * o,
+                 Manam** o,
                  GError** error);
 static gboolean foo_async_co (FooAsyncData* _data_);
 static void run_data_free (gpointer _data);
@@ -193,7 +193,7 @@ foo_async (Manam* i,
 
 void
 foo_finish (GAsyncResult* _res_,
-            Manam* * o,
+            Manam** o,
             GError** error)
 {
 	FooAsyncData* _data_;
