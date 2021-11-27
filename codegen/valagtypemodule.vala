@@ -31,10 +31,13 @@ public class Vala.GTypeModule : GErrorModule {
 
 		generate_type_declaration (param.variable_type, decl_space);
 
-		string ctypename = get_ccode_name (param.variable_type);
+		string? ctypename = get_ccode_type (param);
+		if (ctypename == null) {
+			ctypename = get_ccode_name (param.variable_type);
 
-		if (param.direction != ParameterDirection.IN) {
-			ctypename = "%s*".printf (ctypename);
+			if (param.direction != ParameterDirection.IN) {
+				ctypename = "%s*".printf (ctypename);
+			}
 		}
 
 		var cparam = new CCodeParameter (get_ccode_name (param), ctypename);

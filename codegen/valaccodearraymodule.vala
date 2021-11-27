@@ -850,23 +850,25 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
-		if (param.params_array || !(param.variable_type is ArrayType)) {
+		unowned ArrayType? array_type = param.variable_type as ArrayType;
+		if (array_type == null || param.params_array) {
 			return base.generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
-		string ctypename = get_ccode_name (param.variable_type);
-		string name = get_ccode_name (param);
-		var array_type = (ArrayType) param.variable_type;
+		string? ctypename = get_ccode_type (param);
+		if (ctypename == null) {
+			ctypename = get_ccode_name (param.variable_type);
 
-		if (array_type.fixed_length) {
-			ctypename += "*";
+			if (array_type.fixed_length) {
+				ctypename += "*";
+			}
+
+			if (param.direction != ParameterDirection.IN) {
+				ctypename += "*";
+			}
 		}
 
-		if (param.direction != ParameterDirection.IN) {
-			ctypename += "*";
-		}
-
-		var main_cparam = new CCodeParameter (name, ctypename);
+		var main_cparam = new CCodeParameter (get_ccode_name (param), ctypename);
 
 		generate_type_declaration (array_type.element_type, decl_space);
 
