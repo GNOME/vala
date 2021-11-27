@@ -7,8 +7,8 @@
 
 typedef gint (*_LocalFunc0_) (gpointer user_data);
 typedef gboolean (*_LocalFunc1_) (gint a, gint b, gpointer user_data);
-typedef void (*_LocalFunc2_) (gchar* * s, gpointer user_data);
-typedef const gchar* (*_LocalFunc3_) (gchar* * s, gpointer user_data);
+typedef void (*_LocalFunc2_) (gchar** s, gpointer user_data);
+typedef const gchar* (*_LocalFunc3_) (gchar** s, gpointer user_data);
 typedef struct _Block1Data Block1Data;
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
@@ -32,11 +32,11 @@ static gboolean ___lambda5_ (gint a,
 static gboolean ____lambda5___localfunc1_ (gint a,
                                     gint b,
                                     gpointer self);
-static void ___lambda6_ (gchar* * s);
-static void ____lambda6___localfunc2_ (gchar* * s,
+static void ___lambda6_ (gchar** s);
+static void ____lambda6___localfunc2_ (gchar** s,
                                 gpointer self);
-static const gchar* ___lambda7_ (gchar* * s);
-static const gchar* ____lambda7___localfunc3_ (gchar* * s,
+static const gchar* ___lambda7_ (gchar** s);
+static const gchar* ____lambda7___localfunc3_ (gchar** s,
                                         gpointer self);
 
 static Block1Data*
@@ -93,7 +93,7 @@ ____lambda5___localfunc1_ (gint a,
 }
 
 static void
-___lambda6_ (gchar* * s)
+___lambda6_ (gchar** s)
 {
 	gchar* _vala_s = NULL;
 	gchar* _tmp0_;
@@ -108,14 +108,14 @@ ___lambda6_ (gchar* * s)
 }
 
 static void
-____lambda6___localfunc2_ (gchar* * s,
+____lambda6___localfunc2_ (gchar** s,
                            gpointer self)
 {
 	___lambda6_ (s);
 }
 
 static const gchar*
-___lambda7_ (gchar* * s)
+___lambda7_ (gchar** s)
 {
 	gchar* _tmp0_;
 	const gchar* result = NULL;
@@ -129,7 +129,7 @@ ___lambda7_ (gchar* * s)
 }
 
 static const gchar*
-____lambda7___localfunc3_ (gchar* * s,
+____lambda7___localfunc3_ (gchar** s,
                            gpointer self)
 {
 	const gchar* result;

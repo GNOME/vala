@@ -75,7 +75,7 @@ VALA_EXTERN gint test_test_int (Test* self,
                     GError** error);
 VALA_EXTERN gchar* test_test_string (Test* self,
                          const gchar* s,
-                         gchar* * t,
+                         gchar** t,
                          GError** error);
 VALA_EXTERN void test_test_cancellable (Test* self,
                             GCancellable* cancellable,
@@ -207,7 +207,7 @@ test_test_int (Test* self,
 gchar*
 test_test_string (Test* self,
                   const gchar* s,
-                  gchar* * t,
+                  gchar** t,
                   GError** error)
 {
 	gchar* _vala_t = NULL;

@@ -64,7 +64,7 @@ VALA_EXTERN guint test_register_object (void* object,
                             GError** error);
 VALA_EXTERN GUnixInputStream* test_test_in (Test* self,
                                 GUnixInputStream* i,
-                                GUnixInputStream* * j,
+                                GUnixInputStream** j,
                                 GError** error);
 VALA_EXTERN Test* test_new (void);
 VALA_EXTERN Test* test_construct (GType object_type);
@@ -125,7 +125,7 @@ static const GDBusInterfaceVTable _test_dbus_interface_vtable = {test_dbus_inter
 GUnixInputStream*
 test_test_in (Test* self,
               GUnixInputStream* i,
-              GUnixInputStream* * j,
+              GUnixInputStream** j,
               GError** error)
 {
 	GUnixInputStream* _vala_j = NULL;

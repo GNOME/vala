@@ -60,7 +60,7 @@ static void run_ready (GObject* source_object,
                 gpointer _user_data_);
 static gint _dynamic_do_foo0 (GDBusProxy* self,
                        gint param1,
-                       gchar* * param2,
+                       gchar** param2,
                        GError** error);
 static void _vala_main (void);
 
@@ -105,7 +105,7 @@ run_ready (GObject* source_object,
 static gint
 _dynamic_do_foo0 (GDBusProxy* self,
                   gint param1,
-                  gchar* * param2,
+                  gchar** param2,
                   GError** error)
 {
 	GDBusMessage *_message;

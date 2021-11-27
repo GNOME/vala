@@ -57,10 +57,10 @@ VALA_EXTERN Manam* manam_new (void);
 VALA_EXTERN Manam* manam_construct (GType object_type);
 static GType manam_get_type_once (void);
 VALA_EXTERN void foo (Manam* i,
-          Manam* * o,
+          Manam** o,
           GError** error);
 VALA_EXTERN void bar (Manam* i,
-          Manam* * o,
+          Manam** o,
           GError** error);
 static void _vala_main (void);
 
@@ -126,7 +126,7 @@ _g_object_ref0 (gpointer self)
 
 void
 foo (Manam* i,
-     Manam* * o,
+     Manam** o,
      GError** error)
 {
 	Manam* _vala_o = NULL;
@@ -153,7 +153,7 @@ foo (Manam* i,
 
 void
 bar (Manam* i,
-     Manam* * o,
+     Manam** o,
      GError** error)
 {
 	Manam* _vala_o = NULL;

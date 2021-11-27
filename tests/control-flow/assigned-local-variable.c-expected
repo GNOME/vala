@@ -21,12 +21,12 @@
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
-VALA_EXTERN gboolean foo (gchar* * s);
+VALA_EXTERN gboolean foo (gchar** s);
 VALA_EXTERN gint bar (void);
 static void _vala_main (void);
 
 gboolean
-foo (gchar* * s)
+foo (gchar** s)
 {
 	gchar* _vala_s = NULL;
 	gchar* _tmp0_;

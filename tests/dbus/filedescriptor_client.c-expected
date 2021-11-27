@@ -38,7 +38,7 @@ typedef GDBusProxyClass TestProxyClass;
 
 struct _TestIface {
 	GTypeInterface parent_iface;
-	GUnixInputStream* (*test_in) (Test* self, GUnixInputStream* i, GUnixInputStream* * j, GError** error);
+	GUnixInputStream* (*test_in) (Test* self, GUnixInputStream* i, GUnixInputStream** j, GError** error);
 };
 
 VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
@@ -49,7 +49,7 @@ VALA_EXTERN guint test_register_object (void* object,
 VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GUnixInputStream* test_test_in (Test* self,
                                 GUnixInputStream* i,
-                                GUnixInputStream* * j,
+                                GUnixInputStream** j,
                                 GError** error);
 static GType test_get_type_once (void);
 static void test_proxy_g_signal (GDBusProxy* proxy,
@@ -58,7 +58,7 @@ static void test_proxy_g_signal (GDBusProxy* proxy,
                           GVariant* parameters);
 static GUnixInputStream* test_proxy_test_in (Test* self,
                                       GUnixInputStream* i,
-                                      GUnixInputStream* * j,
+                                      GUnixInputStream** j,
                                       GError** error);
 static void test_proxy_test_interface_init (TestIface* iface);
 static void _dbus_test_test_in (Test* self,
@@ -105,7 +105,7 @@ static const GDBusInterfaceVTable _test_dbus_interface_vtable = {test_dbus_inter
 GUnixInputStream*
 test_test_in (Test* self,
               GUnixInputStream* i,
-              GUnixInputStream* * j,
+              GUnixInputStream** j,
               GError** error)
 {
 	TestIface* _iface_;
@@ -173,7 +173,7 @@ test_proxy_init (TestProxy* self)
 static GUnixInputStream*
 test_proxy_test_in (Test* self,
                     GUnixInputStream* i,
-                    GUnixInputStream* * j,
+                    GUnixInputStream** j,
                     GError** error)
 {
 	GUnixFDList* _fd_list;
