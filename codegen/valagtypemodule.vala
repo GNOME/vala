@@ -34,7 +34,7 @@ public class Vala.GTypeModule : GErrorModule {
 		string ctypename = get_ccode_name (param.variable_type);
 
 		if (param.direction != ParameterDirection.IN) {
-			ctypename = "%s *".printf (ctypename);
+			ctypename = "%s*".printf (ctypename);
 		}
 
 		var cparam = new CCodeParameter (get_ccode_name (param), ctypename);
