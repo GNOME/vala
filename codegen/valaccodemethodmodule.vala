@@ -877,26 +877,29 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 	public virtual CCodeParameter generate_parameter (Parameter param, CCodeFile decl_space, Map<int,CCodeParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		CCodeParameter cparam;
 		if (!param.ellipsis && !param.params_array) {
-			string ctypename = get_ccode_name (param.variable_type);
-
 			generate_type_declaration (param.variable_type, decl_space);
 
-			// pass non-simple structs always by reference
-			unowned Struct? st = param.variable_type.type_symbol as Struct;
-			if (st != null) {
-				if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
-					if (st.is_immutable && !param.variable_type.value_owned) {
-						ctypename = "const " + ctypename;
-					}
+			string? ctypename = get_ccode_type (param);
+			if (ctypename == null) {
+				ctypename = get_ccode_name (param.variable_type);
 
-					if (!param.variable_type.nullable) {
-						ctypename += "*";
+				// pass non-simple structs always by reference
+				unowned Struct? st = param.variable_type.type_symbol as Struct;
+				if (st != null) {
+					if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
+						if (st.is_immutable && !param.variable_type.value_owned) {
+							ctypename = "const " + ctypename;
+						}
+
+						if (!param.variable_type.nullable) {
+							ctypename += "*";
+						}
 					}
 				}
-			}
 
-			if (param.direction != ParameterDirection.IN) {
-				ctypename += "*";
+				if (param.direction != ParameterDirection.IN) {
+					ctypename += "*";
+				}
 			}
 
 			cparam = new CCodeParameter (get_ccode_name (param), ctypename);
