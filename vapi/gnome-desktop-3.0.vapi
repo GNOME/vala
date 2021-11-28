@@ -52,9 +52,9 @@ namespace Gnome {
 		public Gdk.Pixbuf create_thumbnail (Gnome.DesktopThumbnailFactory factory, Gdk.Screen screen, int dest_width, int dest_height);
 		public void draw (Gdk.Pixbuf dest);
 		public unowned string get_filename ();
-		public bool get_image_size (Gnome.DesktopThumbnailFactory factory, int best_width, int best_height, int width, int height);
+		public bool get_image_size (Gnome.DesktopThumbnailFactory factory, int best_width, int best_height, out int width, out int height);
 		public GDesktop.BackgroundStyle get_placement ();
-		public void get_rgba (GDesktop.BackgroundShading type, Gdk.RGBA primary, Gdk.RGBA secondary);
+		public void get_rgba (out GDesktop.BackgroundShading type, out Gdk.RGBA primary, out Gdk.RGBA secondary);
 		[Version (deprecated = true, deprecated_since = "3.36")]
 		public static Cairo.Surface get_surface_from_root (Gdk.Screen screen);
 		public bool has_multiple_sizes ();
