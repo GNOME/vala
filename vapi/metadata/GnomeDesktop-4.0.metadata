@@ -1,0 +1,23 @@
+DesktopThumbnail* cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
+desktop_thumbnail_* parent="Gnome.DesktopThumbnail" name="desktop_thumbnail_(.+)" cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
+
+get_language_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_country_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_all_locales parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+parse_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+normalize_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+language_has_translations parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_language_from_code parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_country_from_code parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_input_source_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+get_translated_modifier parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
+
+IdleMonitor* cheader_filename="libgnome-desktop/gnome-idle-monitor.h"
+
+PnpIds cheader_filename="libgnome-desktop/gnome-pnp-ids.h"
+
+start_systemd_scope cheader_filename="libgnome-desktop/gnome-systemd.h"
+
+WallClock cheader_filename="libgnome-desktop/gnome-wall-clock.h"
+
+XkbInfo cheader_filename="libgnome-desktop/gnome-xkb-info.h"

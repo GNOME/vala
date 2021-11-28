@@ -1,0 +1,5 @@
+* cheader_filename="libgnome-desktop/gnome-rr.h"
+OutputInfo cheader_filename="libgnome-desktop/gnome-rr-config.h"
+Config cheader_filename="libgnome-desktop/gnome-rr-config.h"
+Screen
+	.new name="new_sync"

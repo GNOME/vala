@@ -1,0 +1,10 @@
+BG cheader_filename="libgnome-desktop/gnome-bg.h"
+	.get_image_size.width out
+	.get_image_size.height out
+	.get_rgba.type out
+	.get_rgba.primary out
+	.get_rgba.secondary out
+BGSlideShow cheader_filename="libgnome-desktop/gnome-bg-slide-show.h"
+BGSlideShow
+	.load_async skip
+	.file since="3.34"

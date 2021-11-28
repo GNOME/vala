@@ -80,10 +80,16 @@ dist_vapi_DATA = \
 	gmodule-2.0.vapi \
 	gnet-2.0.deps \
 	gnet-2.0.vapi \
+	gnome-bg-4.deps \
+	gnome-bg-4.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
 	gnome-desktop-3.0.deps \
 	gnome-desktop-3.0.vapi \
+	gnome-desktop-4.deps \
+	gnome-desktop-4.vapi \
+	gnome-rr-4.deps \
+	gnome-rr-4.vapi \
 	gnome-vfs-2.0.vapi \
 	gnu.deps \
 	gnu.vapi \
@@ -383,7 +389,10 @@ GIR_BINDINGS = \
 	geocode-glib-1.0 \
 	gio-2.0 \
 	gmodule-2.0 \
+	gnome-bg-4 \
 	gnome-desktop-3.0 \
+	gnome-desktop-4 \
+	gnome-rr-4 \
 	gobject-introspection-1.0 \
 	goocanvas-2.0 \
 	graphene-gobject-1.0 \
@@ -511,11 +520,20 @@ gio-unix-2.0:
 gmodule-2.0:
 	$(GENVAPI) --library $(srcdir)/gmodule-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/GModule-2.0-custom.vala $(GIRDIR)/GModule-2.0.gir
 
+gnome-bg-4:
+	$(GENVAPI) --library $(srcdir)/gnome-bg-4 --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gnome-desktop-4 --pkg gtk4 --metadatadir $(METADATADIR) $(METADATADIR)/GnomeBG-4.0-custom.vala $(GIRDIR)/GnomeBG-4.0.gir
+
 gnome-desktop-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-desktop-2.0 $(PACKAGESDIR)/gnome-desktop-2.0/gnome-desktop-2.0.gi
 
 gnome-desktop-3.0:
 	$(GENVAPI) --library $(srcdir)/gnome-desktop-3.0 --pkg gtk+-3.0 --metadatadir $(METADATADIR) $(METADATADIR)/GnomeDesktop-3.0-custom.vala $(GIRDIR)/GnomeDesktop-3.0.gir
+
+gnome-desktop-4:
+	$(GENVAPI) --library $(srcdir)/gnome-desktop-4 --pkg gio-2.0 --pkg gdesktopenums-3.0 --pkg gdk-pixbuf-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/GnomeDesktop-4.0.gir
+
+gnome-rr-4:
+	$(GENVAPI) --library $(srcdir)/gnome-rr-4 --pkg gnome-desktop-4 --pkg gtk4 --metadatadir $(METADATADIR) $(GIRDIR)/GnomeRR-4.0.gir
 
 gnome-vfs-2.0:
 	$(GENVAPI) --library $(srcdir)/gnome-vfs-2.0 $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala $(PACKAGESDIR)/gnome-vfs-2.0/gnome-vfs-2.0.gi
