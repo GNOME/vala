@@ -372,7 +372,7 @@ namespace Pango {
 	public class FontsetSimple : Pango.Fontset {
 		[CCode (has_construct_function = false)]
 		public FontsetSimple (Pango.Language language);
-		public void append (Pango.Font font);
+		public void append (owned Pango.Font font);
 		public int size ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_item_get_type ()")]
