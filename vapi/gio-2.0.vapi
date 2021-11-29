@@ -2738,7 +2738,7 @@ namespace GLib {
 		public uint get_timeout ();
 		[Version (since = "2.28")]
 		public bool get_tls ();
-		[Version (since = "2.28")]
+		[Version (deprecated = true, deprecated_since = "2.72", since = "2.28")]
 		public GLib.TlsCertificateFlags get_tls_validation_flags ();
 		[Version (since = "2.26")]
 		public void set_enable_proxy (bool enable);
@@ -2752,7 +2752,7 @@ namespace GLib {
 		public void set_timeout (uint timeout);
 		[Version (since = "2.28")]
 		public void set_tls (bool tls);
-		[Version (since = "2.28")]
+		[Version (deprecated = true, deprecated_since = "2.72", since = "2.28")]
 		public void set_tls_validation_flags (GLib.TlsCertificateFlags flags);
 		public bool enable_proxy { get; set construct; }
 		public GLib.SocketFamily family { get; set construct; }
@@ -2762,6 +2762,7 @@ namespace GLib {
 		public GLib.ProxyResolver proxy_resolver { get; set construct; }
 		public uint timeout { get; set construct; }
 		public bool tls { get; set construct; }
+		[Version (deprecated = true, deprecated_since = "2.72")]
 		public GLib.TlsCertificateFlags tls_validation_flags { get; set construct; }
 		[NoAccessorMethod]
 		public GLib.SocketType type { get; set construct; }
@@ -4066,11 +4067,13 @@ namespace GLib {
 		public unowned GLib.SocketConnectable? get_server_identity ();
 		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public bool get_use_ssl3 ();
+		[Version (deprecated = true, deprecated_since = "2.72", since = "2.28")]
 		public GLib.TlsCertificateFlags get_validation_flags ();
 		public static GLib.TlsClientConnection? @new (GLib.IOStream base_io_stream, GLib.SocketConnectable? server_identity) throws GLib.Error;
 		public void set_server_identity (GLib.SocketConnectable identity);
 		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public void set_use_ssl3 (bool use_ssl3);
+		[Version (deprecated = true, deprecated_since = "2.72", since = "2.28")]
 		public void set_validation_flags (GLib.TlsCertificateFlags flags);
 		[ConcreteAccessor]
 		public abstract GLib.List<GLib.ByteArray> accepted_cas { owned get; }
@@ -4080,6 +4083,7 @@ namespace GLib {
 		[Version (deprecated = true, deprecated_since = "2.56", since = "2.28")]
 		public abstract bool use_ssl3 { get; set construct; }
 		[ConcreteAccessor]
+		[Version (deprecated = true, deprecated_since = "2.72", since = "2.28")]
 		public abstract GLib.TlsCertificateFlags validation_flags { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GTlsFileDatabaseInterface", type_id = "g_tls_file_database_get_type ()")]
@@ -4744,7 +4748,8 @@ namespace GLib {
 		STDERR_PIPE,
 		STDERR_SILENCE,
 		STDERR_MERGE,
-		INHERIT_FDS
+		INHERIT_FDS,
+		SEARCH_PATH_FROM_ENVP
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_TEST_DBUS_", type_id = "g_test_dbus_flags_get_type ()")]
 	[Flags]

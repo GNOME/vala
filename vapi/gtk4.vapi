@@ -5559,6 +5559,7 @@ namespace Gdk {
 		public void set_transient_for (Gdk.Surface parent);
 		public bool show_window_menu (Gdk.Event event);
 		public bool supports_edge_constraints ();
+		[Version (since = "4.4")]
 		public bool titlebar_gesture (Gdk.TitlebarGesture gesture);
 		[NoAccessorMethod]
 		public abstract bool decorated { get; set; }
@@ -5892,6 +5893,7 @@ namespace Gdk {
 		SOUTH_EAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TITLEBAR_GESTURE_", type_id = "gdk_titlebar_gesture_get_type ()")]
+	[Version (since = "4.4")]
 	public enum TitlebarGesture {
 		DOUBLE_CLICK,
 		RIGHT_CLICK,
@@ -6323,6 +6325,7 @@ namespace Gsk {
 		public unowned Pango.GlyphInfo[] get_glyphs ();
 		public uint get_num_glyphs ();
 		public unowned Graphene.Point? get_offset ();
+		[Version (since = "4.2")]
 		public bool has_color_glyphs ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_node_get_type ()")]
@@ -13735,6 +13738,7 @@ namespace Gtk {
 		SMALLER,
 		EQUAL,
 		LARGER;
+		[Version (since = "4.2")]
 		public static Gtk.Ordering from_cmpfunc (int cmpfunc_result);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ORIENTATION_", type_id = "gtk_orientation_get_type ()")]
@@ -14527,7 +14531,7 @@ namespace Gtk {
 	[Version (replacement = "Native.get_for_surface")]
 	public static unowned Gtk.Native native_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (replacement = "Ordering.from_cmpfunc")]
+	[Version (replacement = "Ordering.from_cmpfunc", since = "4.2")]
 	public static Gtk.Ordering ordering_from_cmpfunc (int cmpfunc_result);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (replacement = "PaperSize.get_default")]
