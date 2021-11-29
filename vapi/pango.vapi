@@ -244,8 +244,9 @@ namespace Pango {
 		[Version (since = "1.10")]
 		public virtual unowned Pango.FontMap? get_font_map ();
 		public virtual void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.50")]
-		public unowned Pango.Language? get_languages ();
+		public unowned Pango.Language[]? get_languages ();
 		public virtual Pango.FontMetrics get_metrics (Pango.Language? language);
 		[Version (since = "1.44")]
 		public bool has_char (unichar wc);
@@ -373,7 +374,7 @@ namespace Pango {
 	public class FontsetSimple : Pango.Fontset {
 		[CCode (has_construct_function = false)]
 		public FontsetSimple (Pango.Language language);
-		public void append (Pango.Font font);
+		public void append (owned Pango.Font font);
 		public int size ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_item_get_type ()")]
