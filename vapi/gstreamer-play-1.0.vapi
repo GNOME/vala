@@ -245,7 +245,7 @@ namespace Gst {
 			public unowned string get_name ();
 			public static void parse_buffering_percent (Gst.Message msg, out uint percent);
 			public static void parse_duration_updated (Gst.Message msg, out Gst.ClockTime duration);
-			public static void parse_error (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+			public static void parse_error (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 			public static void parse_media_info_updated (Gst.Message msg, out Gst.Play.MediaInfo info);
 			public static void parse_muted_changed (Gst.Message msg, out bool muted);
 			public static void parse_position_updated (Gst.Message msg, out Gst.ClockTime position);
@@ -253,7 +253,7 @@ namespace Gst {
 			public static void parse_type (Gst.Message msg, out Gst.Play.Message type);
 			public static void parse_video_dimensions_changed (Gst.Message msg, out uint width, out uint height);
 			public static void parse_volume_changed (Gst.Message msg, out double volume);
-			public static void parse_warning (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+			public static void parse_warning (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		}
 		[CCode (cheader_filename = "gst/play/play.h", cprefix = "GST_PLAY_THUMBNAIL_", has_type_id = false)]
 		[GIR (name = "PlaySnapshotFormat")]
@@ -305,7 +305,7 @@ namespace Gst {
 		public static void play_message_parse_duration_updated (Gst.Message msg, out Gst.ClockTime duration);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_error")]
 		[Version (replacement = "PlayMessage.parse_error", since = "1.20")]
-		public static void play_message_parse_error (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+		public static void play_message_parse_error (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_media_info_updated")]
 		[Version (replacement = "PlayMessage.parse_media_info_updated", since = "1.20")]
 		public static void play_message_parse_media_info_updated (Gst.Message msg, out Gst.Play.MediaInfo info);
@@ -329,7 +329,7 @@ namespace Gst {
 		public static void play_message_parse_volume_changed (Gst.Message msg, out double volume);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_message_parse_warning")]
 		[Version (replacement = "PlayMessage.parse_warning", since = "1.20")]
-		public static void play_message_parse_warning (Gst.Message msg, out unowned GLib.Error error, out Gst.Structure details);
+		public static void play_message_parse_warning (Gst.Message msg, out GLib.Error error, out Gst.Structure? details);
 		[CCode (cheader_filename = "gst/play/play.h", cname = "gst_play_state_get_name")]
 		[Version (replacement = "PlayState.get_name", since = "1.20")]
 		public static unowned string play_state_get_name (Gst.Play.State state);
