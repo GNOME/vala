@@ -351,8 +351,6 @@ Notebook
   .create_window skip=false
 PrintOperation
   .create_custom_widget skip=false
-Snapshot
-  .push_shadow.shadow array array_length_idx=1
 
 // Not completely sure
 Button

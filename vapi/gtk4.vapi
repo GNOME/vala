@@ -5019,6 +5019,8 @@ namespace Gdk {
 		protected Display ();
 		public void beep ();
 		public void close ();
+		[Version (since = "4.6")]
+		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public bool device_is_grabbed (Gdk.Device device);
 		public void flush ();
 		public Gdk.AppLaunchContext get_app_launch_context ();
@@ -5166,7 +5168,9 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_file_list_get_type ()")]
 	[Compact]
+	[Version (since = "4.6")]
 	public class FileList {
+		public GLib.SList<weak GLib.File> get_files ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_focus_event_get_type ()")]
 	public class FocusEvent : Gdk.Event {
@@ -5213,6 +5217,10 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected GLContext ();
 		public static void clear_current ();
+		[Version (since = "4.6")]
+		public Gdk.GLAPI get_allowed_apis ();
+		[Version (since = "4.6")]
+		public Gdk.GLAPI get_api ();
 		public static unowned Gdk.GLContext? get_current ();
 		public bool get_debug_enabled ();
 		public unowned Gdk.Display? get_display ();
@@ -5228,10 +5236,16 @@ namespace Gdk {
 		public bool is_shared (Gdk.GLContext other);
 		public void make_current ();
 		public bool realize () throws GLib.Error;
+		[Version (since = "4.6")]
+		public void set_allowed_apis (Gdk.GLAPI apis);
 		public void set_debug_enabled (bool enabled);
 		public void set_forward_compatible (bool compatible);
 		public void set_required_version (int major, int minor);
 		public void set_use_es (int use_es);
+		[Version (since = "4.6")]
+		public Gdk.GLAPI allowed_apis { get; set; }
+		[Version (since = "4.6")]
+		public Gdk.GLAPI api { get; }
 		[Version (deprecated = true, deprecated_since = "4.4")]
 		public Gdk.GLContext shared_context { get; construct; }
 	}
@@ -5372,7 +5386,7 @@ namespace Gdk {
 		protected Surface ();
 		public void beep ();
 		public Gdk.CairoContext create_cairo_context ();
-		public Gdk.GLContext? create_gl_context () throws GLib.Error;
+		public Gdk.GLContext create_gl_context () throws GLib.Error;
 		public Cairo.Surface create_similar_surface (Cairo.Content content, int width, int height);
 		public Gdk.VulkanContext create_vulkan_context () throws GLib.Error;
 		[DestroysInstance]
@@ -5427,6 +5441,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_texture_new_from_file")]
 		public static Gdk.Texture from_file (GLib.File file) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_filename")]
+		[Version (since = "4.6")]
 		public static Gdk.Texture from_filename (string path) throws GLib.Error;
 		[CCode (cname = "gdk_texture_new_from_resource")]
 		public static Gdk.Texture from_resource (string resource_path);
@@ -5544,6 +5559,7 @@ namespace Gdk {
 		public void set_transient_for (Gdk.Surface parent);
 		public bool show_window_menu (Gdk.Event event);
 		public bool supports_edge_constraints ();
+		[Version (since = "4.4")]
 		public bool titlebar_gesture (Gdk.TitlebarGesture gesture);
 		[NoAccessorMethod]
 		public abstract bool decorated { get; set; }
@@ -5747,6 +5763,13 @@ namespace Gdk {
 		CURRENT_MONITOR,
 		ALL_MONITORS
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GL_API_", type_id = "gdk_gl_api_get_type ()")]
+	[Flags]
+	[Version (since = "4.6")]
+	public enum GLAPI {
+		GL,
+		GLES
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_GRAVITY_", type_id = "gdk_gravity_get_type ()")]
 	public enum Gravity {
 		NORTH_WEST,
@@ -5789,10 +5812,13 @@ namespace Gdk {
 		B8G8R8,
 		R16G16B16,
 		R16G16B16A16_PREMULTIPLIED,
+		R16G16B16A16,
 		R16G16B16_FLOAT,
 		R16G16B16A16_FLOAT_PREMULTIPLIED,
+		R16G16B16A16_FLOAT,
 		R32G32B32_FLOAT,
 		R32G32B32A32_FLOAT_PREMULTIPLIED,
+		R32G32B32A32_FLOAT,
 		N_FORMATS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_modifier_type_get_type ()")]
@@ -5867,6 +5893,7 @@ namespace Gdk {
 		SOUTH_EAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TITLEBAR_GESTURE_", type_id = "gdk_titlebar_gesture_get_type ()")]
+	[Version (since = "4.4")]
 	public enum TitlebarGesture {
 		DOUBLE_CLICK,
 		RIGHT_CLICK,
@@ -6108,6 +6135,12 @@ namespace Gsk {
 		public unowned Gsk.RenderNode get_child ();
 		public unowned string get_message ();
 	}
+	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_renderer_get_type ()")]
+	public class GLRenderer : Gsk.Renderer {
+		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[Version (since = "4.2")]
+		public GLRenderer ();
+	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_get_type ()")]
 	public class GLShader : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -6171,7 +6204,7 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_ngl_renderer_get_type ()")]
 	public class NglRenderer : Gsk.Renderer {
 		[CCode (has_construct_function = false, type = "GskRenderer*")]
-		[Version (since = "4.2")]
+		[Version (deprecated = true, deprecated_since = "4.4")]
 		public NglRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
@@ -6226,7 +6259,7 @@ namespace Gsk {
 		public static Gsk.Renderer? for_surface (Gdk.Surface surface);
 		public unowned Gdk.Surface? get_surface ();
 		public bool is_realized ();
-		public bool realize (Gdk.Surface surface) throws GLib.Error;
+		public bool realize (Gdk.Surface? surface) throws GLib.Error;
 		public void render (Gsk.RenderNode root, Cairo.Region? region);
 		public Gdk.Texture render_texture (Gsk.RenderNode root, Graphene.Rect? viewport);
 		public void unrealize ();
@@ -6292,6 +6325,7 @@ namespace Gsk {
 		public unowned Pango.GlyphInfo[] get_glyphs ();
 		public uint get_num_glyphs ();
 		public unowned Graphene.Point? get_offset ();
+		[Version (since = "4.2")]
 		public bool has_color_glyphs ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_node_get_type ()")]
@@ -6485,12 +6519,16 @@ namespace Gsk {
 	[Version (replacement = "Transform.parse")]
 	public static bool transform_parse (string string, out Gsk.Transform out_transform);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static Gsk.RenderNode? value_dup_render_node (GLib.Value value);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static unowned Gsk.RenderNode? value_get_render_node (ref GLib.Value value);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static void value_set_render_node (ref GLib.Value value, Gsk.RenderNode node);
 	[CCode (cheader_filename = "gsk/gsk.h")]
+	[Version (since = "4.6")]
 	public static void value_take_render_node (ref GLib.Value value, owned Gsk.RenderNode? node);
 }
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
@@ -7631,6 +7669,8 @@ namespace Gtk {
 		public bool popup_fixed_width { get; set; }
 		[NoAccessorMethod]
 		public bool popup_shown { get; }
+		[Version (since = "4.6")]
+		public virtual signal void activate ();
 		public virtual signal void changed ();
 		public virtual signal string format_entry_text (string path);
 		public signal void move_active (Gtk.ScrollType scroll_type);
@@ -7897,12 +7937,16 @@ namespace Gtk {
 		public unowned GLib.ListModel? get_model ();
 		public uint get_selected ();
 		public unowned GLib.Object? get_selected_item ();
+		[Version (since = "4.6")]
+		public bool get_show_arrow ();
 		public void set_enable_search (bool enable_search);
 		public void set_expression (Gtk.Expression? expression);
 		public void set_factory (Gtk.ListItemFactory? factory);
 		public void set_list_factory (Gtk.ListItemFactory? factory);
 		public void set_model (GLib.ListModel? model);
 		public void set_selected (uint position);
+		[Version (since = "4.6")]
+		public void set_show_arrow (bool show_arrow);
 		public bool enable_search { get; set; }
 		public Gtk.Expression expression { get; set; }
 		public Gtk.ListItemFactory factory { get; set; }
@@ -7910,6 +7954,10 @@ namespace Gtk {
 		public GLib.ListModel model { get; set; }
 		public uint selected { get; set; }
 		public GLib.Object selected_item { get; }
+		[Version (since = "4.6")]
+		public bool show_arrow { get; set; }
+		[Version (since = "4.6")]
+		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_get_type ()")]
 	public class DropTarget : Gtk.EventController {
@@ -8422,6 +8470,8 @@ namespace Gtk {
 	public class FlowBox : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public FlowBox ();
+		[Version (since = "4.6")]
+		public void append (Gtk.Widget child);
 		public void bind_model (GLib.ListModel? model, owned Gtk.FlowBoxCreateWidgetFunc? create_widget_func);
 		public bool get_activate_on_single_click ();
 		public unowned Gtk.FlowBoxChild? get_child_at_index (int idx);
@@ -8436,6 +8486,8 @@ namespace Gtk {
 		public void insert (Gtk.Widget widget, int position);
 		public void invalidate_filter ();
 		public void invalidate_sort ();
+		[Version (since = "4.6")]
+		public void prepend (Gtk.Widget child);
 		public void remove (Gtk.Widget widget);
 		public void select_child (Gtk.FlowBoxChild child);
 		public void selected_foreach (Gtk.FlowBoxForeachFunc func);
@@ -10859,7 +10911,7 @@ namespace Gtk {
 		public void push_opacity (double opacity);
 		public void push_repeat (Graphene.Rect bounds, Graphene.Rect? child_bounds);
 		public void push_rounded_clip (Gsk.RoundedRect bounds);
-		public void push_shadow ([CCode (array_length_cname = "n_shadows", array_length_pos = 1.1, array_length_type = "gsize", type = "const GskShadow*")] Gsk.Shadow[] shadow);
+		public void push_shadow ([CCode (array_length_cname = "n_shadows", array_length_pos = 1.1, array_length_type = "gsize")] Gsk.Shadow[] shadow);
 		public void render_background (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_focus (Gtk.StyleContext context, double x, double y, double width, double height);
 		public void render_frame (Gtk.StyleContext context, double x, double y, double width, double height);
@@ -12887,6 +12939,7 @@ namespace Gtk {
 		public signal void gtk_private_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSymbolicPaintableInterface", type_id = "gtk_symbolic_paintable_get_type ()")]
+	[Version (since = "4.6")]
 	public interface SymbolicPaintable : Gdk.Paintable, GLib.Object {
 		public abstract void snapshot_symbolic (Gdk.Snapshot snapshot, double width, double height, [CCode (array_length_cname = "n_colors", array_length_pos = 4.1, array_length_type = "gsize")] Gdk.RGBA[] colors);
 	}
@@ -13685,6 +13738,7 @@ namespace Gtk {
 		SMALLER,
 		EQUAL,
 		LARGER;
+		[Version (since = "4.2")]
 		public static Gtk.Ordering from_cmpfunc (int cmpfunc_result);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ORIENTATION_", type_id = "gtk_orientation_get_type ()")]
@@ -14016,6 +14070,7 @@ namespace Gtk {
 		SHOW_CHANGE
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYMBOLIC_COLOR_", type_id = "gtk_symbolic_color_get_type ()")]
+	[Version (since = "4.6")]
 	public enum SymbolicColor {
 		FOREGROUND,
 		ERROR,
@@ -14476,7 +14531,7 @@ namespace Gtk {
 	[Version (replacement = "Native.get_for_surface")]
 	public static unowned Gtk.Native native_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (replacement = "Ordering.from_cmpfunc")]
+	[Version (replacement = "Ordering.from_cmpfunc", since = "4.2")]
 	public static Gtk.Ordering ordering_from_cmpfunc (int cmpfunc_result);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (replacement = "PaperSize.get_default")]
