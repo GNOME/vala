@@ -2857,7 +2857,7 @@ namespace GLib {
 		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
 		public static string encode (uchar[] data);
 		public static size_t decode_step (char[] _in, uchar* _out, ref int state, ref uint save);
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public static uchar[] decode (string text);
 	}
 
@@ -3871,9 +3871,9 @@ namespace GLib {
 		[Version (since = "2.66")]
 		public static bool set_contents_full (string filename, string contents, ssize_t length = -1, FileSetContentsFlags flags = 0, int mode = 0666) throws FileError;
 		[CCode (cname = "g_file_get_contents")]
-		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "size_t")] out uint8[] contents) throws FileError;
+		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "gsize")] out uint8[] contents) throws FileError;
 		[CCode (cname = "g_file_set_contents")]
-		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "size_t")] uint8[] contents) throws FileError;
+		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "gsize")] uint8[] contents) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		[Version (since = "2.4")]
@@ -6189,39 +6189,39 @@ namespace GLib {
 		public string dup_bytestring (out size_t length);
 
 		public Variant.strv (string[] value);
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_strv ();
 #else
 		public string*[] get_strv ();
 #endif
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_strv ();
 
 		[Version (since = "2.26")]
 		public Variant.bytestring_array (string[] value);
 		[Version (since = "2.26")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_bytestring_array ();
 #else
 		public string*[] get_bytestring_array ();
 #endif
 		[Version (since = "2.26")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_bytestring_array ();
 
 		[Version (since = "2.30")]
 		public Variant.objv (string[] value);
 		[Version (since = "2.30")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_objv ();
 #else
 		public string*[] get_objv ();
 #endif
 		[Version (since = "2.30")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_objv ();
 
 		public Variant (string format, ...);
