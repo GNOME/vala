@@ -49,6 +49,7 @@ TESTS = \
 	basic-types/custom-types.vala \
 	basic-types/default-gtype.vala \
 	basic-types/strings.vala \
+	basic-types/string-array-append.vala \
 	basic-types/string-concat-null.test \
 	basic-types/arrays.vala \
 	basic-types/arrays-generics.vala \
@@ -110,6 +111,7 @@ TESTS = \
 	arrays/class-field-initializer.vala \
 	arrays/class-field-length-cname.vala \
 	arrays/constant-element-access.vala \
+	arrays/element-nullable-assignment.vala \
 	arrays/empty-length-0.vala \
 	arrays/expression-bracket.test \
 	arrays/fixed-length-init0-not-allowed.vala \
