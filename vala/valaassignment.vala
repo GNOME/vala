@@ -229,13 +229,36 @@ public class Vala.Assignment : Expression {
 		}
 
 		unowned MemberAccess? ma = left as MemberAccess;
-		if (operator != AssignmentOperator.SIMPLE && ma != null
-		    && !(left.value_type.is_non_null_simple_type () && ma.symbol_reference is LocalVariable)) {
+		unowned ElementAccess? ea = left as ElementAccess;
+		bool transform_assignment = false;
+
+		if (ma != null && !(ma.symbol_reference is LocalVariable)) {
+			transform_assignment = true;
+		} else if (left.value_type != null && !left.value_type.is_non_null_simple_type ()) {
+			transform_assignment = true;
+		} else if (ea != null && ea.container.value_type is ArrayType) {
+			// check if the left is an array and its element is non-null simple type
+			unowned ArrayType array_type = (ArrayType) ea.container.value_type;
+			transform_assignment = !array_type.element_type.is_non_null_simple_type ();
+		}
+
+		if ((operator != AssignmentOperator.SIMPLE) && transform_assignment) {
 			// transform into simple assignment
 			// FIXME: only do this if the backend doesn't support
 			// the assignment natively
+			Expression old_value = null;
 
-			var old_value = new MemberAccess (ma.inner, ma.member_name, source_reference);
+			if (ma != null) {
+				old_value = new MemberAccess (ma.inner, ma.member_name, left.source_reference);
+			} else if (ea !=null) {
+				old_value = new ElementAccess (ea.container, left.source_reference);
+				var indices = ea.get_indices ();
+				foreach (var index in indices) {
+					((ElementAccess) old_value).append_index (index);
+				}
+			} else {
+				assert_not_reached ();
+			}
 
 			BinaryOperator bop;
 
@@ -361,9 +384,7 @@ public class Vala.Assignment : Expression {
 					}
 				}
 			}
-		} else if (left is ElementAccess) {
-			unowned ElementAccess ea = (ElementAccess) left;
-
+		} else if (ea != null) {
 			if (!right.value_type.compatible (left.value_type)) {
 				error = true;
 				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
