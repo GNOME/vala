@@ -2949,7 +2949,7 @@ namespace GLib {
 		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
 		public static string encode (uchar[] data);
 		public static size_t decode_step (char[] _in, uchar* _out, ref int state, ref uint save);
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public static uchar[] decode (string text);
 	}
 
@@ -3770,7 +3770,7 @@ namespace GLib {
 		public static bool spawn_async_with_fds (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid = null, int stdin_fd = -1, int stdout_fd = -1, int stderr_fd = -1) throws SpawnError;
 		public static bool spawn_async_with_pipes (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[Version (since = "2.68")]
-		public static bool spawn_async_with_pipes_and_fds (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, int stdin_fd, int stdout_fd, int stderr_fd, [CCode (array_length_pos = 10.1, array_length_type = "size_t")] int[] source_fds, [CCode (array_length_pos = 10.1, array_length_type = "size_t")] int[] target_fds, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
+		public static bool spawn_async_with_pipes_and_fds (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, int stdin_fd, int stdout_fd, int stderr_fd, [CCode (array_length_pos = 10.1, array_length_type = "gsize")] int[] source_fds, [CCode (array_length_pos = 10.1, array_length_type = "gsize")] int[] target_fds, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		public static bool spawn_async (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid) throws SpawnError;
 		public static bool spawn_sync (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string command_line) throws SpawnError;
@@ -3968,9 +3968,9 @@ namespace GLib {
 		[Version (since = "2.66")]
 		public static bool set_contents_full (string filename, string contents, ssize_t length = -1, FileSetContentsFlags flags = 0, int mode = 0666) throws FileError;
 		[CCode (cname = "g_file_get_contents")]
-		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "size_t")] out uint8[] contents) throws FileError;
+		public static bool get_data (string filename, [CCode (type = "gchar**", array_length_type = "gsize")] out uint8[] contents) throws FileError;
 		[CCode (cname = "g_file_set_contents")]
-		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "size_t")] uint8[] contents) throws FileError;
+		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "gsize")] uint8[] contents) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		[Version (since = "2.4")]
@@ -6332,39 +6332,39 @@ namespace GLib {
 		public string dup_bytestring (out size_t length);
 
 		public Variant.strv (string[] value);
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_strv ();
 #else
 		public string*[] get_strv ();
 #endif
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_strv ();
 
 		[Version (since = "2.26")]
 		public Variant.bytestring_array (string[] value);
 		[Version (since = "2.26")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_bytestring_array ();
 #else
 		public string*[] get_bytestring_array ();
 #endif
 		[Version (since = "2.26")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_bytestring_array ();
 
 		[Version (since = "2.30")]
 		public Variant.objv (string[] value);
 		[Version (since = "2.30")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 #if VALA_0_26
 		public (unowned string)[] get_objv ();
 #else
 		public string*[] get_objv ();
 #endif
 		[Version (since = "2.30")]
-		[CCode (array_length_type = "size_t")]
+		[CCode (array_length_type = "gsize")]
 		public string[] dup_objv ();
 
 		public Variant (string format, ...);
