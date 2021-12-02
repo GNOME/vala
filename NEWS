@@ -1,3 +1,62 @@
+Vala 0.48.20
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Add type declaration for implicit temporary local variable
+    + Actually free data when using "remove(_all)"
+      on GLib.Queue/(S)List [#1238]
+    + Use CCodeConstant for member access of constant symbol
+    + Add and use CCodeConstantIdentifier for accessing constants
+    + Check required length of enum type name for GType support
+    + Add missing check while overriding virtual async interface methods [#852]
+    + Drop inconsistent space for ObjectType parameters
+    + Accept CCode.type attribute on parameters [#876]
+    + Fix CCodeUnaryExpression.write() for PREFIX_INCREMENT/PREFIX_DECREMENT
+  - vala:
+    + Warn about unsupported cast to void and drop it [#1070]
+    + Don't restrict element type of GLib.Array [#1227]
+    + Accept NullType as generic type argument
+    + Set source references of created DataType instances in OCE
+    + Parameter following ellipsis parameter is not allowed [#1237]
+    + More thorough check of ValueType and set CodeNode.error on failure
+    + Really check compatiblity of error types for delegate symbol
+    + Correctly output signature of callable throwing error
+    + Report error for non ErrorType in throws
+    + Implement CodeWriter.visit_foreach_statement()/visit_catch_clause()
+    + Improve error message for invalid handler of dynamic signal
+    + Using SignalHandler.disconnect() is required for dynamic signals
+    + Check for unavailable value-type of variable initializer [#1253]
+    + Add [Profile] as known attribute for methods
+    + Report error on missing gio-2.0 package for async constructors
+    + Fix signals with generic return
+    + parser: Make sure ErrorCodes are accessible as needed
+    + parser: Split out Parser.parse_switch_section_statement()
+    + parser: Better handling of misplaced switch sections [#1246]
+  - genie:
+    + Amend text of indent and dedent for error messages [#497]
+    + Accept INTERR token before type arguments when parsing type [#1245]
+    + Properly handle plain "get" or "set" property accessors [#1248]
+    + "exception" is the expected string for TokenType.ERRORDOMAIN
+    + Accept accessibility/async modifiers on "construct" creation methods [#1235]
+  - girparser: Add support for "ref_/ref_sink_/unref_function"
+    metadata for classes [#1233]
+  - girparser: Accept "sealed" for transformed records and compact classes
+  - gtkmodule: Improve error message for invalid signal element in ui-file
+  - valadoc: Correctly format background of inline @link's [#1226]
+  - tests: Rename colliding test cases to avoid conflicts
+
+ * Bindings:
+  - alsa: Add more API and fix a few things
+  - gio-2.0: Unhide a few usable symbols which are marked not introspectable [#1222]
+  - gio-2.0: Backport fixes from 0.54.2
+  - glib-2.0: Current constants in GLib.Math are part of glib.h [#1220]
+  - glib-2.0: Add RefString since 2.58 [#723]
+  - gnome-desktop-3.0: Some parameter fixes
+  - gstreamer: Cherry-pick bindings fixes from 0.56
+  - gstreamer-base-1.0: Some parameter fixes [#1255]
+  - gtk4: Backport fixes from 0.54.2
+  - pango: Cherry-pick bindings fixes from 0.56
+
 Vala 0.48.19
 ============
  * Various improvements and bug fixes:
