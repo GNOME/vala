@@ -1,3 +1,40 @@
+Vala 0.52.8
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use CCodeConstant for member access of constant symbol
+    + Add and use CCodeConstantIdentifier for accessing constants
+    + Check required length of enum type name for GType support
+    + Add missing check while overriding virtual async interface methods [#852]
+    + Drop inconsistent space for ObjectType parameters
+    + Accept CCode.type attribute on parameters [#876]
+    + Fix CCodeUnaryExpression.write() for PREFIX_INCREMENT/PREFIX_DECREMENT
+  - vala:
+    + Improve error message for invalid handler of dynamic signal
+    + Using SignalHandler.disconnect() is required for dynamic signals
+    + Check for unavailable value-type of variable initializer [#1253]
+    + Add [Profile] as known attribute for methods
+    + Report error on missing gio-2.0 package for async constructors
+    + Fix signals with generic return
+    + parser: Split out Parser.parse_switch_section_statement()
+    + parser: Better handling of misplaced switch sections [#1246]
+  - genie:
+    + Amend text of indent and dedent for error messages [#497]
+    + Accept INTERR token before type arguments when parsing type [#1245]
+    + Properly handle plain "get" or "set" property accessors [#1248]
+    + "exception" is the expected string for TokenType.ERRORDOMAIN
+    + Accept accessibility/async modifiers on "construct" creation methods [#1235]
+  - girparser: Accept "sealed" for transformed records and compact classes
+  - gtkmodule: Improve error message for invalid signal element in ui-file
+  - tests: Rename colliding test cases to avoid conflicts
+
+ * Bindings:
+  - alsa: Add more API and fix a few things
+  - gnome-desktop-3.0: Some parameter fixes
+  - gstreamer: Cherry-pick bindings fixes from 0.56
+  - gstreamer-base-1.0: Some parameter fixes [#1255]
+  - pango: Cherry-pick bindings fixes from 0.56
+
 Vala 0.52.7
 ===========
  * Various improvements and bug fixes:
