@@ -23,6 +23,7 @@
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
 VALA_EXTERN void test_string (void);
+VALA_EXTERN void test_string_concat (void);
 VALA_EXTERN void test_string_joinv (void);
 VALA_EXTERN void test_string_printf (void);
 VALA_EXTERN void test_string_replace (void);
@@ -237,6 +238,17 @@ test_string (void)
 	_tmp50_ = s;
 	_vala_assert (g_strcmp0 (_tmp49_, _tmp50_) == 0, "t == s");
 	_g_free0 (t);
+	_g_free0 (s);
+}
+
+void
+test_string_concat (void)
+{
+	gchar* s = NULL;
+	gchar* _tmp0_;
+	_tmp0_ = g_strdup ("hello" "world");
+	s = _tmp0_;
+	_vala_assert (g_strcmp0 (s, "helloworld") == 0, "s == \"helloworld\"");
 	_g_free0 (s);
 }
 
@@ -853,6 +865,7 @@ static void
 _vala_main (void)
 {
 	test_string ();
+	test_string_concat ();
 	test_string_joinv ();
 	test_string_printf ();
 	test_string_replace ();

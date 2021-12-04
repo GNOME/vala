@@ -359,7 +359,9 @@ public class Vala.BinaryExpression : Expression {
 		    && left.value_type.compatible (context.analyzer.string_type)) {
 			// string concatenation
 
-			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)) {
+			if (right.value_type == null || !right.value_type.compatible (context.analyzer.string_type)
+			    || left is NullLiteral || right is NullLiteral) {
+				// operands cannot be null
 				error = true;
 				Report.error (source_reference, "Operands must be strings");
 				return false;
