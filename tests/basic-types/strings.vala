@@ -48,6 +48,11 @@ void test_string () {
 	assert (t == s);
 }
 
+void test_string_concat () {
+	var s = "hello" + "world";
+	assert (s == "helloworld");
+}
+
 void test_string_joinv () {
 	string[] sa = { "hello", "my", "world" };
 
@@ -139,6 +144,7 @@ void test_string_substring () {
 
 void main () {
 	test_string ();
+	test_string_concat ();
 	test_string_joinv ();
 	test_string_printf ();
 	test_string_replace ();
