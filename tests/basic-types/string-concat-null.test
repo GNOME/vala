@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	var str = "foo" + null + "bar";
+}

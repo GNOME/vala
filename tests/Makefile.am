@@ -50,6 +50,7 @@ TESTS = \
 	basic-types/custom-types.vala \
 	basic-types/default-gtype.vala \
 	basic-types/strings.vala \
+	basic-types/string-concat-null.test \
 	basic-types/arrays.vala \
 	basic-types/arrays-generics.vala \
 	basic-types/arrays-fixed-assignment.vala \
