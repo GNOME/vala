@@ -35,6 +35,7 @@ public class Vala.SignalType : CallableType {
 	Method? connect_method;
 	Method? connect_after_method;
 	Method? disconnect_method;
+	Method? emit_method;
 
 	public SignalType (Signal signal_symbol, SourceReference? source_reference = null) {
 		base (signal_symbol, source_reference);
@@ -104,6 +105,16 @@ public class Vala.SignalType : CallableType {
 		return disconnect_method;
 	}
 
+	unowned Method get_emit_method () {
+		if (emit_method == null) {
+			emit_method = new Method ("emit", signal_symbol.return_type, source_reference);
+			emit_method.access = SymbolAccessibility.PUBLIC;
+			emit_method.external = true;
+			emit_method.owner = signal_symbol.scope;
+		}
+		return emit_method;
+	}
+
 	public override Symbol? get_member (string member_name) {
 		if (member_name == "connect") {
 			return get_connect_method ();
@@ -111,6 +122,8 @@ public class Vala.SignalType : CallableType {
 			return get_connect_after_method ();
 		} else if (member_name == "disconnect") {
 			return get_disconnect_method ();
+		} else if (member_name == "emit") {
+			return get_emit_method ();
 		}
 		return null;
 	}

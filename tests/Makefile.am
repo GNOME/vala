@@ -556,9 +556,11 @@ TESTS = \
 	objects/signals-enum-marshal.vala \
 	objects/signals-delegate.vala \
 	objects/signals-delegate-parameter.vala \
+	objects/signals-dynamic-emit.vala \
 	objects/signals-dynamic-invalid-disconnect.test \
 	objects/signals-dymanic-invalid-handler.test \
 	objects/signals-dynamic-lambda-handler.test \
+	objects/signals-emit.vala \
 	objects/signals-error-marshal.vala \
 	objects/signals-fundamental-return.vala \
 	objects/signals-generic-return.vala \
