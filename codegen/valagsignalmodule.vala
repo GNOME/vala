@@ -576,7 +576,8 @@ public class Vala.GSignalModule : GObjectModule {
 	public override void visit_method_call (MethodCall expr) {
 		var method_type = expr.call.value_type as MethodType;
 
-		if (method_type == null || !(method_type.method_symbol.parent_symbol is Signal)) {
+		// emit () calls are ignored
+		if (method_type == null || !(method_type.method_symbol.parent_symbol is Signal) || method_type.method_symbol.name == "emit") {
 			// no signal connect/disconnect call
 			base.visit_method_call (expr);
 			return;
