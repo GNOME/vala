@@ -29,6 +29,8 @@ public class Vala.GtkModule : GSignalModule {
 	private HashMap<string, Class> cclass_to_vala_map = null;
 	/* GResource name to real file name mapping */
 	private HashMap<string, string> gresource_to_file_map = null;
+	/* GtkBuilder xml handler set */
+	private HashMap<string, string> handler_map = new HashMap<string, string>(str_hash, str_equal);
 	/* GtkBuilder xml handler to Vala signal mapping */
 	private HashMap<string, Property> current_handler_to_property_map = new HashMap<string, Property>(str_hash, str_equal);
 	/* GtkBuilder xml handler to Vala signal mapping */
@@ -142,12 +144,14 @@ public class Vala.GtkModule : GSignalModule {
 			Report.error (node.source_reference, "UI resource not found: `%s'. Please make sure to specify the proper GResources xml files with --gresources and alternative search locations with --gresourcesdir.", ui_resource);
 			return;
 		}
+		handler_map = new HashMap<string, string>(str_hash, str_equal);
 		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
 		current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
 
 		MarkupReader reader = new MarkupReader (ui_file);
 		Class current_class = null;
 		Property? current_property = null;
+		string? current_handler = null;
 
 		bool template_tag_found = false;
 		MarkupTokenType current_token = reader.read_token (null, null);
@@ -235,7 +239,12 @@ public class Vala.GtkModule : GSignalModule {
 
 					//TODO Retrieve signature declaration? c-type to vala-type?
 					current_handler_to_property_map.set (handler_name, current_property);
+					current_handler = handler_name;
 					current_property = null;
+				} else if (current_handler != null) {
+					// Track nested closure elements
+					handler_map.set (handler_name, current_handler);
+					current_handler = handler_name;
 				}
 			}
 			current_token = reader.read_token (null, null);
@@ -374,9 +383,10 @@ public class Vala.GtkModule : GSignalModule {
 
 		/* Handler name as defined in the gtkbuilder xml */
 		var handler_name = m.get_attribute_string ("GtkCallback", "name", m.name);
+		var callback = handler_map.get (handler_name);
 		var sig = current_handler_to_signal_map.get (handler_name);
 		var prop = current_handler_to_property_map.get (handler_name);
-		if (sig == null && prop == null) {
+		if (callback == null && sig == null && prop == null) {
 			Report.error (m.source_reference, "could not find signal or property for handler `%s'", handler_name);
 			return;
 		}
@@ -400,8 +410,10 @@ public class Vala.GtkModule : GSignalModule {
 				ccode.add_expression (call);
 			}
 		}
-		if (prop != null) {
-			prop.check (context);
+		if (prop != null || callback != null) {
+			if (prop != null) {
+				prop.check (context);
+			}
 			//TODO Perform signature check
 			var call = new CCodeFunctionCall (new CCodeIdentifier ("gtk_widget_class_bind_template_callback_full"));
 			call.add_argument (new CCodeIdentifier ("GTK_WIDGET_CLASS (klass)"));
