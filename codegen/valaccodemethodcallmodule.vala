@@ -700,7 +700,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if (m == null) {
+			if (itype is SignalType) {
+				// g_signal_emit*() does not require more
+			} else if (m == null) {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant ("NULL"));
 			} else if (!m.printf_format && !m.scanf_format && get_ccode_sentinel (m) != "" && !expr.is_constructv_chainup) {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (get_ccode_sentinel (m)));
