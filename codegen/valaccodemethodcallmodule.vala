@@ -41,14 +41,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		var itype = expr.call.value_type;
 		params = itype.get_parameters ();
 
-		// signal.emit () calls are treated like signal ()
-		if (ma != null && ma.member_name == "emit") {
-			ma = ((MemberAccess) expr.call).inner as MemberAccess;
-			ccall = new CCodeFunctionCall (get_cvalue (ma));
-			itype = ma.value_type;
-		}
-
-
 		if (itype is MethodType) {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
@@ -71,7 +63,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (ma != null && ma.inner is BaseAccess && sig_type.signal_symbol.is_virtual) {
 				m = sig_type.signal_symbol.default_handler;
 			} else {
-				ccall = (CCodeFunctionCall) get_cvalue (ma);
+				ccall = (CCodeFunctionCall) get_cvalue (expr.call);
 			}
 		} else if (itype is ObjectType) {
 			// constructor

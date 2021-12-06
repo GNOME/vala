@@ -390,6 +390,13 @@ public class Vala.MemberAccess : Expression {
 				}
 			}
 
+			if (inner.value_type is SignalType && member_name == "emit") {
+				// transform foo.sig.emit() to foo.sig()
+				//FIXME? context.analyzer.replaced_nodes.add (this);
+				parent_node.replace_expression (this, inner);
+				return true;
+			}
+
 			if (inner is MemberAccess) {
 				unowned MemberAccess ma = (MemberAccess) inner;
 				if (ma.prototype_access) {
@@ -497,6 +504,13 @@ public class Vala.MemberAccess : Expression {
 							}
 						}
 						s.access = SymbolAccessibility.PUBLIC;
+						dynamic_object_type.type_symbol.scope.add (null, s);
+						symbol_reference = s;
+					} else if (ma.member_name == "emit") {
+						// dynamic signal
+						var s = new DynamicSignal (inner.value_type, member_name, new VoidType (), source_reference);
+						s.access = SymbolAccessibility.PUBLIC;
+						s.add_parameter (new Parameter.with_ellipsis ());
 						dynamic_object_type.type_symbol.scope.add (null, s);
 						symbol_reference = s;
 					} else if (ma.member_name == "disconnect") {

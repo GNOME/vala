@@ -537,7 +537,7 @@ public class Vala.GSignalModule : GObjectModule {
 			return new CCodeMemberAccess.pointer (vcast, m.name);
 		}
 
-		if (!sig.external_package && expr.source_reference.file == sig.source_reference.file) {
+		if (!sig.external_package && expr.source_reference.file == sig.source_reference.file && !(sig is DynamicSignal)) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit"));
 			ccall.add_argument (pub_inst);
 			ccall.add_argument (get_signal_id_cexpression (sig));
@@ -576,8 +576,7 @@ public class Vala.GSignalModule : GObjectModule {
 	public override void visit_method_call (MethodCall expr) {
 		var method_type = expr.call.value_type as MethodType;
 
-		// emit () calls are ignored
-		if (method_type == null || !(method_type.method_symbol.parent_symbol is Signal) || method_type.method_symbol.name == "emit") {
+		if (method_type == null || !(method_type.method_symbol.parent_symbol is Signal)) {
 			// no signal connect/disconnect call
 			base.visit_method_call (expr);
 			return;
