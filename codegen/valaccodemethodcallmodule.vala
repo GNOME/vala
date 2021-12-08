@@ -546,7 +546,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 
-			arg_pos = get_param_pos (param != null && !ellipsis ? get_ccode_pos (param) : i, ellipsis);
+			if (itype is SignalType && ((SignalType) itype).signal_symbol is DynamicSignal) {
+				arg_pos = get_param_pos (i, false);
+			} else {
+				arg_pos = get_param_pos (param != null && !ellipsis ? get_ccode_pos (param) : i, ellipsis);
+			}
 			carg_map.set (arg_pos, cexpr);
 
 			if (m is ArrayResizeMethod && context.profile == Profile.POSIX) {

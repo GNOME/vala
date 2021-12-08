@@ -33,6 +33,7 @@ enum  {
 static GParamSpec* foo_properties[FOO_NUM_PROPERTIES];
 enum  {
 	FOO_SIG_SIGNAL,
+	FOO_SIG2_SIGNAL,
 	FOO_NUM_SIGNALS
 };
 static guint foo_signals[FOO_NUM_SIGNALS] = {0};
@@ -66,15 +67,28 @@ static void g_cclosure_user_marshal_VOID__STRING_INT (GClosure * closure,
                                                const GValue * param_values,
                                                gpointer invocation_hint,
                                                gpointer marshal_data);
+static void g_cclosure_user_marshal_BOOLEAN__STRING_INT (GClosure * closure,
+                                                  GValue * return_value,
+                                                  guint n_param_values,
+                                                  const GValue * param_values,
+                                                  gpointer invocation_hint,
+                                                  gpointer marshal_data);
 static GType foo_get_type_once (void);
 VALA_EXTERN void sig_cb (GObject* o,
              const gchar* s,
              gint i);
+VALA_EXTERN gboolean sig2_cb (GObject* o,
+                  const gchar* s,
+                  gint i);
 static void _vala_main (void);
 static void _sig_cb_foo_sig (Foo* _sender,
                       const gchar* s,
                       gint i,
                       gpointer self);
+static gboolean _sig2_cb_foo_sig2 (Foo* _sender,
+                            const gchar* s,
+                            gint i,
+                            gpointer self);
 
 void
 foo_fire (Foo* self)
@@ -124,11 +138,41 @@ g_cclosure_user_marshal_VOID__STRING_INT (GClosure * closure,
 }
 
 static void
+g_cclosure_user_marshal_BOOLEAN__STRING_INT (GClosure * closure,
+                                             GValue * return_value,
+                                             guint n_param_values,
+                                             const GValue * param_values,
+                                             gpointer invocation_hint,
+                                             gpointer marshal_data)
+{
+	typedef gboolean (*GMarshalFunc_BOOLEAN__STRING_INT) (gpointer data1, const char* arg_1, gint arg_2, gpointer data2);
+	register GMarshalFunc_BOOLEAN__STRING_INT callback;
+	register GCClosure * cc;
+	register gpointer data1;
+	register gpointer data2;
+	gboolean v_return;
+	cc = (GCClosure *) closure;
+	g_return_if_fail (return_value != NULL);
+	g_return_if_fail (n_param_values == 3);
+	if (G_CCLOSURE_SWAP_DATA (closure)) {
+		data1 = closure->data;
+		data2 = param_values->data[0].v_pointer;
+	} else {
+		data1 = param_values->data[0].v_pointer;
+		data2 = closure->data;
+	}
+	callback = (GMarshalFunc_BOOLEAN__STRING_INT) (marshal_data ? marshal_data : cc->callback);
+	v_return = callback (data1, g_value_get_string (param_values + 1), g_value_get_int (param_values + 2), data2);
+	g_value_set_boolean (return_value, v_return);
+}
+
+static void
 foo_class_init (FooClass * klass,
                 gpointer klass_data)
 {
 	foo_parent_class = g_type_class_peek_parent (klass);
 	foo_signals[FOO_SIG_SIGNAL] = g_signal_new ("sig", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_VOID__STRING_INT, G_TYPE_NONE, 2, G_TYPE_STRING, G_TYPE_INT);
+	foo_signals[FOO_SIG2_SIGNAL] = g_signal_new ("sig2", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_BOOLEAN__STRING_INT, G_TYPE_BOOLEAN, 2, G_TYPE_STRING, G_TYPE_INT);
 }
 
 static void
@@ -170,6 +214,21 @@ sig_cb (GObject* o,
 	_vala_assert (i == 42, "i == 42");
 }
 
+gboolean
+sig2_cb (GObject* o,
+         const gchar* s,
+         gint i)
+{
+	gboolean result;
+	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT), FALSE);
+	g_return_val_if_fail (s != NULL, FALSE);
+	success = TRUE;
+	_vala_assert (g_strcmp0 (s, "foo") == 0, "s == \"foo\"");
+	_vala_assert (i == 42, "i == 42");
+	result = TRUE;
+	return result;
+}
+
 static void
 _sig_cb_foo_sig (Foo* _sender,
                  const gchar* s,
@@ -179,11 +238,23 @@ _sig_cb_foo_sig (Foo* _sender,
 	sig_cb (_sender, s, i);
 }
 
+static gboolean
+_sig2_cb_foo_sig2 (Foo* _sender,
+                   const gchar* s,
+                   gint i,
+                   gpointer self)
+{
+	gboolean result;
+	result = sig2_cb (_sender, s, i);
+	return result;
+}
+
 static void
 _vala_main (void)
 {
 	Foo* foo = NULL;
 	Foo* _tmp0_;
+	gboolean _tmp1_ = FALSE;
 	_tmp0_ = foo_new ();
 	foo = _tmp0_;
 	g_signal_connect (foo, "sig", (GCallback) _sig_cb_foo_sig, NULL);
@@ -192,6 +263,11 @@ _vala_main (void)
 	_vala_assert (success, "success");
 	success = FALSE;
 	foo_fire (foo);
+	_vala_assert (success, "success");
+	success = FALSE;
+	g_signal_connect (foo, "sig2", (GCallback) _sig2_cb_foo_sig2, NULL);
+	g_signal_emit (foo, foo_signals[FOO_SIG2_SIGNAL], 0, "foo", 42, &_tmp1_);
+	_vala_assert (_tmp1_, "foo.sig2.emit (\"foo\", 42)");
 	_vala_assert (success, "success");
 	_g_object_unref0 (foo);
 }

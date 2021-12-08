@@ -563,6 +563,7 @@ TESTS = \
 	objects/signals-dynamic-emit.vala \
 	objects/signals-dynamic-invalid-disconnect.test \
 	objects/signals-dymanic-invalid-handler.test \
+	objects/signals-dynamic-invalid-return-type.test \
 	objects/signals-dynamic-lambda-handler.test \
 	objects/signals-emit.vala \
 	objects/signals-error-marshal.vala \

@@ -518,7 +518,13 @@ public class Vala.MemberAccess : Expression {
 						symbol_reference = s;
 					} else if (ma.member_name == "emit") {
 						// dynamic signal
-						var s = new DynamicSignal (inner.value_type, member_name, new VoidType (), source_reference);
+						unowned MethodCall mcall = (MethodCall) ma.parent_node;
+						var return_type = mcall.target_type ?? new VoidType ();
+						if (return_type is VarType) {
+							error = true;
+							Report.error (mcall.source_reference, "Cannot infer return type for dynamic signal `%s' from given context", member_name);
+						}
+						var s = new DynamicSignal (inner.value_type, member_name, return_type, source_reference);
 						s.access = SymbolAccessibility.PUBLIC;
 						s.add_parameter (new Parameter.with_ellipsis ());
 						dynamic_object_type.type_symbol.scope.add (null, s);

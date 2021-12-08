@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo : Object {
+	public signal void sig ();
+}
+
+void main () {
+	var real = new Foo ();
+	dynamic Object foo = real;
+
+	var bar = foo.sig.emit ();
+}
