@@ -59,8 +59,8 @@ BufferPool
 Element
   .add_pad.pad owned=false
 ElementFactory
-  .create floating
-  .make floating
+  .create* skip=false floating
+  .make* skip=false floating
 GhostPad
   .new floating
 Pad
