@@ -53,6 +53,8 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public bool is_yield_expression { get; set; }
 
+	public bool is_chainup { get; set; }
+
 	public bool struct_creation { get; set; }
 
 	private List<Expression> argument_list = new ArrayList<Expression> ();
