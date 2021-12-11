@@ -44,7 +44,6 @@ foo_init (Foo *self)
 void
 foo_init_bar (Foo *self)
 {
-	memset (self, 0, sizeof (Foo));
 	foo_init (self);
 	(*self).i = 1;
 }

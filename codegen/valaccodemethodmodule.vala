@@ -662,7 +662,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							var vardecl = new CCodeVariableDeclarator ("self", default_value_for_type (creturn_type, true));
 							vardecl.init0 = true;
 							ccode.add_declaration (get_ccode_name (creturn_type), vardecl);
-						} else {
+						} else if (!((CreationMethod) m).chain_up) {
 							// memset needs string.h
 							cfile.add_include ("string.h");
 							var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));

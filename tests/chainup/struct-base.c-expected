@@ -85,7 +85,6 @@ foo_get_type (void)
 void
 bar_init (Bar *self)
 {
-	memset (self, 0, sizeof (Bar));
 	foo_init (self);
 	(*self).j = 1;
 }

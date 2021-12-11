@@ -37,9 +37,7 @@ static void _vala_main (void);
 void
 foo_init (Foo *self)
 {
-	Foo _tmp0_ = {0};
-	memset (self, 0, sizeof (Foo));
-	foo_init_foo (&_tmp0_);
+	foo_init_foo (self);
 	(*self).j = 1;
 }
 
@@ -90,9 +88,12 @@ _vala_main (void)
 {
 	Foo foo = {0};
 	Foo _tmp0_;
+	Foo _tmp1_;
 	foo_init (&foo);
 	_tmp0_ = foo;
-	_vala_assert (_tmp0_.j == 1, "foo.j == 1");
+	_vala_assert (_tmp0_.i == 1, "foo.i == 1");
+	_tmp1_ = foo;
+	_vala_assert (_tmp1_.j == 1, "foo.j == 1");
 }
 
 int
