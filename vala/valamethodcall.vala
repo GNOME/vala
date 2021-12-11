@@ -46,7 +46,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 	 */
 	public bool is_constructv_chainup { get; private set; }
 
-	public bool is_chainup { get; private set; }
+	public bool is_chainup { get; set; }
 
 	private Expression _call;
 
@@ -319,6 +319,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
+			struct_creation_expression.is_chainup = is_chainup;
 			foreach (Expression arg in argument_list) {
 				struct_creation_expression.add_argument (arg);
 			}

@@ -15,6 +15,6 @@ public struct Bar : Foo {
 
 void main () {
 	var bar = Bar ();
-	//FIXME assert (bar.i == 1);
+	assert (bar.i == 1);
 	assert (bar.j == 1);
 }

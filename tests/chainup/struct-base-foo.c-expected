@@ -85,9 +85,7 @@ foo_get_type (void)
 void
 bar_init (Bar *self)
 {
-	Foo _tmp0_ = {0};
-	memset (self, 0, sizeof (Bar));
-	foo_init_foo (&_tmp0_);
+	foo_init_foo (self);
 	(*self).j = 1;
 }
 
@@ -131,9 +129,12 @@ _vala_main (void)
 {
 	Bar bar = {0};
 	Bar _tmp0_;
+	Bar _tmp1_;
 	bar_init (&bar);
 	_tmp0_ = bar;
-	_vala_assert (_tmp0_.j == 1, "bar.j == 1");
+	_vala_assert (_tmp0_.i == 1, "bar.i == 1");
+	_tmp1_ = bar;
+	_vala_assert (_tmp1_.j == 1, "bar.j == 1");
 }
 
 int
