@@ -4912,6 +4912,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				} else if (param != null) {
 					instance = get_cvalue_ (get_parameter_cvalue (param));
 				}
+			} else if (expr.is_chainup) {
+				instance = get_this_cexpression ();
 			} else {
 				var temp_value = create_temp_value (expr.type_reference, true, expr);
 				instance = get_cvalue_ (temp_value);
@@ -4956,7 +4958,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			if ((st != null && !st.is_simple_type ()) && !(get_ccode_instance_pos (m) < 0)) {
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+				if (expr.is_chainup) {
+					creation_call.add_argument (instance);
+				} else {
+					creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+				}
 			} else if (st != null && get_ccode_name (st) == "va_list") {
 				creation_call.add_argument (instance);
 				if (get_ccode_name (m) == "va_start") {
