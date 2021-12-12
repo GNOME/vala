@@ -200,7 +200,11 @@ public class Vala.CreationMethod : Method {
 					context.analyzer.current_symbol = body;
 					context.analyzer.insert_block = body;
 
-					var stmt = new ExpressionStatement (new MethodCall (new BaseAccess (source_reference), source_reference), source_reference);
+					var base_call = new MethodCall (new BaseAccess (source_reference), source_reference);
+					if (coroutine && cl.base_class.default_construction_method.coroutine) {
+						base_call.is_yield_expression = true;
+					}
+					var stmt = new ExpressionStatement (base_call, source_reference);
 					body.insert_statement (0, stmt);
 					stmt.check (context);
 
