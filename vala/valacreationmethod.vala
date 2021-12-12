@@ -217,12 +217,6 @@ public class Vala.CreationMethod : Method {
 		context.analyzer.current_source_file = old_source_file;
 		context.analyzer.current_symbol = old_symbol;
 
-		if (is_abstract || is_virtual || overrides) {
-			error = true;
-			Report.error (source_reference, "The creation method `%s' cannot be marked as override, virtual, or abstract", get_full_name ());
-			return false;
-		}
-
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null && !body.error) {
 			var body_errors = new ArrayList<DataType> ();
