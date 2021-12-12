@@ -959,13 +959,7 @@ public class Vala.Method : Subroutine, Callable {
 			body.check (context);
 		}
 
-		if (context.analyzer.current_struct != null) {
-			if (is_abstract || is_virtual || overrides) {
-				error = true;
-				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract", get_full_name ());
-				return false;
-			}
-		} else if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
+		if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
 			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
 			overrides = false;
 		} else if (overrides && base_method == null && base_interface_method == null) {
