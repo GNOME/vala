@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo {
+    private Foo () {
+    }
+}
+
+class Bar : Foo {
+    public Bar () {
+    }
+}
+
+void main () {
+}
