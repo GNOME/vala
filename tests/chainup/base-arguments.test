@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo {
+    public Foo (int i) {
+    }
+}
+
+class Bar : Foo {
+    public Bar () {
+    }
+}
+
+void main () {
+}
