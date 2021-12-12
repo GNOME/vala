@@ -146,9 +146,11 @@ TESTS = \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
 	arrays/slice-no-array.test \
+	chainup/base-arguments.test \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \
 	chainup/base-invalid.test \
+	chainup/base-private.test \
 	chainup/base-struct-invalid.test \
 	chainup/class-base.vala \
 	chainup/class-base-foo.vala \
