@@ -326,28 +326,28 @@ static gchar**
 _variant_get1 (GVariant* value,
                gint* result_length1)
 {
-	gchar** _tmp5_;
-	gint _tmp5__length;
-	gint _tmp5__size;
-	gint _tmp5__length1;
-	GVariantIter _tmp6_;
-	GVariant* _tmp7_;
-	_tmp5_ = g_new (gchar*, 5);
-	_tmp5__length = 0;
-	_tmp5__size = 4;
-	_tmp5__length1 = 0;
-	g_variant_iter_init (&_tmp6_, value);
-	for (; (_tmp7_ = g_variant_iter_next_value (&_tmp6_)) != NULL; _tmp5__length1++) {
-		if (_tmp5__size == _tmp5__length) {
-			_tmp5__size = 2 * _tmp5__size;
-			_tmp5_ = g_renew (gchar*, _tmp5_, _tmp5__size + 1);
+	gchar** _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gchar*, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		if (_tmp0__size == _tmp0__length) {
+			_tmp0__size = 2 * _tmp0__size;
+			_tmp0_ = g_renew (gchar*, _tmp0_, _tmp0__size + 1);
 		}
-		_tmp5_[_tmp5__length++] = g_variant_dup_string (_tmp7_, NULL);
-		g_variant_unref (_tmp7_);
+		_tmp0_[_tmp0__length++] = g_variant_dup_string (_tmp2_, NULL);
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp5__length1;
-	_tmp5_[_tmp5__length] = NULL;
-	return _tmp5_;
+	*result_length1 = _tmp0__length1;
+	_tmp0_[_tmp0__length] = NULL;
+	return _tmp0_;
 }
 
 static void
@@ -364,9 +364,9 @@ _vala_main (void)
 	gint _tmp4__length1 = 0;
 	gint s_length1;
 	gint _s_size_;
-	gboolean _tmp8_ = FALSE;
-	gchar** _tmp9_;
-	gint _tmp9__length1;
+	gboolean _tmp5_ = FALSE;
+	gchar** _tmp6_;
+	gint _tmp6__length1;
 	GError* _inner_error0_ = NULL;
 	_tmp0_ = (Test*) g_initable_new (TYPE_TEST_PROXY, NULL, &_inner_error0_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
 	test = (Test*) _tmp0_;
@@ -389,20 +389,20 @@ _vala_main (void)
 	s = _tmp4_;
 	s_length1 = _tmp4__length1;
 	_s_size_ = s_length1;
-	_tmp9_ = s;
-	_tmp9__length1 = s_length1;
-	if (_tmp9__length1 == 1) {
-		gchar** _tmp10_;
-		gint _tmp10__length1;
-		const gchar* _tmp11_;
-		_tmp10_ = s;
-		_tmp10__length1 = s_length1;
-		_tmp11_ = _tmp10_[0];
-		_tmp8_ = g_strcmp0 (_tmp11_, "hello") == 0;
+	_tmp6_ = s;
+	_tmp6__length1 = s_length1;
+	if (_tmp6__length1 == 1) {
+		gchar** _tmp7_;
+		gint _tmp7__length1;
+		const gchar* _tmp8_;
+		_tmp7_ = s;
+		_tmp7__length1 = s_length1;
+		_tmp8_ = _tmp7_[0];
+		_tmp5_ = g_strcmp0 (_tmp8_, "hello") == 0;
 	} else {
-		_tmp8_ = FALSE;
+		_tmp5_ = FALSE;
 	}
-	_vala_assert (_tmp8_, "s.length == 1 && s[0] == \"hello\"");
+	_vala_assert (_tmp5_, "s.length == 1 && s[0] == \"hello\"");
 	s = (_vala_array_free (s, s_length1, (GDestroyNotify) g_free), NULL);
 	_g_variant_unref0 (v);
 	_g_object_unref0 (test);

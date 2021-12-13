@@ -139,28 +139,28 @@ static gchar**
 _variant_get2 (GVariant* value,
                gint* result_length1)
 {
-	gchar** _tmp10_;
-	gint _tmp10__length;
-	gint _tmp10__size;
-	gint _tmp10__length1;
-	GVariantIter _tmp11_;
-	GVariant* _tmp12_;
-	_tmp10_ = g_new (gchar*, 5);
-	_tmp10__length = 0;
-	_tmp10__size = 4;
-	_tmp10__length1 = 0;
-	g_variant_iter_init (&_tmp11_, value);
-	for (; (_tmp12_ = g_variant_iter_next_value (&_tmp11_)) != NULL; _tmp10__length1++) {
-		if (_tmp10__size == _tmp10__length) {
-			_tmp10__size = 2 * _tmp10__size;
-			_tmp10_ = g_renew (gchar*, _tmp10_, _tmp10__size + 1);
+	gchar** _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gchar*, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		if (_tmp0__size == _tmp0__length) {
+			_tmp0__size = 2 * _tmp0__size;
+			_tmp0_ = g_renew (gchar*, _tmp0_, _tmp0__size + 1);
 		}
-		_tmp10_[_tmp10__length++] = g_variant_dup_string (_tmp12_, NULL);
-		g_variant_unref (_tmp12_);
+		_tmp0_[_tmp0__length++] = g_variant_dup_string (_tmp2_, NULL);
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp10__length1;
-	_tmp10_[_tmp10__length] = NULL;
-	return _tmp10_;
+	*result_length1 = _tmp0__length1;
+	_tmp0_[_tmp0__length] = NULL;
+	return _tmp0_;
 }
 
 void
@@ -179,7 +179,7 @@ string_array_conversion (void)
 	gint _tmp9__length1 = 0;
 	gint sa_length1;
 	gint _sa_size_;
-	const gchar* _tmp13_;
+	const gchar* _tmp10_;
 	_tmp0_ = g_strdup ("foo");
 	_tmp1_ = g_strdup ("bar");
 	_tmp2_ = g_new0 (gchar*, 2 + 1);
@@ -196,8 +196,8 @@ string_array_conversion (void)
 	sa_length1 = _tmp9__length1;
 	_sa_size_ = sa_length1;
 	_vala_assert (sa_length1 == 2, "sa.length == 2");
-	_tmp13_ = sa[1];
-	_vala_assert (g_strcmp0 (_tmp13_, "bar") == 0, "sa[1] == \"bar\"");
+	_tmp10_ = sa[1];
+	_vala_assert (g_strcmp0 (_tmp10_, "bar") == 0, "sa[1] == \"bar\"");
 	sa = (_vala_array_free (sa, sa_length1, (GDestroyNotify) g_free), NULL);
 	_g_variant_unref0 (v);
 }
@@ -230,37 +230,37 @@ _variant_get3 (GVariant* value,
                gint* result_length1,
                gint* result_length2)
 {
-	gchar** _tmp14_;
-	gint _tmp14__length;
-	gint _tmp14__size;
-	gint _tmp14__length1;
-	GVariantIter _tmp15_;
-	GVariant* _tmp16_;
-	_tmp14_ = g_new (gchar*, 5);
-	_tmp14__length = 0;
-	_tmp14__size = 4;
-	_tmp14__length1 = 0;
-	g_variant_iter_init (&_tmp15_, value);
-	for (; (_tmp16_ = g_variant_iter_next_value (&_tmp15_)) != NULL; _tmp14__length1++) {
-		gint _tmp14__length2;
-		GVariantIter _tmp17_;
-		GVariant* _tmp18_;
-		_tmp14__length2 = 0;
-		g_variant_iter_init (&_tmp17_, _tmp16_);
-		for (; (_tmp18_ = g_variant_iter_next_value (&_tmp17_)) != NULL; _tmp14__length2++) {
-			if (_tmp14__size == _tmp14__length) {
-				_tmp14__size = 2 * _tmp14__size;
-				_tmp14_ = g_renew (gchar*, _tmp14_, _tmp14__size + 1);
+	gchar** _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gchar*, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		gint _tmp0__length2;
+		GVariantIter _tmp3_;
+		GVariant* _tmp4_;
+		_tmp0__length2 = 0;
+		g_variant_iter_init (&_tmp3_, _tmp2_);
+		for (; (_tmp4_ = g_variant_iter_next_value (&_tmp3_)) != NULL; _tmp0__length2++) {
+			if (_tmp0__size == _tmp0__length) {
+				_tmp0__size = 2 * _tmp0__size;
+				_tmp0_ = g_renew (gchar*, _tmp0_, _tmp0__size + 1);
 			}
-			_tmp14_[_tmp14__length++] = g_variant_dup_string (_tmp18_, NULL);
-			g_variant_unref (_tmp18_);
+			_tmp0_[_tmp0__length++] = g_variant_dup_string (_tmp4_, NULL);
+			g_variant_unref (_tmp4_);
 		}
-		*result_length2 = _tmp14__length2;
-		g_variant_unref (_tmp16_);
+		*result_length2 = _tmp0__length2;
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp14__length1;
-	_tmp14_[_tmp14__length] = NULL;
-	return _tmp14_;
+	*result_length1 = _tmp0__length1;
+	_tmp0_[_tmp0__length] = NULL;
+	return _tmp0_;
 }
 
 void
@@ -283,9 +283,9 @@ string_array_2d_conversion (void)
 	gint _tmp13__length2 = 0;
 	gint sa_length1;
 	gint sa_length2;
-	gint _tmp19_;
-	gint _tmp20_;
-	const gchar* _tmp21_;
+	gint _tmp14_;
+	gint _tmp15_;
+	const gchar* _tmp16_;
 	_tmp0_ = g_strdup ("foo");
 	_tmp1_ = g_strdup ("faz");
 	_tmp2_ = g_strdup ("bar");
@@ -306,12 +306,12 @@ string_array_2d_conversion (void)
 	sa = _tmp13_;
 	sa_length1 = _tmp13__length1;
 	sa_length2 = _tmp13__length2;
-	_tmp19_ = sa_length1;
-	_vala_assert (_tmp19_ == 2, "sa.length[0] == 2");
-	_tmp20_ = sa_length2;
-	_vala_assert (_tmp20_ == 2, "sa.length[1] == 2");
-	_tmp21_ = sa[(1 * sa_length2) + 1];
-	_vala_assert (g_strcmp0 (_tmp21_, "baz") == 0, "sa[1,1] == \"baz\"");
+	_tmp14_ = sa_length1;
+	_vala_assert (_tmp14_ == 2, "sa.length[0] == 2");
+	_tmp15_ = sa_length2;
+	_vala_assert (_tmp15_ == 2, "sa.length[1] == 2");
+	_tmp16_ = sa[(1 * sa_length2) + 1];
+	_vala_assert (g_strcmp0 (_tmp16_, "baz") == 0, "sa[1,1] == \"baz\"");
 	sa = (_vala_array_free (sa, sa_length1 * sa_length2, (GDestroyNotify) g_free), NULL);
 	_g_variant_unref0 (v);
 }
@@ -352,46 +352,46 @@ _variant_get4 (GVariant* value,
                gint* result_length2,
                gint* result_length3)
 {
-	gchar** _tmp20_;
-	gint _tmp20__length;
-	gint _tmp20__size;
-	gint _tmp20__length1;
-	GVariantIter _tmp21_;
-	GVariant* _tmp22_;
-	_tmp20_ = g_new (gchar*, 5);
-	_tmp20__length = 0;
-	_tmp20__size = 4;
-	_tmp20__length1 = 0;
-	g_variant_iter_init (&_tmp21_, value);
-	for (; (_tmp22_ = g_variant_iter_next_value (&_tmp21_)) != NULL; _tmp20__length1++) {
-		gint _tmp20__length2;
-		GVariantIter _tmp23_;
-		GVariant* _tmp24_;
-		_tmp20__length2 = 0;
-		g_variant_iter_init (&_tmp23_, _tmp22_);
-		for (; (_tmp24_ = g_variant_iter_next_value (&_tmp23_)) != NULL; _tmp20__length2++) {
-			gint _tmp20__length3;
-			GVariantIter _tmp25_;
-			GVariant* _tmp26_;
-			_tmp20__length3 = 0;
-			g_variant_iter_init (&_tmp25_, _tmp24_);
-			for (; (_tmp26_ = g_variant_iter_next_value (&_tmp25_)) != NULL; _tmp20__length3++) {
-				if (_tmp20__size == _tmp20__length) {
-					_tmp20__size = 2 * _tmp20__size;
-					_tmp20_ = g_renew (gchar*, _tmp20_, _tmp20__size + 1);
+	gchar** _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gchar*, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		gint _tmp0__length2;
+		GVariantIter _tmp3_;
+		GVariant* _tmp4_;
+		_tmp0__length2 = 0;
+		g_variant_iter_init (&_tmp3_, _tmp2_);
+		for (; (_tmp4_ = g_variant_iter_next_value (&_tmp3_)) != NULL; _tmp0__length2++) {
+			gint _tmp0__length3;
+			GVariantIter _tmp5_;
+			GVariant* _tmp6_;
+			_tmp0__length3 = 0;
+			g_variant_iter_init (&_tmp5_, _tmp4_);
+			for (; (_tmp6_ = g_variant_iter_next_value (&_tmp5_)) != NULL; _tmp0__length3++) {
+				if (_tmp0__size == _tmp0__length) {
+					_tmp0__size = 2 * _tmp0__size;
+					_tmp0_ = g_renew (gchar*, _tmp0_, _tmp0__size + 1);
 				}
-				_tmp20_[_tmp20__length++] = g_variant_dup_string (_tmp26_, NULL);
-				g_variant_unref (_tmp26_);
+				_tmp0_[_tmp0__length++] = g_variant_dup_string (_tmp6_, NULL);
+				g_variant_unref (_tmp6_);
 			}
-			*result_length3 = _tmp20__length3;
-			g_variant_unref (_tmp24_);
+			*result_length3 = _tmp0__length3;
+			g_variant_unref (_tmp4_);
 		}
-		*result_length2 = _tmp20__length2;
-		g_variant_unref (_tmp22_);
+		*result_length2 = _tmp0__length2;
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp20__length1;
-	_tmp20_[_tmp20__length] = NULL;
-	return _tmp20_;
+	*result_length1 = _tmp0__length1;
+	_tmp0_[_tmp0__length] = NULL;
+	return _tmp0_;
 }
 
 void
@@ -421,13 +421,13 @@ string_array_3d_conversion (void)
 	gint sa_length1;
 	gint sa_length2;
 	gint sa_length3;
-	gint _tmp27_;
-	gint _tmp28_;
-	gint _tmp29_;
-	const gchar* _tmp30_;
-	const gchar* _tmp31_;
-	const gchar* _tmp32_;
-	const gchar* _tmp33_;
+	gint _tmp20_;
+	gint _tmp21_;
+	gint _tmp22_;
+	const gchar* _tmp23_;
+	const gchar* _tmp24_;
+	const gchar* _tmp25_;
+	const gchar* _tmp26_;
 	_tmp0_ = g_strdup ("foo");
 	_tmp1_ = g_strdup ("bar");
 	_tmp2_ = g_strdup ("baz");
@@ -458,20 +458,20 @@ string_array_3d_conversion (void)
 	sa_length1 = _tmp19__length1;
 	sa_length2 = _tmp19__length2;
 	sa_length3 = _tmp19__length3;
-	_tmp27_ = sa_length1;
-	_vala_assert (_tmp27_ == 2, "sa.length[0] == 2");
-	_tmp28_ = sa_length2;
-	_vala_assert (_tmp28_ == 2, "sa.length[1] == 2");
-	_tmp29_ = sa_length3;
-	_vala_assert (_tmp29_ == 2, "sa.length[2] == 2");
-	_tmp30_ = sa[(((0 * sa_length2) + 1) * sa_length3) + 0];
-	_vala_assert (g_strcmp0 (_tmp30_, "baz") == 0, "sa[0,1,0] == \"baz\"");
-	_tmp31_ = sa[(((0 * sa_length2) + 1) * sa_length3) + 1];
-	_vala_assert (g_strcmp0 (_tmp31_, "man") == 0, "sa[0,1,1] == \"man\"");
-	_tmp32_ = sa[(((1 * sa_length2) + 1) * sa_length3) + 0];
-	_vala_assert (g_strcmp0 (_tmp32_, "baz2") == 0, "sa[1,1,0] == \"baz2\"");
-	_tmp33_ = sa[(((1 * sa_length2) + 1) * sa_length3) + 1];
-	_vala_assert (g_strcmp0 (_tmp33_, "man2") == 0, "sa[1,1,1] == \"man2\"");
+	_tmp20_ = sa_length1;
+	_vala_assert (_tmp20_ == 2, "sa.length[0] == 2");
+	_tmp21_ = sa_length2;
+	_vala_assert (_tmp21_ == 2, "sa.length[1] == 2");
+	_tmp22_ = sa_length3;
+	_vala_assert (_tmp22_ == 2, "sa.length[2] == 2");
+	_tmp23_ = sa[(((0 * sa_length2) + 1) * sa_length3) + 0];
+	_vala_assert (g_strcmp0 (_tmp23_, "baz") == 0, "sa[0,1,0] == \"baz\"");
+	_tmp24_ = sa[(((0 * sa_length2) + 1) * sa_length3) + 1];
+	_vala_assert (g_strcmp0 (_tmp24_, "man") == 0, "sa[0,1,1] == \"man\"");
+	_tmp25_ = sa[(((1 * sa_length2) + 1) * sa_length3) + 0];
+	_vala_assert (g_strcmp0 (_tmp25_, "baz2") == 0, "sa[1,1,0] == \"baz2\"");
+	_tmp26_ = sa[(((1 * sa_length2) + 1) * sa_length3) + 1];
+	_vala_assert (g_strcmp0 (_tmp26_, "man2") == 0, "sa[1,1,1] == \"man2\"");
 	sa = (_vala_array_free (sa, (sa_length1 * sa_length2) * sa_length3, (GDestroyNotify) g_free), NULL);
 	_g_variant_unref0 (v);
 }
@@ -523,27 +523,27 @@ static gdouble*
 _variant_get6 (GVariant* value,
                gint* result_length1)
 {
-	gdouble* _tmp8_;
-	gint _tmp8__length;
-	gint _tmp8__size;
-	gint _tmp8__length1;
-	GVariantIter _tmp9_;
-	GVariant* _tmp10_;
-	_tmp8_ = g_new (gdouble, 5);
-	_tmp8__length = 0;
-	_tmp8__size = 4;
-	_tmp8__length1 = 0;
-	g_variant_iter_init (&_tmp9_, value);
-	for (; (_tmp10_ = g_variant_iter_next_value (&_tmp9_)) != NULL; _tmp8__length1++) {
-		if (_tmp8__size == _tmp8__length) {
-			_tmp8__size = 2 * _tmp8__size;
-			_tmp8_ = g_renew (gdouble, _tmp8_, _tmp8__size + 1);
+	gdouble* _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gdouble, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		if (_tmp0__size == _tmp0__length) {
+			_tmp0__size = 2 * _tmp0__size;
+			_tmp0_ = g_renew (gdouble, _tmp0_, _tmp0__size + 1);
 		}
-		_tmp8_[_tmp8__length++] = g_variant_get_double (_tmp10_);
-		g_variant_unref (_tmp10_);
+		_tmp0_[_tmp0__length++] = g_variant_get_double (_tmp2_);
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp8__length1;
-	return _tmp8_;
+	*result_length1 = _tmp0__length1;
+	return _tmp0_;
 }
 
 void
@@ -560,7 +560,7 @@ double_array_conversion (void)
 	gint _tmp7__length1 = 0;
 	gint da_length1;
 	gint _da_size_;
-	gdouble _tmp11_;
+	gdouble _tmp8_;
 	_tmp0_ = g_new0 (gdouble, 2);
 	_tmp0_[0] = 42.23;
 	_tmp0_[1] = 47.11;
@@ -575,8 +575,8 @@ double_array_conversion (void)
 	da_length1 = _tmp7__length1;
 	_da_size_ = da_length1;
 	_vala_assert (da_length1 == 2, "da.length == 2");
-	_tmp11_ = da[1];
-	_vala_assert (_tmp11_ == 47.11, "da[1] == 47.11");
+	_tmp8_ = da[1];
+	_vala_assert (_tmp8_ == 47.11, "da[1] == 47.11");
 	da = (g_free (da), NULL);
 	_g_variant_unref0 (v);
 }
@@ -609,36 +609,36 @@ _variant_get7 (GVariant* value,
                gint* result_length1,
                gint* result_length2)
 {
-	gdouble* _tmp10_;
-	gint _tmp10__length;
-	gint _tmp10__size;
-	gint _tmp10__length1;
-	GVariantIter _tmp11_;
-	GVariant* _tmp12_;
-	_tmp10_ = g_new (gdouble, 5);
-	_tmp10__length = 0;
-	_tmp10__size = 4;
-	_tmp10__length1 = 0;
-	g_variant_iter_init (&_tmp11_, value);
-	for (; (_tmp12_ = g_variant_iter_next_value (&_tmp11_)) != NULL; _tmp10__length1++) {
-		gint _tmp10__length2;
-		GVariantIter _tmp13_;
-		GVariant* _tmp14_;
-		_tmp10__length2 = 0;
-		g_variant_iter_init (&_tmp13_, _tmp12_);
-		for (; (_tmp14_ = g_variant_iter_next_value (&_tmp13_)) != NULL; _tmp10__length2++) {
-			if (_tmp10__size == _tmp10__length) {
-				_tmp10__size = 2 * _tmp10__size;
-				_tmp10_ = g_renew (gdouble, _tmp10_, _tmp10__size + 1);
+	gdouble* _tmp0_;
+	gint _tmp0__length;
+	gint _tmp0__size;
+	gint _tmp0__length1;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	_tmp0_ = g_new (gdouble, 5);
+	_tmp0__length = 0;
+	_tmp0__size = 4;
+	_tmp0__length1 = 0;
+	g_variant_iter_init (&_tmp1_, value);
+	for (; (_tmp2_ = g_variant_iter_next_value (&_tmp1_)) != NULL; _tmp0__length1++) {
+		gint _tmp0__length2;
+		GVariantIter _tmp3_;
+		GVariant* _tmp4_;
+		_tmp0__length2 = 0;
+		g_variant_iter_init (&_tmp3_, _tmp2_);
+		for (; (_tmp4_ = g_variant_iter_next_value (&_tmp3_)) != NULL; _tmp0__length2++) {
+			if (_tmp0__size == _tmp0__length) {
+				_tmp0__size = 2 * _tmp0__size;
+				_tmp0_ = g_renew (gdouble, _tmp0_, _tmp0__size + 1);
 			}
-			_tmp10_[_tmp10__length++] = g_variant_get_double (_tmp14_);
-			g_variant_unref (_tmp14_);
+			_tmp0_[_tmp0__length++] = g_variant_get_double (_tmp4_);
+			g_variant_unref (_tmp4_);
 		}
-		*result_length2 = _tmp10__length2;
-		g_variant_unref (_tmp12_);
+		*result_length2 = _tmp0__length2;
+		g_variant_unref (_tmp2_);
 	}
-	*result_length1 = _tmp10__length1;
-	return _tmp10_;
+	*result_length1 = _tmp0__length1;
+	return _tmp0_;
 }
 
 void
@@ -657,9 +657,9 @@ double_array_2d_conversion (void)
 	gint _tmp9__length2 = 0;
 	gint da_length1;
 	gint da_length2;
-	gint _tmp15_;
-	gint _tmp16_;
-	gdouble _tmp17_;
+	gint _tmp10_;
+	gint _tmp11_;
+	gdouble _tmp12_;
 	_tmp0_ = g_new0 (gdouble, 2 * 2);
 	_tmp0_[0] = 42.23;
 	_tmp0_[1] = 11.47;
@@ -676,12 +676,12 @@ double_array_2d_conversion (void)
 	da = _tmp9_;
 	da_length1 = _tmp9__length1;
 	da_length2 = _tmp9__length2;
-	_tmp15_ = da_length1;
-	_vala_assert (_tmp15_ == 2, "da.length[0] == 2");
-	_tmp16_ = da_length2;
-	_vala_assert (_tmp16_ == 2, "da.length[1] == 2");
-	_tmp17_ = da[(1 * da_length2) + 1];
-	_vala_assert (_tmp17_ == 23.42, "da[1,1] == 23.42");
+	_tmp10_ = da_length1;
+	_vala_assert (_tmp10_ == 2, "da.length[0] == 2");
+	_tmp11_ = da_length2;
+	_vala_assert (_tmp11_ == 2, "da.length[1] == 2");
+	_tmp12_ = da[(1 * da_length2) + 1];
+	_vala_assert (_tmp12_ == 23.42, "da[1,1] == 23.42");
 	da = (g_free (da), NULL);
 	_g_variant_unref0 (v);
 }
@@ -757,22 +757,22 @@ static void
 _variant_get8 (GVariant* value,
                Foo * result)
 {
-	Foo _tmp6_;
-	GVariantIter _tmp7_;
-	GVariant* _tmp8_;
-	GVariant* _tmp9_;
-	GVariant* _tmp10_;
-	g_variant_iter_init (&_tmp7_, value);
-	_tmp8_ = g_variant_iter_next_value (&_tmp7_);
-	_tmp6_.s = g_variant_dup_string (_tmp8_, NULL);
-	g_variant_unref (_tmp8_);
-	_tmp9_ = g_variant_iter_next_value (&_tmp7_);
-	_tmp6_.u64 = g_variant_get_uint64 (_tmp9_);
-	g_variant_unref (_tmp9_);
-	_tmp10_ = g_variant_iter_next_value (&_tmp7_);
-	_tmp6_.b = g_variant_get_boolean (_tmp10_);
-	g_variant_unref (_tmp10_);
-	*result = _tmp6_;
+	Foo _tmp0_;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	GVariant* _tmp3_;
+	GVariant* _tmp4_;
+	g_variant_iter_init (&_tmp1_, value);
+	_tmp2_ = g_variant_iter_next_value (&_tmp1_);
+	_tmp0_.s = g_variant_dup_string (_tmp2_, NULL);
+	g_variant_unref (_tmp2_);
+	_tmp3_ = g_variant_iter_next_value (&_tmp1_);
+	_tmp0_.u64 = g_variant_get_uint64 (_tmp3_);
+	g_variant_unref (_tmp3_);
+	_tmp4_ = g_variant_iter_next_value (&_tmp1_);
+	_tmp0_.b = g_variant_get_boolean (_tmp4_);
+	g_variant_unref (_tmp4_);
+	*result = _tmp0_;
 }
 
 void
@@ -786,10 +786,10 @@ struct_conversion (void)
 	GVariant* _tmp4_;
 	Foo st = {0};
 	Foo _tmp5_;
-	Foo _tmp11_;
-	const gchar* _tmp12_;
-	Foo _tmp13_;
-	Foo _tmp14_;
+	Foo _tmp6_;
+	const gchar* _tmp7_;
+	Foo _tmp8_;
+	Foo _tmp9_;
 	_tmp0_ = g_strdup ("foo");
 	_g_free0 (_tmp1_.s);
 	_tmp1_.s = _tmp0_;
@@ -801,13 +801,13 @@ struct_conversion (void)
 	v = _tmp4_;
 	_variant_get8 (v, &_tmp5_);
 	st = _tmp5_;
-	_tmp11_ = st;
-	_tmp12_ = _tmp11_.s;
-	_vala_assert (g_strcmp0 (_tmp12_, "foo") == 0, "st.s == \"foo\"");
-	_tmp13_ = st;
-	_vala_assert (_tmp13_.u64 == G_MAXUINT64, "st.u64 == uint64.MAX");
-	_tmp14_ = st;
-	_vala_assert (_tmp14_.b == TRUE, "st.b == true");
+	_tmp6_ = st;
+	_tmp7_ = _tmp6_.s;
+	_vala_assert (g_strcmp0 (_tmp7_, "foo") == 0, "st.s == \"foo\"");
+	_tmp8_ = st;
+	_vala_assert (_tmp8_.u64 == G_MAXUINT64, "st.u64 == uint64.MAX");
+	_tmp9_ = st;
+	_vala_assert (_tmp9_.b == TRUE, "st.b == true");
 	foo_destroy (&st);
 	_g_variant_unref0 (v);
 	foo_destroy (&s);
