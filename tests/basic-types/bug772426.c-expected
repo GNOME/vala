@@ -44,12 +44,12 @@ static guint8*
 _variant_get1 (GVariant* value,
                gint* result_length1)
 {
-	gsize _tmp4__length;
-	guint8* _tmp4_;
-	_tmp4__length = g_variant_get_size (value);
-	_tmp4_ = _vala_memdup2 (g_variant_get_data (value), _tmp4__length);
-	*result_length1 = _tmp4__length;
-	return _tmp4_;
+	gsize _tmp0__length;
+	guint8* _tmp0_;
+	_tmp0__length = g_variant_get_size (value);
+	_tmp0_ = _vala_memdup2 (g_variant_get_data (value), _tmp0__length);
+	*result_length1 = _tmp0__length;
+	return _tmp0_;
 }
 
 static void

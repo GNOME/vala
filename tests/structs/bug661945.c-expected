@@ -85,18 +85,18 @@ static void
 _variant_get1 (GVariant* value,
                Foo * result)
 {
-	Foo _tmp4_;
-	GVariantIter _tmp5_;
-	GVariant* _tmp6_;
-	GVariant* _tmp7_;
-	g_variant_iter_init (&_tmp5_, value);
-	_tmp6_ = g_variant_iter_next_value (&_tmp5_);
-	_tmp4_.a = g_variant_get_int32 (_tmp6_);
-	g_variant_unref (_tmp6_);
-	_tmp7_ = g_variant_iter_next_value (&_tmp5_);
-	_tmp4_.b = g_variant_get_int32 (_tmp7_);
-	g_variant_unref (_tmp7_);
-	*result = _tmp4_;
+	Foo _tmp0_;
+	GVariantIter _tmp1_;
+	GVariant* _tmp2_;
+	GVariant* _tmp3_;
+	g_variant_iter_init (&_tmp1_, value);
+	_tmp2_ = g_variant_iter_next_value (&_tmp1_);
+	_tmp0_.a = g_variant_get_int32 (_tmp2_);
+	g_variant_unref (_tmp2_);
+	_tmp3_ = g_variant_iter_next_value (&_tmp1_);
+	_tmp0_.b = g_variant_get_int32 (_tmp3_);
+	g_variant_unref (_tmp3_);
+	*result = _tmp0_;
 }
 
 static void
@@ -107,8 +107,8 @@ _vala_main (void)
 	GVariant* _tmp2_;
 	Foo b = {0};
 	Foo _tmp3_;
-	Foo _tmp8_;
-	Foo _tmp9_;
+	Foo _tmp4_;
+	Foo _tmp5_;
 	memset (&_tmp0_, 0, sizeof (Foo));
 	_tmp0_.a = 2;
 	_tmp0_.b = 3;
@@ -116,10 +116,10 @@ _vala_main (void)
 	a = _tmp2_;
 	_variant_get1 (a, &_tmp3_);
 	b = _tmp3_;
-	_tmp8_ = b;
-	_vala_assert (_tmp8_.a == 2, "b.a == 2");
-	_tmp9_ = b;
-	_vala_assert (_tmp9_.b == 3, "b.b == 3");
+	_tmp4_ = b;
+	_vala_assert (_tmp4_.a == 2, "b.a == 2");
+	_tmp5_ = b;
+	_vala_assert (_tmp5_.b == 3, "b.b == 3");
 	_g_variant_unref0 (a);
 }
 
