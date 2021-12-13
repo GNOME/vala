@@ -158,6 +158,7 @@ public class Vala.GVariantModule : GValueModule {
 			ccode.add_expression (ccall);
 		}
 
+		push_context (new EmitContext ());
 		push_function (cfunc);
 
 		CCodeExpression type_expr = null;
@@ -217,6 +218,7 @@ public class Vala.GVariantModule : GValueModule {
 		}
 
 		pop_function ();
+		pop_context ();
 
 		cfile.add_function_declaration (cfunc);
 		cfile.add_function (cfunc);
