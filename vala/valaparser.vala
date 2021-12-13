@@ -1683,8 +1683,12 @@ public class Vala.Parser : CodeVisitor {
 		} catch (ParseError e) {
 			var e_begin = get_location ();
 			string token = ((EnumClass) typeof (TokenType).class_ref ()).get_value (type).value_nick;
+			rollback (begin);
+			if (!is_expression ()) {
+				rollback (e_begin);
+				throw e;
+			}
 			try {
-				rollback (begin);
 				stmt = parse_expression_statement ();
 				Report.warning (get_src (begin), "`%s' is a syntax keyword, replace with `@%s'", token, token);
 			} catch (ParseError e2) {
