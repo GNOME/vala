@@ -741,6 +741,7 @@ TESTS = \
 	generics/reference-transfer.vala \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
+	generics/type-parameter-property-clash.vala \
 	generics/value-pointer-type-access.vala \
 	generics/bug640330.vala \
 	generics/bug640330-2.test \
