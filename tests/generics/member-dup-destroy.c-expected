@@ -158,7 +158,7 @@ foo_construct (GType object_type,
 {
 	Foo * self = NULL;
 	gpointer g = NULL;
-	self = (Foo*) g_object_new (object_type, NULL);
+	self = (Foo*) g_object_new (object_type, "g-type", g_type, "g-dup-func", g_dup_func, "g-destroy-func", g_destroy_func, NULL);
 	self->priv->g_type = g_type;
 	self->priv->g_dup_func = g_dup_func;
 	self->priv->g_destroy_func = g_destroy_func;

@@ -140,7 +140,7 @@ foo_construct (GType object_type,
                GDestroyNotify type_param_destroy_func)
 {
 	Foo * self = NULL;
-	self = (Foo*) g_object_new (object_type, NULL);
+	self = (Foo*) g_object_new (object_type, "type-param-type", type_param_type, "type-param-dup-func", type_param_dup_func, "type-param-destroy-func", type_param_destroy_func, NULL);
 	self->priv->type_param_type = type_param_type;
 	self->priv->type_param_dup_func = type_param_dup_func;
 	self->priv->type_param_destroy_func = type_param_destroy_func;

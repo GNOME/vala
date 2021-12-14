@@ -160,6 +160,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			if (!current_class.is_compact) {
+				int type_param_index = 0;
 				if (current_class != m.parent_symbol) {
 					// chain up to base class
 					foreach (DataType base_type in current_class.get_base_types ()) {
@@ -168,6 +169,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							if (get_ccode_real_name (m) == "g_object_new") {
 								// gobject-style chainup
 								type_parameters = ((Class) base_type.type_symbol).get_type_parameters ();
+								type_param_index += type_parameters.size;
 							}
 							add_generic_type_arguments (m, in_arg_map, base_type.get_type_arguments (), expr, true, type_parameters);
 							break;
@@ -175,12 +177,24 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					}
 				} else {
 					// chain up to other constructor in same class
-					int type_param_index = 0;
 					var cl = (Class) m.parent_symbol;
 					foreach (TypeParameter type_param in cl.get_type_parameters ()) {
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier (get_ccode_type_id (type_param)));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (get_ccode_copy_function (type_param)));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier (get_ccode_destroy_function (type_param)));
+						type_param_index++;
+					}
+				}
+				if (current_class.has_type_parameters () && get_ccode_real_name (m) == "g_object_new") {
+					// gobject-style construction
+					foreach (var type_param in current_class.get_type_parameters ()) {
+						var type_param_name = type_param.name.ascii_down ().replace ("_", "-");
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (get_ccode_type_id (type_param)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("\"%s-dup-func\"".printf (type_param_name)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.04), new CCodeIdentifier (get_ccode_copy_function (type_param)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.05), new CCodeConstant ("\"%s-destroy-func\"".printf (type_param_name)));
+						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.06), new CCodeIdentifier (get_ccode_destroy_function (type_param)));
 						type_param_index++;
 					}
 				}
@@ -361,6 +375,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccode.add_assignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
 			}
 
+			//FIXME Only needed for non-"g_object_new" calls, if there is no property clash
 			if (!current_class.is_compact && current_class.has_type_parameters ()) {
 				/* type, dup func, and destroy func fields for generic types */
 				var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
