@@ -3907,7 +3907,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 
 			foreach (var attribute in orig.attributes) {
-				deleg.attributes.append (attribute);
+				deleg.add_attribute (attribute);
 			}
 
 			alias.symbol = deleg;
@@ -4347,7 +4347,7 @@ public class Vala.GirParser : CodeVisitor {
 				// cannot use List.copy()
 				// as it returns a list of unowned elements
 				foreach (Attribute a in m.attributes) {
-					method.attributes.append (a);
+					method.add_attribute (a);
 				}
 
 				method.set_attribute_string ("CCode", "cname", node.get_cname ());
