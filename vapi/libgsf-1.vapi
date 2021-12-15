@@ -108,6 +108,8 @@ namespace Gsf {
 		public Gsf.InfileZip internal_parent { construct; }
 		[NoAccessorMethod]
 		public Gsf.Input source { owned get; construct; }
+		[NoAccessorMethod]
+		public bool zip64 { get; }
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_input_get_type ()")]
 	public abstract class Input : GLib.Object {

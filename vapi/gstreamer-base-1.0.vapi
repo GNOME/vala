@@ -884,8 +884,8 @@ namespace Gst {
 			[CCode (array_length = false, cname = "gst_bit_writer_free_and_get_data")]
 			[DestroysInstance]
 			public uint8[] free_and_get_data ();
-			[CCode (cname = "gst_bit_writer_get_data")]
-			public uint8 get_data ();
+			[CCode (array_length = false, cname = "gst_bit_writer_get_data")]
+			public unowned uint8[] get_data ();
 			[CCode (cname = "gst_bit_writer_get_remaining")]
 			public uint get_remaining ();
 			[CCode (cname = "gst_bit_writer_get_size")]
@@ -899,7 +899,7 @@ namespace Gst {
 			[CCode (cname = "gst_bit_writer_put_bits_uint8")]
 			public bool put_bits_uint8 (uint8 value, uint nbits);
 			[CCode (cname = "gst_bit_writer_put_bytes")]
-			public bool put_bytes ([CCode (array_length_cname = "nbytes", array_length_pos = 1.1, array_length_type = "guint", type = "const guint8*")] uint8[] data);
+			public bool put_bytes ([CCode (array_length_cname = "nbytes", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_bit_writer_reset")]
 			public void reset ();
 			[CCode (cname = "gst_bit_writer_reset_and_get_buffer")]

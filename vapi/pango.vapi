@@ -241,6 +241,8 @@ namespace Pango {
 		[Version (since = "1.14")]
 		public Pango.FontDescription describe_with_absolute_size ();
 		public static void descriptions_free ([CCode (array_length_cname = "n_descs", array_length_pos = 1.1)] owned Pango.FontDescription[]? descs);
+		[Version (since = "1.50")]
+		public static Pango.Font? deserialize (Pango.Context context, GLib.Bytes bytes) throws GLib.Error;
 		public virtual Pango.Coverage get_coverage (Pango.Language language);
 		[Version (since = "1.46")]
 		public unowned Pango.FontFace get_face ();
@@ -678,12 +680,20 @@ namespace Pango {
 		public void free ();
 		[Version (since = "1.50")]
 		public static Pango.TabArray? from_string (string text);
+		[Version (since = "1.50")]
+		public unichar get_decimal_point (int tab_index);
 		public bool get_positions_in_pixels ();
 		public int get_size ();
 		public void get_tab (int tab_index, out Pango.TabAlign alignment, out int location);
 		public void get_tabs (out Pango.TabAlign alignments, [CCode (array_length = false)] out int[] locations);
 		public void resize (int new_size);
+		[Version (since = "1.50")]
+		public void set_decimal_point (int tab_index, unichar decimal_point);
+		[Version (since = "1.50")]
+		public void set_positions_in_pixels (bool positions_in_pixels);
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
+		[Version (since = "1.50")]
+		public void sort ();
 		[Version (since = "1.50")]
 		public string to_string ();
 		[CCode (has_construct_function = false)]
@@ -963,12 +973,14 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_LAYOUT_DESERIALIZE_", type_id = "pango_layout_deserialize_flags_get_type ()")]
 	[Flags]
+	[Version (since = "1.50")]
 	public enum LayoutDeserializeFlags {
 		DEFAULT,
 		CONTEXT
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_LAYOUT_SERIALIZE_", type_id = "pango_layout_serialize_flags_get_type ()")]
 	[Flags]
+	[Version (since = "1.50")]
 	public enum LayoutSerializeFlags {
 		DEFAULT,
 		CONTEXT,
@@ -1150,7 +1162,10 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_TAB_", type_id = "pango_tab_align_get_type ()")]
 	public enum TabAlign {
-		LEFT
+		LEFT,
+		RIGHT,
+		CENTER,
+		DECIMAL
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_TEXT_TRANSFORM_", type_id = "pango_text_transform_get_type ()")]
 	[Version (since = "1.50")]
@@ -1203,9 +1218,9 @@ namespace Pango {
 		WORD_CHAR
 	}
 	[CCode (cheader_filename = "pango/pango.h", cprefix = "PANGO_LAYOUT_DESERIALIZE_")]
+	[Version (since = "1.50")]
 	public errordomain LayoutDeserializeError {
 		INVALID,
-		INVALID_SYNTAX,
 		INVALID_VALUE,
 		MISSING_VALUE;
 		public static GLib.Quark quark ();
