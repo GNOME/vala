@@ -872,8 +872,8 @@ namespace Gst {
 			[CCode (array_length = false, cname = "gst_bit_writer_free_and_get_data")]
 			[DestroysInstance]
 			public uint8[] free_and_get_data ();
-			[CCode (cname = "gst_bit_writer_get_data")]
-			public uint8 get_data ();
+			[CCode (array_length = false, cname = "gst_bit_writer_get_data")]
+			public unowned uint8[] get_data ();
 			[CCode (cname = "gst_bit_writer_get_remaining")]
 			public uint get_remaining ();
 			[CCode (cname = "gst_bit_writer_get_size")]
