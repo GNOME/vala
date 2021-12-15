@@ -120,6 +120,23 @@ public abstract class Vala.CodeNode {
 		return null;
 	}
 
+	/**
+	 * Add attribute and append key/value pairs to an existing one.
+	 *
+	 * @param a  an attribute to add
+	 */
+	public void add_attribute (Attribute a) {
+		unowned Attribute? old_a = get_attribute (a.name);
+		if (old_a == null) {
+			attributes.append (a);
+		} else {
+			var it = a.args.map_iterator ();
+			while (it.next ()) {
+				old_a.args.set (it.get_key (), it.get_value ());
+			}
+		}
+	}
+
 	unowned Attribute get_or_create_attribute (string name) {
 		unowned Attribute? a = get_attribute (name);
 		if (a == null) {
