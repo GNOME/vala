@@ -176,9 +176,7 @@ _vala_main (void)
 	FooStruct foo_struct = {0};
 	FooStruct _tmp4_ = {0};
 	FooStruct _tmp5_;
-	FooEnum _tmp6_;
 	FooEnum foo_enum = 0;
-	FooEnum _tmp7_;
 	if (takes_enum (FOO_ENUM_BAR) == FOO_ENUM_BAR) {
 		return;
 	}
@@ -202,11 +200,9 @@ _vala_main (void)
 	_tmp4_.f = FOO_ENUM_BAR;
 	foo_struct = _tmp4_;
 	_tmp5_ = foo_struct;
-	_tmp6_ = _tmp5_.f;
-	_vala_assert (_tmp6_ == FOO_ENUM_BAR, "foo_struct.f == BAR");
+	_vala_assert (_tmp5_.f == FOO_ENUM_BAR, "foo_struct.f == BAR");
 	foo_enum = FOO_ENUM_BAR;
-	_tmp7_ = foo_enum;
-	switch (_tmp7_) {
+	switch (foo_enum) {
 		default:
 		case FOO_ENUM_FOO:
 		{
