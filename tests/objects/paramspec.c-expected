@@ -552,10 +552,8 @@ FooEnum
 foo_get_enum_prop (Foo* self)
 {
 	FooEnum result;
-	FooEnum _tmp0_;
 	g_return_val_if_fail (IS_FOO (self), 0);
-	_tmp0_ = self->priv->_enum_prop;
-	result = _tmp0_;
+	result = self->priv->_enum_prop;
 	return result;
 }
 
@@ -576,10 +574,8 @@ FooEnum
 foo_get_enum_prop2 (Foo* self)
 {
 	FooEnum result;
-	FooEnum _tmp0_;
 	g_return_val_if_fail (IS_FOO (self), 0);
-	_tmp0_ = self->priv->_enum_prop2;
-	result = _tmp0_;
+	result = self->priv->_enum_prop2;
 	return result;
 }
 
@@ -600,10 +596,8 @@ FooFlag
 foo_get_flag_prop (Foo* self)
 {
 	FooFlag result;
-	FooFlag _tmp0_;
 	g_return_val_if_fail (IS_FOO (self), 0U);
-	_tmp0_ = self->priv->_flag_prop;
-	result = _tmp0_;
+	result = self->priv->_flag_prop;
 	return result;
 }
 
@@ -624,10 +618,8 @@ FooFlag
 foo_get_flag_prop2 (Foo* self)
 {
 	FooFlag result;
-	FooFlag _tmp0_;
 	g_return_val_if_fail (IS_FOO (self), 0U);
-	_tmp0_ = self->priv->_flag_prop2;
-	result = _tmp0_;
+	result = self->priv->_flag_prop2;
 	return result;
 }
 

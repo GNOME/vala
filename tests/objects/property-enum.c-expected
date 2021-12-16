@@ -244,10 +244,8 @@ FooEnum
 manam_get_prop1 (Manam* self)
 {
 	FooEnum result;
-	FooEnum _tmp0_;
 	g_return_val_if_fail (IS_MANAM (self), 0);
-	_tmp0_ = self->priv->_prop1;
-	result = _tmp0_;
+	result = self->priv->_prop1;
 	return result;
 }
 
@@ -263,10 +261,8 @@ FooFlag
 manam_get_prop2 (Manam* self)
 {
 	FooFlag result;
-	FooFlag _tmp0_;
 	g_return_val_if_fail (IS_MANAM (self), 0U);
-	_tmp0_ = self->priv->_prop2;
-	result = _tmp0_;
+	result = self->priv->_prop2;
 	return result;
 }
 
@@ -282,10 +278,8 @@ BarEnum
 manam_get_prop3 (Manam* self)
 {
 	BarEnum result;
-	BarEnum _tmp0_;
 	g_return_val_if_fail (IS_MANAM (self), 0);
-	_tmp0_ = self->priv->_prop3;
-	result = _tmp0_;
+	result = self->priv->_prop3;
 	return result;
 }
 
@@ -301,10 +295,8 @@ BarFlag
 manam_get_prop4 (Manam* self)
 {
 	BarFlag result;
-	BarFlag _tmp0_;
 	g_return_val_if_fail (IS_MANAM (self), 0U);
-	_tmp0_ = self->priv->_prop4;
-	result = _tmp0_;
+	result = self->priv->_prop4;
 	return result;
 }
 
@@ -542,10 +534,8 @@ FooEnum
 minim_get_prop1 (Minim* self)
 {
 	FooEnum result;
-	FooEnum _tmp0_;
 	g_return_val_if_fail (IS_MINIM (self), 0);
-	_tmp0_ = self->priv->_prop1;
-	result = _tmp0_;
+	result = self->priv->_prop1;
 	return result;
 }
 
@@ -566,10 +556,8 @@ FooFlag
 minim_get_prop2 (Minim* self)
 {
 	FooFlag result;
-	FooFlag _tmp0_;
 	g_return_val_if_fail (IS_MINIM (self), 0U);
-	_tmp0_ = self->priv->_prop2;
-	result = _tmp0_;
+	result = self->priv->_prop2;
 	return result;
 }
 
@@ -590,10 +578,8 @@ BarEnum
 minim_get_prop3 (Minim* self)
 {
 	BarEnum result;
-	BarEnum _tmp0_;
 	g_return_val_if_fail (IS_MINIM (self), 0);
-	_tmp0_ = self->priv->_prop3;
-	result = _tmp0_;
+	result = self->priv->_prop3;
 	return result;
 }
 
@@ -614,10 +600,8 @@ BarFlag
 minim_get_prop4 (Minim* self)
 {
 	BarFlag result;
-	BarFlag _tmp0_;
 	g_return_val_if_fail (IS_MINIM (self), 0U);
-	_tmp0_ = self->priv->_prop4;
-	result = _tmp0_;
+	result = self->priv->_prop4;
 	return result;
 }
 
