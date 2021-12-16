@@ -464,6 +464,9 @@ public abstract class Vala.DataType : CodeNode {
 		if (s != null && s.is_simple_type ()) {
 			return !nullable;
 		}
+		if (type_symbol is Enum) {
+			return !nullable;
+		}
 		return false;
 	}
 
