@@ -102,6 +102,7 @@ TESTS = \
 	constants/array-type-invalid.test \
 	constants/glog.vala \
 	constants/member-access.vala \
+	constants/member-access-enum.vala \
 	constants/strings.vala \
 	namespace/unique.vala \
 	arrays/cast-silent-invalid.test \
@@ -325,6 +326,7 @@ TESTS = \
 	control-semantic/variadic-argument-invalid.test \
 	enums/default-gtype.vala \
 	enums/enum_only.vala \
+	enums/enum-boxed.vala \
 	enums/enum-no-gtype.vala \
 	enums/enum-gtype-too-short.test \
 	enums/enums.vala \
