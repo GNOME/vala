@@ -314,6 +314,10 @@ public class Vala.Assignment : Expression {
 					error = true;
 					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
 					return false;
+				} else if (left.value_type is EnumValueType && right.value_type is IntegerType
+				    && (!(right is IntegerLiteral) || ((IntegerLiteral) right).value != "0")) {
+					//FIXME This will have to be an error in the future?
+					Report.notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
 				}
 
 				if (!(ma.symbol_reference is Property)) {

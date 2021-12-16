@@ -330,6 +330,7 @@ TESTS = \
 	enums/in-inference.vala \
 	enums/no_gtype_to_string.vala \
 	enums/switch.vala \
+	enums/unsafe-assignment.vala \
 	enums/bug614424.vala \
 	enums/bug666035.vala \
 	enums/bug666035-1.test \

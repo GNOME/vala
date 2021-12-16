@@ -215,6 +215,10 @@ public class Vala.LocalVariable : Variable {
 				error = true;
 				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
 				return false;
+			} else if (variable_type is EnumValueType && initializer.value_type is IntegerType
+			    && (!(initializer is IntegerLiteral) || ((IntegerLiteral) initializer).value != "0")) {
+				//FIXME This will have to be an error in the future?
+				Report.notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
 			}
 
 			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {

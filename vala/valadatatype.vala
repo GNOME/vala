@@ -318,6 +318,9 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (type_symbol is Enum && target_type.type_symbol is Struct && ((Struct) target_type.type_symbol).is_integer_type ()) {
 			return true;
+		} else if (target_type.type_symbol is Enum && type_symbol is Struct && ((Struct) type_symbol).is_integer_type ()) {
+			//FIXME Drop this unsafe direction in the future?
+			return true;
 		}
 
 		// check for matching ownership of type-arguments
