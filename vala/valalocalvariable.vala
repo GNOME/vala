@@ -219,7 +219,8 @@ public class Vala.LocalVariable : Variable {
 				error = true;
 				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 				return false;
-			} else if (variable_type is EnumValueType && initializer.value_type is IntegerType) {
+			} else if (variable_type is EnumValueType && initializer.value_type is IntegerType
+			    && (!(initializer is IntegerLiteral) || ((IntegerLiteral) initializer).value != "0")) {
 				//FIXME This will have to be an error in the future?
 				Report.notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 			}
