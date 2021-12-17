@@ -56,21 +56,22 @@ public class Vala.Genie.Parser : CodeVisitor {
 		public SourceLocation end;
 	}
 
+	[Flags]
 	enum ModifierFlags {
-		NONE,
-		ABSTRACT = 1 << 0,
-		CLASS = 1 << 1,
-		EXTERN = 1 << 2,
-		INLINE = 1 << 3,
-		NEW = 1 << 4,
-		OVERRIDE = 1 << 5,
-		STATIC = 1 << 6,
-		VIRTUAL = 1 << 7,
-		PRIVATE = 1 << 8,
-		ASYNC = 1 << 9,
-		SEALED = 1 << 10,
-		PUBLIC = 1 << 11,
-		PROTECTED = 1 << 12,
+		NONE = 0,
+		ABSTRACT,
+		CLASS,
+		EXTERN,
+		INLINE,
+		NEW,
+		OVERRIDE,
+		STATIC,
+		VIRTUAL,
+		PRIVATE,
+		ASYNC,
+		SEALED,
+		PUBLIC,
+		PROTECTED
 	}
 
 	public Parser () {
