@@ -42,6 +42,8 @@ typedef struct _IBarIface IBarIface;
 typedef struct _Foo Foo;
 typedef struct _FooClass FooClass;
 typedef struct _FooPrivate FooPrivate;
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 enum  {
 	FOO_0_PROPERTY,
 	FOO_P0_PROPERTY,
@@ -50,7 +52,6 @@ enum  {
 	FOO_NUM_PROPERTIES
 };
 static GParamSpec* foo_properties[FOO_NUM_PROPERTIES];
-#define _g_free0(var) (var = (g_free (var), NULL))
 enum  {
 	FOO_S0_SIGNAL,
 	FOO_S1_SIGNAL,
@@ -58,7 +59,6 @@ enum  {
 	FOO_NUM_SIGNALS
 };
 static guint foo_signals[FOO_NUM_SIGNALS] = {0};
-#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -109,30 +109,31 @@ static GType ifoo_get_type_once (void);
 VALA_EXTERN GType ibar_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void ibar_i2 (IBar* self);
 static GType ibar_get_type_once (void);
+static void _vala_main (void);
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
-VALA_EXTERN void foo_v0 (Foo* self);
-VALA_EXTERN void foo_v1 (Foo* self);
-VALA_EXTERN void foo_v2 (Foo* self);
-VALA_EXTERN void foo_m0 (Foo* self);
-static void foo_real_v0 (Foo* self);
 VALA_EXTERN Foo* foo_new (void);
 VALA_EXTERN Foo* foo_construct (GType object_type);
+VALA_EXTERN void foo_set_p0 (Foo* self,
+                 const gchar* value);
+VALA_EXTERN void foo_m0 (Foo* self);
+VALA_EXTERN void foo_v0 (Foo* self);
+VALA_EXTERN void foo_set_p1 (Foo* self,
+                 const gchar* value);
 VALA_EXTERN void foo_m1 (Foo* self);
+VALA_EXTERN void foo_v1 (Foo* self);
+VALA_EXTERN void foo_set_p2 (Foo* self,
+                 const gchar* value);
+VALA_EXTERN void foo_m2 (Foo* self);
+VALA_EXTERN void foo_v2 (Foo* self);
+static void foo_real_v0 (Foo* self);
 static void foo_real_v1 (Foo* self);
 static void foo_real_i1 (IFoo* base);
-VALA_EXTERN void foo_m2 (Foo* self);
 static void foo_real_v2 (Foo* self);
 static void foo_real_i2 (IBar* base);
 VALA_EXTERN const gchar* foo_get_p0 (Foo* self);
-VALA_EXTERN void foo_set_p0 (Foo* self,
-                 const gchar* value);
 VALA_EXTERN const gchar* foo_get_p1 (Foo* self);
-VALA_EXTERN void foo_set_p1 (Foo* self,
-                 const gchar* value);
 VALA_EXTERN const gchar* foo_get_p2 (Foo* self);
-VALA_EXTERN void foo_set_p2 (Foo* self,
-                 const gchar* value);
 static void foo_real_s0 (Foo* self);
 static void foo_real_s1 (Foo* self);
 static void foo_real_s2 (Foo* self);
@@ -146,7 +147,6 @@ static void _vala_foo_set_property (GObject * object,
                              guint property_id,
                              const GValue * value,
                              GParamSpec * pspec);
-static void _vala_main (void);
 
 void
 ifoo_i1 (IFoo* self)
@@ -222,6 +222,52 @@ ibar_get_type (void)
 		g_once_init_leave (&ibar_type_id__volatile, ibar_type_id);
 	}
 	return ibar_type_id__volatile;
+}
+
+static void
+_vala_main (void)
+{
+	Foo* foo = NULL;
+	Foo* _tmp0_;
+	gchar* _tmp1_;
+	gchar* _tmp2_;
+	gchar* _tmp3_;
+	_tmp0_ = foo_new ();
+	foo = _tmp0_;
+	foo_set_p0 (foo, "p0");
+	_tmp1_ = g_strdup ("f0");
+	_g_free0 (foo->f0);
+	foo->f0 = _tmp1_;
+	foo_m0 (foo);
+	foo_v0 (foo);
+	g_signal_emit (foo, foo_signals[FOO_S0_SIGNAL], 0);
+	foo_set_p1 (foo, "p1");
+	_tmp2_ = g_strdup ("f1");
+	_g_free0 (foo->f1);
+	foo->f1 = _tmp2_;
+	foo_m1 (foo);
+	foo_v1 (foo);
+	g_signal_emit (foo, foo_signals[FOO_S1_SIGNAL], 0);
+	foo_set_p2 (foo, "p2");
+	_tmp3_ = g_strdup ("f2");
+	_g_free0 (foo->f2);
+	foo->f2 = _tmp3_;
+	foo_m2 (foo);
+	foo_v2 (foo);
+	g_signal_emit (foo, foo_signals[FOO_S2_SIGNAL], 0);
+	_vala_assert (IS_IFOO (foo), "foo is IFoo");
+	ifoo_i1 (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo));
+	_vala_assert (IS_IBAR (foo), "foo is IBar");
+	ibar_i2 (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IBAR, IBar));
+	_g_object_unref0 (foo);
+}
+
+int
+main (int argc,
+      char ** argv)
+{
+	_vala_main ();
+	return 0;
 }
 
 static inline gpointer
@@ -552,51 +598,5 @@ _vala_foo_set_property (GObject * object,
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 		break;
 	}
-}
-
-static void
-_vala_main (void)
-{
-	Foo* foo = NULL;
-	Foo* _tmp0_;
-	gchar* _tmp1_;
-	gchar* _tmp2_;
-	gchar* _tmp3_;
-	_tmp0_ = foo_new ();
-	foo = _tmp0_;
-	foo_set_p0 (foo, "p0");
-	_tmp1_ = g_strdup ("f0");
-	_g_free0 (foo->f0);
-	foo->f0 = _tmp1_;
-	foo_m0 (foo);
-	foo_v0 (foo);
-	g_signal_emit (foo, foo_signals[FOO_S0_SIGNAL], 0);
-	foo_set_p1 (foo, "p1");
-	_tmp2_ = g_strdup ("f1");
-	_g_free0 (foo->f1);
-	foo->f1 = _tmp2_;
-	foo_m1 (foo);
-	foo_v1 (foo);
-	g_signal_emit (foo, foo_signals[FOO_S1_SIGNAL], 0);
-	foo_set_p2 (foo, "p2");
-	_tmp3_ = g_strdup ("f2");
-	_g_free0 (foo->f2);
-	foo->f2 = _tmp3_;
-	foo_m2 (foo);
-	foo_v2 (foo);
-	g_signal_emit (foo, foo_signals[FOO_S2_SIGNAL], 0);
-	_vala_assert (IS_IFOO (foo), "foo is IFoo");
-	ifoo_i1 (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo));
-	_vala_assert (IS_IBAR (foo), "foo is IBar");
-	ibar_i2 (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IBAR, IBar));
-	_g_object_unref0 (foo);
-}
-
-int
-main (int argc,
-      char ** argv)
-{
-	_vala_main ();
-	return 0;
 }
 

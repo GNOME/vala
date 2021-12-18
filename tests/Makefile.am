@@ -471,6 +471,7 @@ TESTS = \
 	objects/class-partial-conflict-access.test \
 	objects/class-partial-conflict-partial.test \
 	objects/class-partial-conflict-sealed.test \
+	objects/class-partial-nested.vala \
 	objects/class-vfunc-base-access.vala \
 	objects/classes.vala \
 	objects/classes-interfaces.vala \

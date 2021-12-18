@@ -44,10 +44,18 @@ public class Vala.Parser : CodeVisitor {
 	static List<TypeParameter> _empty_type_parameter_list;
 	static int next_local_func_id = 0;
 
+	PartialInfo[] partials;
+
 	struct TokenInfo {
 		public TokenType type;
 		public SourceLocation begin;
 		public SourceLocation end;
+	}
+
+	struct PartialInfo {
+		public Symbol parent;
+		public SourceLocation begin;
+		public List<Attribute>? attributes;
 	}
 
 	[Flags]
@@ -202,6 +210,20 @@ public class Vala.Parser : CodeVisitor {
 			index = (index - 1 + BUFFER_SIZE) % BUFFER_SIZE;
 			size++;
 			if (size > BUFFER_SIZE) {
+				scanner.seek (location);
+				size = 0;
+				index = 0;
+
+				next ();
+			}
+		}
+	}
+
+	void jump (SourceLocation location) {
+		while (tokens[index].begin.pos != location.pos) {
+			index = (index + 1) % BUFFER_SIZE;
+			size--;
+			if (size <= 0) {
 				scanner.seek (location);
 				size = 0;
 				index = 0;
@@ -386,6 +408,8 @@ public class Vala.Parser : CodeVisitor {
 
 
 		try {
+			partials = new PartialInfo[] {};
+			var begin = get_location ();
 			parse_using_directives (context.root);
 			parse_declarations (context.root, true);
 			if (accept (TokenType.CLOSE_BRACE)) {
@@ -394,6 +418,14 @@ public class Vala.Parser : CodeVisitor {
 					Report.error (get_last_src (), "unexpected `}'");
 				}
 			}
+			if (partials.length > 0) {
+				rollback (begin);
+				foreach (var info in partials) {
+					jump (info.begin);
+					parse_class_declaration (info.parent, info.attributes, true);
+				}
+			}
+			partials = null;
 		} catch (ParseError e) {
 			report_parse_error (e);
 		}
@@ -2903,7 +2935,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	void parse_class_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
+	void parse_class_declaration (Symbol parent, List<Attribute>? attrs, bool partial_reparse = false) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -2935,7 +2967,30 @@ public class Vala.Parser : CodeVisitor {
 			cl.is_extern = true;
 		}
 
-		var old_cl = parent.scope.lookup (cl.name) as Class;
+		Class? old_cl = null;
+		if (partial_reparse) {
+			var names = new ArrayList<string> ();
+			while (sym.inner != null) {
+				sym = sym.inner;
+				names.insert (0, sym.name);
+			}
+			Symbol p = parent;
+			while (p != null && p != context.root) {
+				names.insert (0, p.name);
+				p = p.parent_symbol;
+			}
+			p = context.root;
+			foreach (var name in names) {
+				p = p.scope.lookup (name);
+				if (p == null) {
+					break;
+				}
+			}
+			if (p != null) {
+				old_cl = p.scope.lookup (cl.name) as Class;
+				parent = p;
+			}
+		}
 		if (old_cl != null && old_cl.is_partial) {
 			if (cl.is_partial != old_cl.is_partial) {
 				Report.error (cl.source_reference, "conflicting partial and not partial declarations of `%s'".printf (cl.name));
@@ -2984,6 +3039,11 @@ public class Vala.Parser : CodeVisitor {
 			cl.add_method (m);
 		}
 
+		if (partial_reparse) {
+			parent.add_class (cl);
+			return;
+		}
+
 		Symbol result = cl;
 		while (sym != null) {
 			sym = sym.inner;
@@ -2991,7 +3051,10 @@ public class Vala.Parser : CodeVisitor {
 			Symbol next = (sym != null ? new Namespace (sym.name, cl.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
-			} else {
+			} else if (!partial_reparse && cl.is_partial) {
+				PartialInfo info = { parent, begin, attrs };
+				partials += info;
+			} else if (!cl.is_partial) {
 				next.add_class ((Class) result);
 			}
 			result = next;
