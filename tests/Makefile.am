@@ -188,6 +188,7 @@ TESTS = \
 	methods/preconditions-temp-variables.vala \
 	methods/prepostconditions.vala \
 	methods/prepostconditions-captured.vala \
+	methods/prepostconditions-contains.vala \
 	methods/postconditions.vala \
 	methods/postconditions-temp-variables.vala \
 	methods/return-unowned-delegate.vala \
