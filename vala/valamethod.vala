@@ -577,6 +577,23 @@ public class Vala.Method : Subroutine, Callable {
 		}
 	}
 
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (preconditions != null) {
+			var index = preconditions.index_of (old_node);
+			if (index >= 0) {
+				preconditions[index] = new_node;
+				new_node.parent_node = this;
+			}
+		}
+		if (postconditions != null) {
+			var index = postconditions.index_of (old_node);
+			if (index >= 0) {
+				postconditions[index] = new_node;
+				new_node.parent_node = this;
+			}
+		}
+	}
+
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (base_interface_type == old_type) {
 			base_interface_type = new_type;
