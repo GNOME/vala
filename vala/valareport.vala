@@ -341,7 +341,7 @@ public class Vala.Report {
 
 		warnings++;
 
-		print_message (source, "warning", warning_color_start, warning_color_end, message, false);
+		print_message (source, "warning", warning_color_start, warning_color_end, message, verbose_errors);
 	}
 
 	/**
