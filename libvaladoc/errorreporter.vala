@@ -137,7 +137,12 @@ public class Valadoc.ErrorReporter : Object {
 	 * }}}
 	 */
 	public bool set_colors (string str) {
-		unowned Regex val_regex = /^\\s*[0-9]+(;[0-9]*)*\\s*$/;
+		Regex val_regex;
+		try {
+			val_regex = new Regex ("^\\s*[0-9]+(;[0-9]*)*\\s*$");
+		} catch (RegexError e) {
+			assert_not_reached ();
+		}
 
 		string error_color = null;
 		string warning_color = null;

@@ -48,6 +48,8 @@ public class Vala.CCodeWriter {
 		get { return _bol; }
 	}
 
+	static GLib.Regex fix_indent_regex;
+
 	private string temp_filename;
 	private bool file_exists;
 
@@ -244,7 +246,8 @@ public class Vala.CCodeWriter {
 			bool first = true;
 
 			// discard tabs at beginning of line
-			unowned Regex fix_indent_regex = /^\t+/;
+			if (fix_indent_regex == null)
+				fix_indent_regex = new GLib.Regex ("^\t+");;
 
 			foreach (unowned string line in text.split ("\n")) {
 				if (!first) {
