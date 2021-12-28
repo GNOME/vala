@@ -1247,6 +1247,7 @@ TESTS = \
 	genie/try-except-finally.gs \
 	genie/typeof.gs \
 	genie/while.gs \
+	bindings/gio/memoryoutputstream.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
 
