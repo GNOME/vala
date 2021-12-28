@@ -87,6 +87,17 @@ namespace GLib {
 	public class MemoryOutputStream : GLib.OutputStream {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
+		[CCode (cname = "g_memory_output_stream_new", has_construct_function = false, type = "GOutputStream*")]
+		public MemoryOutputStream.from_data (void* data, size_t size, GLib.ReallocFunc? realloc_function = null, GLib.DestroyNotify? destroy_function = null);
+		[CCode (cname = "vala_g_memory_output_stream_with_data")]
+		public static MemoryOutputStream with_data ([CCode (array_length_type = "gsize")] uint8[] data) {
+			return new MemoryOutputStream.from_data (data, data.length);
+		}
+		[CCode (cname = "vala_g_memory_output_stream_with_owned_data")]
+		public static MemoryOutputStream with_owned_data ([CCode (array_length_type = "gsize")] owned uint8[] data) {
+			size_t size = data.length;
+			return new MemoryOutputStream.from_data ((owned) data, size, GLib.g_realloc, GLib.g_free);
+		}
 	}
 
 	public abstract class NativeVolumeMonitor : GLib.VolumeMonitor {

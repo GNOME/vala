@@ -1348,6 +1348,7 @@ TESTS = \
 	genie/typeof.gs \
 	genie/while.gs \
 	glib/conditional-glib-api.vala \
+	bindings/gio/memoryoutputstream.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
 
