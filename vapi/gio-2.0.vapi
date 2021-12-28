@@ -1771,6 +1771,8 @@ namespace GLib {
 	public class MemoryOutputStream : GLib.OutputStream, GLib.PollableOutputStream, GLib.Seekable {
 		[CCode (has_construct_function = false, type = "GOutputStream*")]
 		public MemoryOutputStream ([CCode (array_length_type = "gsize")] owned uint8[]? data, GLib.ReallocFunc? realloc_function = GLib.g_realloc, GLib.DestroyNotify? destroy_function = GLib.g_free);
+		[CCode (cname = "g_memory_output_stream_new", has_construct_function = false, type = "GOutputStream*")]
+		public MemoryOutputStream.from_data (void* data, size_t size, GLib.ReallocFunc? realloc_function = null, GLib.DestroyNotify? destroy_function = null);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_data ();
 		[Version (since = "2.18")]
@@ -1784,6 +1786,15 @@ namespace GLib {
 		[CCode (array_length = false)]
 		[Version (since = "2.26")]
 		public uint8[] steal_data ();
+		[CCode (cname = "vala_g_memory_output_stream_with_data")]
+		public static GLib.MemoryOutputStream with_data ([CCode (array_length_type = "gsize")] uint8[] data) {
+			return new GLib.MemoryOutputStream.from_data (data, data.length, null, null);
+		}
+		[CCode (cname = "vala_g_memory_output_stream_with_owned_data")]
+		public static GLib.MemoryOutputStream with_owned_data ([CCode (array_length_type = "gsize")] owned uint8[] data) {
+			size_t size = data.length;
+			return new GLib.MemoryOutputStream.from_data ((owned) data, size, GLib.g_realloc, GLib.g_free);
+		}
 		[Version (since = "2.24")]
 		public void* data { get; construct; }
 		[Version (since = "2.24")]
