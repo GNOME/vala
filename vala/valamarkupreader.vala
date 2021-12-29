@@ -33,6 +33,7 @@ public class Vala.MarkupReader {
 	public string content { get; private set; }
 
 	MappedFile mapped_file;
+	CodeContext context;
 
 	char* begin;
 	char* current;
@@ -44,7 +45,8 @@ public class Vala.MarkupReader {
 	Map<string,string> attributes = new HashMap<string,string> (str_hash, str_equal);
 	bool empty_element;
 
-	public MarkupReader (string filename) {
+	public MarkupReader (CodeContext context, string filename) {
+		this.context = context;
 		this.filename = filename;
 
 		try {
@@ -57,7 +59,7 @@ public class Vala.MarkupReader {
 			line = 1;
 			column = 1;
 		} catch (FileError e) {
-			Report.error (null, "Unable to map file `%s': %s", filename, e.message);
+			context.report.log_error (null, "Unable to map file `%s': %s", filename, e.message);
 		}
 	}
 
@@ -101,7 +103,7 @@ public class Vala.MarkupReader {
 			if (u != (unichar) (-1)) {
 				current += u.to_utf8 (null);
 			} else {
-				Report.error (null, "invalid UTF-8 character");
+				context.report.log_error (null, "invalid UTF-8 character");
 			}
 		}
 		if (current == begin) {
@@ -232,7 +234,7 @@ public class Vala.MarkupReader {
 		while (current < end && current[0] != end_char) {
 			unichar u = ((string) current).get_char_validated ((long) (end - current));
 			if (u == (unichar) (-1)) {
-				Report.error (null, "invalid UTF-8 character");
+				context.report.log_error (null, "invalid UTF-8 character");
 			} else if (u == '&') {
 				char* next_pos = current + u.to_utf8 (null);
 				if (((string) next_pos).has_prefix ("amp;")) {

@@ -102,7 +102,7 @@ public class Vala.GtkModule : GSignalModule {
 				continue;
 			}
 
-			MarkupReader reader = new MarkupReader (gresource);
+			MarkupReader reader = new MarkupReader (context, gresource);
 
 			int state = 0;
 			string prefix = null;
@@ -148,7 +148,7 @@ public class Vala.GtkModule : GSignalModule {
 		current_handler_to_signal_map = new HashMap<string, Signal>(str_hash, str_equal);
 		current_child_to_class_map = new HashMap<string, Class>(str_hash, str_equal);
 
-		MarkupReader reader = new MarkupReader (ui_file);
+		MarkupReader reader = new MarkupReader (context, ui_file);
 		Class current_class = null;
 		Property? current_property = null;
 		string? current_handler = null;

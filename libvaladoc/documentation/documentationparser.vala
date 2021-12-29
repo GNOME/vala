@@ -53,7 +53,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 
 		metadata = new Vala.HashMap<Api.SourceFile, GirMetaData> ();
-		id_registrar = new Importer.InternalIdRegistrar ();
+		id_registrar = new Importer.InternalIdRegistrar (tree.context);
 
 		init_valadoc_rules ();
 	}

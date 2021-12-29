@@ -66,7 +66,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		var data = new Vala.SourceFile (tree.context, Vala.SourceFileType.PACKAGE, Path.get_basename (source_file));
 		this.file = new Api.SourceFile (new Api.Package (Path.get_basename (source_file), true, null),
 										source_file, null, data);
-		this.reader = new Vala.MarkupReader (source_file);
+		this.reader = new Vala.MarkupReader (tree.context, source_file);
 
 		// xml prolog
 		do {

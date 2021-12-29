@@ -26,9 +26,11 @@ using Valadoc;
 public class Valadoc.Importer.InternalIdRegistrar {
 	private Vala.HashMap<string, Api.Node> symbol_map;
 	private Vala.HashMap<string, string> map;
+	private Vala.CodeContext context;
 
 
-	public InternalIdRegistrar () {
+	public InternalIdRegistrar (Vala.CodeContext context) {
+		this.context = context;
 		map = new Vala.HashMap<string, string> (str_hash, str_equal);
 		symbol_map = new Vala.HashMap<string, Api.Node> (str_hash, str_equal);
 	}
@@ -53,7 +55,7 @@ public class Valadoc.Importer.InternalIdRegistrar {
 		Vala.MarkupTokenType token;
 
 		string base_path = index_sgml_online ?? Vala.CodeContext.realpath (filename);
-		var reader = new Vala.MarkupReader (filename);
+		var reader = new Vala.MarkupReader (context, filename);
 
 		while ((token = reader.read_token (out begin, out end)) != Vala.MarkupTokenType.EOF) {
 			if (token == Vala.MarkupTokenType.START_ELEMENT && reader.name == "ONLINE") {

@@ -1481,7 +1481,7 @@ public class Vala.GirParser : CodeVisitor {
 		cheader_filenames = null;
 
 		this.current_source_file = source_file;
-		reader = new MarkupReader (source_file.filename);
+		reader = new MarkupReader (source_file.context, source_file.filename);
 
 		// xml prolog
 		do {
