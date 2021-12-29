@@ -79,7 +79,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing", filename);
+			context.report.log_error (null, "unable to open `%s' for writing", filename);
 			return;
 		}
 
