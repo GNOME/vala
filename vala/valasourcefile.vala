@@ -349,7 +349,7 @@ public class Vala.SourceFile {
 			try {
 				mapped_file = new MappedFile (filename, false);
 			} catch (FileError e) {
-				Report.error (null, "Unable to map file `%s': %s", filename, e.message);
+				context.report.log_error (null, "Unable to map file `%s': %s", filename, e.message);
 				return null;
 			}
 		}
