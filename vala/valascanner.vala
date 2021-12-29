@@ -121,25 +121,25 @@ public class Vala.Scanner {
 					switch (current[0]) {
 					case 'i':
 						if (fl_i) {
-							Report.error (get_source_reference (token_length_in_chars), "modifier 'i' used more than once");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "modifier 'i' used more than once");
 						}
 						fl_i = true;
 						break;
 					case 's':
 						if (fl_s) {
-							Report.error (get_source_reference (token_length_in_chars), "modifier 's' used more than once");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "modifier 's' used more than once");
 						}
 						fl_s = true;
 						break;
 					case 'm':
 						if (fl_m) {
-							Report.error (get_source_reference (token_length_in_chars), "modifier 'm' used more than once");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "modifier 'm' used more than once");
 						}
 						fl_m = true;
 						break;
 					case 'x':
 						if (fl_x) {
-							Report.error (get_source_reference (token_length_in_chars), "modifier 'x' used more than once");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "modifier 'x' used more than once");
 						}
 						fl_x = true;
 						break;
@@ -225,9 +225,9 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
 							} else if (digit_length < 4) {
-								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':
@@ -246,9 +246,9 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (empty && digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
 							} else if (digit_length > 2) {
-								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:
@@ -261,7 +261,7 @@ public class Vala.Scanner {
 									token_length_in_chars++;
 								}
 							} else {
-								Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid escape sequence");
 							}
 							break;
 						}
@@ -274,12 +274,12 @@ public class Vala.Scanner {
 							token_length_in_chars++;
 						} else {
 							current++;
-							Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
 				}
 				if (current >= end || current[0] == '\n') {
-					Report.error (get_source_reference (token_length_in_chars), "syntax error, expected \"");
+					source_file.context.report.log_error (get_source_reference (token_length_in_chars), "syntax error, expected \"");
 					state_stack.length--;
 					return read_token (out token_begin, out token_end);
 				}
@@ -722,7 +722,7 @@ public class Vala.Scanner {
 					current++;
 					state_stack += State.TEMPLATE_PART;
 				} else {
-					Report.error (get_source_reference (1), "unexpected character");
+					source_file.context.report.log_error (get_source_reference (1), "unexpected character");
 					return read_template_token (out token_begin, out token_end);
 				}
 				break;
@@ -761,9 +761,9 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
 							} else if (digit_length < 4) {
-								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':
@@ -782,13 +782,13 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (empty && digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
 							} else if (digit_length > 2) {
-								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:
-							Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid escape sequence");
 							break;
 						}
 					} else if (current[0] == '\n') {
@@ -803,12 +803,12 @@ public class Vala.Scanner {
 							token_length_in_chars++;
 						} else {
 							current++;
-							Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
 				}
 				if (current >= end) {
-					Report.error (get_source_reference (token_length_in_chars), "syntax error, expected \"");
+					source_file.context.report.log_error (get_source_reference (token_length_in_chars), "syntax error, expected \"");
 					state_stack.length--;
 					return read_token (out token_begin, out token_end);
 				}
@@ -1158,14 +1158,14 @@ public class Vala.Scanner {
 								current += u.to_utf8 (null);
 								token_length_in_chars++;
 							} else {
-								Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 							}
 						}
 					}
 					if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
 						current += 3;
 					} else {
-						Report.error (get_source_reference (token_length_in_chars), "syntax error, expected \"\"\"");
+						source_file.context.report.log_error (get_source_reference (token_length_in_chars), "syntax error, expected \"\"\"");
 					}
 					break;
 				} else {
@@ -1206,9 +1206,9 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\u used with no following hex digits");
 							} else if (digit_length < 4) {
-								Report.error (get_source_reference (token_length_in_chars), "incomplete universal character name");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "incomplete universal character name");
 							}
 							break;
 						case 'x':
@@ -1227,13 +1227,13 @@ public class Vala.Scanner {
 								token_length_in_chars++;
 							}
 							if (empty && digit_length < 1) {
-								Report.error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "\\x used with no following hex digits");
 							} else if (digit_length > 2) {
-								Report.error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
+								source_file.context.report.log_error (get_source_reference (token_length_in_chars), "hex escape sequence out of range");
 							}
 							break;
 						default:
-							Report.error (get_source_reference (token_length_in_chars), "invalid escape sequence");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid escape sequence");
 							break;
 						}
 					} else if (current[0] == '\n') {
@@ -1248,28 +1248,28 @@ public class Vala.Scanner {
 							token_length_in_chars++;
 						} else {
 							current++;
-							Report.error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
+							source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
 					if (current < end && begin[0] == '\'' && current[0] != '\'') {
 						// multiple characters in single character literal
-						Report.error (get_source_reference (token_length_in_chars), "invalid character literal");
+						source_file.context.report.log_error (get_source_reference (token_length_in_chars), "invalid character literal");
 					}
 				}
 				if (current < end) {
 					current++;
 				} else {
-					Report.error (get_source_reference (token_length_in_chars), "syntax error, expected %c", begin[0]);
+					source_file.context.report.log_error (get_source_reference (token_length_in_chars), "syntax error, expected %c", begin[0]);
 				}
 				break;
 			default:
 				unichar u = ((string) current).get_char_validated ((long) (end - current));
 				if (u != (unichar) (-1)) {
 					current += u.to_utf8 (null);
-					Report.error (get_source_reference (0), "syntax error, unexpected character");
+					source_file.context.report.log_error (get_source_reference (0), "syntax error, unexpected character");
 				} else {
 					current++;
-					Report.error (get_source_reference (0), "invalid UTF-8 character");
+					source_file.context.report.log_error (get_source_reference (0), "invalid UTF-8 character");
 				}
 				column++;
 				return read_token (out token_begin, out token_end);
@@ -1347,7 +1347,7 @@ public class Vala.Scanner {
 		} else if (len == 5 && matches (begin, "endif")) {
 			parse_pp_endif ();
 		} else {
-			Report.error (get_source_reference (-len, len), "syntax error, invalid preprocessing directive");
+			source_file.context.report.log_error (get_source_reference (-len, len), "syntax error, invalid preprocessing directive");
 		}
 
 		if (conditional_stack.length > 0
@@ -1377,7 +1377,7 @@ public class Vala.Scanner {
 	void pp_eol () {
 		pp_space ();
 		if (current >= end || current[0] != '\n') {
-			Report.error (get_source_reference (0), "syntax error, expected newline");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, expected newline");
 		}
 	}
 
@@ -1407,7 +1407,7 @@ public class Vala.Scanner {
 		pp_eol ();
 
 		if (conditional_stack.length == 0 || conditional_stack[conditional_stack.length - 1].else_found) {
-			Report.error (get_source_reference (0), "syntax error, unexpected #elif");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, unexpected #elif");
 			return;
 		}
 
@@ -1426,7 +1426,7 @@ public class Vala.Scanner {
 		pp_eol ();
 
 		if (conditional_stack.length == 0 || conditional_stack[conditional_stack.length - 1].else_found) {
-			Report.error (get_source_reference (0), "syntax error, unexpected #else");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, unexpected #else");
 			return;
 		}
 
@@ -1445,7 +1445,7 @@ public class Vala.Scanner {
 		pp_eol ();
 
 		if (conditional_stack.length == 0) {
-			Report.error (get_source_reference (0), "syntax error, unexpected #endif");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, unexpected #endif");
 			return;
 		}
 
@@ -1461,7 +1461,7 @@ public class Vala.Scanner {
 		}
 
 		if (len == 0) {
-			Report.error (get_source_reference (0), "syntax error, expected identifier");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, expected identifier");
 			return false;
 		}
 
@@ -1480,7 +1480,7 @@ public class Vala.Scanner {
 
 	bool parse_pp_primary_expression () {
 		if (current >= end) {
-			Report.error (get_source_reference (0), "syntax error, expected identifier");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, expected identifier");
 		} else if (is_ident_char (current[0])) {
 			return parse_pp_symbol ();
 		} else if (current[0] == '(') {
@@ -1493,11 +1493,11 @@ public class Vala.Scanner {
 				current++;
 				column++;
 			} else {
-				Report.error (get_source_reference (0), "syntax error, expected `)'");
+				source_file.context.report.log_error (get_source_reference (0), "syntax error, expected `)'");
 			}
 			return result;
 		} else {
-			Report.error (get_source_reference (0), "syntax error, expected identifier");
+			source_file.context.report.log_error (get_source_reference (0), "syntax error, expected identifier");
 		}
 		return false;
 	}
@@ -1638,7 +1638,7 @@ public class Vala.Scanner {
 			}
 
 			if (current == end - 1) {
-				Report.error (get_source_reference (0), "syntax error, expected */");
+				source_file.context.report.log_error (get_source_reference (0), "syntax error, expected */");
 				return true;
 			}
 
