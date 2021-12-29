@@ -104,7 +104,7 @@ public class Vala.AddressofExpression : Expression {
 			// address of element of regular array or pointer is always possible
 		} else {
 			error = true;
-			Report.error (source_reference, "Address-of operator not supported for this expression");
+			context.report.log_error (source_reference, "Address-of operator not supported for this expression");
 			return false;
 		}
 
