@@ -191,7 +191,7 @@ public class Vala.CodeContext {
 		get { return save_temps; }
 	}
 
-	public Report report { get; set; default = new Report ();}
+	public Report report { get; set; }
 
 	public Method? entry_point { get; set; }
 
@@ -247,6 +247,7 @@ public class Vala.CodeContext {
 		analyzer = new SemanticAnalyzer ();
 		flow_analyzer = new FlowAnalyzer ();
 		used_attr = new UsedAttr ();
+		report = new Report (this);
 	}
 
 	/**
@@ -313,7 +314,7 @@ public class Vala.CodeContext {
 	 */
 	public void add_source_file (SourceFile file) {
 		if (source_files_map.contains (file.filename)) {
-			Report.warning (null, "Ignoring source file `%s', which was already added to this context", file.filename);
+			report.log_warning (null, "Ignoring source file `%s', which was already added to this context", file.filename);
 			return;
 		}
 
@@ -389,7 +390,7 @@ public class Vala.CodeContext {
 			path = get_gir_path (pkg);
 		}
 		if (path == null) {
-			Report.error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories", pkg);
+			report.log_error (null, "Package `%s' not found in specified Vala API directories or GObject-Introspection GIR directories", pkg);
 			return false;
 		}
 
@@ -437,7 +438,7 @@ public class Vala.CodeContext {
 				}
 			}
 		} catch (FileError e) {
-			Report.error (null, "Unable to read dependency file: %s", e.message);
+			report.log_error (null, "Unable to read dependency file: %s", e.message);
 			return false;
 		}
 
@@ -455,7 +456,7 @@ public class Vala.CodeContext {
 	 */
 	public bool add_source_filename (string filename, bool is_source = false, bool cmdline = false) {
 		if (!FileUtils.test (filename, FileTest.EXISTS)) {
-			Report.error (null, "%s not found", filename);
+			report.log_error (null, "%s not found", filename);
 			return false;
 		}
 
@@ -493,7 +494,7 @@ public class Vala.CodeContext {
 		} else if (filename.has_suffix (".h")) {
 			/* Ignore */
 		} else {
-			Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.", filename);
+			report.log_error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.", filename);
 			return false;
 		}
 
@@ -547,11 +548,11 @@ public class Vala.CodeContext {
 
 	public void add_define (string define) {
 		if (is_defined (define)) {
-			Report.warning (null, "`%s' is already defined", define);
+			report.log_warning (null, "`%s' is already defined", define);
 			if (/VALA_0_\d+/.match_all (define)) {
-				Report.warning (null, "`VALA_0_XX' defines are automatically added up to current compiler version in use");
+				report.log_warning (null, "`VALA_0_XX' defines are automatically added up to current compiler version in use");
 			} else if (/GLIB_2_\d+/.match_all (define)) {
-				Report.warning (null, "`GLIB_2_XX' defines are automatically added up to targeted glib version");
+				report.log_warning (null, "`GLIB_2_XX' defines are automatically added up to targeted glib version");
 			}
 		}
 		defines.add (define);
@@ -568,7 +569,7 @@ public class Vala.CodeContext {
 		if (API_VERSION.scanf ("%d.%d", out api_major, out api_minor) != 2
 		    || api_major > 0
 		    || api_minor % 2 != 0) {
-			Report.error (null, "Invalid format for Vala.API_VERSION");
+			report.log_error (null, "Invalid format for Vala.API_VERSION");
 			return;
 		}
 
@@ -638,7 +639,7 @@ public class Vala.CodeContext {
 				glib_minor -= glib_minor % 2;
 				set_target_glib_version ("%d.%d".printf (glib_major, glib_minor));
 			} else {
-				Report.warning (null, "Could not determine the version of `glib-2.0', target version of glib was not set");
+				report.log_warning (null, "Could not determine the version of `glib-2.0', target version of glib was not set");
 			}
 			return;
 		}
@@ -648,11 +649,11 @@ public class Vala.CodeContext {
 
 		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2
 		    || glib_minor % 2 != 0) {
-			Report.error (null, "Only a stable version of GLib can be targeted, use MAJOR.MINOR format with MINOR as an even number");
+			report.log_error (null, "Only a stable version of GLib can be targeted, use MAJOR.MINOR format with MINOR as an even number");
 		}
 
 		if (glib_major != 2) {
-			Report.error (null, "This version of valac only supports GLib 2");
+			report.log_error (null, "This version of valac only supports GLib 2");
 		}
 
 		if (glib_minor <= target_glib_minor) {
@@ -753,7 +754,7 @@ public class Vala.CodeContext {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing", filename);
+			report.log_error (null, "unable to open `%s' for writing", filename);
 			return;
 		}
 
@@ -770,7 +771,7 @@ public class Vala.CodeContext {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing", filename);
+			report.log_error (null, "unable to open `%s' for writing", filename);
 			return;
 		}
 
@@ -878,7 +879,7 @@ public class Vala.CodeContext {
 			Process.spawn_command_line_sync (pc, null, null, out exit_status);
 			return (0 == exit_status);
 		} catch (SpawnError e) {
-			Report.error (null, e.message);
+			report.log_error (null, e.message);
 			return false;
 		}
 	}
@@ -918,11 +919,11 @@ public class Vala.CodeContext {
 		try {
 			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
 			if (exit_status != 0) {
-				Report.error (null, "%s exited with status %d", pkg_config_command, exit_status);
+				report.log_error (null, "%s exited with status %d", pkg_config_command, exit_status);
 				return null;
 			}
 		} catch (SpawnError e) {
-			Report.error (null, e.message);
+			report.log_error (null, e.message);
 			output = null;
 		}
 
