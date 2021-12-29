@@ -99,7 +99,6 @@ public class Vala.Report {
 	private unowned string quote_color_end = "";
 
 
-	protected CodeContext context;
 	protected int warnings;
 	protected int errors;
 
@@ -108,10 +107,6 @@ public class Vala.Report {
 	public bool enable_warnings { get; set; default = true; }
 
 	static GLib.Regex val_regex;
-
-	public Report (CodeContext ctx) {
-		context = ctx;
-	}
 
 	/**
 	 * Set all colors by string
@@ -382,19 +377,19 @@ public class Vala.Report {
 
 	/* Convenience methods for log errors and warnings*/
 	public void log_notice (SourceReference? source, string msg_format, ...) {
-		CodeContext.get ().report.note (source, msg_format.vprintf (va_list ()));
+		note (source, msg_format.vprintf (va_list ()));
 	}
 	public void log_deprecated (SourceReference? source, string msg_format, ...) {
-		CodeContext.get ().report.depr (source, msg_format.vprintf (va_list ()));
+		depr (source, msg_format.vprintf (va_list ()));
 	}
 	public void log_experimental (SourceReference? source, string msg_format, ...) {
-		CodeContext.get ().report.depr (source, msg_format.vprintf (va_list ()));
+		depr (source, msg_format.vprintf (va_list ()));
 	}
 	public void log_warning (SourceReference? source, string msg_format, ...) {
-		CodeContext.get ().report.warn (source, msg_format.vprintf (va_list ()));
+		warn (source, msg_format.vprintf (va_list ()));
 	}
 	public void log_error (SourceReference? source, string msg_format, ...) {
-		CodeContext.get ().report.err (source, msg_format.vprintf (va_list ()));
+		err (source, msg_format.vprintf (va_list ()));
 	}
 
 	/* Convenience methods calling warn and err on correct instance */

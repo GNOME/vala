@@ -191,7 +191,7 @@ public class Vala.CodeContext {
 		get { return save_temps; }
 	}
 
-	public Report report { get; set; }
+	public Report report { get; set; default = new Report (); }
 
 	public Method? entry_point { get; set; }
 
@@ -247,7 +247,6 @@ public class Vala.CodeContext {
 		analyzer = new SemanticAnalyzer ();
 		flow_analyzer = new FlowAnalyzer ();
 		used_attr = new UsedAttr ();
-		report = new Report (this);
 	}
 
 	/**
