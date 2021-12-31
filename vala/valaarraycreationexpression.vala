@@ -207,7 +207,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				if (rank == 1) {
 					il.error = true;
 					e.error = true;
-					Report.error (e.source_reference, "Expected array element, got array initializer list");
+					context.report.log_error (e.source_reference, "Expected array element, got array initializer list");
 					return -1;
 				}
 				int size = create_sizes_from_initializer_list (context, (InitializerList) e, rank - 1, sl);
@@ -216,7 +216,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				}
 				if (subsize >= 0 && subsize != size) {
 					il.error = true;
-					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d", subsize, size);
+					context.report.log_error (il.source_reference, "Expected initializer list of size %d, got size %d", subsize, size);
 					return -1;
 				} else {
 					subsize = size;
@@ -225,7 +225,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				if (rank != 1) {
 					il.error = true;
 					e.error = true;
-					Report.error (e.source_reference, "Expected array initializer list, got array element");
+					context.report.log_error (e.source_reference, "Expected array initializer list, got array element");
 					return -1;
 				}
 			}
@@ -260,7 +260,7 @@ public class Vala.ArrayCreationExpression : Expression {
 			length_type.check (context);
 			if (!(length_type is IntegerType) || length_type.nullable) {
 				error = true;
-				Report.error (length_type.source_reference, "Expected integer type as length type of array");
+				context.report.log_error (length_type.source_reference, "Expected integer type as length type of array");
 			}
 		}
 
@@ -286,7 +286,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				error = true;
 				var actual_type = new ArrayType (element_type, calc_sizes.size, source_reference);
 				((ArrayType) actual_type).length_type = length_type;
-				Report.error (initlist.source_reference, "Expected initializer for `%s' but got `%s'", target_type.to_string (), actual_type.to_string ());
+				context.report.log_error (initlist.source_reference, "Expected initializer for `%s' but got `%s'", target_type.to_string (), actual_type.to_string ());
 			}
 		}
 
@@ -298,14 +298,14 @@ public class Vala.ArrayCreationExpression : Expression {
 					return false;
 				} else if (!(e.value_type is IntegerType || e.value_type is EnumValueType)) {
 					error = true;
-					Report.error (e.source_reference, "Expression of integer type expected");
+					context.report.log_error (e.source_reference, "Expression of integer type expected");
 				}
 			}
 		} else {
 			if (initlist == null) {
 				error = true;
 				/* this is an internal error because it is already handled by the parser */
-				Report.error (source_reference, "internal error: initializer list expected");
+				context.report.log_error (source_reference, "internal error: initializer list expected");
 			} else {
 				foreach (Expression size in calc_sizes) {
 					append_size (size);
@@ -325,7 +325,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		/* try to construct the type of the array */
 		if (element_type == null) {
 			error = true;
-			Report.error (source_reference, "Cannot determine the element type of the created array");
+			context.report.log_error (source_reference, "Cannot determine the element type of the created array");
 			return false;
 		}
 
