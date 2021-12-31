@@ -2888,7 +2888,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
-		var ns = new Namespace (sym.name, get_src (begin));
+		var ns = new Namespace (sym.name, context, get_src (begin));
 		if (comment != null) {
 			ns.add_comment (comment);
 			comment = null;
@@ -2916,7 +2916,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, ns.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, ns.source_reference) : parent);
 			next.add_namespace ((Namespace) result);
 			result = next;
 		}
@@ -3048,7 +3048,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, cl.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, cl.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else if (!partial_reparse && cl.is_partial) {
@@ -3497,7 +3497,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, st.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, st.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else {
@@ -3540,7 +3540,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, iface.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, iface.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else {
@@ -3607,7 +3607,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, en.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, en.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else {
@@ -3672,7 +3672,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, ed.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, ed.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else {
@@ -3927,7 +3927,7 @@ public class Vala.Parser : CodeVisitor {
 		while (sym != null) {
 			sym = sym.inner;
 
-			Symbol next = (sym != null ? new Namespace (sym.name, d.source_reference) : parent);
+			Symbol next = (sym != null ? new Namespace (sym.name, context, d.source_reference) : parent);
 			if (result is Namespace) {
 				next.add_namespace ((Namespace) result);
 			} else {

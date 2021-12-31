@@ -475,7 +475,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach ( unowned string tok in path ) {
 			cc = cp.scope.lookup (tok);
 			if ( cc == null ) {
-				cc = new Namespace (tok, current_source_reference);
+				cc = new Namespace (tok, context, current_source_reference);
 				add_symbol_to_container (cp, cc);
 			}
 			cp = cc;
@@ -494,7 +494,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				ns.source_reference = current_source_reference;
 			}
 		} else {
-			ns = new Namespace (module.name, current_source_reference);
+			ns = new Namespace (module.name, context, current_source_reference);
 		}
 
 		current_namespace = ns;

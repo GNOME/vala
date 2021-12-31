@@ -2210,7 +2210,7 @@ public class Vala.GirParser : CodeVisitor {
 		Namespace ns;
 		push_node (vala_namespace, true);
 		if (current.new_symbol) {
-			ns = new Namespace (vala_namespace, current.source_reference);
+			ns = new Namespace (vala_namespace, context, current.source_reference);
 			current.symbol = ns;
 		} else {
 			ns = (Namespace) current.symbol;
@@ -3838,7 +3838,7 @@ public class Vala.GirParser : CodeVisitor {
 	void create_new_namespaces () {
 		foreach (var node in Node.new_namespaces) {
 			if (node.symbol == null) {
-				node.symbol = new Namespace (node.name, node.source_reference);
+				node.symbol = new Namespace (node.name, context, node.source_reference);
 			}
 		}
 	}

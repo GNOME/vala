@@ -2575,7 +2575,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
-		var ns = new Namespace (sym.name, get_src (begin));
+		var ns = new Namespace (sym.name, context, get_src (begin));
 		if (comment != null) {
 			ns.add_comment (comment);
 			comment = null;
@@ -2587,7 +2587,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Namespace result = ns;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			ns = new Namespace (sym.name, result.source_reference);
+			ns = new Namespace (sym.name, context, result.source_reference);
 			ns.add_namespace ((Namespace) result);
 			result = ns;
 		}
@@ -2722,7 +2722,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = cl;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, cl.source_reference);
+			var ns = new Namespace (sym.name, context, cl.source_reference);
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -3326,7 +3326,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = st;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, st.source_reference);
+			var ns = new Namespace (sym.name, context, st.source_reference);
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -3395,7 +3395,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = iface;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, iface.source_reference);
+			var ns = new Namespace (sym.name, context, iface.source_reference);
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -3482,7 +3482,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = en;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, en.source_reference);
+			var ns = new Namespace (sym.name, context, en.source_reference);
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -3538,7 +3538,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = ed;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, ed.source_reference);
+			var ns = new Namespace (sym.name, context, ed.source_reference);
 
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
@@ -3826,7 +3826,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Symbol result = d;
 		while (sym.inner != null) {
 			sym = sym.inner;
-			var ns = new Namespace (sym.name, d.source_reference);
+			var ns = new Namespace (sym.name, context,  d.source_reference);
 
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
