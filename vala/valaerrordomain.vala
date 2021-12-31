@@ -115,7 +115,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 		checked = true;
 
 		if (codes.size <= 0) {
-			Report.error (source_reference, "Error domain `%s' requires at least one code", get_full_name ());
+			context.report.log_error (source_reference, "Error domain `%s' requires at least one code", get_full_name ());
 			error = true;
 			return false;
 		}
@@ -129,7 +129,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 				if (external_package) {
 					Report.warning (m.source_reference, "Instance methods are not supported in error domains yet");
 				} else {
-					Report.error (m.source_reference, "Instance methods are not supported in error domains yet");
+					context.report.log_error (m.source_reference, "Instance methods are not supported in error domains yet");
 				}
 				error = true;
 			}

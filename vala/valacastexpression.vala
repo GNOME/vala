@@ -149,7 +149,7 @@ public class Vala.CastExpression : Expression {
 		}
 
 		if (inner.value_type == null) {
-			Report.error (source_reference, "Invalid cast expression");
+			context.report.log_error (source_reference, "Invalid cast expression");
 			error = true;
 			return false;
 		}
@@ -165,7 +165,7 @@ public class Vala.CastExpression : Expression {
 		// FIXME: check whether cast is allowed
 
 		if (type_reference is VoidType) {
-			Report.error (source_reference, "Casting to `void' is not allowed");
+			context.report.log_error (source_reference, "Casting to `void' is not allowed");
 			error = true;
 			return false;
 		}
@@ -175,7 +175,7 @@ public class Vala.CastExpression : Expression {
 			if (!type_reference.is_real_struct_type () && inner.value_type.is_real_struct_type ()
 			    && (context.profile != Profile.GOBJECT || !(is_gvariant (context, inner.value_type) || is_gvalue (context, inner.value_type)))) {
 				error = true;
-				Report.error (source_reference, "Casting of struct `%s' to `%s' is not allowed", inner.value_type.to_qualified_string (), type_reference.to_qualified_string ());
+				context.report.log_error (source_reference, "Casting of struct `%s' to `%s' is not allowed", inner.value_type.to_qualified_string (), type_reference.to_qualified_string ());
 			}
 		}
 
@@ -222,7 +222,7 @@ public class Vala.CastExpression : Expression {
 			value_type.value_owned = true;
 			if (value_type.get_type_signature () == null) {
 				error = true;
-				Report.error (source_reference, "Casting of `GLib.Variant' to `%s' is not supported", value_type.to_qualified_string ());
+				context.report.log_error (source_reference, "Casting of `GLib.Variant' to `%s' is not supported", value_type.to_qualified_string ());
 			}
 		}
 
@@ -232,7 +232,7 @@ public class Vala.CastExpression : Expression {
 			value_type.value_owned = false;
 			if (value_type.nullable && value_type.type_symbol != null && !value_type.type_symbol.is_reference_type ()) {
 				error = true;
-				Report.error (source_reference, "Casting of `GLib.Value' to `%s' is not supported", value_type.to_qualified_string ());
+				context.report.log_error (source_reference, "Casting of `GLib.Value' to `%s' is not supported", value_type.to_qualified_string ());
 			}
 		}
 

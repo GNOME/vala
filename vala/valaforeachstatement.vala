@@ -165,7 +165,7 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			return false;
 		} else if (collection.value_type == null) {
-			Report.error (collection.source_reference, "invalid collection expression");
+			context.report.log_error (collection.source_reference, "invalid collection expression");
 			error = true;
 			return false;
 		}
@@ -184,7 +184,7 @@ public class Vala.ForeachStatement : Block {
 		    || collection_type.compatible (context.analyzer.gslist_type) || collection_type.compatible (context.analyzer.genericarray_type))) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
-				Report.error (collection.source_reference, "missing type argument for collection");
+				context.report.log_error (collection.source_reference, "missing type argument for collection");
 				return false;
 			}
 
@@ -239,18 +239,18 @@ public class Vala.ForeachStatement : Block {
 
 		var iterator_method = collection_type.get_member ("iterator") as Method;
 		if (iterator_method == null) {
-			Report.error (collection.source_reference, "`%s' does not have an `iterator' method", collection_type.to_string ());
+			context.report.log_error (collection.source_reference, "`%s' does not have an `iterator' method", collection_type.to_string ());
 			error = true;
 			return false;
 		}
 		if (iterator_method.get_parameters ().size != 0) {
-			Report.error (collection.source_reference, "`%s' must not have any parameters", iterator_method.get_full_name ());
+			context.report.log_error (collection.source_reference, "`%s' must not have any parameters", iterator_method.get_full_name ());
 			error = true;
 			return false;
 		}
 		var iterator_type = iterator_method.return_type.get_actual_type (collection_type, null, this);
 		if (iterator_type is VoidType) {
-			Report.error (collection.source_reference, "`%s' must return an iterator", iterator_method.get_full_name ());
+			context.report.log_error (collection.source_reference, "`%s' must return an iterator", iterator_method.get_full_name ());
 			error = true;
 			return false;
 		}
@@ -262,13 +262,13 @@ public class Vala.ForeachStatement : Block {
 		var next_method = iterator_type.get_member ("next") as Method;
 		if (next_value_method != null) {
 			if (next_value_method.get_parameters ().size != 0) {
-				Report.error (collection.source_reference, "`%s' must not have any parameters", next_value_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "`%s' must not have any parameters", next_value_method.get_full_name ());
 				error = true;
 				return false;
 			}
 			var element_type = next_value_method.return_type.get_actual_type (iterator_type, null, this);
 			if (!element_type.nullable) {
-				Report.error (collection.source_reference, "return type of `%s' must be nullable", next_value_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "return type of `%s' must be nullable", next_value_method.get_full_name ());
 				error = true;
 				return false;
 			}
@@ -286,29 +286,29 @@ public class Vala.ForeachStatement : Block {
 			add_statement (loop);
 		} else if (next_method != null) {
 			if (next_method.get_parameters ().size != 0) {
-				Report.error (collection.source_reference, "`%s' must not have any parameters", next_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "`%s' must not have any parameters", next_method.get_full_name ());
 				error = true;
 				return false;
 			}
 			if (!next_method.return_type.compatible (context.analyzer.bool_type)) {
-				Report.error (collection.source_reference, "`%s' must return a boolean value", next_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "`%s' must return a boolean value", next_method.get_full_name ());
 				error = true;
 				return false;
 			}
 			var get_method = iterator_type.get_member ("get") as Method;
 			if (get_method == null) {
-				Report.error (collection.source_reference, "`%s' does not have a `get' method", iterator_type.to_string ());
+				context.report.log_error (collection.source_reference, "`%s' does not have a `get' method", iterator_type.to_string ());
 				error = true;
 				return false;
 			}
 			if (get_method.get_parameters ().size != 0) {
-				Report.error (collection.source_reference, "`%s' must not have any parameters", get_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "`%s' must not have any parameters", get_method.get_full_name ());
 				error = true;
 				return false;
 			}
 			var element_type = get_method.return_type.get_actual_type (iterator_type, null, this);
 			if (element_type is VoidType) {
-				Report.error (collection.source_reference, "`%s' must return an element", get_method.get_full_name ());
+				context.report.log_error (collection.source_reference, "`%s' must return an element", get_method.get_full_name ());
 				error = true;
 				return false;
 			}
@@ -324,7 +324,7 @@ public class Vala.ForeachStatement : Block {
 			var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
 			body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
 		} else {
-			Report.error (collection.source_reference, "`%s' does not have a `next_value' or `next' method", iterator_type.to_string ());
+			context.report.log_error (collection.source_reference, "`%s' does not have a `next_value' or `next' method", iterator_type.to_string ());
 			error = true;
 			return false;
 		}
@@ -376,7 +376,7 @@ public class Vala.ForeachStatement : Block {
 			}
 		} else if (!element_type.compatible (type_reference)) {
 			error = true;
-			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'", element_type.to_string (), type_reference.to_string ());
+			context.report.log_error (source_reference, "Foreach: Cannot convert from `%s' to `%s'", element_type.to_string (), type_reference.to_string ());
 			return false;
 		}
 

@@ -77,7 +77,7 @@ public class Vala.EnumValue : Constant {
 			// check whether initializer is at least as accessible as the enum value
 			if (!value.is_accessible (this)) {
 				error = true;
-				Report.error (value.source_reference, "value is less accessible than enum `%s'", parent_symbol.get_full_name ());
+				context.report.log_error (value.source_reference, "value is less accessible than enum `%s'", parent_symbol.get_full_name ());
 			}
 		}
 

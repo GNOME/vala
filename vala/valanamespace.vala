@@ -481,11 +481,11 @@ public class Vala.Namespace : Symbol {
 
 		foreach (Field f in fields) {
 			if (f.binding == MemberBinding.INSTANCE) {
-				Report.error (f.source_reference, "instance fields are not allowed outside of data types");
+				context.report.log_error (f.source_reference, "instance fields are not allowed outside of data types");
 				f.error = true;
 				error = true;
 			} else if (f.binding == MemberBinding.CLASS) {
-				Report.error (f.source_reference, "class fields are not allowed outside of classes");
+				context.report.log_error (f.source_reference, "class fields are not allowed outside of classes");
 				f.error = true;
 				error = true;
 			}
@@ -493,16 +493,16 @@ public class Vala.Namespace : Symbol {
 
 		foreach (Method m in methods) {
 			if (m is CreationMethod) {
-				Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+				context.report.log_error (m.source_reference, "construction methods may only be declared within classes and structs");
 				m.error = true;
 				error = true;
 			}
 			if (m.binding == MemberBinding.INSTANCE) {
-				Report.error (m.source_reference, "instance methods are not allowed outside of data types");
+				context.report.log_error (m.source_reference, "instance methods are not allowed outside of data types");
 				m.error = true;
 				error = true;
 			} else if (m.binding == MemberBinding.CLASS) {
-				Report.error (m.source_reference, "class methods are not allowed outside of classes");
+				context.report.log_error (m.source_reference, "class methods are not allowed outside of classes");
 				m.error = true;
 				error = true;
 			}

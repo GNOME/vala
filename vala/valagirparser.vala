@@ -476,7 +476,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				var arg_type = ArgumentType.from_string (id);
 				if (arg_type == null) {
-					Report.warning (get_src (begin, old_end), "unknown argument `%s'", id);
+					scanner.source_file.context.report.log_warning (get_src (begin, old_end), "unknown argument `%s'", id);
 					continue;
 				}
 
@@ -935,7 +935,7 @@ public class Vala.GirParser : CodeVisitor {
 								// assume method is getter
 								merged = true;
 							} else {
-								Report.warning (symbol.source_reference, "Field `%s' conflicts with method of the same name", get_full_name ());
+								parser.context.report.log_warning (symbol.source_reference, "Field `%s' conflicts with method of the same name", get_full_name ());
 							}
 						} else if (sym is Signal) {
 							node.process (parser);
@@ -947,7 +947,7 @@ public class Vala.GirParser : CodeVisitor {
 							}
 							parser.assume_parameter_names (sig, m, false);
 							if (m.get_parameters().size != sig.get_parameters().size) {
-								Report.warning (symbol.source_reference, "Signal `%s' conflicts with method of the same name", get_full_name ());
+								parser.context.report.log_warning (symbol.source_reference, "Signal `%s' conflicts with method of the same name", get_full_name ());
 							}
 							merged = true;
 						} else if (sym is Method && !(sym is CreationMethod) && node != this) {
@@ -969,12 +969,12 @@ public class Vala.GirParser : CodeVisitor {
 								}
 								if (!different_invoker) {
 									if (attr != null) {
-										Report.warning (symbol.source_reference, "Virtual method `%s' conflicts with method of the same name", get_full_name ());
+										parser.context.report.log_warning (symbol.source_reference, "Virtual method `%s' conflicts with method of the same name", get_full_name ());
 									}
 									node.merged = true;
 								}
 							} else if (m.is_class_member ()) {
-								Report.warning (symbol.source_reference, "Class method `%s' conflicts with method of the same name", get_full_name ());
+								parser.context.report.log_warning (symbol.source_reference, "Class method `%s' conflicts with method of the same name", get_full_name ());
 								node.merged = true;
 							}
 						}
@@ -1008,7 +1008,7 @@ public class Vala.GirParser : CodeVisitor {
 							// properties take precedence
 							node.processed = true;
 							node.merged = true;
-							Report.warning (symbol.source_reference, "Signal `%s' conflicts with property of the same name", get_full_name ());
+							parser.context.report.log_warning (symbol.source_reference, "Signal `%s' conflicts with property of the same name", get_full_name ());
 						} else if (node.symbol is Method) {
 							// getter in C, but not in Vala
 							node.merged = true;
@@ -1514,7 +1514,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void end_element (string name) {
 		while (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
-			Report.warning (get_current_src (), "expected end element of `%s'", name);
+			context.report.log_warning (get_current_src (), "expected end element of `%s'", name);
 			skip_element ();
 		}
 		next ();
@@ -2595,7 +2595,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (name == null) {
 			name = default_name;
 		} else if (name.contains ("-")) {
-			Report.warning (get_current_src (), "parameter name contains hyphen");
+			context.report.log_warning (get_current_src (), "parameter name contains hyphen");
 			name = name.replace ("-", "_");
 		}
 		string direction = null;
@@ -3782,7 +3782,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		if (metadata.args.size == 0 && metadata.children.size == 0) {
-			Report.warning (metadata.source_reference, "empty metadata");
+			context.report.log_warning (metadata.source_reference, "empty metadata");
 			return;
 		}
 
@@ -3790,13 +3790,13 @@ public class Vala.GirParser : CodeVisitor {
 			var arg = metadata.args[arg_type];
 			if (!arg.used) {
 				// if metadata is used and argument is not, then it's a unexpected argument
-				Report.warning (arg.source_reference, "argument never used");
+				context.report.log_warning (arg.source_reference, "argument never used");
 			}
 		}
 
 		foreach (var child in metadata.children) {
 			if (!child.used) {
-				Report.warning (child.source_reference, "metadata never used");
+				context.report.log_warning (child.source_reference, "metadata never used");
 			} else {
 				report_unused_metadata (child);
 			}
@@ -3964,7 +3964,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			alias.symbol = deleg;
 		} else if (type_sym != null) {
-			Report.warning (alias.source_reference, "alias `%s' for `%s' is not supported", alias.get_full_name (), type_sym.get_full_name ());
+			context.report.log_warning (alias.source_reference, "alias `%s' for `%s' is not supported", alias.get_full_name (), type_sym.get_full_name ());
 			alias.symbol = type_sym;
 			alias.merged = true;
 		}
@@ -4379,7 +4379,7 @@ public class Vala.GirParser : CodeVisitor {
 				param.direction = ParameterDirection.IN;
 				param.variable_type.nullable = false;
 				param.variable_type = new PointerType (param.variable_type);
-				Report.warning (param.source_reference, "Synchronous out-parameters are not supported in async methods");
+				context.report.log_warning (param.source_reference, "Synchronous out-parameters are not supported in async methods");
 			}
 		}
 

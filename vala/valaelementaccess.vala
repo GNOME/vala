@@ -154,7 +154,7 @@ public class Vala.ElementAccess : Expression {
 
 		if (container.value_type == null) {
 			error = true;
-			Report.error (container.source_reference, "Invalid container expression");
+			context.report.log_error (container.source_reference, "Invalid container expression");
 			return false;
 		}
 
@@ -162,7 +162,7 @@ public class Vala.ElementAccess : Expression {
 			// signal detail access
 			if (get_indices ().size != 1) {
 				error = true;
-				Report.error (source_reference, "Element access with more than one dimension is not supported for signals");
+				context.report.log_error (source_reference, "Element access with more than one dimension is not supported for signals");
 				return false;
 			}
 
@@ -172,7 +172,7 @@ public class Vala.ElementAccess : Expression {
 
 			if (detail_expr.value_type is NullType || !detail_expr.value_type.compatible (context.analyzer.string_type)) {
 				error = true;
-				Report.error (detail_expr.source_reference, "only string details are supported");
+				context.report.log_error (detail_expr.source_reference, "only string details are supported");
 				return false;
 			}
 		}
@@ -208,10 +208,10 @@ public class Vala.ElementAccess : Expression {
 
 			if (array_type.rank < get_indices ().size) {
 				error = true;
-				Report.error (source_reference, "%d extra indices for element access", get_indices ().size - array_type.rank);
+				context.report.log_error (source_reference, "%d extra indices for element access", get_indices ().size - array_type.rank);
 			} else if (array_type.rank > get_indices ().size) {
 				error = true;
-				Report.error (source_reference, "%d missing indices for element access", array_type.rank - get_indices ().size);
+				context.report.log_error (source_reference, "%d missing indices for element access", array_type.rank - get_indices ().size);
 			}
 		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
 			value_type = pointer_type.base_type.copy ();
@@ -242,7 +242,7 @@ public class Vala.ElementAccess : Expression {
 			}
 
 			error = true;
-			Report.error (source_reference, "The expression `%s' does not denote an array", container.value_type.to_string ());
+			context.report.log_error (source_reference, "The expression `%s' does not denote an array", container.value_type.to_string ());
 			return false;
 		}
 
@@ -257,7 +257,7 @@ public class Vala.ElementAccess : Expression {
 				/* check if the index is of type integer */
 				if (!(e.value_type is IntegerType || e.value_type is EnumValueType)) {
 					error = true;
-					Report.error (e.source_reference, "Expression of integer type expected");
+					context.report.log_error (e.source_reference, "Expression of integer type expected");
 				}
 			}
 		}

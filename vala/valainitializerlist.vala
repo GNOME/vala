@@ -139,7 +139,7 @@ public class Vala.InitializerList : Expression {
 
 		if (target_type == null) {
 			error = true;
-			Report.error (source_reference, "initializer list used for unknown type");
+			context.report.log_error (source_reference, "initializer list used for unknown type");
 			return false;
 		} else if (target_type.error) {
 			error = true;
@@ -222,7 +222,7 @@ public class Vala.InitializerList : Expression {
 				while (field == null) {
 					if (!field_it.next ()) {
 						error = true;
-						Report.error (e.source_reference, "too many expressions in initializer list for `%s'", target_type.to_string ());
+						context.report.log_error (e.source_reference, "too many expressions in initializer list for `%s'", target_type.to_string ());
 						return false;
 					}
 					field = field_it.get ();
@@ -250,7 +250,7 @@ public class Vala.InitializerList : Expression {
 			}
 		} else {
 			error = true;
-			Report.error (source_reference, "initializer list used for `%s', which is neither array nor struct", target_type.to_string ());
+			context.report.log_error (source_reference, "initializer list used for `%s', which is neither array nor struct", target_type.to_string ());
 			return false;
 		}
 
@@ -267,7 +267,7 @@ public class Vala.InitializerList : Expression {
 		foreach (Expression e in get_initializers ()) {
 			if (e.value_type == null) {
 				error = true;
-				Report.error (e.source_reference, "expression type not allowed as initializer");
+				context.report.log_error (e.source_reference, "expression type not allowed as initializer");
 				continue;
 			}
 
@@ -279,7 +279,7 @@ public class Vala.InitializerList : Expression {
 			} else if (!e.value_type.compatible (e.target_type)) {
 				error = true;
 				e.error = true;
-				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'", e.target_type.to_string (), e.value_type.to_string ());
+				context.report.log_error (e.source_reference, "Expected initializer of type `%s' but got `%s'", e.target_type.to_string (), e.value_type.to_string ());
 			}
 		}
 

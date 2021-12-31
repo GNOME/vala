@@ -163,12 +163,12 @@ public class Vala.Assignment : Expression {
 			if ((!(ma.symbol_reference is DynamicProperty) && ma.value_type == null) ||
 			    (ma.inner == null && ma.member_name == "this" && context.analyzer.is_in_instance_method ())) {
 				error = true;
-				Report.error (source_reference, "unsupported lvalue in assignment");
+				context.report.log_error (source_reference, "unsupported lvalue in assignment");
 				return false;
 			}
 			if (ma.prototype_access) {
 				error = true;
-				Report.error (source_reference, "Access to instance member `%s' denied", ma.symbol_reference.get_full_name ());
+				context.report.log_error (source_reference, "Access to instance member `%s' denied", ma.symbol_reference.get_full_name ());
 				return false;
 			}
 
@@ -180,7 +180,7 @@ public class Vala.Assignment : Expression {
 
 			if (ma.symbol_reference.get_attribute ("GtkChild") != null) {
 				error = true;
-				Report.error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", ma.symbol_reference.get_full_name ());
+				context.report.log_error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", ma.symbol_reference.get_full_name ());
 				return false;
 			}
 
@@ -197,7 +197,7 @@ public class Vala.Assignment : Expression {
 
 			if (ea.container.value_type.type_symbol == context.analyzer.string_type.type_symbol) {
 				error = true;
-				Report.error (ea.source_reference, "strings are immutable");
+				context.report.log_error (ea.source_reference, "strings are immutable");
 				return false;
 			} else if (ea.container.value_type.get_member ("set") is Method) {
 				var set_call = new MethodCall (new MemberAccess (ea.container, "set", source_reference), source_reference);
@@ -214,11 +214,11 @@ public class Vala.Assignment : Expression {
 			right.target_type = left.value_type.copy ();
 		} else if (left is Literal) {
 			error = true;
-			Report.error (source_reference, "Literals are immutable");
+			context.report.log_error (source_reference, "Literals are immutable");
 			return false;
 		} else {
 			error = true;
-			Report.error (source_reference, "unsupported lvalue in assignment");
+			context.report.log_error (source_reference, "unsupported lvalue in assignment");
 			return false;
 		}
 
@@ -252,7 +252,7 @@ public class Vala.Assignment : Expression {
 			case AssignmentOperator.SHIFT_RIGHT: bop = BinaryOperator.SHIFT_RIGHT; break;
 			default:
 				error = true;
-				Report.error (source_reference, "internal error: unsupported assignment operator");
+				context.report.log_error (source_reference, "internal error: unsupported assignment operator");
 				return false;
 			}
 
@@ -278,7 +278,7 @@ public class Vala.Assignment : Expression {
 				}
 			} else if (ma.symbol_reference is ArrayLengthField && ((ArrayType) ma.inner.value_type).inline_allocated) {
 				error = true;
-				Report.error (source_reference, "`length' field of fixed length arrays is read-only");
+				context.report.log_error (source_reference, "`length' field of fixed length arrays is read-only");
 				return false;
 			} else if (ma.symbol_reference is Variable && right.value_type is MethodType) {
 				unowned Variable variable = (Variable) ma.symbol_reference;
@@ -289,17 +289,17 @@ public class Vala.Assignment : Expression {
 						unowned Method m = (Method) right.symbol_reference;
 						unowned Delegate cb = ((DelegateType) variable.variable_type).delegate_symbol;
 						error = true;
-						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'", m.get_full_name (), cb.get_full_name ());
+						context.report.log_error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'", m.get_full_name (), cb.get_full_name ());
 						return false;
 					}
 				} else {
 					error = true;
-					Report.error (source_reference, "Assignment: Invalid assignment attempt");
+					context.report.log_error (source_reference, "Assignment: Invalid assignment attempt");
 					return false;
 				}
 			} else if (ma.symbol_reference is Variable && right.value_type == null) {
 				error = true;
-				Report.error (source_reference, "Assignment: Invalid assignment attempt");
+				context.report.log_error (source_reference, "Assignment: Invalid assignment attempt");
 				return false;
 			} else if (ma.symbol_reference is Variable) {
 				unowned Variable variable = (Variable) ma.symbol_reference;
@@ -318,7 +318,7 @@ public class Vala.Assignment : Expression {
 
 				if (!right.value_type.compatible (left.value_type)) {
 					error = true;
-					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
+					context.report.log_error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
 					return false;
 				} else if (left.value_type is EnumValueType && right.value_type is IntegerType
 				    && (!(right is IntegerLiteral) || ((IntegerLiteral) right).value != "0")) {
@@ -332,7 +332,7 @@ public class Vala.Assignment : Expression {
 						if (!(left.value_type is PointerType) && !left.value_type.value_owned) {
 							/* lhs doesn't own the value */
 							error = true;
-							Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+							context.report.log_error (source_reference, "Invalid assignment from owned expression to unowned variable");
 						}
 					} else if (left.value_type.value_owned) {
 						/* lhs wants to own the value
@@ -366,7 +366,7 @@ public class Vala.Assignment : Expression {
 
 			if (!right.value_type.compatible (left.value_type)) {
 				error = true;
-				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
+				context.report.log_error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
 				return false;
 			}
 
@@ -387,7 +387,7 @@ public class Vala.Assignment : Expression {
 				if (!(element_type is PointerType) && !element_type.value_owned) {
 					/* lhs doesn't own the value */
 					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					context.report.log_error (source_reference, "Invalid assignment from owned expression to unowned variable");
 					return false;
 				}
 			} else if (left.value_type.value_owned) {

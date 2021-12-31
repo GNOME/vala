@@ -77,7 +77,7 @@ public class Vala.MemberInitializer : Expression {
 		unowned ObjectCreationExpression? oce = parent_node as ObjectCreationExpression;
 		if (oce == null) {
 			error = true;
-			Report.error (source_reference, "internal: Invalid member initializer");
+			context.report.log_error (source_reference, "internal: Invalid member initializer");
 			return false;
 		}
 
@@ -86,12 +86,12 @@ public class Vala.MemberInitializer : Expression {
 		symbol_reference = SemanticAnalyzer.symbol_lookup_inherited (type.type_symbol, name);
 		if (!(symbol_reference is Field || symbol_reference is Property)) {
 			error = true;
-			Report.error (source_reference, "Invalid member `%s' in `%s'", name, type.type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "Invalid member `%s' in `%s'", name, type.type_symbol.get_full_name ());
 			return false;
 		}
 		if (symbol_reference.access != SymbolAccessibility.PUBLIC) {
 			error = true;
-			Report.error (source_reference, "Access to private member `%s' denied", symbol_reference.get_full_name ());
+			context.report.log_error (source_reference, "Access to private member `%s' denied", symbol_reference.get_full_name ());
 			return false;
 		}
 		DataType member_type = null;
@@ -103,7 +103,7 @@ public class Vala.MemberInitializer : Expression {
 			member_type = prop.property_type;
 			if (prop.set_accessor == null || !prop.set_accessor.writable) {
 				error = true;
-				Report.error (source_reference, "Property `%s' is read-only", prop.get_full_name ());
+				context.report.log_error (source_reference, "Property `%s' is read-only", prop.get_full_name ());
 				return false;
 			}
 		}
@@ -117,7 +117,7 @@ public class Vala.MemberInitializer : Expression {
 
 		if (initializer.value_type == null || !initializer.value_type.compatible (initializer.target_type)) {
 			error = true;
-			Report.error (source_reference, "Invalid type for member `%s'", name);
+			context.report.log_error (source_reference, "Invalid type for member `%s'", name);
 			return false;
 		}
 

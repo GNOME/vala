@@ -328,25 +328,25 @@ public class Vala.BinaryExpression : Expression {
 		}
 
 		if (left.value_type == null) {
-			Report.error (left.source_reference, "invalid left operand");
+			context.report.log_error (left.source_reference, "invalid left operand");
 			error = true;
 			return false;
 		}
 
 		if (operator != BinaryOperator.IN && right.value_type == null) {
-			Report.error (right.source_reference, "invalid right operand");
+			context.report.log_error (right.source_reference, "invalid right operand");
 			error = true;
 			return false;
 		}
 
 		if (left.value_type is FieldPrototype || left.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (left.source_reference, "Access to instance member `%s' denied", left.symbol_reference.get_full_name ());
+			context.report.log_error (left.source_reference, "Access to instance member `%s' denied", left.symbol_reference.get_full_name ());
 			return false;
 		}
 		if (right.value_type is FieldPrototype || right.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (right.source_reference, "Access to instance member `%s' denied", right.symbol_reference.get_full_name ());
+			context.report.log_error (right.source_reference, "Access to instance member `%s' denied", right.symbol_reference.get_full_name ());
 			return false;
 		}
 
@@ -363,7 +363,7 @@ public class Vala.BinaryExpression : Expression {
 			    || left is NullLiteral || right is NullLiteral) {
 				// operands cannot be null
 				error = true;
-				Report.error (source_reference, "Operands must be strings");
+				context.report.log_error (source_reference, "Operands must be strings");
 				return false;
 			}
 
@@ -383,11 +383,11 @@ public class Vala.BinaryExpression : Expression {
 
 			if (array_type.inline_allocated) {
 				error = true;
-				Report.error (source_reference, "Array concatenation not supported for fixed length arrays");
+				context.report.log_error (source_reference, "Array concatenation not supported for fixed length arrays");
 			}
 			if (right.value_type == null || !right.value_type.compatible (array_type.element_type)) {
 				error = true;
-				Report.error (source_reference, "Incompatible operand");
+				context.report.log_error (source_reference, "Incompatible operand");
 				return false;
 			}
 
@@ -410,7 +410,7 @@ public class Vala.BinaryExpression : Expression {
 				unowned PointerType pointer_type = (PointerType) left.value_type;
 				if (pointer_type.base_type is VoidType) {
 					error = true;
-					Report.error (source_reference, "Pointer arithmetic not supported for `void*'");
+					context.report.log_error (source_reference, "Pointer arithmetic not supported for `void*'");
 					return false;
 				}
 
@@ -436,7 +436,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (value_type == null) {
 				error = true;
-				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
+				context.report.log_error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
 				return false;
 			}
 			break;
@@ -450,7 +450,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (value_type == null) {
 				error = true;
-				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
+				context.report.log_error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
 				return false;
 			}
 			break;
@@ -475,7 +475,7 @@ public class Vala.BinaryExpression : Expression {
 
 				if (resulting_type == null) {
 					error = true;
-					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
+					context.report.log_error (source_reference, "Relational operation not supported for types `%s' and `%s'", left.value_type.to_string (), right.value_type.to_string ());
 					return false;
 				}
 
@@ -517,7 +517,7 @@ public class Vala.BinaryExpression : Expression {
 
 			if (!right.value_type.compatible (left.value_type)
 			    && !left.value_type.compatible (right.value_type)) {
-				Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible", right.value_type.to_string (), left.value_type.to_string ());
+				context.report.log_error (source_reference, "Equality operation: `%s' and `%s' are incompatible", right.value_type.to_string (), left.value_type.to_string ());
 				error = true;
 				return false;
 			}
@@ -562,7 +562,7 @@ public class Vala.BinaryExpression : Expression {
 		case BinaryOperator.OR:
 			if (!left.value_type.compatible (context.analyzer.bool_type) || !right.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (source_reference, "Operands must be boolean");
+				context.report.log_error (source_reference, "Operands must be boolean");
 			}
 			left.target_type.nullable = false;
 			right.target_type.nullable = false;
@@ -578,28 +578,28 @@ public class Vala.BinaryExpression : Expression {
 				if (left.value_type.type_symbol is Enum && right.value_type.type_symbol is Enum
 				    && left.value_type.type_symbol != right.value_type.type_symbol) {
 					error = true;
-					Report.error (source_reference, "Cannot look for `%s' in `%s'", left.value_type.to_string (), right.value_type.to_string ());
+					context.report.log_error (source_reference, "Cannot look for `%s' in `%s'", left.value_type.to_string (), right.value_type.to_string ());
 				}
 			} else if (right.value_type is ArrayType) {
 				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
 					error = true;
-					Report.error (source_reference, "Cannot look for `%s' in `%s'", left.value_type.to_string (), right.value_type.to_string ());
+					context.report.log_error (source_reference, "Cannot look for `%s' in `%s'", left.value_type.to_string (), right.value_type.to_string ());
 				}
 			} else {
 				// otherwise require a bool contains () method
 				var contains_method = right.value_type.get_member ("contains") as Method;
 				if (contains_method == null) {
-					Report.error (source_reference, "`%s' does not have a `contains' method", right.value_type.to_string ());
+					context.report.log_error (source_reference, "`%s' does not have a `contains' method", right.value_type.to_string ());
 					error = true;
 					return false;
 				}
 				if (contains_method.get_parameters ().size != 1) {
-					Report.error (source_reference, "`%s' must have one parameter", contains_method.get_full_name ());
+					context.report.log_error (source_reference, "`%s' must have one parameter", contains_method.get_full_name ());
 					error = true;
 					return false;
 				}
 				if (!contains_method.return_type.compatible (context.analyzer.bool_type)) {
-					Report.error (source_reference, "`%s' must return a boolean value", contains_method.get_full_name ());
+					context.report.log_error (source_reference, "`%s' must return a boolean value", contains_method.get_full_name ());
 					error = true;
 					return false;
 				}
@@ -614,7 +614,7 @@ public class Vala.BinaryExpression : Expression {
 			break;
 		default:
 			error = true;
-			Report.error (source_reference, "internal error: unsupported binary operator");
+			context.report.log_error (source_reference, "internal error: unsupported binary operator");
 			return false;
 		}
 

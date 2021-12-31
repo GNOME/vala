@@ -117,14 +117,14 @@ public class Vala.Constant : Symbol {
 
 		if (!check_const_type (type_reference, context)) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as type for constants", type_reference.to_string ());
+			context.report.log_error (source_reference, "`%s' not supported as type for constants", type_reference.to_string ());
 			return false;
 		}
 
 		// check whether constant type is at least as accessible as the constant
 		if (!type_reference.is_accessible (this)) {
 			error = true;
-			Report.error (source_reference, "constant type `%s' is less accessible than constant `%s'", type_reference.to_string (), get_full_name ());
+			context.report.log_error (source_reference, "constant type `%s' is less accessible than constant `%s'", type_reference.to_string (), get_full_name ());
 		}
 
 		if (!external) {
@@ -132,7 +132,7 @@ public class Vala.Constant : Symbol {
 				// constants from fast-vapi files are special
 				if (source_type != SourceFileType.FAST) {
 					error = true;
-					Report.error (source_reference, "A const field requires a value to be provided");
+					context.report.log_error (source_reference, "A const field requires a value to be provided");
 				}
 			} else {
 				value.target_type = type_reference;
@@ -144,7 +144,7 @@ public class Vala.Constant : Symbol {
 
 				if (!value.value_type.compatible (type_reference)) {
 					error = true;
-					Report.error (source_reference, "Cannot convert from `%s' to `%s'", value.value_type.to_string (), type_reference.to_string ());
+					context.report.log_error (source_reference, "Cannot convert from `%s' to `%s'", value.value_type.to_string (), type_reference.to_string ());
 					return false;
 				}
 
@@ -165,20 +165,20 @@ public class Vala.Constant : Symbol {
 
 				if (!value.is_constant ()) {
 					error = true;
-					Report.error (value.source_reference, "Value must be constant");
+					context.report.log_error (value.source_reference, "Value must be constant");
 					return false;
 				}
 
 				// check whether initializer is at least as accessible as the constant
 				if (!value.is_accessible (this)) {
 					error = true;
-					Report.error (value.source_reference, "value is less accessible than constant `%s'", get_full_name ());
+					context.report.log_error (value.source_reference, "value is less accessible than constant `%s'", get_full_name ());
 				}
 			}
 		} else {
 			if (value != null) {
 				error = true;
-				Report.error (source_reference, "External constants cannot use values");
+				context.report.log_error (source_reference, "External constants cannot use values");
 			}
 		}
 

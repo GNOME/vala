@@ -507,14 +507,14 @@ public class Vala.Struct : TypeSymbol {
 
 			if (!(base_type is ValueType)) {
 				error = true;
-				Report.error (source_reference, "The base type `%s' of struct `%s' is not a struct", base_type.to_string (), get_full_name ());
+				context.report.log_error (source_reference, "The base type `%s' of struct `%s' is not a struct", base_type.to_string (), get_full_name ());
 				return false;
 			}
 
 			// check whether base type is at least as accessible as the struct
 			if (!base_type.is_accessible (this)) {
 				error = true;
-				Report.error (source_reference, "base type `%s' is less accessible than struct `%s'", base_type.to_string (), get_full_name ());
+				context.report.log_error (source_reference, "base type `%s' is less accessible than struct `%s'", base_type.to_string (), get_full_name ());
 			}
 		}
 
@@ -527,13 +527,13 @@ public class Vala.Struct : TypeSymbol {
 
 			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (context, f.variable_type)) {
 				error = true;
-				Report.error (f.source_reference, "Recursive value types are not allowed");
+				context.report.log_error (f.source_reference, "Recursive value types are not allowed");
 				return false;
 			}
 
 			if (f.binding == MemberBinding.INSTANCE && f.initializer != null) {
 				error = true;
-				Report.error (f.source_reference, "Instance field initializers not supported");
+				context.report.log_error (f.source_reference, "Instance field initializers not supported");
 				return false;
 			}
 
@@ -541,7 +541,7 @@ public class Vala.Struct : TypeSymbol {
 				// for backing property fields a dedicated error will be reported later
 				if (!(f in property_fields) && !(f.initializer.value_type is NullType) && f.variable_type.is_disposable () && f.variable_type.value_owned) {
 					error = true;
-					Report.error (f.initializer.source_reference, "Owned static struct fields can only be initialized in a function or method");
+					context.report.log_error (f.initializer.source_reference, "Owned static struct fields can only be initialized in a function or method");
 				}
 			}
 		}
@@ -561,7 +561,7 @@ public class Vala.Struct : TypeSymbol {
 				unowned Field? field = prop.field;
 				if (field != null && field.initializer != null && !(field.initializer.value_type is NullType) && field.variable_type.is_disposable () && field.variable_type.value_owned) {
 					error = true;
-					Report.error (field.initializer.source_reference, "Owned static struct properties can only be initialized in a function or method");
+					context.report.log_error (field.initializer.source_reference, "Owned static struct properties can only be initialized in a function or method");
 				}
 			}
 		}
@@ -579,10 +579,10 @@ public class Vala.Struct : TypeSymbol {
 			}
 			if (base_type == null && !has_instance_field && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
 				error = true;
-				Report.error (source_reference, "struct `%s' cannot be empty", get_full_name ());
+				context.report.log_error (source_reference, "struct `%s' cannot be empty", get_full_name ());
 			} else if (base_type != null && has_instance_field) {
 				error = true;
-				Report.error (source_reference, "derived struct `%s' may not have instance fields", get_full_name ());
+				context.report.log_error (source_reference, "derived struct `%s' may not have instance fields", get_full_name ());
 			}
 		}
 

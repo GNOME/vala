@@ -99,7 +99,7 @@ public class Vala.LocalVariable : Variable {
 		if (!(variable_type is VarType)) {
 			if (variable_type is VoidType) {
 				error = true;
-				Report.error (source_reference, "'void' not supported as variable type");
+				context.report.log_error (source_reference, "'void' not supported as variable type");
 			} else if (!variable_type.check (context)) {
 				error = true;
 			}
@@ -124,7 +124,7 @@ public class Vala.LocalVariable : Variable {
 				error = true;
 			} else if (initializer.value_type is VoidType) {
 				error = true;
-				Report.error (initializer.source_reference, "'void' not supported as initializer type");
+				context.report.log_error (initializer.source_reference, "'void' not supported as initializer type");
 			}
 		}
 
@@ -140,17 +140,17 @@ public class Vala.LocalVariable : Variable {
 
 			if (initializer == null) {
 				error = true;
-				Report.error (source_reference, "var declaration not allowed without initializer");
+				context.report.log_error (source_reference, "var declaration not allowed without initializer");
 				return false;
 			}
 			if (initializer.value_type == null) {
 				error = true;
-				Report.error (source_reference, "var declaration not allowed with non-typed initializer");
+				context.report.log_error (source_reference, "var declaration not allowed with non-typed initializer");
 				return false;
 			}
 			if (initializer.value_type is FieldPrototype || initializer.value_type is PropertyPrototype) {
 				error = true;
-				Report.error (initializer.source_reference, "Access to instance member `%s' denied", initializer.symbol_reference.get_full_name ());
+				context.report.log_error (initializer.source_reference, "Access to instance member `%s' denied", initializer.symbol_reference.get_full_name ());
 				return false;
 			}
 
@@ -184,14 +184,14 @@ public class Vala.LocalVariable : Variable {
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && variable_array_type.length == null && !(initializer is ArrayCreationExpression)) {
 			error = true;
-			Report.error (source_reference, "Inline allocated array requires either a given length or an initializer");
+			context.report.log_error (source_reference, "Inline allocated array requires either a given length or an initializer");
 		}
 
 		if (initializer != null && !initializer.error) {
 			if (initializer.value_type is MethodType) {
 				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {
 					error = true;
-					Report.error (source_reference, "expression type not allowed as initializer");
+					context.report.log_error (source_reference, "expression type not allowed as initializer");
 					return false;
 				}
 
@@ -201,23 +201,23 @@ public class Vala.LocalVariable : Variable {
 						unowned Method m = (Method) initializer.symbol_reference;
 						unowned Delegate cb = ((DelegateType) variable_type).delegate_symbol;
 						error = true;
-						Report.error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'", m.get_full_name (), cb.get_full_name ());
+						context.report.log_error (source_reference, "Declaration of method `%s' is not compatible with delegate `%s'", m.get_full_name (), cb.get_full_name ());
 						return false;
 					}
 				} else {
 					error = true;
-					Report.error (source_reference, "expression type not allowed as initializer");
+					context.report.log_error (source_reference, "expression type not allowed as initializer");
 					return false;
 				}
 			} else if (initializer.value_type == null) {
 				error = true;
-				Report.error (source_reference, "expression type not allowed as initializer");
+				context.report.log_error (source_reference, "expression type not allowed as initializer");
 				return false;
 			}
 
 			if (!initializer.value_type.compatible (variable_type)) {
 				error = true;
-				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
+				context.report.log_error (source_reference, "Assignment: Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 				return false;
 			} else if (variable_type is EnumValueType && initializer.value_type is IntegerType
 			    && (!(initializer is IntegerLiteral) || ((IntegerLiteral) initializer).value != "0")) {
@@ -233,7 +233,7 @@ public class Vala.LocalVariable : Variable {
 
 			if (variable_array_type != null && variable_array_type.inline_allocated && initializer.value_type is ArrayType == false) {
 				error = true;
-				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
+				context.report.log_error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
 				return false;
 			}
 
@@ -242,7 +242,7 @@ public class Vala.LocalVariable : Variable {
 				if (!(variable_type is PointerType) && !variable_type.value_owned) {
 					/* lhs doesn't own the value */
 					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					context.report.log_error (source_reference, "Invalid assignment from owned expression to unowned variable");
 					return false;
 				}
 			}

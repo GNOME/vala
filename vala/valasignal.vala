@@ -187,7 +187,7 @@ public class Vala.Signal : Symbol, Callable {
 		unowned Class? parent_cl = parent_symbol as Class;
 		if (parent_cl != null && parent_cl.is_compact) {
 			error = true;
-			Report.error (source_reference, "Signals are not supported in compact classes");
+			context.report.log_error (source_reference, "Signals are not supported in compact classes");
 			return false;
 		}
 
@@ -195,7 +195,7 @@ public class Vala.Signal : Symbol, Callable {
 			foreach (DataType base_type in parent_cl.get_base_types ()) {
 				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.type_symbol, name) is Signal) {
 					error = true;
-					Report.error (source_reference, "Signals with the same name as a signal in a base type are not supported");
+					context.report.log_error (source_reference, "Signals with the same name as a signal in a base type are not supported");
 					return false;
 				}
 			}
@@ -209,13 +209,13 @@ public class Vala.Signal : Symbol, Callable {
 
 		if (return_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as return type", return_type.type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "`%s' not supported as return type", return_type.type_symbol.get_full_name ());
 			return false;
 		}
 
 		foreach (Parameter param in parameters) {
 			if (param.ellipsis) {
-				Report.error  (param.source_reference, "Signals with variable argument lists are not supported");
+				context.report.log_error  (param.source_reference, "Signals with variable argument lists are not supported");
 				return false;
 			}
 
@@ -276,7 +276,7 @@ public class Vala.Signal : Symbol, Callable {
 
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited signal `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
+			context.report.log_warning (source_reference, "%s hides inherited signal `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		return !error;

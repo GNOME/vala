@@ -167,7 +167,7 @@ public class Vala.Enum : TypeSymbol {
 		context.analyzer.current_symbol = this;
 
 		if (values.size <= 0) {
-			Report.error (source_reference, "Enum `%s' requires at least one value", get_full_name ());
+			context.report.log_error (source_reference, "Enum `%s' requires at least one value", get_full_name ());
 			error = true;
 			return false;
 		}

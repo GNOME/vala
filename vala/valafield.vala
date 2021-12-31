@@ -94,18 +94,18 @@ public class Vala.Field : Variable, Lockable {
 
 		if (variable_type is VoidType) {
 			error = true;
-			Report.error (source_reference, "'void' not supported as field type");
+			context.report.log_error (source_reference, "'void' not supported as field type");
 			return false;
 		}
 
 		if (variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 			error = true;
-			Report.error (source_reference, "`%s' not supported as field type", variable_type.type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "`%s' not supported as field type", variable_type.type_symbol.get_full_name ());
 			return false;
 		}
 
 		if (get_attribute ("GtkChild") != null && variable_type.value_owned) {
-			Report.warning (source_reference, "[GtkChild] fields must be declared as `unowned'");
+			context.report.log_warning (source_reference, "[GtkChild] fields must be declared as `unowned'");
 			variable_type.value_owned = false;
 		}
 
@@ -122,20 +122,20 @@ public class Vala.Field : Variable, Lockable {
 		// check whether field type is at least as accessible as the field
 		if (!variable_type.is_accessible (this)) {
 			error = true;
-			Report.error (source_reference, "field type `%s' is less accessible than field `%s'", variable_type.to_string (), get_full_name ());
+			context.report.log_error (source_reference, "field type `%s' is less accessible than field `%s'", variable_type.to_string (), get_full_name ());
 			return false;
 		}
 
 		unowned ArrayType? variable_array_type = variable_type as ArrayType;
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && initializer is ArrayCreationExpression && ((ArrayCreationExpression) initializer).initializer_list == null) {
-			Report.warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
+			context.report.log_warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
 			initializer = null;
 		}
 
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && !variable_array_type.fixed_length) {
-			Report.error (source_reference, "Inline allocated array as field requires to have fixed length");
+			context.report.log_error (source_reference, "Inline allocated array as field requires to have fixed length");
 		}
 
 		if (initializer != null) {
@@ -157,13 +157,13 @@ public class Vala.Field : Variable, Lockable {
 
 			if (initializer.value_type == null) {
 				error = true;
-				Report.error (source_reference, "expression type not allowed as initializer");
+				context.report.log_error (source_reference, "expression type not allowed as initializer");
 				return false;
 			}
 
 			if (!initializer.value_type.compatible (variable_type)) {
 				error = true;
-				Report.error (source_reference, "Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
+				context.report.log_error (source_reference, "Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 				return false;
 			}
 
@@ -175,7 +175,7 @@ public class Vala.Field : Variable, Lockable {
 
 			if (variable_array_type != null && variable_array_type.inline_allocated && !(initializer.value_type is ArrayType)) {
 				error = true;
-				Report.error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
+				context.report.log_error (source_reference, "only arrays are allowed as initializer for arrays with fixed length");
 				return false;
 			}
 
@@ -184,40 +184,40 @@ public class Vala.Field : Variable, Lockable {
 				if (!(variable_type is PointerType) && !variable_type.value_owned) {
 					/* lhs doesn't own the value */
 					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					context.report.log_error (source_reference, "Invalid assignment from owned expression to unowned variable");
 					return false;
 				}
 			}
 
 			if (parent_symbol is Namespace && !initializer.is_constant ()) {
 				error = true;
-				Report.error (source_reference, "Non-constant field initializers not supported in this context");
+				context.report.log_error (source_reference, "Non-constant field initializers not supported in this context");
 				return false;
 			}
 
 			if (parent_symbol is Namespace && initializer.is_constant () && initializer.is_non_null ()) {
 				if (variable_type.is_disposable () && variable_type.value_owned) {
 					error = true;
-					Report.error (source_reference, "Owned namespace fields can only be initialized in a function or method");
+					context.report.log_error (source_reference, "Owned namespace fields can only be initialized in a function or method");
 					return false;
 				}
 			}
 
 			if (binding == MemberBinding.STATIC && parent_symbol is Class && ((Class)parent_symbol).is_compact && !initializer.is_constant ()) {
 				error = true;
-				Report.error (source_reference, "Static fields in compact classes cannot have non-constant initializers");
+				context.report.log_error (source_reference, "Static fields in compact classes cannot have non-constant initializers");
 				return false;
 			}
 
 			if (external) {
 				error = true;
-				Report.error (source_reference, "External fields cannot use initializers");
+				context.report.log_error (source_reference, "External fields cannot use initializers");
 			}
 		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
 			error = true;
-			Report.error (source_reference, "Interfaces may not have instance fields");
+			context.report.log_error (source_reference, "Interfaces may not have instance fields");
 			return false;
 		}
 
@@ -231,7 +231,7 @@ public class Vala.Field : Variable, Lockable {
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
+			context.report.log_warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		context.analyzer.current_source_file = old_source_file;

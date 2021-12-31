@@ -43,7 +43,7 @@ public class Vala.YieldStatement : CodeNode, Statement {
 
 		if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
 			error = true;
-			Report.error (source_reference, "yield statement not available outside async method");
+			context.report.log_error (source_reference, "yield statement not available outside async method");
 		}
 
 		return !error;

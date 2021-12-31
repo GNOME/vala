@@ -96,13 +96,13 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 		if (!(inner is MemberAccess || inner is ElementAccess)) {
 			error = true;
-			Report.error (source_reference, "Reference transfer not supported for this expression");
+			context.report.log_error (source_reference, "Reference transfer not supported for this expression");
 			return false;
 		}
 
 		if (inner.value_type is ArrayType && ((ArrayType) inner.value_type).inline_allocated) {
 			error = true;
-			Report.error (source_reference, "Ownership of inline-allocated array cannot be transferred");
+			context.report.log_error (source_reference, "Ownership of inline-allocated array cannot be transferred");
 			return false;
 		}
 
@@ -111,7 +111,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 		    && !(inner.value_type is PointerType)
 			&& !is_owned_delegate) {
 			error = true;
-			Report.error (source_reference, "No reference to be transferred");
+			context.report.log_error (source_reference, "No reference to be transferred");
 			return false;
 		}
 

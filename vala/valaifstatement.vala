@@ -134,7 +134,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 
 		if (condition.value_type == null || !condition.value_type.compatible (context.analyzer.bool_type)) {
 			error = true;
-			Report.error (condition.source_reference, "Condition must be boolean");
+			context.report.log_error (condition.source_reference, "Condition must be boolean");
 			return false;
 		}
 

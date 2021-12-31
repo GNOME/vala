@@ -548,14 +548,14 @@ public class Vala.Class : ObjectTypeSymbol {
 
 			if (!(base_type_reference is ObjectType)) {
 				error = true;
-				Report.error (source_reference, "base type `%s' of class `%s' is not an object type", base_type_reference.to_string (), get_full_name ());
+				context.report.log_error (source_reference, "base type `%s' of class `%s' is not an object type", base_type_reference.to_string (), get_full_name ());
 				return false;
 			}
 
 			// check whether base type is at least as accessible as the class
 			if (!base_type_reference.is_accessible (this)) {
 				error = true;
-				Report.error (source_reference, "base type `%s' is less accessible than class `%s'", base_type_reference.to_string (), get_full_name ());
+				context.report.log_error (source_reference, "base type `%s' is less accessible than class `%s'", base_type_reference.to_string (), get_full_name ());
 				return false;
 			}
 
@@ -577,12 +577,12 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		if (base_class != null && base_class.is_singleton) {
 			error = true;
-			Report.error (source_reference, "`%s' cannot inherit from SingleInstance class `%s'", get_full_name (), base_class.get_full_name ());
+			context.report.log_error (source_reference, "`%s' cannot inherit from SingleInstance class `%s'", get_full_name (), base_class.get_full_name ());
 		}
 
 		if (is_singleton && !is_subtype_of (context.analyzer.object_type)) {
 			error = true;
-			Report.error (source_reference, "SingleInstance class `%s' requires inheritance from `GLib.Object'", get_full_name ());
+			context.report.log_error (source_reference, "SingleInstance class `%s' requires inheritance from `GLib.Object'", get_full_name ());
 		}
 
 		/* singleton classes require an instance constructor */
@@ -594,18 +594,18 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		if (base_class != null && base_class.is_sealed) {
 			error = true;
-			Report.error (source_reference, "`%s' cannot inherit from sealed class `%s'", get_full_name (), base_class.get_full_name ());
+			context.report.log_error (source_reference, "`%s' cannot inherit from sealed class `%s'", get_full_name (), base_class.get_full_name ());
 		}
 
 		if (is_sealed) {
 			if (is_compact) {
 				error = true;
-				Report.error (source_reference, "Sealed class `%s' cannot be compact", get_full_name ());
+				context.report.log_error (source_reference, "Sealed class `%s' cannot be compact", get_full_name ());
 				return false;
 			}
 			if (is_abstract) {
 				error = true;
-				Report.error (source_reference, "Sealed class `%s' cannot be abstract", get_full_name ());
+				context.report.log_error (source_reference, "Sealed class `%s' cannot be abstract", get_full_name ());
 				return false;
 			}
 		}
@@ -619,15 +619,15 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (is_compact && f.binding != MemberBinding.STATIC) {
 				//FIXME Should external bindings follow this too?
 				if (!external_package && !is_opaque && f.access == SymbolAccessibility.PRIVATE) {
-					Report.error (f.source_reference, "private fields are only supported in opaque compact classes, use [Compact (opaque = true)]");
+					context.report.log_error (f.source_reference, "private fields are only supported in opaque compact classes, use [Compact (opaque = true)]");
 					error = true;
 				}
 				if (!external_package && is_opaque && (f.access == SymbolAccessibility.PUBLIC || f.access == SymbolAccessibility.PROTECTED)) {
-					Report.error (f.source_reference, "fields in opaque compact classes must be private or internal");
+					context.report.log_error (f.source_reference, "fields in opaque compact classes must be private or internal");
 					error = true;
 				}
 				if (f.binding == MemberBinding.CLASS) {
-					Report.error (f.source_reference, "class fields are not supported in compact classes");
+					context.report.log_error (f.source_reference, "class fields are not supported in compact classes");
 					error = true;
 				}
 			}
@@ -646,7 +646,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Property prop in get_properties ()) {
 			if (prop.get_attribute ("NoAccessorMethod") != null && !is_subtype_of (context.analyzer.object_type)) {
 				error = true;
-				Report.error (prop.source_reference, "NoAccessorMethod is only allowed for properties in classes derived from GLib.Object");
+				context.report.log_error (prop.source_reference, "NoAccessorMethod is only allowed for properties in classes derived from GLib.Object");
 				return false;
 			}
 			prop.check (context);
@@ -701,7 +701,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			foreach (DataType base_type in get_base_types ()) {
 				if (base_type.type_symbol is Interface) {
 					error = true;
-					Report.error (source_reference, "compact classes `%s' may not implement interfaces", get_full_name ());
+					context.report.log_error (source_reference, "compact classes `%s' may not implement interfaces", get_full_name ());
 				}
 			}
 
@@ -709,7 +709,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				foreach (Field f in get_fields ()) {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
-						Report.error (source_reference, "derived compact classes may not have instance fields");
+						context.report.log_error (source_reference, "derived compact classes may not have instance fields");
 						break;
 					}
 				}
@@ -745,7 +745,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				}
 			}
 			error_string += ") are not met";
-			Report.error (source_reference, error_string);
+			context.report.log_error (source_reference, error_string);
 		}
 
 		/* VAPI classes don't have to specify overridden methods */
@@ -789,7 +789,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							}
 							if (!implemented) {
 								error = true;
-								Report.error (source_reference, "`%s' does not implement interface method `%s'", get_full_name (), m.get_full_name ());
+								context.report.log_error (source_reference, "`%s' does not implement interface method `%s'", get_full_name (), m.get_full_name ());
 							}
 						}
 					}
@@ -809,14 +809,14 @@ public class Vala.Class : ObjectTypeSymbol {
 								// No check at all for "new" classified properties, really?
 								if (!base_prop.hides && !base_prop.compatible (prop, out invalid_match)) {
 									error = true;
-									Report.error (source_reference, "Type and/or accessors of inherited properties `%s' and `%s' do not match: %s.", prop.get_full_name (), base_prop.get_full_name (), invalid_match);
+									context.report.log_error (source_reference, "Type and/or accessors of inherited properties `%s' and `%s' do not match: %s.", prop.get_full_name (), base_prop.get_full_name (), invalid_match);
 								}
 								// property is used as interface implementation, so it is not unused
 								sym.version.check (context, source_reference);
 								sym.used = true;
 							} else {
 								error = true;
-								Report.error (source_reference, "`%s' does not implement interface property `%s'", get_full_name (), prop.get_full_name ());
+								context.report.log_error (source_reference, "`%s' does not implement interface property `%s'", get_full_name (), prop.get_full_name ());
 							}
 						}
 					}
@@ -832,7 +832,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							var override_method = SemanticAnalyzer.symbol_lookup_inherited (this, base_method.name) as Method;
 							if (override_method == null || !override_method.overrides) {
 								error = true;
-								Report.error (source_reference, "`%s' does not implement abstract method `%s'", get_full_name (), base_method.get_full_name ());
+								context.report.log_error (source_reference, "`%s' does not implement abstract method `%s'", get_full_name (), base_method.get_full_name ());
 							}
 						}
 					}
@@ -841,7 +841,7 @@ public class Vala.Class : ObjectTypeSymbol {
 							var override_property = SemanticAnalyzer.symbol_lookup_inherited (this, base_property.name) as Property;
 							if (override_property == null || !override_property.overrides) {
 								error = true;
-								Report.error (source_reference, "`%s' does not implement abstract property `%s'", get_full_name (), base_property.get_full_name ());
+								context.report.log_error (source_reference, "`%s' does not implement abstract property `%s'", get_full_name (), base_property.get_full_name ());
 							}
 						}
 					}

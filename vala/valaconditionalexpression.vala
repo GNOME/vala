@@ -146,7 +146,7 @@ public class Vala.ConditionalExpression : Expression {
 		checked = true;
 
 		if (!(context.analyzer.current_symbol is Block)) {
-			Report.error (source_reference, "Conditional expressions may only be used in blocks");
+			context.report.log_error (source_reference, "Conditional expressions may only be used in blocks");
 			error = true;
 			return false;
 		}
@@ -195,7 +195,7 @@ public class Vala.ConditionalExpression : Expression {
 		} else {
 			error = true;
 			var source_reference = new SourceReference (true_expression.source_reference.file, true_expression.source_reference.begin, false_expression.source_reference.end);
-			Report.error (source_reference, "Cannot resolve target type from `%s' and `%s'", true_expression.value_type.to_prototype_string (), false_expression.value_type.to_prototype_string ());
+			context.report.log_error (source_reference, "Cannot resolve target type from `%s' and `%s'", true_expression.value_type.to_prototype_string (), false_expression.value_type.to_prototype_string ());
 			return false;
 		}
 

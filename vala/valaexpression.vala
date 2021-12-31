@@ -159,14 +159,14 @@ public abstract class Vala.Expression : CodeNode {
 		}
 
 		if (inner.value_type == null) {
-			Report.error (inner.source_reference, "invalid inner expression");
+			context.report.log_error (inner.source_reference, "invalid inner expression");
 			return false;
 		}
 
 		// declare the inner expression as a local variable to check for null
 		var inner_type = inner.value_type.copy ();
 		if (context.experimental_non_null && !inner_type.nullable) {
-			Report.warning (inner.source_reference, "inner expression is never null");
+			context.report.log_warning (inner.source_reference, "inner expression is never null");
 			// make it nullable, otherwise the null check will not compile in non-null mode
 			inner_type.nullable = true;
 		}
@@ -211,7 +211,7 @@ public abstract class Vala.Expression : CodeNode {
 		}
 
 		if (non_null_expr.value_type == null) {
-			Report.error (source_reference, "invalid null-safe expression");
+			context.report.log_error (source_reference, "invalid null-safe expression");
 			error = true;
 			return false;
 		}
@@ -243,7 +243,7 @@ public abstract class Vala.Expression : CodeNode {
 			unowned Block? parent_block = parent_stmt != null ? parent_stmt.parent_node as Block : null;
 
 			if (parent_stmt == null || parent_block == null) {
-				Report.error (source_reference, "void method call not allowed here");
+				context.report.log_error (source_reference, "void method call not allowed here");
 				error = true;
 				return false;
 			}
@@ -290,7 +290,7 @@ public abstract class Vala.Expression : CodeNode {
 					// ownership can be transferred transitively
 					result_access.lvalue = true;
 				} else {
-					Report.error (source_reference, "null-safe expression not supported as lvalue");
+					context.report.log_error (source_reference, "null-safe expression not supported as lvalue");
 					error = true;
 					return false;
 				}

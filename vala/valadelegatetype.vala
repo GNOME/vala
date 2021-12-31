@@ -91,7 +91,7 @@ public class Vala.DelegateType : CallableType {
 
 	public override bool check (CodeContext context) {
 		if (is_called_once && !value_owned) {
-			Report.warning (source_reference, "delegates with scope=\"async\" must be owned");
+			context.report.log_warning (source_reference, "delegates with scope=\"async\" must be owned");
 		}
 
 		if (!delegate_symbol.check (context)) {

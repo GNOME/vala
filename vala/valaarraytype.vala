@@ -284,7 +284,7 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override bool check (CodeContext context) {
 		if (invalid_syntax) {
-			Report.error (source_reference, "syntax error, no expression allowed between array brackets");
+			context.report.log_error (source_reference, "syntax error, no expression allowed between array brackets");
 			error = true;
 			return false;
 		}
@@ -295,20 +295,20 @@ public class Vala.ArrayType : ReferenceType {
 			if (length.value_type == null || !(length.value_type is IntegerType || length.value_type is EnumValueType)
 			    || !length.is_constant ()) {
 				error = true;
-				Report.error (length.source_reference, "Expression of constant integer type expected");
+				context.report.log_error (length.source_reference, "Expression of constant integer type expected");
 				return false;
 			}
 		}
 
 		if (element_type is ArrayType) {
 			error = true;
-			Report.error (source_reference, "Stacked arrays are not supported");
+			context.report.log_error (source_reference, "Stacked arrays are not supported");
 			return false;
 		} else if (element_type is DelegateType) {
 			var delegate_type = (DelegateType) element_type;
 			if (delegate_type.delegate_symbol.has_target) {
 				error = true;
-				Report.error (source_reference, "Delegates with target are not supported as array element type");
+				context.report.log_error (source_reference, "Delegates with target are not supported as array element type");
 				return false;
 			}
 		}
@@ -320,7 +320,7 @@ public class Vala.ArrayType : ReferenceType {
 			length_type.check (context);
 			if (!(length_type is IntegerType) || length_type.nullable) {
 				error = true;
-				Report.error (length_type.source_reference, "Expected integer type as length type of array");
+				context.report.log_error (length_type.source_reference, "Expected integer type as length type of array");
 				return false;
 			}
 		}

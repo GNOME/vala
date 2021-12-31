@@ -152,13 +152,13 @@ public class Vala.UnaryExpression : Expression {
 			return false;
 		} else if (inner.value_type == null) {
 			error = true;
-			Report.error (inner.source_reference, "Invalid inner operand");
+			context.report.log_error (inner.source_reference, "Invalid inner operand");
 			return false;
 		}
 
 		if (inner.value_type is FieldPrototype || inner.value_type is PropertyPrototype) {
 			error = true;
-			Report.error (inner.source_reference, "Access to instance member `%s' denied", inner.symbol_reference.get_full_name ());
+			context.report.log_error (inner.source_reference, "Access to instance member `%s' denied", inner.symbol_reference.get_full_name ());
 			return false;
 		}
 
@@ -168,7 +168,7 @@ public class Vala.UnaryExpression : Expression {
 			// integer or floating point type
 			if (!is_numeric_type (inner.value_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
+				context.report.log_error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
 				return false;
 			}
 
@@ -178,7 +178,7 @@ public class Vala.UnaryExpression : Expression {
 			// boolean type
 			if (inner.value_type.nullable || !inner.value_type.compatible (context.analyzer.bool_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
+				context.report.log_error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
 				return false;
 			}
 
@@ -188,7 +188,7 @@ public class Vala.UnaryExpression : Expression {
 			// integer type
 			if (!is_integer_type (inner.value_type) && !(inner.value_type is EnumValueType)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
+				context.report.log_error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
 				return false;
 			}
 
@@ -199,13 +199,13 @@ public class Vala.UnaryExpression : Expression {
 			// integer type
 			if (!is_integer_type (inner.value_type)) {
 				error = true;
-				Report.error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
+				context.report.log_error (source_reference, "Operator not supported for `%s'", inner.value_type.to_string ());
 				return false;
 			}
 
 			if (!(inner is MemberAccess)) {
 				error = true;
-				Report.error (source_reference, "Prefix operators not supported for this expression");
+				context.report.log_error (source_reference, "Prefix operators not supported for this expression");
 				return false;
 			}
 
@@ -221,18 +221,18 @@ public class Vala.UnaryExpression : Expression {
 				value_type = inner.value_type;
 			} else {
 				error = true;
-				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");
+				context.report.log_error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");
 				return false;
 			}
 			if (inner.symbol_reference != null && inner.symbol_reference.get_attribute ("GtkChild") != null) {
 				error = true;
-				Report.error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", inner.symbol_reference.get_full_name ());
+				context.report.log_error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", inner.symbol_reference.get_full_name ());
 				return false;
 			}
 			break;
 		default:
 			error = true;
-			Report.error (source_reference, "internal error: unsupported unary operator");
+			context.report.log_error (source_reference, "internal error: unsupported unary operator");
 			return false;
 		}
 

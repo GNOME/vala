@@ -417,7 +417,7 @@ public class Vala.Property : Symbol, Lockable {
 		    && ((ObjectTypeSymbol) parent_symbol).is_subtype_of (context.analyzer.object_type)) {
 			if (!is_valid_name (name)) {
 				error = true;
-				Report.error (source_reference, "Name `%s' is not valid for a GLib.Object property", name);
+				context.report.log_error (source_reference, "Name `%s' is not valid for a GLib.Object property", name);
 			}
 		}
 
@@ -429,12 +429,12 @@ public class Vala.Property : Symbol, Lockable {
 			var cl = (Class) parent_symbol;
 			if (cl.is_compact && cl.base_class != null) {
 				error = true;
-				Report.error (source_reference, "Abstract and virtual properties may not be declared in derived compact classes");
+				context.report.log_error (source_reference, "Abstract and virtual properties may not be declared in derived compact classes");
 				return false;
 			}
 			if (cl.is_opaque) {
 				error = true;
-				Report.error (source_reference, "Abstract and virtual properties may not be declared in opaque compact classes");
+				context.report.log_error (source_reference, "Abstract and virtual properties may not be declared in opaque compact classes");
 				return false;
 			}
 		}
@@ -444,30 +444,30 @@ public class Vala.Property : Symbol, Lockable {
 				var cl = (Class) parent_symbol;
 				if (!cl.is_abstract) {
 					error = true;
-					Report.error (source_reference, "Abstract properties may not be declared in non-abstract classes");
+					context.report.log_error (source_reference, "Abstract properties may not be declared in non-abstract classes");
 					return false;
 				}
 			} else if (!(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Abstract properties may not be declared outside of classes and interfaces");
+				context.report.log_error (source_reference, "Abstract properties may not be declared outside of classes and interfaces");
 				return false;
 			}
 		} else if (is_virtual) {
 			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Virtual properties may not be declared outside of classes and interfaces");
+				context.report.log_error (source_reference, "Virtual properties may not be declared outside of classes and interfaces");
 				return false;
 			}
 		} else if (overrides) {
 			if (!(parent_symbol is Class)) {
 				error = true;
-				Report.error (source_reference, "Properties may not be overridden outside of classes");
+				context.report.log_error (source_reference, "Properties may not be overridden outside of classes");
 				return false;
 			}
 		} else if (access == SymbolAccessibility.PROTECTED) {
 			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
 				error = true;
-				Report.error (source_reference, "Protected properties may not be declared outside of classes and interfaces");
+				context.report.log_error (source_reference, "Protected properties may not be declared outside of classes and interfaces");
 				return false;
 			}
 		}
@@ -482,7 +482,7 @@ public class Vala.Property : Symbol, Lockable {
 
 		if (property_type is VoidType) {
 			error = true;
-			Report.error (source_reference, "'void' not supported as property type");
+			context.report.log_error (source_reference, "'void' not supported as property type");
 			return false;
 		}
 
@@ -497,7 +497,7 @@ public class Vala.Property : Symbol, Lockable {
 
 		if (get_accessor == null && set_accessor == null) {
 			error = true;
-			Report.error (source_reference, "Property `%s' must have a `get' accessor and/or a `set' mutator", get_full_name ());
+			context.report.log_error (source_reference, "Property `%s' must have a `get' accessor and/or a `set' mutator", get_full_name ());
 			return false;
 		}
 
@@ -512,7 +512,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		if (initializer != null && field == null && !is_abstract) {
-			Report.error (source_reference, "Property `%s' with custom `get' accessor and/or `set' mutator cannot have `default' value", get_full_name ());
+			context.report.log_error (source_reference, "Property `%s' with custom `get' accessor and/or `set' mutator cannot have `default' value", get_full_name ());
 		}
 
 		if (initializer != null) {
@@ -522,11 +522,11 @@ public class Vala.Property : Symbol, Lockable {
 		// check whether property type is at least as accessible as the property
 		if (!property_type.is_accessible (this)) {
 			error = true;
-			Report.error (source_reference, "property type `%s' is less accessible than property `%s'", property_type.to_string (), get_full_name ());
+			context.report.log_error (source_reference, "property type `%s' is less accessible than property `%s'", property_type.to_string (), get_full_name ());
 		}
 
 		if (overrides && base_property == null && base_interface_property == null) {
-			Report.error (source_reference, "%s: no suitable property found to override", get_full_name ());
+			context.report.log_error (source_reference, "%s: no suitable property found to override", get_full_name ());
 		}
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
@@ -537,13 +537,13 @@ public class Vala.Property : Symbol, Lockable {
 		if (set_accessor != null && set_accessor.construction) {
 			if (access != SymbolAccessibility.PUBLIC) {
 				error = true;
-				Report.error (source_reference, "%s: construct properties must be public", get_full_name ());
+				context.report.log_error (source_reference, "%s: construct properties must be public", get_full_name ());
 			}
 		}
 
 		if (initializer != null && !initializer.error && initializer.value_type != null && !(initializer.value_type.compatible (property_type))) {
 			error = true;
-			Report.error (initializer.source_reference, "Expected initializer of type `%s' but got `%s'", property_type.to_string (), initializer.value_type.to_string ());
+			context.report.log_error (initializer.source_reference, "Expected initializer of type `%s' but got `%s'", property_type.to_string (), initializer.value_type.to_string ());
 		}
 
 		context.analyzer.current_source_file = old_source_file;

@@ -175,7 +175,7 @@ public class Vala.PropertyAccessor : Subroutine {
 						// Hopefully good as is
 					} else if (!value_type.value_owned && source_reference.file.file_type == SourceFileType.SOURCE) {
 						error = true;
-						Report.error (source_reference, "unowned return value for getter of property `%s' not supported without accessor", prop.get_full_name ());
+						context.report.log_error (source_reference, "unowned return value for getter of property `%s' not supported without accessor", prop.get_full_name ());
 					}
 				} else if (value_type.value_owned && (source_reference == null || source_reference.file == null)) {
 					if (value_type is DelegateType || value_type is PointerType || (value_type is ValueType && !value_type.nullable)) {
@@ -207,17 +207,17 @@ public class Vala.PropertyAccessor : Subroutine {
 
 		if ((prop.is_abstract || prop.is_virtual || prop.overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
-			Report.error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override", prop.get_full_name ());
+			context.report.log_error (source_reference, "Property `%s' with private accessor cannot be marked as abstract, virtual or override", prop.get_full_name ());
 			return false;
 		}
 
 		if (context.profile == Profile.POSIX && construction) {
 			error = true;
-			Report.error (source_reference, "`construct' is not supported in POSIX profile");
+			context.report.log_error (source_reference, "`construct' is not supported in POSIX profile");
 			return false;
 		} else if (construction && !((TypeSymbol) prop.parent_symbol).is_subtype_of (context.analyzer.object_type)) {
 			error = true;
-			Report.error (source_reference, "construct properties require `GLib.Object'");
+			context.report.log_error (source_reference, "construct properties require `GLib.Object'");
 			return false;
 		} else if (construction && !context.analyzer.is_gobject_property (prop)) {
 			//TODO Report an error for external property too
@@ -225,14 +225,14 @@ public class Vala.PropertyAccessor : Subroutine {
 				Report.warning (source_reference, "construct properties not supported for specified property type");
 			} else {
 				error = true;
-				Report.error (source_reference, "construct properties not supported for specified property type");
+				context.report.log_error (source_reference, "construct properties not supported for specified property type");
 				return false;
 			}
 		}
 
 		if (body != null && prop.is_abstract) {
 			error = true;
-			Report.error (source_reference, "Accessor of abstract property `%s' cannot have body", prop.get_full_name ());
+			context.report.log_error (source_reference, "Accessor of abstract property `%s' cannot have body", prop.get_full_name ());
 			return false;
 		}
 

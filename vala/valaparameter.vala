@@ -143,7 +143,7 @@ public class Vala.Parameter : Variable {
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
 				error = true;
-				Report.error (source_reference, "'void' not supported as parameter type");
+				context.report.log_error (source_reference, "'void' not supported as parameter type");
 				return false;
 			}
 			variable_type.check (context);
@@ -155,11 +155,11 @@ public class Vala.Parameter : Variable {
 			if (params_array) {
 				if (!(variable_type is ArrayType)) {
 					error = true;
-					Report.error (source_reference, "parameter array expected");
+					context.report.log_error (source_reference, "parameter array expected");
 					return false;
 				} else if (((ArrayType) variable_type).rank != 1) {
 					error = true;
-					Report.error (source_reference, "multi-dimensional parameter array not allowed");
+					context.report.log_error (source_reference, "multi-dimensional parameter array not allowed");
 					return false;
 				}
 			}
@@ -181,7 +181,7 @@ public class Vala.Parameter : Variable {
 			if (variable_array_type != null && variable_array_type.inline_allocated
 				&& !variable_array_type.fixed_length) {
 				error = true;
-				Report.error (source_reference, "Inline allocated array as parameter requires to have fixed length");
+				context.report.log_error (source_reference, "Inline allocated array as parameter requires to have fixed length");
 			}
 		}
 
@@ -192,16 +192,16 @@ public class Vala.Parameter : Variable {
 				Report.warning (source_reference, "`null' incompatible with parameter type `%s'", variable_type.to_string ());
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
 				error = true;
-				Report.error (source_reference, "only `null' is allowed as default value for out parameters");
+				context.report.log_error (source_reference, "only `null' is allowed as default value for out parameters");
 			} else if (direction == ParameterDirection.IN && !initializer.value_type.compatible (variable_type)) {
 				error = true;
-				Report.error (initializer.source_reference, "Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
+				context.report.log_error (initializer.source_reference, "Cannot convert from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 			} else if (direction == ParameterDirection.REF) {
 				error = true;
-				Report.error (source_reference, "default value not allowed for ref parameter");
+				context.report.log_error (source_reference, "default value not allowed for ref parameter");
 			} else if (!initializer.is_accessible (this)) {
 				error = true;
-				Report.error (initializer.source_reference, "default value is less accessible than method `%s'", parent_symbol.get_full_name ());
+				context.report.log_error (initializer.source_reference, "default value is less accessible than method `%s'", parent_symbol.get_full_name ());
 			}
 		}
 
@@ -218,7 +218,7 @@ public class Vala.Parameter : Variable {
 			// check whether parameter type is at least as accessible as the method
 			if (!variable_type.is_accessible (this)) {
 				error = true;
-				Report.error (source_reference, "parameter type `%s' is less accessible than method `%s'", variable_type.to_string (), parent_symbol.get_full_name ());
+				context.report.log_error (source_reference, "parameter type `%s' is less accessible than method `%s'", variable_type.to_string (), parent_symbol.get_full_name ());
 			}
 		}
 

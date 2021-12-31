@@ -99,7 +99,7 @@ public class Vala.WithStatement : Block {
 
 		if (!is_object_or_value_type (expression.value_type)) {
 			error = true;
-			Report.error (expression.source_reference, "with statement expects an object or basic type");
+			context.report.log_error (expression.source_reference, "with statement expects an object or basic type");
 			return false;
 		}
 

@@ -85,21 +85,21 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		if (context.analyzer.current_return_type == null) {
 			error = true;
-			Report.error (source_reference, "Return not allowed in this context");
+			context.report.log_error (source_reference, "Return not allowed in this context");
 			return false;
 		}
 
 		if (return_expression == null) {
 			if (!(context.analyzer.current_return_type is VoidType)) {
 				error = true;
-				Report.error (source_reference, "Return without value in non-void function");
+				context.report.log_error (source_reference, "Return without value in non-void function");
 			}
 			return !error;
 		}
 
 		if (context.analyzer.current_return_type is VoidType) {
 			error = true;
-			Report.error (source_reference, "Return with value in void function");
+			context.report.log_error (source_reference, "Return with value in void function");
 			return false;
 		}
 
@@ -113,20 +113,20 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 
 		if (return_expression.value_type == null) {
 			error = true;
-			Report.error (source_reference, "Invalid expression in return value");
+			context.report.log_error (source_reference, "Invalid expression in return value");
 			return false;
 		}
 
 		if (!return_expression.value_type.compatible (context.analyzer.current_return_type)) {
 			error = true;
-			Report.error (source_reference, "Return: Cannot convert from `%s' to `%s'", return_expression.value_type.to_string (), context.analyzer.current_return_type.to_string ());
+			context.report.log_error (source_reference, "Return: Cannot convert from `%s' to `%s'", return_expression.value_type.to_string (), context.analyzer.current_return_type.to_string ());
 			return false;
 		}
 
 		if (return_expression.value_type.is_disposable () &&
 		    !context.analyzer.current_return_type.value_owned) {
 			error = true;
-			Report.error (source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
+			context.report.log_error (source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
 			return false;
 		}
 
@@ -134,7 +134,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		if (local != null && local.variable_type.is_disposable () &&
 		    !context.analyzer.current_return_type.value_owned) {
 			error = true;
-			Report.error (source_reference, "Local variable with strong reference used as return value and method return type has not been declared to transfer ownership");
+			context.report.log_error (source_reference, "Local variable with strong reference used as return value and method return type has not been declared to transfer ownership");
 			return false;
 		}
 

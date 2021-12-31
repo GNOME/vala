@@ -683,7 +683,7 @@ public abstract class Vala.DataType : CodeNode {
 		} else if (type_symbol is Delegate) {
 			expected_n_type_args = ((Delegate) type_symbol).get_type_parameters ().size;
 		} else if (n_type_args > 0) {
-			Report.error (source_reference, "`%s' does not support type arguments", type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "`%s' does not support type arguments", type_symbol.get_full_name ());
 			error = true;
 			return false;
 		} else {
@@ -693,11 +693,11 @@ public abstract class Vala.DataType : CodeNode {
 
 		if ((!allow_none || n_type_args > 0) && n_type_args < expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "too few type arguments for `%s'", type_symbol.get_full_name ());
 			return false;
 		} else if ((!allow_none || n_type_args > 0) && n_type_args > expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.get_full_name ());
+			context.report.log_error (source_reference, "too many type arguments for `%s'", type_symbol.get_full_name ());
 			return false;
 		}
 

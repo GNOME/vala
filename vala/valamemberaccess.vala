@@ -247,7 +247,7 @@ public class Vala.MemberAccess : Expression {
 			if (member_name == "this") {
 				if (!context.analyzer.is_in_instance_method ()) {
 					error = true;
-					Report.error (source_reference, "This access invalid outside of instance methods");
+					context.report.log_error (source_reference, "This access invalid outside of instance methods");
 					return false;
 				}
 			}
@@ -351,7 +351,7 @@ public class Vala.MemberAccess : Expression {
 					if (local_sym != null) {
 						if (symbol_reference != null && symbol_reference != local_sym) {
 							error = true;
-							Report.error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'", member_name, symbol_reference.get_full_name (), local_sym.get_full_name ());
+							context.report.log_error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'", member_name, symbol_reference.get_full_name (), local_sym.get_full_name ());
 							return false;
 						}
 
@@ -394,7 +394,7 @@ public class Vala.MemberAccess : Expression {
 				unowned MemberAccess ma = (MemberAccess) inner;
 				if (ma.prototype_access) {
 					error = true;
-					Report.error (source_reference, "Access to instance member `%s' denied", inner.symbol_reference.get_full_name ());
+					context.report.log_error (source_reference, "Access to instance member `%s' denied", inner.symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -490,9 +490,9 @@ public class Vala.MemberAccess : Expression {
 							if (arg == null || !arg.check (context) || !(arg.symbol_reference is Method)) {
 								error = true;
 								if (s.handler is LambdaExpression) {
-									Report.error (s.handler.source_reference, "Lambdas are not allowed for dynamic signals");
+									context.report.log_error (s.handler.source_reference, "Lambdas are not allowed for dynamic signals");
 								} else {
-									Report.error (s.handler.source_reference, "Cannot infer call signature for dynamic signal `%s' from given expression", s.get_full_name ());
+									context.report.log_error (s.handler.source_reference, "Cannot infer call signature for dynamic signal `%s' from given expression", s.get_full_name ());
 								}
 							}
 						}
@@ -501,7 +501,7 @@ public class Vala.MemberAccess : Expression {
 						symbol_reference = s;
 					} else if (ma.member_name == "disconnect") {
 						error = true;
-						Report.error (ma.source_reference, "Use SignalHandler.disconnect() to disconnect from dynamic signal");
+						context.report.log_error (ma.source_reference, "Use SignalHandler.disconnect() to disconnect from dynamic signal");
 					}
 				}
 				if (symbol_reference == null) {
@@ -530,15 +530,15 @@ public class Vala.MemberAccess : Expression {
 					// require the real type with its original value_owned attritubte
 					var inner_type = context.analyzer.get_value_type_for_symbol (inner.symbol_reference, true) as ArrayType;
 					if (inner_type != null && inner_type.inline_allocated) {
-						Report.error (source_reference, "`resize' is not supported for arrays with fixed length");
+						context.report.log_error (source_reference, "`resize' is not supported for arrays with fixed length");
 						error = true;
 					} else if (inner_type != null && !inner_type.value_owned) {
-						Report.error (source_reference, "`resize' is not allowed for unowned array references");
+						context.report.log_error (source_reference, "`resize' is not allowed for unowned array references");
 						error = true;
 					}
 				} else if (inner.symbol_reference is Constant) {
 					// disallow resize() for const array
-					Report.error (source_reference, "`resize' is not allowed for constant arrays");
+					context.report.log_error (source_reference, "`resize' is not allowed for constant arrays");
 					error = true;
 				}
 			}
@@ -581,7 +581,7 @@ public class Vala.MemberAccess : Expression {
 				visited_types_string += " or `%s'".printf (type.to_string ());
 			}
 
-			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s", member_name, base_type_name, base_type_package, visited_types_string);
+			context.report.log_error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s", member_name, base_type_name, base_type_package, visited_types_string);
 			value_type = new InvalidType ();
 			return false;
 		} else if (symbol_reference.error) {
@@ -606,7 +606,7 @@ public class Vala.MemberAccess : Expression {
 					symbol_reference = sig.emitter;
 				} else {
 					error = true;
-					Report.error (source_reference, "Signal `%s' requires emitter in this context", symbol_reference.get_full_name ());
+					context.report.log_error (source_reference, "Signal `%s' requires emitter in this context", symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -645,7 +645,7 @@ public class Vala.MemberAccess : Expression {
 
 				if (local.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 					error = true;
-					Report.error (source_reference, "Capturing `va_list' variable `%s' is not allowed", local.get_full_name ());
+					context.report.log_error (source_reference, "Capturing `va_list' variable `%s' is not allowed", local.get_full_name ());
 				}
 			}
 		} else if (member is Parameter) {
@@ -668,11 +668,11 @@ public class Vala.MemberAccess : Expression {
 
 				if (param.direction != ParameterDirection.IN) {
 					error = true;
-					Report.error (source_reference, "Cannot capture reference or output parameter `%s'", param.get_full_name ());
+					context.report.log_error (source_reference, "Cannot capture reference or output parameter `%s'", param.get_full_name ());
 				}
 				if (param.variable_type.type_symbol == context.analyzer.va_list_type.type_symbol) {
 					error = true;
-					Report.error (source_reference, "Capturing `va_list' parameter `%s' is not allowed", param.get_full_name ());
+					context.report.log_error (source_reference, "Capturing `va_list' parameter `%s' is not allowed", param.get_full_name ());
 				}
 			} else {
 				unowned PropertyAccessor? acc = param.parent_symbol.parent_symbol as PropertyAccessor;
@@ -710,7 +710,7 @@ public class Vala.MemberAccess : Expression {
 			unowned Block? block = c.parent_symbol as Block;
 			if (block != null && SemanticAnalyzer.find_parent_method_or_property_accessor (block) != context.analyzer.current_method_or_property_accessor) {
 				error = true;
-				Report.error (source_reference, "internal error: accessing local constants of outer methods is not supported yet");
+				context.report.log_error (source_reference, "internal error: accessing local constants of outer methods is not supported yet");
 				return false;
 			}
 		} else if (member is Method) {
@@ -732,7 +732,7 @@ public class Vala.MemberAccess : Expression {
 				}
 				if (!is_valid_access) {
 					error = true;
-					Report.error (source_reference, "Access to async callback `%s' not allowed in this context", m.get_full_name ());
+					context.report.log_error (source_reference, "Access to async callback `%s' not allowed in this context", m.get_full_name ());
 					return false;
 				}
 
@@ -818,22 +818,22 @@ public class Vala.MemberAccess : Expression {
 			if (lvalue) {
 				if (prop.set_accessor == null) {
 					error = true;
-					Report.error (source_reference, "Property `%s' is read-only", prop.get_full_name ());
+					context.report.log_error (source_reference, "Property `%s' is read-only", prop.get_full_name ());
 					return false;
 				} else if (!prop.set_accessor.writable && prop.set_accessor.construction) {
 					if (context.analyzer.find_current_method () is CreationMethod) {
 						error = true;
-						Report.error (source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
+						context.report.log_error (source_reference, "Cannot assign to construct-only properties, use Object (property: value) constructor chain up");
 						return false;
 					} else if (context.analyzer.is_in_constructor ()) {
 						if (!context.analyzer.current_type_symbol.is_subtype_of ((TypeSymbol) prop.parent_symbol)) {
 							error = true;
-							Report.error (source_reference, "Cannot assign to construct-only property `%s' in `construct' of `%s'", prop.get_full_name (), context.analyzer.current_type_symbol.get_full_name ());
+							context.report.log_error (source_reference, "Cannot assign to construct-only property `%s' in `construct' of `%s'", prop.get_full_name (), context.analyzer.current_type_symbol.get_full_name ());
 							return false;
 						}
 					} else {
 						error = true;
-						Report.error (source_reference, "Cannot assign to construct-only property in this context");
+						context.report.log_error (source_reference, "Cannot assign to construct-only property in this context");
 						return false;
 					}
 				}
@@ -846,7 +846,7 @@ public class Vala.MemberAccess : Expression {
 			} else {
 				if (prop.get_accessor == null) {
 					error = true;
-					Report.error (source_reference, "Property `%s' is write-only", prop.get_full_name ());
+					context.report.log_error (source_reference, "Property `%s' is write-only", prop.get_full_name ());
 					return false;
 				}
 				if (prop.access == SymbolAccessibility.PUBLIC) {
@@ -905,7 +905,7 @@ public class Vala.MemberAccess : Expression {
 
 			if (!in_subtype) {
 				error = true;
-				Report.error (source_reference, "Access to protected member `%s' denied", member.get_full_name ());
+				context.report.log_error (source_reference, "Access to protected member `%s' denied", member.get_full_name ());
 				return false;
 			}
 		} else if (access == SymbolAccessibility.PRIVATE) {
@@ -921,7 +921,7 @@ public class Vala.MemberAccess : Expression {
 
 			if (!in_target_type) {
 				error = true;
-				Report.error (source_reference, "Access to private member `%s' denied", member.get_full_name ());
+				context.report.log_error (source_reference, "Access to private member `%s' denied", member.get_full_name ());
 				return false;
 			}
 		}
@@ -939,7 +939,7 @@ public class Vala.MemberAccess : Expression {
 			if (object_type != null && object_type.object_type_symbol.has_type_parameters ()
 			    && !instance_type.has_type_arguments ()) {
 				error = true;
-				Report.error (inner.source_reference, "missing generic type arguments");
+				context.report.log_error (inner.source_reference, "missing generic type arguments");
 				return false;
 			}
 		}
@@ -999,7 +999,7 @@ public class Vala.MemberAccess : Expression {
 			if (context.experimental_non_null && instance && inner.value_type.nullable &&
 			    !(inner.value_type is PointerType) && !(inner.value_type is GenericType) &&
 				!(inner.value_type is ArrayType)) {
-				Report.error (source_reference, "Access to instance member `%s' from nullable reference denied", symbol_reference.get_full_name ());
+				context.report.log_error (source_reference, "Access to instance member `%s' from nullable reference denied", symbol_reference.get_full_name ());
 			}
 
 			unowned Method? m = symbol_reference as Method;
@@ -1050,17 +1050,17 @@ public class Vala.MemberAccess : Expression {
 
 		if (symbol_reference is ArrayLengthField) {
 			if (inner.value_type is ArrayType && ((ArrayType) inner.value_type).rank > 1 && !(parent_node is ElementAccess)) {
-				Report.error (source_reference, "unsupported use of length field of multi-dimensional array");
+				context.report.log_error (source_reference, "unsupported use of length field of multi-dimensional array");
 				error = true;
 			}
 		} else if (symbol_reference is DelegateTargetField) {
 			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
-				Report.error (source_reference, "unsupported use of target field of delegate without target");
+				context.report.log_error (source_reference, "unsupported use of target field of delegate without target");
 				error = true;
 			}
 		} else if (symbol_reference is DelegateDestroyField) {
 			if (!((DelegateType) inner.value_type).delegate_symbol.has_target) {
-				Report.error (source_reference, "unsupported use of destroy field of delegate without target");
+				context.report.log_error (source_reference, "unsupported use of destroy field of delegate without target");
 				error = true;
 			}
 		}

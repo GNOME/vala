@@ -58,35 +58,35 @@ public class Vala.BaseAccess : Expression {
 
 		if (!context.analyzer.is_in_instance_method ()) {
 			error = true;
-			Report.error (source_reference, "Base access invalid outside of instance methods");
+			context.report.log_error (source_reference, "Base access invalid outside of instance methods");
 			return false;
 		}
 
 		if (context.analyzer.current_class == null) {
 			if (context.analyzer.current_struct == null) {
 				error = true;
-				Report.error (source_reference, "Base access invalid outside of class and struct");
+				context.report.log_error (source_reference, "Base access invalid outside of class and struct");
 				return false;
 			} else if (context.analyzer.current_struct.base_type == null) {
 				error = true;
-				Report.error (source_reference, "Base access invalid without base type");
+				context.report.log_error (source_reference, "Base access invalid without base type");
 				return false;
 			}
 			value_type = context.analyzer.current_struct.base_type;
 		} else if (context.analyzer.current_class.base_class == null) {
 			error = true;
-			Report.error (source_reference, "Base access invalid without base class");
+			context.report.log_error (source_reference, "Base access invalid without base class");
 			return false;
 		} else if (context.analyzer.current_class.is_compact && context.analyzer.current_method != null
 		    && !(context.analyzer.current_method is CreationMethod)
 		    && (context.analyzer.current_method.overrides || context.analyzer.current_method.is_virtual)) {
 			error = true;
-			Report.error (source_reference, "Base access invalid in virtual overridden method of compact class");
+			context.report.log_error (source_reference, "Base access invalid in virtual overridden method of compact class");
 			return false;
 		} else if (context.analyzer.current_class.is_compact && context.analyzer.current_property_accessor != null
 		    && (context.analyzer.current_property_accessor.prop.overrides || context.analyzer.current_property_accessor.prop.is_virtual)) {
 			error = true;
-			Report.error (source_reference, "Base access invalid in virtual overridden property of compact class");
+			context.report.log_error (source_reference, "Base access invalid in virtual overridden property of compact class");
 			return false;
 		} else {
 			foreach (var base_type in context.analyzer.current_class.get_base_types ()) {

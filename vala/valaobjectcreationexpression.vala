@@ -195,7 +195,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 		if (type_reference == null) {
 			if (member_name == null) {
 				error = true;
-				Report.error (source_reference, "Incomplete object creation expression");
+				context.report.log_error (source_reference, "Incomplete object creation expression");
 				return false;
 			}
 
@@ -215,7 +215,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				var constructor = (Method) constructor_sym;
 				if (!(constructor_sym is CreationMethod)) {
 					error = true;
-					Report.error (source_reference, "`%s' is not a creation method", constructor.get_full_name ());
+					context.report.log_error (source_reference, "`%s' is not a creation method", constructor.get_full_name ());
 					return false;
 				}
 
@@ -244,7 +244,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				symbol_reference = type_sym;
 			} else {
 				error = true;
-				Report.error (source_reference, "`%s' is not a class, struct, or error code", type_sym.get_full_name ());
+				context.report.log_error (source_reference, "`%s' is not a class, struct, or error code", type_sym.get_full_name ());
 				return false;
 			}
 
@@ -263,14 +263,14 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			if (struct_creation) {
 				error = true;
-				Report.error (source_reference, "syntax error, use `new' to create new objects");
+				context.report.log_error (source_reference, "syntax error, use `new' to create new objects");
 				return false;
 			}
 
 			if (cl.is_abstract) {
 				value_type = null;
 				error = true;
-				Report.error (source_reference, "Can't create instance of abstract class `%s'", cl.get_full_name ());
+				context.report.log_error (source_reference, "Can't create instance of abstract class `%s'", cl.get_full_name ());
 				return false;
 			}
 
@@ -279,7 +279,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 				if (symbol_reference == null) {
 					error = true;
-					Report.error (source_reference, "`%s' does not have a default constructor", cl.get_full_name ());
+					context.report.log_error (source_reference, "`%s' does not have a default constructor", cl.get_full_name ());
 					return false;
 				}
 
@@ -300,7 +300,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 				if (!in_target_type) {
 					error = true;
-					Report.error (source_reference, "Access to non-public constructor `%s' denied", symbol_reference.get_full_name ());
+					context.report.log_error (source_reference, "Access to non-public constructor `%s' denied", symbol_reference.get_full_name ());
 					return false;
 				}
 			}
@@ -327,7 +327,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			if (context.profile == Profile.GOBJECT && st.is_simple_type () && symbol_reference == null && object_initializer.size == 0) {
 				error = true;
-				Report.error (source_reference, "`%s' does not have a default constructor", st.get_full_name ());
+				context.report.log_error (source_reference, "`%s' does not have a default constructor", st.get_full_name ());
 				return false;
 			}
 		}
@@ -341,7 +341,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 		if (symbol_reference == null && argument_list.size != 0) {
 			value_type = null;
 			error = true;
-			Report.error (source_reference, "No arguments allowed when constructing type `%s'", type.get_full_name ());
+			context.report.log_error (source_reference, "No arguments allowed when constructing type `%s'", type.get_full_name ());
 			return false;
 		}
 
@@ -351,16 +351,16 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 			if (is_yield_expression) {
 				if (!m.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression requires async method");
+					context.report.log_error (source_reference, "yield expression requires async method");
 				}
 				if (context.analyzer.current_method == null || !context.analyzer.current_method.coroutine) {
 					error = true;
-					Report.error (source_reference, "yield expression not available outside async method");
+					context.report.log_error (source_reference, "yield expression not available outside async method");
 				}
 			} else if (m is CreationMethod) {
 				if (m.coroutine) {
 					error = true;
-					Report.error (source_reference, "missing `yield' before async creation expression");
+					context.report.log_error (source_reference, "missing `yield' before async creation expression");
 				}
 			}
 
@@ -457,14 +457,14 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			if (argument_list.size == 0) {
 				error = true;
-				Report.error (source_reference, "Too few arguments, errors need at least 1 argument");
+				context.report.log_error (source_reference, "Too few arguments, errors need at least 1 argument");
 			} else {
 				Iterator<Expression> arg_it = argument_list.iterator ();
 				arg_it.next ();
 				var ex = arg_it.get ();
 				if (ex.value_type == null || !ex.value_type.compatible (context.analyzer.string_type)) {
 					error = true;
-					Report.error (source_reference, "Invalid type for argument 1");
+					context.report.log_error (source_reference, "Invalid type for argument 1");
 				}
 
 				var format_literal = StringLiteral.get_format_literal (ex);
@@ -535,7 +535,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				// simple statements, no side effects after method call
 			} else if (!(context.analyzer.current_symbol is Block)) {
 				// can't handle errors in field initializers
-				Report.error (source_reference, "Field initializers must not throw errors");
+				context.report.log_error (source_reference, "Field initializers must not throw errors");
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;

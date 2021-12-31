@@ -79,7 +79,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 			error = true;
 			return false;
 		} else if (expression is Literal) {
-			Report.error (source_reference, "Literal expression not allowed as statement");
+			context.report.log_error (source_reference, "Literal expression not allowed as statement");
 			error = true;
 			return false;
 		}
