@@ -49,7 +49,7 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeDeclaration cdecl;
 		if (!plugin) {
 			cdecl = new CCodeDeclaration ("gsize");
-			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name + "__volatile", new CCodeConstant ("0")));
+			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name + "__once", new CCodeConstant ("0")));
 			if (context.require_glib_version (2, 68)) {
 				cdecl.modifiers = CCodeModifiers.STATIC;
 			} else {
@@ -251,16 +251,16 @@ public abstract class Vala.TypeRegisterFunction {
 		if (!plugin) {
 			// the condition that guards the type initialisation
 			var enter = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
-			enter.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
+			enter.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__once")));
 
 			var leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
-			leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__volatile")));
+			leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name + "__once")));
 			leave.add_argument (new CCodeIdentifier (type_id_name));
 			once_call_block.add_statement (new CCodeExpressionStatement (leave));
 
 			var cif = new CCodeIfStatement (enter, once_call_block);
 			type_block.add_statement (cif);
-			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name + "__volatile")));
+			type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name + "__once")));
 
 			type_once_block = type_init;
 			type_once_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));

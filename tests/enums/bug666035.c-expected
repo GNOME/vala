@@ -64,13 +64,13 @@ foo_enum_get_type_once (void)
 GType
 foo_enum_get_type (void)
 {
-	static volatile gsize foo_enum_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_enum_type_id__volatile)) {
+	static volatile gsize foo_enum_type_id__once = 0;
+	if (g_once_init_enter (&foo_enum_type_id__once)) {
 		GType foo_enum_type_id;
 		foo_enum_type_id = foo_enum_get_type_once ();
-		g_once_init_leave (&foo_enum_type_id__volatile, foo_enum_type_id);
+		g_once_init_leave (&foo_enum_type_id__once, foo_enum_type_id);
 	}
-	return foo_enum_type_id__volatile;
+	return foo_enum_type_id__once;
 }
 
 static GType
@@ -85,13 +85,13 @@ foo_flag_get_type_once (void)
 GType
 foo_flag_get_type (void)
 {
-	static volatile gsize foo_flag_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_flag_type_id__volatile)) {
+	static volatile gsize foo_flag_type_id__once = 0;
+	if (g_once_init_enter (&foo_flag_type_id__once)) {
 		GType foo_flag_type_id;
 		foo_flag_type_id = foo_flag_get_type_once ();
-		g_once_init_leave (&foo_flag_type_id__volatile, foo_flag_type_id);
+		g_once_init_leave (&foo_flag_type_id__once, foo_flag_type_id);
 	}
-	return foo_flag_type_id__volatile;
+	return foo_flag_type_id__once;
 }
 
 FooStruct*
@@ -120,13 +120,13 @@ foo_struct_get_type_once (void)
 GType
 foo_struct_get_type (void)
 {
-	static volatile gsize foo_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_struct_type_id__volatile)) {
+	static volatile gsize foo_struct_type_id__once = 0;
+	if (g_once_init_enter (&foo_struct_type_id__once)) {
 		GType foo_struct_type_id;
 		foo_struct_type_id = foo_struct_get_type_once ();
-		g_once_init_leave (&foo_struct_type_id__volatile, foo_struct_type_id);
+		g_once_init_leave (&foo_struct_type_id__once, foo_struct_type_id);
 	}
-	return foo_struct_type_id__volatile;
+	return foo_struct_type_id__once;
 }
 
 FooEnum

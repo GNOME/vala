@@ -305,13 +305,13 @@ testclass_get_type_once (void)
 GType
 testclass_get_type (void)
 {
-	static volatile gsize testclass_type_id__volatile = 0;
-	if (g_once_init_enter (&testclass_type_id__volatile)) {
+	static volatile gsize testclass_type_id__once = 0;
+	if (g_once_init_enter (&testclass_type_id__once)) {
 		GType testclass_type_id;
 		testclass_type_id = testclass_get_type_once ();
-		g_once_init_leave (&testclass_type_id__volatile, testclass_type_id);
+		g_once_init_leave (&testclass_type_id__once, testclass_type_id);
 	}
-	return testclass_type_id__volatile;
+	return testclass_type_id__once;
 }
 
 gpointer
@@ -389,12 +389,12 @@ test_struct_get_type_once (void)
 GType
 test_struct_get_type (void)
 {
-	static volatile gsize test_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&test_struct_type_id__volatile)) {
+	static volatile gsize test_struct_type_id__once = 0;
+	if (g_once_init_enter (&test_struct_type_id__once)) {
 		GType test_struct_type_id;
 		test_struct_type_id = test_struct_get_type_once ();
-		g_once_init_leave (&test_struct_type_id__volatile, test_struct_type_id);
+		g_once_init_leave (&test_struct_type_id__once, test_struct_type_id);
 	}
-	return test_struct_type_id__volatile;
+	return test_struct_type_id__once;
 }
 

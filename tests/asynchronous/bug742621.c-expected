@@ -172,13 +172,13 @@ xyzzy_get_type_once (void)
 GType
 xyzzy_get_type (void)
 {
-	static volatile gsize xyzzy_type_id__volatile = 0;
-	if (g_once_init_enter (&xyzzy_type_id__volatile)) {
+	static volatile gsize xyzzy_type_id__once = 0;
+	if (g_once_init_enter (&xyzzy_type_id__once)) {
 		GType xyzzy_type_id;
 		xyzzy_type_id = xyzzy_get_type_once ();
-		g_once_init_leave (&xyzzy_type_id__volatile, xyzzy_type_id);
+		g_once_init_leave (&xyzzy_type_id__once, xyzzy_type_id);
 	}
-	return xyzzy_type_id__volatile;
+	return xyzzy_type_id__once;
 }
 
 static void

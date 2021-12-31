@@ -235,13 +235,13 @@ foo_get_type_once (void)
 GType
 foo_get_type (void)
 {
-	static volatile gsize foo_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_type_id__volatile)) {
+	static volatile gsize foo_type_id__once = 0;
+	if (g_once_init_enter (&foo_type_id__once)) {
 		GType foo_type_id;
 		foo_type_id = foo_get_type_once ();
-		g_once_init_leave (&foo_type_id__volatile, foo_type_id);
+		g_once_init_leave (&foo_type_id__once, foo_type_id);
 	}
-	return foo_type_id__volatile;
+	return foo_type_id__once;
 }
 
 static void

@@ -499,7 +499,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (cl.is_singleton) {
 				var singleton_ref_name = "%s_singleton__ref".printf (get_ccode_name (cl));
 				var singleton_lock_name = "%s_singleton__lock".printf (get_ccode_name (cl));
-				var singleton_once_name = "%s_singleton__volatile".printf (get_ccode_name (cl));
+				var singleton_once_name = "%s_singleton__once".printf (get_ccode_name (cl));
 
 				var singleton_ref = new CCodeDeclaration("GObject *");
 				singleton_ref.add_declarator (new CCodeVariableDeclarator (singleton_ref_name, new CCodeConstant ("NULL")));

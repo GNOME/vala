@@ -212,13 +212,13 @@ foo_struct_get_type_once (void)
 GType
 foo_struct_get_type (void)
 {
-	static volatile gsize foo_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_struct_type_id__volatile)) {
+	static volatile gsize foo_struct_type_id__once = 0;
+	if (g_once_init_enter (&foo_struct_type_id__once)) {
 		GType foo_struct_type_id;
 		foo_struct_type_id = foo_struct_get_type_once ();
-		g_once_init_leave (&foo_struct_type_id__volatile, foo_struct_type_id);
+		g_once_init_leave (&foo_struct_type_id__once, foo_struct_type_id);
 	}
-	return foo_struct_type_id__volatile;
+	return foo_struct_type_id__once;
 }
 
 FooClass*
@@ -406,13 +406,13 @@ fooclass_get_type_once (void)
 GType
 fooclass_get_type (void)
 {
-	static volatile gsize fooclass_type_id__volatile = 0;
-	if (g_once_init_enter (&fooclass_type_id__volatile)) {
+	static volatile gsize fooclass_type_id__once = 0;
+	if (g_once_init_enter (&fooclass_type_id__once)) {
 		GType fooclass_type_id;
 		fooclass_type_id = fooclass_get_type_once ();
-		g_once_init_leave (&fooclass_type_id__volatile, fooclass_type_id);
+		g_once_init_leave (&fooclass_type_id__once, fooclass_type_id);
 	}
-	return fooclass_type_id__volatile;
+	return fooclass_type_id__once;
 }
 
 gpointer
@@ -777,13 +777,13 @@ bar_get_type_once (void)
 GType
 bar_get_type (void)
 {
-	static volatile gsize bar_type_id__volatile = 0;
-	if (g_once_init_enter (&bar_type_id__volatile)) {
+	static volatile gsize bar_type_id__once = 0;
+	if (g_once_init_enter (&bar_type_id__once)) {
 		GType bar_type_id;
 		bar_type_id = bar_get_type_once ();
-		g_once_init_leave (&bar_type_id__volatile, bar_type_id);
+		g_once_init_leave (&bar_type_id__once, bar_type_id);
 	}
-	return bar_type_id__volatile;
+	return bar_type_id__once;
 }
 
 gpointer

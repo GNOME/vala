@@ -124,13 +124,13 @@ manam_bar_foo_get_type_once (void)
 GType
 manam_bar_foo_get_type (void)
 {
-	static volatile gsize manam_bar_foo_type_id__volatile = 0;
-	if (g_once_init_enter (&manam_bar_foo_type_id__volatile)) {
+	static volatile gsize manam_bar_foo_type_id__once = 0;
+	if (g_once_init_enter (&manam_bar_foo_type_id__once)) {
 		GType manam_bar_foo_type_id;
 		manam_bar_foo_type_id = manam_bar_foo_get_type_once ();
-		g_once_init_leave (&manam_bar_foo_type_id__volatile, manam_bar_foo_type_id);
+		g_once_init_leave (&manam_bar_foo_type_id__once, manam_bar_foo_type_id);
 	}
-	return manam_bar_foo_type_id__volatile;
+	return manam_bar_foo_type_id__once;
 }
 
 ManamBaz*
@@ -193,13 +193,13 @@ manam_baz_faz_get_type_once (void)
 GType
 manam_baz_faz_get_type (void)
 {
-	static volatile gsize manam_baz_faz_type_id__volatile = 0;
-	if (g_once_init_enter (&manam_baz_faz_type_id__volatile)) {
+	static volatile gsize manam_baz_faz_type_id__once = 0;
+	if (g_once_init_enter (&manam_baz_faz_type_id__once)) {
 		GType manam_baz_faz_type_id;
 		manam_baz_faz_type_id = manam_baz_faz_get_type_once ();
-		g_once_init_leave (&manam_baz_faz_type_id__volatile, manam_baz_faz_type_id);
+		g_once_init_leave (&manam_baz_faz_type_id__once, manam_baz_faz_type_id);
 	}
-	return manam_baz_faz_type_id__volatile;
+	return manam_baz_faz_type_id__once;
 }
 
 static void
@@ -372,13 +372,13 @@ manam_baz_get_type_once (void)
 GType
 manam_baz_get_type (void)
 {
-	static volatile gsize manam_baz_type_id__volatile = 0;
-	if (g_once_init_enter (&manam_baz_type_id__volatile)) {
+	static volatile gsize manam_baz_type_id__once = 0;
+	if (g_once_init_enter (&manam_baz_type_id__once)) {
 		GType manam_baz_type_id;
 		manam_baz_type_id = manam_baz_get_type_once ();
-		g_once_init_leave (&manam_baz_type_id__volatile, manam_baz_type_id);
+		g_once_init_leave (&manam_baz_type_id__once, manam_baz_type_id);
 	}
-	return manam_baz_type_id__volatile;
+	return manam_baz_type_id__once;
 }
 
 gpointer

@@ -190,13 +190,13 @@ foo_enum_get_type_once (void)
 GType
 foo_enum_get_type (void)
 {
-	static volatile gsize foo_enum_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_enum_type_id__volatile)) {
+	static volatile gsize foo_enum_type_id__once = 0;
+	if (g_once_init_enter (&foo_enum_type_id__once)) {
 		GType foo_enum_type_id;
 		foo_enum_type_id = foo_enum_get_type_once ();
-		g_once_init_leave (&foo_enum_type_id__volatile, foo_enum_type_id);
+		g_once_init_leave (&foo_enum_type_id__once, foo_enum_type_id);
 	}
-	return foo_enum_type_id__volatile;
+	return foo_enum_type_id__once;
 }
 
 static GType
@@ -211,13 +211,13 @@ foo_flag_get_type_once (void)
 GType
 foo_flag_get_type (void)
 {
-	static volatile gsize foo_flag_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_flag_type_id__volatile)) {
+	static volatile gsize foo_flag_type_id__once = 0;
+	if (g_once_init_enter (&foo_flag_type_id__once)) {
 		GType foo_flag_type_id;
 		foo_flag_type_id = foo_flag_get_type_once ();
-		g_once_init_leave (&foo_flag_type_id__volatile, foo_flag_type_id);
+		g_once_init_leave (&foo_flag_type_id__once, foo_flag_type_id);
 	}
-	return foo_flag_type_id__volatile;
+	return foo_flag_type_id__once;
 }
 
 static inline gpointer
@@ -481,13 +481,13 @@ manam_get_type_once (void)
 GType
 manam_get_type (void)
 {
-	static volatile gsize manam_type_id__volatile = 0;
-	if (g_once_init_enter (&manam_type_id__volatile)) {
+	static volatile gsize manam_type_id__once = 0;
+	if (g_once_init_enter (&manam_type_id__once)) {
 		GType manam_type_id;
 		manam_type_id = manam_get_type_once ();
-		g_once_init_leave (&manam_type_id__volatile, manam_type_id);
+		g_once_init_leave (&manam_type_id__once, manam_type_id);
 	}
-	return manam_type_id__volatile;
+	return manam_type_id__once;
 }
 
 gpointer
@@ -661,13 +661,13 @@ minim_get_type_once (void)
 GType
 minim_get_type (void)
 {
-	static volatile gsize minim_type_id__volatile = 0;
-	if (g_once_init_enter (&minim_type_id__volatile)) {
+	static volatile gsize minim_type_id__once = 0;
+	if (g_once_init_enter (&minim_type_id__once)) {
 		GType minim_type_id;
 		minim_type_id = minim_get_type_once ();
-		g_once_init_leave (&minim_type_id__volatile, minim_type_id);
+		g_once_init_leave (&minim_type_id__once, minim_type_id);
 	}
-	return minim_type_id__volatile;
+	return minim_type_id__once;
 }
 
 static void

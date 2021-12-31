@@ -134,13 +134,13 @@ foo_get_type_once (void)
 GType
 foo_get_type (void)
 {
-	static volatile gsize foo_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_type_id__volatile)) {
+	static volatile gsize foo_type_id__once = 0;
+	if (g_once_init_enter (&foo_type_id__once)) {
 		GType foo_type_id;
 		foo_type_id = foo_get_type_once ();
-		g_once_init_leave (&foo_type_id__volatile, foo_type_id);
+		g_once_init_leave (&foo_type_id__once, foo_type_id);
 	}
-	return foo_type_id__volatile;
+	return foo_type_id__once;
 }
 
 AbstractBar*
@@ -326,13 +326,13 @@ abstract_bar_get_type_once (void)
 GType
 abstract_bar_get_type (void)
 {
-	static volatile gsize abstract_bar_type_id__volatile = 0;
-	if (g_once_init_enter (&abstract_bar_type_id__volatile)) {
+	static volatile gsize abstract_bar_type_id__once = 0;
+	if (g_once_init_enter (&abstract_bar_type_id__once)) {
 		GType abstract_bar_type_id;
 		abstract_bar_type_id = abstract_bar_get_type_once ();
-		g_once_init_leave (&abstract_bar_type_id__volatile, abstract_bar_type_id);
+		g_once_init_leave (&abstract_bar_type_id__once, abstract_bar_type_id);
 	}
-	return abstract_bar_type_id__volatile;
+	return abstract_bar_type_id__once;
 }
 
 gpointer
@@ -398,13 +398,13 @@ bar_get_type_once (void)
 GType
 bar_get_type (void)
 {
-	static volatile gsize bar_type_id__volatile = 0;
-	if (g_once_init_enter (&bar_type_id__volatile)) {
+	static volatile gsize bar_type_id__once = 0;
+	if (g_once_init_enter (&bar_type_id__once)) {
 		GType bar_type_id;
 		bar_type_id = bar_get_type_once ();
-		g_once_init_leave (&bar_type_id__volatile, bar_type_id);
+		g_once_init_leave (&bar_type_id__once, bar_type_id);
 	}
-	return bar_type_id__volatile;
+	return bar_type_id__once;
 }
 
 static void

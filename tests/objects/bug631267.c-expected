@@ -217,13 +217,13 @@ fobject_get_type_once (void)
 GType
 fobject_get_type (void)
 {
-	static volatile gsize fobject_type_id__volatile = 0;
-	if (g_once_init_enter (&fobject_type_id__volatile)) {
+	static volatile gsize fobject_type_id__once = 0;
+	if (g_once_init_enter (&fobject_type_id__once)) {
 		GType fobject_type_id;
 		fobject_type_id = fobject_get_type_once ();
-		g_once_init_leave (&fobject_type_id__volatile, fobject_type_id);
+		g_once_init_leave (&fobject_type_id__once, fobject_type_id);
 	}
-	return fobject_type_id__volatile;
+	return fobject_type_id__once;
 }
 
 FStruct*
@@ -252,13 +252,13 @@ fstruct_get_type_once (void)
 GType
 fstruct_get_type (void)
 {
-	static volatile gsize fstruct_type_id__volatile = 0;
-	if (g_once_init_enter (&fstruct_type_id__volatile)) {
+	static volatile gsize fstruct_type_id__once = 0;
+	if (g_once_init_enter (&fstruct_type_id__once)) {
 		GType fstruct_type_id;
 		fstruct_type_id = fstruct_get_type_once ();
-		g_once_init_leave (&fstruct_type_id__volatile, fstruct_type_id);
+		g_once_init_leave (&fstruct_type_id__once, fstruct_type_id);
 	}
-	return fstruct_type_id__volatile;
+	return fstruct_type_id__once;
 }
 
 static inline gpointer
@@ -539,13 +539,13 @@ foo_get_type_once (void)
 GType
 foo_get_type (void)
 {
-	static volatile gsize foo_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_type_id__volatile)) {
+	static volatile gsize foo_type_id__once = 0;
+	if (g_once_init_enter (&foo_type_id__once)) {
 		GType foo_type_id;
 		foo_type_id = foo_get_type_once ();
-		g_once_init_leave (&foo_type_id__volatile, foo_type_id);
+		g_once_init_leave (&foo_type_id__once, foo_type_id);
 	}
-	return foo_type_id__volatile;
+	return foo_type_id__once;
 }
 
 static void

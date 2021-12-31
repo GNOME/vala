@@ -120,13 +120,13 @@ maman_foo_get_type_once (void)
 GType
 maman_foo_get_type (void)
 {
-	static volatile gsize maman_foo_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_foo_type_id__volatile)) {
+	static volatile gsize maman_foo_type_id__once = 0;
+	if (g_once_init_enter (&maman_foo_type_id__once)) {
 		GType maman_foo_type_id;
 		maman_foo_type_id = maman_foo_get_type_once ();
-		g_once_init_leave (&maman_foo_type_id__volatile, maman_foo_type_id);
+		g_once_init_leave (&maman_foo_type_id__once, maman_foo_type_id);
 	}
-	return maman_foo_type_id__volatile;
+	return maman_foo_type_id__once;
 }
 
 static Block1Data*

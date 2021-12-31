@@ -187,13 +187,13 @@ foo_struct_get_type_once (void)
 GType
 foo_struct_get_type (void)
 {
-	static volatile gsize foo_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_struct_type_id__volatile)) {
+	static volatile gsize foo_struct_type_id__once = 0;
+	if (g_once_init_enter (&foo_struct_type_id__once)) {
 		GType foo_struct_type_id;
 		foo_struct_type_id = foo_struct_get_type_once ();
-		g_once_init_leave (&foo_struct_type_id__volatile, foo_struct_type_id);
+		g_once_init_leave (&foo_struct_type_id__once, foo_struct_type_id);
 	}
-	return foo_struct_type_id__volatile;
+	return foo_struct_type_id__once;
 }
 
 void
@@ -326,13 +326,13 @@ fooclass_get_type_once (void)
 GType
 fooclass_get_type (void)
 {
-	static volatile gsize fooclass_type_id__volatile = 0;
-	if (g_once_init_enter (&fooclass_type_id__volatile)) {
+	static volatile gsize fooclass_type_id__once = 0;
+	if (g_once_init_enter (&fooclass_type_id__once)) {
 		GType fooclass_type_id;
 		fooclass_type_id = fooclass_get_type_once ();
-		g_once_init_leave (&fooclass_type_id__volatile, fooclass_type_id);
+		g_once_init_leave (&fooclass_type_id__once, fooclass_type_id);
 	}
-	return fooclass_type_id__volatile;
+	return fooclass_type_id__once;
 }
 
 static void
@@ -438,13 +438,13 @@ afoo_get_type_once (void)
 GType
 afoo_get_type (void)
 {
-	static volatile gsize afoo_type_id__volatile = 0;
-	if (g_once_init_enter (&afoo_type_id__volatile)) {
+	static volatile gsize afoo_type_id__once = 0;
+	if (g_once_init_enter (&afoo_type_id__once)) {
 		GType afoo_type_id;
 		afoo_type_id = afoo_get_type_once ();
-		g_once_init_leave (&afoo_type_id__volatile, afoo_type_id);
+		g_once_init_leave (&afoo_type_id__once, afoo_type_id);
 	}
-	return afoo_type_id__volatile;
+	return afoo_type_id__once;
 }
 
 gint
@@ -485,13 +485,13 @@ ifoo_get_type_once (void)
 GType
 ifoo_get_type (void)
 {
-	static volatile gsize ifoo_type_id__volatile = 0;
-	if (g_once_init_enter (&ifoo_type_id__volatile)) {
+	static volatile gsize ifoo_type_id__once = 0;
+	if (g_once_init_enter (&ifoo_type_id__once)) {
 		GType ifoo_type_id;
 		ifoo_type_id = ifoo_get_type_once ();
-		g_once_init_leave (&ifoo_type_id__volatile, ifoo_type_id);
+		g_once_init_leave (&ifoo_type_id__once, ifoo_type_id);
 	}
-	return ifoo_type_id__volatile;
+	return ifoo_type_id__once;
 }
 
 void
@@ -528,13 +528,13 @@ foo_enum_get_type_once (void)
 GType
 foo_enum_get_type (void)
 {
-	static volatile gsize foo_enum_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_enum_type_id__volatile)) {
+	static volatile gsize foo_enum_type_id__once = 0;
+	if (g_once_init_enter (&foo_enum_type_id__once)) {
 		GType foo_enum_type_id;
 		foo_enum_type_id = foo_enum_get_type_once ();
-		g_once_init_leave (&foo_enum_type_id__volatile, foo_enum_type_id);
+		g_once_init_leave (&foo_enum_type_id__once, foo_enum_type_id);
 	}
-	return foo_enum_type_id__volatile;
+	return foo_enum_type_id__once;
 }
 
 void

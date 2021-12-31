@@ -182,13 +182,13 @@ maman_a_get_type_once (void)
 GType
 maman_a_get_type (void)
 {
-	static volatile gsize maman_a_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_a_type_id__volatile)) {
+	static volatile gsize maman_a_type_id__once = 0;
+	if (g_once_init_enter (&maman_a_type_id__once)) {
 		GType maman_a_type_id;
 		maman_a_type_id = maman_a_get_type_once ();
-		g_once_init_leave (&maman_a_type_id__volatile, maman_a_type_id);
+		g_once_init_leave (&maman_a_type_id__once, maman_a_type_id);
 	}
-	return maman_a_type_id__volatile;
+	return maman_a_type_id__once;
 }
 
 MamanB*
@@ -230,13 +230,13 @@ maman_b_get_type_once (void)
 GType
 maman_b_get_type (void)
 {
-	static volatile gsize maman_b_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_b_type_id__volatile)) {
+	static volatile gsize maman_b_type_id__once = 0;
+	if (g_once_init_enter (&maman_b_type_id__once)) {
 		GType maman_b_type_id;
 		maman_b_type_id = maman_b_get_type_once ();
-		g_once_init_leave (&maman_b_type_id__volatile, maman_b_type_id);
+		g_once_init_leave (&maman_b_type_id__once, maman_b_type_id);
 	}
-	return maman_b_type_id__volatile;
+	return maman_b_type_id__once;
 }
 
 MamanC*
@@ -278,13 +278,13 @@ maman_c_get_type_once (void)
 GType
 maman_c_get_type (void)
 {
-	static volatile gsize maman_c_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_c_type_id__volatile)) {
+	static volatile gsize maman_c_type_id__once = 0;
+	if (g_once_init_enter (&maman_c_type_id__once)) {
 		GType maman_c_type_id;
 		maman_c_type_id = maman_c_get_type_once ();
-		g_once_init_leave (&maman_c_type_id__volatile, maman_c_type_id);
+		g_once_init_leave (&maman_c_type_id__once, maman_c_type_id);
 	}
-	return maman_c_type_id__volatile;
+	return maman_c_type_id__once;
 }
 
 static void
@@ -543,12 +543,12 @@ maman_bar_get_type_once (void)
 GType
 maman_bar_get_type (void)
 {
-	static volatile gsize maman_bar_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_bar_type_id__volatile)) {
+	static volatile gsize maman_bar_type_id__once = 0;
+	if (g_once_init_enter (&maman_bar_type_id__once)) {
 		GType maman_bar_type_id;
 		maman_bar_type_id = maman_bar_get_type_once ();
-		g_once_init_leave (&maman_bar_type_id__volatile, maman_bar_type_id);
+		g_once_init_leave (&maman_bar_type_id__once, maman_bar_type_id);
 	}
-	return maman_bar_type_id__volatile;
+	return maman_bar_type_id__once;
 }
 

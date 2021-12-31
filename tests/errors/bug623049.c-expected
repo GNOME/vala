@@ -140,13 +140,13 @@ cls_a_get_type_once (void)
 GType
 cls_a_get_type (void)
 {
-	static volatile gsize cls_a_type_id__volatile = 0;
-	if (g_once_init_enter (&cls_a_type_id__volatile)) {
+	static volatile gsize cls_a_type_id__once = 0;
+	if (g_once_init_enter (&cls_a_type_id__once)) {
 		GType cls_a_type_id;
 		cls_a_type_id = cls_a_get_type_once ();
-		g_once_init_leave (&cls_a_type_id__volatile, cls_a_type_id);
+		g_once_init_leave (&cls_a_type_id__once, cls_a_type_id);
 	}
-	return cls_a_type_id__volatile;
+	return cls_a_type_id__once;
 }
 
 ClsB*
@@ -196,13 +196,13 @@ cls_b_get_type_once (void)
 GType
 cls_b_get_type (void)
 {
-	static volatile gsize cls_b_type_id__volatile = 0;
-	if (g_once_init_enter (&cls_b_type_id__volatile)) {
+	static volatile gsize cls_b_type_id__once = 0;
+	if (g_once_init_enter (&cls_b_type_id__once)) {
 		GType cls_b_type_id;
 		cls_b_type_id = cls_b_get_type_once ();
-		g_once_init_leave (&cls_b_type_id__volatile, cls_b_type_id);
+		g_once_init_leave (&cls_b_type_id__once, cls_b_type_id);
 	}
-	return cls_b_type_id__volatile;
+	return cls_b_type_id__once;
 }
 
 static void

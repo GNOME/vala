@@ -329,13 +329,13 @@ global_testclass_get_type_once (void)
 GType
 global_testclass_get_type (void)
 {
-	static volatile gsize global_testclass_type_id__volatile = 0;
-	if (g_once_init_enter (&global_testclass_type_id__volatile)) {
+	static volatile gsize global_testclass_type_id__once = 0;
+	if (g_once_init_enter (&global_testclass_type_id__once)) {
 		GType global_testclass_type_id;
 		global_testclass_type_id = global_testclass_get_type_once ();
-		g_once_init_leave (&global_testclass_type_id__volatile, global_testclass_type_id);
+		g_once_init_leave (&global_testclass_type_id__once, global_testclass_type_id);
 	}
-	return global_testclass_type_id__volatile;
+	return global_testclass_type_id__once;
 }
 
 gpointer
@@ -424,13 +424,13 @@ maman_bar_get_type_once (void)
 GType
 maman_bar_get_type (void)
 {
-	static volatile gsize maman_bar_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_bar_type_id__volatile)) {
+	static volatile gsize maman_bar_type_id__once = 0;
+	if (g_once_init_enter (&maman_bar_type_id__once)) {
 		GType maman_bar_type_id;
 		maman_bar_type_id = maman_bar_get_type_once ();
-		g_once_init_leave (&maman_bar_type_id__volatile, maman_bar_type_id);
+		g_once_init_leave (&maman_bar_type_id__once, maman_bar_type_id);
 	}
-	return maman_bar_type_id__volatile;
+	return maman_bar_type_id__once;
 }
 
 FooSubClassInNestedNamespace*
@@ -617,13 +617,13 @@ foo_sub_class_in_nested_namespace_get_type_once (void)
 GType
 foo_sub_class_in_nested_namespace_get_type (void)
 {
-	static volatile gsize foo_sub_class_in_nested_namespace_type_id__volatile = 0;
-	if (g_once_init_enter (&foo_sub_class_in_nested_namespace_type_id__volatile)) {
+	static volatile gsize foo_sub_class_in_nested_namespace_type_id__once = 0;
+	if (g_once_init_enter (&foo_sub_class_in_nested_namespace_type_id__once)) {
 		GType foo_sub_class_in_nested_namespace_type_id;
 		foo_sub_class_in_nested_namespace_type_id = foo_sub_class_in_nested_namespace_get_type_once ();
-		g_once_init_leave (&foo_sub_class_in_nested_namespace_type_id__volatile, foo_sub_class_in_nested_namespace_type_id);
+		g_once_init_leave (&foo_sub_class_in_nested_namespace_type_id__once, foo_sub_class_in_nested_namespace_type_id);
 	}
-	return foo_sub_class_in_nested_namespace_type_id__volatile;
+	return foo_sub_class_in_nested_namespace_type_id__once;
 }
 
 gpointer

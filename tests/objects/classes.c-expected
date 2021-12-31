@@ -824,13 +824,13 @@ simple_gtype_instanceclass_get_type_once (void)
 GType
 simple_gtype_instanceclass_get_type (void)
 {
-	static volatile gsize simple_gtype_instanceclass_type_id__volatile = 0;
-	if (g_once_init_enter (&simple_gtype_instanceclass_type_id__volatile)) {
+	static volatile gsize simple_gtype_instanceclass_type_id__once = 0;
+	if (g_once_init_enter (&simple_gtype_instanceclass_type_id__once)) {
 		GType simple_gtype_instanceclass_type_id;
 		simple_gtype_instanceclass_type_id = simple_gtype_instanceclass_get_type_once ();
-		g_once_init_leave (&simple_gtype_instanceclass_type_id__volatile, simple_gtype_instanceclass_type_id);
+		g_once_init_leave (&simple_gtype_instanceclass_type_id__once, simple_gtype_instanceclass_type_id);
 	}
-	return simple_gtype_instanceclass_type_id__volatile;
+	return simple_gtype_instanceclass_type_id__once;
 }
 
 gpointer
@@ -892,13 +892,13 @@ derived_gtype_instanceclass_get_type_once (void)
 GType
 derived_gtype_instanceclass_get_type (void)
 {
-	static volatile gsize derived_gtype_instanceclass_type_id__volatile = 0;
-	if (g_once_init_enter (&derived_gtype_instanceclass_type_id__volatile)) {
+	static volatile gsize derived_gtype_instanceclass_type_id__once = 0;
+	if (g_once_init_enter (&derived_gtype_instanceclass_type_id__once)) {
 		GType derived_gtype_instanceclass_type_id;
 		derived_gtype_instanceclass_type_id = derived_gtype_instanceclass_get_type_once ();
-		g_once_init_leave (&derived_gtype_instanceclass_type_id__volatile, derived_gtype_instanceclass_type_id);
+		g_once_init_leave (&derived_gtype_instanceclass_type_id__once, derived_gtype_instanceclass_type_id);
 	}
-	return derived_gtype_instanceclass_type_id__volatile;
+	return derived_gtype_instanceclass_type_id__once;
 }
 
 PublicGTypeInstanceClass*
@@ -1085,13 +1085,13 @@ public_gtype_instanceclass_get_type_once (void)
 GType
 public_gtype_instanceclass_get_type (void)
 {
-	static volatile gsize public_gtype_instanceclass_type_id__volatile = 0;
-	if (g_once_init_enter (&public_gtype_instanceclass_type_id__volatile)) {
+	static volatile gsize public_gtype_instanceclass_type_id__once = 0;
+	if (g_once_init_enter (&public_gtype_instanceclass_type_id__once)) {
 		GType public_gtype_instanceclass_type_id;
 		public_gtype_instanceclass_type_id = public_gtype_instanceclass_get_type_once ();
-		g_once_init_leave (&public_gtype_instanceclass_type_id__volatile, public_gtype_instanceclass_type_id);
+		g_once_init_leave (&public_gtype_instanceclass_type_id__once, public_gtype_instanceclass_type_id);
 	}
-	return public_gtype_instanceclass_type_id__volatile;
+	return public_gtype_instanceclass_type_id__once;
 }
 
 gpointer
@@ -1301,13 +1301,13 @@ gtype_instance_class_with_creation_method_get_type_once (void)
 GType
 gtype_instance_class_with_creation_method_get_type (void)
 {
-	static volatile gsize gtype_instance_class_with_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&gtype_instance_class_with_creation_method_type_id__volatile)) {
+	static volatile gsize gtype_instance_class_with_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&gtype_instance_class_with_creation_method_type_id__once)) {
 		GType gtype_instance_class_with_creation_method_type_id;
 		gtype_instance_class_with_creation_method_type_id = gtype_instance_class_with_creation_method_get_type_once ();
-		g_once_init_leave (&gtype_instance_class_with_creation_method_type_id__volatile, gtype_instance_class_with_creation_method_type_id);
+		g_once_init_leave (&gtype_instance_class_with_creation_method_type_id__once, gtype_instance_class_with_creation_method_type_id);
 	}
-	return gtype_instance_class_with_creation_method_type_id__volatile;
+	return gtype_instance_class_with_creation_method_type_id__once;
 }
 
 gpointer
@@ -1531,13 +1531,13 @@ gtype_instance_class_with_named_creation_method_get_type_once (void)
 GType
 gtype_instance_class_with_named_creation_method_get_type (void)
 {
-	static volatile gsize gtype_instance_class_with_named_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&gtype_instance_class_with_named_creation_method_type_id__volatile)) {
+	static volatile gsize gtype_instance_class_with_named_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&gtype_instance_class_with_named_creation_method_type_id__once)) {
 		GType gtype_instance_class_with_named_creation_method_type_id;
 		gtype_instance_class_with_named_creation_method_type_id = gtype_instance_class_with_named_creation_method_get_type_once ();
-		g_once_init_leave (&gtype_instance_class_with_named_creation_method_type_id__volatile, gtype_instance_class_with_named_creation_method_type_id);
+		g_once_init_leave (&gtype_instance_class_with_named_creation_method_type_id__once, gtype_instance_class_with_named_creation_method_type_id);
 	}
-	return gtype_instance_class_with_named_creation_method_type_id__volatile;
+	return gtype_instance_class_with_named_creation_method_type_id__once;
 }
 
 gpointer
@@ -1599,13 +1599,13 @@ simple_gobjectclass_get_type_once (void)
 GType
 simple_gobjectclass_get_type (void)
 {
-	static volatile gsize simple_gobjectclass_type_id__volatile = 0;
-	if (g_once_init_enter (&simple_gobjectclass_type_id__volatile)) {
+	static volatile gsize simple_gobjectclass_type_id__once = 0;
+	if (g_once_init_enter (&simple_gobjectclass_type_id__once)) {
 		GType simple_gobjectclass_type_id;
 		simple_gobjectclass_type_id = simple_gobjectclass_get_type_once ();
-		g_once_init_leave (&simple_gobjectclass_type_id__volatile, simple_gobjectclass_type_id);
+		g_once_init_leave (&simple_gobjectclass_type_id__once, simple_gobjectclass_type_id);
 	}
-	return simple_gobjectclass_type_id__volatile;
+	return simple_gobjectclass_type_id__once;
 }
 
 DerivedGObjectClass*
@@ -1647,13 +1647,13 @@ derived_gobjectclass_get_type_once (void)
 GType
 derived_gobjectclass_get_type (void)
 {
-	static volatile gsize derived_gobjectclass_type_id__volatile = 0;
-	if (g_once_init_enter (&derived_gobjectclass_type_id__volatile)) {
+	static volatile gsize derived_gobjectclass_type_id__once = 0;
+	if (g_once_init_enter (&derived_gobjectclass_type_id__once)) {
 		GType derived_gobjectclass_type_id;
 		derived_gobjectclass_type_id = derived_gobjectclass_get_type_once ();
-		g_once_init_leave (&derived_gobjectclass_type_id__volatile, derived_gobjectclass_type_id);
+		g_once_init_leave (&derived_gobjectclass_type_id__once, derived_gobjectclass_type_id);
 	}
-	return derived_gobjectclass_type_id__volatile;
+	return derived_gobjectclass_type_id__once;
 }
 
 PublicGObjectClass*
@@ -1695,13 +1695,13 @@ public_gobjectclass_get_type_once (void)
 GType
 public_gobjectclass_get_type (void)
 {
-	static volatile gsize public_gobjectclass_type_id__volatile = 0;
-	if (g_once_init_enter (&public_gobjectclass_type_id__volatile)) {
+	static volatile gsize public_gobjectclass_type_id__once = 0;
+	if (g_once_init_enter (&public_gobjectclass_type_id__once)) {
 		GType public_gobjectclass_type_id;
 		public_gobjectclass_type_id = public_gobjectclass_get_type_once ();
-		g_once_init_leave (&public_gobjectclass_type_id__volatile, public_gobjectclass_type_id);
+		g_once_init_leave (&public_gobjectclass_type_id__once, public_gobjectclass_type_id);
 	}
-	return public_gobjectclass_type_id__volatile;
+	return public_gobjectclass_type_id__once;
 }
 
 AbstractGObjectClass*
@@ -1737,13 +1737,13 @@ abstract_gobjectclass_get_type_once (void)
 GType
 abstract_gobjectclass_get_type (void)
 {
-	static volatile gsize abstract_gobjectclass_type_id__volatile = 0;
-	if (g_once_init_enter (&abstract_gobjectclass_type_id__volatile)) {
+	static volatile gsize abstract_gobjectclass_type_id__once = 0;
+	if (g_once_init_enter (&abstract_gobjectclass_type_id__once)) {
 		GType abstract_gobjectclass_type_id;
 		abstract_gobjectclass_type_id = abstract_gobjectclass_get_type_once ();
-		g_once_init_leave (&abstract_gobjectclass_type_id__volatile, abstract_gobjectclass_type_id);
+		g_once_init_leave (&abstract_gobjectclass_type_id__once, abstract_gobjectclass_type_id);
 	}
-	return abstract_gobjectclass_type_id__volatile;
+	return abstract_gobjectclass_type_id__once;
 }
 
 GObjectClassWithCreationMethod*
@@ -1785,13 +1785,13 @@ gobject_class_with_creation_method_get_type_once (void)
 GType
 gobject_class_with_creation_method_get_type (void)
 {
-	static volatile gsize gobject_class_with_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&gobject_class_with_creation_method_type_id__volatile)) {
+	static volatile gsize gobject_class_with_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&gobject_class_with_creation_method_type_id__once)) {
 		GType gobject_class_with_creation_method_type_id;
 		gobject_class_with_creation_method_type_id = gobject_class_with_creation_method_get_type_once ();
-		g_once_init_leave (&gobject_class_with_creation_method_type_id__volatile, gobject_class_with_creation_method_type_id);
+		g_once_init_leave (&gobject_class_with_creation_method_type_id__once, gobject_class_with_creation_method_type_id);
 	}
-	return gobject_class_with_creation_method_type_id__volatile;
+	return gobject_class_with_creation_method_type_id__once;
 }
 
 GObjectClassWithNamedCreationMethod*
@@ -1847,13 +1847,13 @@ gobject_class_with_named_creation_method_get_type_once (void)
 GType
 gobject_class_with_named_creation_method_get_type (void)
 {
-	static volatile gsize gobject_class_with_named_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&gobject_class_with_named_creation_method_type_id__volatile)) {
+	static volatile gsize gobject_class_with_named_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&gobject_class_with_named_creation_method_type_id__once)) {
 		GType gobject_class_with_named_creation_method_type_id;
 		gobject_class_with_named_creation_method_type_id = gobject_class_with_named_creation_method_get_type_once ();
-		g_once_init_leave (&gobject_class_with_named_creation_method_type_id__volatile, gobject_class_with_named_creation_method_type_id);
+		g_once_init_leave (&gobject_class_with_named_creation_method_type_id__once, gobject_class_with_named_creation_method_type_id);
 	}
-	return gobject_class_with_named_creation_method_type_id__volatile;
+	return gobject_class_with_named_creation_method_type_id__once;
 }
 
 static void

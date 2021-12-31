@@ -132,13 +132,13 @@ maman_bar_get_type_once (void)
 GType
 maman_bar_get_type (void)
 {
-	static volatile gsize maman_bar_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_bar_type_id__volatile)) {
+	static volatile gsize maman_bar_type_id__once = 0;
+	if (g_once_init_enter (&maman_bar_type_id__once)) {
 		GType maman_bar_type_id;
 		maman_bar_type_id = maman_bar_get_type_once ();
-		g_once_init_leave (&maman_bar_type_id__volatile, maman_bar_type_id);
+		g_once_init_leave (&maman_bar_type_id__once, maman_bar_type_id);
 	}
-	return maman_bar_type_id__volatile;
+	return maman_bar_type_id__once;
 }
 
 void
@@ -229,12 +229,12 @@ maman_sub_bar_get_type_once (void)
 GType
 maman_sub_bar_get_type (void)
 {
-	static volatile gsize maman_sub_bar_type_id__volatile = 0;
-	if (g_once_init_enter (&maman_sub_bar_type_id__volatile)) {
+	static volatile gsize maman_sub_bar_type_id__once = 0;
+	if (g_once_init_enter (&maman_sub_bar_type_id__once)) {
 		GType maman_sub_bar_type_id;
 		maman_sub_bar_type_id = maman_sub_bar_get_type_once ();
-		g_once_init_leave (&maman_sub_bar_type_id__volatile, maman_sub_bar_type_id);
+		g_once_init_leave (&maman_sub_bar_type_id__once, maman_sub_bar_type_id);
 	}
-	return maman_sub_bar_type_id__volatile;
+	return maman_sub_bar_type_id__once;
 }
 

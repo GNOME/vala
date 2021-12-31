@@ -408,13 +408,13 @@ baz_get_type_once (void)
 GType
 baz_get_type (void)
 {
-	static volatile gsize baz_type_id__volatile = 0;
-	if (g_once_init_enter (&baz_type_id__volatile)) {
+	static volatile gsize baz_type_id__once = 0;
+	if (g_once_init_enter (&baz_type_id__once)) {
 		GType baz_type_id;
 		baz_type_id = baz_get_type_once ();
-		g_once_init_leave (&baz_type_id__volatile, baz_type_id);
+		g_once_init_leave (&baz_type_id__once, baz_type_id);
 	}
-	return baz_type_id__volatile;
+	return baz_type_id__once;
 }
 
 void

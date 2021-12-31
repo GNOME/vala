@@ -275,13 +275,13 @@ fooclass_get_type_once (void)
 GType
 fooclass_get_type (void)
 {
-	static volatile gsize fooclass_type_id__volatile = 0;
-	if (g_once_init_enter (&fooclass_type_id__volatile)) {
+	static volatile gsize fooclass_type_id__once = 0;
+	if (g_once_init_enter (&fooclass_type_id__once)) {
 		GType fooclass_type_id;
 		fooclass_type_id = fooclass_get_type_once ();
-		g_once_init_leave (&fooclass_type_id__volatile, fooclass_type_id);
+		g_once_init_leave (&fooclass_type_id__once, fooclass_type_id);
 	}
-	return fooclass_type_id__volatile;
+	return fooclass_type_id__once;
 }
 
 gpointer

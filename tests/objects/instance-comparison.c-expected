@@ -161,13 +161,13 @@ ifoo_get_type_once (void)
 GType
 ifoo_get_type (void)
 {
-	static volatile gsize ifoo_type_id__volatile = 0;
-	if (g_once_init_enter (&ifoo_type_id__volatile)) {
+	static volatile gsize ifoo_type_id__once = 0;
+	if (g_once_init_enter (&ifoo_type_id__once)) {
 		GType ifoo_type_id;
 		ifoo_type_id = ifoo_get_type_once ();
-		g_once_init_leave (&ifoo_type_id__volatile, ifoo_type_id);
+		g_once_init_leave (&ifoo_type_id__once, ifoo_type_id);
 	}
-	return ifoo_type_id__volatile;
+	return ifoo_type_id__once;
 }
 
 Bar*
@@ -218,13 +218,13 @@ bar_get_type_once (void)
 GType
 bar_get_type (void)
 {
-	static volatile gsize bar_type_id__volatile = 0;
-	if (g_once_init_enter (&bar_type_id__volatile)) {
+	static volatile gsize bar_type_id__once = 0;
+	if (g_once_init_enter (&bar_type_id__once)) {
 		GType bar_type_id;
 		bar_type_id = bar_get_type_once ();
-		g_once_init_leave (&bar_type_id__volatile, bar_type_id);
+		g_once_init_leave (&bar_type_id__once, bar_type_id);
 	}
-	return bar_type_id__volatile;
+	return bar_type_id__once;
 }
 
 Manam*
@@ -266,13 +266,13 @@ manam_get_type_once (void)
 GType
 manam_get_type (void)
 {
-	static volatile gsize manam_type_id__volatile = 0;
-	if (g_once_init_enter (&manam_type_id__volatile)) {
+	static volatile gsize manam_type_id__once = 0;
+	if (g_once_init_enter (&manam_type_id__once)) {
 		GType manam_type_id;
 		manam_type_id = manam_get_type_once ();
-		g_once_init_leave (&manam_type_id__volatile, manam_type_id);
+		g_once_init_leave (&manam_type_id__once, manam_type_id);
 	}
-	return manam_type_id__volatile;
+	return manam_type_id__once;
 }
 
 static void
@@ -295,13 +295,13 @@ ifaz_get_type_once (void)
 GType
 ifaz_get_type (void)
 {
-	static volatile gsize ifaz_type_id__volatile = 0;
-	if (g_once_init_enter (&ifaz_type_id__volatile)) {
+	static volatile gsize ifaz_type_id__once = 0;
+	if (g_once_init_enter (&ifaz_type_id__once)) {
 		GType ifaz_type_id;
 		ifaz_type_id = ifaz_get_type_once ();
-		g_once_init_leave (&ifaz_type_id__volatile, ifaz_type_id);
+		g_once_init_leave (&ifaz_type_id__once, ifaz_type_id);
 	}
-	return ifaz_type_id__volatile;
+	return ifaz_type_id__once;
 }
 
 Baz*
@@ -361,13 +361,13 @@ baz_get_type_once (void)
 GType
 baz_get_type (void)
 {
-	static volatile gsize baz_type_id__volatile = 0;
-	if (g_once_init_enter (&baz_type_id__volatile)) {
+	static volatile gsize baz_type_id__once = 0;
+	if (g_once_init_enter (&baz_type_id__once)) {
 		GType baz_type_id;
 		baz_type_id = baz_get_type_once ();
-		g_once_init_leave (&baz_type_id__volatile, baz_type_id);
+		g_once_init_leave (&baz_type_id__once, baz_type_id);
 	}
-	return baz_type_id__volatile;
+	return baz_type_id__once;
 }
 
 static gpointer

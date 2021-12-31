@@ -120,13 +120,13 @@ simple_struct_get_type_once (void)
 GType
 simple_struct_get_type (void)
 {
-	static volatile gsize simple_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&simple_struct_type_id__volatile)) {
+	static volatile gsize simple_struct_type_id__once = 0;
+	if (g_once_init_enter (&simple_struct_type_id__once)) {
 		GType simple_struct_type_id;
 		simple_struct_type_id = simple_struct_get_type_once ();
-		g_once_init_leave (&simple_struct_type_id__volatile, simple_struct_type_id);
+		g_once_init_leave (&simple_struct_type_id__once, simple_struct_type_id);
 	}
-	return simple_struct_type_id__volatile;
+	return simple_struct_type_id__once;
 }
 
 PublicStruct*
@@ -155,13 +155,13 @@ public_struct_get_type_once (void)
 GType
 public_struct_get_type (void)
 {
-	static volatile gsize public_struct_type_id__volatile = 0;
-	if (g_once_init_enter (&public_struct_type_id__volatile)) {
+	static volatile gsize public_struct_type_id__once = 0;
+	if (g_once_init_enter (&public_struct_type_id__once)) {
 		GType public_struct_type_id;
 		public_struct_type_id = public_struct_get_type_once ();
-		g_once_init_leave (&public_struct_type_id__volatile, public_struct_type_id);
+		g_once_init_leave (&public_struct_type_id__once, public_struct_type_id);
 	}
-	return public_struct_type_id__volatile;
+	return public_struct_type_id__once;
 }
 
 void
@@ -199,13 +199,13 @@ struct_with_creation_method_get_type_once (void)
 GType
 struct_with_creation_method_get_type (void)
 {
-	static volatile gsize struct_with_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&struct_with_creation_method_type_id__volatile)) {
+	static volatile gsize struct_with_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&struct_with_creation_method_type_id__once)) {
 		GType struct_with_creation_method_type_id;
 		struct_with_creation_method_type_id = struct_with_creation_method_get_type_once ();
-		g_once_init_leave (&struct_with_creation_method_type_id__volatile, struct_with_creation_method_type_id);
+		g_once_init_leave (&struct_with_creation_method_type_id__once, struct_with_creation_method_type_id);
 	}
-	return struct_with_creation_method_type_id__volatile;
+	return struct_with_creation_method_type_id__once;
 }
 
 void
@@ -243,13 +243,13 @@ struct_with_named_creation_method_get_type_once (void)
 GType
 struct_with_named_creation_method_get_type (void)
 {
-	static volatile gsize struct_with_named_creation_method_type_id__volatile = 0;
-	if (g_once_init_enter (&struct_with_named_creation_method_type_id__volatile)) {
+	static volatile gsize struct_with_named_creation_method_type_id__once = 0;
+	if (g_once_init_enter (&struct_with_named_creation_method_type_id__once)) {
 		GType struct_with_named_creation_method_type_id;
 		struct_with_named_creation_method_type_id = struct_with_named_creation_method_get_type_once ();
-		g_once_init_leave (&struct_with_named_creation_method_type_id__volatile, struct_with_named_creation_method_type_id);
+		g_once_init_leave (&struct_with_named_creation_method_type_id__once, struct_with_named_creation_method_type_id);
 	}
-	return struct_with_named_creation_method_type_id__volatile;
+	return struct_with_named_creation_method_type_id__once;
 }
 
 void
@@ -334,13 +334,13 @@ struct_with_func_get_type_once (void)
 GType
 struct_with_func_get_type (void)
 {
-	static volatile gsize struct_with_func_type_id__volatile = 0;
-	if (g_once_init_enter (&struct_with_func_type_id__volatile)) {
+	static volatile gsize struct_with_func_type_id__once = 0;
+	if (g_once_init_enter (&struct_with_func_type_id__once)) {
 		GType struct_with_func_type_id;
 		struct_with_func_type_id = struct_with_func_get_type_once ();
-		g_once_init_leave (&struct_with_func_type_id__volatile, struct_with_func_type_id);
+		g_once_init_leave (&struct_with_func_type_id__once, struct_with_func_type_id);
 	}
-	return struct_with_func_type_id__volatile;
+	return struct_with_func_type_id__once;
 }
 
 void
