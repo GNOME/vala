@@ -183,7 +183,7 @@ public class Vala.Constant : Symbol {
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
+			context.report.log_warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		context.analyzer.current_source_file = old_source_file;
