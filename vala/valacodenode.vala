@@ -30,6 +30,10 @@ using GLib;
  */
 public abstract class Vala.CodeNode {
 	/**
+	 * Current context.
+	 */
+	public weak CodeContext context { get; protected set; }
+	/**
 	 * Parent of this code node.
 	 */
 	public weak CodeNode? parent_node { get; protected set; }
@@ -427,6 +431,28 @@ public abstract class Vala.CodeNode {
 	}
 
 	public virtual void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
+	}
+
+	/**
+	 * Traverse tree for the current {@link CodeContext}
+	 */
+	public CodeContext traverse_for_context () {
+		CodeContext ctx = null;
+		if (this is Namespace) {
+			ctx = this.context;
+		}
+
+		CodeNode parent = parent_node;
+		while (ctx == null) {
+			parent = parent.parent_node;
+			if (parent == null) {
+				break;
+			}
+
+			ctx = parent.context;
+		}
+
+		return ctx;
 	}
 
 	public static string get_temp_name () {
