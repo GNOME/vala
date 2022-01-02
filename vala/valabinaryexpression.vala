@@ -218,7 +218,7 @@ public class Vala.BinaryExpression : Expression {
 			DataType local_type = null;
 			bool cast_non_null = false;
 			if (left.value_type is NullType && right.value_type != null) {
-				Report.warning (left.source_reference, "left operand is always null");
+				context.report.log_warning (left.source_reference, "left operand is always null");
 				local_type = right.value_type.copy ();
 				local_type.nullable = true;
 				if (!right.value_type.nullable) {
@@ -232,7 +232,7 @@ public class Vala.BinaryExpression : Expression {
 				}
 				if (context.experimental_non_null) {
 					if (!local_type.nullable) {
-						Report.warning (left.source_reference, "left operand is never null");
+						context.report.log_warning (left.source_reference, "left operand is never null");
 						if (right.value_type != null && right.value_type.nullable) {
 							local_type.nullable = true;
 							cast_non_null = true;
