@@ -306,7 +306,7 @@ public class Vala.Assignment : Expression {
 				unowned ArrayType? variable_array_type = variable.variable_type as ArrayType;
 				if (variable_array_type != null && variable_array_type.inline_allocated
 				    && right is ArrayCreationExpression && ((ArrayCreationExpression) right).initializer_list == null) {
-					Report.warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
+					context.report.log_warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
 					((Block) parent_node.parent_node).replace_statement ((Statement) parent_node, new EmptyStatement (source_reference));
 					return true;
 				}
@@ -323,7 +323,7 @@ public class Vala.Assignment : Expression {
 				} else if (left.value_type is EnumValueType && right.value_type is IntegerType
 				    && (!(right is IntegerLiteral) || ((IntegerLiteral) right).value != "0")) {
 					//FIXME This will have to be an error in the future?
-					Report.notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
+					context.report.log_notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'", right.value_type.to_string (), left.value_type.to_string ());
 				}
 
 				if (!(ma.symbol_reference is Property)) {
@@ -346,17 +346,17 @@ public class Vala.Assignment : Expression {
 			unowned MemberAccess? right_ma = right as MemberAccess;
 			if (right_ma != null && ma.symbol_reference == right_ma.symbol_reference) {
 				if (ma.symbol_reference is LocalVariable || ma.symbol_reference is Parameter) {
-					Report.warning (source_reference, "Assignment to same variable");
+					context.report.log_warning (source_reference, "Assignment to same variable");
 				} else if (ma.symbol_reference is Field) {
 					unowned Field f = (Field) ma.symbol_reference;
 					if (f.binding == MemberBinding.STATIC) {
-						Report.warning (source_reference, "Assignment to same variable");
+						context.report.log_warning (source_reference, "Assignment to same variable");
 					} else {
 						unowned MemberAccess? ma_inner = ma.inner as MemberAccess;
 						unowned MemberAccess? right_ma_inner = right_ma.inner as MemberAccess;
 						if (ma_inner != null && ma_inner.member_name == "this" && ma_inner.inner == null &&
 						    right_ma_inner != null && right_ma_inner.member_name == "this" && right_ma_inner.inner == null) {
-							Report.warning (source_reference, "Assignment to same variable");
+							context.report.log_warning (source_reference, "Assignment to same variable");
 						}
 					}
 				}
