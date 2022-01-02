@@ -112,14 +112,14 @@ public class Vala.CatchClause : CodeNode {
 		checked = true;
 
 		if (context.profile == Profile.POSIX) {
-			Report.error (source_reference, "`catch' is not supported in POSIX profile");
+			context.report.log_error (source_reference, "`catch' is not supported in POSIX profile");
 			error = true;
 			return false;
 		}
 
 		if (error_type != null) {
 			if (!(error_type is ErrorType)) {
-				Report.error (source_reference, "clause must catch a valid error type, found `%s' instead", error_type.to_string ());
+				context.report.log_error (source_reference, "clause must catch a valid error type, found `%s' instead", error_type.to_string ());
 				error = true;
 			}
 
