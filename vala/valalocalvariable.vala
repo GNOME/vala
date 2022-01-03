@@ -177,7 +177,7 @@ public class Vala.LocalVariable : Variable {
 		unowned ArrayType? variable_array_type = variable_type as ArrayType;
 		if (variable_array_type != null && variable_array_type.inline_allocated
 		    && initializer is ArrayCreationExpression && ((ArrayCreationExpression) initializer).initializer_list == null) {
-			Report.warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
+			context.report.log_warning (source_reference, "Inline allocated arrays don't require an explicit instantiation");
 			initializer = null;
 		}
 
@@ -222,7 +222,7 @@ public class Vala.LocalVariable : Variable {
 			} else if (variable_type is EnumValueType && initializer.value_type is IntegerType
 			    && (!(initializer is IntegerLiteral) || ((IntegerLiteral) initializer).value != "0")) {
 				//FIXME This will have to be an error in the future?
-				Report.notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
+				context.report.log_notice (source_reference, "Assignment: Unsafe conversion from `%s' to `%s'", initializer.value_type.to_string (), variable_type.to_string ());
 			}
 
 			if (variable_array_type != null && variable_array_type.inline_allocated && !variable_array_type.fixed_length && is_initializer_list) {
