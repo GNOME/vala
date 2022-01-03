@@ -369,6 +369,7 @@ TESTS = \
 	structs/gvalue-implicit-comparison.vala \
 	structs/properties.vala \
 	structs/simple-type-constructor.vala \
+	structs/simple-type-boxed.vala \
 	structs/simple-type-disposable.test \
 	structs/bug530605.vala \
 	structs/bug572091.vala \
