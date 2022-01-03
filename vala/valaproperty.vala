@@ -506,7 +506,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 		if (set_accessor != null) {
 			if (get_attribute ("GtkChild") != null) {
-				Report.warning (set_accessor.source_reference, "[GtkChild] property `%s' is not allowed to have `set' accessor", get_full_name ());
+				context.report.log_warning (set_accessor.source_reference, "[GtkChild] property `%s' is not allowed to have `set' accessor", get_full_name ());
 			}
 			set_accessor.check (context);
 		}
@@ -530,7 +530,7 @@ public class Vala.Property : Symbol, Lockable {
 		}
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited property `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
+			context.report.log_warning (source_reference, "%s hides inherited property `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		/* construct properties must be public */
