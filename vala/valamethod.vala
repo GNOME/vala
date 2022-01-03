@@ -882,7 +882,7 @@ public class Vala.Method : Subroutine, Callable {
 				continue;
 			}
 			if (optional_param && param.initializer == null && !param.ellipsis) {
-				Report.warning (param.source_reference, "parameter without default follows parameter with default");
+				context.report.log_warning (param.source_reference, "parameter without default follows parameter with default");
 			} else if (param.initializer != null) {
 				optional_param = true;
 			}
@@ -907,7 +907,7 @@ public class Vala.Method : Subroutine, Callable {
 					continue;
 				}
 				if (!context.experimental) {
-					Report.warning (param.source_reference, "Support of params-arrays is experimental");
+					context.report.log_warning (param.source_reference, "Support of params-arrays is experimental");
 				}
 				var type = (ArrayType) param.variable_type.copy ();
 				type.element_type.value_owned = type.value_owned;
@@ -977,7 +977,7 @@ public class Vala.Method : Subroutine, Callable {
 		}
 
 		if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
-			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
+			context.report.log_warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
 			overrides = false;
 		} else if (overrides && base_method == null && base_interface_method == null) {
 			context.report.log_error (source_reference, "`%s': no suitable method found to override", get_full_name ());
@@ -995,7 +995,7 @@ public class Vala.Method : Subroutine, Callable {
 					m.error = true;
 					error = true;
 					context.report.log_error (source_reference, "`%s' already contains an implementation for `%s'", cl.get_full_name (), base_interface_method.get_full_name ());
-					Report.notice (m.source_reference, "previous implementation of `%s' was here", base_interface_method.get_full_name ());
+					context.report.log_notice (m.source_reference, "previous implementation of `%s' was here", base_interface_method.get_full_name ());
 					return false;
 				}
 			}
@@ -1005,7 +1005,7 @@ public class Vala.Method : Subroutine, Callable {
 		context.analyzer.current_symbol = old_symbol;
 
 		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
-			Report.warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
+			context.report.log_warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional", get_full_name (), get_hidden_member ().get_full_name ());
 		}
 
 		// check whether return type is at least as accessible as the method
@@ -1058,7 +1058,7 @@ public class Vala.Method : Subroutine, Callable {
 				}
 				bool is_dynamic_error = body_error_type is ErrorType && ((ErrorType) body_error_type).dynamic_error;
 				if (!can_propagate_error && !is_dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
+					context.report.log_warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}
 		}
@@ -1091,7 +1091,7 @@ public class Vala.Method : Subroutine, Callable {
 					}
 				}
 				if (!throws_gerror && !(throws_gioerror && throws_gdbuserror)) {
-					Report.warning (source_reference, "DBus methods are recommended to throw at least `GLib.Error' or `GLib.DBusError, GLib.IOError'");
+					context.report.log_warning (source_reference, "DBus methods are recommended to throw at least `GLib.Error' or `GLib.DBusError, GLib.IOError'");
 				}
 			}
 		}
