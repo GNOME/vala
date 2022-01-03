@@ -364,7 +364,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 					if (ma.member_name != "end") {
 						// begin (possibly implicit)
 						if (ma.member_name != "begin") {
-							Report.deprecated (ma.source_reference, "implicit .begin is deprecated");
+							context.report.log_deprecated (ma.source_reference, "implicit .begin is deprecated");
 						}
 						params = m.get_async_begin_parameters ();
 						ret_type = new VoidType ();
