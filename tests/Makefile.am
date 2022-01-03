@@ -1358,6 +1358,7 @@ endif
 
 if ENABLE_TEST_ASAN
 XFAIL_TESTS = \
+	constants/member-access-enum.vala \
 	objects/property-array.vala \
 	dbus/filedescriptor-errors.test \
 	$(NULL)
