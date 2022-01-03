@@ -318,7 +318,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 			var st = (Struct) type;
 
 			if (!struct_creation && !context.deprecated) {
-				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
+				context.report.log_warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
 
 			if (symbol_reference == null) {
