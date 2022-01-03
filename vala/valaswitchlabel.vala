@@ -107,12 +107,12 @@ public class Vala.SwitchLabel : CodeNode {
 
 			if (!expression.is_constant ()) {
 				error = true;
-				Report.error (expression.source_reference, "Expression must be constant");
+				context.report.log_error (expression.source_reference, "Expression must be constant");
 				return false;
 			}
 			if (!expression.value_type.compatible (switch_statement.expression.value_type)) {
 				error = true;
-				Report.error (expression.source_reference, "Cannot convert from `%s' to `%s'", expression.value_type.to_string (), switch_statement.expression.value_type.to_string ());
+				context.report.log_error (expression.source_reference, "Cannot convert from `%s' to `%s'", expression.value_type.to_string (), switch_statement.expression.value_type.to_string ());
 				return false;
 			}
 		}
