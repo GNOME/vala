@@ -189,7 +189,7 @@ public class Vala.Parameter : Variable {
 			if (initializer is NullLiteral
 			    && !variable_type.nullable
 			    && direction != ParameterDirection.OUT) {
-				Report.warning (source_reference, "`null' incompatible with parameter type `%s'", variable_type.to_string ());
+				context.report.log_warning (source_reference, "`null' incompatible with parameter type `%s'", variable_type.to_string ());
 			} else if (!(initializer is NullLiteral) && direction == ParameterDirection.OUT) {
 				error = true;
 				context.report.log_error (source_reference, "only `null' is allowed as default value for out parameters");
