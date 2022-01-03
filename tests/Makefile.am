@@ -1378,6 +1378,12 @@ XFAIL_TESTS = \
 	$(NULL)
 endif
 
+if ENABLE_TEST_UBSAN
+XFAIL_TESTS = \
+	methods/extern.vala \
+	$(NULL)
+endif
+
 EXTRA_DIST = \
 	glib/tests-extra-environment.sh \
 	girwriter/tests-extra-environment.sh \
