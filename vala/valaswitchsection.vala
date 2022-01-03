@@ -89,7 +89,7 @@ public class Vala.SwitchSection : Block {
 		}
 
 		if (!(parent_node is SwitchStatement)) {
-			Report.error (source_reference, "no enclosing switch statement found");
+			context.report.log_error (source_reference, "no enclosing switch statement found");
 			error = true;
 			return false;
 		}
