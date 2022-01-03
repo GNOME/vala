@@ -6544,7 +6544,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var array_type = type as ArrayType;
 		if (type.type_symbol != null && !type.nullable
 		    && (on_error ? get_ccode_default_value_on_error (type.type_symbol) : get_ccode_default_value (type.type_symbol)) != "") {
-			return new CCodeConstant (on_error ? get_ccode_default_value_on_error (type.type_symbol) : get_ccode_default_value (type.type_symbol));
+		    CCodeExpression val = new CCodeConstant (on_error ? get_ccode_default_value_on_error (type.type_symbol) : get_ccode_default_value (type.type_symbol));
+		    if (st != null && st.get_fields ().size > 0) {
+				val = new CCodeCastExpression (val, get_ccode_name (st));
+			}
+			return val;
 		} else if (initializer_expression && !type.nullable &&
 				   (st != null || (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
