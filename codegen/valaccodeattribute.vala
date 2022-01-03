@@ -255,7 +255,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (ccode != null) {
 					_dup_function = ccode.get_string ("dup_function");
 				}
-				if (_dup_function == null && !sym.external_package && sym is Struct) {
+				if (_dup_function == null && !sym.external_package
+				    && sym is Struct && !((Struct) sym).is_simple_type ()) {
 					_dup_function = "%sdup".printf (lower_case_prefix);
 				}
 				dup_function_set = true;
@@ -1037,7 +1038,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 			return "%sfree".printf (lower_case_prefix);
 		} else if (sym is Struct) {
-			if (!sym.external_package) {
+			if (!sym.external_package && !((Struct) sym).is_simple_type ()) {
 				return "%sfree".printf (lower_case_prefix);
 			}
 		}
