@@ -222,7 +222,7 @@ public class Vala.PropertyAccessor : Subroutine {
 		} else if (construction && !context.analyzer.is_gobject_property (prop)) {
 			//TODO Report an error for external property too
 			if (external_package) {
-				Report.warning (source_reference, "construct properties not supported for specified property type");
+				context.report.log_warning (source_reference, "construct properties not supported for specified property type");
 			} else {
 				error = true;
 				context.report.log_error (source_reference, "construct properties not supported for specified property type");
@@ -249,7 +249,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			body.get_error_types (error_types);
 			foreach (DataType body_error_type in error_types) {
 				if (!((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string ());
+					context.report.log_warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string ());
 				}
 			}
 		}
