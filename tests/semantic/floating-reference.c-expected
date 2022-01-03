@@ -35,7 +35,7 @@ GVariant*
 get_floating_variant (void)
 {
 	GVariant* _tmp0_;
-	GVariant* result = NULL;
+	GVariant* result;
 	_tmp0_ = g_variant_new_string ("foo");
 	result = _tmp0_;
 	return result;
@@ -45,7 +45,7 @@ GVariant*
 get_floating_variant_with_error (GError** error)
 {
 	GVariant* _tmp0_;
-	GVariant* result = NULL;
+	GVariant* result;
 	_tmp0_ = g_variant_new_string ("bar");
 	result = _tmp0_;
 	return result;

@@ -44,7 +44,7 @@ foo (gint* result_length1)
 	gint _tmp0__length1;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	bar[7] = 42;
 	_tmp0_ = _vala_array_dup1 (bar, 8);
 	_tmp0__length1 = 8;

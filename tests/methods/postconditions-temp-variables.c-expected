@@ -28,7 +28,7 @@ static void _vala_main (void);
 static const gchar*
 string_to_string (const gchar* self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self;
 	return result;
@@ -39,7 +39,7 @@ foo (void)
 {
 	gchar* _tmp0_;
 	const gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup_printf ("%i", 4711);
 	result = _tmp0_;
 	_tmp1_ = string_to_string (result);
@@ -50,7 +50,7 @@ foo (void)
 gchar*
 bar (gboolean b)
 {
-	gchar* result = NULL;
+	gchar* result;
 	if (b) {
 		gchar* _tmp0_;
 		const gchar* _tmp1_;

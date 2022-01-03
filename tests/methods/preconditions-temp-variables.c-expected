@@ -33,7 +33,7 @@ foo (gint i)
 	gchar* _tmp3_;
 	gchar* _tmp4_;
 	gchar* _tmp5_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup_printf ("%i", i);
 	_tmp1_ = _tmp0_;
 	_tmp2_ = g_strdup_printf ("%i", i);

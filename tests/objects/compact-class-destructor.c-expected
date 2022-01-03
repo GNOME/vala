@@ -100,7 +100,7 @@ static void _vala_main (void);
 gint
 foo_destroy (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	g_slice_free1 ((gsize) sizeof (gint), self);
 	result = 42;
@@ -136,7 +136,7 @@ Foo*
 get_foo (void)
 {
 	Foo* _tmp0_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = foo_new ();
 	result = _tmp0_;
 	return result;

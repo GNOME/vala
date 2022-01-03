@@ -76,7 +76,7 @@ _vala_prof_bar_exit (void)
 gint
 bar (gboolean b)
 {
-	gint result = 0;
+	gint result;
 	if (!(_vala_prof_bar_level++)) {
 		_vala_prof_bar_counter++;
 		g_timer_continue (_vala_prof_bar_timer);

@@ -326,7 +326,7 @@ create_bar (GType g_type,
             GDestroyNotify g_destroy_func)
 {
 	GPtrArray* _tmp0_;
-	GPtrArray* result = NULL;
+	GPtrArray* result;
 	_tmp0_ = g_ptr_array_new_full ((guint) 0, g_destroy_func);
 	result = _tmp0_;
 	return result;

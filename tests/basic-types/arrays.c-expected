@@ -709,7 +709,7 @@ pass_helper (gint* a,
 	gint* _tmp1_;
 	gint* _tmp2_;
 	gint _tmp2__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = (a != NULL) ? _vala_array_dup8 (a, a_length1) : a;
 	_tmp0__length1 = a_length1;
 	_vala_b = (g_free (_vala_b), NULL);
@@ -954,7 +954,7 @@ nd_array_pass (gint* a,
 	gint _tmp6__length1;
 	gint _tmp6__length2;
 	gint _tmp6__length3;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = a_length1;
 	_vala_assert (_tmp0_ == 2, "a.length[0] == 2");
 	_tmp1_ = a_length2;
@@ -1122,7 +1122,7 @@ test_nd_array (void)
 gint
 simple_func (void)
 {
-	gint result = 0;
+	gint result;
 	result = 0;
 	return result;
 }

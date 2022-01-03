@@ -31,7 +31,7 @@ Foo
 bar (GObject* o)
 {
 	Foo _tmp0_ = (Foo) { .i = 23 };
-	Foo result = (Foo) { .i = 23 };
+	Foo result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT), (Foo) { .i = 23 });
 	result = _tmp0_;
 	return result;

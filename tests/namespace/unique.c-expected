@@ -287,7 +287,7 @@ g_vala_foo_unref (gpointer instance)
 gint
 g_vala_foo (void)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }

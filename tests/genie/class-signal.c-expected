@@ -126,7 +126,7 @@ main (int argc,
 gboolean
 test (gint a)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = a == 23;
 	return result;
 }

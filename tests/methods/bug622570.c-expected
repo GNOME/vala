@@ -24,7 +24,7 @@ static void ___lambda5__deleg2 (GValue* foo,
 static gint
 __lambda4_ (gint* foo)
 {
-	gint result = 0;
+	gint result;
 	result = (*foo) + 5;
 	return result;
 }

@@ -122,7 +122,7 @@ foo_array_owned (gint* result_length1)
 	Foo** _tmp6_;
 	Foo** _tmp7_;
 	gint _tmp7__length1;
-	Foo** result = NULL;
+	Foo** result;
 	memset (&_tmp0_, 0, sizeof (Foo));
 	_tmp0_.i = 23;
 	_tmp1_ = _foo_dup0 (&_tmp0_);
@@ -159,7 +159,7 @@ foo_array_unowned (gint* result_length1)
 	gint _tmp7__length1;
 	Foo** _tmp8_;
 	gint _tmp8__length1;
-	Foo** result = NULL;
+	Foo** result;
 	memset (&_tmp0_, 0, sizeof (Foo));
 	_tmp0_.i = 23;
 	_tmp1_ = _foo_dup0 (&_tmp0_);
@@ -431,7 +431,7 @@ bar_array_owned (gint* result_length1)
 	gint _tmp13__length1;
 	Bar** _tmp14_;
 	gint _tmp14__length1;
-	Bar** result = NULL;
+	Bar** result;
 	_tmp0_ = g_strdup ("foo");
 	memset (&_tmp1_, 0, sizeof (Bar));
 	_g_free0 (_tmp1_.s);
@@ -488,7 +488,7 @@ bar_array_unowned (gint* result_length1)
 	gint _tmp13__length1;
 	Bar** _tmp14_;
 	gint _tmp14__length1;
-	Bar** result = NULL;
+	Bar** result;
 	_tmp0_ = g_strdup ("foo");
 	memset (&_tmp1_, 0, sizeof (Bar));
 	_g_free0 (_tmp1_.s);

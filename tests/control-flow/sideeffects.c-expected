@@ -64,7 +64,7 @@ Foo*
 foo_sideeffect (Foo* self)
 {
 	gint _tmp0_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	self->i = self->i - 1;
 	_tmp0_ = self->i;

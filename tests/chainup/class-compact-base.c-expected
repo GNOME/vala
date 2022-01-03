@@ -51,7 +51,7 @@ foo_new (void)
 gint
 foo_sum (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = self->a + self->b;
 	return result;
@@ -81,7 +81,7 @@ bar_new (void)
 gint
 bar_mul (Bar* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = ((Foo*) self)->a * ((Foo*) self)->b;
 	return result;
@@ -90,7 +90,7 @@ bar_mul (Bar* self)
 gint
 bar_mul2 (Bar* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = self->a * self->b;
 	return result;

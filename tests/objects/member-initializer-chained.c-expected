@@ -453,7 +453,7 @@ gint
 get_int (void)
 {
 	gint _tmp0_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = i;
 	i = _tmp0_ + 1;
 	result = _tmp0_;

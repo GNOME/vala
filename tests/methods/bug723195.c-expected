@@ -25,7 +25,7 @@ _vala_g_strjoinv (const gchar* separator,
                   gint str_array_length1)
 {
 	gboolean _tmp0_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	if (separator == NULL) {
 		separator = "";
 	}

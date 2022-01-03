@@ -155,7 +155,7 @@ static const gchar*
 foo_real_foo (AbstractFoo* base)
 {
 	Foo * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Foo*) base;
 	result = "Foo";
 	return result;
@@ -208,7 +208,7 @@ static const gchar*
 bar_real_foo (AbstractFoo* base)
 {
 	Bar * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Bar*) base;
 	result = "Bar";
 	return result;
@@ -244,7 +244,7 @@ bar_instance_init (Bar * self)
 static const gchar*
 manam_real_foo (Manam* self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	result = "Manam";
 	return result;
 }
@@ -262,7 +262,7 @@ manam_foo (Manam* self)
 static gint
 manam_real_foo_plain (Manam* self)
 {
-	gint result = 0;
+	gint result;
 	result = 13;
 	return result;
 }
@@ -335,7 +335,7 @@ static const gchar*
 baz_real_foo (Manam* base)
 {
 	Baz * self;
-	const gchar* result = NULL;
+	const gchar* result;
 	self = (Baz*) base;
 	result = "Baz";
 	return result;
@@ -345,7 +345,7 @@ static gint
 baz_real_foo_plain (Manam* base)
 {
 	Baz * self;
-	gint result = 0;
+	gint result;
 	self = (Baz*) base;
 	result = 23;
 	return result;

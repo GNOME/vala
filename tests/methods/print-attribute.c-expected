@@ -335,7 +335,7 @@ bar (const gchar* s,
 static gchar*
 bool_to_string (gboolean self)
 {
-	gchar* result = NULL;
+	gchar* result;
 	if (self) {
 		gchar* _tmp0_;
 		_tmp0_ = g_strdup ("true");

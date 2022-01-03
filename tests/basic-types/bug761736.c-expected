@@ -51,7 +51,7 @@ transfer_none (gint* result_length1)
 {
 	gchar** _tmp0_;
 	gint _tmp0__length1;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = FOO;
 	_tmp0__length1 = G_N_ELEMENTS (FOO);
 	if (result_length1) {
@@ -78,7 +78,7 @@ transfer_container (gint* result_length1)
 	gint _tmp0__length1;
 	const gchar** _tmp1_;
 	gint _tmp1__length1;
-	const gchar** result = NULL;
+	const gchar** result;
 	_tmp0_ = _vala_array_dup1 (FOO, G_N_ELEMENTS (FOO));
 	_tmp0__length1 = G_N_ELEMENTS (FOO);
 	_tmp1_ = _tmp0_;
@@ -115,7 +115,7 @@ transfer_full (gint* result_length1)
 	gint _tmp0__length1;
 	gchar** _tmp1_;
 	gint _tmp1__length1;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = _vala_array_dup2 (FOO, G_N_ELEMENTS (FOO));
 	_tmp0__length1 = G_N_ELEMENTS (FOO);
 	_tmp1_ = _tmp0_;

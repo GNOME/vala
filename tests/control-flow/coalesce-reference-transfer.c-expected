@@ -56,7 +56,7 @@ Foo*
 get_foo (gint* i)
 {
 	Foo* _tmp0_ = NULL;
-	Foo* result = NULL;
+	Foo* result;
 	if (i != NULL) {
 		Foo* _tmp1_;
 		_tmp1_ = foo_new (*i);

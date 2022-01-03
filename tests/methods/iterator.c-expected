@@ -765,7 +765,7 @@ foo_iterator_get_instance_private (FooIterator* self)
 gboolean
 foo_iterator_next (FooIterator* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (IS_FOO_ITERATOR (self), FALSE);
 	result = !self->priv->called;
 	return result;
@@ -782,7 +782,7 @@ foo_iterator_get (FooIterator* self)
 {
 	Foo* _tmp0_;
 	Foo* _tmp1_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (IS_FOO_ITERATOR (self), NULL);
 	_vala_assert (!self->priv->called, "!called");
 	self->priv->called = TRUE;
@@ -1013,7 +1013,7 @@ FooIterator*
 foo_collection_iterator (FooCollection* self)
 {
 	FooIterator* _tmp0_;
-	FooIterator* result = NULL;
+	FooIterator* result;
 	g_return_val_if_fail (IS_FOO_COLLECTION (self), NULL);
 	_tmp0_ = foo_iterator_new ();
 	result = _tmp0_;
@@ -1244,7 +1244,7 @@ foo_iterator2_next_value (FooIterator2* self)
 {
 	Foo* _tmp0_;
 	Foo* _tmp1_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (IS_FOO_ITERATOR2 (self), NULL);
 	if (self->priv->called) {
 		result = NULL;
@@ -1478,7 +1478,7 @@ FooIterator2*
 foo_collection2_iterator (FooCollection2* self)
 {
 	FooIterator2* _tmp0_;
-	FooIterator2* result = NULL;
+	FooIterator2* result;
 	g_return_val_if_fail (IS_FOO_COLLECTION2 (self), NULL);
 	_tmp0_ = foo_iterator2_new ();
 	result = _tmp0_;
@@ -1704,7 +1704,7 @@ foo_collection3_get (FooCollection3* self,
 {
 	Foo* _tmp0_;
 	Foo* _tmp1_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (IS_FOO_COLLECTION3 (self), NULL);
 	_vala_assert (index == 0, "index == 0");
 	_tmp0_ = foo_instance;
@@ -2235,7 +2235,7 @@ foo_iterator4_get_instance_private (FooIterator4* self)
 gboolean
 foo_iterator4_next (FooIterator4* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (IS_FOO_ITERATOR4 (self), FALSE);
 	result = !self->priv->called;
 	return result;
@@ -2246,7 +2246,7 @@ foo_iterator4_get (FooIterator4* self)
 {
 	Foo* _tmp0_;
 	FooEntry4* _tmp1_;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (IS_FOO_ITERATOR4 (self), NULL);
 	_vala_assert (!self->priv->called, "!called");
 	self->priv->called = TRUE;
@@ -2493,7 +2493,7 @@ foo_collection4_get (FooCollection4* self,
 {
 	Foo* _tmp0_;
 	gpointer _tmp1_;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (IS_FOO_COLLECTION4 (self), NULL);
 	_vala_assert (g_strcmp0 (key, "foo") == 0, "key == \"foo\"");
 	_tmp0_ = foo_instance;
@@ -2506,7 +2506,7 @@ FooIterator4*
 foo_collection4_iterator (FooCollection4* self)
 {
 	FooIterator4* _tmp0_;
-	FooIterator4* result = NULL;
+	FooIterator4* result;
 	g_return_val_if_fail (IS_FOO_COLLECTION4 (self), NULL);
 	_tmp0_ = foo_iterator4_new (TYPE_FOO_ENTRY4, (GBoxedCopyFunc) foo_entry4_ref, (GDestroyNotify) foo_entry4_unref);
 	result = _tmp0_;

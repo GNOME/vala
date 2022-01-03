@@ -89,7 +89,7 @@ static void _____lambda4__foo_manam (Foo* _sender,
 gint
 foo_bar (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	result = 23;
 	return result;

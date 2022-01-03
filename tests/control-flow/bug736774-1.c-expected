@@ -122,7 +122,7 @@ Foo*
 may_fail (GError** error)
 {
 	Foo* _tmp0_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = foo_new ();
 	result = _tmp0_;
 	return result;

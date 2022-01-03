@@ -333,7 +333,7 @@ call (GType t_type,
 	gpointer _tmp1_;
 	gpointer _tmp2_;
 	GError* _inner_error0_ = NULL;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (conn, g_dbus_connection_get_type ()), NULL);
 	g_return_val_if_fail (name != NULL, NULL);
 	g_return_val_if_fail (object_path != NULL, NULL);

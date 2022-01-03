@@ -55,7 +55,7 @@ maman_bar_main (void)
 	FILE* _tmp0_;
 	gint i = 0;
 	FILE* _tmp4_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Break Test: 1");
 	{

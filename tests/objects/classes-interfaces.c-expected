@@ -262,7 +262,7 @@ static gint
 manam_real_ibar_foo (IBar* base)
 {
 	Manam * self;
-	gint result = 0;
+	gint result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_MANAM, Manam);
 	result = 23;
 	return result;
@@ -273,7 +273,7 @@ manam_real_ifoo_foo (IFoo* base)
 {
 	Manam * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_MANAM, Manam);
 	_tmp0_ = g_strdup ("foo");
 	result = _tmp0_;

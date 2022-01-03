@@ -95,7 +95,7 @@ maman_foo_get_type (void)
 gint
 maman_fooish_something (MamanFooish self)
 {
-	gint result = 0;
+	gint result;
 	result = (gint) self;
 	return result;
 }
@@ -166,7 +166,7 @@ maman_bar_main (void)
 	MamanBar* bar = NULL;
 	MamanBar* _tmp1_;
 	FILE* _tmp2_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Enum Test: 1");
 	_tmp1_ = maman_bar_new ();

@@ -148,7 +148,7 @@ foo_get_type (void)
 gint
 bar_get_bar (Bar* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_BAR (self), 0);
 	result = 23;
 	return result;
@@ -205,7 +205,7 @@ bar_get_type (void)
 static gint
 manam_real_get_foo (Manam* self)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }

@@ -206,7 +206,7 @@ static Foo*
 __lambda4_ (void)
 {
 	Foo* _tmp0_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = foo_new ();
 	result = _tmp0_;
 	return result;
@@ -225,7 +225,7 @@ static IBar*
 __lambda5_ (void)
 {
 	Foo* _tmp0_;
-	IBar* result = NULL;
+	IBar* result;
 	_tmp0_ = foo_new ();
 	result = G_TYPE_CHECK_INSTANCE_CAST (_tmp0_, TYPE_IBAR, IBar);
 	return result;

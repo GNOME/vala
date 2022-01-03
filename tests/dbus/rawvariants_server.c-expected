@@ -276,7 +276,7 @@ test_test_method (Test* self,
                   gint j,
                   gint k)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	_vala_assert (j == 23, "j == 23");
 	_vala_assert (k == 11, "k == 11");
@@ -620,7 +620,7 @@ test_raw_test_method (TestRaw* self,
 	gint _tmp1_;
 	GVariant* _tmp2_;
 	GVariant* _tmp3_;
-	GVariant* result = NULL;
+	GVariant* result;
 	g_return_val_if_fail (IS_TEST_RAW (self), NULL);
 	g_return_val_if_fail (j != NULL, NULL);
 	g_return_val_if_fail (k != NULL, NULL);

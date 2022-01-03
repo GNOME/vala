@@ -75,7 +75,7 @@ gboolean
 foo_contains (Foo* self,
               gint item)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (IS_FOO (self), FALSE);
 	result = item == 42;
 	return result;

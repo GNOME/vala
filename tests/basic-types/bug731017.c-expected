@@ -45,7 +45,7 @@ bar (gint* result_length1)
 	const gchar* _tmp1_;
 	const gchar** _tmp2_;
 	gint _tmp2__length1;
-	const gchar** result = NULL;
+	const gchar** result;
 	_tmp0_ = g_new0 (const gchar*, 1 + 1);
 	ret = _tmp0_;
 	ret_length1 = 1;

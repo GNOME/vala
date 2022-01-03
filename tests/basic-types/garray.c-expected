@@ -227,7 +227,7 @@ vala_g_array_remove_index (GArray* self,
 	gpointer* _tmp0_;
 	gint _tmp0__length1;
 	gpointer _tmp1_;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_vala_assert (self->len > index, "length > index");
 	_tmp0_ = self->data;
@@ -248,7 +248,7 @@ vala_g_array_remove_index_fast (GArray* self,
 	gpointer* _tmp0_;
 	gint _tmp0__length1;
 	gpointer _tmp1_;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_vala_assert (self->len > index, "length > index");
 	_tmp0_ = self->data;
@@ -273,7 +273,7 @@ vala_g_array_remove_range (GArray* self,
 	gint _ga_size_;
 	gpointer* _tmp6_;
 	gint _tmp6__length1;
-	gpointer* result = NULL;
+	gpointer* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_vala_assert (self->len >= (index + length), "this.length >= index + length");
 	_tmp0_ = g_new0 (gpointer, length);
@@ -450,7 +450,7 @@ create_struct_garray (void)
 	FooStruct _tmp10_;
 	FooStruct _tmp11_;
 	FooStruct* _tmp12_;
-	GArray* result = NULL;
+	GArray* result;
 	_tmp0_ = g_array_new (TRUE, TRUE, sizeof (FooStruct*));
 	g_array_set_clear_func (_tmp0_, (GDestroyNotify) _vala_FooStruct_free_function_content_of);
 	array = _tmp0_;
@@ -572,7 +572,7 @@ test_object_garray (void)
 GArray*
 check_gvalue_garray (GArray* vals)
 {
-	GArray* result = NULL;
+	GArray* result;
 	g_return_val_if_fail (vals != NULL, NULL);
 	_vala_assert (g_strcmp0 (g_value_get_string (&g_array_index (vals, GValue, (guint) 0)), "foo") == 0, "vals.index (0) == \"foo\"");
 	_vala_assert (g_value_get_int (&g_array_index (vals, GValue, (guint) 1)) == 42, "vals.index (1) == 42");

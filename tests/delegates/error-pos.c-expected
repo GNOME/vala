@@ -103,7 +103,7 @@ bar_foo (Bar* self,
          gint i)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	_vala_assert (IS_BAR (self), "this is Bar");
 	_tmp0_ = g_strdup_printf ("%i", i);

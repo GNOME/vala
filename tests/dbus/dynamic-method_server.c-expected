@@ -128,7 +128,7 @@ test_do_foo (Test* self,
 {
 	gchar* _vala_s = NULL;
 	gchar* _tmp0_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	_vala_assert (i == 42, "i == 42");
 	_tmp0_ = g_strdup ("foo");

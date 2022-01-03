@@ -201,7 +201,7 @@ foo_get_type (void)
 static gint
 __lambda4_ (gint i)
 {
-	gint result = 0;
+	gint result;
 	result = i + 12;
 	return result;
 }

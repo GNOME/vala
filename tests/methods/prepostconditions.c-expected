@@ -157,7 +157,7 @@ foo_bar (Foo* self)
 	gchar* _tmp0_;
 	gint _tmp1_;
 	gint _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = g_strdup ("bar");
 	result = _tmp0_;
@@ -180,7 +180,7 @@ gint
 foo_bar_pre (Foo* self,
              gint i)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	_vala_return_val_if_fail (i > 42, "i > 42", 0);
 	_vala_assert (i == 4711, "i == 4711");
@@ -192,7 +192,7 @@ gint
 foo_faz (Foo* self,
          gint i)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	switch (i) {
 		case 42:
@@ -212,7 +212,7 @@ gint
 foo_faz_pre (Foo* self,
              gint i)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	_vala_return_val_if_fail (i > 23, "i > 23", 0);
 	switch (i) {
@@ -232,7 +232,7 @@ static gint
 foo_real_manam (Foo* self,
                 gint i)
 {
-	gint result = 0;
+	gint result;
 	switch (i) {
 		case 67:
 		{
@@ -267,7 +267,7 @@ static gint
 foo_real_manam_pre (Foo* self,
                     gint i)
 {
-	gint result = 0;
+	gint result;
 	_vala_return_val_if_fail (i > 23, "i > 23", 0);
 	switch (i) {
 		case 231:
@@ -528,7 +528,7 @@ bar_foo (Bar *self)
 	gchar* _tmp0_;
 	gint _tmp1_;
 	gint _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("foo");
 	result = _tmp0_;
 	_tmp1_ = strlen (result);

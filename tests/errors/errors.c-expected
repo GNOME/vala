@@ -105,7 +105,7 @@ bar_bad (Bar* self,
 {
 	FILE* _tmp0_;
 	GError* _inner_error0_ = NULL;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_BAR (self), 0);
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, " 5");

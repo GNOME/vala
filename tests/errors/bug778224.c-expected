@@ -41,7 +41,7 @@ foo (GError** error)
 {
 	Foo _tmp3_ = {0};
 	GError* _inner_error0_ = NULL;
-	Foo result = {0};
+	Foo result;
 	if (true) {
 		GError* _tmp0_;
 		_tmp0_ = g_error_new_literal (FOO_ERROR, FOO_ERROR_BAR, "");

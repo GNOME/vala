@@ -365,7 +365,7 @@ ___lambda6_ (void)
 	Foo _tmp2_;
 	Foo* _tmp3_;
 	Foo* _tmp4_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = g_strdup ("bar");
 	_g_free0 (_tmp1_.s);
 	_tmp1_.s = _tmp0_;
@@ -395,7 +395,7 @@ ___lambda7_ (const gchar* s)
 	Foo _tmp2_;
 	Foo* _tmp3_;
 	Foo* _tmp4_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (s != NULL, NULL);
 	_vala_assert (g_strcmp0 (s, "bar") == 0, "s == \"bar\"");
 	_tmp0_ = g_strdup ("bar");

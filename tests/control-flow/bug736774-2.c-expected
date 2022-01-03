@@ -54,7 +54,7 @@ may_fail (GError** error)
 	vstring* _result_ = NULL;
 	gchar* _tmp0_;
 	vstring* _tmp1_;
-	vstring* result = NULL;
+	vstring* result;
 	_tmp0_ = g_strdup ("test");
 	_result_ = (vstring*) _tmp0_;
 	_tmp1_ = _result_;

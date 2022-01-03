@@ -92,7 +92,7 @@ foo_output_stream_real_close (GOutputStream* base,
                               GError** error)
 {
 	FooOutputStream * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO_OUTPUT_STREAM, FooOutputStream);
 	g_return_val_if_fail ((cancellable == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (cancellable, g_cancellable_get_type ()), FALSE);
 	result = TRUE;

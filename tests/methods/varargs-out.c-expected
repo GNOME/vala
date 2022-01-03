@@ -255,7 +255,7 @@ get_foo_varg (const gchar* s,
 	Foo** _tmp0_;
 	Foo* _tmp1_;
 	GObject* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (s != NULL, FALSE);
 	va_start (args, s);
 	_tmp0_ = va_arg (args, Foo**);

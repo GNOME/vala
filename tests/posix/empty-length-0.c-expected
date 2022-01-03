@@ -132,7 +132,7 @@ get_foo (int* result_length1)
 	int _tmp1__length1;
 	char** _tmp2_;
 	int _tmp2__length1;
-	char** result = NULL;
+	char** result;
 	_tmp0_ = foo;
 	_tmp0__length1 = foo_length1;
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup1 (_tmp0_, _tmp0__length1) : _tmp0_;
@@ -168,7 +168,7 @@ get_bar (int* result_length1)
 	int _tmp1__length1;
 	int* _tmp2_;
 	int _tmp2__length1;
-	int* result = NULL;
+	int* result;
 	_tmp0_ = bar;
 	_tmp0__length1 = bar_length1;
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup2 (_tmp0_, _tmp0__length1) : _tmp0_;
@@ -211,7 +211,7 @@ get_manam (int* result_length1)
 	int _tmp1__length1;
 	Manam* _tmp2_;
 	int _tmp2__length1;
-	Manam* result = NULL;
+	Manam* result;
 	_tmp0_ = manam;
 	_tmp0__length1 = manam_length1;
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup3 (_tmp0_, _tmp0__length1) : _tmp0_;

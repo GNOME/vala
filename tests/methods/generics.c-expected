@@ -456,7 +456,7 @@ is_check (GType g_type,
 {
 	Bar* o = NULL;
 	Bar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	_tmp0_ = bar_new ();
 	o = _tmp0_;
 	result = G_TYPE_CHECK_INSTANCE_TYPE (o, g_type);

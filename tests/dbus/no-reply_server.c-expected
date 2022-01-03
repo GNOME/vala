@@ -186,7 +186,7 @@ test_list_messages (Test* self,
 	gint _tmp1__length1;
 	gchar** _tmp2_;
 	gint _tmp2__length1;
-	gchar** result = NULL;
+	gchar** result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = self->priv->messages;
 	_tmp0__length1 = self->priv->messages_length1;

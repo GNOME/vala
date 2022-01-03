@@ -34,7 +34,7 @@ GError*
 foo_from_string (const gchar* _error_)
 {
 	GError* _tmp0_;
-	GError* result = NULL;
+	GError* result;
 	g_return_val_if_fail (_error_ != NULL, NULL);
 	_vala_assert (g_strcmp0 (_error_, "BAD") == 0, "error == \"BAD\"");
 	_tmp0_ = g_error_new_literal (FOO, FOO_BAD, "BAD");

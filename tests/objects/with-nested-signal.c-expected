@@ -122,7 +122,7 @@ static void _______lambda5__foo_manam (Foo* _sender,
 static gint
 foo_real_foo (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	result = 23;
 	return result;
 }
@@ -358,7 +358,7 @@ static gint
 bar_real_foo (Foo* base)
 {
 	Bar * self;
-	gint result = 0;
+	gint result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	result = 42;
 	return result;

@@ -147,7 +147,7 @@ foo_get_instance_private (Foo* self)
 gint
 foo_foo (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	result = self->i;
 	return result;
@@ -157,7 +157,7 @@ Bar*
 foo_bar (Foo* self)
 {
 	Bar* _tmp0_;
-	Bar* result = NULL;
+	Bar* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = bar_new ();
 	result = _tmp0_;
@@ -175,7 +175,7 @@ foo_bars (Foo* self,
 	gint _a_size_;
 	Bar** _tmp5_;
 	gint _tmp5__length1;
-	Bar** result = NULL;
+	Bar** result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = g_new0 (Bar*, n + 1);
 	a = _tmp0_;
@@ -229,7 +229,7 @@ foo_seq (Foo* self,
 	gint _a_size_;
 	gint* _tmp4_;
 	gint _tmp4__length1;
-	gint* result = NULL;
+	gint* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = g_new0 (gint, n);
 	a = _tmp0_;

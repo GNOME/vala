@@ -31,7 +31,7 @@ foo (gpointer* result_target)
 {
 	FooFunc _tmp0_;
 	gpointer _tmp0__target;
-	FooFunc result = NULL;
+	FooFunc result;
 	_tmp0_ = (FooFunc) manam;
 	_tmp0__target = NULL;
 	*result_target = _tmp0__target;
@@ -42,7 +42,7 @@ foo (gpointer* result_target)
 static gint
 __lambda4_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 4711;
 	return result;
 }
@@ -60,7 +60,7 @@ bar (gpointer* result_target)
 {
 	FooFunc _tmp0_;
 	gpointer _tmp0__target;
-	FooFunc result = NULL;
+	FooFunc result;
 	_tmp0_ = ___lambda4__foo_func;
 	_tmp0__target = NULL;
 	*result_target = _tmp0__target;
@@ -71,7 +71,7 @@ bar (gpointer* result_target)
 gint
 manam (void)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }

@@ -365,7 +365,7 @@ baz (GType t_type,
      GBoxedCopyFunc t_dup_func,
      GDestroyNotify t_destroy_func)
 {
-	gconstpointer* result = NULL;
+	gconstpointer* result;
 	result = NULL;
 	return result;
 }

@@ -131,7 +131,7 @@ static gboolean
 foo_real_ifoo_foo (IFoo* base)
 {
 	Foo * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	result = TRUE;
 	return result;
@@ -140,7 +140,7 @@ foo_real_ifoo_foo (IFoo* base)
 gint
 foo_foo (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	result = 42;
 	return result;

@@ -27,7 +27,7 @@ static void _vala_main (void);
 const gchar*
 m (void)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	result = "foo";
 	return result;
 }
@@ -35,7 +35,7 @@ m (void)
 static const gchar*
 string_to_string (const gchar* self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self;
 	return result;

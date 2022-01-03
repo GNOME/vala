@@ -208,7 +208,7 @@ get_foo (void)
 	Foo _tmp2_;
 	Foo* _tmp3_;
 	Foo* _tmp4_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = g_strdup ("foo");
 	_g_free0 (_tmp1_.s);
 	_tmp1_.s = _tmp0_;

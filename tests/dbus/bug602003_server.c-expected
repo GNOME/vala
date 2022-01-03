@@ -144,7 +144,7 @@ test_test_string (Test* self)
 	gint _tmp2__length1;
 	GVariant* _tmp6_;
 	GVariant* _tmp7_;
-	GVariant* result = NULL;
+	GVariant* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = g_strdup ("hello");
 	_tmp1_ = g_new0 (gchar*, 1 + 1);

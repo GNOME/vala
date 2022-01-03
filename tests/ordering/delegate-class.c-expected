@@ -71,7 +71,7 @@ Func
 foo_foo (Foo* self,
          Func p)
 {
-	Func result = NULL;
+	Func result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	result = p;
 	return result;

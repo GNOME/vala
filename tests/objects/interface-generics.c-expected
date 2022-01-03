@@ -139,7 +139,7 @@ static gpointer
 foo_real_get (IFoo* base)
 {
 	Foo * self;
-	gpointer result = NULL;
+	gpointer result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	result = NULL;
 	return result;

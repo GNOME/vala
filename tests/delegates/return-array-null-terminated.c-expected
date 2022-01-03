@@ -38,7 +38,7 @@ foo (void)
 	gchar* _tmp0_;
 	gchar* _tmp1_;
 	gchar** _tmp2_;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = g_strdup ("foo");
 	_tmp1_ = g_strdup ("bar");
 	_tmp2_ = g_new0 (gchar*, 2 + 1);

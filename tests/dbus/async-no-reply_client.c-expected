@@ -753,7 +753,7 @@ __lambda4_ (Block1Data* _data1_,
 	gboolean _tmp0_ = FALSE;
 	const gchar* _tmp1_;
 	GDBusMessage* _tmp6_;
-	GDBusMessage* result = NULL;
+	GDBusMessage* result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (conn, g_dbus_connection_get_type ()), NULL);
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (message, g_dbus_message_get_type ()), NULL);
 	_tmp1_ = g_dbus_message_get_interface (message);

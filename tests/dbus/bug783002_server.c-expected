@@ -251,7 +251,7 @@ static gboolean
 __lambda4_ (Block1Data* _data1_)
 {
 	Test* self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	test_test_array_lifetime_co (_data1_->_async_data_);
 	result = FALSE;

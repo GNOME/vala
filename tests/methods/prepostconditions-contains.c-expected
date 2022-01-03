@@ -55,7 +55,7 @@ gchar*
 bar (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("manam");
 	result = _tmp0_;
 	_vala_warn_if_fail (_vala_string_array_contains (array, G_N_ELEMENTS (array), result), "result in array");

@@ -265,7 +265,7 @@ maman_bar_do_void_action (void)
 static gint
 maman_bar_do_action (void)
 {
-	gint result = 0;
+	gint result;
 	result = 4;
 	return result;
 }
@@ -434,7 +434,7 @@ ___lambda4__maman_void_callback (void)
 static MamanVoidCallback
 maman_bar_test_unowned_delegate_return (void)
 {
-	MamanVoidCallback result = NULL;
+	MamanVoidCallback result;
 	result = ___lambda4__maman_void_callback;
 	return result;
 }
@@ -478,7 +478,7 @@ maman_bar_main (void)
 	FILE* _tmp10_;
 	MamanVoidCallback baz = NULL;
 	MamanVoidCallback _tmp11_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Delegate Test: 1");
 	void_cb = _maman_bar_do_void_action_maman_void_callback;

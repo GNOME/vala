@@ -81,7 +81,7 @@ foo_count_strings (Foo* self,
 {
 	gint i = 0;
 	va_list args = {0};
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	i = 0;
 	va_start (args, self);

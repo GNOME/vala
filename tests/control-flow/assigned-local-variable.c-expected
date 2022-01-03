@@ -30,7 +30,7 @@ foo (gchar** s)
 {
 	gchar* _vala_s = NULL;
 	gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	_tmp0_ = g_strdup ("foo");
 	_g_free0 (_vala_s);
 	_vala_s = _tmp0_;
@@ -46,7 +46,7 @@ foo (gchar** s)
 gint
 bar (void)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }

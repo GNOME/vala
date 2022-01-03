@@ -828,7 +828,7 @@ sample_main (void)
 	RealStruct* _tmp6_;
 	RealStruct* _tmp7_;
 	RealStruct* _tmp8_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = sample_new ("InitialName");
 	test = _tmp0_;
 	sample_run (test);

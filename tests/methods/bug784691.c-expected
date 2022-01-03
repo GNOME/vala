@@ -26,7 +26,7 @@ const gint FOO[3] = {0, 1, 2};
 gint*
 get_foo (void)
 {
-	gint* result = NULL;
+	gint* result;
 	_vala_assert (G_N_ELEMENTS (FOO) == 3, "FOO.length == 3");
 	result = FOO;
 	return result;

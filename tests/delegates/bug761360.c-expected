@@ -20,7 +20,7 @@ __lambda4_ (gint* result_length1)
 	gint* _tmp0_;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = g_new0 (gint, 3);
 	_tmp0_[0] = 1;
 	_tmp0_[1] = 2;

@@ -122,7 +122,7 @@ vala_g_list_remove_full (GList* self,
                          GFreeFunc func)
 {
 	GList* l = NULL;
-	GList* result = NULL;
+	GList* result;
 	l = self;
 	while (TRUE) {
 		GList* _tmp0_;
@@ -174,7 +174,7 @@ vala_g_list_remove_all_full (GList* self,
                              GFreeFunc func)
 {
 	GList* l = NULL;
-	GList* result = NULL;
+	GList* result;
 	l = self;
 	while (TRUE) {
 		GList* _tmp0_;
@@ -272,7 +272,7 @@ vala_g_slist_remove_full (GSList* self,
                           GFreeFunc func)
 {
 	GSList* l = NULL;
-	GSList* result = NULL;
+	GSList* result;
 	l = self;
 	while (TRUE) {
 		GSList* _tmp0_;
@@ -318,7 +318,7 @@ vala_g_slist_remove_all_full (GSList* self,
                               GFreeFunc func)
 {
 	GSList* l = NULL;
-	GSList* result = NULL;
+	GSList* result;
 	l = self;
 	while (TRUE) {
 		GSList* _tmp0_;
@@ -419,7 +419,7 @@ vala_g_queue_remove_full (GQueue* self,
 	GList* _tmp0_;
 	GList* _tmp1_;
 	GList* _tmp2_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = self->head;
 	_tmp1_ = g_list_find (_tmp0_, data);
@@ -456,7 +456,7 @@ vala_g_queue_remove_all_full (GQueue* self,
 	guint old_length = 0U;
 	GList* l = NULL;
 	GList* _tmp0_;
-	guint result = 0U;
+	guint result;
 	g_return_val_if_fail (self != NULL, 0U);
 	old_length = self->length;
 	_tmp0_ = self->head;

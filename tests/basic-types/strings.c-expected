@@ -49,7 +49,7 @@ string_slice (const gchar* self,
 	gboolean _tmp2_ = FALSE;
 	gboolean _tmp3_ = FALSE;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = strlen (self);
 	_tmp1_ = _tmp0_;
@@ -83,7 +83,7 @@ string_get (const gchar* self,
             glong index)
 {
 	gchar _tmp0_;
-	gchar result = '\0';
+	gchar result;
 	g_return_val_if_fail (self != NULL, '\0');
 	_tmp0_ = ((gchar*) self)[index];
 	result = _tmp0_;
@@ -258,7 +258,7 @@ _vala_g_strjoinv (const gchar* separator,
                   gint str_array_length1)
 {
 	gboolean _tmp0_ = FALSE;
-	gchar* result = NULL;
+	gchar* result;
 	if (separator == NULL) {
 		separator = "";
 	}
@@ -475,7 +475,7 @@ string_replace (const gchar* self,
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
@@ -635,7 +635,7 @@ string_splice (const gchar* self,
 	gchar* _tmp9_;
 	gchar* _tmp12_;
 	const gchar* _tmp13_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = strlen (self);
 	_tmp1_ = _tmp0_;
@@ -768,7 +768,7 @@ string_strnlen (gchar* str,
 	gchar* end = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	glong result = 0L;
+	glong result;
 	_tmp0_ = memchr (str, 0, (gsize) maxlen);
 	end = _tmp0_;
 	_tmp1_ = end;
@@ -791,7 +791,7 @@ string_substring (const gchar* self,
 	glong string_length = 0L;
 	gboolean _tmp0_ = FALSE;
 	gchar* _tmp3_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	if (offset >= ((glong) 0)) {
 		_tmp0_ = len >= ((glong) 0);

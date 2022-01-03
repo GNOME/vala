@@ -804,7 +804,7 @@ _vala_bar_set_property (GObject * object,
 const gchar*
 manam (void)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	result = "manam";
 	return result;
 }

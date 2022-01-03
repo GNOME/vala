@@ -59,7 +59,7 @@ static gchar*
 __lambda4_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup (_data1_->bar);
 	result = _tmp0_;
 	return result;
@@ -82,7 +82,7 @@ foo (gchar* bar,
 	Deleg _tmp0_;
 	gpointer _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
-	Deleg result = NULL;
+	Deleg result;
 	g_return_val_if_fail (bar != NULL, NULL);
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;

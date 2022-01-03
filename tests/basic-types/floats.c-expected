@@ -43,7 +43,7 @@ double_to_string (gdouble self)
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_new0 (gchar, G_ASCII_DTOSTR_BUF_SIZE);
 	_tmp1_ = _tmp0_;
 	_tmp1__length1 = G_ASCII_DTOSTR_BUF_SIZE;
@@ -58,7 +58,7 @@ double_to_string (gdouble self)
 static gdouble
 double_parse (const gchar* str)
 {
-	gdouble result = 0.0;
+	gdouble result;
 	g_return_val_if_fail (str != NULL, 0.0);
 	result = g_ascii_strtod (str, NULL);
 	return result;
@@ -77,7 +77,7 @@ double_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = g_ascii_strtod (str, &_tmp0_);
@@ -214,7 +214,7 @@ test_double (void)
 static gfloat
 float_parse (const gchar* str)
 {
-	gfloat result = 0.0F;
+	gfloat result;
 	g_return_val_if_fail (str != NULL, 0.0F);
 	result = strtof (str, NULL);
 	return result;
@@ -233,7 +233,7 @@ float_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = strtof (str, &_tmp0_);

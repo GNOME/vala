@@ -162,7 +162,7 @@ do_foo (void)
 	Block1Data* _data1_;
 	Foo* _tmp0_;
 	Foo* _tmp1_;
-	Foo* result = NULL;
+	Foo* result;
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = foo_new ();

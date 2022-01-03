@@ -392,7 +392,7 @@ bar_instance_callback (Bar* self,
                        const gchar* s)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	g_return_val_if_fail (IS_FOO (foo), NULL);
 	g_return_val_if_fail (s != NULL, NULL);
@@ -457,7 +457,7 @@ callback_static (Foo* foo,
                  const gchar* s)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_FOO (foo), NULL);
 	g_return_val_if_fail (s != NULL, NULL);
 	_vala_assert (IS_FOO (foo), "foo is Foo");

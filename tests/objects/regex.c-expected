@@ -134,7 +134,7 @@ get_from_array (gint index)
 	gint _tmp5_;
 	GRegex* _tmp6_;
 	GRegex* _tmp7_;
-	GRegex* result = NULL;
+	GRegex* result;
 	_tmp0_ = _g_regex_ref0 (_thread_safe_regex_init (&_tmp_regex_0, "(\\d+\\.\\d+\\.\\d+)", 0));
 	_tmp1_ = _g_regex_ref0 (_thread_safe_regex_init (&_tmp_regex_1, "(\\d+)\\.\\d+\\.\\d+", 0));
 	_tmp2_ = _g_regex_ref0 (_thread_safe_regex_init (&_tmp_regex_2, "\\d+\\.(\\d+)\\.\\d+", 0));
@@ -160,7 +160,7 @@ GRegex*
 get_fixed (void)
 {
 	GRegex* _tmp0_;
-	GRegex* result = NULL;
+	GRegex* result;
 	_tmp0_ = _g_regex_ref0 (_thread_safe_regex_init (&_tmp_regex_4, "(is.*ip)", 0));
 	result = _tmp0_;
 	return result;

@@ -12,7 +12,7 @@ static gint
 _vala_main (gchar** args,
             gint args_length1)
 {
-	gint result = 0;
+	gint result;
 	result = 0;
 	return result;
 }

@@ -184,7 +184,7 @@ maman_sub_bar_main (void)
 	MamanSubBar* bar = NULL;
 	MamanSubBar* _tmp1_;
 	FILE* _tmp2_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Base Access Test: 1");
 	_tmp1_ = maman_sub_bar_new ();

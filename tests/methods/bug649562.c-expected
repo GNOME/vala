@@ -11,7 +11,7 @@ static gboolean
 __lambda4_ (void)
 {
 	static const gint b = 3;
-	gboolean result = FALSE;
+	gboolean result;
 	result = FALSE;
 	return result;
 }

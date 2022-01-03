@@ -68,7 +68,7 @@ block1_data_unref (void * _userdata_)
 static gint
 __lambda4_ (gint i)
 {
-	gint result = 0;
+	gint result;
 	_vala_assert (i == 42, "i == 42");
 	result = i;
 	return result;
@@ -86,7 +86,7 @@ static gint
 __lambda5_ (Block1Data* _data1_,
             gint i)
 {
-	gint result = 0;
+	gint result;
 	_vala_assert (i == 23, "i == 23");
 	result = _data1_->global;
 	return result;

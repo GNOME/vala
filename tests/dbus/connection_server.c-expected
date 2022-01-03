@@ -119,7 +119,7 @@ gint
 test_get_test (Test* self,
                GError** error)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	result = 4711;
 	return result;

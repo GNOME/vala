@@ -15,7 +15,7 @@ static gboolean ___lambda4__gsource_dispatch_func (GSource* source,
 static gboolean
 __lambda4_ (void)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = FALSE;
 	return result;
 }

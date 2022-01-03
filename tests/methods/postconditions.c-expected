@@ -114,7 +114,7 @@ bar (gchar** a,
 	gint _tmp2__length1;
 	const gchar* _tmp3_;
 	const gchar* _tmp4_;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = g_strdup ("manam");
 	_tmp1_ = g_new0 (gchar*, 1 + 1);
 	_tmp1_[0] = _tmp0_;
@@ -145,7 +145,7 @@ baz (gchar*** a,
 	gint _tmp5__length1;
 	const gchar* _tmp6_;
 	const gchar* _tmp7_;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = g_strdup ("bar");
 	_tmp1_ = g_strdup ("foo");
 	_tmp2_ = g_new0 (gchar*, 2 + 1);
@@ -185,7 +185,7 @@ bam (gchar*** a,
 	gint _tmp5__length1;
 	const gchar* _tmp6_;
 	const gchar* _tmp7_;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = g_strdup ("bar");
 	_tmp1_ = g_strdup ("foo");
 	_tmp2_ = g_new0 (gchar*, 2 + 1);

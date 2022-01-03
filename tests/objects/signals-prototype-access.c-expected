@@ -126,7 +126,7 @@ foo_new (void)
 static gint
 foo_real_bar (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	result = 23;
 	return result;
 }
@@ -135,7 +135,7 @@ gint
 foo_bar (Foo* self)
 {
 	gint _tmp0_ = 0;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	g_signal_emit (self, foo_signals[FOO_BAR_SIGNAL], 0, &_tmp0_);
 	result = _tmp0_;

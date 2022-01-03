@@ -113,7 +113,7 @@ ref_generic (GType g_type,
              gconstpointer o)
 {
 	gpointer _tmp0_;
-	gpointer result = NULL;
+	gpointer result;
 	_tmp0_ = ((o != NULL) && (g_dup_func != NULL)) ? g_dup_func ((gpointer) o) : ((gpointer) o);
 	result = _tmp0_;
 	return result;
@@ -129,7 +129,7 @@ GObject*
 ref (GObject* o)
 {
 	GObject* _tmp0_;
-	GObject* result = NULL;
+	GObject* result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT), NULL);
 	_tmp0_ = _g_object_ref0 (o);
 	result = _tmp0_;

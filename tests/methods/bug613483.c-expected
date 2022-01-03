@@ -117,7 +117,7 @@ _foo_bar___lambda4_ (Block1Data* _data1_)
 {
 	Foo* self;
 	gint i = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	i = _data1_->value;
 	result = FALSE;

@@ -109,7 +109,7 @@ foo_new (void)
 static gboolean
 __lambda4_ (Foo* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = TRUE;
 	return result;
 }

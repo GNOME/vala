@@ -45,7 +45,7 @@ foo_new (void)
 gint
 foo_get_i (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
 	result = self->i;
 	return result;

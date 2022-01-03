@@ -120,7 +120,7 @@ static TestEnum
 __lambda4_ (TestEnum self,
             TestEnum x)
 {
-	TestEnum result = 0;
+	TestEnum result;
 	switch (self) {
 		case TEST_ENUM_T:
 		{
@@ -173,7 +173,7 @@ __lambda5_ (Block1Data* _data1_,
             TestEnum x)
 {
 	TestEnum self;
-	TestEnum result = 0;
+	TestEnum result;
 	self = _data1_->self;
 	switch (self) {
 		case TEST_ENUM_T:
@@ -265,7 +265,7 @@ static TestEnum
 test_g (TestEnum i,
         Test* self)
 {
-	TestEnum result = 0;
+	TestEnum result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	result = i;
 	return result;
@@ -275,7 +275,7 @@ static gint
 test_h (gint i,
         Test* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	result = i;
 	return result;
@@ -500,7 +500,7 @@ _vala_main (void)
 	TestEnum t = 0;
 	Test* t2 = NULL;
 	Test* _tmp0_;
-	gint result = 0;
+	gint result;
 	t = TEST_ENUM_T;
 	test_enum_f (t);
 	test_enum_g (t, 0);

@@ -39,7 +39,7 @@ test (gint* result_length1,
 	gchar** _tmp1_;
 	gchar** _tmp2_;
 	gint _tmp2__length1;
-	gchar** result = NULL;
+	gchar** result;
 	_tmp0_ = g_strdup ("1");
 	_tmp1_ = g_new0 (gchar*, 2 + 1);
 	_tmp1_[0] = NULL;

@@ -49,7 +49,7 @@ gchar*
 test (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("passed");
 	result = _tmp0_;
 	return result;

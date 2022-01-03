@@ -55,7 +55,7 @@ foo_source_real_prepare (GSource* base,
 {
 	FooSource * self;
 	gint _vala_timeout = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (FooSource*) base;
 	_vala_timeout = 1000;
 	result = FALSE;
@@ -69,7 +69,7 @@ static gboolean
 foo_source_real_check (GSource* base)
 {
 	FooSource * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (FooSource*) base;
 	result = FALSE;
 	return result;
@@ -81,7 +81,7 @@ foo_source_real_dispatch (GSource* base,
                           gpointer callback_target)
 {
 	FooSource * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (FooSource*) base;
 	result = FALSE;
 	return result;
@@ -126,7 +126,7 @@ bar_source_real_prepare (GSource* base,
 {
 	BarSource * self;
 	gint _vala_timeout = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (BarSource*) base;
 	_vala_timeout = self->custom_timeout;
 	result = FALSE;
@@ -140,7 +140,7 @@ static gboolean
 bar_source_real_check (GSource* base)
 {
 	BarSource * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (BarSource*) base;
 	result = FALSE;
 	return result;
@@ -152,7 +152,7 @@ bar_source_real_dispatch (GSource* base,
                           gpointer callback_target)
 {
 	BarSource * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (BarSource*) base;
 	result = FALSE;
 	return result;
@@ -176,7 +176,7 @@ manam_source_real_dispatch (GSource* base,
                             gpointer callback_target)
 {
 	ManamSource * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = (ManamSource*) base;
 	result = FALSE;
 	return result;

@@ -395,7 +395,7 @@ to_int (GBinding* b,
         GValue* to)
 {
 	const gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (b, G_TYPE_BINDING), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
 	g_return_val_if_fail (to != NULL, FALSE);
@@ -412,7 +412,7 @@ to_string (GBinding* b,
 {
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (b, G_TYPE_BINDING), FALSE);
 	g_return_val_if_fail (from != NULL, FALSE);
 	g_return_val_if_fail (to != NULL, FALSE);

@@ -1016,7 +1016,7 @@ take_value (GValue* v)
 gboolean
 make_bool (void)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = TRUE;
 	return result;
 }

@@ -55,7 +55,7 @@ Foo
 foo (void)
 {
 	Foo foo = 0;
-	Foo result = 0;
+	Foo result;
 	foo = FOO_BAR;
 	switch (foo) {
 		case FOO_FOO:

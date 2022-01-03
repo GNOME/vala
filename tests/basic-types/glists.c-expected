@@ -38,7 +38,7 @@ static void _vala_main (void);
 static inline gboolean
 vala_g_list_is_empty (GList* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = ((GList*) self) == NULL;
 	return result;
 }
@@ -97,7 +97,7 @@ test_glist (void)
 static inline gboolean
 vala_g_slist_is_empty (GSList* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = ((GSList*) self) == NULL;
 	return result;
 }

@@ -74,7 +74,7 @@ foo_format (Foo* self,
             gint baz,
             const gchar* format)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	g_return_val_if_fail (bar != NULL, NULL);
 	g_return_val_if_fail (format != NULL, NULL);
@@ -88,7 +88,7 @@ foo_format_pos (const gchar* bar,
                 const gchar* format,
                 Foo* self)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	g_return_val_if_fail (bar != NULL, NULL);
 	g_return_val_if_fail (format != NULL, NULL);
@@ -102,7 +102,7 @@ foo_real_format_virtual (Foo* self,
                          gint baz,
                          const gchar* format)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (bar != NULL, NULL);
 	g_return_val_if_fail (format != NULL, NULL);
 	result = format;
@@ -114,7 +114,7 @@ foo_format_static (const gchar* foo,
                    gint baz,
                    const gchar* format)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (foo != NULL, NULL);
 	g_return_val_if_fail (format != NULL, NULL);
 	result = format;
@@ -173,7 +173,7 @@ foo_get_type (void)
 const gchar*
 format_wrapper (const gchar* format)
 {
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (format != NULL, NULL);
 	result = format;
 	return result;

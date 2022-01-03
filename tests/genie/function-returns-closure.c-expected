@@ -60,7 +60,7 @@ main (int argc,
 static gboolean
 __lambda4_ (void)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	result = TRUE;
 	return result;
 }
@@ -80,7 +80,7 @@ test (gpointer* result_target,
 	TestFunction _tmp0_;
 	gpointer _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
-	TestFunction result = NULL;
+	TestFunction result;
 	_tmp0_ = ___lambda4__test_function;
 	_tmp0__target = NULL;
 	_tmp0__target_destroy_notify = NULL;

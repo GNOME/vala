@@ -36,7 +36,7 @@ gchar*
 get_bar (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("bar");
 	result = _tmp0_;
 	return result;

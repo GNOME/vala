@@ -113,7 +113,7 @@ maman_foo_main (void)
 	FILE* _tmp5_;
 	gint _tmp6_;
 	FILE* _tmp7_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Construct Formal Parameter Test: 1");
 	_tmp1_ = maman_foo_new (2, 3);

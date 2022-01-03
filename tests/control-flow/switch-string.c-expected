@@ -40,7 +40,7 @@ foo (void)
 	static GQuark _tmp2_label1 = 0;
 	static GQuark _tmp2_label2 = 0;
 	static GQuark _tmp2_label3 = 0;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("foo");
 	foo = _tmp0_;
 	_tmp1_ = foo;
@@ -75,7 +75,7 @@ gchar*
 get_bar (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("bar");
 	result = _tmp0_;
 	return result;
@@ -91,7 +91,7 @@ bar (void)
 	static GQuark _tmp2_label1 = 0;
 	static GQuark _tmp2_label2 = 0;
 	gchar* _tmp4_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = get_bar ();
 	_tmp1_ = _tmp0_;
 	_tmp3_ = (NULL == _tmp1_) ? 0 : g_quark_from_string (_tmp1_);

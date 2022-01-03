@@ -130,7 +130,7 @@ block1_data_unref (void * _userdata_)
 static gboolean
 __lambda4_ (Block1Data* _data1_)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	run (NULL, NULL);
 	g_main_loop_quit (_data1_->loop);
 	result = FALSE;

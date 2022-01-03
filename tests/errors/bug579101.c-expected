@@ -69,7 +69,7 @@ do_bar (gint* i)
 	gchar* s = NULL;
 	gchar* _tmp0_;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("bar");
 	s = _tmp0_;
 	{
@@ -111,7 +111,7 @@ do_manam (gint* i)
 	gchar* s = NULL;
 	gchar* _tmp0_;
 	GError* _inner_error0_ = NULL;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("manam");
 	s = _tmp0_;
 	{

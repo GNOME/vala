@@ -36,7 +36,7 @@ foo_bar (Foo self)
 {
 	GEnumValue* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_enum_get_value (g_type_class_ref (TYPE_FOO), self);
 	_tmp1_ = g_strdup ((_tmp0_ != NULL) ? _tmp0_->value_name : NULL);
 	result = _tmp1_;

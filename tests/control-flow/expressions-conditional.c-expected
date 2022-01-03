@@ -58,7 +58,7 @@ maman_bar_get_number (void)
 {
 	const gchar* _tmp0_ = NULL;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	if (FALSE) {
 		_tmp0_ = "BAD";
 	} else {
@@ -80,7 +80,7 @@ maman_bar_main (void)
 	gchar* _tmp5_;
 	gchar* _tmp6_;
 	FILE* _tmp7_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Conditional Expression Test: 1");
 	if (FALSE) {

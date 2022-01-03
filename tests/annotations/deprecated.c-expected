@@ -222,7 +222,7 @@ fooclass_get_instance_private (FooClass* self)
 gint
 fooclass_foo (FooClass* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOOCLASS (self), 0);
 	result = 42;
 	return result;
@@ -231,7 +231,7 @@ fooclass_foo (FooClass* self)
 static gint
 fooclass_real_foov (FooClass* self)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }
@@ -378,7 +378,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 gint
 afoo_foo (AFoo* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_AFOO (self), 0);
 	result = 42;
 	return result;
@@ -450,7 +450,7 @@ afoo_get_type (void)
 gint
 ifoo_foo (IFoo* self)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }

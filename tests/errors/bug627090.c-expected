@@ -168,7 +168,7 @@ gchar*
 manam (GError** error)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("manam");
 	result = _tmp0_;
 	return result;

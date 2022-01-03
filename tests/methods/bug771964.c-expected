@@ -235,7 +235,7 @@ _vala_main (void)
 {
 	Bar* obj = NULL;
 	Bar* _tmp0_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = bar_new ();
 	obj = _tmp0_;
 	foo_test (G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_FOO, Foo), G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free, "test");

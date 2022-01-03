@@ -822,7 +822,7 @@ __lambda6_ (MamanReturnBar* self,
 {
 	FILE* _tmp0_;
 	gint _tmp1_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (MAMAN_IS_RETURN_FOO (foo), 0);
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, " %d", arg);
@@ -851,7 +851,7 @@ __lambda7_ (MamanReturnBar* self,
 	FILE* _tmp0_;
 	gint _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (MAMAN_IS_RETURN_FOO (foo), NULL);
 	g_return_val_if_fail (arg != NULL, NULL);
 	_tmp0_ = stdout;

@@ -249,7 +249,7 @@ static gint
 bar_real_foo (IFoo* base)
 {
 	Bar * self;
-	gint result = 0;
+	gint result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	result = 42;
 	return result;

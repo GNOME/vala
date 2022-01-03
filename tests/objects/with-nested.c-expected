@@ -636,7 +636,7 @@ test_main (void)
 {
 	Test* _tmp0_;
 	Test* _tmp1_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = test_new ();
 	_tmp1_ = _tmp0_;
 	test_nested (_tmp1_);

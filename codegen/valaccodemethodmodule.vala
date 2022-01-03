@@ -814,8 +814,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (current_method_return && !(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
-			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
-			vardecl.init0 = true;
+			CCodeVariableDeclarator vardecl;
+			if (m.is_abstract) {
+				vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+				vardecl.init0 = true;
+			} else {
+				vardecl = new CCodeVariableDeclarator ("result");
+			}
 			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
 		}
 
@@ -1120,8 +1125,13 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m.return_type.is_non_null_simple_type () && default_value_for_type (m.return_type, false) == null) {
 			// the type check will use the result variable
-			var vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
-			vardecl.init0 = true;
+			CCodeVariableDeclarator vardecl;
+			if (m.is_abstract) {
+				vardecl = new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true));
+				vardecl.init0 = true;
+			} else {
+				vardecl = new CCodeVariableDeclarator ("result");
+			}
 			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
 		}
 

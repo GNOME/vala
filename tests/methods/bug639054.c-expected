@@ -163,7 +163,7 @@ block1_data_unref (void * _userdata_)
 static gboolean
 __lambda4_ (Block1Data* _data1_)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	_data1_->bar[0] = (guint8) 'b';
 	_data1_->baz = NULL;
 	result = FALSE;

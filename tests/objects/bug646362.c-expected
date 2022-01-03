@@ -94,7 +94,7 @@ static gboolean
 _foo___lambda4_ (Block1Data* _data1_)
 {
 	Foo* self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	result = _data1_->baz == 2;
 	return result;

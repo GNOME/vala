@@ -322,7 +322,7 @@ foo_unref (gpointer instance)
 Foo*
 foo (GError** error)
 {
-	Foo* result = NULL;
+	Foo* result;
 	result = NULL;
 	return result;
 }
@@ -333,7 +333,7 @@ bar (GType g_type,
      GDestroyNotify g_destroy_func,
      Foo* foo)
 {
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail ((foo == NULL) || IS_FOO (foo), NULL);
 	result = NULL;
 	return result;

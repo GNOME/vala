@@ -126,7 +126,7 @@ foo_meth (Foo* self,
 	gint _tmp2__length1;
 	const gchar** _tmp3_;
 	gint _tmp3__length1;
-	const gchar** result = NULL;
+	const gchar** result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = (((const gchar**) var4) != NULL) ? _vala_array_dup1 ((const gchar**) var4, (var4_length1 * sizeof (const gchar*)) / sizeof (const gchar*)) : ((const gchar**) var4);
 	_tmp0__length1 = (var4_length1 * sizeof (const gchar*)) / sizeof (const gchar*);

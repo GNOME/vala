@@ -84,7 +84,7 @@ do_foo (void)
 	Block1Data* _data1_;
 	GObject* _tmp0_;
 	GObject* _tmp1_;
-	GObject* result = NULL;
+	GObject* result;
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_object_new (G_TYPE_OBJECT, NULL);

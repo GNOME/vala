@@ -107,7 +107,7 @@ foo_heap_owned (void)
 	Foo* _tmp1_;
 	Foo* _tmp2_;
 	Foo* _tmp3_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_.i = 23;
 	_tmp1_ = _foo_dup0 (&_tmp0_);
 	_foo_free0 (foo);
@@ -124,7 +124,7 @@ foo_heap_unowned (void)
 	Foo _tmp0_ = {0};
 	Foo* _tmp1_;
 	Foo* _tmp2_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_.i = 42;
 	_tmp1_ = _foo_dup0 (&_tmp0_);
 	_foo_free0 (foo);
@@ -267,7 +267,7 @@ bar_heap_owned (void)
 	Bar* _tmp3_;
 	Bar* _tmp4_;
 	Bar* _tmp5_;
-	Bar* result = NULL;
+	Bar* result;
 	_tmp0_ = g_strdup ("bar");
 	_g_free0 (_tmp1_.s);
 	_tmp1_.s = _tmp0_;
@@ -290,7 +290,7 @@ bar_heap_unowned (void)
 	Bar _tmp2_;
 	Bar* _tmp3_;
 	Bar* _tmp4_;
-	Bar* result = NULL;
+	Bar* result;
 	_tmp0_ = g_strdup ("manam");
 	_g_free0 (_tmp1_.s);
 	_tmp1_.s = _tmp0_;

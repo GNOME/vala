@@ -36,7 +36,7 @@ copy_list (GType g_type,
            GList* list)
 {
 	GList* _result_ = NULL;
-	GList* result = NULL;
+	GList* result;
 	_result_ = NULL;
 	{
 		GList* item_collection = NULL;

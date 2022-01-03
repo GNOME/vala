@@ -38,7 +38,7 @@ static void _vala_main (void);
 gint
 foo_sum (Foo *self)
 {
-	gint result = 0;
+	gint result;
 	result = (*self).a + (*self).b;
 	return result;
 }
@@ -61,7 +61,7 @@ foo_free (Foo* self)
 gint
 bar_mul (Bar *self)
 {
-	gint result = 0;
+	gint result;
 	result = (*self).a * (*self).b;
 	return result;
 }
@@ -69,7 +69,7 @@ bar_mul (Bar *self)
 gint
 bar_mul2 (Bar *self)
 {
-	gint result = 0;
+	gint result;
 	result = (*self).a * (*self).b;
 	return result;
 }

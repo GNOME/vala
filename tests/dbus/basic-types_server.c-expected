@@ -187,7 +187,7 @@ test_test_int (Test* self,
                gint* j)
 {
 	gint _vala_j = 0;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_TEST (self), 0);
 	_vala_assert (i == 42, "i == 42");
 	_vala_j = 23;
@@ -206,7 +206,7 @@ test_test_string (Test* self,
 	gchar* _vala_t = NULL;
 	gchar* _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	g_return_val_if_fail (s != NULL, NULL);
 	_vala_assert (g_strcmp0 (s, "hello") == 0, "s == \"hello\"");

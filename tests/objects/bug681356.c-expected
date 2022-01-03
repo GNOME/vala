@@ -89,7 +89,7 @@ foo_bar (Foo* self,
          gint i)
 {
 	gint _tmp0_ = 0;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (self), 0);
 	g_signal_emit (self, foo_signals[FOO_BAR_SIGNAL], 0, i, &_tmp0_);
 	result = _tmp0_;
@@ -163,7 +163,7 @@ foo_get_type (void)
 static gint
 __lambda4_ (gint i)
 {
-	gint result = 0;
+	gint result;
 	result = i + 12;
 	return result;
 }

@@ -124,7 +124,7 @@ static gboolean
 __lambda5_ (Block1Data* _data1_)
 {
 	Foo* self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	((_data1_->baz == NULL) || (self->priv->t_destroy_func == NULL)) ? NULL : (_data1_->baz = (self->priv->t_destroy_func (_data1_->baz), NULL));
 	_data1_->baz = NULL;
@@ -147,7 +147,7 @@ __lambda4_ (Block1Data* _data1_)
 	GSourceFunc ff = NULL;
 	gpointer ff_target;
 	GDestroyNotify ff_target_destroy_notify;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	((_data1_->baz == NULL) || (self->priv->t_destroy_func == NULL)) ? NULL : (_data1_->baz = (self->priv->t_destroy_func (_data1_->baz), NULL));
 	_data1_->baz = NULL;

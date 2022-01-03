@@ -42,7 +42,7 @@ static gint ____lambda5__foo_func (gpointer self);
 static gint
 __lambda4_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 4711;
 	return result;
 }
@@ -74,7 +74,7 @@ foo (gint i,
 gint
 bar (void)
 {
-	gint result = 0;
+	gint result;
 	result = 23;
 	return result;
 }
@@ -107,7 +107,7 @@ block1_data_unref (void * _userdata_)
 static gint
 ___lambda5_ (Block1Data* _data1_)
 {
-	gint result = 0;
+	gint result;
 	result = _data1_->i;
 	return result;
 }

@@ -958,7 +958,7 @@ baz_ifoo_get_type (void)
 BazFooBar1*
 manam_foo1 (Manam* self)
 {
-	BazFooBar1* result = NULL;
+	BazFooBar1* result;
 	g_return_val_if_fail (IS_MANAM (self), NULL);
 	result = NULL;
 	return result;
@@ -967,7 +967,7 @@ manam_foo1 (Manam* self)
 BazFooIBar1*
 manam_ifoo1 (Manam* self)
 {
-	BazFooIBar1* result = NULL;
+	BazFooIBar1* result;
 	g_return_val_if_fail (IS_MANAM (self), NULL);
 	result = NULL;
 	return result;
@@ -976,7 +976,7 @@ manam_ifoo1 (Manam* self)
 BazIFooBar2*
 manam_foo2 (Manam* self)
 {
-	BazIFooBar2* result = NULL;
+	BazIFooBar2* result;
 	g_return_val_if_fail (IS_MANAM (self), NULL);
 	result = NULL;
 	return result;
@@ -985,7 +985,7 @@ manam_foo2 (Manam* self)
 BazIFooIBar2*
 manam_ifoo2 (Manam* self)
 {
-	BazIFooIBar2* result = NULL;
+	BazIFooIBar2* result;
 	g_return_val_if_fail (IS_MANAM (self), NULL);
 	result = NULL;
 	return result;

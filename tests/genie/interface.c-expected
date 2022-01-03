@@ -142,7 +142,7 @@ test_real_test (ITest* base,
                 gint a)
 {
 	Test * self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_TEST, Test);
 	result = a == 42;
 	return result;

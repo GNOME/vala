@@ -94,7 +94,7 @@ static gboolean
 maman_bar_test_switch_control_flow_graph (void)
 {
 	gint a = 0;
-	gboolean result = FALSE;
+	gboolean result;
 	a = 0;
 	switch (a) {
 		case 1:
@@ -120,7 +120,7 @@ maman_bar_main (void)
 	MamanFoo* foo = NULL;
 	MamanFoo* _tmp6_;
 	FILE* _tmp7_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "For Test: 1");
 	{
@@ -296,7 +296,7 @@ gint
 maman_foo_inc (MamanFoo* self)
 {
 	gint _tmp0_;
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (MAMAN_IS_FOO (self), 0);
 	_tmp0_ = self->priv->counter;
 	self->priv->counter = _tmp0_ + 1;

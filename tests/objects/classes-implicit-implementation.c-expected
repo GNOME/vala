@@ -253,7 +253,7 @@ ibar_get_type (void)
 gint
 bar_foo (Bar* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_BAR (self), 0);
 	g_assert_not_reached ();
 	result = -1;
@@ -311,7 +311,7 @@ bar_get_type (void)
 gint
 baz_foo (Baz* self)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_BAZ (self), 0);
 	result = 23;
 	return result;
@@ -369,7 +369,7 @@ static gint
 foo_real_foo (IFoo* base)
 {
 	Foo * self;
-	gint result = 0;
+	gint result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	result = 42;
 	return result;

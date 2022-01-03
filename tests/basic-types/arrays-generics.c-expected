@@ -122,7 +122,7 @@ static Baz*
 baz_get_object (Baz* self)
 {
 	Baz* _tmp0_;
-	Baz* result = NULL;
+	Baz* result;
 	g_return_val_if_fail (IS_BAZ (self), NULL);
 	_tmp0_ = baz_new ();
 	result = _tmp0_;
@@ -175,7 +175,7 @@ baz_create_array (Baz* self,
 	gint _tmp6__length1;
 	Baz** _tmp7_;
 	gint _tmp7__length1;
-	Baz** result = NULL;
+	Baz** result;
 	g_return_val_if_fail (IS_BAZ (self), NULL);
 	_tmp1_ = baz_get_array (self, TYPE_BAZ, (GBoxedCopyFunc) g_object_ref, (GDestroyNotify) g_object_unref, &_tmp0_);
 	a = _tmp1_;
@@ -250,7 +250,7 @@ baz_create_array2 (Baz* self,
 	gint _tmp6__length1;
 	gpointer* _tmp7_;
 	gint _tmp7__length1;
-	gpointer* result = NULL;
+	gpointer* result;
 	g_return_val_if_fail (IS_BAZ (self), NULL);
 	_tmp1_ = baz_get_array2 (self, v_type, (GBoxedCopyFunc) v_dup_func, (GDestroyNotify) v_destroy_func, &_tmp0_);
 	a = _tmp1_;
@@ -304,7 +304,7 @@ baz_get_array (Baz* self,
 	Baz* _tmp1_;
 	gpointer* _tmp2_;
 	gint _tmp2__length1;
-	gpointer* result = NULL;
+	gpointer* result;
 	g_return_val_if_fail (IS_BAZ (self), NULL);
 	_tmp0_ = g_new0 (gpointer, 0);
 	a = _tmp0_;
@@ -364,7 +364,7 @@ baz_get_array2 (Baz* self,
 	Baz* _tmp2_;
 	gpointer* _tmp3_;
 	gint _tmp3__length1;
-	gpointer* result = NULL;
+	gpointer* result;
 	g_return_val_if_fail (IS_BAZ (self), NULL);
 	_tmp0_ = g_new0 (gpointer, 0);
 	a = _tmp0_;

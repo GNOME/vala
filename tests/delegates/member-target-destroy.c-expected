@@ -30,7 +30,7 @@ gchar*
 bar (const gchar* s)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (s != NULL, NULL);
 	_tmp0_ = g_strdup (s);
 	result = _tmp0_;

@@ -77,7 +77,7 @@ Foo*
 foo_bar (Foo* self)
 {
 	Foo* _tmp0_;
-	Foo* result = NULL;
+	Foo* result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = foo_new ();
 	result = _tmp0_;

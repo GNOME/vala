@@ -33,7 +33,7 @@ foo (const gchar* format,
 	va_list _tmp0_ = {0};
 	gchar* _tmp1_;
 	gchar* _tmp2_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (format != NULL, NULL);
 	va_start (_tmp0_, format);
 	_tmp1_ = g_strdup_vprintf (format, _tmp0_);

@@ -41,7 +41,7 @@ static const gint SIMPLE_STRUCT_array[1] = {42};
 gint
 simple_struct_test (SimpleStruct *self)
 {
-	gint result = 0;
+	gint result;
 	result = (*self).field;
 	return result;
 }
@@ -85,7 +85,7 @@ simple_struct_test_pointers_element_access (void)
 static gint*
 simple_struct_return_pointer (void)
 {
-	gint* result = NULL;
+	gint* result;
 	result = SIMPLE_STRUCT_array;
 	return result;
 }

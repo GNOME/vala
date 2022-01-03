@@ -29,7 +29,7 @@ gchar*
 foo (GError** error)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("foo");
 	result = _tmp0_;
 	return result;

@@ -301,7 +301,7 @@ maman_sub_baz_main_func (void)
 	MamanIbaz* subbaz = NULL;
 	MamanSubBaz* _tmp4_;
 	FILE* _tmp5_;
-	gint result = 0;
+	gint result;
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, "Interface Test: 1");
 	_tmp1_ = maman_baz_new ();

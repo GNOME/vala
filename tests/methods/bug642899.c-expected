@@ -121,7 +121,7 @@ __lambda4_ (Block1Data* _data1_)
 	Foo* self;
 	GObject* _tmp0_;
 	GObject* _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	_tmp0_ = self->priv->bar;
 	_tmp1_ = _g_object_ref0 (_tmp0_);

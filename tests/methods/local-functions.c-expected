@@ -59,7 +59,7 @@ block1_data_unref (void * _userdata_)
 static gint
 ___lambda4_ (Block1Data* _data1_)
 {
-	gint result = 0;
+	gint result;
 	result = _data1_->x + _data1_->y;
 	return result;
 }
@@ -76,7 +76,7 @@ static gboolean
 ___lambda5_ (gint a,
              gint b)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	_vala_assert ((a * b) == 966, "a * b == 966");
 	result = TRUE;
 	return result;
@@ -118,7 +118,7 @@ static const gchar*
 ___lambda7_ (gchar** s)
 {
 	gchar* _tmp0_;
-	const gchar* result = NULL;
+	const gchar* result;
 	g_return_val_if_fail (*s != NULL, NULL);
 	_vala_assert (g_strcmp0 (*s, "foo") == 0, "s == \"foo\"");
 	_tmp0_ = g_strdup ("bar");

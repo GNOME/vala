@@ -168,7 +168,7 @@ test_test_in (Test* self,
 	gint _tmp19_;
 	GUnixInputStream* _tmp20_;
 	GError* _inner_error0_ = NULL;
-	GUnixInputStream* result = NULL;
+	GUnixInputStream* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (i, G_TYPE_UNIX_INPUT_STREAM), NULL);
 	_tmp0_ = g_new0 (guint8, 1);

@@ -295,7 +295,7 @@ foo_real_get_foo (IFoo* base,
 	gint _res_size_;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	_tmp0_ = g_new0 (gint, 255);
 	res = _tmp0_;
@@ -346,7 +346,7 @@ foo_real_get_bar (Foo* self,
 	gint _res_size_;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = g_new0 (gint, 255);
 	res = _tmp0_;
 	res_length1 = 255;
@@ -830,7 +830,7 @@ bar_real_get_bar (Foo* base,
 	gint _res_size_;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	_tmp0_ = g_new0 (gint, 255);
 	res = _tmp0_;
@@ -1082,7 +1082,7 @@ get_foo (guint8* result_length1)
 	gint _res_size_;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = g_new0 (gint, 255);
 	res = _tmp0_;
 	res_length1 = 255;
@@ -1138,7 +1138,7 @@ foo_func (gint* p,
 	gint _tmp0__length1;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = (p != NULL) ? _vala_array_dup4 (p, p_length1) : p;
 	_tmp0__length1 = p_length1;
 	_tmp1_ = _tmp0_;
@@ -1170,7 +1170,7 @@ ___lambda4_ (gint* a,
 	gint _tmp0__length1;
 	gint* _tmp1_;
 	gint _tmp1__length1;
-	gint* result = NULL;
+	gint* result;
 	_tmp0_ = (a != NULL) ? _vala_array_dup5 (a, a_length1) : a;
 	_tmp0__length1 = a_length1;
 	_tmp1_ = _tmp0_;

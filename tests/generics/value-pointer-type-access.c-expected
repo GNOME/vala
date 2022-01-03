@@ -118,7 +118,7 @@ foo_get_g (Foo* self)
 {
 	gconstpointer _tmp0_;
 	gpointer _tmp1_;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->g;
 	_tmp1_ = ((_tmp0_ != NULL) && (self->priv->g_dup_func != NULL)) ? self->priv->g_dup_func ((gpointer) _tmp0_) : ((gpointer) _tmp0_);

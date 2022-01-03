@@ -153,7 +153,7 @@ gint
 compare_foo (Foo* a,
              Foo* b)
 {
-	gint result = 0;
+	gint result;
 	g_return_val_if_fail (IS_FOO (a), 0);
 	g_return_val_if_fail (IS_FOO (b), 0);
 	result = b->i - a->i;
@@ -220,7 +220,7 @@ __lambda1_ (Block1Data* _data1_,
             gconstpointer** b)
 {
 	GPtrArray* self;
-	gint result = 0;
+	gint result;
 	self = _data1_->self;
 	result = _data1_->compare_func ((gconstpointer**) (*a), (gconstpointer**) (*b));
 	return result;
@@ -286,7 +286,7 @@ __lambda2_ (Block2Data* _data2_,
             gconstpointer** b)
 {
 	GPtrArray* self;
-	gint result = 0;
+	gint result;
 	self = _data2_->self;
 	result = _data2_->compare_func ((gconstpointer**) (*a), (gconstpointer**) (*b), _data2_->compare_func_target);
 	return result;

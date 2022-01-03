@@ -178,7 +178,7 @@ test_test_nested_dict (Test* self)
 	GHashTable* _tmp10_;
 	gchar* _tmp11_;
 	GHashTable* _tmp12_;
-	GHashTable* result = NULL;
+	GHashTable* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = g_strdup ("hello");
 	_tmp1_ = g_new0 (gchar*, 1 + 1);

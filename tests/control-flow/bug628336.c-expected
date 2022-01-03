@@ -51,7 +51,7 @@ static gboolean
 ____lambda4_ (Block1Data* _data1_)
 {
 	const gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	_tmp0_ = _data1_->bar;
 	result = g_strcmp0 (_tmp0_, "bar") == 0;
 	return result;

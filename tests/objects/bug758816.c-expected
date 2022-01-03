@@ -423,7 +423,7 @@ callback_bar (void)
 {
 	Bar _tmp0_;
 	Bar* _tmp1_;
-	Bar* result = NULL;
+	Bar* result;
 	_tmp0_ = BAR_FOO;
 	_tmp1_ = __bar_dup0 (&_tmp0_);
 	result = _tmp1_;
@@ -435,7 +435,7 @@ callback_bar2 (Bar* bar)
 {
 	Bar _tmp0_;
 	Bar* _tmp1_;
-	Bar* result = NULL;
+	Bar* result;
 	_tmp0_ = BAR_BAZ;
 	_vala_assert (_bar_equal (bar, &_tmp0_) == TRUE, "bar == Bar.BAZ");
 	_tmp1_ = __bar_dup0 (bar);
@@ -448,7 +448,7 @@ callback_manam (void)
 {
 	Manam _tmp0_ = {0};
 	Manam* _tmp1_;
-	Manam* result = NULL;
+	Manam* result;
 	_tmp0_.i = 23;
 	_tmp0_.j = 42;
 	_tmp1_ = _manam_dup0 (&_tmp0_);
@@ -463,7 +463,7 @@ callback_manam2 (Manam* manam)
 	Manam _tmp0_ = {0};
 	Manam* _tmp1_;
 	Manam* _tmp2_;
-	Manam* result = NULL;
+	Manam* result;
 	_tmp0_.i = 23;
 	_tmp0_.j = 42;
 	_tmp1_ = _manam_dup0 (&_tmp0_);

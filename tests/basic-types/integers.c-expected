@@ -44,7 +44,7 @@ int_try_parse (const gchar* str,
 	gint _tmp3_;
 	gint _tmp4_;
 	glong _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = strtol (str, &_tmp0_, (gint) _base);
@@ -114,7 +114,7 @@ long_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = strtol (str, &_tmp0_, (gint) _base);
@@ -170,7 +170,7 @@ uint_try_parse (const gchar* str,
 	gint _tmp3_;
 	gint _tmp4_;
 	gulong _tmp6_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = strtoul (str, &_tmp0_, (gint) _base);
@@ -240,7 +240,7 @@ ulong_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = strtoul (str, &_tmp0_, (gint) _base);
@@ -294,7 +294,7 @@ int64_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = g_ascii_strtoll (str, &_tmp0_, _base);
@@ -348,7 +348,7 @@ uint64_try_parse (const gchar* str,
 	gchar* _tmp2_;
 	gint _tmp3_;
 	gint _tmp4_;
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (str != NULL, FALSE);
 	errno = 0;
 	_tmp1_ = g_ascii_strtoull (str, &_tmp0_, _base);

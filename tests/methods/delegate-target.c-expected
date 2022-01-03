@@ -224,7 +224,7 @@ ___lambda4__foo_func (gpointer self)
 static FooFunc
 foo_real_get_foo (Foo* self)
 {
-	FooFunc result = NULL;
+	FooFunc result;
 	result = ___lambda4__foo_func;
 	return result;
 }
@@ -275,7 +275,7 @@ ___lambda5__foo_func (gpointer self)
 static FooFunc
 foo_real_get_bar (Foo* self)
 {
-	FooFunc result = NULL;
+	FooFunc result;
 	result = ___lambda5__foo_func;
 	return result;
 }
@@ -585,7 +585,7 @@ static FooFunc
 bar_real_get_foo (Foo* base)
 {
 	Bar * self;
-	FooFunc result = NULL;
+	FooFunc result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	result = ___lambda7__foo_func;
 	return result;
@@ -616,7 +616,7 @@ static FooFunc
 bar_real_get_bar (Foo* base)
 {
 	Bar * self;
-	FooFunc result = NULL;
+	FooFunc result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	result = ___lambda8__foo_func;
 	return result;
@@ -758,7 +758,7 @@ ___lambda11__foo_func (gpointer self)
 FooFunc
 get_foo (void)
 {
-	FooFunc result = NULL;
+	FooFunc result;
 	result = ___lambda11__foo_func;
 	return result;
 }

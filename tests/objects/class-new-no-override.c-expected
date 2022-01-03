@@ -129,7 +129,7 @@ gchar*
 bar_foo (Bar* self)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	_tmp0_ = g_strdup ("bar");
 	result = _tmp0_;

@@ -31,7 +31,7 @@ static void _vala_main (void);
 gchar*
 get_foo (void)
 {
-	gchar* result = NULL;
+	gchar* result;
 	_vala_assert (count == 0, "count == 0");
 	result = NULL;
 	return result;
@@ -42,7 +42,7 @@ get_bar (void)
 {
 	gint _tmp0_;
 	gchar* _tmp1_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = count;
 	count = _tmp0_ + 1;
 	_vala_assert (count == 1, "count == 1");

@@ -297,7 +297,7 @@ _vala_foo_set_property (GObject * object,
 gint
 cb_foo (void)
 {
-	gint result = 0;
+	gint result;
 	result = 23;
 	return result;
 }
@@ -306,7 +306,7 @@ gchar*
 cb_bar (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("foo");
 	result = _tmp0_;
 	return result;
@@ -315,7 +315,7 @@ cb_bar (void)
 static gint
 ___lambda4_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }
@@ -333,7 +333,7 @@ static gchar*
 ___lambda5_ (void)
 {
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	_tmp0_ = g_strdup ("bar");
 	result = _tmp0_;
 	return result;

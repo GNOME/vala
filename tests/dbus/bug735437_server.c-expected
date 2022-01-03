@@ -145,7 +145,7 @@ test_array (Test* self,
 	gdouble* _tmp0_;
 	gdouble* _tmp1_;
 	gint _tmp1__length1;
-	gdouble* result = NULL;
+	gdouble* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = g_new0 (gdouble, 2);
 	_tmp0_[0] = 2.0;
@@ -168,7 +168,7 @@ test_multi_array (Test* self,
 	gdouble* _tmp1_;
 	gint _tmp1__length1;
 	gint _tmp1__length2;
-	gdouble* result = NULL;
+	gdouble* result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = g_new0 (gdouble, 2 * 2);
 	_tmp0_[0] = 2.0;
@@ -207,7 +207,7 @@ test_multi_array2 (Test* self,
 	gint _tmp9__length1;
 	gint _tmp9__length2;
 	gint _tmp9__length3;
-	gchar** result = NULL;
+	gchar** result;
 	g_return_val_if_fail (IS_TEST (self), NULL);
 	_tmp0_ = g_strdup ("foo");
 	_tmp1_ = g_strdup ("bar");

@@ -87,7 +87,7 @@ foo_factory (void)
 {
 	gint _tmp0_;
 	Foo* _tmp1_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = foo_factory_called;
 	foo_factory_called = _tmp0_ + 1;
 	_tmp1_ = foo_new ();

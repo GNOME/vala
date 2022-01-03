@@ -32,7 +32,7 @@ vala_g_memory_output_stream_with_data (guint8* data,
                                        gsize data_length1)
 {
 	GMemoryOutputStream* _tmp0_;
-	GMemoryOutputStream* result = NULL;
+	GMemoryOutputStream* result;
 	_tmp0_ = (GMemoryOutputStream*) g_memory_output_stream_new (data, (gsize) data_length1, NULL, NULL);
 	result = _tmp0_;
 	return result;
@@ -134,7 +134,7 @@ vala_g_memory_output_stream_with_owned_data (guint8* data,
 	GReallocFunc _tmp1_;
 	GDestroyNotify _tmp2_;
 	GMemoryOutputStream* _tmp3_;
-	GMemoryOutputStream* result = NULL;
+	GMemoryOutputStream* result;
 	size = (gsize) data_length1;
 	_tmp0_ = data;
 	_tmp0__length1 = data_length1;

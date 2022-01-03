@@ -53,7 +53,7 @@ static gboolean
 __lambda4_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	_tmp0_ = g_strdup ("outerbar");
 	_g_free0 (_data1_->outervar);
 	_data1_->outervar = _tmp0_;
@@ -91,7 +91,7 @@ static gboolean
 __lambda6_ (Block2Data* _data2_)
 {
 	gchar* _tmp0_;
-	gboolean result = FALSE;
+	gboolean result;
 	_tmp0_ = g_strdup ("innerbar");
 	_g_free0 (_data2_->innervar);
 	_data2_->innervar = _tmp0_;
@@ -115,7 +115,7 @@ __lambda5_ (void)
 	GSourceFunc innerfunc = NULL;
 	gpointer innerfunc_target;
 	GDestroyNotify innerfunc_target_destroy_notify;
-	gboolean result = FALSE;
+	gboolean result;
 	_data2_ = g_slice_new0 (Block2Data);
 	_data2_->_ref_count_ = 1;
 	_tmp0_ = g_strdup ("innerfoo");

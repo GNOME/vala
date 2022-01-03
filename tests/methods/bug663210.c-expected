@@ -117,7 +117,7 @@ __lambda4_ (Block1Data* _data1_)
 	GType t_type;
 	GBoxedCopyFunc t_dup_func;
 	GDestroyNotify t_destroy_func;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	t_type = _data1_->t_type;
 	t_dup_func = _data1_->t_dup_func;

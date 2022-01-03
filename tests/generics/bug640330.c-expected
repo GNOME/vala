@@ -110,7 +110,7 @@ foo_real_get_foo (Foo* self,
 	gpointer _tmp0_;
 	GCompareFunc _tmp1_;
 	gpointer _tmp2_;
-	gpointer result = NULL;
+	gpointer result;
 	_vala_assert (FOO_GET_INTERFACE (self)->get_g_type (self) == G_TYPE_STRING, "typeof (G) == typeof (string)");
 	_tmp0_ = ((g != NULL) && (FOO_GET_INTERFACE (self)->get_g_dup_func (self) != NULL)) ? FOO_GET_INTERFACE (self)->get_g_dup_func (self) ((gpointer) g) : ((gpointer) g);
 	g_copy = _tmp0_;

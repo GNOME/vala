@@ -218,7 +218,7 @@ static GInitiallyUnowned*
 foo_real_foo (IFoo* base)
 {
 	Foo * self;
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	result = NULL;
 	return result;
@@ -228,7 +228,7 @@ static GInitiallyUnowned*
 foo_real_bar (IBar* base)
 {
 	Foo * self;
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	result = NULL;
 	return result;
@@ -237,7 +237,7 @@ foo_real_bar (IBar* base)
 static GInitiallyUnowned*
 foo_real_faz (Foo* self)
 {
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	result = NULL;
 	return result;
 }
@@ -257,7 +257,7 @@ foo_faz (Foo* self)
 static GInitiallyUnowned*
 foo_real_baz (Foo* self)
 {
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	result = NULL;
 	return result;
 }
@@ -513,7 +513,7 @@ static GInitiallyUnowned*
 manam_real_faz (Foo* base)
 {
 	Manam * self;
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_MANAM, Manam);
 	result = NULL;
 	return result;
@@ -523,7 +523,7 @@ static GInitiallyUnowned*
 manam_real_baz (Foo* base)
 {
 	Manam * self;
-	GInitiallyUnowned* result = NULL;
+	GInitiallyUnowned* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_MANAM, Manam);
 	result = NULL;
 	return result;

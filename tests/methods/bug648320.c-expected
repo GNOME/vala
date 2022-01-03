@@ -74,7 +74,7 @@ __lambda4_ (Block1Data* _data1_)
 	Foo* self;
 	gint _tmp0_;
 	gint _tmp1_;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	_tmp0_ = foo_get_i (self);
 	_tmp1_ = _tmp0_;

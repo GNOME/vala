@@ -36,7 +36,7 @@ get_buffer (void)
 {
 	guchar* _tmp0_;
 	gint _tmp0__length1;
-	guchar* result = NULL;
+	guchar* result;
 	_tmp0_ = data;
 	_tmp0__length1 = -1;
 	result = _tmp0_;
@@ -56,7 +56,7 @@ get_buffer2 (void)
 {
 	guint8* _tmp0_;
 	gint _tmp0__length1;
-	guint8* result = NULL;
+	guint8* result;
 	_tmp0_ = data2;
 	_tmp0__length1 = -1;
 	result = _tmp0_;

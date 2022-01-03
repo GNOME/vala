@@ -116,7 +116,7 @@ get_object (GType g_type,
             GObject** o,
             gint o_length1)
 {
-	gpointer result = NULL;
+	gpointer result;
 	result = NULL;
 	return result;
 }
@@ -130,7 +130,7 @@ get_foo (void)
 	gint _tmp2__length1;
 	gpointer _tmp3_;
 	Foo* _tmp4_;
-	Foo* result = NULL;
+	Foo* result;
 	_tmp0_ = foo_new ();
 	_tmp1_ = g_new0 (GObject*, 1 + 1);
 	_tmp1_[0] = G_TYPE_CHECK_INSTANCE_CAST (_tmp0_, G_TYPE_OBJECT, GObject);

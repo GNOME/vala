@@ -61,7 +61,7 @@ GValue*
 get_nullable_value (GValue* v)
 {
 	GValue* _tmp0_;
-	GValue* result = NULL;
+	GValue* result;
 	_tmp0_ = __g_value_dup0 (v);
 	result = _tmp0_;
 	return result;

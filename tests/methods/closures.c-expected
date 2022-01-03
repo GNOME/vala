@@ -159,7 +159,7 @@ static gboolean
 __lambda4_ (Block1Data* _data1_)
 {
 	Foo* self;
-	gboolean result = FALSE;
+	gboolean result;
 	self = _data1_->self;
 	_g_object_unref0 (_data1_->o);
 	_data1_->o = NULL;
@@ -291,7 +291,7 @@ __lambda5_ (Block2Data* _data2_)
 {
 	Func _tmp0_;
 	gpointer _tmp0__target;
-	gint result = 0;
+	gint result;
 	_data2_->k = _data2_->k - 1;
 	_tmp0_ = _data2_->B;
 	_tmp0__target = _data2_->B_target;
@@ -322,7 +322,7 @@ A (gint k,
 {
 	Block2Data* _data2_;
 	gint _tmp0_ = 0;
-	gint result = 0;
+	gint result;
 	_data2_ = g_slice_new0 (Block2Data);
 	_data2_->_ref_count_ = 1;
 	_data2_->k = k;
@@ -379,7 +379,7 @@ block3_data_unref (void * _userdata_)
 static gint
 __lambda6_ (Block3Data* _data3_)
 {
-	gint result = 0;
+	gint result;
 	_data3_->array = NULL;
 	_data3_->func ();
 	result = 0;
@@ -420,7 +420,7 @@ B (gint* array,
 static gint
 __lambda7_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 1;
 	return result;
 }
@@ -436,7 +436,7 @@ ___lambda7__func (gpointer self)
 static gint
 __lambda8_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = -1;
 	return result;
 }
@@ -452,7 +452,7 @@ ___lambda8__func (gpointer self)
 static gint
 __lambda9_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = -1;
 	return result;
 }
@@ -468,7 +468,7 @@ ___lambda9__func (gpointer self)
 static gint
 __lambda10_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 1;
 	return result;
 }
@@ -484,7 +484,7 @@ ___lambda10__func (gpointer self)
 static gint
 __lambda11_ (void)
 {
-	gint result = 0;
+	gint result;
 	result = 0;
 	return result;
 }

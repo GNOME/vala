@@ -53,7 +53,7 @@ __lambda4_ (gpointer* result_target,
 	FooFunc _tmp0_;
 	gpointer _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
-	FooFunc result = NULL;
+	FooFunc result;
 	_tmp0_ = ___lambda5__foo_func;
 	_tmp0__target = NULL;
 	_tmp0__target_destroy_notify = NULL;

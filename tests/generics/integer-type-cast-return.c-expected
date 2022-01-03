@@ -61,7 +61,7 @@ manam (GType t_type,
 	gint* _tmp0_ = NULL;
 	gint* _tmp1_;
 	gint* _tmp2_;
-	gpointer result = NULL;
+	gpointer result;
 	_tmp1_ = __int_dup0 (&i);
 	_tmp0_ = _tmp1_;
 	_tmp2_ = _tmp0_;
@@ -95,7 +95,7 @@ minim (GType t_type,
 	guint* _tmp0_ = NULL;
 	guint* _tmp1_;
 	guint* _tmp2_;
-	gpointer result = NULL;
+	gpointer result;
 	_tmp1_ = __uint_dup0 (&i);
 	_tmp0_ = _tmp1_;
 	_tmp2_ = _tmp0_;

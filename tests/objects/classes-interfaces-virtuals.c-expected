@@ -209,7 +209,7 @@ ibar_get_type (void)
 static gint
 foo_real_ifoo_foo (Foo* self)
 {
-	gint result = 0;
+	gint result;
 	result = 42;
 	return result;
 }
@@ -231,7 +231,7 @@ foo_real_ibar_foo (IBar* base)
 {
 	Foo * self;
 	gchar* _tmp0_;
-	gchar* result = NULL;
+	gchar* result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO, Foo);
 	_tmp0_ = g_strdup ("foo");
 	result = _tmp0_;
@@ -311,7 +311,7 @@ static gint
 bar_real_foo (Foo* base)
 {
 	Bar * self;
-	gint result = 0;
+	gint result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	result = 23;
 	return result;

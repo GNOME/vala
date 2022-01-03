@@ -392,7 +392,7 @@ generator_feed_co (GeneratorFeedData* _data_)
 gboolean
 generator_next (Generator* self)
 {
-	gboolean result = FALSE;
+	gboolean result;
 	g_return_val_if_fail (IS_GENERATOR (self), FALSE);
 	result = !self->priv->consumed;
 	return result;
@@ -406,7 +406,7 @@ generator_get (Generator* self)
 	gpointer _tmp1_;
 	GSourceFunc _tmp2_;
 	gpointer _tmp2__target;
-	gpointer result = NULL;
+	gpointer result;
 	g_return_val_if_fail (IS_GENERATOR (self), NULL);
 	_tmp0_ = self->priv->value;
 	_tmp1_ = ((_tmp0_ != NULL) && (self->priv->g_dup_func != NULL)) ? self->priv->g_dup_func ((gpointer) _tmp0_) : ((gpointer) _tmp0_);
@@ -422,7 +422,7 @@ Generator*
 generator_iterator (Generator* self)
 {
 	Generator* _tmp0_;
-	Generator* result = NULL;
+	Generator* result;
 	g_return_val_if_fail (IS_GENERATOR (self), NULL);
 	_tmp0_ = _generator_ref0 (self);
 	result = _tmp0_;

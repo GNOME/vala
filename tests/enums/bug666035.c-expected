@@ -132,7 +132,7 @@ foo_struct_get_type (void)
 FooEnum
 takes_enum (FooEnum foo)
 {
-	FooEnum result = 0;
+	FooEnum result;
 	result = foo;
 	return result;
 }
@@ -140,7 +140,7 @@ takes_enum (FooEnum foo)
 FooEnum
 gives_enum (void)
 {
-	FooEnum result = 0;
+	FooEnum result;
 	result = FOO_ENUM_MAM;
 	return result;
 }
@@ -148,7 +148,7 @@ gives_enum (void)
 FooFlag
 takes_flag (FooFlag foo)
 {
-	FooFlag result = 0U;
+	FooFlag result;
 	result = foo;
 	return result;
 }
@@ -156,7 +156,7 @@ takes_flag (FooFlag foo)
 FooFlag
 gives_flag (void)
 {
-	FooFlag result = 0U;
+	FooFlag result;
 	result = FOO_FLAG_MAM | FOO_FLAG_BAR;
 	return result;
 }

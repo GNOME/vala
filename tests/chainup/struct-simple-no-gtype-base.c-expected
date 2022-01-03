@@ -33,7 +33,7 @@ gint
 foo_t_sum (foo_t self,
            foo_t b)
 {
-	gint result = 0;
+	gint result;
 	result = (gint) (self + b);
 	return result;
 }
@@ -42,7 +42,7 @@ gint
 bar_t_mul (bar_t self,
            bar_t b)
 {
-	gint result = 0;
+	gint result;
 	result = (gint) (self * b);
 	return result;
 }
@@ -51,7 +51,7 @@ gint
 bar_t_mul2 (bar_t self,
             bar_t b)
 {
-	gint result = 0;
+	gint result;
 	result = (gint) (self * b);
 	return result;
 }
