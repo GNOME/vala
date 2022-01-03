@@ -130,7 +130,7 @@ public class Vala.CreationMethod : Method {
 					continue;
 				}
 				if (!context.experimental) {
-					Report.warning (param.source_reference, "Support of params-arrays is experimental");
+					context.report.log_warning (param.source_reference, "Support of params-arrays is experimental");
 				}
 				var type = (ArrayType) param.variable_type.copy ();
 				type.element_type.value_owned = type.value_owned;
@@ -231,7 +231,7 @@ public class Vala.CreationMethod : Method {
 					}
 				}
 				if (!can_propagate_error && !((ErrorType) body_error_type).dynamic_error) {
-					Report.warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
+					context.report.log_warning (body_error_type.source_reference, "unhandled error `%s'", body_error_type.to_string());
 				}
 			}
 		}
