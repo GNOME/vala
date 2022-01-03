@@ -400,7 +400,7 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			if (inner is CastExpression && ((CastExpression) inner).is_silent_cast) {
-				Report.warning (source_reference, "Access to possible `null'. Perform a check or use an unsafe cast.");
+				context.report.log_warning (source_reference, "Access to possible `null'. Perform a check or use an unsafe cast.");
 			}
 
 			if (inner is MemberAccess || inner is BaseAccess) {
@@ -981,7 +981,7 @@ public class Vala.MemberAccess : Expression {
 				if (inner.symbol_reference is Method) {
 					// do not warn when calling .begin or .end on static async method
 				} else {
-					Report.warning (source_reference, "Access to static member `%s' with an instance reference", symbol_reference.get_full_name ());
+					context.report.log_warning (source_reference, "Access to static member `%s' with an instance reference", symbol_reference.get_full_name ());
 
 					// Transform to static member access
 					unowned Symbol? inner_sym = symbol_reference.parent_symbol;
