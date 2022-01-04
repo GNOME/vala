@@ -1195,13 +1195,7 @@ public class Vala.GirParser : CodeVisitor {
 							var length_field = (Field) array_length.symbol;
 							// array has length
 							field.set_attribute_string ("CCode", "array_length_cname", length_field.name);
-							var length_type = length_field.variable_type.to_qualified_string ();
-							if (length_type != "int") {
-								var st = parser.root.lookup (length_type);
-								if (st != null) {
-									field.set_attribute_string ("CCode", "array_length_type", st.get_cname ());
-								}
-							}
+							((ArrayType) field.variable_type).length_type = length_field.variable_type.copy ();
 							field.remove_attribute_argument ("CCode", "array_length");
 							field.remove_attribute_argument ("CCode", "array_null_terminated");
 						}
@@ -1990,17 +1984,13 @@ public class Vala.GirParser : CodeVisitor {
 
 	void set_array_ccode (Symbol sym, ParameterInfo info) {
 		sym.set_attribute_double ("CCode", "array_length_pos", info.vala_idx);
+		var length_type = info.param.variable_type.copy ();
+		length_type.nullable = false;
 		if (sym is Parameter) {
 			sym.set_attribute_string ("CCode", "array_length_cname", info.param.name);
-		}
-		var type_name = info.param.variable_type.to_qualified_string ();
-		if (type_name != "int") {
-			var st = root.lookup (type_name);
-			if (st != null) {
-				if (sym is Callable || sym is Parameter) {
-					sym.set_attribute_string ("CCode", "array_length_type", st.get_cname ());
-				}
-			}
+			((ArrayType) ((Parameter) sym).variable_type).length_type = length_type;
+		} else if (sym is Callable) {
+			((ArrayType) ((Callable) sym).return_type).length_type = length_type;
 		}
 	}
 

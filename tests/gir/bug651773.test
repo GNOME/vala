@@ -20,5 +20,5 @@ Input:
 
 Output:
 
-[CCode (array_length_pos = 0.1, array_length_type = "gsize", cheader_filename = "test.h")]
-public static unowned uint8[] get_array ();
+[CCode (array_length_pos = 0.1, cheader_filename = "test.h")]
+public static unowned uint8[:size_t] get_array ();
