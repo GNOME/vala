@@ -210,7 +210,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
 
 		set_cvalue (expr, cstartpointer);
-		append_array_length (expr, splicelen);
+		// Make sure no previous length values are preserved
+		set_array_length (expr, splicelen);
 	}
 
 	void append_struct_array_free_loop (Struct st) {
