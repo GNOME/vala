@@ -142,6 +142,17 @@ namespace Vala {
 		glib_value.append_array_length_cvalue (size);
 	}
 
+	public static void set_array_length (Expression expr, CCodeExpression size) {
+		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
+		if (glib_value == null) {
+			expr.target_value = new GLibValue (expr.value_type);
+			glib_value = (GLibValue) expr.target_value;
+		} else {
+			glib_value.array_length_cvalues = null;
+		}
+		glib_value.append_array_length_cvalue (size);
+	}
+
 	public static unowned List<CCodeExpression>? get_array_lengths (Expression expr) {
 		unowned GLibValue? glib_value = (GLibValue) expr.target_value;
 		if (glib_value == null) {
