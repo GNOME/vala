@@ -653,6 +653,7 @@ TESTS = \
 	asynchronous/bug599568.vala \
 	asynchronous/bug600827.vala \
 	asynchronous/bug601558.vala \
+	asynchronous/bug602594.vala \
 	asynchronous/bug612641.vala \
 	asynchronous/bug613484.vala \
 	asynchronous/bug614294.vala \
