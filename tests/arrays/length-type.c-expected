@@ -195,6 +195,9 @@ test_out (void)
 static void
 _vala_main (void)
 {
+	if (((gint64) G_MAXSSIZE) < 2147483648LL) {
+		return;
+	}
 	test_pass ();
 	test_ref ();
 	test_out ();

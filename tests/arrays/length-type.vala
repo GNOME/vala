@@ -43,6 +43,11 @@ void test_out () {
 }
 
 void main () {
+	if (ssize_t.MAX < 2147483648LL) {
+		//FIXME skip runtime while there is still c-expected
+		return;
+	}
+
 	test_pass ();
 	test_ref ();
 	test_out ();
