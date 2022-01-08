@@ -1,3 +1,18 @@
+Vala 0.48.21
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Allow boxing of non-external SimpleType structs [#1273]
+    + Cast given default-value of struct with possible member initializer [#1272]
+    + Clear existing length values when revisiting a slice expression [#1274]
+  - vala:
+    + Allow unsafe assignment of integer to enum while reporting a notice
+    + Non nullable enum types are simple types [#1268]
+    + Correctly replace "in" expression in pre-/postconditions of method [#1269]
+
+ * Bindings:
+  - gio-2.0: Add custom MemoryOutputStream.with_*data() wrappers [#1271]
+
 Vala 0.48.20
 ============
  * Various improvements and bug fixes:
