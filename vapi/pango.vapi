@@ -802,6 +802,8 @@ namespace Pango {
 		public double get_font_scale_factor ();
 		[Version (since = "1.38")]
 		public void get_font_scale_factors (out double xscale, out double yscale);
+		[Version (since = "1.50")]
+		public double get_slant_ratio ();
 		public void rotate (double degrees);
 		public void scale (double scale_x, double scale_y);
 		[Version (since = "1.16")]
