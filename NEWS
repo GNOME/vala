@@ -1,3 +1,19 @@
+Vala 0.48.22
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Correctly handle chain up of struct creation methods [#1264]
+    + Use a dedicated EmitContext for _variant_get*() functions
+  - vala:
+    + NullLiteral is not a valid argument for string concatenation [#1260]
+    + Set is_yield_expression in async context when chaining up to async base ctor
+    + girparser: Avoid possibily creating duplicated attributes
+  - vapigen.m4: use $PKG_CONFIG_SYSROOT_DIR
+
+ * Bindings:
+  - glib-2.0: Always use the actual C type for CCode.array_length_type
+  - gstreamer: Cherry-pick bindings fixes from 0.56
+
 Vala 0.48.21
 ============
  * Various improvements and bug fixes:
