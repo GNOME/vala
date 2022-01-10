@@ -269,20 +269,24 @@ generator_helper_co (GeneratorHelperData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_state_ = 1;
-	generator_generate (_data_->self, generator_helper_ready, _data_);
-	return FALSE;
-	_state_1:
-	generator_generate_finish (_data_->self, _data_->_res_);
-	_data_->self->priv->consumed = TRUE;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		generator_generate (_data_->self, generator_helper_ready, _data_);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		generator_generate_finish (_data_->self, _data_->_res_);
+		_data_->self->priv->consumed = TRUE;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 void
@@ -367,26 +371,30 @@ generator_feed_co (GeneratorFeedData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->self->priv->value = _data_->value;
-	(_data_->self->priv->callback_target_destroy_notify == NULL) ? NULL : (_data_->self->priv->callback_target_destroy_notify (_data_->self->priv->callback_target), NULL);
-	_data_->self->priv->callback = NULL;
-	_data_->self->priv->callback_target = NULL;
-	_data_->self->priv->callback_target_destroy_notify = NULL;
-	_data_->self->priv->callback = _generator_feed_co_gsource_func;
-	_data_->self->priv->callback_target = _data_;
-	_data_->self->priv->callback_target_destroy_notify = NULL;
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		_data_->self->priv->value = _data_->value;
+		(_data_->self->priv->callback_target_destroy_notify == NULL) ? NULL : (_data_->self->priv->callback_target_destroy_notify (_data_->self->priv->callback_target), NULL);
+		_data_->self->priv->callback = NULL;
+		_data_->self->priv->callback_target = NULL;
+		_data_->self->priv->callback_target_destroy_notify = NULL;
+		_data_->self->priv->callback = _generator_feed_co_gsource_func;
+		_data_->self->priv->callback_target = _data_;
+		_data_->self->priv->callback_target_destroy_notify = NULL;
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 gboolean
@@ -694,36 +702,40 @@ int_generator_real_generate_co (IntGeneratorGenerateData* _data_)
 	}
 	_state_0:
 	{
-		_data_->i = 0;
 		{
-			_data_->_tmp0_ = TRUE;
-			while (TRUE) {
-				if (!_data_->_tmp0_) {
-					_data_->_tmp1_ = _data_->i;
-					_data_->i = _data_->_tmp1_ + 1;
-				}
-				_data_->_tmp0_ = FALSE;
-				if (!(_data_->i < 10)) {
-					break;
-				}
-				if ((_data_->i % 2) == 0) {
-					_data_->_state_ = 1;
-					generator_feed (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_GENERATOR, Generator), (gpointer) ((gintptr) _data_->i), int_generator_generate_ready, _data_);
-					return FALSE;
-					_state_1:
-					generator_feed_finish (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_GENERATOR, Generator), _data_->_res_);
+			_data_->i = 0;
+			{
+				_data_->_tmp0_ = TRUE;
+				while (TRUE) {
+					if (!_data_->_tmp0_) {
+						_data_->_tmp1_ = _data_->i;
+						_data_->i = _data_->_tmp1_ + 1;
+					}
+					_data_->_tmp0_ = FALSE;
+					if (!(_data_->i < 10)) {
+						break;
+					}
+					if ((_data_->i % 2) == 0) {
+						_data_->_state_ = 1;
+						generator_feed (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_GENERATOR, Generator), (gpointer) ((gintptr) _data_->i), int_generator_generate_ready, _data_);
+						return FALSE;
+						_state_1:
+						{
+							generator_feed_finish (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_GENERATOR, Generator), _data_->_res_);
+						}
+					}
 				}
 			}
+			g_task_return_pointer (_data_->_async_result, _data_, NULL);
+			if (_data_->_state_ != 0) {
+				while (!g_task_get_completed (_data_->_async_result)) {
+					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				}
+			}
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
 	}
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 IntGenerator*

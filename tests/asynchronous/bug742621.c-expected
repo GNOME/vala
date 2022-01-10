@@ -270,17 +270,19 @@ go_async_co (GoAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = xyzzy;
-	g_signal_parse_name ("notify::b", G_TYPE_OBJECT, &_data_->_tmp1_, &_data_->_tmp2_, TRUE);
-	g_signal_handlers_disconnect_matched (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp0_, G_TYPE_OBJECT, GObject), G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA, _data_->_tmp1_, _data_->_tmp2_, NULL, (GCallback) _on_b_g_object_notify, NULL);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_tmp0_ = xyzzy;
+		g_signal_parse_name ("notify::b", G_TYPE_OBJECT, &_data_->_tmp1_, &_data_->_tmp2_, TRUE);
+		g_signal_handlers_disconnect_matched (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp0_, G_TYPE_OBJECT, GObject), G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA, _data_->_tmp1_, _data_->_tmp2_, NULL, (GCallback) _on_b_g_object_notify, NULL);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

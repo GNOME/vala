@@ -74,34 +74,36 @@ do_foo_co (DoFooData* _data_)
 	}
 	_state_0:
 	{
-		_data_->i = 0;
 		{
-			_data_->_tmp0_ = TRUE;
-			while (TRUE) {
-				if (!_data_->_tmp0_) {
-					_data_->_tmp1_ = _data_->i;
-					_data_->i = _data_->_tmp1_ + 1;
+			_data_->i = 0;
+			{
+				_data_->_tmp0_ = TRUE;
+				while (TRUE) {
+					if (!_data_->_tmp0_) {
+						_data_->_tmp1_ = _data_->i;
+						_data_->i = _data_->_tmp1_ + 1;
+					}
+					_data_->_tmp0_ = FALSE;
+					if (!(_data_->i < 2)) {
+						break;
+					}
+					memset (&_data_->_tmp2_, 0, sizeof (GValue));
+					g_value_init (&_data_->_tmp2_, G_TYPE_INT);
+					g_value_set_int (&_data_->_tmp2_, 42);
+					_data_->value = _data_->_tmp2_;
+					G_IS_VALUE (&_data_->value) ? (g_value_unset (&_data_->value), NULL) : NULL;
 				}
-				_data_->_tmp0_ = FALSE;
-				if (!(_data_->i < 2)) {
-					break;
-				}
-				memset (&_data_->_tmp2_, 0, sizeof (GValue));
-				g_value_init (&_data_->_tmp2_, G_TYPE_INT);
-				g_value_set_int (&_data_->_tmp2_, 42);
-				_data_->value = _data_->_tmp2_;
-				G_IS_VALUE (&_data_->value) ? (g_value_unset (&_data_->value), NULL) : NULL;
 			}
 		}
-	}
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

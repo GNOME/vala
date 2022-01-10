@@ -133,40 +133,42 @@ foo_co (FooData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_data1_ = g_slice_new0 (Block1Data);
-	_data_->_data1_->_ref_count_ = 1;
-	(_data_->_data1_->deleg_target_destroy_notify == NULL) ? NULL : (_data_->_data1_->deleg_target_destroy_notify (_data_->_data1_->deleg_target), NULL);
-	_data_->_data1_->deleg = NULL;
-	_data_->_data1_->deleg_target = NULL;
-	_data_->_data1_->deleg_target_destroy_notify = NULL;
-	_data_->_data1_->deleg = _data_->deleg;
-	_data_->_data1_->deleg_target = _data_->deleg_target;
-	_data_->_data1_->deleg_target_destroy_notify = _data_->deleg_target_destroy_notify;
-	_data_->_data1_->_async_data_ = _data_;
-	_data_->d = ___lambda4__deleg;
-	_data_->d_target = block1_data_ref (_data_->_data1_);
-	_data_->d_target_destroy_notify = block1_data_unref;
-	(_data_->d_target_destroy_notify == NULL) ? NULL : (_data_->d_target_destroy_notify (_data_->d_target), NULL);
-	_data_->d = NULL;
-	_data_->d_target = NULL;
-	_data_->d_target_destroy_notify = NULL;
-	_data_->d = NULL;
-	_data_->d_target = NULL;
-	_data_->d_target_destroy_notify = NULL;
-	(_data_->d_target_destroy_notify == NULL) ? NULL : (_data_->d_target_destroy_notify (_data_->d_target), NULL);
-	_data_->d = NULL;
-	_data_->d_target = NULL;
-	_data_->d_target_destroy_notify = NULL;
-	block1_data_unref (_data_->_data1_);
-	_data_->_data1_ = NULL;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_data1_ = g_slice_new0 (Block1Data);
+		_data_->_data1_->_ref_count_ = 1;
+		(_data_->_data1_->deleg_target_destroy_notify == NULL) ? NULL : (_data_->_data1_->deleg_target_destroy_notify (_data_->_data1_->deleg_target), NULL);
+		_data_->_data1_->deleg = NULL;
+		_data_->_data1_->deleg_target = NULL;
+		_data_->_data1_->deleg_target_destroy_notify = NULL;
+		_data_->_data1_->deleg = _data_->deleg;
+		_data_->_data1_->deleg_target = _data_->deleg_target;
+		_data_->_data1_->deleg_target_destroy_notify = _data_->deleg_target_destroy_notify;
+		_data_->_data1_->_async_data_ = _data_;
+		_data_->d = ___lambda4__deleg;
+		_data_->d_target = block1_data_ref (_data_->_data1_);
+		_data_->d_target_destroy_notify = block1_data_unref;
+		(_data_->d_target_destroy_notify == NULL) ? NULL : (_data_->d_target_destroy_notify (_data_->d_target), NULL);
+		_data_->d = NULL;
+		_data_->d_target = NULL;
+		_data_->d_target_destroy_notify = NULL;
+		_data_->d = NULL;
+		_data_->d_target = NULL;
+		_data_->d_target_destroy_notify = NULL;
+		(_data_->d_target_destroy_notify == NULL) ? NULL : (_data_->d_target_destroy_notify (_data_->d_target), NULL);
+		_data_->d = NULL;
+		_data_->d_target = NULL;
+		_data_->d_target_destroy_notify = NULL;
+		block1_data_unref (_data_->_data1_);
+		_data_->_data1_ = NULL;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

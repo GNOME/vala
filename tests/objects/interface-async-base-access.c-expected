@@ -253,15 +253,17 @@ bar_real_foo_co (BarFooData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	reached = TRUE;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		reached = TRUE;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 Bar*
@@ -545,19 +547,23 @@ foo_bar_co (FooBarData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_state_ = 1;
-	IFOO_GET_INTERFACE (_data_->self)->foo (G_TYPE_CHECK_INSTANCE_CAST (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_BAR, Bar), TYPE_IFOO, IFoo), foo_bar_ready, _data_);
-	return FALSE;
-	_state_1:
-	IFOO_GET_INTERFACE (_data_->self)->foo_finish (G_TYPE_CHECK_INSTANCE_CAST (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_BAR, Bar), TYPE_IFOO, IFoo), _data_->_res_);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		IFOO_GET_INTERFACE (_data_->self)->foo (G_TYPE_CHECK_INSTANCE_CAST (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_BAR, Bar), TYPE_IFOO, IFoo), foo_bar_ready, _data_);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		IFOO_GET_INTERFACE (_data_->self)->foo_finish (G_TYPE_CHECK_INSTANCE_CAST (G_TYPE_CHECK_INSTANCE_CAST (_data_->self, TYPE_BAR, Bar), TYPE_IFOO, IFoo), _data_->_res_);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 Foo*

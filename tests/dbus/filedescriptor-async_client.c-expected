@@ -587,132 +587,138 @@ run_co (RunData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_state_ = 1;
-	g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
-	return FALSE;
+	{
+		_data_->_state_ = 1;
+		g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
+		return FALSE;
+	}
 	_state_1:
-	_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
-	_data_->test = (Test*) _data_->_tmp0_;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp1_ = g_new0 (guint8, 1);
-	_data_->buffer = _data_->_tmp1_;
-	_data_->buffer_length1 = 1;
-	_data_->_buffer_size_ = _data_->buffer_length1;
-	_data_->_tmp2_ = g_new0 (gint, 2);
-	_data_->pipe1 = _data_->_tmp2_;
-	_data_->pipe1_length1 = 2;
-	_data_->_pipe1_size_ = _data_->pipe1_length1;
-	_data_->_tmp3_ = _data_->pipe1;
-	_data_->_tmp3__length1 = _data_->pipe1_length1;
-	_vala_assert (pipe (_data_->_tmp3_) == 0, "Posix.pipe (pipe1) == 0");
-	_data_->_tmp4_ = _data_->buffer;
-	_data_->_tmp4__length1 = _data_->buffer_length1;
-	_data_->_tmp4_[0] = (guint8) 42;
-	_data_->_tmp5_ = _data_->pipe1;
-	_data_->_tmp5__length1 = _data_->pipe1_length1;
-	_data_->_tmp6_ = _data_->_tmp5_[1];
-	_data_->_tmp7_ = _data_->buffer;
-	_data_->_tmp7__length1 = _data_->buffer_length1;
-	_vala_assert (write (_data_->_tmp6_, _data_->_tmp7_, (gsize) 1) == ((gssize) 1), "Posix.write (pipe1[1], buffer, 1) == 1");
-	_data_->_tmp8_ = _data_->pipe1;
-	_data_->_tmp8__length1 = _data_->pipe1_length1;
-	_data_->_tmp9_ = _data_->_tmp8_[1];
-	close (_data_->_tmp9_);
-	_data_->_tmp11_ = _data_->test;
-	_data_->_tmp12_ = _data_->pipe1;
-	_data_->_tmp12__length1 = _data_->pipe1_length1;
-	_data_->_tmp13_ = _data_->_tmp12_[0];
-	_data_->_tmp14_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp13_, TRUE);
-	_data_->_tmp15_ = _data_->_tmp14_;
-	_data_->_tmp16_ = NULL;
-	_data_->_state_ = 2;
-	test_test_in (_data_->_tmp11_, _data_->_tmp15_, run_ready, _data_);
-	return FALSE;
-	_state_2:
-	_data_->_tmp17_ = test_test_in_finish (_data_->_tmp11_, _data_->_res_, &_data_->_tmp16_, &_data_->_inner_error0_);
-	_g_object_unref0 (_data_->j);
-	_data_->j = _data_->_tmp16_;
-	_data_->_tmp18_ = _data_->_tmp17_;
-	_g_object_unref0 (_data_->_tmp15_);
-	_data_->_tmp10_ = _data_->_tmp18_;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->k);
-		_g_object_unref0 (_data_->j);
-		_data_->pipe1 = (g_free (_data_->pipe1), NULL);
-		_data_->buffer = (g_free (_data_->buffer), NULL);
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp19_ = _data_->_tmp10_;
-	_data_->_tmp10_ = NULL;
-	_g_object_unref0 (_data_->k);
-	_data_->k = _data_->_tmp19_;
-	_data_->_tmp21_ = _data_->j;
-	_data_->_tmp22_ = _data_->buffer;
-	_data_->_tmp22__length1 = _data_->buffer_length1;
-	_data_->_tmp20_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp21_, g_input_stream_get_type (), GInputStream), _data_->_tmp22_, (gsize) _data_->_tmp22__length1, NULL, &_data_->_inner_error0_);
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->_tmp10_);
-		_g_object_unref0 (_data_->k);
-		_g_object_unref0 (_data_->j);
-		_data_->pipe1 = (g_free (_data_->pipe1), NULL);
-		_data_->buffer = (g_free (_data_->buffer), NULL);
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_vala_assert (_data_->_tmp20_ == ((gssize) 1), "j.read (buffer) == 1");
-	_data_->_tmp23_ = _data_->buffer;
-	_data_->_tmp23__length1 = _data_->buffer_length1;
-	_data_->_tmp24_ = _data_->_tmp23_[0];
-	_vala_assert (((gint) _data_->_tmp24_) == 23, "buffer[0] == 23");
-	_data_->_tmp26_ = _data_->k;
-	_data_->_tmp27_ = _data_->buffer;
-	_data_->_tmp27__length1 = _data_->buffer_length1;
-	_data_->_tmp25_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp26_, g_input_stream_get_type (), GInputStream), _data_->_tmp27_, (gsize) _data_->_tmp27__length1, NULL, &_data_->_inner_error0_);
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->_tmp10_);
-		_g_object_unref0 (_data_->k);
-		_g_object_unref0 (_data_->j);
-		_data_->pipe1 = (g_free (_data_->pipe1), NULL);
-		_data_->buffer = (g_free (_data_->buffer), NULL);
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_vala_assert (_data_->_tmp25_ == ((gssize) 1), "k.read (buffer) == 1");
-	_data_->_tmp28_ = _data_->buffer;
-	_data_->_tmp28__length1 = _data_->buffer_length1;
-	_data_->_tmp29_ = _data_->_tmp28_[0];
-	_vala_assert (((gint) _data_->_tmp29_) == 11, "buffer[0] == 11");
-	_data_->_tmp30_ = main_loop;
-	g_main_loop_quit (_data_->_tmp30_);
-	_g_object_unref0 (_data_->_tmp10_);
-	_g_object_unref0 (_data_->k);
-	_g_object_unref0 (_data_->j);
-	_data_->pipe1 = (g_free (_data_->pipe1), NULL);
-	_data_->buffer = (g_free (_data_->buffer), NULL);
-	_g_object_unref0 (_data_->test);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_state_ = 2;
+		_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
+		_data_->test = (Test*) _data_->_tmp0_;
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
+		_data_->_tmp1_ = g_new0 (guint8, 1);
+		_data_->buffer = _data_->_tmp1_;
+		_data_->buffer_length1 = 1;
+		_data_->_buffer_size_ = _data_->buffer_length1;
+		_data_->_tmp2_ = g_new0 (gint, 2);
+		_data_->pipe1 = _data_->_tmp2_;
+		_data_->pipe1_length1 = 2;
+		_data_->_pipe1_size_ = _data_->pipe1_length1;
+		_data_->_tmp3_ = _data_->pipe1;
+		_data_->_tmp3__length1 = _data_->pipe1_length1;
+		_vala_assert (pipe (_data_->_tmp3_) == 0, "Posix.pipe (pipe1) == 0");
+		_data_->_tmp4_ = _data_->buffer;
+		_data_->_tmp4__length1 = _data_->buffer_length1;
+		_data_->_tmp4_[0] = (guint8) 42;
+		_data_->_tmp5_ = _data_->pipe1;
+		_data_->_tmp5__length1 = _data_->pipe1_length1;
+		_data_->_tmp6_ = _data_->_tmp5_[1];
+		_data_->_tmp7_ = _data_->buffer;
+		_data_->_tmp7__length1 = _data_->buffer_length1;
+		_vala_assert (write (_data_->_tmp6_, _data_->_tmp7_, (gsize) 1) == ((gssize) 1), "Posix.write (pipe1[1], buffer, 1) == 1");
+		_data_->_tmp8_ = _data_->pipe1;
+		_data_->_tmp8__length1 = _data_->pipe1_length1;
+		_data_->_tmp9_ = _data_->_tmp8_[1];
+		close (_data_->_tmp9_);
+		_data_->_tmp11_ = _data_->test;
+		_data_->_tmp12_ = _data_->pipe1;
+		_data_->_tmp12__length1 = _data_->pipe1_length1;
+		_data_->_tmp13_ = _data_->_tmp12_[0];
+		_data_->_tmp14_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp13_, TRUE);
+		_data_->_tmp15_ = _data_->_tmp14_;
+		_data_->_tmp16_ = NULL;
+		test_test_in (_data_->_tmp11_, _data_->_tmp15_, run_ready, _data_);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_2:
+	{
+		_data_->_tmp17_ = test_test_in_finish (_data_->_tmp11_, _data_->_res_, &_data_->_tmp16_, &_data_->_inner_error0_);
+		_g_object_unref0 (_data_->j);
+		_data_->j = _data_->_tmp16_;
+		_data_->_tmp18_ = _data_->_tmp17_;
+		_g_object_unref0 (_data_->_tmp15_);
+		_data_->_tmp10_ = _data_->_tmp18_;
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_g_object_unref0 (_data_->k);
+			_g_object_unref0 (_data_->j);
+			_data_->pipe1 = (g_free (_data_->pipe1), NULL);
+			_data_->buffer = (g_free (_data_->buffer), NULL);
+			_g_object_unref0 (_data_->test);
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_data_->_tmp19_ = _data_->_tmp10_;
+		_data_->_tmp10_ = NULL;
+		_g_object_unref0 (_data_->k);
+		_data_->k = _data_->_tmp19_;
+		_data_->_tmp21_ = _data_->j;
+		_data_->_tmp22_ = _data_->buffer;
+		_data_->_tmp22__length1 = _data_->buffer_length1;
+		_data_->_tmp20_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp21_, g_input_stream_get_type (), GInputStream), _data_->_tmp22_, (gsize) _data_->_tmp22__length1, NULL, &_data_->_inner_error0_);
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_g_object_unref0 (_data_->_tmp10_);
+			_g_object_unref0 (_data_->k);
+			_g_object_unref0 (_data_->j);
+			_data_->pipe1 = (g_free (_data_->pipe1), NULL);
+			_data_->buffer = (g_free (_data_->buffer), NULL);
+			_g_object_unref0 (_data_->test);
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_vala_assert (_data_->_tmp20_ == ((gssize) 1), "j.read (buffer) == 1");
+		_data_->_tmp23_ = _data_->buffer;
+		_data_->_tmp23__length1 = _data_->buffer_length1;
+		_data_->_tmp24_ = _data_->_tmp23_[0];
+		_vala_assert (((gint) _data_->_tmp24_) == 23, "buffer[0] == 23");
+		_data_->_tmp26_ = _data_->k;
+		_data_->_tmp27_ = _data_->buffer;
+		_data_->_tmp27__length1 = _data_->buffer_length1;
+		_data_->_tmp25_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp26_, g_input_stream_get_type (), GInputStream), _data_->_tmp27_, (gsize) _data_->_tmp27__length1, NULL, &_data_->_inner_error0_);
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_g_object_unref0 (_data_->_tmp10_);
+			_g_object_unref0 (_data_->k);
+			_g_object_unref0 (_data_->j);
+			_data_->pipe1 = (g_free (_data_->pipe1), NULL);
+			_data_->buffer = (g_free (_data_->buffer), NULL);
+			_g_object_unref0 (_data_->test);
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_vala_assert (_data_->_tmp25_ == ((gssize) 1), "k.read (buffer) == 1");
+		_data_->_tmp28_ = _data_->buffer;
+		_data_->_tmp28__length1 = _data_->buffer_length1;
+		_data_->_tmp29_ = _data_->_tmp28_[0];
+		_vala_assert (((gint) _data_->_tmp29_) == 11, "buffer[0] == 11");
+		_data_->_tmp30_ = main_loop;
+		g_main_loop_quit (_data_->_tmp30_);
+		_g_object_unref0 (_data_->_tmp10_);
+		_g_object_unref0 (_data_->k);
+		_g_object_unref0 (_data_->j);
+		_data_->pipe1 = (g_free (_data_->pipe1), NULL);
+		_data_->buffer = (g_free (_data_->buffer), NULL);
+		_g_object_unref0 (_data_->test);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void

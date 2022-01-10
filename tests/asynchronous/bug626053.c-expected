@@ -154,23 +154,25 @@ foo_foo_co (FooFooData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = g_strdup ("foo");
-	_data_->_tmp1_ = g_strdup ("bar");
-	_data_->_tmp2_ = g_new0 (gchar*, 2 + 1);
-	_data_->_tmp2_[0] = _data_->_tmp0_;
-	_data_->_tmp2_[1] = _data_->_tmp1_;
-	_data_->_tmp3_ = _data_->_tmp2_;
-	_data_->_tmp3__length1 = 2;
-	_data_->result_length1 = _data_->_tmp3__length1;
-	_data_->result = _data_->_tmp3_;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_tmp0_ = g_strdup ("foo");
+		_data_->_tmp1_ = g_strdup ("bar");
+		_data_->_tmp2_ = g_new0 (gchar*, 2 + 1);
+		_data_->_tmp2_[0] = _data_->_tmp0_;
+		_data_->_tmp2_[1] = _data_->_tmp1_;
+		_data_->_tmp3_ = _data_->_tmp2_;
+		_data_->_tmp3__length1 = 2;
+		_data_->result_length1 = _data_->_tmp3__length1;
+		_data_->result = _data_->_tmp3_;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 Foo*

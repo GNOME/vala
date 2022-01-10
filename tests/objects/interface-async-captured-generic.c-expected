@@ -147,19 +147,21 @@ ifoo_bar_co (IfooBarData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (IFOO_GET_INTERFACE (_data_->self)->get_g_type (_data_->self) == G_TYPE_STRING, "typeof (G) == typeof (string)");
-	_vala_assert (g_strcmp0 (_data_->g, "foo") == 0, "g == \"foo\"");
-	_data_->_tmp0_ = ((_data_->g != NULL) && (IFOO_GET_INTERFACE (_data_->self)->get_g_dup_func (_data_->self) != NULL)) ? IFOO_GET_INTERFACE (_data_->self)->get_g_dup_func (_data_->self) ((gpointer) _data_->g) : ((gpointer) _data_->g);
-	ifoo_baz (_data_->self, _data_->_tmp0_);
-	((_data_->g == NULL) || (IFOO_GET_INTERFACE (_data_->self)->get_g_destroy_func (_data_->self) == NULL)) ? NULL : (_data_->g = (IFOO_GET_INTERFACE (_data_->self)->get_g_destroy_func (_data_->self) (_data_->g), NULL));
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_vala_assert (IFOO_GET_INTERFACE (_data_->self)->get_g_type (_data_->self) == G_TYPE_STRING, "typeof (G) == typeof (string)");
+		_vala_assert (g_strcmp0 (_data_->g, "foo") == 0, "g == \"foo\"");
+		_data_->_tmp0_ = ((_data_->g != NULL) && (IFOO_GET_INTERFACE (_data_->self)->get_g_dup_func (_data_->self) != NULL)) ? IFOO_GET_INTERFACE (_data_->self)->get_g_dup_func (_data_->self) ((gpointer) _data_->g) : ((gpointer) _data_->g);
+		ifoo_baz (_data_->self, _data_->_tmp0_);
+		((_data_->g == NULL) || (IFOO_GET_INTERFACE (_data_->self)->get_g_destroy_func (_data_->self) == NULL)) ? NULL : (_data_->g = (IFOO_GET_INTERFACE (_data_->self)->get_g_destroy_func (_data_->self) (_data_->g), NULL));
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 void

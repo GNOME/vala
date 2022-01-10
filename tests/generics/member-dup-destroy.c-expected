@@ -243,21 +243,23 @@ foo_foo_async_co (FooFooAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (_data_->self->priv->g_type == G_TYPE_STRING, "typeof (G) == typeof (string)");
-	_vala_assert (_data_->self->priv->g_dup_func == ((GBoxedCopyFunc) g_strdup), "G.dup == (BoxedCopyFunc) string.dup");
-	_vala_assert (_data_->self->priv->g_destroy_func == ((GDestroyNotify) g_free), "G.destroy == (DestroyNotify) free");
-	_data_->g = NULL;
-	_vala_assert (_data_->self->priv->g_dup_func == ((GBoxedCopyFunc) g_strdup), "g.dup == (BoxedCopyFunc) string.dup");
-	_vala_assert (_data_->self->priv->g_destroy_func == ((GDestroyNotify) g_free), "g.destroy == (DestroyNotify) free");
-	((_data_->g == NULL) || (_data_->self->priv->g_destroy_func == NULL)) ? NULL : (_data_->g = (_data_->self->priv->g_destroy_func (_data_->g), NULL));
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_vala_assert (_data_->self->priv->g_type == G_TYPE_STRING, "typeof (G) == typeof (string)");
+		_vala_assert (_data_->self->priv->g_dup_func == ((GBoxedCopyFunc) g_strdup), "G.dup == (BoxedCopyFunc) string.dup");
+		_vala_assert (_data_->self->priv->g_destroy_func == ((GDestroyNotify) g_free), "G.destroy == (DestroyNotify) free");
+		_data_->g = NULL;
+		_vala_assert (_data_->self->priv->g_dup_func == ((GBoxedCopyFunc) g_strdup), "g.dup == (BoxedCopyFunc) string.dup");
+		_vala_assert (_data_->self->priv->g_destroy_func == ((GDestroyNotify) g_free), "g.destroy == (DestroyNotify) free");
+		((_data_->g == NULL) || (_data_->self->priv->g_destroy_func == NULL)) ? NULL : (_data_->g = (_data_->self->priv->g_destroy_func (_data_->g), NULL));
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -447,19 +449,21 @@ bar_async_co (BarAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (_data_->t_type == TYPE_FOO, "typeof (T) == typeof (Foo)");
-	_vala_assert (_data_->t_dup_func == ((GBoxedCopyFunc) g_object_ref), "T.dup == (BoxedCopyFunc) Object.@ref");
-	_vala_assert (_data_->t_destroy_func == ((GDestroyNotify) g_object_unref), "T.destroy == (DestroyNotify) Object.unref");
-	_vala_assert (_data_->t_dup_func == ((GBoxedCopyFunc) g_object_ref), "t.dup == (BoxedCopyFunc) Object.@ref");
-	_vala_assert (_data_->t_destroy_func == ((GDestroyNotify) g_object_unref), "t.destroy == (DestroyNotify) Object.unref");
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_vala_assert (_data_->t_type == TYPE_FOO, "typeof (T) == typeof (Foo)");
+		_vala_assert (_data_->t_dup_func == ((GBoxedCopyFunc) g_object_ref), "T.dup == (BoxedCopyFunc) Object.@ref");
+		_vala_assert (_data_->t_destroy_func == ((GDestroyNotify) g_object_unref), "T.destroy == (DestroyNotify) Object.unref");
+		_vala_assert (_data_->t_dup_func == ((GBoxedCopyFunc) g_object_ref), "t.dup == (BoxedCopyFunc) Object.@ref");
+		_vala_assert (_data_->t_destroy_func == ((GDestroyNotify) g_object_unref), "t.destroy == (DestroyNotify) Object.unref");
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static Block1Data*

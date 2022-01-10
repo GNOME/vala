@@ -134,15 +134,17 @@ foo_co (FooData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->out_i = _data_->in_i;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->out_i = _data_->in_i;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -191,15 +193,17 @@ bar_co (BarData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->out_i = _data_->in_i;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->out_i = _data_->in_i;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -254,50 +258,56 @@ run_co (RunData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = 0;
-	_data_->_state_ = 1;
-	foo (323, run_ready, _data_);
-	return FALSE;
+	{
+		_data_->_state_ = 1;
+		_data_->_tmp0_ = 0;
+		foo (323, run_ready, _data_);
+		return FALSE;
+	}
 	_state_1:
-	foo_finish (&_data_->_tmp0_, _data_->_res_);
-	_data_->i = _data_->_tmp0_;
-	_vala_assert (_data_->i == 323, "i == 323");
 	{
-		_data_->_tmp1_ = 0;
-		_data_->_state_ = 2;
-		bar (742, run_ready, _data_);
-		return FALSE;
-		_state_2:
-		bar_finish (&_data_->_tmp1_, _data_->_res_, &_data_->_inner_error0_);
-		_data_->i = _data_->_tmp1_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch0_g_error;
+		foo_finish (&_data_->_tmp0_, _data_->_res_);
+		_data_->i = _data_->_tmp0_;
+		_vala_assert (_data_->i == 323, "i == 323");
+		{
+			_data_->_state_ = 2;
+			_data_->_tmp1_ = 0;
+			bar (742, run_ready, _data_);
+			return FALSE;
+			_state_2:
+			{
+				bar_finish (&_data_->_tmp1_, _data_->_res_, &_data_->_inner_error0_);
+				_data_->i = _data_->_tmp1_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch0_g_error;
+				}
+				_vala_assert (_data_->i == 742, "i == 742");
+			}
+			goto __finally0;
+			__catch0_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+				g_assert_not_reached ();
+			}
+			__finally0:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			_data_->_tmp2_ = loop;
+			g_main_loop_quit (_data_->_tmp2_);
+			g_task_return_pointer (_data_->_async_result, _data_, NULL);
+			if (_data_->_state_ != 0) {
+				while (!g_task_get_completed (_data_->_async_result)) {
+					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				}
+			}
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
-		_vala_assert (_data_->i == 742, "i == 742");
 	}
-	goto __finally0;
-	__catch0_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-		g_assert_not_reached ();
-	}
-	__finally0:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp2_ = loop;
-	g_main_loop_quit (_data_->_tmp2_);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

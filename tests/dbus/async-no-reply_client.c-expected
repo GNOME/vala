@@ -818,149 +818,159 @@ run_co (RunData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_data1_ = g_slice_new0 (Block1Data);
-	_data_->_data1_->_ref_count_ = 1;
-	_data_->_data1_->_async_data_ = _data_;
-	_data_->_state_ = 1;
-	g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/Test", "g-interface-name", "org.example.Test", NULL);
-	return FALSE;
+	{
+		_data_->_data1_ = g_slice_new0 (Block1Data);
+		_data_->_data1_->_ref_count_ = 1;
+		_data_->_data1_->_async_data_ = _data_;
+		_data_->_state_ = 1;
+		g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/Test", "g-interface-name", "org.example.Test", NULL);
+		return FALSE;
+	}
 	_state_1:
-	_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
-	_data_->test = (Test*) _data_->_tmp0_;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		block1_data_unref (_data_->_data1_);
-		_data_->_data1_ = NULL;
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp1_ = g_async_queue_new_full (_g_free0_);
-	_data_->_data1_->events = _data_->_tmp1_;
-	_data_->_tmp2_ = _data_->test;
-	g_object_get (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp2_, g_dbus_proxy_get_type (), GDBusProxy), "g-connection", &_data_->_tmp3_, NULL);
-	_data_->_tmp4_ = _data_->_tmp3_;
-	_data_->connection = _data_->_tmp4_;
-	_data_->_tmp5_ = _data_->connection;
-	g_dbus_connection_add_filter (_data_->_tmp5_, ___lambda4__gd_bus_message_filter_function, block1_data_ref (_data_->_data1_), block1_data_unref);
-	_data_->_tmp6_ = _data_->test;
-	_data_->_tmp7_ = 0;
-	_data_->_state_ = 2;
-	test_list_messages (_data_->_tmp6_, run_ready, _data_);
-	return FALSE;
-	_state_2:
-	_data_->_tmp8_ = test_list_messages_finish (_data_->_tmp6_, _data_->_res_, &_data_->_tmp7_, &_data_->_inner_error0_);
-	_data_->messages = _data_->_tmp8_;
-	_data_->messages_length1 = _data_->_tmp7_;
-	_data_->_messages_size_ = _data_->messages_length1;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->connection);
-		_g_object_unref0 (_data_->test);
-		block1_data_unref (_data_->_data1_);
-		_data_->_data1_ = NULL;
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp9_ = _data_->messages;
-	_data_->_tmp9__length1 = _data_->messages_length1;
-	_vala_assert (_data_->_tmp9__length1 == 0, "messages.length == 0");
-	_data_->_tmp10_ = _data_->test;
-	_data_->_state_ = 3;
-	test_post_message (_data_->_tmp10_, "round-trip", run_ready, _data_);
-	return FALSE;
-	_state_3:
-	test_post_message_finish (_data_->_tmp10_, _data_->_res_, &_data_->_inner_error0_);
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
-		_g_object_unref0 (_data_->connection);
-		_g_object_unref0 (_data_->test);
-		block1_data_unref (_data_->_data1_);
-		_data_->_data1_ = NULL;
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp11_ = _data_->_data1_->events;
-	_data_->_tmp12_ = g_async_queue_pop (_data_->_tmp11_);
-	_data_->_tmp13_ = (gchar*) _data_->_tmp12_;
-	_vala_assert (g_strcmp0 (_data_->_tmp13_, "G_DBUS_MESSAGE_FLAGS_NONE") == 0, "events.pop () == \"G_DBUS_MESSAGE_FLAGS_NONE\"");
-	_g_free0 (_data_->_tmp13_);
-	_data_->_tmp14_ = _data_->_data1_->events;
-	_data_->_tmp15_ = g_async_queue_try_pop (_data_->_tmp14_);
-	_data_->_tmp16_ = (gchar*) _data_->_tmp15_;
-	_vala_assert (_data_->_tmp16_ == NULL, "events.try_pop () == null");
-	_g_free0 (_data_->_tmp16_);
-	_data_->_tmp17_ = _data_->test;
-	test_post_message (_data_->_tmp17_, "fire-and-forget", NULL, NULL);
-	_data_->_tmp18_ = _data_->_data1_->events;
-	_data_->_tmp19_ = g_async_queue_pop (_data_->_tmp18_);
-	_data_->_tmp20_ = (gchar*) _data_->_tmp19_;
-	_vala_assert (g_strcmp0 (_data_->_tmp20_, "G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED") == 0, "events.pop () == \"G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED\"");
-	_g_free0 (_data_->_tmp20_);
-	_data_->_tmp21_ = _data_->_data1_->events;
-	_data_->_tmp22_ = g_async_queue_try_pop (_data_->_tmp21_);
-	_data_->_tmp23_ = (gchar*) _data_->_tmp22_;
-	_vala_assert (_data_->_tmp23_ == NULL, "events.try_pop () == null");
-	_g_free0 (_data_->_tmp23_);
-	_data_->_tmp25_ = _data_->test;
-	_data_->_tmp26_ = 0;
-	_data_->_state_ = 4;
-	test_list_messages (_data_->_tmp25_, run_ready, _data_);
-	return FALSE;
-	_state_4:
-	_data_->_tmp27_ = test_list_messages_finish (_data_->_tmp25_, _data_->_res_, &_data_->_tmp26_, &_data_->_inner_error0_);
-	_data_->_tmp24_ = _data_->_tmp27_;
-	_data_->_tmp24__length1 = _data_->_tmp26_;
-	_data_->__tmp24__size_ = _data_->_tmp24__length1;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
-		_g_object_unref0 (_data_->connection);
-		_g_object_unref0 (_data_->test);
-		block1_data_unref (_data_->_data1_);
-		_data_->_data1_ = NULL;
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp28_ = _data_->_tmp24_;
-	_data_->_tmp28__length1 = _data_->_tmp24__length1;
-	_data_->_tmp24_ = NULL;
-	_data_->_tmp24__length1 = 0;
-	_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
-	_data_->messages = _data_->_tmp28_;
-	_data_->messages_length1 = _data_->_tmp28__length1;
-	_data_->_messages_size_ = _data_->messages_length1;
-	_data_->_tmp29_ = _data_->messages;
-	_data_->_tmp29__length1 = _data_->messages_length1;
-	_vala_assert (_data_->_tmp29__length1 == 2, "messages.length == 2");
-	_data_->_tmp30_ = _data_->messages;
-	_data_->_tmp30__length1 = _data_->messages_length1;
-	_data_->_tmp31_ = _data_->_tmp30_[0];
-	_vala_assert (g_strcmp0 (_data_->_tmp31_, "round-trip") == 0, "messages[0] == \"round-trip\"");
-	_data_->_tmp32_ = _data_->messages;
-	_data_->_tmp32__length1 = _data_->messages_length1;
-	_data_->_tmp33_ = _data_->_tmp32_[1];
-	_vala_assert (g_strcmp0 (_data_->_tmp33_, "fire-and-forget") == 0, "messages[1] == \"fire-and-forget\"");
-	_data_->_tmp34_ = main_loop;
-	g_main_loop_quit (_data_->_tmp34_);
-	_data_->_tmp24_ = (_vala_array_free (_data_->_tmp24_, _data_->_tmp24__length1, (GDestroyNotify) g_free), NULL);
-	_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
-	_g_object_unref0 (_data_->connection);
-	_g_object_unref0 (_data_->test);
-	block1_data_unref (_data_->_data1_);
-	_data_->_data1_ = NULL;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_state_ = 2;
+		_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
+		_data_->test = (Test*) _data_->_tmp0_;
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			block1_data_unref (_data_->_data1_);
+			_data_->_data1_ = NULL;
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
+		_data_->_tmp1_ = g_async_queue_new_full (_g_free0_);
+		_data_->_data1_->events = _data_->_tmp1_;
+		_data_->_tmp2_ = _data_->test;
+		g_object_get (G_TYPE_CHECK_INSTANCE_CAST (_data_->_tmp2_, g_dbus_proxy_get_type (), GDBusProxy), "g-connection", &_data_->_tmp3_, NULL);
+		_data_->_tmp4_ = _data_->_tmp3_;
+		_data_->connection = _data_->_tmp4_;
+		_data_->_tmp5_ = _data_->connection;
+		g_dbus_connection_add_filter (_data_->_tmp5_, ___lambda4__gd_bus_message_filter_function, block1_data_ref (_data_->_data1_), block1_data_unref);
+		_data_->_tmp6_ = _data_->test;
+		_data_->_tmp7_ = 0;
+		test_list_messages (_data_->_tmp6_, run_ready, _data_);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_2:
+	{
+		_data_->_state_ = 3;
+		_data_->_tmp8_ = test_list_messages_finish (_data_->_tmp6_, _data_->_res_, &_data_->_tmp7_, &_data_->_inner_error0_);
+		_data_->messages = _data_->_tmp8_;
+		_data_->messages_length1 = _data_->_tmp7_;
+		_data_->_messages_size_ = _data_->messages_length1;
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_g_object_unref0 (_data_->connection);
+			_g_object_unref0 (_data_->test);
+			block1_data_unref (_data_->_data1_);
+			_data_->_data1_ = NULL;
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_data_->_tmp9_ = _data_->messages;
+		_data_->_tmp9__length1 = _data_->messages_length1;
+		_vala_assert (_data_->_tmp9__length1 == 0, "messages.length == 0");
+		_data_->_tmp10_ = _data_->test;
+		test_post_message (_data_->_tmp10_, "round-trip", run_ready, _data_);
+		return FALSE;
+	}
+	_state_3:
+	{
+		_data_->_state_ = 4;
+		test_post_message_finish (_data_->_tmp10_, _data_->_res_, &_data_->_inner_error0_);
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
+			_g_object_unref0 (_data_->connection);
+			_g_object_unref0 (_data_->test);
+			block1_data_unref (_data_->_data1_);
+			_data_->_data1_ = NULL;
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_data_->_tmp11_ = _data_->_data1_->events;
+		_data_->_tmp12_ = g_async_queue_pop (_data_->_tmp11_);
+		_data_->_tmp13_ = (gchar*) _data_->_tmp12_;
+		_vala_assert (g_strcmp0 (_data_->_tmp13_, "G_DBUS_MESSAGE_FLAGS_NONE") == 0, "events.pop () == \"G_DBUS_MESSAGE_FLAGS_NONE\"");
+		_g_free0 (_data_->_tmp13_);
+		_data_->_tmp14_ = _data_->_data1_->events;
+		_data_->_tmp15_ = g_async_queue_try_pop (_data_->_tmp14_);
+		_data_->_tmp16_ = (gchar*) _data_->_tmp15_;
+		_vala_assert (_data_->_tmp16_ == NULL, "events.try_pop () == null");
+		_g_free0 (_data_->_tmp16_);
+		_data_->_tmp17_ = _data_->test;
+		test_post_message (_data_->_tmp17_, "fire-and-forget", NULL, NULL);
+		_data_->_tmp18_ = _data_->_data1_->events;
+		_data_->_tmp19_ = g_async_queue_pop (_data_->_tmp18_);
+		_data_->_tmp20_ = (gchar*) _data_->_tmp19_;
+		_vala_assert (g_strcmp0 (_data_->_tmp20_, "G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED") == 0, "events.pop () == \"G_DBUS_MESSAGE_FLAGS_NO_REPLY_EXPECTED\"");
+		_g_free0 (_data_->_tmp20_);
+		_data_->_tmp21_ = _data_->_data1_->events;
+		_data_->_tmp22_ = g_async_queue_try_pop (_data_->_tmp21_);
+		_data_->_tmp23_ = (gchar*) _data_->_tmp22_;
+		_vala_assert (_data_->_tmp23_ == NULL, "events.try_pop () == null");
+		_g_free0 (_data_->_tmp23_);
+		_data_->_tmp25_ = _data_->test;
+		_data_->_tmp26_ = 0;
+		test_list_messages (_data_->_tmp25_, run_ready, _data_);
+		return FALSE;
+	}
+	_state_4:
+	{
+		_data_->_tmp27_ = test_list_messages_finish (_data_->_tmp25_, _data_->_res_, &_data_->_tmp26_, &_data_->_inner_error0_);
+		_data_->_tmp24_ = _data_->_tmp27_;
+		_data_->_tmp24__length1 = _data_->_tmp26_;
+		_data_->__tmp24__size_ = _data_->_tmp24__length1;
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
+			_g_object_unref0 (_data_->connection);
+			_g_object_unref0 (_data_->test);
+			block1_data_unref (_data_->_data1_);
+			_data_->_data1_ = NULL;
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
+		}
+		_data_->_tmp28_ = _data_->_tmp24_;
+		_data_->_tmp28__length1 = _data_->_tmp24__length1;
+		_data_->_tmp24_ = NULL;
+		_data_->_tmp24__length1 = 0;
+		_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
+		_data_->messages = _data_->_tmp28_;
+		_data_->messages_length1 = _data_->_tmp28__length1;
+		_data_->_messages_size_ = _data_->messages_length1;
+		_data_->_tmp29_ = _data_->messages;
+		_data_->_tmp29__length1 = _data_->messages_length1;
+		_vala_assert (_data_->_tmp29__length1 == 2, "messages.length == 2");
+		_data_->_tmp30_ = _data_->messages;
+		_data_->_tmp30__length1 = _data_->messages_length1;
+		_data_->_tmp31_ = _data_->_tmp30_[0];
+		_vala_assert (g_strcmp0 (_data_->_tmp31_, "round-trip") == 0, "messages[0] == \"round-trip\"");
+		_data_->_tmp32_ = _data_->messages;
+		_data_->_tmp32__length1 = _data_->messages_length1;
+		_data_->_tmp33_ = _data_->_tmp32_[1];
+		_vala_assert (g_strcmp0 (_data_->_tmp33_, "fire-and-forget") == 0, "messages[1] == \"fire-and-forget\"");
+		_data_->_tmp34_ = main_loop;
+		g_main_loop_quit (_data_->_tmp34_);
+		_data_->_tmp24_ = (_vala_array_free (_data_->_tmp24_, _data_->_tmp24__length1, (GDestroyNotify) g_free), NULL);
+		_data_->messages = (_vala_array_free (_data_->messages, _data_->messages_length1, (GDestroyNotify) g_free), NULL);
+		_g_object_unref0 (_data_->connection);
+		_g_object_unref0 (_data_->test);
+		block1_data_unref (_data_->_data1_);
+		_data_->_data1_ = NULL;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void

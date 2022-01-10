@@ -272,15 +272,17 @@ foo_bar_co (FooBarData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->self->manam = 23;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->self->manam = 23;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -326,16 +328,18 @@ foo_construct_async_co (FooNewAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->self = (Foo*) g_object_new (_data_->object_type, NULL);
-	_data_->self->manam = 42;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->self = (Foo*) g_object_new (_data_->object_type, NULL);
+		_data_->self->manam = 42;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 void
@@ -406,21 +410,25 @@ foo_create_foo_async_co (FooCreateFooAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_state_ = 1;
-	foo_new_async (foo_create_foo_async_ready, _data_);
-	return FALSE;
-	_state_1:
-	_data_->_tmp0_ = foo_new_finish (_data_->_res_);
-	_data_->foo = _data_->_tmp0_;
-	_data_->result = _data_->foo;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		foo_new_async (foo_create_foo_async_ready, _data_);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		_data_->_tmp0_ = foo_new_finish (_data_->_res_);
+		_data_->foo = _data_->_tmp0_;
+		_data_->result = _data_->foo;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 Foo*

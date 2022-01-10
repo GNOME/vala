@@ -162,69 +162,75 @@ run_co (RunData* _data_)
 	}
 	_state_0:
 	{
-		_data_->_state_ = 1;
-		g_bus_get (G_BUS_TYPE_SESSION, NULL, run_ready, _data_);
-		return FALSE;
-		_state_1:
-		_data_->_tmp0_ = g_bus_get_finish (_data_->_res_, &_data_->_inner_error0_);
-		_data_->bus = _data_->_tmp0_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch0_g_error;
+		{
+			_data_->_state_ = 1;
+			g_bus_get (G_BUS_TYPE_SESSION, NULL, run_ready, _data_);
+			return FALSE;
+			_state_1:
+			{
+				_data_->_state_ = 2;
+				_data_->_tmp0_ = g_bus_get_finish (_data_->_res_, &_data_->_inner_error0_);
+				_data_->bus = _data_->_tmp0_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch0_g_error;
+				}
+				_data_->_tmp1_ = _data_->bus;
+				_data_->_tmp2_ = _data_->bus;
+				_data_->_tmp3_ = g_dbus_connection_get_unique_name (_data_->_tmp2_);
+				g_dbus_proxy_new (_data_->_tmp1_, G_DBUS_PROXY_FLAGS_NONE, NULL, _data_->_tmp3_, "/org/example/test", "org.example.Test", NULL, run_ready, _data_);
+				return FALSE;
+			}
+			_state_2:
+			{
+				_data_->_tmp4_ = g_dbus_proxy_new_finish (_data_->_res_, &_data_->_inner_error0_);
+				_data_->test = _data_->_tmp4_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					_g_object_unref0 (_data_->bus);
+					goto __catch0_g_error;
+				}
+				_data_->_tmp5_ = _data_->test;
+				_data_->_tmp10_ = NULL;
+				_data_->_tmp11_ = _dynamic_do_foo0 (_data_->_tmp5_, 42, &_data_->_tmp10_, &_data_->_inner_error0_);
+				_g_free0 (_data_->s);
+				_data_->s = _data_->_tmp10_;
+				_data_->i = _data_->_tmp11_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					_g_free0 (_data_->s);
+					_g_object_unref0 (_data_->test);
+					_g_object_unref0 (_data_->bus);
+					goto __catch0_g_error;
+				}
+				_vala_assert (_data_->i == 23, "i == 23");
+				_data_->_tmp12_ = _data_->s;
+				_vala_assert (g_strcmp0 (_data_->_tmp12_, "foo") == 0, "s == \"foo\"");
+				_g_free0 (_data_->s);
+				_g_object_unref0 (_data_->test);
+				_g_object_unref0 (_data_->bus);
+			}
+			goto __finally0;
+			__catch0_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally0:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			_data_->_tmp13_ = main_loop;
+			g_main_loop_quit (_data_->_tmp13_);
+			g_task_return_pointer (_data_->_async_result, _data_, NULL);
+			if (_data_->_state_ != 0) {
+				while (!g_task_get_completed (_data_->_async_result)) {
+					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				}
+			}
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
-		_data_->_tmp1_ = _data_->bus;
-		_data_->_tmp2_ = _data_->bus;
-		_data_->_tmp3_ = g_dbus_connection_get_unique_name (_data_->_tmp2_);
-		_data_->_state_ = 2;
-		g_dbus_proxy_new (_data_->_tmp1_, G_DBUS_PROXY_FLAGS_NONE, NULL, _data_->_tmp3_, "/org/example/test", "org.example.Test", NULL, run_ready, _data_);
-		return FALSE;
-		_state_2:
-		_data_->_tmp4_ = g_dbus_proxy_new_finish (_data_->_res_, &_data_->_inner_error0_);
-		_data_->test = _data_->_tmp4_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			_g_object_unref0 (_data_->bus);
-			goto __catch0_g_error;
-		}
-		_data_->_tmp5_ = _data_->test;
-		_data_->_tmp10_ = NULL;
-		_data_->_tmp11_ = _dynamic_do_foo0 (_data_->_tmp5_, 42, &_data_->_tmp10_, &_data_->_inner_error0_);
-		_g_free0 (_data_->s);
-		_data_->s = _data_->_tmp10_;
-		_data_->i = _data_->_tmp11_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			_g_free0 (_data_->s);
-			_g_object_unref0 (_data_->test);
-			_g_object_unref0 (_data_->bus);
-			goto __catch0_g_error;
-		}
-		_vala_assert (_data_->i == 23, "i == 23");
-		_data_->_tmp12_ = _data_->s;
-		_vala_assert (g_strcmp0 (_data_->_tmp12_, "foo") == 0, "s == \"foo\"");
-		_g_free0 (_data_->s);
-		_g_object_unref0 (_data_->test);
-		_g_object_unref0 (_data_->bus);
 	}
-	goto __finally0;
-	__catch0_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally0:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp13_ = main_loop;
-	g_main_loop_quit (_data_->_tmp13_);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

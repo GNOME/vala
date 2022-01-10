@@ -392,17 +392,19 @@ callback_co (CallbackData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (g_strcmp0 (_data_->s, "foo") == 0, "s == \"foo\"");
-	_vala_assert (_data_->b, "b");
-	success = TRUE;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_vala_assert (g_strcmp0 (_data_->s, "foo") == 0, "s == \"foo\"");
+		_vala_assert (_data_->b, "b");
+		success = TRUE;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

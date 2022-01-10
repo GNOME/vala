@@ -228,86 +228,94 @@ foo_query_async_co (FooQueryAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->self->priv->running = TRUE;
 	{
-		_data_->_state_ = 1;
-		foo_internal_query_async (_data_->self, foo_query_async_ready, _data_);
-		return FALSE;
-		_state_1:
-		_data_->_tmp0_ = foo_internal_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error0_);
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __finally0;
-		}
-		if (!_data_->_tmp0_) {
+		_data_->self->priv->running = TRUE;
+		{
+			_data_->_state_ = 1;
+			foo_internal_query_async (_data_->self, foo_query_async_ready, _data_);
+			return FALSE;
+			_state_1:
 			{
-				{
-					_data_->_state_ = 2;
-					foo_close_query_async (_data_->self, foo_query_async_ready, _data_);
-					return FALSE;
-					_state_2:
-					foo_close_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error0_);
-					if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-						goto __catch1_g_error;
+				_data_->_tmp0_ = foo_internal_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error0_);
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __finally0;
+				}
+				if (!_data_->_tmp0_) {
+					{
+						{
+							_data_->_state_ = 2;
+							foo_close_query_async (_data_->self, foo_query_async_ready, _data_);
+							return FALSE;
+							_state_2:
+							{
+								foo_close_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error0_);
+								if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+									goto __catch1_g_error;
+								}
+							}
+							goto __finally1;
+							__catch1_g_error:
+							{
+								g_clear_error (&_data_->_inner_error0_);
+							}
+							__finally1:
+							if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+							}
+							_data_->self->priv->running = FALSE;
+						}
+						g_task_return_pointer (_data_->_async_result, _data_, NULL);
+						if (_data_->_state_ != 0) {
+							while (!g_task_get_completed (_data_->_async_result)) {
+								g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+							}
+						}
+						g_object_unref (_data_->_async_result);
+						return FALSE;
 					}
 				}
-				goto __finally1;
-				__catch1_g_error:
+				__finally0:
 				{
-					g_clear_error (&_data_->_inner_error0_);
+					{
+						_data_->_state_ = 3;
+						foo_close_query_async (_data_->self, foo_query_async_ready, _data_);
+						return FALSE;
+					}
+					_state_3:
+					{
+						foo_close_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error1_);
+						if (G_UNLIKELY (_data_->_inner_error1_ != NULL)) {
+							goto __catch2_g_error;
+						}
+					}
+					goto __finally2;
+					__catch2_g_error:
+					{
+						g_clear_error (&_data_->_inner_error1_);
+					}
+					__finally2:
+					if (G_UNLIKELY (_data_->_inner_error1_ != NULL)) {
+						g_task_return_error (_data_->_async_result, _data_->_inner_error1_);
+						g_object_unref (_data_->_async_result);
+						return FALSE;
+					}
+					_data_->self->priv->running = FALSE;
 				}
-				__finally1:
 				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+					g_object_unref (_data_->_async_result);
+					return FALSE;
 				}
-				_data_->self->priv->running = FALSE;
-			}
-			g_task_return_pointer (_data_->_async_result, _data_, NULL);
-			if (_data_->_state_ != 0) {
-				while (!g_task_get_completed (_data_->_async_result)) {
-					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				g_task_return_pointer (_data_->_async_result, _data_, NULL);
+				if (_data_->_state_ != 0) {
+					while (!g_task_get_completed (_data_->_async_result)) {
+						g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+					}
 				}
-			}
-			g_object_unref (_data_->_async_result);
-			return FALSE;
-		}
-	}
-	__finally0:
-	{
-		{
-			_data_->_state_ = 3;
-			foo_close_query_async (_data_->self, foo_query_async_ready, _data_);
-			return FALSE;
-			_state_3:
-			foo_close_query_finish (_data_->self, _data_->_res_, &_data_->_inner_error1_);
-			if (G_UNLIKELY (_data_->_inner_error1_ != NULL)) {
-				goto __catch2_g_error;
+				g_object_unref (_data_->_async_result);
+				return FALSE;
 			}
 		}
-		goto __finally2;
-		__catch2_g_error:
-		{
-			g_clear_error (&_data_->_inner_error1_);
-		}
-		__finally2:
-		if (G_UNLIKELY (_data_->_inner_error1_ != NULL)) {
-			g_task_return_error (_data_->_async_result, _data_->_inner_error1_);
-			g_object_unref (_data_->_async_result);
-			return FALSE;
-		}
-		_data_->self->priv->running = FALSE;
 	}
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -361,15 +369,17 @@ foo_internal_query_async_co (FooInternalQueryAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->result = TRUE;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->result = TRUE;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -419,14 +429,16 @@ foo_close_query_async_co (FooCloseQueryAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -526,42 +538,46 @@ go_async_co (GoAsyncData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = foo_new ();
-	_data_->foo = _data_->_tmp0_;
 	{
-		_data_->_state_ = 1;
-		foo_query_async (_data_->foo, go_async_ready, _data_);
-		return FALSE;
-		_state_1:
-		foo_query_finish (_data_->foo, _data_->_res_, &_data_->_inner_error0_);
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch0_g_error;
+		_data_->_tmp0_ = foo_new ();
+		_data_->foo = _data_->_tmp0_;
+		{
+			_data_->_state_ = 1;
+			foo_query_async (_data_->foo, go_async_ready, _data_);
+			return FALSE;
+			_state_1:
+			{
+				foo_query_finish (_data_->foo, _data_->_res_, &_data_->_inner_error0_);
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch0_g_error;
+				}
+			}
+			goto __finally0;
+			__catch0_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally0:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				_g_object_unref0 (_data_->foo);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			_data_->_tmp1_ = loop;
+			g_main_loop_quit (_data_->_tmp1_);
+			_g_object_unref0 (_data_->foo);
+			g_task_return_pointer (_data_->_async_result, _data_, NULL);
+			if (_data_->_state_ != 0) {
+				while (!g_task_get_completed (_data_->_async_result)) {
+					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				}
+			}
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
 	}
-	goto __finally0;
-	__catch0_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally0:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->foo);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp1_ = loop;
-	g_main_loop_quit (_data_->_tmp1_);
-	_g_object_unref0 (_data_->foo);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

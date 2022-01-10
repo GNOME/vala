@@ -279,19 +279,23 @@ test_test_void_co (TestTestVoidData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_void_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_void_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void
@@ -356,22 +360,26 @@ test_test_int_co (TestTestIntData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (_data_->i == 42, "i == 42");
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_int_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	_data_->j = 23;
-	_data_->result = 11;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		_vala_assert (_data_->i == 42, "i == 42");
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_int_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		_data_->j = 23;
+		_data_->result = 11;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void
@@ -446,25 +454,29 @@ test_test_string_co (TestTestStringData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_vala_assert (g_strcmp0 (_data_->s, "hello") == 0, "s == \"hello\"");
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_string_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	_data_->_tmp0_ = g_strdup ("world");
-	_g_free0 (_data_->t);
-	_data_->t = _data_->_tmp0_;
-	_data_->_tmp1_ = g_strdup ("vala");
-	_data_->result = _data_->_tmp1_;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		_vala_assert (g_strcmp0 (_data_->s, "hello") == 0, "s == \"hello\"");
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_string_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		_data_->_tmp0_ = g_strdup ("world");
+		_g_free0 (_data_->t);
+		_data_->t = _data_->_tmp0_;
+		_data_->_tmp1_ = g_strdup ("vala");
+		_data_->result = _data_->_tmp1_;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 Test*

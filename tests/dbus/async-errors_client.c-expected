@@ -971,149 +971,161 @@ run_co (RunData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_state_ = 1;
-	g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
-	return FALSE;
+	{
+		_data_->_state_ = 1;
+		g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, run_ready, _data_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
+		return FALSE;
+	}
 	_state_1:
-	_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
-	_data_->test = (Test*) _data_->_tmp0_;
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
 	{
-		_data_->_state_ = 2;
-		test_test_void (_data_->test, run_ready, _data_);
-		return FALSE;
-		_state_2:
-		test_test_void_finish (_data_->test, _data_->_res_, &_data_->_inner_error0_);
+		_data_->_tmp0_ = (Test*) g_async_initable_new_finish ((GAsyncInitable *) _data_->_source_object_, _data_->_res_, &_data_->_inner_error0_);
+		_data_->test = (Test*) _data_->_tmp0_;
 		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch0_g_error;
+			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+			g_clear_error (&_data_->_inner_error0_);
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
-		g_assert_not_reached ();
-	}
-	goto __finally0;
-	__catch0_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally0:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	{
-		_data_->_tmp2_ = 0;
-		_data_->_state_ = 3;
-		test_test_int (_data_->test, 42, run_ready, _data_);
-		return FALSE;
-		_state_3:
-		_data_->_tmp3_ = test_test_int_finish (_data_->test, _data_->_res_, &_data_->_tmp2_, &_data_->_inner_error0_);
-		_data_->j = _data_->_tmp2_;
-		_data_->_tmp1_ = _data_->_tmp3_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch1_g_error;
+		{
+			_data_->_state_ = 2;
+			test_test_void (_data_->test, run_ready, _data_);
+			return FALSE;
+			_state_2:
+			{
+				test_test_void_finish (_data_->test, _data_->_res_, &_data_->_inner_error0_);
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch0_g_error;
+				}
+				g_assert_not_reached ();
+			}
+			goto __finally0;
+			__catch0_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally0:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				_g_object_unref0 (_data_->test);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			{
+				_data_->_state_ = 3;
+				_data_->_tmp2_ = 0;
+				test_test_int (_data_->test, 42, run_ready, _data_);
+				return FALSE;
+			}
+			_state_3:
+			{
+				_data_->_tmp3_ = test_test_int_finish (_data_->test, _data_->_res_, &_data_->_tmp2_, &_data_->_inner_error0_);
+				_data_->j = _data_->_tmp2_;
+				_data_->_tmp1_ = _data_->_tmp3_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch1_g_error;
+				}
+				_data_->k = _data_->_tmp1_;
+				g_assert_not_reached ();
+			}
+			goto __finally1;
+			__catch1_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally1:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				_g_object_unref0 (_data_->test);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			{
+				_data_->_state_ = 4;
+				_data_->_tmp5_ = NULL;
+				test_test_string (_data_->test, "hello", run_ready, _data_);
+				return FALSE;
+			}
+			_state_4:
+			{
+				_data_->_tmp6_ = test_test_string_finish (_data_->test, _data_->_res_, &_data_->_tmp5_, &_data_->_inner_error0_);
+				_g_free0 (_data_->t);
+				_data_->t = _data_->_tmp5_;
+				_data_->_tmp4_ = _data_->_tmp6_;
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					_g_free0 (_data_->u);
+					_g_free0 (_data_->t);
+					goto __catch2_g_error;
+				}
+				_data_->_tmp7_ = _data_->_tmp4_;
+				_data_->_tmp4_ = NULL;
+				_g_free0 (_data_->u);
+				_data_->u = _data_->_tmp7_;
+				g_assert_not_reached ();
+				_g_free0 (_data_->_tmp4_);
+				_g_free0 (_data_->u);
+				_g_free0 (_data_->t);
+			}
+			goto __finally2;
+			__catch2_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally2:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				_g_object_unref0 (_data_->test);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			{
+				_data_->_state_ = 5;
+				_data_->_tmp8_ = g_cancellable_new ();
+				_data_->cancellable = _data_->_tmp8_;
+				_data_->_tmp9_ = _data_->cancellable;
+				g_cancellable_cancel (_data_->_tmp9_);
+				_data_->_tmp10_ = _data_->cancellable;
+				test_test_cancellable (_data_->test, _data_->_tmp10_, run_ready, _data_);
+				return FALSE;
+			}
+			_state_5:
+			{
+				test_test_cancellable_finish (_data_->test, _data_->_res_, &_data_->_inner_error0_);
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					_g_object_unref0 (_data_->cancellable);
+					goto __catch3_g_error;
+				}
+				g_assert_not_reached ();
+				_g_object_unref0 (_data_->cancellable);
+			}
+			goto __finally3;
+			__catch3_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+			}
+			__finally3:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				_g_object_unref0 (_data_->test);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			_data_->_tmp11_ = main_loop;
+			g_main_loop_quit (_data_->_tmp11_);
+			_g_object_unref0 (_data_->test);
+			g_task_return_pointer (_data_->_async_result, _data_, NULL);
+			if (_data_->_state_ != 0) {
+				while (!g_task_get_completed (_data_->_async_result)) {
+					g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+				}
+			}
+			g_object_unref (_data_->_async_result);
+			return FALSE;
 		}
-		_data_->k = _data_->_tmp1_;
-		g_assert_not_reached ();
 	}
-	goto __finally1;
-	__catch1_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally1:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	{
-		_data_->_tmp5_ = NULL;
-		_data_->_state_ = 4;
-		test_test_string (_data_->test, "hello", run_ready, _data_);
-		return FALSE;
-		_state_4:
-		_data_->_tmp6_ = test_test_string_finish (_data_->test, _data_->_res_, &_data_->_tmp5_, &_data_->_inner_error0_);
-		_g_free0 (_data_->t);
-		_data_->t = _data_->_tmp5_;
-		_data_->_tmp4_ = _data_->_tmp6_;
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			_g_free0 (_data_->u);
-			_g_free0 (_data_->t);
-			goto __catch2_g_error;
-		}
-		_data_->_tmp7_ = _data_->_tmp4_;
-		_data_->_tmp4_ = NULL;
-		_g_free0 (_data_->u);
-		_data_->u = _data_->_tmp7_;
-		g_assert_not_reached ();
-		_g_free0 (_data_->_tmp4_);
-		_g_free0 (_data_->u);
-		_g_free0 (_data_->t);
-	}
-	goto __finally2;
-	__catch2_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally2:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	{
-		_data_->_tmp8_ = g_cancellable_new ();
-		_data_->cancellable = _data_->_tmp8_;
-		_data_->_tmp9_ = _data_->cancellable;
-		g_cancellable_cancel (_data_->_tmp9_);
-		_data_->_tmp10_ = _data_->cancellable;
-		_data_->_state_ = 5;
-		test_test_cancellable (_data_->test, _data_->_tmp10_, run_ready, _data_);
-		return FALSE;
-		_state_5:
-		test_test_cancellable_finish (_data_->test, _data_->_res_, &_data_->_inner_error0_);
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			_g_object_unref0 (_data_->cancellable);
-			goto __catch3_g_error;
-		}
-		g_assert_not_reached ();
-		_g_object_unref0 (_data_->cancellable);
-	}
-	goto __finally3;
-	__catch3_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
-	}
-	__finally3:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		_g_object_unref0 (_data_->test);
-		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-		g_clear_error (&_data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp11_ = main_loop;
-	g_main_loop_quit (_data_->_tmp11_);
-	_g_object_unref0 (_data_->test);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

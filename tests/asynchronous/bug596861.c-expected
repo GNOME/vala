@@ -109,33 +109,93 @@ foo_co (FooData* _data_)
 	}
 	_state_0:
 	{
-		_data_->_state_ = 1;
-		foo (foo_ready, _data_);
-		return FALSE;
-		_state_1:
-		foo_finish (_data_->_res_, &_data_->_inner_error0_);
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			goto __catch0_g_error;
-		}
-	}
-	goto __finally0;
-	__catch0_g_error:
-	{
-		g_clear_error (&_data_->_inner_error0_);
 		{
-			_data_->_state_ = 2;
+			_data_->_state_ = 1;
 			foo (foo_ready, _data_);
 			return FALSE;
-			_state_2:
-			foo_finish (_data_->_res_, &_data_->_inner_error0_);
-			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-				goto __catch1_g_error;
+			_state_1:
+			{
+				foo_finish (_data_->_res_, &_data_->_inner_error0_);
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					goto __catch0_g_error;
+				}
 			}
-		}
-		goto __finally1;
-		__catch1_g_error:
-		{
-			g_clear_error (&_data_->_inner_error0_);
+			goto __finally0;
+			__catch0_g_error:
+			{
+				g_clear_error (&_data_->_inner_error0_);
+				{
+					_data_->_state_ = 2;
+					foo (foo_ready, _data_);
+					return FALSE;
+				}
+				_state_2:
+				{
+					foo_finish (_data_->_res_, &_data_->_inner_error0_);
+					if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+						goto __catch1_g_error;
+					}
+				}
+				goto __finally1;
+				__catch1_g_error:
+				{
+					g_clear_error (&_data_->_inner_error0_);
+					_data_->result = 0;
+					g_task_return_pointer (_data_->_async_result, _data_, NULL);
+					if (_data_->_state_ != 0) {
+						while (!g_task_get_completed (_data_->_async_result)) {
+							g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+						}
+					}
+					g_object_unref (_data_->_async_result);
+					return FALSE;
+				}
+				__finally1:
+				if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+					g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+					g_clear_error (&_data_->_inner_error0_);
+					g_object_unref (_data_->_async_result);
+					return FALSE;
+				}
+			}
+			__finally0:
+			if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+				g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
+			_data_->_tmp0_ = g_new0 (gint, 3);
+			_data_->_tmp0_[0] = 1;
+			_data_->_tmp0_[1] = 2;
+			_data_->_tmp0_[2] = 3;
+			{
+				_data_->e_collection_length1 = 0;
+				_data_->_e_collection_size_ = 0;
+				_data_->e_collection = _data_->_tmp0_;
+				_data_->e_collection_length1 = 3;
+				for (_data_->e_it = 0; _data_->e_it < _data_->e_collection_length1; _data_->e_it = _data_->e_it + 1) {
+					_data_->e = _data_->e_collection[_data_->e_it];
+					{
+					}
+				}
+				_data_->e_collection = (g_free (_data_->e_collection), NULL);
+			}
+			_data_->_tmp1_ = g_new0 (gint, 3);
+			_data_->_tmp1_[0] = 1;
+			_data_->_tmp1_[1] = 2;
+			_data_->_tmp1_[2] = 3;
+			{
+				_data_->_vala1_e_collection_length1 = 0;
+				_data_->__vala1_e_collection_size_ = 0;
+				_data_->_vala1_e_collection = _data_->_tmp1_;
+				_data_->_vala1_e_collection_length1 = 3;
+				for (_data_->_vala1_e_it = 0; _data_->_vala1_e_it < _data_->_vala1_e_collection_length1; _data_->_vala1_e_it = _data_->_vala1_e_it + 1) {
+					_data_->_vala1_e = _data_->_vala1_e_collection[_data_->_vala1_e_it];
+					{
+					}
+				}
+				_data_->_vala1_e_collection = (g_free (_data_->_vala1_e_collection), NULL);
+			}
 			_data_->result = 0;
 			g_task_return_pointer (_data_->_async_result, _data_, NULL);
 			if (_data_->_state_ != 0) {
@@ -146,61 +206,7 @@ foo_co (FooData* _data_)
 			g_object_unref (_data_->_async_result);
 			return FALSE;
 		}
-		__finally1:
-		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-			g_clear_error (&_data_->_inner_error0_);
-			g_object_unref (_data_->_async_result);
-			return FALSE;
-		}
 	}
-	__finally0:
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-		g_object_unref (_data_->_async_result);
-		return FALSE;
-	}
-	_data_->_tmp0_ = g_new0 (gint, 3);
-	_data_->_tmp0_[0] = 1;
-	_data_->_tmp0_[1] = 2;
-	_data_->_tmp0_[2] = 3;
-	{
-		_data_->e_collection_length1 = 0;
-		_data_->_e_collection_size_ = 0;
-		_data_->e_collection = _data_->_tmp0_;
-		_data_->e_collection_length1 = 3;
-		for (_data_->e_it = 0; _data_->e_it < _data_->e_collection_length1; _data_->e_it = _data_->e_it + 1) {
-			_data_->e = _data_->e_collection[_data_->e_it];
-			{
-			}
-		}
-		_data_->e_collection = (g_free (_data_->e_collection), NULL);
-	}
-	_data_->_tmp1_ = g_new0 (gint, 3);
-	_data_->_tmp1_[0] = 1;
-	_data_->_tmp1_[1] = 2;
-	_data_->_tmp1_[2] = 3;
-	{
-		_data_->_vala1_e_collection_length1 = 0;
-		_data_->__vala1_e_collection_size_ = 0;
-		_data_->_vala1_e_collection = _data_->_tmp1_;
-		_data_->_vala1_e_collection_length1 = 3;
-		for (_data_->_vala1_e_it = 0; _data_->_vala1_e_it < _data_->_vala1_e_collection_length1; _data_->_vala1_e_it = _data_->_vala1_e_it + 1) {
-			_data_->_vala1_e = _data_->_vala1_e_collection[_data_->_vala1_e_it];
-			{
-			}
-		}
-		_data_->_vala1_e_collection = (g_free (_data_->_vala1_e_collection), NULL);
-	}
-	_data_->result = 0;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
-	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

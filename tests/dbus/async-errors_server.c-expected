@@ -324,24 +324,28 @@ test_test_void_co (TestTestVoidData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_void_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
-	_data_->_inner_error0_ = _data_->_tmp0_;
-	g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-	g_object_unref (_data_->_async_result);
-	return FALSE;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_void_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
+		_data_->_inner_error0_ = _data_->_tmp0_;
+		g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void
@@ -411,16 +415,20 @@ test_test_int_co (TestTestIntData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_int_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
+	{
+		_data_->_state_ = 1;
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_int_co_gsource_func, _data_, NULL);
+		return FALSE;
+	}
 	_state_1:
-	;
-	_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
-	_data_->_inner_error0_ = _data_->_tmp0_;
-	g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	{
+		;
+		_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
+		_data_->_inner_error0_ = _data_->_tmp0_;
+		g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void
@@ -499,17 +507,21 @@ test_test_string_co (TestTestStringData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_string_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
+	{
+		_data_->_state_ = 1;
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_string_co_gsource_func, _data_, NULL);
+		return FALSE;
+	}
 	_state_1:
-	;
-	_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
-	_data_->_inner_error0_ = _data_->_tmp0_;
-	g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-	_g_free0 (_data_->t);
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	{
+		;
+		_data_->_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
+		_data_->_inner_error0_ = _data_->_tmp0_;
+		g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+		_g_free0 (_data_->t);
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 static void
@@ -576,19 +588,23 @@ test_test_cancellable_co (TestTestCancellableData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_cancellable_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
-	_state_1:
-	;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
-		}
+	{
+		_data_->_state_ = 1;
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_cancellable_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
+	_state_1:
+	{
+		;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
+		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
+	}
 }
 
 Test*

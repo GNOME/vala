@@ -276,22 +276,24 @@ test_list_messages_co (TestListMessagesData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = _data_->self->priv->messages;
-	_data_->_tmp0__length1 = _data_->self->priv->messages_length1;
-	_data_->_tmp1_ = (_data_->_tmp0_ != NULL) ? _vala_array_dup1 (_data_->_tmp0_, _data_->_tmp0__length1) : _data_->_tmp0_;
-	_data_->_tmp1__length1 = _data_->_tmp0__length1;
-	_data_->_tmp2_ = _data_->_tmp1_;
-	_data_->_tmp2__length1 = _data_->_tmp1__length1;
-	_data_->result_length1 = _data_->_tmp2__length1;
-	_data_->result = _data_->_tmp2_;
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_tmp0_ = _data_->self->priv->messages;
+		_data_->_tmp0__length1 = _data_->self->priv->messages_length1;
+		_data_->_tmp1_ = (_data_->_tmp0_ != NULL) ? _vala_array_dup1 (_data_->_tmp0_, _data_->_tmp0__length1) : _data_->_tmp0_;
+		_data_->_tmp1__length1 = _data_->_tmp0__length1;
+		_data_->_tmp2_ = _data_->_tmp1_;
+		_data_->_tmp2__length1 = _data_->_tmp1__length1;
+		_data_->result_length1 = _data_->_tmp2__length1;
+		_data_->result = _data_->_tmp2_;
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void
@@ -358,16 +360,18 @@ test_post_message_co (TestPostMessageData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = g_strdup (_data_->message);
-	_vala_array_add1 (&_data_->self->priv->messages, &_data_->self->priv->messages_length1, &_data_->self->priv->_messages_size_, _data_->_tmp0_);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		_data_->_tmp0_ = g_strdup (_data_->message);
+		_vala_array_add1 (&_data_->self->priv->messages, &_data_->self->priv->messages_length1, &_data_->self->priv->_messages_size_, _data_->_tmp0_);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 Test*

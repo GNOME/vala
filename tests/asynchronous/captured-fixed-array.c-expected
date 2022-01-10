@@ -79,24 +79,26 @@ foo_co (FooData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	memset (&_data_->_tmp0_, 0, 2 * sizeof (gint));
-	_data_->_tmp0_[0] = 23;
-	_data_->_tmp0_[1] = 42;
-	memcpy (_data_->array, _data_->_tmp0_, 2 * sizeof (gint));
-	_vala_assert (2 == 2, "array.length == 2");
-	_data_->_tmp1_ = _data_->array[1];
-	_vala_assert (_data_->_tmp1_ == 42, "array[1] == 42");
-	_vala_assert (3 == 3, "array_param.length == 3");
-	_data_->_tmp2_ = _data_->array_param[2];
-	_vala_assert (_data_->_tmp2_ == 4711, "array_param[2] == 4711");
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		memset (&_data_->_tmp0_, 0, 2 * sizeof (gint));
+		_data_->_tmp0_[0] = 23;
+		_data_->_tmp0_[1] = 42;
+		memcpy (_data_->array, _data_->_tmp0_, 2 * sizeof (gint));
+		_vala_assert (2 == 2, "array.length == 2");
+		_data_->_tmp1_ = _data_->array[1];
+		_vala_assert (_data_->_tmp1_ == 42, "array[1] == 42");
+		_vala_assert (3 == 3, "array_param.length == 3");
+		_data_->_tmp2_ = _data_->array_param[2];
+		_vala_assert (_data_->_tmp2_ == 4711, "array_param[2] == 4711");
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 static void

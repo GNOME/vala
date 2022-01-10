@@ -271,89 +271,93 @@ test_test_in_co (TestTestInData* _data_)
 		g_assert_not_reached ();
 	}
 	_state_0:
-	_data_->_tmp0_ = g_new0 (guint8, 1);
-	_data_->buffer = _data_->_tmp0_;
-	_data_->buffer_length1 = 1;
-	_data_->_buffer_size_ = _data_->buffer_length1;
-	_data_->_tmp1_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->i, g_input_stream_get_type (), GInputStream), _data_->buffer, (gsize) _data_->buffer_length1, NULL, &_data_->_inner_error0_);
-	if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
-		if (_data_->_inner_error0_->domain == G_IO_ERROR) {
-			g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
-			_data_->buffer = (g_free (_data_->buffer), NULL);
-			_g_object_unref0 (_data_->j);
-			g_object_unref (_data_->_async_result);
-			return FALSE;
-		} else {
-			_data_->buffer = (g_free (_data_->buffer), NULL);
-			_g_object_unref0 (_data_->j);
-			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
-			g_clear_error (&_data_->_inner_error0_);
-			g_object_unref (_data_->_async_result);
-			return FALSE;
+	{
+		_data_->_state_ = 1;
+		_data_->_tmp0_ = g_new0 (guint8, 1);
+		_data_->buffer = _data_->_tmp0_;
+		_data_->buffer_length1 = 1;
+		_data_->_buffer_size_ = _data_->buffer_length1;
+		_data_->_tmp1_ = g_input_stream_read (G_TYPE_CHECK_INSTANCE_CAST (_data_->i, g_input_stream_get_type (), GInputStream), _data_->buffer, (gsize) _data_->buffer_length1, NULL, &_data_->_inner_error0_);
+		if (G_UNLIKELY (_data_->_inner_error0_ != NULL)) {
+			if (_data_->_inner_error0_->domain == G_IO_ERROR) {
+				g_task_return_error (_data_->_async_result, _data_->_inner_error0_);
+				_data_->buffer = (g_free (_data_->buffer), NULL);
+				_g_object_unref0 (_data_->j);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			} else {
+				_data_->buffer = (g_free (_data_->buffer), NULL);
+				_g_object_unref0 (_data_->j);
+				g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _data_->_inner_error0_->message, g_quark_to_string (_data_->_inner_error0_->domain), _data_->_inner_error0_->code);
+				g_clear_error (&_data_->_inner_error0_);
+				g_object_unref (_data_->_async_result);
+				return FALSE;
+			}
 		}
+		_vala_assert (_data_->_tmp1_ == ((gssize) 1), "i.read (buffer) == 1");
+		_data_->_tmp2_ = _data_->buffer[0];
+		_vala_assert (((gint) _data_->_tmp2_) == 42, "buffer[0] == 42");
+		_data_->_tmp3_ = g_new0 (gint, 2);
+		_data_->pipe1 = _data_->_tmp3_;
+		_data_->pipe1_length1 = 2;
+		_data_->_pipe1_size_ = _data_->pipe1_length1;
+		_data_->_tmp4_ = _data_->pipe1;
+		_data_->_tmp4__length1 = _data_->pipe1_length1;
+		_vala_assert (pipe (_data_->_tmp4_) == 0, "Posix.pipe (pipe1) == 0");
+		_data_->buffer[0] = (guint8) 23;
+		_data_->_tmp5_ = _data_->pipe1;
+		_data_->_tmp5__length1 = _data_->pipe1_length1;
+		_data_->_tmp6_ = _data_->_tmp5_[1];
+		_vala_assert (write (_data_->_tmp6_, _data_->buffer, (gsize) 1) == ((gssize) 1), "Posix.write (pipe1[1], buffer, 1) == 1");
+		_data_->_tmp7_ = _data_->pipe1;
+		_data_->_tmp7__length1 = _data_->pipe1_length1;
+		_data_->_tmp8_ = _data_->_tmp7_[1];
+		close (_data_->_tmp8_);
+		_data_->_tmp9_ = g_new0 (gint, 2);
+		_data_->pipe2 = _data_->_tmp9_;
+		_data_->pipe2_length1 = 2;
+		_data_->_pipe2_size_ = _data_->pipe2_length1;
+		_data_->_tmp10_ = _data_->pipe2;
+		_data_->_tmp10__length1 = _data_->pipe2_length1;
+		_vala_assert (pipe (_data_->_tmp10_) == 0, "Posix.pipe (pipe2) == 0");
+		_data_->buffer[0] = (guint8) 11;
+		_data_->_tmp11_ = _data_->pipe2;
+		_data_->_tmp11__length1 = _data_->pipe2_length1;
+		_data_->_tmp12_ = _data_->_tmp11_[1];
+		_vala_assert (write (_data_->_tmp12_, _data_->buffer, (gsize) 1) == ((gssize) 1), "Posix.write (pipe2[1], buffer, 1) == 1");
+		_data_->_tmp13_ = _data_->pipe2;
+		_data_->_tmp13__length1 = _data_->pipe2_length1;
+		_data_->_tmp14_ = _data_->_tmp13_[1];
+		close (_data_->_tmp14_);
+		g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_in_co_gsource_func, _data_, NULL);
+		return FALSE;
 	}
-	_vala_assert (_data_->_tmp1_ == ((gssize) 1), "i.read (buffer) == 1");
-	_data_->_tmp2_ = _data_->buffer[0];
-	_vala_assert (((gint) _data_->_tmp2_) == 42, "buffer[0] == 42");
-	_data_->_tmp3_ = g_new0 (gint, 2);
-	_data_->pipe1 = _data_->_tmp3_;
-	_data_->pipe1_length1 = 2;
-	_data_->_pipe1_size_ = _data_->pipe1_length1;
-	_data_->_tmp4_ = _data_->pipe1;
-	_data_->_tmp4__length1 = _data_->pipe1_length1;
-	_vala_assert (pipe (_data_->_tmp4_) == 0, "Posix.pipe (pipe1) == 0");
-	_data_->buffer[0] = (guint8) 23;
-	_data_->_tmp5_ = _data_->pipe1;
-	_data_->_tmp5__length1 = _data_->pipe1_length1;
-	_data_->_tmp6_ = _data_->_tmp5_[1];
-	_vala_assert (write (_data_->_tmp6_, _data_->buffer, (gsize) 1) == ((gssize) 1), "Posix.write (pipe1[1], buffer, 1) == 1");
-	_data_->_tmp7_ = _data_->pipe1;
-	_data_->_tmp7__length1 = _data_->pipe1_length1;
-	_data_->_tmp8_ = _data_->_tmp7_[1];
-	close (_data_->_tmp8_);
-	_data_->_tmp9_ = g_new0 (gint, 2);
-	_data_->pipe2 = _data_->_tmp9_;
-	_data_->pipe2_length1 = 2;
-	_data_->_pipe2_size_ = _data_->pipe2_length1;
-	_data_->_tmp10_ = _data_->pipe2;
-	_data_->_tmp10__length1 = _data_->pipe2_length1;
-	_vala_assert (pipe (_data_->_tmp10_) == 0, "Posix.pipe (pipe2) == 0");
-	_data_->buffer[0] = (guint8) 11;
-	_data_->_tmp11_ = _data_->pipe2;
-	_data_->_tmp11__length1 = _data_->pipe2_length1;
-	_data_->_tmp12_ = _data_->_tmp11_[1];
-	_vala_assert (write (_data_->_tmp12_, _data_->buffer, (gsize) 1) == ((gssize) 1), "Posix.write (pipe2[1], buffer, 1) == 1");
-	_data_->_tmp13_ = _data_->pipe2;
-	_data_->_tmp13__length1 = _data_->pipe2_length1;
-	_data_->_tmp14_ = _data_->_tmp13_[1];
-	close (_data_->_tmp14_);
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, _test_test_in_co_gsource_func, _data_, NULL);
-	_data_->_state_ = 1;
-	return FALSE;
 	_state_1:
-	;
-	_data_->_tmp15_ = _data_->pipe1;
-	_data_->_tmp15__length1 = _data_->pipe1_length1;
-	_data_->_tmp16_ = _data_->_tmp15_[0];
-	_data_->_tmp17_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp16_, TRUE);
-	_g_object_unref0 (_data_->j);
-	_data_->j = _data_->_tmp17_;
-	_data_->_tmp18_ = _data_->pipe2;
-	_data_->_tmp18__length1 = _data_->pipe2_length1;
-	_data_->_tmp19_ = _data_->_tmp18_[0];
-	_data_->_tmp20_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp19_, TRUE);
-	_data_->result = _data_->_tmp20_;
-	_data_->pipe2 = (g_free (_data_->pipe2), NULL);
-	_data_->pipe1 = (g_free (_data_->pipe1), NULL);
-	_data_->buffer = (g_free (_data_->buffer), NULL);
-	g_task_return_pointer (_data_->_async_result, _data_, NULL);
-	if (_data_->_state_ != 0) {
-		while (!g_task_get_completed (_data_->_async_result)) {
-			g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+	{
+		;
+		_data_->_tmp15_ = _data_->pipe1;
+		_data_->_tmp15__length1 = _data_->pipe1_length1;
+		_data_->_tmp16_ = _data_->_tmp15_[0];
+		_data_->_tmp17_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp16_, TRUE);
+		_g_object_unref0 (_data_->j);
+		_data_->j = _data_->_tmp17_;
+		_data_->_tmp18_ = _data_->pipe2;
+		_data_->_tmp18__length1 = _data_->pipe2_length1;
+		_data_->_tmp19_ = _data_->_tmp18_[0];
+		_data_->_tmp20_ = (GUnixInputStream*) g_unix_input_stream_new (_data_->_tmp19_, TRUE);
+		_data_->result = _data_->_tmp20_;
+		_data_->pipe2 = (g_free (_data_->pipe2), NULL);
+		_data_->pipe1 = (g_free (_data_->pipe1), NULL);
+		_data_->buffer = (g_free (_data_->buffer), NULL);
+		g_task_return_pointer (_data_->_async_result, _data_, NULL);
+		if (_data_->_state_ != 0) {
+			while (!g_task_get_completed (_data_->_async_result)) {
+				g_main_context_iteration (g_task_get_context (_data_->_async_result), TRUE);
+			}
 		}
+		g_object_unref (_data_->_async_result);
+		return FALSE;
 	}
-	g_object_unref (_data_->_async_result);
-	return FALSE;
 }
 
 Test*
