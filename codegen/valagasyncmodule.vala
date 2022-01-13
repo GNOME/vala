@@ -354,7 +354,7 @@ public class Vala.GAsyncModule : GtkModule {
 			var cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			if (m.is_private_symbol ()) {
+			if (m.is_private_symbol () || m.entry_point) {
 				asyncfunc.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && m.is_internal_symbol ()) {
 				asyncfunc.modifiers |= CCodeModifiers.INTERNAL;
@@ -374,7 +374,7 @@ public class Vala.GAsyncModule : GtkModule {
 			cparam_map = new HashMap<int,CCodeParameter> (direct_hash, direct_equal);
 			carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			if (m.is_private_symbol ()) {
+			if (m.is_private_symbol () || m.entry_point) {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
 			} else if (context.hide_internal && m.is_internal_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.INTERNAL;

@@ -1114,11 +1114,6 @@ public class Vala.Method : Subroutine, Callable {
 				error = true;
 				Report.error (source_reference, "\"main\" method cannot be inline");
 			}
-
-			if (coroutine) {
-				error = true;
-				Report.error (source_reference, "\"main\" method cannot be async");
-			}
 		}
 
 		if (get_attribute ("GtkCallback") != null) {

@@ -731,6 +731,8 @@ TESTS = \
 	asynchronous/constructor-argument-check.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
+	asynchronous/method-main-async.vala \
+	asynchronous/method-main-async-void.vala \
 	asynchronous/nowrapper.vala \
 	asynchronous/out-parameter-free-on-error.vala \
 	asynchronous/out-parameter-invalid.test \
@@ -1139,7 +1141,6 @@ TESTS = \
 	semantic/method-extern-virtual.test \
 	semantic/method-interface-already-found.test \
 	semantic/method-interface-not-found.test \
-	semantic/method-main-async.test \
 	semantic/method-main-inline.test \
 	semantic/method-main-throws.test \
 	semantic/method-override.test \
