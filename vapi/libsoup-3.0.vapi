@@ -280,7 +280,7 @@ namespace Soup {
 		public void set_response_filter (owned Soup.LoggerFilter response_filter);
 		[NoAccessorMethod]
 		public Soup.LoggerLogLevel level { get; set; }
-		public int max_body_size { get; set; }
+		public int max_body_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_message_get_type ()")]
 	public sealed class Message : GLib.Object {

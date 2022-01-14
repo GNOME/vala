@@ -382,7 +382,8 @@ namespace GI {
 		INVALID,
 		CALL,
 		ASYNC,
-		NOTIFIED
+		NOTIFIED,
+		FOREVER
 	}
 	[CCode (cheader_filename = "girepository.h", cprefix = "GI_TRANSFER_", has_type_id = false)]
 	public enum Transfer {

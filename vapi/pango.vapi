@@ -223,10 +223,12 @@ namespace Pango {
 		public Pango.CoverageLevel @get (int index_);
 		[Version (deprecated = true, deprecated_since = "1.44")]
 		public void max (Pango.Coverage other);
+		[Version (deprecated = true, deprecated_since = "1.52")]
 		public unowned Pango.Coverage @ref ();
 		public void @set (int index_, Pango.CoverageLevel level);
 		[Version (deprecated = true, deprecated_since = "1.44")]
 		public void to_bytes ([CCode (array_length_cname = "n_bytes", array_length_pos = 1.1)] out uint8[] bytes);
+		[Version (deprecated = true, deprecated_since = "1.52")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_get_type ()")]
