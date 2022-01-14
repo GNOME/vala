@@ -20,6 +20,7 @@ enumerate_printers skip
 // Causes vapigen issues, not sure why -- <union> without name
 
 // G-I doesn't support structs
+BitsetIter struct
 Border struct
 ExpressionWatch compact=false
 Requisition struct
