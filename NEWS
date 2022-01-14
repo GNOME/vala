@@ -1,3 +1,44 @@
+Vala 0.55.1
+===========
+ * Highlights:
+  - Add support for partial classes [#370]
+  - Add support for nested methods (local functions) [#1232]
+  - Add multi-line support to Vala.Report [#764]
+  - Support "emit" for explicit signal emission
+  - Add native support to specify non default length-type for arrays [#607]
+
+ * Various improvements and bug fixes:
+  - codegen:
+    + Move some errors to semantic analyzer pass
+    + Stop generating wrappers for dynamic signal connections
+    + gdbus: Use g_dbus_method_invocation_take_error() as simplification
+    + Initialize type parameter properties for generics earlier [#67]
+    + Initialize "result" variable on declaration for abstract methods only
+    + Use __once instead of __volatile in generated code
+    + Generated SimpleType structs don't have a type id
+  - vala:
+    + Add optional SourceReference parameter to DataType classes
+    + Preserve the source reference when resolving data types
+    + Set source references of created DataType instances in OCE
+    + Set TypeParameter as symbol of GenericType
+    + Add accessibility check of type for constants and structs base type
+    + Don't allow casting to void [#1070]
+    + Don't allow casting real structs to classes or simple-types [#1249]
+    + Check accessibility of initializer for constant and enum value
+    + Show source location when reporting deprecations
+
+ * Bindings:
+  - Add gnome-desktop-4, gnome-bg-4 and gnome-rr-4 bindings
+  - Add libsoup-3.0 binding
+  - Add webkit2gtk-5.0 bindings
+  - glib-2.0: Add Unicode 14.0 symbols
+  - glib-2.0: Update 2.72 symbols
+  - gstreamer: Update from 1.19.3+ git master
+  - gstreamer-1.0: Make Gst.Uri a sealed class
+  - gtk4: Update to 4.6.0+06e5da45
+  - webkit2gtk-*.0: Update to 2.35.1
+  - vapi: Update GIR-based bindings
+
 Vala 0.54.6
 ===========
  * Various improvements and bug fixes:
