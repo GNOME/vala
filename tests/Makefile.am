@@ -437,6 +437,7 @@ TESTS = \
 	delegates/lambda-outer-constant.test \
 	delegates/lambda-shared-closure.vala \
 	delegates/member-target-destroy.vala \
+	delegates/member-target-destroy-2.vala \
 	delegates/params-array.vala \
 	delegates/params-array-with-throws.vala \
 	delegates/reference_transfer.vala \

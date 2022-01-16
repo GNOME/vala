@@ -122,14 +122,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				Report.error (expr.source_reference, "unsupported use of target field of delegate without target");
 			}
 			CCodeExpression delegate_target_destroy_notify;
-			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify));
+			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify) ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is DelegateDestroyField) {
 			if (!((DelegateType) expr.inner.value_type).delegate_symbol.has_target) {
 				Report.error (expr.source_reference, "unsupported use of destroy field of delegate without target");
 			}
 			CCodeExpression delegate_target_destroy_notify;
 			get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify);
-			set_cvalue (expr, delegate_target_destroy_notify);
+			set_cvalue (expr, delegate_target_destroy_notify ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is GenericDupField) {
 			set_cvalue (expr, get_dup_func_expression (expr.inner.value_type, expr.source_reference));
 		} else if (expr.symbol_reference is GenericDestroyField) {
