@@ -116,11 +116,11 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			set_cvalue (expr, get_array_length_cexpression (expr.inner, 1));
 		} else if (expr.symbol_reference is DelegateTargetField) {
 			CCodeExpression delegate_target_destroy_notify;
-			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify));
+			set_cvalue (expr, get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify) ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is DelegateDestroyField) {
 			CCodeExpression delegate_target_destroy_notify;
 			get_delegate_target_cexpression (expr.inner, out delegate_target_destroy_notify);
-			set_cvalue (expr, delegate_target_destroy_notify);
+			set_cvalue (expr, delegate_target_destroy_notify ?? new CCodeConstant ("NULL"));
 		} else if (expr.symbol_reference is GenericDupField) {
 			set_cvalue (expr, get_dup_func_expression (expr.inner.value_type, expr.source_reference));
 		} else if (expr.symbol_reference is GenericDestroyField) {
