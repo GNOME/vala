@@ -431,6 +431,7 @@ TESTS = \
 	delegates/lambda-outer-constant.test \
 	delegates/lambda-shared-closure.vala \
 	delegates/member-target-destroy.vala \
+	delegates/member-target-destroy-2.vala \
 	delegates/reference_transfer.vala \
 	delegates/return-array-null-terminated.vala \
 	delegates/wrapper.vala \
