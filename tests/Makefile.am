@@ -731,6 +731,9 @@ TESTS = \
 	asynchronous/constructor-argument-check.vala \
 	asynchronous/finish-name.vala \
 	asynchronous/generator.vala \
+	asynchronous/main-block-async-call.vala \
+	asynchronous/main-block-async-creation.vala \
+	asynchronous/main-block-async-yield.vala \
 	asynchronous/method-main-async.vala \
 	asynchronous/method-main-async-void.vala \
 	asynchronous/nowrapper.vala \

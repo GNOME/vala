@@ -133,6 +133,8 @@ public class Vala.Method : Subroutine, Callable {
 
 	public bool entry_point { get; private set; }
 
+	public bool is_main_block { get; private set; }
+
 	/**
 	 * Specifies the generated `this` parameter for instance methods.
 	 */
@@ -219,6 +221,18 @@ public class Vala.Method : Subroutine, Callable {
 	public Method (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
+	}
+
+	/**
+	 * Creates a new main block method.
+	 *
+	 * @param source_reference  reference to source code
+	 * @return                  newly created method
+	 */
+	public Method.main_block (SourceReference? source_reference = null) {
+		base ("main", source_reference, null);
+		return_type = new VoidType ();
+		is_main_block = true;
 	}
 
 	/**
@@ -816,6 +830,22 @@ public class Vala.Method : Subroutine, Callable {
 		} else if (!is_abstract && !external && source_type == SourceFileType.SOURCE && body == null) {
 			error = true;
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
+		}
+
+		// auto-convert main block to async if a yield expression is used
+		if (is_main_block && body != null) {
+			body.accept (new TraverseVisitor (node => {
+				if (!(node is Statement || node is Expression || node is Variable || node is CatchClause)) {
+					return TraverseStatus.STOP;
+				}
+				if (node is YieldStatement
+				    || (node is MethodCall && ((MethodCall) node).is_yield_expression)
+				    || (node is ObjectCreationExpression && ((ObjectCreationExpression) node).is_yield_expression)) {
+					coroutine = true;
+					return TraverseStatus.STOP;
+				}
+				return TraverseStatus.CONTINUE;
+			}));
 		}
 
 		if (coroutine && !external_package && !context.has_package ("gio-2.0")) {
