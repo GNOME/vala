@@ -1093,11 +1093,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("ap"));
 		ccode.add_declaration ("char*", new CCodeVariableDeclarator ("result"));
 
-		var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		va_start.add_argument (new CCodeIdentifier ("ap"));
-		va_start.add_argument (new CCodeIdentifier ("format"));
+		var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+		vastart.add_argument (new CCodeIdentifier ("ap"));
+		vastart.add_argument (new CCodeIdentifier ("format"));
 
-		ccode.add_expression (va_start);
+		ccode.add_expression (vastart);
 
 		if (context.profile == Profile.POSIX) {
 			cfile.add_include ("stdio.h");
@@ -1121,11 +1121,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		ccode.add_assignment (new CCodeIdentifier ("result"), malloc);
 
-		va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-		va_start.add_argument (new CCodeIdentifier ("ap"));
-		va_start.add_argument (new CCodeIdentifier ("format"));
+		vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+		vastart.add_argument (new CCodeIdentifier ("ap"));
+		vastart.add_argument (new CCodeIdentifier ("format"));
 
-		ccode.add_expression (va_start);
+		ccode.add_expression (vastart);
 
 		vsnprintf = new CCodeFunctionCall (new CCodeIdentifier ("vsnprintf"));
 		vsnprintf.add_argument (new CCodeIdentifier ("result"));
