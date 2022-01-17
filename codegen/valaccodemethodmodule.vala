@@ -1321,12 +1321,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				vcall.add_argument (carg);
 			}
 
-			var va_start = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
-			va_start.add_argument (new CCodeIdentifier ("_vala_va_list_obj"));
-			va_start.add_argument (carg);
+			var vastart = new CCodeFunctionCall (new CCodeIdentifier ("va_start"));
+			vastart.add_argument (new CCodeIdentifier ("_vala_va_list_obj"));
+			vastart.add_argument (carg);
 
 			ccode.add_declaration ("va_list", new CCodeVariableDeclarator ("_vala_va_list_obj"));
-			ccode.add_expression (va_start);
+			ccode.add_expression (vastart);
 
 			vcall.add_argument (new CCodeIdentifier("_vala_va_list_obj"));
 		}
