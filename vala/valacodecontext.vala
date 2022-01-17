@@ -582,6 +582,8 @@ public class Vala.CodeContext {
 		for (int i = 16; i <= target_glib_minor; i += 2) {
 			defines.add ("GLIB_2_%d".printf (i));
 		}
+
+		defines.add ("VALA_ARCH_%s".printf (Config.PACKAGE_TARGET_CPU_ARCH.ascii_up ().replace ("-", "_")));
 	}
 
 	/**

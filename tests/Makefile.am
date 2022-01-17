@@ -934,6 +934,7 @@ TESTS = \
 	parser/namespaces.vala \
 	parser/namespace-missing-bracket.test \
 	parser/preprocessor.vala \
+	parser/preprocessor-arch.vala \
 	parser/preprocessor-glib.vala \
 	parser/preprocessor-vala.vala \
 	parser/property-default-redefined.test \

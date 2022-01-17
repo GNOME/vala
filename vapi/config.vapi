@@ -24,6 +24,7 @@
 namespace Config {
 	public const string PACKAGE_DATADIR;
 	public const string PACKAGE_SUFFIX;
+	public const string PACKAGE_TARGET_CPU_ARCH;
 	public const string PACKAGE_VALADOC_LIBDIR;
 	public const string PACKAGE_VALADOC_ICONDIR;
 }

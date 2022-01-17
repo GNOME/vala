@@ -44,6 +44,7 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 
 AC_CANONICAL_HOST
+AC_CANONICAL_CPU_ARCH
 
 # Detect the target system
 build_linux=no
@@ -55,6 +56,9 @@ case "${host_os}" in
         ;;
 esac
 AM_CONDITIONAL([HAVE_LINUX], [test "$build_linux" = "yes"])
+
+AC_SUBST(PACKAGE_TARGET_CPU_ARCH)
+AC_DEFINE_UNQUOTED(PACKAGE_TARGET_CPU_ARCH, "$target_cpu_arch", [Define to the target architecture])
 
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
