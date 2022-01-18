@@ -34,6 +34,10 @@ public class Vala.YieldStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 	}
 
+	public override void accept (CodeVisitor visitor) {
+		visitor.visit_yield_statement (this);
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
