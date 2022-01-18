@@ -2517,7 +2517,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_main_block (Symbol parent) throws ParseError {
 		var begin = get_location ();
 
-		var method = new Method ("main", new VoidType (), get_src (begin));
+		var method = new Method ("main", new VoidType (), new SourceReference (scanner.source_file, begin, begin));
 		method.access = SymbolAccessibility.PUBLIC;
 		method.binding = MemberBinding.STATIC;
 		method.body = new Block (get_src (begin));
