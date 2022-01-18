@@ -865,6 +865,7 @@ TESTS = \
 	parser/local-variable.vala \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
+	parser/main-block-minimal.vala \
 	parser/member-access-pointer.vala \
 	parser/member-initializer.vala \
 	parser/member-initializer-empty.vala \
