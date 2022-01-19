@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-public class Vala.Variable : Symbol {
+public abstract class Vala.Variable : Symbol {
 	/**
 	 * The optional initializer expression.
 	 */
@@ -54,7 +54,7 @@ public class Vala.Variable : Symbol {
 	Expression? _initializer;
 	DataType? _variable_type;
 
-	public Variable (DataType? variable_type, string? name, Expression? initializer = null, SourceReference? source_reference = null, Comment? comment = null) {
+	protected Variable (DataType? variable_type, string? name, Expression? initializer = null, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.variable_type = variable_type;
 		this.initializer = initializer;
