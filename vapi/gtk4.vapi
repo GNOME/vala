@@ -6349,18 +6349,18 @@ namespace Gsk {
 		[DestroysInstance]
 		public Gsk.Transform perspective (float depth);
 		public void print (GLib.StringBuilder string);
-		public unowned Gsk.Transform @ref ();
+		public unowned Gsk.Transform? @ref ();
 		[DestroysInstance]
-		public Gsk.Transform rotate (float angle);
+		public Gsk.Transform? rotate (float angle);
 		[DestroysInstance]
-		public Gsk.Transform rotate_3d (float angle, Graphene.Vec3 axis);
+		public Gsk.Transform? rotate_3d (float angle, Graphene.Vec3 axis);
 		[DestroysInstance]
-		public Gsk.Transform scale (float factor_x, float factor_y);
+		public Gsk.Transform? scale (float factor_x, float factor_y);
 		[DestroysInstance]
-		public Gsk.Transform scale_3d (float factor_x, float factor_y, float factor_z);
+		public Gsk.Transform? scale_3d (float factor_x, float factor_y, float factor_z);
 		[DestroysInstance]
 		[Version (since = "4.6")]
-		public Gsk.Transform skew (float skew_x, float skew_y);
+		public Gsk.Transform? skew (float skew_x, float skew_y);
 		public void to_2d (out float out_xx, out float out_yx, out float out_xy, out float out_yy, out float out_dx, out float out_dy);
 		[Version (since = "4.6")]
 		public void to_2d_components (out float out_skew_x, out float out_skew_y, out float out_scale_x, out float out_scale_y, out float out_angle, out float out_dx, out float out_dy);
@@ -6369,13 +6369,13 @@ namespace Gsk {
 		public string to_string ();
 		public void to_translate (out float out_dx, out float out_dy);
 		[DestroysInstance]
-		public Gsk.Transform transform (Gsk.Transform? other);
+		public Gsk.Transform? transform (Gsk.Transform? other);
 		public Graphene.Rect transform_bounds (Graphene.Rect rect);
 		public Graphene.Point transform_point (Graphene.Point point);
 		[DestroysInstance]
-		public Gsk.Transform translate (Graphene.Point point);
+		public Gsk.Transform? translate (Graphene.Point point);
 		[DestroysInstance]
-		public Gsk.Transform translate_3d (Graphene.Point3D point);
+		public Gsk.Transform? translate_3d (Graphene.Point3D point);
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_transform_node_get_type ()")]
@@ -13153,14 +13153,14 @@ namespace Gtk {
 		public int get_bytes_in_line ();
 		public unichar get_char ();
 		public int get_chars_in_line ();
-		public unowned Gtk.TextChildAnchor get_child_anchor ();
+		public unowned Gtk.TextChildAnchor? get_child_anchor ();
 		public Pango.Language get_language ();
 		public int get_line ();
 		public int get_line_index ();
 		public int get_line_offset ();
 		public GLib.SList<weak Gtk.TextMark> get_marks ();
 		public int get_offset ();
-		public unowned Gdk.Paintable get_paintable ();
+		public unowned Gdk.Paintable? get_paintable ();
 		public string get_slice (Gtk.TextIter end);
 		public GLib.SList<weak Gtk.TextTag> get_tags ();
 		public string get_text (Gtk.TextIter end);
