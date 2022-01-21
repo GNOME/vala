@@ -5402,6 +5402,8 @@ namespace GLib {
 		[CCode (cname = "g_hash_table_new_full", simple_generics = true)]
 		public HashTable (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func);
 		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
+		[Version (since = "2.72")]
+		public HashTable.similar (HashTable<K,V> other_hash_table);
 		public void insert (owned K key, owned V value);
 		public void replace (owned K key, owned V value);
 		[Version (since = "2.32", deprecated_since = "vala-0.26", replacement = "GenericSet.add")]

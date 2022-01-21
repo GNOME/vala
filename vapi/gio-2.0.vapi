@@ -3083,12 +3083,18 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_file (string file) throws GLib.Error;
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.72")]
+		public TlsCertificate.from_file_with_password (string file, string password) throws GLib.Error;
+		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_files (string cert_file, string key_file) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public TlsCertificate.from_pem (string data, ssize_t length) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.68")]
 		public TlsCertificate.from_pkcs11_uris (string pkcs11_uri, string? private_key_pkcs11_uri) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.72")]
+		public TlsCertificate.from_pkcs12 ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "const guint8*")] uint8[] data, string? password) throws GLib.Error;
 		[Version (since = "2.70")]
 		public GLib.GenericArray<weak GLib.Bytes>? get_dns_names ();
 		[Version (since = "2.70")]
@@ -3122,8 +3128,14 @@ namespace GLib {
 		[Version (since = "2.70")]
 		public GLib.DateTime not_valid_before { owned get; }
 		[NoAccessorMethod]
+		[Version (since = "2.72")]
+		public string password { construct; }
+		[NoAccessorMethod]
 		[Version (since = "2.68")]
 		public string pkcs11_uri { owned get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.72")]
+		public GLib.ByteArray pkcs12_data { construct; }
 		[NoAccessorMethod]
 		public GLib.ByteArray private_key { owned get; construct; }
 		[NoAccessorMethod]
@@ -5028,7 +5040,8 @@ namespace GLib {
 		HANDSHAKE,
 		CERTIFICATE_REQUIRED,
 		EOF,
-		INAPPROPRIATE_FALLBACK;
+		INAPPROPRIATE_FALLBACK,
+		BAD_CERTIFICATE_PASSWORD;
 		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
