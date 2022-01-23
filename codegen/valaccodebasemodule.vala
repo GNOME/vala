@@ -4831,6 +4831,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			return store_temp_value (new GLibValue (type, ccall), node);
 		} else {
+			CCodeExpression ccallarg;
+			if (node is SliceExpression) {
+				ccallarg = cexpr;
+				cexpr = get_cvalue (((SliceExpression) node).container);
+			} else {
+				ccallarg = cexpr;
+			}
 			var cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cexpr, new CCodeConstant ("NULL"));
 			if (type is GenericType) {
 				// dup functions are optional for type parameters
@@ -4840,9 +4847,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (type is GenericType) {
 				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
-				ccall.add_argument (new CCodeCastExpression (cexpr, get_ccode_name (pointer_type)));
+				ccall.add_argument (new CCodeCastExpression (ccallarg, get_ccode_name (pointer_type)));
 			} else {
-				ccall.add_argument (cexpr);
+				ccall.add_argument (ccallarg);
 			}
 
 			if (type is ArrayType) {
