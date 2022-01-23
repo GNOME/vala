@@ -478,7 +478,7 @@ test_integer_array (void)
 	assert (_tmp22_ == 23);
 	_tmp23_ = a;
 	_tmp23__length1 = a_length1;
-	_tmp24_ = ((_tmp23_ + 1) != NULL) ? _vala_array_dup2 (_tmp23_ + 1, 3 - 1) : (_tmp23_ + 1);
+	_tmp24_ = (_tmp23_ != NULL) ? _vala_array_dup2 (_tmp23_ + 1, 3 - 1) : _tmp23_;
 	_tmp24__length1 = 3 - 1;
 	c = _tmp24_;
 	c_length1 = _tmp24__length1;
@@ -490,7 +490,7 @@ test_integer_array (void)
 	assert (_tmp26_ == 11);
 	_tmp27_ = a;
 	_tmp27__length1 = a_length1;
-	_tmp28_ = ((_tmp27_ + 0) != NULL) ? _vala_array_dup3 (_tmp27_ + 0, 0 - 0) : (_tmp27_ + 0);
+	_tmp28_ = (_tmp27_ != NULL) ? _vala_array_dup3 (_tmp27_ + 0, 0 - 0) : _tmp27_;
 	_tmp28__length1 = 0 - 0;
 	c0 = _tmp28_;
 	c0_length1 = _tmp28__length1;
@@ -501,7 +501,7 @@ test_integer_array (void)
 	_tmp29__length1 = a_length1;
 	_tmp30_ = a;
 	_tmp30__length1 = a_length1;
-	_tmp31_ = ((_tmp30_ + 1) != NULL) ? _vala_array_dup4 (_tmp30_ + 1, _tmp30__length1 - 1) : (_tmp30_ + 1);
+	_tmp31_ = (_tmp30_ != NULL) ? _vala_array_dup4 (_tmp30_ + 1, _tmp30__length1 - 1) : _tmp30_;
 	_tmp31__length1 = _tmp30__length1 - 1;
 	c1 = _tmp31_;
 	c1_length1 = _tmp31__length1;
@@ -513,7 +513,7 @@ test_integer_array (void)
 	assert (_tmp33_ == 11);
 	_tmp34_ = a;
 	_tmp34__length1 = a_length1;
-	_tmp35_ = ((_tmp34_ + 0) != NULL) ? _vala_array_dup5 (_tmp34_ + 0, 2 - 0) : (_tmp34_ + 0);
+	_tmp35_ = (_tmp34_ != NULL) ? _vala_array_dup5 (_tmp34_ + 0, 2 - 0) : _tmp34_;
 	_tmp35__length1 = 2 - 0;
 	c2 = _tmp35_;
 	c2_length1 = _tmp35__length1;
@@ -527,7 +527,7 @@ test_integer_array (void)
 	_tmp38__length1 = a_length1;
 	_tmp39_ = a;
 	_tmp39__length1 = a_length1;
-	_tmp40_ = ((_tmp39_ + 0) != NULL) ? _vala_array_dup6 (_tmp39_ + 0, _tmp39__length1 - 0) : (_tmp39_ + 0);
+	_tmp40_ = (_tmp39_ != NULL) ? _vala_array_dup6 (_tmp39_ + 0, _tmp39__length1 - 0) : _tmp39_;
 	_tmp40__length1 = _tmp39__length1 - 0;
 	c3 = _tmp40_;
 	c3_length1 = _tmp40__length1;
