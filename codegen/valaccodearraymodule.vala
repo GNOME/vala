@@ -210,6 +210,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
 
 		set_cvalue (expr, cstartpointer);
+		((GLibValue) expr.target_value).non_null = get_non_null (expr.container.target_value);
 		// Make sure no previous length values are preserved
 		set_array_length (expr, splicelen);
 	}
