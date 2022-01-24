@@ -33,6 +33,49 @@ void test_garray () {
 	assert (foo.ref_count == 1);
 }
 
+void test_garray_foreach () {
+	var array = new GLib.Array<Foo> ();
+
+	var foo1 = new Foo ();
+	var foo2 = new Foo ();
+	var foo3 = new Foo ();
+
+	array.append_val (foo1);
+	assert (foo1.ref_count == 2);
+	array.append_val (foo2);
+	assert (foo2.ref_count == 2);
+	array.append_val (foo3);
+	assert (foo3.ref_count == 2);
+	assert (array.length == 3);
+
+	int loop_size = 0;
+	foreach (weak Foo element in array) {
+		loop_size++;
+		assert (element.ref_count == 2);
+		switch (loop_size) {
+			case 1: assert (element == foo1); break;
+			case 2: assert (element == foo2); break;
+			case 3: assert (element == foo3); break;
+		}
+	}
+	assert (loop_size == 3);
+
+	loop_size = 0;
+	foreach (Foo element in array) {
+		loop_size++;
+		assert (element.ref_count == 3);
+		switch (loop_size) {
+			case 1: assert (element == foo1); break;
+			case 2: assert (element == foo2); break;
+			case 3: assert (element == foo3); break;
+		}
+	}
+	assert (loop_size == 3);
+	assert (foo1.ref_count == 2);
+	assert (foo2.ref_count == 2);
+	assert (foo3.ref_count == 2);
+}
+
 void test_int_garray () {
 	var array = new GLib.Array<int> ();
 	// g_array_append_val() is a macro which uses a reference to the value parameter and thus can't use constants.
@@ -115,6 +158,7 @@ void test_gvalue_garray () {
 
 void main () {
 	test_garray ();
+	test_garray_foreach ();
 	test_int_garray ();
 	test_struct_garray ();
 	test_object_garray ();

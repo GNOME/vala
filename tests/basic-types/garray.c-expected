@@ -74,6 +74,7 @@ VALA_EXTERN void foo_struct_destroy (FooStruct* self);
 VALA_EXTERN void test_garray (void);
 static void _g_object_unref0_ (gpointer var);
 static void _vala_Foo_free_function_content_of (gpointer data);
+VALA_EXTERN void test_garray_foreach (void);
 VALA_EXTERN void test_int_garray (void);
 VALA_EXTERN GArray* create_struct_garray (void);
 static void _foo_struct_free0_ (gpointer var);
@@ -387,6 +388,182 @@ test_garray (void)
 }
 
 void
+test_garray_foreach (void)
+{
+	GArray* array = NULL;
+	GArray* _tmp0_;
+	Foo* foo1 = NULL;
+	Foo* _tmp1_;
+	Foo* foo2 = NULL;
+	Foo* _tmp2_;
+	Foo* foo3 = NULL;
+	Foo* _tmp3_;
+	GArray* _tmp4_;
+	Foo* _tmp5_;
+	Foo* _tmp6_;
+	Foo* _tmp7_;
+	GArray* _tmp8_;
+	Foo* _tmp9_;
+	Foo* _tmp10_;
+	Foo* _tmp11_;
+	GArray* _tmp12_;
+	Foo* _tmp13_;
+	Foo* _tmp14_;
+	Foo* _tmp15_;
+	GArray* _tmp16_;
+	gint loop_size = 0;
+	GArray* _tmp17_;
+	GArray* _tmp26_;
+	Foo* _tmp36_;
+	Foo* _tmp37_;
+	Foo* _tmp38_;
+	_tmp0_ = g_array_new (TRUE, TRUE, sizeof (Foo*));
+	g_array_set_clear_func (_tmp0_, (GDestroyNotify) _vala_Foo_free_function_content_of);
+	array = _tmp0_;
+	_tmp1_ = foo_new ();
+	foo1 = _tmp1_;
+	_tmp2_ = foo_new ();
+	foo2 = _tmp2_;
+	_tmp3_ = foo_new ();
+	foo3 = _tmp3_;
+	_tmp4_ = array;
+	_tmp5_ = foo1;
+	_tmp6_ = _g_object_ref0 (_tmp5_);
+	g_array_append_val (_tmp4_, _tmp6_);
+	_tmp7_ = foo1;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp7_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo1.ref_count == 2");
+	_tmp8_ = array;
+	_tmp9_ = foo2;
+	_tmp10_ = _g_object_ref0 (_tmp9_);
+	g_array_append_val (_tmp8_, _tmp10_);
+	_tmp11_ = foo2;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp11_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo2.ref_count == 2");
+	_tmp12_ = array;
+	_tmp13_ = foo3;
+	_tmp14_ = _g_object_ref0 (_tmp13_);
+	g_array_append_val (_tmp12_, _tmp14_);
+	_tmp15_ = foo3;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp15_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo3.ref_count == 2");
+	_tmp16_ = array;
+	_vala_assert (_tmp16_->len == ((guint) 3), "array.length == 3");
+	loop_size = 0;
+	_tmp17_ = array;
+	{
+		GArray* element_collection = NULL;
+		guint element_index = 0U;
+		element_collection = _tmp17_;
+		for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
+			Foo* element = NULL;
+			element = g_array_index (element_collection, Foo*, element_index);
+			{
+				gint _tmp18_;
+				Foo* _tmp19_;
+				_tmp18_ = loop_size;
+				loop_size = _tmp18_ + 1;
+				_tmp19_ = element;
+				_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp19_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "element.ref_count == 2");
+				switch (loop_size) {
+					case 1:
+					{
+						Foo* _tmp20_;
+						Foo* _tmp21_;
+						_tmp20_ = element;
+						_tmp21_ = foo1;
+						_vala_assert (_tmp20_ == _tmp21_, "element == foo1");
+						break;
+					}
+					case 2:
+					{
+						Foo* _tmp22_;
+						Foo* _tmp23_;
+						_tmp22_ = element;
+						_tmp23_ = foo2;
+						_vala_assert (_tmp22_ == _tmp23_, "element == foo2");
+						break;
+					}
+					case 3:
+					{
+						Foo* _tmp24_;
+						Foo* _tmp25_;
+						_tmp24_ = element;
+						_tmp25_ = foo3;
+						_vala_assert (_tmp24_ == _tmp25_, "element == foo3");
+						break;
+					}
+					default:
+					break;
+				}
+			}
+		}
+	}
+	_vala_assert (loop_size == 3, "loop_size == 3");
+	loop_size = 0;
+	_tmp26_ = array;
+	{
+		GArray* element_collection = NULL;
+		guint element_index = 0U;
+		element_collection = _tmp26_;
+		for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
+			Foo* _tmp27_;
+			Foo* element = NULL;
+			_tmp27_ = _g_object_ref0 (g_array_index (element_collection, Foo*, element_index));
+			element = _tmp27_;
+			{
+				gint _tmp28_;
+				Foo* _tmp29_;
+				_tmp28_ = loop_size;
+				loop_size = _tmp28_ + 1;
+				_tmp29_ = element;
+				_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp29_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 3), "element.ref_count == 3");
+				switch (loop_size) {
+					case 1:
+					{
+						Foo* _tmp30_;
+						Foo* _tmp31_;
+						_tmp30_ = element;
+						_tmp31_ = foo1;
+						_vala_assert (_tmp30_ == _tmp31_, "element == foo1");
+						break;
+					}
+					case 2:
+					{
+						Foo* _tmp32_;
+						Foo* _tmp33_;
+						_tmp32_ = element;
+						_tmp33_ = foo2;
+						_vala_assert (_tmp32_ == _tmp33_, "element == foo2");
+						break;
+					}
+					case 3:
+					{
+						Foo* _tmp34_;
+						Foo* _tmp35_;
+						_tmp34_ = element;
+						_tmp35_ = foo3;
+						_vala_assert (_tmp34_ == _tmp35_, "element == foo3");
+						break;
+					}
+					default:
+					break;
+				}
+				_g_object_unref0 (element);
+			}
+		}
+	}
+	_vala_assert (loop_size == 3, "loop_size == 3");
+	_tmp36_ = foo1;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp36_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo1.ref_count == 2");
+	_tmp37_ = foo2;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp37_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo2.ref_count == 2");
+	_tmp38_ = foo3;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (_tmp38_, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "foo3.ref_count == 2");
+	_g_object_unref0 (foo3);
+	_g_object_unref0 (foo2);
+	_g_object_unref0 (foo1);
+	_g_array_unref0 (array);
+}
+
+void
 test_int_garray (void)
 {
 	GArray* array = NULL;
@@ -632,6 +809,7 @@ static void
 _vala_main (void)
 {
 	test_garray ();
+	test_garray_foreach ();
 	test_int_garray ();
 	test_struct_garray ();
 	test_object_garray ();

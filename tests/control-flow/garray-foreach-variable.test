@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	var array = new Array<string> ();
+	foreach (int element in array) {
+	}
+}

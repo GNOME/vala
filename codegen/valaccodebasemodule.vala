@@ -335,7 +335,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Class gqueue_type;
 	public Class gvaluearray_type;
 	public TypeSymbol gstringbuilder_type;
-	public TypeSymbol garray_type;
+	public Class garray_type;
 	public TypeSymbol gbytearray_type;
 	public TypeSymbol genericarray_type;
 	public TypeSymbol gthreadpool_type;
@@ -509,7 +509,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gqueue_type = (Class) glib_ns.scope.lookup ("Queue");
 			gvaluearray_type = (Class) glib_ns.scope.lookup ("ValueArray");
 			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
-			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
+			garray_type = (Class) glib_ns.scope.lookup ("Array");
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 			genericarray_type = (TypeSymbol) glib_ns.scope.lookup ("GenericArray");
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");

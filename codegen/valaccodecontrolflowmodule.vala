@@ -277,6 +277,40 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			stmt.body.emit (this);
 
 			ccode.close ();
+		} else if (stmt.collection.value_type.compatible (new ObjectType (garray_type))) {
+			// iterating over a GArray
+
+			var iterator_variable = new LocalVariable (uint_type.copy (), "%s_index".printf (stmt.variable_name));
+			visit_local_variable (iterator_variable);
+			var arr_index = get_variable_cname (get_local_cname (iterator_variable));
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (get_local_cname (collection_backup)), "len"));
+
+			ccode.open_for (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeConstant ("0")),
+			                   ccond,
+			                   new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (arr_index), new CCodeConstant ("1"))));
+
+			var get_item = new CCodeFunctionCall (new CCodeIdentifier ("g_array_index"));
+			get_item.add_argument (get_variable_cexpression (get_local_cname (collection_backup)));
+			get_item.add_argument (new CCodeIdentifier (get_ccode_name (stmt.type_reference)));
+			get_item.add_argument (get_variable_cexpression (arr_index));
+
+			if (collection_type.get_type_arguments ().size != 1) {
+				Report.error (stmt.source_reference, "internal error: missing generic type argument");
+				stmt.error = true;
+				return;
+			}
+
+			var element_type = collection_type.get_type_arguments ().get (0).copy ();
+			element_type.value_owned = false;
+			var element_expr = get_cvalue_ (transform_value (new GLibValue (element_type, get_item, true), stmt.type_reference, stmt));
+
+			visit_local_variable (stmt.element_variable);
+			ccode.add_assignment (get_variable_cexpression (get_local_cname (stmt.element_variable)), element_expr);
+
+			stmt.body.emit (this);
+
+			ccode.close ();
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
 			// iterating over a GList or GSList
 
