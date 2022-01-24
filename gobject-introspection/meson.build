@@ -14,8 +14,8 @@ gidl_dep = declare_dependency(
 	include_directories: include_directories('.'),
 )
 
-flex = find_program('flex')
-bison = find_program('bison')
+flex = find_program('flex', 'win_flex')
+bison = find_program('bison', 'win_bison')
 
 lgen = generator(flex,
 	output: '@PLAINNAME@.c',
