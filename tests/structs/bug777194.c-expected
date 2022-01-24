@@ -238,7 +238,7 @@ _vala_main (void)
 	_tmp4_ = tu;
 	_tmp4__length1 = tu_length1;
 	bar (_tmp4_, (gint) _tmp4__length1);
-	_tmp5_ = (((guint8*) (&fstack)) != NULL) ? _vala_array_dup1 ((guint8*) (&fstack), sizeof (Foo) / sizeof (guint8)) : ((guint8*) (&fstack));
+	_tmp5_ = _vala_array_dup1 ((guint8*) (&fstack), sizeof (Foo) / sizeof (guint8));
 	_tmp5__length1 = sizeof (Foo) / sizeof (guint8);
 	to = (g_free (to), NULL);
 	to = _tmp5_;
@@ -263,7 +263,7 @@ _vala_main (void)
 	_tmp11__length1 = tu_length1;
 	bar (_tmp11_, (gint) _tmp11__length1);
 	_tmp12_ = fstack;
-	_tmp13_ = (((guint8*) (&_tmp12_)) != NULL) ? _vala_array_dup2 ((guint8*) (&_tmp12_), sizeof (Foo) / sizeof (guint8)) : ((guint8*) (&_tmp12_));
+	_tmp13_ = _vala_array_dup2 ((guint8*) (&_tmp12_), sizeof (Foo) / sizeof (guint8));
 	_tmp13__length1 = sizeof (Foo) / sizeof (guint8);
 	to = (g_free (to), NULL);
 	to = _tmp13_;
@@ -310,7 +310,7 @@ _vala_main (void)
 	_tmp22_ = tu;
 	_tmp22__length1 = tu_length1;
 	_vala_assert (_tmp22__length1 == 4, "tu.length == 4");
-	_tmp23_ = (((guint8*) (&i32)) != NULL) ? _vala_array_dup4 ((guint8*) (&i32), sizeof (gint32) / sizeof (guint8)) : ((guint8*) (&i32));
+	_tmp23_ = _vala_array_dup4 ((guint8*) (&i32), sizeof (gint32) / sizeof (guint8));
 	_tmp23__length1 = sizeof (gint32) / sizeof (guint8);
 	to = (g_free (to), NULL);
 	to = _tmp23_;
@@ -332,7 +332,7 @@ _vala_main (void)
 	_tmp26_ = tu;
 	_tmp26__length1 = tu_length1;
 	_vala_assert (_tmp26__length1 == 8, "tu.length == 8");
-	_tmp27_ = (((guint8*) (&u64)) != NULL) ? _vala_array_dup5 ((guint8*) (&u64), sizeof (guint64) / sizeof (guint8)) : ((guint8*) (&u64));
+	_tmp27_ = _vala_array_dup5 ((guint8*) (&u64), sizeof (guint64) / sizeof (guint8));
 	_tmp27__length1 = sizeof (guint64) / sizeof (guint8);
 	to = (g_free (to), NULL);
 	to = _tmp27_;
