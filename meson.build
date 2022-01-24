@@ -88,38 +88,46 @@ if valac.version().version_compare('>= 0.39.6')
 	add_project_arguments(['--abi-stability'], language: 'vala')
 endif
 
-test_cflags = [
-	'-Werror=init-self',
-	'-Werror=implicit',
-	'-Werror=implicit-fallthrough',
-	'-Werror=pointer-arith',
-	'-Werror=redundant-decls',
-	'-Werror=return-local-addr',
-	'-Werror=return-stack-address',
-	'-Werror=return-type',
-	'-Werror=sequence-point',
-	'-Werror=uninitialized',
-	'-Werror=int-to-pointer-cast',
-	'-Werror=pointer-to-int-cast',
-	'-Werror=compare-distinct-pointer-types',
-	'-Werror=empty-body',
-	'-Wformat=2',
-	'-Werror=format-security',
-	'-Werror=format-nonliteral',
-	'-Werror=int-conversion',
-	'-Werror=duplicated-branches',
-	'-Werror=duplicated-cond',
-	'-Werror=declaration-after-statement',
-	'-Werror=maybe-uninitialized',
-	'-Werror=missing-prototypes',
-	'-Werror=missing-braces',
-	'-Werror=missing-declaration',
-	'-Werror=strict-prototypes',
-	'-Werror=tautological-pointer-compare',
-	'-Werror=address',
-	'-Werror=array-bounds',
-	'-Werror=enum-conversion',
-]
+test_cflags = []
+
+if cc.get_id() == 'msvc'
+	test_cflags += [
+		'-FImsvc_recommended_pragmas.h'
+	]
+else
+	test_cflags += [
+		'-Werror=init-self',
+		'-Werror=implicit',
+		'-Werror=implicit-fallthrough',
+		'-Werror=pointer-arith',
+		'-Werror=redundant-decls',
+		'-Werror=return-local-addr',
+		'-Werror=return-stack-address',
+		'-Werror=return-type',
+		'-Werror=sequence-point',
+		'-Werror=uninitialized',
+		'-Werror=int-to-pointer-cast',
+		'-Werror=pointer-to-int-cast',
+		'-Werror=compare-distinct-pointer-types',
+		'-Werror=empty-body',
+		'-Wformat=2',
+		'-Werror=format-security',
+		'-Werror=format-nonliteral',
+		'-Werror=int-conversion',
+		'-Werror=duplicated-branches',
+		'-Werror=duplicated-cond',
+		'-Werror=declaration-after-statement',
+		'-Werror=maybe-uninitialized',
+		'-Werror=missing-prototypes',
+		'-Werror=missing-braces',
+		'-Werror=missing-declaration',
+		'-Werror=strict-prototypes',
+		'-Werror=tautological-pointer-compare',
+		'-Werror=address',
+		'-Werror=array-bounds',
+		'-Werror=enum-conversion',
+	]
+endif
 supported_test_cflags = cc.get_supported_arguments(test_cflags)
 
 # https://github.com/mesonbuild/meson/issues/3407
@@ -127,10 +135,17 @@ if valac.version().version_compare('>= @0@'.format(vala_version))
 	add_project_arguments(supported_test_cflags, language: 'c')
 endif
 
+if cc.get_id() != 'msvc'
+	add_project_arguments([
+			'-Wno-discarded-qualifiers',
+			'-Wno-incompatible-pointer-types',
+			'-Wno-unused',
+		],
+		language: 'c',
+	)
+endif
+
 add_project_arguments([
-		'-Wno-discarded-qualifiers',
-		'-Wno-incompatible-pointer-types',
-		'-Wno-unused',
 		'-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_48',
 		'-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_48',
 	],
