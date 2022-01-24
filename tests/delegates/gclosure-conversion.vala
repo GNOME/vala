@@ -20,8 +20,10 @@ void main () {
 	var foo = new Foo ();
 	var bar = new Bar ();
 
+	BindingTransformFunc transform_to_func = (BindingTransformFunc) to_int;
+
 	foo.bind_property ("foo", bar, "bar", BindingFlags.BIDIRECTIONAL,
-		(BindingTransformFunc) to_int, (BindingTransformFunc) to_string);
+		transform_to_func, (BindingTransformFunc) to_string);
 
 	foo.foo = "42";
 	assert (bar.bar == 42);

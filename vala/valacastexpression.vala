@@ -132,6 +132,10 @@ public class Vala.CastExpression : Expression {
 		}
 	}
 
+	public override bool is_non_null () {
+		return is_non_null_cast || (!is_silent_cast && inner.is_non_null ());
+	}
+
 	public override void get_error_types (Collection<DataType> collection, SourceReference? source_reference = null) {
 		inner.get_error_types (collection, source_reference);
 	}

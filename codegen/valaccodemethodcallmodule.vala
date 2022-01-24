@@ -449,7 +449,12 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									closure_new.add_argument (new CCodeCastExpression (cexpr, "GCallback"));
 									closure_new.add_argument (delegate_target);
 									closure_new.add_argument (new CCodeCastExpression (delegate_target_destroy_notify, "GClosureNotify"));
-									cexpr = new CCodeConditionalExpression (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cexpr, new CCodeConstant ("NULL")), new CCodeConstant ("NULL"), closure_new);
+									//TODO Use get_non_null (arg.target_value)
+									if (arg.is_non_null ()) {
+										cexpr = closure_new;
+									} else {
+										cexpr = new CCodeConditionalExpression (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cexpr, new CCodeConstant ("NULL")), new CCodeConstant ("NULL"), closure_new);
+									}
 								} else {
 									// Override previously given target/destroy only if it was NULL
 									// TODO https://gitlab.gnome.org/GNOME/vala/issues/59
