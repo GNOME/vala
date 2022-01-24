@@ -197,7 +197,7 @@ valacore_dep = declare_dependency(
 custom_target(
 	'libvala@0@.vapi'.format(vala_version_suffix),
 	command: [
-		find_program('cat'),
+		find_program('generate-libvala-vapi.py'),
 		join_paths(meson.build_root(), 'gee', 'gee.vapi'),
 		join_paths(meson.current_build_dir(), 'vala.vapi'),
 	],
