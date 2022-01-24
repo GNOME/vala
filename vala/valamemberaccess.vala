@@ -194,10 +194,13 @@ public class Vala.MemberAccess : Expression {
 	public override bool is_non_null () {
 		unowned Constant? c = symbol_reference as Constant;
 		unowned LocalVariable? l = symbol_reference as LocalVariable;
+		unowned Method? m = symbol_reference as Method;
 		if (c != null) {
 			return (c is EnumValue || !c.type_reference.nullable);
 		} else if (l != null) {
 			return (l.variable_type is ArrayType && ((ArrayType) l.variable_type).inline_allocated);
+		} else if (m != null) {
+			return (m.binding == MemberBinding.STATIC || prototype_access);
 		} else {
 			return false;
 		}
