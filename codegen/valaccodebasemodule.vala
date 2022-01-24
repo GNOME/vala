@@ -5516,6 +5516,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, innercexpr);
 		}
 		set_cvalue (expr, new CCodeCastExpression (innercexpr, get_ccode_name (expr.type_reference)));
+		//TODO Use get_non_null (expr.inner.target_value)
+		((GLibValue) expr.target_value).non_null = expr.is_non_null ();
 
 		if (expr.type_reference is DelegateType) {
 			var target = get_delegate_target (expr.inner);
