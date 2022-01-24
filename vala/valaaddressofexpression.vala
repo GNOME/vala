@@ -82,6 +82,10 @@ public class Vala.AddressofExpression : Expression {
 		return inner.is_accessible (sym);
 	}
 
+	public override bool is_non_null () {
+		return inner.is_non_null ();
+	}
+
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;

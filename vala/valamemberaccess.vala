@@ -197,7 +197,12 @@ public class Vala.MemberAccess : Expression {
 		if (c != null) {
 			return (c is EnumValue || !c.type_reference.nullable);
 		} else if (l != null) {
-			return (l.variable_type is ArrayType && ((ArrayType) l.variable_type).inline_allocated);
+			unowned DataType type = l.variable_type;
+			if (type is ArrayType) {
+				return ((ArrayType) type).inline_allocated;
+			} else {
+				return type.is_real_non_null_struct_type () || type.is_non_null_simple_type ();
+			}
 		} else if (m != null) {
 			return (m.binding == MemberBinding.STATIC || prototype_access);
 		} else {
