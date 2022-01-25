@@ -342,6 +342,7 @@ public class Vala.ForeachStatement : Block {
 			// var type
 			bool nullable = type_reference.nullable;
 			bool value_owned = type_reference.value_owned;
+			bool is_dynamic = type_reference.nullable;
 			type_reference = element_type.copy ();
 			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
 			if (!value_owned) {
@@ -349,6 +350,9 @@ public class Vala.ForeachStatement : Block {
 			}
 			if (nullable) {
 				type_reference.nullable = true;
+			}
+			if (is_dynamic) {
+				type_reference.is_dynamic = true;
 			}
 		} else if (!element_type.compatible (type_reference)) {
 			error = true;
@@ -369,6 +373,7 @@ public class Vala.ForeachStatement : Block {
 			// var type
 			bool nullable = type_reference.nullable;
 			bool value_owned = type_reference.value_owned;
+			bool is_dynamic = type_reference.nullable;
 			type_reference = element_type.copy ();
 			// FIXME Only follows "unowned var" otherwise inherit ownership of element-type
 			if (!value_owned) {
@@ -376,6 +381,9 @@ public class Vala.ForeachStatement : Block {
 			}
 			if (nullable) {
 				type_reference.nullable = true;
+			}
+			if (is_dynamic) {
+				type_reference.is_dynamic = true;
 			}
 		} else if (!element_type.compatible (type_reference)) {
 			error = true;

@@ -2063,15 +2063,20 @@ public class Vala.Parser : CodeVisitor {
 	void parse_local_variable_declarations (Block block) throws ParseError {
 		var begin = get_location ();
 		DataType variable_type;
+		bool is_dynamic = accept (TokenType.DYNAMIC);
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			variable_type = new VarType (false);
 			variable_type.nullable = accept (TokenType.INTERR);
+			variable_type.is_dynamic = is_dynamic;
 		} else {
 			rollback (begin);
+			is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.VAR)) {
 				variable_type = new VarType ();
 				variable_type.nullable = accept (TokenType.INTERR);
+				variable_type.is_dynamic = is_dynamic;
 			} else {
+				rollback (begin);
 				variable_type = parse_type (true, true);
 			}
 		}
@@ -2375,15 +2380,20 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var var_or_type = get_location ();
 		DataType type;
+		bool is_dynamic = accept (TokenType.DYNAMIC);
 		if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 			type = new VarType (false);
 			type.nullable = accept (TokenType.INTERR);
+			type.is_dynamic = is_dynamic;
 		} else {
 			rollback (var_or_type);
+			is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.VAR)) {
 				type = new VarType ();
 				type.nullable = accept (TokenType.INTERR);
+				type.is_dynamic = is_dynamic;
 			} else {
+				rollback (var_or_type);
 				type = parse_type (true, true);
 				if (accept (TokenType.IN)) {
 					Report.error (type.source_reference, "syntax error, expected `unowned var', `var' or type");
@@ -2551,14 +2561,18 @@ public class Vala.Parser : CodeVisitor {
 			// Try "with (var identifier = expr)"
 			rollback (expr_or_decl);
 			DataType variable_type;
+			bool is_dynamic = accept (TokenType.DYNAMIC);
 			if (accept (TokenType.UNOWNED) && accept (TokenType.VAR)) {
 				variable_type = new VarType (false);
 				variable_type.nullable = accept (TokenType.INTERR);
+				variable_type.is_dynamic = is_dynamic;
 			} else {
 				rollback (expr_or_decl);
+				is_dynamic = accept (TokenType.DYNAMIC);
 				if (accept (TokenType.VAR)) {
 					variable_type = new VarType ();
 					variable_type.nullable = accept (TokenType.INTERR);
+					variable_type.is_dynamic = is_dynamic;
 				} else {
 					variable_type = parse_type (true, true);
 				}
