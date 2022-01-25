@@ -281,7 +281,7 @@ test_gsequence_owned (GSequence* sequence)
 		for (item_iter = g_sequence_get_begin_iter (item_collection); !g_sequence_iter_is_end (item_iter); item_iter = g_sequence_iter_next (item_iter)) {
 			GValue* _tmp0_;
 			GValue* item = NULL;
-			_tmp0_ = __g_value_dup0 (g_sequence_get (item_iter));
+			_tmp0_ = __g_value_dup0 ((GValue*) g_sequence_get (item_iter));
 			item = _tmp0_;
 			{
 				guint _tmp1_;
@@ -306,7 +306,7 @@ test_gsequence_unowned (GSequence* sequence)
 		item_collection = sequence;
 		for (item_iter = g_sequence_get_begin_iter (item_collection); !g_sequence_iter_is_end (item_iter); item_iter = g_sequence_iter_next (item_iter)) {
 			GValue* item = NULL;
-			item = g_sequence_get (item_iter);
+			item = (GValue*) g_sequence_get (item_iter);
 			{
 				guint _tmp0_;
 				_tmp0_ = i;
