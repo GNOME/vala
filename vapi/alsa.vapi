@@ -207,6 +207,7 @@ namespace Alsa {
     [CCode (cprefix = "snd_ctl_card_info_", cname = "snd_ctl_card_info_t", free_function = "snd_ctl_card_info_free")]
     public class CardInfo
     {
+        public static void alloca(out unowned CardInfo info);
         [CCode (cname = "snd_ctl_card_info_malloc")]
         public static int alloc (out CardInfo info);
 
@@ -581,7 +582,7 @@ namespace Alsa {
     [CCode (cname = "snd_pcm_info_t", cprefix = "snd_pcm_info_")]
     public class PcmInfo
     {
-        public static int alloca( out unowned PcmInfo info );
+        public static void alloca( out unowned PcmInfo info );
         public static int malloc( out PcmInfo info );
         public void free();
         public void copy( PcmInfo source );
@@ -606,7 +607,7 @@ namespace Alsa {
     [CCode (cname = "snd_pcm_hw_params_t", cprefix = "snd_pcm_hw_params_", free_function = "snd_pcm_hw_params_free")]
     public class PcmHardwareParams
     {
-        public static int alloca( out unowned PcmHardwareParams params );
+        public static void alloca( out unowned PcmHardwareParams params );
         public static int malloc( out PcmHardwareParams params );
         public void free();
         public void copy( PcmHardwareParams source );
@@ -1128,7 +1129,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_client_info_t", cprefix = "snd_seq_client_info_", free_function = "")]
     public class SeqClientInfo
     {
-        public static int alloca( out unowned SeqClientInfo info );
+        public static void alloca( out unowned SeqClientInfo info );
         public static int malloc( out SeqClientInfo info );
         public void free();
         public void copy( SeqClientInfo source );
@@ -1314,7 +1315,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_port_info_t", cprefix = "snd_seq_port_info_", free_function = "")]
     public class SeqPortInfo
     {
-        public static int alloca( out unowned SeqPortInfo info );
+        public static void alloca( out unowned SeqPortInfo info );
         public static int malloc( out SeqPortInfo info );
         public void free();
         public void copy( SeqPortInfo source );
@@ -1359,7 +1360,7 @@ namespace Alsa {
     [CCode (cname = "snd_seq_query_subscribe_t", cprefix = "snd_seq_query_subscribe_")]
     public class SeqQuerySubscribe
     {
-        public static int alloca( out unowned SeqQuerySubscribe subscribe );
+        public static void alloca( out unowned SeqQuerySubscribe subscribe );
         public static int malloc( out SeqQuerySubscribe subscribe );
         public void free();
         public void copy( SeqQuerySubscribe source );
