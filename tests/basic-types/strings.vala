@@ -53,6 +53,9 @@ void test_string_joinv () {
 	s = string.joinv ("-", null);
 	assert (s == "");
 
+	s = string.joinv ("-", { null });
+	assert (s == "");
+
 	// LeakSanitizer -fsanitize=address
 	sa.length = 3;
 }
