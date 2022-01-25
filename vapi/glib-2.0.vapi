@@ -1213,7 +1213,7 @@ public class string {
 			len += ((!) separator).length * (i - 1);
 
 			string* res = GLib.malloc (len);
-			void* ptr = string.copy_to_buffer ((void*) res, (!) str_array[0]);
+			void* ptr = string.copy_to_buffer ((void*) res, (str_array[0] != null) ? ((!) str_array[0]) : "");
 			for (i = 1 ; i < str_array.length ; i++) {
 				ptr = string.copy_to_buffer (ptr, (!) separator);
 				ptr = string.copy_to_buffer (ptr, (str_array[i] != null) ? ((!) str_array[i]) : "");
