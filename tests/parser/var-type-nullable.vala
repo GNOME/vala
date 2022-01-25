@@ -13,4 +13,12 @@ void main () {
 		foreach (unowned var? foo in new string[] { "foo", "bar" }) {
 		}
 	}
+	{
+		with (var? foo = "foo") {
+		}
+	}
+	{
+		with (unowned var? foo = "foo") {
+		}
+	}
 }

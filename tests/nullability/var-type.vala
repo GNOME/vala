@@ -8,4 +8,9 @@ void main () {
 			assert (foo != null);
 		}
 	}
+	{
+		with (unowned var? foo = "foo") {
+			assert (foo != null);
+		}
+	}
 }

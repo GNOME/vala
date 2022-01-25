@@ -82,6 +82,21 @@ _vala_main (void)
 			foo_collection = (_vala_array_free (foo_collection, foo_collection_length1, (GDestroyNotify) g_free), NULL);
 		}
 	}
+	{
+		{
+			gchar* foo = NULL;
+			gchar* _tmp8_;
+			_tmp8_ = g_strdup ("foo");
+			foo = _tmp8_;
+			_g_free0 (foo);
+		}
+	}
+	{
+		{
+			const gchar* foo = NULL;
+			foo = "foo";
+		}
+	}
 }
 
 int

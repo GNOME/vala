@@ -2541,8 +2541,13 @@ public class Vala.Parser : CodeVisitor {
 		LocalVariable? local = null;
 
 		// Try "with (expr)"
-		Expression expr = parse_expression ();
-		if (!accept (TokenType.CLOSE_PARENS)) {
+		Expression expr;
+		try {
+			expr = parse_expression ();
+		} catch {
+			expr = null;
+		}
+		if (expr == null || !accept (TokenType.CLOSE_PARENS)) {
 			// Try "with (var identifier = expr)"
 			rollback (expr_or_decl);
 			DataType variable_type;
