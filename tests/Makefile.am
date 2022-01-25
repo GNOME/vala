@@ -279,6 +279,7 @@ TESTS = \
 	control-flow/foreach.vala \
 	control-flow/garray-foreach-variable.test \
 	control-flow/gptrarray-foreach-variable.test \
+	control-flow/gsequence-foreach-variable.test \
 	control-flow/local-clash-with-implicit-this.vala \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \

@@ -68,6 +68,41 @@ void test_foreach_genericarray () {
 	test_generic_array_unowned (array);
 }
 
+void test_gsequence_owned (Sequence<Value?> sequence) {
+	uint i = 0;
+
+	foreach (Value? item in sequence) {
+		i++;
+	}
+
+	assert (i == 3);
+}
+
+void test_gsequence_unowned (Sequence<Value?> sequence) {
+	uint i = 0;
+
+	foreach (unowned Value? item in sequence) {
+		i++;
+	}
+
+	assert (i == 3);
+}
+
+void test_foreach_gsequence () {
+	Value value;
+	var sequence = new Sequence<Value?> ();
+
+	value = 1;
+	sequence.append (value);
+	value = 2.0;
+	sequence.append (value);
+	value = "three";
+	sequence.append (value);
+
+	test_gsequence_owned (sequence);
+	test_gsequence_unowned (sequence);
+}
+
 void test_garray_owned (Array<Value?> array) {
 	uint i = 0;
 
@@ -142,6 +177,7 @@ void main () {
 	test_foreach_gvaluearray ();
 	test_foreach_garray ();
 	test_foreach_genericarray ();
+	test_foreach_gsequence ();
 	test_foreach_const_array ();
 	test_foreach_multidim_array ();
 	test_foreach_slice_array ();

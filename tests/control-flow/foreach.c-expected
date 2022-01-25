@@ -19,6 +19,7 @@
 #define _g_value_array_free0(var) ((var == NULL) ? NULL : (var = (g_value_array_free (var), NULL)))
 #define __vala_GValue_free0(var) ((var == NULL) ? NULL : (var = (_vala_GValue_free (var), NULL)))
 #define _g_ptr_array_unref0(var) ((var == NULL) ? NULL : (var = (g_ptr_array_unref (var), NULL)))
+#define _g_sequence_free0(var) ((var == NULL) ? NULL : (var = (g_sequence_free (var), NULL)))
 #define _g_array_unref0(var) ((var == NULL) ? NULL : (var = (g_array_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
@@ -35,6 +36,9 @@ static void _vala_GValue_free (GValue* self);
 VALA_EXTERN void test_generic_array_unowned (GPtrArray* array);
 VALA_EXTERN void test_foreach_genericarray (void);
 static void __vala_GValue_free0_ (gpointer var);
+VALA_EXTERN void test_gsequence_owned (GSequence* sequence);
+VALA_EXTERN void test_gsequence_unowned (GSequence* sequence);
+VALA_EXTERN void test_foreach_gsequence (void);
 VALA_EXTERN void test_garray_owned (GArray* array);
 VALA_EXTERN void test_garray_unowned (GArray* array);
 VALA_EXTERN void test_foreach_garray (void);
@@ -261,6 +265,108 @@ test_foreach_genericarray (void)
 	test_generic_array_owned (array);
 	test_generic_array_unowned (array);
 	_g_ptr_array_unref0 (array);
+	G_IS_VALUE (&value) ? (g_value_unset (&value), NULL) : NULL;
+}
+
+void
+test_gsequence_owned (GSequence* sequence)
+{
+	guint i = 0U;
+	g_return_if_fail (sequence != NULL);
+	i = (guint) 0;
+	{
+		GSequence* item_collection = NULL;
+		GSequenceIter* item_iter = NULL;
+		item_collection = sequence;
+		for (item_iter = g_sequence_get_begin_iter (item_collection); !g_sequence_iter_is_end (item_iter); item_iter = g_sequence_iter_next (item_iter)) {
+			GValue* _tmp0_;
+			GValue* item = NULL;
+			_tmp0_ = __g_value_dup0 (g_sequence_get (item_iter));
+			item = _tmp0_;
+			{
+				guint _tmp1_;
+				_tmp1_ = i;
+				i = _tmp1_ + 1;
+				__vala_GValue_free0 (item);
+			}
+		}
+	}
+	_vala_assert (i == ((guint) 3), "i == 3");
+}
+
+void
+test_gsequence_unowned (GSequence* sequence)
+{
+	guint i = 0U;
+	g_return_if_fail (sequence != NULL);
+	i = (guint) 0;
+	{
+		GSequence* item_collection = NULL;
+		GSequenceIter* item_iter = NULL;
+		item_collection = sequence;
+		for (item_iter = g_sequence_get_begin_iter (item_collection); !g_sequence_iter_is_end (item_iter); item_iter = g_sequence_iter_next (item_iter)) {
+			GValue* item = NULL;
+			item = g_sequence_get (item_iter);
+			{
+				guint _tmp0_;
+				_tmp0_ = i;
+				i = _tmp0_ + 1;
+			}
+		}
+	}
+	_vala_assert (i == ((guint) 3), "i == 3");
+}
+
+void
+test_foreach_gsequence (void)
+{
+	GValue value = {0};
+	GSequence* sequence = NULL;
+	GSequence* _tmp0_;
+	GValue _tmp1_ = {0};
+	GValue _tmp2_;
+	GValue _tmp3_;
+	GValue* _tmp4_;
+	GSequenceIter* _tmp5_;
+	GValue _tmp6_ = {0};
+	GValue _tmp7_;
+	GValue _tmp8_;
+	GValue* _tmp9_;
+	GSequenceIter* _tmp10_;
+	GValue _tmp11_ = {0};
+	GValue _tmp12_;
+	GValue _tmp13_;
+	GValue* _tmp14_;
+	GSequenceIter* _tmp15_;
+	_tmp0_ = g_sequence_new (__vala_GValue_free0_);
+	sequence = _tmp0_;
+	g_value_init (&_tmp1_, G_TYPE_INT);
+	g_value_set_int (&_tmp1_, 1);
+	G_IS_VALUE (&value) ? (g_value_unset (&value), NULL) : NULL;
+	value = _tmp1_;
+	_tmp2_ = value;
+	_tmp3_ = _tmp2_;
+	_tmp4_ = __g_value_dup0 (&_tmp3_);
+	_tmp5_ = g_sequence_append (sequence, _tmp4_);
+	g_value_init (&_tmp6_, G_TYPE_DOUBLE);
+	g_value_set_double (&_tmp6_, 2.0);
+	G_IS_VALUE (&value) ? (g_value_unset (&value), NULL) : NULL;
+	value = _tmp6_;
+	_tmp7_ = value;
+	_tmp8_ = _tmp7_;
+	_tmp9_ = __g_value_dup0 (&_tmp8_);
+	_tmp10_ = g_sequence_append (sequence, _tmp9_);
+	g_value_init (&_tmp11_, G_TYPE_STRING);
+	g_value_set_string (&_tmp11_, "three");
+	G_IS_VALUE (&value) ? (g_value_unset (&value), NULL) : NULL;
+	value = _tmp11_;
+	_tmp12_ = value;
+	_tmp13_ = _tmp12_;
+	_tmp14_ = __g_value_dup0 (&_tmp13_);
+	_tmp15_ = g_sequence_append (sequence, _tmp14_);
+	test_gsequence_owned (sequence);
+	test_gsequence_unowned (sequence);
+	_g_sequence_free0 (sequence);
 	G_IS_VALUE (&value) ? (g_value_unset (&value), NULL) : NULL;
 }
 
@@ -569,6 +675,7 @@ _vala_main (void)
 	test_foreach_gvaluearray ();
 	test_foreach_garray ();
 	test_foreach_genericarray ();
+	test_foreach_gsequence ();
 	test_foreach_const_array ();
 	test_foreach_multidim_array ();
 	test_foreach_slice_array ();

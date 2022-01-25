@@ -183,7 +183,8 @@ public class Vala.ForeachStatement : Block {
 		} else if (context.profile == Profile.GOBJECT && (collection_type.compatible (context.analyzer.glist_type)
 		    || collection_type.compatible (context.analyzer.gslist_type)
 		    || collection_type.compatible (context.analyzer.genericarray_type)
-		    || collection_type.compatible (context.analyzer.garray_type))) {
+		    || collection_type.compatible (context.analyzer.garray_type)
+		    || collection_type.compatible (context.analyzer.gsequence_type))) {
 			if (collection_type.get_type_arguments ().size != 1) {
 				error = true;
 				Report.error (collection.source_reference, "missing type argument for collection");

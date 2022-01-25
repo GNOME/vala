@@ -1,0 +1,7 @@
+Invalid Code
+
+void main () {
+	var sequence = new Sequence<string> ();
+	foreach (int element in sequence) {
+	}
+}
