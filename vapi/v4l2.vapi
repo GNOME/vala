@@ -1,6 +1,7 @@
 /* v4l2.vapi
  *
  * Copyright (C) 2008  Matias De la Puente
+ * Copyright (C) 2021-2022  Nikola Hadžić
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,7 @@
  *
  * Author:
  * 	Matias De la Puente <mfpuente.ar@gmail.com>
+ * 	Nikola Hadžić <nikola.hadzic.000@protonmail.com>
  */
 
 [CCode (lower_case_cprefix="", cprefix="", cheader_filename="linux/videodev2.h")]
@@ -129,7 +131,11 @@ namespace V4l2
 	public enum Capabilities
 	{
 		VIDEO_CAPTURE,
+		VIDEO_CAPTURE_MPLANE,
 		VIDEO_OUTPUT,
+		VIDEO_OUTPUT_MPLANE,
+		VIDEO_M2M,
+		VIDEO_M2M_PLANE,
 		VIDEO_OVERLAY,
 		VBI_CAPTURE,
 		VBI_OUTPUT,
@@ -138,12 +144,22 @@ namespace V4l2
 		RDS_CAPTURE,
 		VIDEO_OUTPUT_OVERLAY,
 		HW_FREQ_SEEK,
+		RDS_OUTPUT,
 		TUNER,
 		AUDIO,
 		RADIO,
+		MODULATOR,
+		SDR_CAPTURE,
+		EXT_PIX_FORMAT,
+		SDR_OUTPUT,
+		META_CAPTURE,
 		READWRITE,
 		ASYNCIO,
-		STREAMING
+		STREAMING,
+		META_OUTPUT,
+		TOUCH,
+		IO_MC,
+		DEVICE_CAPS
 	}
 
 	[CCode (cname="struct v4l2_capability", has_type_id = false)]
@@ -154,7 +170,8 @@ namespace V4l2
 		public unowned string bus_info;
 		public uint32 version;
 		public uint32 capabilities;
-		public uint32[] reserved;
+		public uint32 device_caps;
+		public uint32 reserved[3];
 	}
 
 	[CCode (cprefix="V4L2_PIX_FMT_", has_type_id = false)]
@@ -1135,7 +1152,7 @@ namespace V4l2
 	{
 		public uint32 entries;
 		public uint32 entries_cap;
-		public EncIdxEntry[] entry;
+		public EncIdxEntry entry[ENC_IDX_ENTRIES];
 	}
 
 	[CCode (cprefix="V4L2_ENC_CMD_", has_type_id = false)]
@@ -1185,9 +1202,9 @@ namespace V4l2
 	public struct SlicedVbiFormat
 	{
 		public uint16 service_set;
-		public uint16[] service_lines;
+		public uint16 service_lines[2 * 24];
 		public uint32 io_size;
-		public uint32[] reserved;
+		public uint32 reserved[2];
 	}
 
 	[CCode (cprefix="V4L2_SLICED_", has_type_id = false)]
@@ -1206,7 +1223,7 @@ namespace V4l2
 	public struct SlicedVbiCap
 	{
 		public uint16 service_set;
-		public uint16[] service_lines;
+		public uint16 service_lines[2 * 24];
 		public BufferType type;
 	}
 
