@@ -4,9 +4,16 @@ valac_sources = files(
 
 valac_name = 'valac@0@'.format(vala_version_suffix)
 
+extra_compiler_include_dirs = []
+
+if cc.get_argument_syntax() == 'msvc'
+	extra_compiler_include_dirs += include_directories('../msvc')
+endif
+
 valac_exe = executable(
 	valac_name,
 	valac_sources,
+	include_directories: extra_compiler_include_dirs,
 	dependencies: [glib_dep, valacodegen_dep],
 	install: true,
 )

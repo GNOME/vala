@@ -57,10 +57,17 @@ valaccode_sources = files(
 	'valaccodewriter.vala'
 )
 
+extra_ccode_include_dirs = []
+
+if cc.get_argument_syntax() == 'msvc'
+	extra_ccode_include_dirs += include_directories('../msvc')
+endif
+
 valaccode_lib = static_library(
 	'valaccode',
 	valaccode_sources,
 	dependencies: [gobject_dep, valagee_dep, valacore_dep],
+	include_directories: extra_ccode_include_dirs,
 	install: false,
 	vala_header: 'valaccode.h',
 	vala_vapi: 'valaccode.vapi',
