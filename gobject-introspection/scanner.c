@@ -24,7 +24,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <ctype.h>
 #include <errno.h>
 #include <glib.h>
@@ -40,6 +39,7 @@
 #include "grealpath.h"
 
 #ifndef _WIN32
+#include <unistd.h>
 #include <sys/wait.h> /* waitpid */
 #endif
 
