@@ -55,13 +55,19 @@ else
 	install_man(manpages)
 endif
 
-# https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative vala-gen-introspect.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'vala-gen-introspect@0@.1'.format(vala_version_suffix)))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative valac.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'valac@0@.1'.format(vala_version_suffix)))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative vapigen.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'vapigen@0@.1'.format(vala_version_suffix)))
+man_names = [ 'vala-gen-introspect', 'valac', 'vapigen' ]
 if valadoc_enabled
-	meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative valadoc.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir')), 'valadoc@0@.1'.format(vala_version_suffix)))
+	man_names += 'valadoc'
 endif
+
+foreach name: man_names
+	if cc.get_argument_syntax() == 'msvc'
+		meson.add_install_script('cmd', '/c', 'cd /d @0@\man1 & (if exist @1@.1 del @1@.1) & mklink @1@.1 @2@.1'.format(join_paths(get_option('prefix'), get_option('mandir')).replace('/','\\'), '@1@@0@'.format(vala_version_suffix, name), name))
+	else
+		# https://github.com/mesonbuild/meson/issues/1602
+		meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@/man1; ln -fs --relative @2@.1 @1@'.format(join_paths(get_option('prefix'), get_option('mandir'), name), '@1@@0@.1'.format(vala_version_suffix, name)))
+	endif
+endforeach
 
 if valadoc_enabled
 

@@ -13,9 +13,6 @@ vapigen_exe = executable(
 	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.source_root(), 'gobject-introspection')],
 )
 
-# https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vapigen'.format(join_paths(get_option('prefix'), get_option('bindir')), vapigen_name))
-
 vapicheck_sources = files(
 	'valavapicheck.vala',
 )
@@ -30,8 +27,16 @@ executable(
 	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.source_root(), 'gobject-introspection')],
 )
 
-# https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vapicheck'.format(join_paths(get_option('prefix'), get_option('bindir')), vapicheck_name))
+vapitools_names = [ 'vapigen', 'vapicheck' ]
+
+foreach name: vapitools_names
+	if cc.get_argument_syntax() == 'msvc'
+		meson.add_install_script('cmd', '/c', 'cd /d @0@ & (if exist @1@.exe del @1@.exe) & mklink @1@.exe @1@@2@.exe'.format(join_paths(get_option('prefix'), get_option('bindir')).replace('/','\\'), name, vala_version_suffix))
+	else
+		# https://github.com/mesonbuild/meson/issues/1602
+		meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@@2@ @1@'.format(join_paths(get_option('prefix'), get_option('bindir')), name, vala_version_suffix))
+	endif
+endforeach
 
 configure_file(
 	input: 'vapigen.pc.in',

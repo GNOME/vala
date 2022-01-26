@@ -20,7 +20,14 @@ valac_exe = executable(
 
 vala_name = 'vala@0@'.format(vala_version_suffix)
 
-# https://github.com/mesonbuild/meson/issues/1602
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ valac'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ @2@'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name, vala_name))
-meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ vala'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name))
+
+valac_names = [ 'valac', vala_name, 'vala' ]
+
+foreach name: valac_names
+	if cc.get_argument_syntax() == 'msvc'
+		meson.add_install_script('cmd', '/c', 'cd /d @0@ & (if exist @2@.exe del @2@.exe) & mklink @2@.exe @1@.exe'.format(join_paths(get_option('prefix'), get_option('bindir')).replace('/','\\'), valac_name, name))
+	else
+		# https://github.com/mesonbuild/meson/issues/1602
+		meson.add_install_script('sh', '-c', 'cd $DESTDIR@0@; ln -fs --relative @1@ @2@'.format(join_paths(get_option('prefix'), get_option('bindir')), valac_name, name))
+	endif
+endforeach
