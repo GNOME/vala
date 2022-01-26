@@ -13,7 +13,7 @@
 #endif
 #endif
 
-typedef guint8* (*FooFunc) (guint8* param0, gsize param0_length1, guint8** param1, gint64* param1_length1, guint8** param2, guint* param2_length1, guint8* param3, guint64* result_length1, gpointer user_data);
+typedef guint8* (*FooFunc) (guint8* param0, gsize param0_length1, guint8** param1, gint64* param1_length1, guint8** param2, guint* param2_length1, guint8 param3[42], guint64* result_length1, gpointer user_data);
 
 VALA_EXTERN guint8* field0;
 VALA_EXTERN gssize field0_length1;
@@ -29,7 +29,7 @@ VALA_EXTERN guint8* func (guint8* param0,
               gint64* param1_length1,
               guint8** param2,
               guint* param2_length1,
-              guint8* param3,
+              guint8 param3[42],
               guint64* result_length1);
 static void _vala_main (void);
 
@@ -40,7 +40,7 @@ func (guint8* param0,
       gint64* param1_length1,
       guint8** param2,
       guint* param2_length1,
-      guint8* param3,
+      guint8 param3[42],
       guint64* result_length1)
 {
 	guint8* _vala_param2 = NULL;

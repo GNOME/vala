@@ -32,8 +32,8 @@ struct _Bar {
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);
-VALA_EXTERN void foo (gint* a);
-VALA_EXTERN void bar (Bar* b);
+VALA_EXTERN void foo (gint a[3]);
+VALA_EXTERN void bar (Bar b[3]);
 static void _vala_main (void);
 
 Bar*
@@ -72,7 +72,7 @@ bar_get_type (void)
 }
 
 void
-foo (gint* a)
+foo (gint a[3])
 {
 	gint _tmp0_;
 	_tmp0_ = a[2];
@@ -80,7 +80,7 @@ foo (gint* a)
 }
 
 void
-bar (Bar* b)
+bar (Bar b[3])
 {
 	Bar _tmp0_;
 	Bar _tmp1_;

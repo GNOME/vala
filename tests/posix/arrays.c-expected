@@ -144,9 +144,9 @@ static bool _bar_equal (const Bar * s1,
 static bool _vala_bar_array_contains (Bar * stack,
                                ssize_t stack_length,
                                const Bar * needle);
-VALA_EXTERN void give_fixed_array (int** i);
-VALA_EXTERN void take_fixed_array (int* i);
-VALA_EXTERN void change_fixed_array (int** i);
+VALA_EXTERN void give_fixed_array (int* i[3]);
+VALA_EXTERN void take_fixed_array (int i[3]);
+VALA_EXTERN void change_fixed_array (int* i[3]);
 VALA_EXTERN void test_fixed_array (void);
 static void _vala_main (void);
 static void _vala_array_destroy (void* array,
@@ -1525,21 +1525,16 @@ test_struct_array (void)
 }
 
 void
-give_fixed_array (int** i)
+give_fixed_array (int* i[3])
 {
 	int _vala_i[3] = {0};
-	int _tmp0_[3] = {0};
-	_tmp0_[0] = 3;
-	_tmp0_[1] = 4;
-	_tmp0_[2] = 5;
-	memcpy (_vala_i, _tmp0_, 3 * sizeof (int));
 	if (i) {
 		*i = _vala_i;
 	}
 }
 
 void
-take_fixed_array (int* i)
+take_fixed_array (int i[3])
 {
 	int _tmp0_;
 	assert (3 == 3);
@@ -1548,35 +1543,62 @@ take_fixed_array (int* i)
 }
 
 void
-change_fixed_array (int** i)
+change_fixed_array (int* i[3])
 {
+	int _tmp0_;
 	assert (3 == 3);
+	_tmp0_ = (*i)[1];
+	assert (_tmp0_ == 7);
+	(*i)[1] = 9;
 }
 
 void
 test_fixed_array (void)
 {
-	int i[3] = {0};
-	int _tmp0_[3] = {0};
-	int k[3] = {0};
-	int _tmp1_[3] = {0};
-	int j[3] = {0};
-	int _tmp2_[3] = {0};
+	int* i = NULL;
+	int* _tmp0_;
+	int i_length1;
+	int _i_size_;
+	int* k = NULL;
+	int* _tmp1_;
+	int k_length1;
+	int _k_size_;
+	int* _tmp2_;
+	int _tmp2__length1;
+	int* _tmp3_;
+	int _tmp3__length1;
+	int _tmp4_;
+	int* j = NULL;
+	int j_length1 = 0;
+	int _j_size_ = 0;
+	_tmp0_ = calloc (4, sizeof (int));
 	_tmp0_[0] = 1;
 	_tmp0_[1] = 2;
 	_tmp0_[2] = 3;
-	memcpy (i, _tmp0_, 3 * sizeof (int));
-	assert (3 == 3);
+	_tmp0_[3] = 4;
+	i = _tmp0_;
+	i_length1 = 4;
+	_i_size_ = i_length1;
+	assert (i_length1 == 4);
 	take_fixed_array (i);
+	_tmp1_ = calloc (3, sizeof (int));
 	_tmp1_[0] = 6;
 	_tmp1_[1] = 7;
 	_tmp1_[2] = 8;
-	memcpy (k, _tmp1_, 3 * sizeof (int));
+	k = _tmp1_;
+	k_length1 = 3;
+	_k_size_ = k_length1;
 	change_fixed_array (&k);
-	assert (3 == 3);
-	give_fixed_array (&_tmp2_);
-	memcpy (j, _tmp2_, 3 * sizeof (int));
-	assert (3 == 3);
+	_tmp2_ = k;
+	_tmp2__length1 = k_length1;
+	assert (_tmp2__length1 == 3);
+	_tmp3_ = k;
+	_tmp3__length1 = k_length1;
+	_tmp4_ = _tmp3_[1];
+	assert (_tmp4_ == 9);
+	j = (free (j), NULL);
+	k = (free (k), NULL);
+	i = (free (i), NULL);
 }
 
 static void

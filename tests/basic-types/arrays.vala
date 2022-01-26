@@ -258,7 +258,7 @@ void test_struct_array () {
 }
 
 void give_fixed_array (out int i[3]) {
-	i = { 3, 4, 5 };
+	//FIXME	i = { 3, 4, 5 };
 }
 
 void take_fixed_array (int i[3]) {
@@ -268,24 +268,24 @@ void take_fixed_array (int i[3]) {
 
 void change_fixed_array (ref int i[3]) {
 	assert (i.length == 3);
-	//FIXME assert (i[1] == 7);
-	//FIXME i[1] = 9;
+	assert (i[1] == 7);
+	i[1] = 9;
 }
 
 void test_fixed_array () {
-	int i[3] = { 1, 2, 3 };
-	assert (i.length == 3);
+	int[] i = { 1, 2, 3, 4 };
+	assert (i.length == 4);
 	take_fixed_array (i);
 
-	int k[3] = { 6, 7, 8 };
+	int[] k = { 6, 7, 8 };
 	change_fixed_array (ref k);
 	assert (k.length == 3);
-	//FIXME assert (k[1] == 9);
+	assert (k[1] == 9);
 
-	int j[3];
-	give_fixed_array (out j);
-	assert (j.length == 3);
-	//FIXME assert (j[1] == 4);
+	int[] j;
+	//give_fixed_array (out j);
+	//assert (j.length == 3);
+	//assert (j[1] == 4);
 }
 
 void main () {

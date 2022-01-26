@@ -34,7 +34,7 @@ struct _FooData {
 };
 
 static void foo_data_free (gpointer _data);
-VALA_EXTERN void foo (gint* array_param,
+VALA_EXTERN void foo (gint array_param[3],
           GAsyncReadyCallback _callback_,
           gpointer _user_data_);
 VALA_EXTERN void foo_finish (GAsyncResult* _res_);
@@ -50,7 +50,7 @@ foo_data_free (gpointer _data)
 }
 
 void
-foo (gint* array_param,
+foo (gint array_param[3],
      GAsyncReadyCallback _callback_,
      gpointer _user_data_)
 {

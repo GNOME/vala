@@ -861,16 +861,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (ctypename == null) {
 			ctypename = get_ccode_name (param.variable_type);
 
-			if (array_type.fixed_length) {
-				ctypename += "*";
-			}
-
 			if (param.direction != ParameterDirection.IN) {
 				ctypename += "*";
 			}
 		}
 
-		var main_cparam = new CCodeParameter (get_ccode_name (param), ctypename);
+		var main_cparam = new CCodeParameter.with_declarator (ctypename, new CCodeVariableDeclarator (get_ccode_name (param), null, get_ccode_declarator_suffix (array_type)));
 
 		generate_type_declaration (array_type.element_type, decl_space);
 

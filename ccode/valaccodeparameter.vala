@@ -42,6 +42,8 @@ public class Vala.CCodeParameter : CCodeNode {
 	 */
 	public bool ellipsis { get; set; }
 
+	CCodeDeclarator? declarator;
+
 	public CCodeParameter (string n, string type) {
 		name = n;
 		type_name = type;
@@ -51,11 +53,21 @@ public class Vala.CCodeParameter : CCodeNode {
 		ellipsis = true;
 	}
 
+	public CCodeParameter.with_declarator (string type, CCodeDeclarator decl) {
+		name = decl.name;
+		type_name = type;
+		declarator = decl;
+	}
+
 	public override void write (CCodeWriter writer) {
 		if (!ellipsis) {
 			writer.write_string (type_name);
 			writer.write_string (" ");
-			writer.write_string (name);
+			if (declarator != null) {
+				declarator.write (writer);
+			} else {
+				writer.write_string (name);
+			}
 		} else {
 			writer.write_string ("...");
 		}

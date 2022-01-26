@@ -153,9 +153,9 @@ static gboolean _bar_equal (const Bar * s1,
 static gboolean _vala_bar_array_contains (Bar * stack,
                                    gssize stack_length,
                                    const Bar * needle);
-VALA_EXTERN void give_fixed_array (gint** i);
-VALA_EXTERN void take_fixed_array (gint* i);
-VALA_EXTERN void change_fixed_array (gint** i);
+VALA_EXTERN void give_fixed_array (gint* i[3]);
+VALA_EXTERN void take_fixed_array (gint i[3]);
+VALA_EXTERN void change_fixed_array (gint* i[3]);
 VALA_EXTERN void test_fixed_array (void);
 static void _vala_main (void);
 static void _vala_array_destroy (gpointer array,
@@ -1547,21 +1547,16 @@ test_struct_array (void)
 }
 
 void
-give_fixed_array (gint** i)
+give_fixed_array (gint* i[3])
 {
 	gint _vala_i[3] = {0};
-	gint _tmp0_[3] = {0};
-	_tmp0_[0] = 3;
-	_tmp0_[1] = 4;
-	_tmp0_[2] = 5;
-	memcpy (_vala_i, _tmp0_, 3 * sizeof (gint));
 	if (i) {
 		*i = _vala_i;
 	}
 }
 
 void
-take_fixed_array (gint* i)
+take_fixed_array (gint i[3])
 {
 	gint _tmp0_;
 	_vala_assert (3 == 3, "i.length == 3");
@@ -1570,35 +1565,62 @@ take_fixed_array (gint* i)
 }
 
 void
-change_fixed_array (gint** i)
+change_fixed_array (gint* i[3])
 {
+	gint _tmp0_;
 	_vala_assert (3 == 3, "i.length == 3");
+	_tmp0_ = (*i)[1];
+	_vala_assert (_tmp0_ == 7, "i[1] == 7");
+	(*i)[1] = 9;
 }
 
 void
 test_fixed_array (void)
 {
-	gint i[3] = {0};
-	gint _tmp0_[3] = {0};
-	gint k[3] = {0};
-	gint _tmp1_[3] = {0};
-	gint j[3] = {0};
-	gint _tmp2_[3] = {0};
+	gint* i = NULL;
+	gint* _tmp0_;
+	gint i_length1;
+	gint _i_size_;
+	gint* k = NULL;
+	gint* _tmp1_;
+	gint k_length1;
+	gint _k_size_;
+	gint* _tmp2_;
+	gint _tmp2__length1;
+	gint* _tmp3_;
+	gint _tmp3__length1;
+	gint _tmp4_;
+	gint* j = NULL;
+	gint j_length1 = 0;
+	gint _j_size_ = 0;
+	_tmp0_ = g_new0 (gint, 4);
 	_tmp0_[0] = 1;
 	_tmp0_[1] = 2;
 	_tmp0_[2] = 3;
-	memcpy (i, _tmp0_, 3 * sizeof (gint));
-	_vala_assert (3 == 3, "i.length == 3");
+	_tmp0_[3] = 4;
+	i = _tmp0_;
+	i_length1 = 4;
+	_i_size_ = i_length1;
+	_vala_assert (i_length1 == 4, "i.length == 4");
 	take_fixed_array (i);
+	_tmp1_ = g_new0 (gint, 3);
 	_tmp1_[0] = 6;
 	_tmp1_[1] = 7;
 	_tmp1_[2] = 8;
-	memcpy (k, _tmp1_, 3 * sizeof (gint));
+	k = _tmp1_;
+	k_length1 = 3;
+	_k_size_ = k_length1;
 	change_fixed_array (&k);
-	_vala_assert (3 == 3, "k.length == 3");
-	give_fixed_array (&_tmp2_);
-	memcpy (j, _tmp2_, 3 * sizeof (gint));
-	_vala_assert (3 == 3, "j.length == 3");
+	_tmp2_ = k;
+	_tmp2__length1 = k_length1;
+	_vala_assert (_tmp2__length1 == 3, "k.length == 3");
+	_tmp3_ = k;
+	_tmp3__length1 = k_length1;
+	_tmp4_ = _tmp3_[1];
+	_vala_assert (_tmp4_ == 9, "k[1] == 9");
+	j = (g_free (j), NULL);
+	k = (g_free (k), NULL);
+	i = (g_free (i), NULL);
 }
 
 static void
