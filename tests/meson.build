@@ -1371,13 +1371,23 @@ vala_flags = [
 	'--disable-warnings',
 	'--save-temps',
 	'--cc', cc.cmd_array()[-1],
+	'-X', '-DGETTEXT_PACKAGE="valac"',
+]
+
+if cc.get_id() == 'msvc'
+vala_flags += [
+	'-X', '-Od',
+	'-X', 'gmodule-2.0.lib', # undefined reference to `g_module_open_full'
+]
+else
+vala_flags += [
 	'-X', '-g',
 	'-X', '-O0',
 	'-X', '-pipe',
 	'-X', '-lm',
 	'-X', '-lgmodule-2.0', # undefined reference to `g_module_open_full'
-	'-X', '-DGETTEXT_PACKAGE="valac"',
 ]
+endif
 
 test_envars = [
 	'G_DEBUG=fatal-warnings',
