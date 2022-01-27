@@ -5,6 +5,8 @@ valac_sources = files(
 valac_name = 'valac@0@'.format(vala_version_suffix)
 
 extra_compiler_include_dirs = []
+extra_compiler_linker_args = []
+extra_compiler_libs = []
 
 if cc.get_argument_syntax() == 'msvc'
 	extra_compiler_include_dirs += include_directories('../msvc')
