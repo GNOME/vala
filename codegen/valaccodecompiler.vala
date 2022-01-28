@@ -37,6 +37,9 @@ public class Vala.CCodeCompiler {
 	 */
 	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
 		string pc = "";
+		bool is_msvc_like = false;
+		string debug_cflag = " -g";
+		string obj_out_cflag = " -o ";
 		if (context.profile == Profile.GOBJECT) {
 			pc += " gobject-2.0";
 		}
@@ -45,9 +48,23 @@ public class Vala.CCodeCompiler {
 				pc += " " + pkg;
 			}
 		}
+
+		// TODO compile the C code files in parallel
+
+		if (cc_command == null) {
+			if (Environment.get_variable ("WindowsSdkDir") != null &&
+			    Environment.get_variable ("VSInstallDir") != null) {
+				cc_command = "cl";
+			} else {
+				cc_command = "cc";
+			}
+		}
+		if (cc_command == "cl" || cc_command == "clang-cl")
+			is_msvc_like = true;
+
 		string? pkgflags;
 		if (pc.length > 0) {
-			pkgflags = context.pkg_config_compile_flags (pc);
+			pkgflags = context.pkg_config_compile_flags (pc, is_msvc_like);
 			if (pkgflags == null) {
 				return;
 			}
@@ -55,14 +72,13 @@ public class Vala.CCodeCompiler {
 			pkgflags = "";
 		}
 
-		// TODO compile the C code files in parallel
-
-		if (cc_command == null) {
-			cc_command = "cc";
+		if (is_msvc_like) {
+			debug_cflag = " -Zi";
+			obj_out_cflag = " -Fo";
 		}
 		string cmdline = cc_command;
 		if (context.debug) {
-			cmdline += " -g";
+			cmdline += obj_out_cflag;
 		}
 		if (context.compile_only) {
 			cmdline += " -c";
@@ -71,7 +87,7 @@ public class Vala.CCodeCompiler {
 			if (context.directory != null && context.directory != "" && !Path.is_absolute (context.output)) {
 				output = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, context.output);
 			}
-			cmdline += " -o " + Shell.quote (output);
+			cmdline += obj_out_cflag + Shell.quote (output);
 		}
 
 		/* we're only interested in non-pkg source files */
@@ -88,6 +104,8 @@ public class Vala.CCodeCompiler {
 
 		// add libraries after source files to fix linking
 		// with --as-needed and on Windows
+		if (is_msvc_like)
+			cmdline += " -link ";
 		cmdline += " " + pkgflags.strip ();
 		foreach (string cc_option in cc_options) {
 			cmdline += " " + Shell.quote (cc_option);

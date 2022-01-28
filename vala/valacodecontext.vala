@@ -905,8 +905,11 @@ public class Vala.CodeContext {
 		return output;
 	}
 
-	public string? pkg_config_compile_flags (string package_name) {
+	public string? pkg_config_compile_flags (string package_name, bool is_msvc_like) {
 		string pc = pkg_config_command + " --cflags";
+		if (is_msvc_like) {
+			pc += " --msvc-syntax";
+		}
 		if (!compile_only) {
 			pc += " --libs";
 		}
