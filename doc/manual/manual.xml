@@ -1736,7 +1736,7 @@
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[signal]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[test]]></methodname><![CDATA[ (]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[data]]></methodname><![CDATA[);]]>
 <![CDATA[}]]>
 
-<token><![CDATA[void]]></token><![CDATA[ ]]><token><![CDATA[delegate]]></token><![CDATA[ ]]><methodname><![CDATA[TestHandler]]></methodname><![CDATA[ (]]><methodname><![CDATA[Test]]></methodname><![CDATA[ ]]><methodname><![CDATA[t]]></methodname><![CDATA[, ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[data]]></methodname><![CDATA[);]]>
+<token><![CDATA[delegate]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[TestHandler]]></methodname><![CDATA[ (]]><methodname><![CDATA[Test]]></methodname><![CDATA[ ]]><methodname><![CDATA[t]]></methodname><![CDATA[, ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[data]]></methodname><![CDATA[);]]>
 
 <token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[static]]></token><![CDATA[ ]]><token><![CDATA[void]]></token><![CDATA[ ]]><methodname><![CDATA[main]]></methodname><![CDATA[ (]]><token><![CDATA[string]]></token><![CDATA[[] ]]><methodname><![CDATA[args]]></methodname><![CDATA[) {]]>
 
@@ -1744,14 +1744,14 @@
 
 <![CDATA[        ]]><methodname><![CDATA[TestHandler]]></methodname><![CDATA[ ]]><methodname><![CDATA[h]]></methodname><![CDATA[ = (]]><methodname><![CDATA[t]]></methodname><![CDATA[, ]]><methodname><![CDATA[data]]></methodname><![CDATA[) => {]]>
 <![CDATA[                ]]><methodname><![CDATA[stdout]]></methodname><![CDATA[.]]><methodname><![CDATA[printf]]></methodname><![CDATA[(]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[Data: %d]]></phrase><![CDATA[
-]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[d]]></methodname><![CDATA[);]]>
-<![CDATA[        }]]>
+]]><phrase><![CDATA["]]></phrase><![CDATA[, ]]><methodname><![CDATA[data]]></methodname><![CDATA[);]]>
+<![CDATA[        };]]>
 
-<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ ();]]>
-<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ += ]]><methodname><![CDATA[h]]></methodname><![CDATA[;]]>
-<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ ();]]>
-<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ -= ]]><methodname><![CDATA[h]]></methodname><![CDATA[;]]>
-<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ ();]]>
+<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ (1);]]>
+<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[.]]><methodname><![CDATA[connect]]></methodname><![CDATA[ (]]><methodname><![CDATA[h]]></methodname><![CDATA[);]]>
+<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ (2);]]>
+<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[.]]><methodname><![CDATA[disconnect]]></methodname><![CDATA[ (]]><methodname><![CDATA[h]]></methodname><![CDATA[);]]>
+<![CDATA[        ]]><methodname><![CDATA[t]]></methodname><![CDATA[.]]><methodname><![CDATA[test]]></methodname><![CDATA[ (3);]]>
 <![CDATA[}]]>
 </programlisting>
 </section>
