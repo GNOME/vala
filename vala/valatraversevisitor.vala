@@ -150,6 +150,12 @@ public class Vala.TraverseVisitor : CodeVisitor {
 		}
 	}
 
+	public override void visit_data_type (DataType data_type) {
+		if (func (data_type) == TraverseStatus.CONTINUE) {
+			data_type.accept_children (this);
+		}
+	}
+
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
 		if (func (stmt) == TraverseStatus.CONTINUE) {
 			stmt.accept_children (this);
