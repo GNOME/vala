@@ -280,7 +280,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				sym = scope.lookup (unresolved_symbol.name);
 
 				// only look for types and type containers
-				if (!(sym is Namespace || sym is TypeSymbol || sym is TypeParameter)) {
+				if (!(sym is Namespace || sym is TypeSymbol)) {
 					sym = null;
 				}
 
@@ -338,7 +338,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					var local_sym = ns.namespace_symbol.scope.lookup (unresolved_symbol.name);
 
 					// only look for types and type containers
-					if (!(local_sym is Namespace || local_sym is TypeSymbol || sym is TypeParameter)) {
+					if (!(local_sym is Namespace || local_sym is TypeSymbol)) {
 						local_sym = null;
 					}
 
@@ -352,6 +352,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					}
 				}
 			}
+
 			return sym;
 		} else {
 			var parent_symbol = resolve_symbol (unresolved_symbol.inner);
@@ -439,9 +440,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			return new InvalidType ();
 		}
 
-		if (sym is TypeParameter) {
-			type = new GenericType ((TypeParameter) sym, unresolved_type.source_reference);
-		} else if (sym is TypeSymbol) {
+		if (sym is TypeSymbol) {
 			if (sym is Delegate) {
 				type = new DelegateType ((Delegate) sym, unresolved_type.source_reference);
 			} else if (sym is Class) {
@@ -461,6 +460,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 				type = new ErrorType ((ErrorDomain) sym, null, unresolved_type.source_reference);
 			} else if (sym is ErrorCode) {
 				type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym, unresolved_type.source_reference);
+			} else 	if (sym is TypeParameter) {
+				type = new GenericType ((TypeParameter) sym, unresolved_type.source_reference);
 			} else {
 				Report.error (unresolved_type.source_reference, "internal error: `%s' is not a supported type", sym.get_full_name ());
 				return new InvalidType ();
