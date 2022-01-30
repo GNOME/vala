@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo<G> {
+	static void bar (Foo<G> g) {
+	}
+}
+
+void main () {
+}

@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo<G> {
+	static G bar () {
+		return null;
+	}
+}
+
+void main () {
+}

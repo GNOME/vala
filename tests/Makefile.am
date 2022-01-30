@@ -765,6 +765,10 @@ TESTS = \
 	generics/parameter-invalid-initializer.test \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
+	generics/method-parameter-unknown-type-parameter.test \
+	generics/method-parameter-unknown-type-parameter-2.test \
+	generics/method-return-unknown-type-parameter.test \
+	generics/method-return-unknown-type-parameter-2.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \

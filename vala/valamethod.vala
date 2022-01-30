@@ -890,6 +890,19 @@ public class Vala.Method : Subroutine, Callable {
 			Report.error (source_reference, "[Print] methods must have exactly one parameter of type `string'");
 		}
 
+		// Collect generic type references
+		// TODO Can this be done in the SymbolResolver?
+		List<GenericType> referenced_generics = new ArrayList<GenericType> ();
+		var traverse = new TraverseVisitor (node => {
+			if (node is GenericType) {
+				referenced_generics.add ((GenericType) node);
+				return TraverseStatus.STOP;
+			}
+			return TraverseStatus.CONTINUE;
+		});
+
+		return_type.accept (traverse);
+
 		var optional_param = false;
 		var params_array_param = false;
 		var ellipsis_param = false;
@@ -907,6 +920,9 @@ public class Vala.Method : Subroutine, Callable {
 				Report.error (param.source_reference, "Variadic parameters are not supported for async methods");
 				return false;
 			}
+
+			param.accept_children (traverse);
+
 			// TODO: begin and end parameters must be checked separately for coroutines
 			if (coroutine) {
 				continue;
@@ -952,6 +968,24 @@ public class Vala.Method : Subroutine, Callable {
 				}
 				params_array_var = new LocalVariable (type, param.name, null, param.source_reference);
 				body.insert_statement (0, new DeclarationStatement (params_array_var, param.source_reference));
+			}
+		}
+
+		// Check if referenced type-parameters are present
+		// TODO Can this be done in the SymbolResolver?
+		if (binding == MemberBinding.STATIC && parent_symbol is Class && !((Class) parent_symbol).is_compact) {
+			Iterator<GenericType> ref_generics_it = referenced_generics.iterator ();
+			while (ref_generics_it.next ()) {
+				var ref_generics = ref_generics_it.get ();
+				foreach (var type_param in get_type_parameters ()) {
+					if (ref_generics.type_parameter.name == type_param.name) {
+						ref_generics_it.remove ();
+					}
+				}
+			}
+			foreach (var type in referenced_generics) {
+				error = true;
+				Report.error (type.source_reference, "The type name `%s' could not be found", type.type_parameter.name);
 			}
 		}
 
