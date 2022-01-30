@@ -1,3 +1,4 @@
+[Compact]
 class Foo<G> {
 	public static G[] bar () {
 		return {};
