@@ -421,6 +421,7 @@ TESTS = \
 	structs/bug777194.vala \
 	structs/bug777194-2.vala \
 	delegates/casting.vala \
+	delegates/class-field-initializer.vala \
 	delegates/compatible.vala \
 	delegates/delegate_only.vala \
 	delegates/delegate-recusive.vala \
