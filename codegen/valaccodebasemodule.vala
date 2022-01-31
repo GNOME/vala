@@ -1222,10 +1222,19 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						var delegate_type = (DelegateType) f.variable_type;
 						if (delegate_type.delegate_symbol.has_target) {
 							var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-
-							ccode.add_assignment (get_delegate_target_cvalue (field_value), new CCodeIdentifier ("self"));
+							var target_cvalue = get_delegate_target_cvalue (f.initializer.target_value);
+							if (target_cvalue != null) {
+								ccode.add_assignment (get_delegate_target_cvalue (field_value), target_cvalue);
+							} else {
+								ccode.add_assignment (get_delegate_target_cvalue (field_value), new CCodeIdentifier ("self"));
+							}
 							if (delegate_type.is_disposable ()) {
-								ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeConstant ("NULL"));
+								var destroy_cvalue = get_delegate_target_destroy_notify_cvalue (f.initializer.target_value);
+								if (destroy_cvalue != null) {
+									ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), destroy_cvalue);
+								} else {
+									ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeConstant ("NULL"));
+								}
 							}
 						}
 					}
