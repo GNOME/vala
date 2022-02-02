@@ -102,7 +102,7 @@ _vala_main_async_co (ValaMainAsyncData* _data_)
 	return FALSE;
 	_state_1:
 	;
-	_vala_assert (g_strcmp0 (_data_->foo, "./asynchronous_method_main_async") == 0, "foo == \"./asynchronous_method_main_async\"");
+	_vala_assert (g_str_has_suffix (_data_->foo, "asynchronous_method_main_async"), "foo.has_suffix (\"asynchronous_method_main_async\")");
 	_data_->result = 0;
 	_g_free0 (_data_->foo);
 	g_task_return_pointer (_data_->_async_result, _data_, NULL);

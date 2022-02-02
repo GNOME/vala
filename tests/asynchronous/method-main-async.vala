@@ -6,6 +6,6 @@ async int main (string[] args) {
 	Idle.add (main.callback);
 	yield;
 
-	assert (foo == "./asynchronous_method_main_async");
+	assert (foo.has_suffix ("asynchronous_method_main_async"));
 	return 0;
 }
