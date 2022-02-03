@@ -80,7 +80,9 @@ ShortcutTrigger
 // G-I cannot handle variadic functions
 *.*_valist skip=false
 Accessible
-  .* skip=false
+  .update_property skip=false sentinel="-1"
+  .update_relation skip=false sentinel="-1"
+  .update_state skip=false sentinel="-1"
 BuilderCScope
   .* skip=false
 CellArea

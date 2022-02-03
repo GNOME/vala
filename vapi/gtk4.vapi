@@ -12646,10 +12646,13 @@ namespace Gtk {
 		public void reset_property (Gtk.AccessibleProperty property);
 		public void reset_relation (Gtk.AccessibleRelation relation);
 		public void reset_state (Gtk.AccessibleState state);
+		[CCode (sentinel = "-1")]
 		public void update_property (...);
 		public void update_property_value ([CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] Gtk.AccessibleProperty[] properties, [CCode (array_length_cname = "n_properties", array_length_pos = 0.5)] GLib.Value[] values);
+		[CCode (sentinel = "-1")]
 		public void update_relation (...);
 		public void update_relation_value ([CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] Gtk.AccessibleRelation[] relations, [CCode (array_length_cname = "n_relations", array_length_pos = 0.5)] GLib.Value[] values);
+		[CCode (sentinel = "-1")]
 		public void update_state (...);
 		public void update_state_value ([CCode (array_length_cname = "n_states", array_length_pos = 0.5)] Gtk.AccessibleState[] states, [CCode (array_length_cname = "n_states", array_length_pos = 0.5)] GLib.Value[] values);
 		[NoAccessorMethod]
