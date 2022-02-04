@@ -8,6 +8,8 @@ video_* name="video_(.+)"
 VideoFrame
   .data#field unowned=false
   .map#field name="map_info" unowned=false
+VideoInfo
+  .new_from_caps name="with_caps"
 VideoMeta
   .map#field name="map_v"
   .unmap#field name="unmap_v"

@@ -288,6 +288,24 @@ namespace Gst {
 		REMOTE_CANDIDATE,
 		CERTIFICATE
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_ERROR_")]
+	[Version (since = "1.20")]
+	public errordomain WebRTCError {
+		DATA_CHANNEL_FAILURE,
+		DTLS_FAILURE,
+		FINGERPRINT_FAILURE,
+		SCTP_FAILURE,
+		SDP_SYNTAX_ERROR,
+		HARDWARE_ENCODER_NOT_AVAILABLE,
+		ENCODER_ERROR,
+		INVALID_STATE,
+		INTERNAL_FAILURE;
+		[CCode (cname = "gst_webrtc_error_quark")]
+		public static GLib.Quark quark ();
+	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h")]
+	[Version (replacement = "WebRTCError.quark", since = "1.20")]
+	public static GLib.Quark webrtc_error_quark ();
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h")]
 	[Version (replacement = "WebRTCSDPType.to_string")]
 	public static unowned string webrtc_sdp_type_to_string (Gst.WebRTCSDPType type);

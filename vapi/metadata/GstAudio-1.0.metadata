@@ -4,6 +4,9 @@ AUDIO_* name="AUDIO_(.+)"
 
 audio_resampler_new symbol_type="constructor" parent="Gst.Audio.Resampler" name="new"
 
+AudioInfo
+  .new_from_caps name="with_caps"
+
 // Field ownership
 AudioBaseSink.provided_clock unowned=false
 AudioClock.*#field skip

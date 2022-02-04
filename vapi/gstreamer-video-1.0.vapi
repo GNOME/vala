@@ -412,6 +412,9 @@ namespace Gst {
 			[Version (since = "1.16")]
 			public bool set_interlaced_format (Gst.Video.Format format, Gst.Video.InterlaceMode mode, uint width, uint height);
 			public Gst.Caps to_caps ();
+			[CCode (cname = "gst_video_info_new_from_caps", has_construct_function = false)]
+			[Version (since = "1.20")]
+			public Info.with_caps (Gst.Caps caps);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
 		[GIR (name = "VideoMultiviewFlagsSet")]
