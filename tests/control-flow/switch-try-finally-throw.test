@@ -1,0 +1,24 @@
+Invalid Code
+
+errordomain FooError {
+	FAIL
+}
+
+void foo () throws FooError {
+}
+
+void bar (int i) throws Error {
+	switch (i) {
+	case 23:
+		try {
+		} finally {
+			foo ();
+		}
+		break;
+	default:
+		throw new FooError.FAIL ("bar");
+	}
+}
+
+void main () {
+}
