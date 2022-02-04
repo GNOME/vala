@@ -131,7 +131,7 @@ namespace Soup {
 		public unowned string? get_name ();
 		public unowned string? get_physical ();
 		public uint get_port ();
-		public void* get_sockaddr (int len);
+		public void* get_sockaddr (out int len);
 		[Version (since = "2.26")]
 		public uint hash_by_ip ();
 		[Version (since = "2.26")]
@@ -1089,7 +1089,7 @@ namespace Soup {
 		public bool is_ssl ();
 		public bool listen ();
 		public Soup.SocketIOStatus read ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t nread, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, void* boundary, size_t boundary_len, out size_t nread, bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public Soup.SocketIOStatus read_until ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, void* boundary, size_t boundary_len, out size_t nread, out bool got_boundary, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable? cancellable = null);
 		public bool start_ssl (GLib.Cancellable? cancellable = null);
 		public Soup.SocketIOStatus write ([CCode (array_length_cname = "len", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, out size_t nwrote, GLib.Cancellable? cancellable = null) throws GLib.Error;
