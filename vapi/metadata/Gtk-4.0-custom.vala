@@ -9,16 +9,6 @@ namespace Gtk {
 		public virtual signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, [CCode (array_length = false)] int[] new_order);
 	}
 
-	[CCode (has_type_id = false)]
-	public struct BindingArg {
-		[CCode (cname = "d.long_data")]
-		public long long_data;
-		[CCode (cname = "d.double_data")]
-		public double double_data;
-		[CCode (cname = "d.string_data")]
-		public weak string string_data;
-	}
-
 	[CCode (has_typedef = false)]
 	public delegate void BuildableParserStartElementFunc (BuildableParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws GLib.Error;
 	[CCode (has_typedef = false)]

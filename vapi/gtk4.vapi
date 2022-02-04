@@ -5744,6 +5744,7 @@ namespace Gdk {
 		PAD_RING,
 		PAD_STRIP,
 		PAD_GROUP_MODE,
+		TOUCHPAD_HOLD,
 		EVENT_LAST
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FRAME_CLOCK_PHASE_", type_id = "gdk_frame_clock_phase_get_type ()")]
@@ -10901,9 +10902,9 @@ namespace Gtk {
 		public void append_repeating_radial_gradient (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] stops);
 		public void append_texture (Gdk.Texture texture, Graphene.Rect bounds);
 		[DestroysInstance]
-		public Gsk.RenderNode free_to_node ();
+		public Gsk.RenderNode? free_to_node ();
 		[DestroysInstance]
-		public Gdk.Paintable free_to_paintable (Graphene.Size? size);
+		public Gdk.Paintable? free_to_paintable (Graphene.Size? size);
 		public void gl_shader_pop_texture ();
 		public void perspective (float depth);
 		public void pop ();
@@ -10929,8 +10930,8 @@ namespace Gtk {
 		public void save ();
 		public void scale (float factor_x, float factor_y);
 		public void scale_3d (float factor_x, float factor_y, float factor_z);
-		public Gsk.RenderNode to_node ();
-		public Gdk.Paintable to_paintable (Graphene.Size? size);
+		public Gsk.RenderNode? to_node ();
+		public Gdk.Paintable? to_paintable (Graphene.Size? size);
 		public void transform (Gsk.Transform? transform);
 		public void transform_matrix (Graphene.Matrix matrix);
 		public void translate (Graphene.Point point);
@@ -13014,15 +13015,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gdk_rectangle_get_type ()")]
 	public struct Allocation : Gdk.Rectangle {
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", has_type_id = false)]
-	public struct BindingArg {
-		[CCode (cname = "d.long_data")]
-		public long long_data;
-		[CCode (cname = "d.double_data")]
-		public double double_data;
-		[CCode (cname = "d.string_data")]
-		public weak string string_data;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_bitset_iter_get_type ()")]
 	public struct BitsetIter {
