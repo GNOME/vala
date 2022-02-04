@@ -295,6 +295,7 @@ TESTS = \
 	control-flow/switch.vala \
 	control-flow/switch-enum.vala \
 	control-flow/switch-string.vala \
+	control-flow/switch-try-finally-throw.test \
 	control-flow/sideeffects.vala \
 	control-flow/unassigned-captured-local-variable.test \
 	control-flow/unassigned-local-block-variable.test \
