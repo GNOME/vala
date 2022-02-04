@@ -1009,13 +1009,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			stmt.finally_body.accept (this);
 
+			jump_stack.remove_at (jump_stack.size - 1);
+
 			if (invalid_block.get_predecessors ().size > 0) {
 				// don't allow finally blocks with e.g. return statements
-				Report.error (stmt.source_reference, "jump out of finally block not permitted");
+				Report.error (stmt.finally_body.source_reference, "jump out of finally block not permitted");
 				stmt.error = true;
 				return;
 			}
-			jump_stack.remove_at (jump_stack.size - 1);
 
 			jump_stack.add (new JumpTarget.finally_clause (finally_block, current_block));
 		}
