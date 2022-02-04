@@ -1205,6 +1205,15 @@ namespace GLib {
 		[CCode (cname = "g_source_set_callback")]
 		public void set_callback ([CCode (type = "GSourceFunc")] owned GLib.DatagramBasedSourceFunc func);
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_id = "g_debug_controller_dbus_get_type ()")]
+	[Version (since = "2.72")]
+	public class DebugControllerDBus : GLib.Object, GLib.DebugController, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		public DebugControllerDBus (GLib.DBusConnection connection, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[NoAccessorMethod]
+		public GLib.DBusConnection connection { owned get; construct; }
+		public virtual signal bool authorize (GLib.DBusMethodInvocation invocation);
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_emblem_get_type ()")]
 	public class Emblem : GLib.Object, GLib.Icon {
 		[CCode (has_construct_function = false)]
@@ -1490,6 +1499,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Compact]
 	public class IOExtensionPoint {
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_DEBUG_CONTROLLER_EXTENSION_POINT_NAME")]
+		[Version (since = "2.72")]
+		public const string DEBUG_CONTROLLER;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME")]
 		[Version (deprecated = true, deprecated_since = "2.28")]
 		public const string DESKTOP_APP_INFO_LOOKUP;
@@ -3094,7 +3106,7 @@ namespace GLib {
 		public TlsCertificate.from_pkcs11_uris (string pkcs11_uri, string? private_key_pkcs11_uri) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.72")]
-		public TlsCertificate.from_pkcs12 ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "const guint8*")] uint8[] data, string? password) throws GLib.Error;
+		public TlsCertificate.from_pkcs12 ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, string? password) throws GLib.Error;
 		[Version (since = "2.70")]
 		public GLib.GenericArray<weak GLib.Bytes>? get_dns_names ();
 		[Version (since = "2.70")]
@@ -3596,6 +3608,15 @@ namespace GLib {
 		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, int64 timeout, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
+	[CCode (cheader_filename = "gio/gio.h", type_cname = "GDebugControllerInterface", type_id = "g_debug_controller_get_type ()")]
+	[Version (since = "2.72")]
+	public interface DebugController : GLib.Initable, GLib.Object {
+		public static GLib.DebugController dup_default ();
+		public bool get_debug_enabled ();
+		public void set_debug_enabled (bool debug_enabled);
+		[ConcreteAccessor]
+		public abstract bool debug_enabled { get; set; }
+	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_drive_get_type ()")]
 	public interface Drive : GLib.Object {
 		public abstract bool can_eject ();
@@ -3843,7 +3864,7 @@ namespace GLib {
 		public abstract GLib.FileIOStream replace_readwrite (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public virtual async GLib.FileIOStream replace_readwrite_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public abstract GLib.File? resolve_relative_path (string relative_path);
+		public abstract GLib.File resolve_relative_path (string relative_path);
 		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, void* value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_byte_string (string attribute, string value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool set_attribute_int32 (string attribute, int32 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -4322,7 +4343,8 @@ namespace GLib {
 		OPENBSD_SOCKPEERCRED,
 		SOLARIS_UCRED,
 		NETBSD_UNPCBID,
-		APPLE_XUCRED
+		APPLE_XUCRED,
+		WIN32_PID
 	}
 	[CCode (cheader_filename = "gio/gio.h", cprefix = "G_DBUS_CALL_FLAGS_", type_id = "g_dbus_call_flags_get_type ()")]
 	[Flags]
@@ -5157,6 +5179,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "Action.print_detailed_name", since = "2.38")]
 	public static string action_print_detailed_name (string action_name, GLib.Variant? target_value);
+	[CCode (cheader_filename = "gio/gio.h")]
+	[Version (replacement = "DebugController.dup_default", since = "2.72")]
+	public static GLib.DebugController debug_controller_dup_default ();
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "DtlsClientConnection.new", since = "2.48")]
 	public static GLib.DtlsClientConnection dtls_client_connection_new (GLib.DatagramBased base_socket, GLib.SocketConnectable? server_identity) throws GLib.Error;

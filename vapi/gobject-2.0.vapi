@@ -76,6 +76,19 @@ namespace GLib {
 		public GLib.Object target { get; construct; }
 		public string target_property { get; construct; }
 	}
+	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_BINDING_GROUP")]
+	[Version (since = "2.72")]
+	public class BindingGroup : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public BindingGroup ();
+		public void bind (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags);
+		[CCode (cname = "g_binding_group_bind_with_closures")]
+		public void bind_property (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_to = null, [CCode (type = "GClosure*")] owned GLib.BindingTransformFunc? transform_from = null);
+		public unowned GLib.Object? dup_source ();
+		public void set_source (GLib.Object? source);
+		[NoAccessorMethod]
+		public GLib.Object source { owned get; set; }
+	}
 	[CCode (cheader_filename = "glib-object.h", ref_function = "g_closure_ref", type_id = "G_TYPE_CLOSURE", unref_function = "g_closure_unref")]
 	[Compact]
 	public class Closure {
@@ -460,6 +473,27 @@ namespace GLib {
 		public GLib.VariantType type;
 		[CCode (cname = "g_param_spec_variant", has_construct_function = false, type = "GParamSpec*")]
 		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
+	}
+	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_SIGNAL_GROUP")]
+	[Version (since = "2.72")]
+	public class SignalGroup : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SignalGroup (GLib.Type target_type);
+		public void block ();
+		public void connect (string detailed_signal, GLib.Callback c_handler, void* data);
+		public void connect_after (string detailed_signal, GLib.Callback c_handler, void* data);
+		public void connect_data (string detailed_signal, GLib.Callback c_handler, void* data, GLib.ClosureNotify notify, GLib.ConnectFlags flags);
+		public void connect_object (string detailed_signal, GLib.Callback c_handler, void* object, GLib.ConnectFlags flags);
+		public void connect_swapped (string detailed_signal, GLib.Callback c_handler, void* data);
+		public GLib.Object? dup_target ();
+		public void set_target (GLib.Object? target);
+		public void unblock ();
+		[NoAccessorMethod]
+		public GLib.Object target { owned get; set; }
+		[NoAccessorMethod]
+		public GLib.Type target_type { get; construct; }
+		public signal void bind (GLib.Object instance);
+		public signal void unbind ();
 	}
 	[CCode (cheader_filename = "glib-object.h", free_function = "g_type_class_unref", lower_case_csuffix = "type_class")]
 	[Compact]

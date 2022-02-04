@@ -2888,6 +2888,11 @@ namespace GLib {
 		[Version (since = "2.50")]
 		[CCode (delegate_target = false)]
 		public static LogWriterFunc writer_default;
+
+		[Version (since = "2.72")]
+		public static bool get_debug_enabled ();
+		[Version (since = "2.72")]
+		public static void set_debug_enabled (bool enabled);
 	}
 
 	[CCode (has_type_id = false)]
