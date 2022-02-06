@@ -26,7 +26,7 @@ using GLib;
  * Represents a late bound property.
  */
 public class Vala.DynamicProperty : Property {
-	public DataType dynamic_type { get; set; }
+	public DataType dynamic_type { get; private set; }
 
 	public DynamicProperty (DataType dynamic_type, string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, null, null, null, source_reference, comment);

@@ -26,7 +26,7 @@ using GLib;
  * Represents a late bound method.
  */
 public class Vala.DynamicMethod : Method {
-	public DataType dynamic_type { get; set; }
+	public DataType dynamic_type { get; private set; }
 
 	public MethodCall invocation { get; set; }
 

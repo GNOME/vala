@@ -26,7 +26,7 @@ using GLib;
  * Represents a late bound signal.
  */
 public class Vala.DynamicSignal : Signal {
-	public DataType dynamic_type { get; set; }
+	public DataType dynamic_type { get; private set; }
 
 	public Expression handler { get; set; }
 

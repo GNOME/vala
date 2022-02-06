@@ -31,7 +31,7 @@ public class Vala.Constant : Symbol {
 	 */
 	public DataType type_reference {
 		get { return _data_type; }
-		set {
+		private set {
 			_data_type = value;
 			_data_type.parent_node = this;
 		}
@@ -42,7 +42,7 @@ public class Vala.Constant : Symbol {
 	 */
 	public Expression? value {
 		get { return _value; }
-		set {
+		private set {
 			_value = value;
 			if (_value != null) {
 				_value.parent_node = this;
