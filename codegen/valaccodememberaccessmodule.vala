@@ -333,7 +333,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// g_object_get always returns owned values
 				// therefore, property getters of properties
 				// without accessor methods need to be marked as owned
-				if (!prop.get_accessor.value_type.value_owned) {
+				if (!(prop is DynamicProperty) && !prop.get_accessor.value_type.value_owned) {
 					// only report error for types where there actually
 					// is a difference between `owned' and `unowned'
 					var owned_value_type = prop.get_accessor.value_type.copy ();
