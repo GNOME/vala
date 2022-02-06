@@ -6456,19 +6456,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 		var set_func = "g_object_set";
 
-		if (!get_ccode_no_accessor_method (prop)) {
-			if (prop is DynamicProperty) {
-				set_func = get_dynamic_property_setter_cname ((DynamicProperty) prop);
-			} else {
-				generate_property_accessor_declaration (base_prop.set_accessor, cfile);
-				set_func = get_ccode_name (base_prop.set_accessor);
+		if (!get_ccode_no_accessor_method (prop) && !(prop is DynamicProperty)) {
+			generate_property_accessor_declaration (base_prop.set_accessor, cfile);
+			set_func = get_ccode_name (base_prop.set_accessor);
 
-				if (!prop.external && prop.external_package) {
-					// internal VAPI properties
-					// only add them once per source file
-					if (add_generated_external_symbol (prop)) {
-						visit_property (prop);
-					}
+			if (!prop.external && prop.external_package) {
+				// internal VAPI properties
+				// only add them once per source file
+				if (add_generated_external_symbol (prop)) {
+					visit_property (prop);
 				}
 			}
 		}
@@ -6491,7 +6487,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			ccall.add_argument (cinstance);
 		}
 
-		if (get_ccode_no_accessor_method (prop)) {
+		if (get_ccode_no_accessor_method (prop) || prop is DynamicProperty) {
 			/* property name is second argument of g_object_set */
 			ccall.add_argument (get_property_canonical_cconstant (prop));
 		}
@@ -6525,7 +6521,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		if (get_ccode_no_accessor_method (prop)) {
+		if (get_ccode_no_accessor_method (prop) || prop is DynamicProperty) {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
@@ -6819,16 +6815,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	public virtual void register_dbus_info (CCodeBlock block, ObjectTypeSymbol bindable) {
-	}
-
-	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {
-		Report.error (node.source_reference, "dynamic properties are not supported for %s", node.dynamic_type.to_string ());
-		return "";
-	}
-
-	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
-		Report.error (node.source_reference, "dynamic properties are not supported for %s", node.dynamic_type.to_string ());
-		return "";
 	}
 
 	public virtual string get_dynamic_signal_cname (DynamicSignal node) {

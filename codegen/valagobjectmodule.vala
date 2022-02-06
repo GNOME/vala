@@ -24,7 +24,6 @@
 
 
 public class Vala.GObjectModule : GTypeModule {
-	int dynamic_property_id;
 	int signal_wrapper_id;
 
 	public override void visit_class (Class cl) {
@@ -652,74 +651,6 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		pop_line ();
-	}
-
-	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.type_symbol == null
-		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_property_getter_cname (prop);
-		}
-
-		string getter_cname = "_dynamic_get_%s%d".printf (prop.name, dynamic_property_id++);
-
-		var func = new CCodeFunction (getter_cname, get_ccode_name (prop.property_type));
-		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
-
-		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
-
-		push_function (func);
-
-		ccode.add_declaration (get_ccode_name (prop.property_type), new CCodeVariableDeclarator ("result"));
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
-		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (get_property_canonical_cconstant (prop));
-		call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
-		call.add_argument (new CCodeConstant ("NULL"));
-
-		ccode.add_expression (call);
-
-		ccode.add_return (new CCodeIdentifier ("result"));
-
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return getter_cname;
-	}
-
-	public override string get_dynamic_property_setter_cname (DynamicProperty prop) {
-		if (prop.dynamic_type.type_symbol == null
-		    || !prop.dynamic_type.type_symbol.is_subtype_of (gobject_type)) {
-			return base.get_dynamic_property_setter_cname (prop);
-		}
-
-		string setter_cname = "_dynamic_set_%s%d".printf (prop.name, dynamic_property_id++);
-
-		var func = new CCodeFunction (setter_cname, "void");
-		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
-		func.add_parameter (new CCodeParameter ("obj", get_ccode_name (prop.dynamic_type)));
-		func.add_parameter (new CCodeParameter ("value", get_ccode_name (prop.property_type)));
-
-		push_function (func);
-
-		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
-		call.add_argument (new CCodeIdentifier ("obj"));
-		call.add_argument (get_property_canonical_cconstant (prop));
-		call.add_argument (new CCodeIdentifier ("value"));
-		call.add_argument (new CCodeConstant ("NULL"));
-
-		ccode.add_expression (call);
-
-		pop_function ();
-
-		// append to C source file
-		cfile.add_function_declaration (func);
-		cfile.add_function (func);
-
-		return setter_cname;
 	}
 
 	public override string get_dynamic_signal_cname (DynamicSignal node) {

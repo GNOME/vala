@@ -246,14 +246,8 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					inst = new CCodeMemberAccess.pointer (inst, "priv");
 				}
 				set_cvalue (expr, new CCodeMemberAccess.pointer (inst, get_ccode_name (prop.field)));
-			} else if (!get_ccode_no_accessor_method (prop)) {
-				string getter_cname;
-				if (prop is DynamicProperty) {
-					getter_cname = get_dynamic_property_getter_cname ((DynamicProperty) prop);
-				} else {
-					getter_cname = get_ccode_name (prop.get_accessor);
-				}
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
+			} else if (!get_ccode_no_accessor_method (prop) && !(prop is DynamicProperty)) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_name (prop.get_accessor)));
 
 				if (prop.binding == MemberBinding.INSTANCE) {
 					if (prop.parent_symbol is Struct && !((Struct) prop.parent_symbol).is_simple_type ()) {

@@ -29,6 +29,7 @@ typedef struct _FooPrivate FooPrivate;
 enum  {
 	FOO_0_PROPERTY,
 	FOO_PROP_PROPERTY,
+	FOO_PROP2_PROPERTY,
 	FOO_NUM_PROPERTIES
 };
 static GParamSpec* foo_properties[FOO_NUM_PROPERTIES];
@@ -71,6 +72,7 @@ struct _FooClass {
 
 struct _FooPrivate {
 	gchar* _prop;
+	gint _prop2;
 };
 
 struct _Bar {
@@ -93,9 +95,12 @@ VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN Foo* foo_new (void);
 VALA_EXTERN Foo* foo_construct (GType object_type);
-VALA_EXTERN const gchar* foo_get_prop (Foo* self);
+VALA_EXTERN gchar* foo_get_prop (Foo* self);
 VALA_EXTERN void foo_set_prop (Foo* self,
                    const gchar* value);
+VALA_EXTERN gint foo_get_prop2 (Foo* self);
+VALA_EXTERN void foo_set_prop2 (Foo* self,
+                    gint value);
 static void foo_finalize (GObject * obj);
 static GType foo_get_type_once (void);
 static void _vala_foo_get_property (GObject * object,
@@ -117,9 +122,6 @@ static GType bar_get_type_once (void);
 VALA_EXTERN void sig_cb (void);
 VALA_EXTERN void sig_after_cb (void);
 static void _vala_main (void);
-static inline void _dynamic_set_prop0 (GObject* obj,
-                         const gchar* value);
-static inline gchar* _dynamic_get_prop1 (GObject* obj);
 static void _sig_after_cb_dynamic_sig0_ (GObject* _sender,
                                   gpointer self);
 static void _sig_cb_dynamic_sig1_ (GObject* _sender,
@@ -149,14 +151,16 @@ foo_new (void)
 	return foo_construct (TYPE_FOO);
 }
 
-const gchar*
+gchar*
 foo_get_prop (Foo* self)
 {
-	const gchar* result;
+	gchar* result;
 	const gchar* _tmp0_;
+	gchar* _tmp1_;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->_prop;
-	result = _tmp0_;
+	_tmp1_ = g_strdup (_tmp0_);
+	result = _tmp1_;
 	return result;
 }
 
@@ -174,6 +178,29 @@ foo_set_prop (Foo* self,
 		self->priv->_prop = _tmp0_;
 		g_object_notify_by_pspec ((GObject *) self, foo_properties[FOO_PROP_PROPERTY]);
 	}
+	_g_free0 (old_value);
+}
+
+gint
+foo_get_prop2 (Foo* self)
+{
+	gint result;
+	g_return_val_if_fail (IS_FOO (self), 0);
+	result = self->priv->_prop2;
+	return result;
+}
+
+void
+foo_set_prop2 (Foo* self,
+               gint value)
+{
+	gint old_value;
+	g_return_if_fail (IS_FOO (self));
+	old_value = foo_get_prop2 (self);
+	if (old_value != value) {
+		self->priv->_prop2 = value;
+		g_object_notify_by_pspec ((GObject *) self, foo_properties[FOO_PROP2_PROPERTY]);
+	}
 }
 
 static void
@@ -186,6 +213,7 @@ foo_class_init (FooClass * klass,
 	G_OBJECT_CLASS (klass)->set_property = _vala_foo_set_property;
 	G_OBJECT_CLASS (klass)->finalize = foo_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), FOO_PROP_PROPERTY, foo_properties[FOO_PROP_PROPERTY] = g_param_spec_string ("prop", "prop", "prop", NULL, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), FOO_PROP2_PROPERTY, foo_properties[FOO_PROP2_PROPERTY] = g_param_spec_int ("prop2", "prop2", "prop2", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	foo_signals[FOO_SIG_SIGNAL] = g_signal_new ("sig", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 }
 
@@ -237,7 +265,10 @@ _vala_foo_get_property (GObject * object,
 	self = G_TYPE_CHECK_INSTANCE_CAST (object, TYPE_FOO, Foo);
 	switch (property_id) {
 		case FOO_PROP_PROPERTY:
-		g_value_set_string (value, foo_get_prop (self));
+		g_value_take_string (value, foo_get_prop (self));
+		break;
+		case FOO_PROP2_PROPERTY:
+		g_value_set_int (value, foo_get_prop2 (self));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -256,6 +287,9 @@ _vala_foo_set_property (GObject * object,
 	switch (property_id) {
 		case FOO_PROP_PROPERTY:
 		foo_set_prop (self, g_value_get_string (value));
+		break;
+		case FOO_PROP2_PROPERTY:
+		foo_set_prop2 (self, g_value_get_int (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -353,21 +387,6 @@ _g_object_ref0 (gpointer self)
 	return self ? g_object_ref (self) : NULL;
 }
 
-static inline void
-_dynamic_set_prop0 (GObject* obj,
-                    const gchar* value)
-{
-	g_object_set (obj, "prop", value, NULL);
-}
-
-static inline gchar*
-_dynamic_get_prop1 (GObject* obj)
-{
-	gchar* result;
-	g_object_get (obj, "prop", &result, NULL);
-	return result;
-}
-
 static void
 _sig_after_cb_dynamic_sig0_ (GObject* _sender,
                              gpointer self)
@@ -407,24 +426,32 @@ _vala_main (void)
 		gchar* s = NULL;
 		gchar* _tmp2_;
 		gchar* _tmp3_;
+		gint i = 0;
+		gint _tmp4_;
+		gint _tmp5_;
 		gulong id1 = 0UL;
-		gulong _tmp4_;
+		gulong _tmp6_;
 		gulong id2 = 0UL;
-		gulong _tmp5_;
+		gulong _tmp7_;
 		_tmp0_ = foo_new ();
 		real = _tmp0_;
 		_tmp1_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
 		foo = _tmp1_;
-		_dynamic_set_prop0 (foo, "foo");
-		_tmp2_ = _dynamic_get_prop1 (foo);
+		g_object_set (foo, "prop", "foo", NULL);
+		g_object_get (foo, "prop", &_tmp2_, NULL);
 		_tmp3_ = _tmp2_;
 		s = _tmp3_;
 		_vala_assert (g_strcmp0 (s, "foo") == 0, "s == \"foo\"");
+		g_object_set (foo, "prop2", 42, NULL);
+		g_object_get (foo, "prop2", &_tmp4_, NULL);
+		_tmp5_ = _tmp4_;
+		i = _tmp5_;
+		_vala_assert (i == 42, "i == 42");
 		success = FALSE;
-		_tmp4_ = g_signal_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
-		id1 = _tmp4_;
-		_tmp5_ = g_signal_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig1_, NULL);
-		id2 = _tmp5_;
+		_tmp6_ = g_signal_connect_after (foo, "sig", (GCallback) _sig_after_cb_dynamic_sig0_, NULL);
+		id1 = _tmp6_;
+		_tmp7_ = g_signal_connect (foo, "sig", (GCallback) _sig_cb_dynamic_sig1_, NULL);
+		id2 = _tmp7_;
 		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
 		_vala_assert (success, "success");
 		success = FALSE;
@@ -438,26 +465,26 @@ _vala_main (void)
 	}
 	{
 		Foo* real = NULL;
-		Foo* _tmp6_;
+		Foo* _tmp8_;
 		GObject* foo = NULL;
-		GObject* _tmp7_;
+		GObject* _tmp9_;
 		Bar* bar = NULL;
-		Bar* _tmp8_;
+		Bar* _tmp10_;
 		gulong id1 = 0UL;
-		gulong _tmp9_;
+		gulong _tmp11_;
 		gulong id2 = 0UL;
-		gulong _tmp10_;
-		_tmp6_ = foo_new ();
-		real = _tmp6_;
-		_tmp7_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
-		foo = _tmp7_;
-		_tmp8_ = bar_new ();
-		bar = _tmp8_;
+		gulong _tmp12_;
+		_tmp8_ = foo_new ();
+		real = _tmp8_;
+		_tmp9_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (real, G_TYPE_OBJECT, GObject));
+		foo = _tmp9_;
+		_tmp10_ = bar_new ();
+		bar = _tmp10_;
 		bar->success = FALSE;
-		_tmp9_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_after_cb_dynamic_sig2_, bar, G_CONNECT_AFTER);
-		id1 = _tmp9_;
-		_tmp10_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_cb_dynamic_sig3_, bar, 0);
-		id2 = _tmp10_;
+		_tmp11_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_after_cb_dynamic_sig2_, bar, G_CONNECT_AFTER);
+		id1 = _tmp11_;
+		_tmp12_ = g_signal_connect_object (foo, "sig", (GCallback) _bar_sig_cb_dynamic_sig3_, bar, 0);
+		id2 = _tmp12_;
 		g_signal_emit (real, foo_signals[FOO_SIG_SIGNAL], 0);
 		_vala_assert (bar->success, "bar.success");
 		bar->success = FALSE;

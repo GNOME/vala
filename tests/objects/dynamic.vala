@@ -1,6 +1,7 @@
 class Foo : Object {
 	public signal void sig ();
-	public string prop { get; set; }
+	public string prop { owned get; set; }
+	public int prop2 { get; set; }
 }
 
 class Bar : Object {
@@ -33,6 +34,10 @@ void main () {
 		foo.prop = "foo";
 		string s = foo.prop;
 		assert (s == "foo");
+
+		foo.prop2 = 42;
+		int i = foo.prop2;
+		assert (i == 42);
 
 		success = false;
 		var id1 = foo.sig.connect_after (sig_after_cb);
