@@ -2913,6 +2913,7 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 
 		type = parse_inline_array_type (type);
+		var src = get_src (begin);
 
 		// constant arrays don't own their element
 		unowned ArrayType? array_type = type as ArrayType;
@@ -2920,7 +2921,13 @@ public class Vala.Parser : CodeVisitor {
 			array_type.element_type.value_owned = false;
 		}
 
-		var c = new Constant (id, type, null, get_src (begin), comment);
+		Expression? initializer = null;
+		if (accept (TokenType.ASSIGN)) {
+			initializer = parse_expression ();
+		}
+		expect (TokenType.SEMICOLON);
+
+		var c = new Constant (id, type, initializer, src, comment);
 		c.access = access;
 		if (ModifierFlags.EXTERN in flags) {
 			c.is_extern = true;
@@ -2937,11 +2944,6 @@ public class Vala.Parser : CodeVisitor {
 		if (type.value_owned) {
 			Report.error (c.source_reference, "`owned' is not allowed on constants");
 		}
-
-		if (accept (TokenType.ASSIGN)) {
-			c.value = parse_expression ();
-		}
-		expect (TokenType.SEMICOLON);
 
 		parent.add_constant (c);
 	}
