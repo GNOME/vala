@@ -35,6 +35,7 @@ public class Vala.VarType : DataType {
 	public override DataType copy () {
 		var result = new VarType (value_owned);
 		result.nullable = nullable;
+		result.is_dynamic = is_dynamic;
 		return result;
 	}
 }

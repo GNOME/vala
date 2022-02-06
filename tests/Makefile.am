@@ -982,6 +982,7 @@ TESTS = \
 	parser/using-ambiguous-reference.test \
 	parser/using-directive.vala \
 	parser/using-invalid-namespace.test \
+	parser/var-type-dynamic.vala \
 	parser/var-type-nullable.vala \
 	parser/with-embedded.vala \
 	parser/with-empty.vala \
