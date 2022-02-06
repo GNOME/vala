@@ -488,6 +488,10 @@ public class Vala.MemberAccess : Expression {
 						prop.owner = inner.value_type.type_symbol.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
 						symbol_reference = prop;
+						if (!dynamic_object_type.type_symbol.is_subtype_of (context.analyzer.object_type)) {
+							Report.error (source_reference, "dynamic properties are not supported for `%s'", dynamic_object_type.type_symbol.get_full_name ());
+							error = true;
+						}
 					}
 				} else if (parent_node is MemberAccess && inner is MemberAccess && parent_node.parent_node is MethodCall) {
 					unowned MemberAccess ma = (MemberAccess) parent_node;
@@ -530,6 +534,10 @@ public class Vala.MemberAccess : Expression {
 					prop.owner = inner.value_type.type_symbol.scope;
 					dynamic_object_type.type_symbol.scope.add (null, prop);
 					symbol_reference = prop;
+					if (!dynamic_object_type.type_symbol.is_subtype_of (context.analyzer.object_type)) {
+						Report.error (source_reference, "dynamic properties are not supported for %s", dynamic_object_type.type_symbol.get_full_name ());
+						error = true;
+					}
 				}
 				if (symbol_reference != null) {
 					may_access_instance_members = true;
