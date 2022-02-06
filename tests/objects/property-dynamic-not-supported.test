@@ -1,0 +1,10 @@
+Invalid Code
+
+class Foo {
+}
+
+void main () {
+	dynamic Foo foo = new Foo ();
+	foo.bar = "foo";
+	int i = foo.bar;
+}
