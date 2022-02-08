@@ -835,6 +835,7 @@ TESTS = \
 	gtktemplate/gtkchild-property-unknown.test \
 	gtktemplate/gtkchild-without-gtktemplate.test \
 	gtktemplate/gtktemplate-gtkwidget-subclass.test \
+	gtktemplate/gtktemplate-unknown-template.test \
 	annotations/deprecated.vala \
 	annotations/deprecated-delegate-minimal.vala \
 	annotations/deprecated-enum-minimal.vala \

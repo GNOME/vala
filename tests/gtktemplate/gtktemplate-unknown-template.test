@@ -1,0 +1,8 @@
+Invalid Code
+
+[GtkTemplate (ui = "/org/example/gtktemplate.ui")]
+public class GtkTemplate : Gtk.ApplicationWindow {
+}
+
+void main () {
+}
