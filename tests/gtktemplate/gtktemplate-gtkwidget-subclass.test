@@ -1,7 +1,7 @@
 Invalid Code
 
 [GtkTemplate (ui = "/org/example/gtktemplate.ui")]
-public class GtkTemplate : GLib.Object {
+public class GtkTemplateTest : GLib.Object {
 }
 
 void main () {
