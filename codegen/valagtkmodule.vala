@@ -49,8 +49,19 @@ public class Vala.GtkModule : GSignalModule {
 		recurse_type_id_to_vala_map (context.root);
 	}
 
-	private void recurse_type_id_to_vala_map (Namespace ns) {
-		foreach (var cl in ns.get_classes()) {
+	private void recurse_type_id_to_vala_map (Symbol sym) {
+		unowned List<Class> classes;
+		if (sym is Namespace) {
+			foreach (var inner in ((Namespace) sym).get_namespaces()) {
+				recurse_type_id_to_vala_map (inner);
+			}
+			classes = ((Namespace) sym).get_classes ();
+		} else if (sym is ObjectTypeSymbol) {
+			classes = ((ObjectTypeSymbol) sym).get_classes ();
+		} else {
+			return;
+		}
+		foreach (var cl in classes) {
 			if (!cl.is_compact) {
 				var type_id = get_ccode_type_id (cl);
 				if (type_id == null)
@@ -64,9 +75,7 @@ public class Vala.GtkModule : GSignalModule {
 				}
 				type_id_to_vala_map.set (type_id, cl);
 			}
-		}
-		foreach (var inner in ns.get_namespaces()) {
-			recurse_type_id_to_vala_map (inner);
+			recurse_type_id_to_vala_map (cl);
 		}
 	}
 
@@ -79,14 +88,23 @@ public class Vala.GtkModule : GSignalModule {
 		recurse_cclass_to_vala_map (context.root);
 	}
 
-	private void recurse_cclass_to_vala_map (Namespace ns) {
-		foreach (var cl in ns.get_classes()) {
+	private void recurse_cclass_to_vala_map (Symbol sym) {
+		unowned List<Class> classes;
+		if (sym is Namespace) {
+			foreach (var inner in ((Namespace) sym).get_namespaces()) {
+				recurse_cclass_to_vala_map (inner);
+			}
+			classes = ((Namespace) sym).get_classes ();
+		} else if (sym is ObjectTypeSymbol) {
+			classes = ((ObjectTypeSymbol) sym).get_classes ();
+		} else {
+			return;
+		}
+		foreach (var cl in classes) {
 			if (!cl.is_compact) {
 				cclass_to_vala_map.set (get_ccode_name (cl), cl);
 			}
-		}
-		foreach (var inner in ns.get_namespaces()) {
-			recurse_cclass_to_vala_map (inner);
+			recurse_cclass_to_vala_map (cl);
 		}
 	}
 
