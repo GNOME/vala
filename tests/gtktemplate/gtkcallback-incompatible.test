@@ -1,7 +1,7 @@
 Invalid Code
 
 [GtkTemplate (ui = "/org/example/gtktemplate.ui")]
-public class GtkTemplate : Gtk.ApplicationWindow {
+public class GtkTemplateTest : Gtk.ApplicationWindow {
 	[GtkCallback]
 	void on_clicked_cb (string s) {
 	}
