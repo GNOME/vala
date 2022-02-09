@@ -256,6 +256,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		context.root.check (context);
 		context.accept (this);
 
+		current_symbol = null;
 		this.context = null;
 	}
 
@@ -263,6 +264,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_source_file = file;
 
 		file.check (context);
+
+		current_source_file = null;
 	}
 
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
