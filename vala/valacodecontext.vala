@@ -290,6 +290,11 @@ public class Vala.CodeContext {
 		}
 
 		context_stack->remove_at (context_stack->size - 1);
+
+		if (context_stack->size == 0) {
+			delete context_stack;
+			context_stack_key.set (null, null);
+		}
 	}
 
 	/**
