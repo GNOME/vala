@@ -1,3 +1,27 @@
+Vala 0.55.3
+===========
+ * Highlights:
+  - Allow usage of dynamic on VarType [#187]
+
+ * Various improvements and bug fixes:
+  - codegen: Use correct target/destroy of delegate field initializer [#1285]
+  - codegen: Stop generating wrappers for dynamic property access
+  - gtkmodule: Improve UI parsing and handling of nested objects and properties
+  - vala:
+    + Add missing TraverseVisitor.visit_data_type()
+    + Improve check of generic type references in static contexts [#1284]
+    + Make sure to drop our "trap" jump target in case of an error [#1287]
+    + Move dynamic property errors to semantic analyzer pass
+    + Free empty stack list for code contexts
+    + Clear SemanticAnalyzer.current_{symbol,source_file} when not needed anymore
+
+ * Bindings:
+  - gio-2.0,glib-2.0,gobject-2.0: Update 2.72 symbols
+  - gstreamer: Update from 1.19.90+ git main
+  - gtk4: Specify sentinel for GtkAcessible methods
+  - gtk4: Update to 4.6.0+06ec4ec1
+  - vapi: Update GIR-based bindings
+
 Vala 0.55.2
 ===========
  * Highlights:
