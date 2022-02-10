@@ -275,6 +275,7 @@ TESTS = \
 	control-flow/for-switch-continue.vala \
 	control-flow/foreach.vala \
 	control-flow/local-clash-with-implicit-this.vala \
+	control-flow/lock-if-throw.vala \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
