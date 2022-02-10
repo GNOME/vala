@@ -84,14 +84,26 @@ public class Vala.LockStatement : CodeNode, Statement {
 
 	public override bool check (CodeContext context) {
 		if (body != null) {
-			// if the statement isn't empty, it is converted into a try statement
+			if (!body.check (context)) {
+				return false;
+			}
 
+			// if the statement isn't empty, it is converted into a try statement
 			var fin_body = new Block (source_reference);
 			fin_body.add_statement (new UnlockStatement (resource, source_reference));
 
+			var try_stmt = new TryStatement (body, fin_body, source_reference);
+			if (body.tree_can_fail) {
+				var catch_body = new Block (source_reference);
+				catch_body.add_statement (new ThrowStatement (new ReferenceTransferExpression (new MemberAccess.simple ("_lock_error_")), source_reference));
+				var catch_clause = new CatchClause (new ErrorType (null, null), "_lock_error_", catch_body, source_reference);
+				catch_clause.error_type.value_owned = true;
+				try_stmt.add_catch_clause (catch_clause);
+			}
+
 			var block = new Block (source_reference);
 			block.add_statement (new LockStatement (resource, null, source_reference));
-			block.add_statement (new TryStatement (body, fin_body, source_reference));
+			block.add_statement (try_stmt);
 
 			var parent_block = (Block) parent_node;
 			parent_block.replace_statement (this, block);
