@@ -60,6 +60,7 @@ enum  {
 };
 static GParamSpec* sample_properties[SAMPLE_NUM_PROPERTIES];
 #define _g_free0(var) (var = (g_free (var), NULL))
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 
 #define MAMAN_TYPE_IBAZ (maman_ibaz_get_type ())
 #define MAMAN_IBAZ(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), MAMAN_TYPE_IBAZ, MamanIbaz))
@@ -780,10 +781,23 @@ sample_run (Sample* self)
 		{
 			sample_set_public_prop (self, 42);
 		}
+		goto __finally0;
+		__catch0_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp11_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp11_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp11_;
+			_g_error_free0 (_lock_error_);
+			goto __finally0;
+		}
 		__finally0:
 		{
-			gint _tmp11_;
-			_tmp11_ = self->priv->_public_prop;
+			gint _tmp12_;
+			_tmp12_ = self->priv->_public_prop;
 			g_rec_mutex_unlock (&self->priv->__lock_public_prop);
 		}
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {
@@ -793,16 +807,29 @@ sample_run (Sample* self)
 		}
 	}
 	{
-		gint _tmp12_;
-		_tmp12_ = self->priv->_private_prop;
+		gint _tmp13_;
+		_tmp13_ = self->priv->_private_prop;
 		g_rec_mutex_lock (&self->priv->__lock_private_prop);
 		{
 			sample_set_private_prop (self, 42);
 		}
+		goto __finally1;
+		__catch1_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp14_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp14_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp14_;
+			_g_error_free0 (_lock_error_);
+			goto __finally1;
+		}
 		__finally1:
 		{
-			gint _tmp13_;
-			_tmp13_ = self->priv->_private_prop;
+			gint _tmp15_;
+			_tmp15_ = self->priv->_private_prop;
 			g_rec_mutex_unlock (&self->priv->__lock_private_prop);
 		}
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {

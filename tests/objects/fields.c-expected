@@ -40,6 +40,7 @@ typedef struct _Faz Faz;
 typedef struct _FazClass FazClass;
 typedef struct _FazPrivate FazPrivate;
 typedef struct _FazClassPrivate FazClassPrivate;
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 
 #define TYPE_BAR (bar_get_type ())
 #define BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BAR, Bar))
@@ -577,6 +578,19 @@ faz_lock_action (Faz* self)
 			faz_private_static_field = 1147;
 			_vala_assert (faz_private_static_field == 1147, "private_static_field == 1147");
 		}
+		goto __finally0;
+		__catch0_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp0_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp0_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp0_;
+			_g_error_free0 (_lock_error_);
+			goto __finally0;
+		}
 		__finally0:
 		{
 			g_rec_mutex_unlock (&__lock_faz_faz_private_static_field);
@@ -592,6 +606,19 @@ faz_lock_action (Faz* self)
 		{
 			faz_public_static_field = 1147;
 			_vala_assert (faz_public_static_field == 1147, "public_static_field == 1147");
+		}
+		goto __finally1;
+		__catch1_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp1_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp1_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp1_;
+			_g_error_free0 (_lock_error_);
+			goto __finally1;
 		}
 		__finally1:
 		{
@@ -609,6 +636,19 @@ faz_lock_action (Faz* self)
 			self->priv->private_field = 1147;
 			_vala_assert (self->priv->private_field == 1147, "private_field == 1147");
 		}
+		goto __finally2;
+		__catch2_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp2_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp2_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp2_;
+			_g_error_free0 (_lock_error_);
+			goto __finally2;
+		}
 		__finally2:
 		{
 			g_rec_mutex_unlock (&self->priv->__lock_private_field);
@@ -624,6 +664,19 @@ faz_lock_action (Faz* self)
 		{
 			self->public_field = 1147;
 			_vala_assert (self->public_field == 1147, "public_field == 1147");
+		}
+		goto __finally3;
+		__catch3_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp3_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp3_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp3_;
+			_g_error_free0 (_lock_error_);
+			goto __finally3;
 		}
 		__finally3:
 		{
@@ -648,6 +701,19 @@ faz_lock_action_class (Faz* self)
 			FAZ_GET_CLASS_PRIVATE (FAZ_GET_CLASS (self))->private_class_field = 1147;
 			_vala_assert (FAZ_GET_CLASS_PRIVATE (FAZ_GET_CLASS (self))->private_class_field == 1147, "private_class_field == 1147");
 		}
+		goto __finally0;
+		__catch0_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp0_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp0_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp0_;
+			_g_error_free0 (_lock_error_);
+			goto __finally0;
+		}
 		__finally0:
 		{
 			g_rec_mutex_unlock (&FAZ_GET_CLASS_PRIVATE (FAZ_GET_CLASS (self))->__lock_private_class_field);
@@ -663,6 +729,19 @@ faz_lock_action_class (Faz* self)
 		{
 			FAZ_GET_CLASS (self)->public_class_field = 1147;
 			_vala_assert (FAZ_GET_CLASS (self)->public_class_field == 1147, "public_class_field == 1147");
+		}
+		goto __finally1;
+		__catch1_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp1_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp1_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp1_;
+			_g_error_free0 (_lock_error_);
+			goto __finally1;
 		}
 		__finally1:
 		{
@@ -882,6 +961,19 @@ baz_lock_action (Baz* self)
 			baz_private_static_field = 1147;
 			_vala_assert (baz_private_static_field == 1147, "private_static_field == 1147");
 		}
+		goto __finally0;
+		__catch0_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp0_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp0_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp0_;
+			_g_error_free0 (_lock_error_);
+			goto __finally0;
+		}
 		__finally0:
 		{
 			g_rec_mutex_unlock (&__lock_baz_baz_private_static_field);
@@ -897,6 +989,19 @@ baz_lock_action (Baz* self)
 		{
 			baz_public_static_field = 1147;
 			_vala_assert (baz_public_static_field == 1147, "public_static_field == 1147");
+		}
+		goto __finally1;
+		__catch1_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp1_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp1_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp1_;
+			_g_error_free0 (_lock_error_);
+			goto __finally1;
 		}
 		__finally1:
 		{
@@ -914,6 +1019,19 @@ baz_lock_action (Baz* self)
 			self->priv->private_field = 1147;
 			_vala_assert (self->priv->private_field == 1147, "private_field == 1147");
 		}
+		goto __finally2;
+		__catch2_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp2_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp2_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp2_;
+			_g_error_free0 (_lock_error_);
+			goto __finally2;
+		}
 		__finally2:
 		{
 			g_rec_mutex_unlock (&self->priv->__lock_private_field);
@@ -929,6 +1047,19 @@ baz_lock_action (Baz* self)
 		{
 			self->public_field = 1147;
 			_vala_assert (self->public_field == 1147, "public_field == 1147");
+		}
+		goto __finally3;
+		__catch3_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp3_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp3_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp3_;
+			_g_error_free0 (_lock_error_);
+			goto __finally3;
 		}
 		__finally3:
 		{
@@ -953,6 +1084,19 @@ baz_lock_action_class (Baz* self)
 			BAZ_GET_CLASS_PRIVATE (BAZ_GET_CLASS (self))->private_class_field = 1147;
 			_vala_assert (BAZ_GET_CLASS_PRIVATE (BAZ_GET_CLASS (self))->private_class_field == 1147, "private_class_field == 1147");
 		}
+		goto __finally0;
+		__catch0_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp0_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp0_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp0_;
+			_g_error_free0 (_lock_error_);
+			goto __finally0;
+		}
 		__finally0:
 		{
 			g_rec_mutex_unlock (&BAZ_GET_CLASS_PRIVATE (BAZ_GET_CLASS (self))->__lock_private_class_field);
@@ -968,6 +1112,19 @@ baz_lock_action_class (Baz* self)
 		{
 			BAZ_GET_CLASS (self)->public_class_field = 1147;
 			_vala_assert (BAZ_GET_CLASS (self)->public_class_field == 1147, "public_class_field == 1147");
+		}
+		goto __finally1;
+		__catch1_g_error:
+		{
+			GError* _lock_error_ = NULL;
+			GError* _tmp1_;
+			_lock_error_ = _inner_error0_;
+			_inner_error0_ = NULL;
+			_tmp1_ = _lock_error_;
+			_lock_error_ = NULL;
+			_inner_error0_ = _tmp1_;
+			_g_error_free0 (_lock_error_);
+			goto __finally1;
 		}
 		__finally1:
 		{

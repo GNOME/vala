@@ -283,6 +283,7 @@ TESTS = \
 	control-flow/gptrarray-foreach-variable.test \
 	control-flow/gsequence-foreach-variable.test \
 	control-flow/local-clash-with-implicit-this.vala \
+	control-flow/lock-if-throw.vala \
 	control-flow/missing-break.test \
 	control-flow/missing-return.test \
 	control-flow/nested-conditional.vala \
