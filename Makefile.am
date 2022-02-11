@@ -87,7 +87,7 @@ gen-version:
 	  echo "$$V" > $(top_srcdir)/.version;								\
 	fi
 dist-hook: gen-ChangeLog
-	echo $(VERSION) > $(distdir)/.tarball-version
+	echo '$(VERSION)' > $(distdir)/.tarball-version
 
 gen_start_date = 2009-02-25
 .PHONY: gen-ChangeLog
