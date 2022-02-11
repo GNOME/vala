@@ -25,7 +25,6 @@
 typedef struct _Foo Foo;
 typedef struct _FooClass FooClass;
 typedef struct _FooPrivate FooPrivate;
-#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 typedef struct _ParamSpecFoo ParamSpecFoo;
 
 #define TYPE_BAR (bar_get_type ())
@@ -158,19 +157,6 @@ foo_run (Foo* self)
 		g_rec_mutex_lock (&self->priv->__lock_thing_to_lock_on);
 		{
 			self->other_variable = 1;
-		}
-		goto __finally0;
-		__catch0_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp0_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp0_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp0_;
-			_g_error_free0 (_lock_error_);
-			goto __finally0;
 		}
 		__finally0:
 		{
@@ -412,19 +398,6 @@ bar_run (Bar* self)
 		g_rec_mutex_lock (&BAR_GET_CLASS_PRIVATE (BAR_GET_CLASS (self))->__lock_thing_to_lock_on);
 		{
 			self->other_variable = 1;
-		}
-		goto __finally0;
-		__catch0_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp0_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp0_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp0_;
-			_g_error_free0 (_lock_error_);
-			goto __finally0;
 		}
 		__finally0:
 		{

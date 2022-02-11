@@ -26,7 +26,6 @@ typedef struct _Foo Foo;
 typedef struct _FooClass FooClass;
 typedef struct _FooPrivate FooPrivate;
 typedef struct _FooClassPrivate FooClassPrivate;
-#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 typedef struct _ParamSpecFoo ParamSpecFoo;
 
 struct _Foo {
@@ -109,19 +108,6 @@ foo_use (Foo* self)
 		g_rec_mutex_lock (&self->priv->__lock_faz);
 		{
 		}
-		goto __finally0;
-		__catch0_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp0_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp0_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp0_;
-			_g_error_free0 (_lock_error_);
-			goto __finally0;
-		}
 		__finally0:
 		{
 			g_rec_mutex_unlock (&self->priv->__lock_faz);
@@ -135,19 +121,6 @@ foo_use (Foo* self)
 	{
 		g_rec_mutex_lock (&FOO_GET_CLASS_PRIVATE (FOO_GET_CLASS (self))->__lock_baz);
 		{
-		}
-		goto __finally1;
-		__catch1_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp1_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp1_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp1_;
-			_g_error_free0 (_lock_error_);
-			goto __finally1;
 		}
 		__finally1:
 		{
@@ -163,19 +136,6 @@ foo_use (Foo* self)
 		g_rec_mutex_lock (&__lock_foo_maz);
 		{
 		}
-		goto __finally2;
-		__catch2_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp2_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp2_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp2_;
-			_g_error_free0 (_lock_error_);
-			goto __finally2;
-		}
 		__finally2:
 		{
 			g_rec_mutex_unlock (&__lock_foo_maz);
@@ -189,19 +149,6 @@ foo_use (Foo* self)
 	{
 		g_rec_mutex_lock (&self->priv->__lock_foor);
 		{
-		}
-		goto __finally3;
-		__catch3_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp3_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp3_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp3_;
-			_g_error_free0 (_lock_error_);
-			goto __finally3;
 		}
 		__finally3:
 		{
@@ -217,19 +164,6 @@ foo_use (Foo* self)
 		g_rec_mutex_lock (&FOO_GET_CLASS_PRIVATE (FOO_GET_CLASS (self))->__lock_boor);
 		{
 		}
-		goto __finally4;
-		__catch4_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp4_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp4_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp4_;
-			_g_error_free0 (_lock_error_);
-			goto __finally4;
-		}
 		__finally4:
 		{
 			g_rec_mutex_unlock (&FOO_GET_CLASS_PRIVATE (FOO_GET_CLASS (self))->__lock_boor);
@@ -244,19 +178,6 @@ foo_use (Foo* self)
 		g_rec_mutex_lock (&__lock_foo_foo_moor);
 		{
 		}
-		goto __finally5;
-		__catch5_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp5_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp5_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp5_;
-			_g_error_free0 (_lock_error_);
-			goto __finally5;
-		}
 		__finally5:
 		{
 			g_rec_mutex_unlock (&__lock_foo_foo_moor);
@@ -268,28 +189,15 @@ foo_use (Foo* self)
 		}
 	}
 	{
-		gint _tmp6_;
-		_tmp6_ = self->priv->_foop;
+		gint _tmp0_;
+		_tmp0_ = self->priv->_foop;
 		g_rec_mutex_lock (&self->priv->__lock_foop);
 		{
 		}
-		goto __finally6;
-		__catch6_g_error:
-		{
-			GError* _lock_error_ = NULL;
-			GError* _tmp7_;
-			_lock_error_ = _inner_error0_;
-			_inner_error0_ = NULL;
-			_tmp7_ = _lock_error_;
-			_lock_error_ = NULL;
-			_inner_error0_ = _tmp7_;
-			_g_error_free0 (_lock_error_);
-			goto __finally6;
-		}
 		__finally6:
 		{
-			gint _tmp8_;
-			_tmp8_ = self->priv->_foop;
+			gint _tmp1_;
+			_tmp1_ = self->priv->_foop;
 			g_rec_mutex_unlock (&self->priv->__lock_foop);
 		}
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {
