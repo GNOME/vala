@@ -1,3 +1,34 @@
+Vala 0.48.23
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Generated SimpleType structs don't have a type id
+    + Avoid symbol clashes with "va_*" from "stdarg.h"
+    + Access of inline allocated array is guaranteed to be non null [#1282]
+    + Don't uncoditionally null check callback_func for GLib.Closure [#1282]
+    + Access of stack allocated struct is guaranteed to be non null [#1282]
+    + Use correct target/destroy of delegate field initializer [#1285]
+  - gtkmodule: Recurse inner classes of ObjectTypeSymbols
+  - vala:
+    + Show source location when reporting deprecations
+    + Require lvalue access of delegate target/destroy "fields" [#857]
+    + Transform assignment of an array element as needed [#889] [#1258]
+    + Add missing TraverseVisitor.visit_data_type()
+    + Make sure to drop our "trap" jump target in case of an error [#1287]
+    + Move dynamic property errors to semantic analyzer pass
+    + Free empty stack list for code contexts
+    + Clear SemanticAnalyzer.current_{symbol,source_file} when not needed anymore
+  - parser: Reduce the source reference of main block method to its beginning
+  - parser: Improve handling of nullable VarType in with-statement
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - alsa: Add/fix *.alloca() functions
+  - glib-2.0: Fix criticals in string.joinv() with arrays that start with null
+  - libgeoclue-2.0: Fix Simple.with_thresholds() contructor binding
+  - libsoup-2.4: Cherry-pick bindings fixes from 0.56
+  - v4l2: Update V4l2.Capabilities and fix some inline arrays
+
 Vala 0.48.22
 ============
  * Various improvements and bug fixes:
