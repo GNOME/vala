@@ -471,4 +471,10 @@ namespace GI {
 	[CCode (cheader_filename = "girepository.h", cname = "gi_get_minor_version")]
 	[Version (since = "1.60")]
 	public static uint get_minor_version ();
+	[CCode (cheader_filename = "girepository.h", cname = "gi_type_tag_argument_from_hash_pointer")]
+	[Version (since = "1.72")]
+	public static void type_tag_argument_from_hash_pointer (GI.TypeTag storage_type, void* hash_pointer, GI.Argument arg);
+	[CCode (cheader_filename = "girepository.h", cname = "gi_type_tag_hash_pointer_from_argument")]
+	[Version (since = "1.72")]
+	public static void* type_tag_hash_pointer_from_argument (GI.TypeTag storage_type, GI.Argument arg);
 }

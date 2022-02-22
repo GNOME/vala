@@ -3091,6 +3091,7 @@ namespace Gtk {
 		public signal void up_folder ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_file_chooser_widget_accessible_get_type ()")]
+	[Version (since = "3.24.30")]
 	public class FileChooserWidgetAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected FileChooserWidgetAccessible ();
@@ -3795,6 +3796,7 @@ namespace Gtk {
 		public string title { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_header_bar_accessible_get_type ()")]
+	[Version (since = "3.24.11")]
 	public class HeaderBarAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected HeaderBarAccessible ();
@@ -5667,6 +5669,7 @@ namespace Gtk {
 		public signal void on_embedded ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_plug_accessible_get_type ()")]
+	[Version (since = "3.24.30")]
 	public class PlugAccessible : Gtk.WindowAccessible, Atk.Component, Atk.Window {
 		[CCode (has_construct_function = false)]
 		protected PlugAccessible ();
@@ -7115,6 +7118,7 @@ namespace Gtk {
 		public virtual signal bool plug_removed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_socket_accessible_get_type ()")]
+	[Version (since = "3.24.30")]
 	public class SocketAccessible : Gtk.ContainerAccessible, Atk.Component {
 		[CCode (has_construct_function = false)]
 		protected SocketAccessible ();

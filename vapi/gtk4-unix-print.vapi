@@ -7,9 +7,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PageSetupUnixDialog (string? title, Gtk.Window? parent);
 		public unowned Gtk.PageSetup get_page_setup ();
-		public unowned Gtk.PrintSettings get_print_settings ();
+		public unowned Gtk.PrintSettings? get_print_settings ();
 		public void set_page_setup (Gtk.PageSetup page_setup);
-		public void set_print_settings (Gtk.PrintSettings print_settings);
+		public void set_print_settings (Gtk.PrintSettings? print_settings);
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h")]
 	public abstract class PrintBackend : GLib.Object {
@@ -68,7 +68,7 @@ namespace Gtk {
 		public Gtk.PrintCapabilities get_manual_capabilities ();
 		public unowned Gtk.PageSetup get_page_setup ();
 		public bool get_page_setup_set ();
-		public unowned Gtk.Printer get_selected_printer ();
+		public unowned Gtk.Printer? get_selected_printer ();
 		public Gtk.PrintSettings get_settings ();
 		public bool get_support_selection ();
 		public void set_current_page (int current_page);

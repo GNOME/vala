@@ -117,14 +117,17 @@ namespace Gnome {
 		public bool can_thumbnail (string uri, string mime_type, long mtime);
 		[Version (since = "2.2")]
 		public void create_failed_thumbnail (string uri, long mtime);
+		public async void create_failed_thumbnail_async (string uri, long original_mtime, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.2")]
 		public Gdk.Pixbuf generate_thumbnail (string uri, string mime_type);
+		public async Gdk.Pixbuf generate_thumbnail_async (string uri, string mime_type, GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.2")]
 		public bool has_valid_failed_thumbnail (string uri, long mtime);
 		[Version (since = "2.2")]
 		public string lookup (string uri, long mtime);
 		[Version (since = "2.2")]
 		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, long original_mtime);
+		public async void save_thumbnail_async (Gdk.Pixbuf thumbnail, string uri, long original_mtime, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-idle-monitor.h", type_id = "gnome_idle_monitor_get_type ()")]
 	public class IdleMonitor : GLib.Object, GLib.Initable {

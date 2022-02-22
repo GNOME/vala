@@ -140,14 +140,6 @@ namespace Soup {
 		[NoAccessorMethod]
 		public Soup.CacheType cache_type { get; construct; }
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
-	[Compact]
-	public class ClientMessageIO {
-	}
-	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
-	[Compact]
-	public class Connection {
-	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_content_decoder_get_type ()")]
 	public sealed class ContentDecoder : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
@@ -449,14 +441,6 @@ namespace Soup {
 		public uint64 get_response_start ();
 		public uint64 get_tls_start ();
 	}
-	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
-	[Compact]
-	public class MessageQueue {
-	}
-	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
-	[Compact]
-	public class MessageQueueItem {
-	}
 	[CCode (cheader_filename = "libsoup/soup.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "soup_multipart_get_type ()")]
 	[Compact]
 	public class Multipart {
@@ -613,10 +597,6 @@ namespace Soup {
 		public string user_agent { get; set; }
 		public virtual signal void request_queued (Soup.Message msg);
 		public virtual signal void request_unqueued (Soup.Message msg);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h", has_type_id = false)]
-	[Compact]
-	public class Socket {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_websocket_connection_get_type ()")]
 	public sealed class WebsocketConnection : GLib.Object {

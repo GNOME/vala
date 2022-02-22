@@ -1210,6 +1210,7 @@ namespace GLib {
 	public class DebugControllerDBus : GLib.Object, GLib.DebugController, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		public DebugControllerDBus (GLib.DBusConnection connection, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public void stop ();
 		[NoAccessorMethod]
 		public GLib.DBusConnection connection { owned get; construct; }
 		public virtual signal bool authorize (GLib.DBusMethodInvocation invocation);
@@ -3611,7 +3612,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", type_cname = "GDebugControllerInterface", type_id = "g_debug_controller_get_type ()")]
 	[Version (since = "2.72")]
 	public interface DebugController : GLib.Initable, GLib.Object {
-		public static GLib.DebugController dup_default ();
 		public bool get_debug_enabled ();
 		public void set_debug_enabled (bool debug_enabled);
 		[ConcreteAccessor]
@@ -3820,6 +3820,8 @@ namespace GLib {
 		public abstract async bool mount_enclosing_volume (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract async GLib.File mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback = null) throws GLib.Error;
+		[Version (since = "2.72")]
+		public virtual async bool move_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback) throws GLib.Error;
 		[Version (since = "2.56")]
 		public static GLib.File new_build_filename (string first_element, ...);
 		public static GLib.File new_for_commandline_arg (string arg);
@@ -5179,9 +5181,6 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "Action.print_detailed_name", since = "2.38")]
 	public static string action_print_detailed_name (string action_name, GLib.Variant? target_value);
-	[CCode (cheader_filename = "gio/gio.h")]
-	[Version (replacement = "DebugController.dup_default", since = "2.72")]
-	public static GLib.DebugController debug_controller_dup_default ();
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "DtlsClientConnection.new", since = "2.48")]
 	public static GLib.DtlsClientConnection dtls_client_connection_new (GLib.DatagramBased base_socket, GLib.SocketConnectable? server_identity) throws GLib.Error;

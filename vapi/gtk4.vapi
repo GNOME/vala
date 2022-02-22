@@ -4961,7 +4961,7 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		protected Device ();
 		public bool get_caps_lock_state ();
-		public unowned Gdk.DeviceTool get_device_tool ();
+		public unowned Gdk.DeviceTool? get_device_tool ();
 		public Pango.Direction get_direction ();
 		public unowned Gdk.Display get_display ();
 		public bool get_has_cursor ();
@@ -4972,7 +4972,6 @@ namespace Gdk {
 		public unowned string? get_product_id ();
 		public bool get_scroll_lock_state ();
 		public unowned Gdk.Seat get_seat ();
-		[Version (deprecated = true, deprecated_since = "4.6")]
 		public Gdk.InputSource get_source ();
 		public unowned Gdk.Surface? get_surface_at_position (out double win_x, out double win_y);
 		[Version (since = "4.2")]
@@ -4994,7 +4993,6 @@ namespace Gdk {
 		public bool scroll_lock_state { get; }
 		[NoAccessorMethod]
 		public Gdk.Seat seat { owned get; set; }
-		[Version (deprecated = true, deprecated_since = "4.6")]
 		public Gdk.InputSource source { get; construct; }
 		[NoAccessorMethod]
 		public Gdk.DeviceTool tool { owned get; }
@@ -7109,9 +7107,9 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void get_cell_property (Gtk.CellRenderer renderer, uint property_id, ref GLib.Value value, GLib.ParamSpec pspec);
 		public unowned string get_current_path_string ();
-		public unowned Gtk.CellEditable get_edit_widget ();
-		public unowned Gtk.CellRenderer get_edited_cell ();
-		public unowned Gtk.CellRenderer get_focus_cell ();
+		public unowned Gtk.CellEditable? get_edit_widget ();
+		public unowned Gtk.CellRenderer? get_edited_cell ();
+		public unowned Gtk.CellRenderer? get_focus_cell ();
 		public unowned Gtk.CellRenderer? get_focus_from_sibling (Gtk.CellRenderer renderer);
 		public unowned GLib.List<Gtk.CellRenderer> get_focus_siblings (Gtk.CellRenderer renderer);
 		public virtual void get_preferred_height (Gtk.CellAreaContext context, Gtk.Widget widget, out int minimum_height, out int natural_height);
@@ -7132,7 +7130,7 @@ namespace Gtk {
 		public void request_renderer (Gtk.CellRenderer renderer, Gtk.Orientation orientation, Gtk.Widget widget, int for_size, out int minimum_size, out int natural_size);
 		[NoWrapper]
 		public virtual void set_cell_property (Gtk.CellRenderer renderer, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
-		public void set_focus_cell (Gtk.CellRenderer renderer);
+		public void set_focus_cell (Gtk.CellRenderer? renderer);
 		public virtual void snapshot (Gtk.CellAreaContext context, Gtk.Widget widget, Gtk.Snapshot snapshot, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags, bool paint_focus);
 		public void stop_editing (bool canceled);
 		public Gtk.CellEditable edit_widget { get; }
@@ -7969,7 +7967,7 @@ namespace Gtk {
 		public unowned Gdk.Drop? get_current_drop ();
 		[Version (deprecated = true, deprecated_since = "4.4")]
 		public unowned Gdk.Drop? get_drop ();
-		public Gdk.ContentFormats? get_formats ();
+		public unowned Gdk.ContentFormats? get_formats ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 		public unowned GLib.Type[]? get_gtypes ();
 		public bool get_preload ();
@@ -7981,7 +7979,7 @@ namespace Gtk {
 		public Gdk.DragAction actions { get; set; }
 		[Version (since = "4.4")]
 		public Gdk.Drop current_drop { get; }
-		public Gdk.ContentFormats formats { owned get; construct; }
+		public Gdk.ContentFormats formats { get; construct; }
 		public bool preload { get; set; }
 		public GLib.Value value { get; }
 		public signal bool accept (Gdk.Drop drop);
@@ -8227,12 +8225,12 @@ namespace Gtk {
 		public unowned Gdk.Device? get_current_event_device ();
 		public Gdk.ModifierType get_current_event_state ();
 		public uint32 get_current_event_time ();
-		public unowned string get_name ();
+		public unowned string? get_name ();
 		public Gtk.PropagationLimit get_propagation_limit ();
 		public Gtk.PropagationPhase get_propagation_phase ();
 		public unowned Gtk.Widget get_widget ();
 		public void reset ();
-		public void set_name (string name);
+		public void set_name (string? name);
 		public void set_propagation_limit (Gtk.PropagationLimit limit);
 		public void set_propagation_phase (Gtk.PropagationPhase phase);
 		public string name { get; set; }
@@ -8257,8 +8255,8 @@ namespace Gtk {
 		public EventControllerKey ();
 		public bool forward (Gtk.Widget widget);
 		public uint get_group ();
-		public unowned Gtk.IMContext get_im_context ();
-		public void set_im_context (Gtk.IMContext im_context);
+		public unowned Gtk.IMContext? get_im_context ();
+		public void set_im_context (Gtk.IMContext? im_context);
 		public signal void im_update ();
 		public signal bool key_pressed (uint keyval, uint keycode, Gdk.ModifierType state);
 		public signal void key_released (uint keyval, uint keycode, Gdk.ModifierType state);
@@ -8957,7 +8955,7 @@ namespace Gtk {
 		public int get_columns ();
 		public bool get_cursor (out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
 		public bool get_dest_item_at_pos (int drag_x, int drag_y, out Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
-		public void get_drag_dest_item (out Gtk.TreePath path, out Gtk.IconViewDropPosition pos);
+		public void get_drag_dest_item (out Gtk.TreePath? path, out Gtk.IconViewDropPosition pos);
 		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out unowned Gtk.CellRenderer cell);
 		public int get_item_column (Gtk.TreePath path);
 		public Gtk.Orientation get_item_orientation ();
@@ -10133,7 +10131,7 @@ namespace Gtk {
 		public void get_error () throws GLib.Error;
 		public bool get_has_selection ();
 		public int get_n_pages_to_print ();
-		public unowned Gtk.PrintSettings get_print_settings ();
+		public unowned Gtk.PrintSettings? get_print_settings ();
 		public Gtk.PrintStatus get_status ();
 		public unowned string get_status_string ();
 		public bool get_support_selection ();
@@ -10846,7 +10844,7 @@ namespace Gtk {
 		public SingleSelection (owned GLib.ListModel? model);
 		public bool get_autoselect ();
 		public bool get_can_unselect ();
-		public unowned GLib.ListModel get_model ();
+		public unowned GLib.ListModel? get_model ();
 		public uint get_selected ();
 		public unowned GLib.Object? get_selected_item ();
 		public void set_autoselect (bool autoselect);
@@ -12806,8 +12804,8 @@ namespace Gtk {
 		public Gtk.FileChooserAction get_action ();
 		public unowned string? get_choice (string id);
 		public bool get_create_folders ();
-		public GLib.File get_current_folder ();
-		public string get_current_name ();
+		public GLib.File? get_current_folder ();
+		public string? get_current_name ();
 		public GLib.File? get_file ();
 		public GLib.ListModel get_files ();
 		public unowned Gtk.FileFilter? get_filter ();
@@ -12820,7 +12818,7 @@ namespace Gtk {
 		public void set_action (Gtk.FileChooserAction action);
 		public void set_choice (string id, string option);
 		public void set_create_folders (bool create_folders);
-		public bool set_current_folder (GLib.File file) throws GLib.Error;
+		public bool set_current_folder (GLib.File? file) throws GLib.Error;
 		public void set_current_name (string name);
 		public bool set_file (GLib.File file) throws GLib.Error;
 		public void set_filter (Gtk.FileFilter filter);
