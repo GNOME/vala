@@ -316,7 +316,6 @@ GIDL_BINDINGS = \
 	gtk+-2.0 \
 	gtk+-unix-print-2.0 \
 	gtk+-unix-print-3.0 \
-	gtk4-unix-print \
 	gtksourceview-2.0 \
 	hildon-1 \
 	hildon-fm-2 \
@@ -382,6 +381,7 @@ GIR_BINDINGS = \
 	graphene-gobject-1.0 \
 	gtk+-3.0 \
 	gtk4 \
+	gtk4-unix-print \
 	gudev-1.0 \
 	harfbuzz-gobject \
 	javascriptcoregtk-4.0 \
