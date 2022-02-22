@@ -900,8 +900,10 @@ public class Vala.MemberAccess : Expression {
 			instance = true;
 			access = member.access;
 		} else if (member is ErrorCode) {
-			symbol_reference = ((ErrorCode) member).code;
-			member = symbol_reference;
+			if (!(parent_node is CallableExpression && ((CallableExpression) parent_node).call == this)) {
+				symbol_reference = ((ErrorCode) member).code;
+				member = symbol_reference;
+			}
 		}
 
 		// recursive usage of itself doesn't count as used
