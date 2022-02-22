@@ -633,6 +633,8 @@ TESTS = \
 	errors/default-gtype.vala \
 	errors/delegate-throws-error-code.vala \
 	errors/delegate-throws-no-error-type.test \
+	errors/error-creation-invalid.test \
+	errors/error-creation-invalid-type.test \
 	errors/errors.vala \
 	errors/errorcode.vala \
 	errors/errordomain.vala \

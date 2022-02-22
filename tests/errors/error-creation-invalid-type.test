@@ -1,0 +1,9 @@
+Invalid Code
+
+errordomain FooError {
+	FAIL;
+}
+
+void main () {
+	var e = new FooError.FAIL (42);
+}
