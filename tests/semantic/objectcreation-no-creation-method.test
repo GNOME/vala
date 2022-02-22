@@ -1,6 +1,8 @@
 Invalid Code
 
-void bar () {
+class Foo {
+	public void bar () {
+	}
 }
 
 void main () {
