@@ -103,6 +103,7 @@ TESTS = \
 	basic-types/bug787152.vala \
 	basic-types/bug788775.vala \
 	constants/array-type-invalid.test \
+	constants/delegate-type.vala \
 	constants/glog.vala \
 	constants/member-access.vala \
 	constants/member-access-enum.vala \
