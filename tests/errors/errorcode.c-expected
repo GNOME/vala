@@ -28,12 +28,19 @@ typedef enum  {
 #define FOO_ERROR foo_error_quark ()
 
 VALA_EXTERN GQuark foo_error_quark (void);
+VALA_EXTERN void bar (gint code);
 static void _vala_main (void);
 
 GQuark
 foo_error_quark (void)
 {
 	return g_quark_from_static_string ("foo-error-quark");
+}
+
+void
+bar (gint code)
+{
+	_vala_assert (code == 23, "code == 23");
 }
 
 static void
@@ -77,6 +84,9 @@ _vala_main (void)
 		gint code = 0;
 		code = FOO_ERROR_EVEN_WORSE;
 		_vala_assert (code == 23, "code == 23");
+	}
+	{
+		bar (FOO_ERROR_EVEN_WORSE);
 	}
 }
 
