@@ -4,6 +4,10 @@ errordomain FooError {
 	EVEN_WORSE = 23
 }
 
+void bar (int code) {
+	assert (code == 23);
+}
+
 void main () {
 	{
 		var error = new IOError.NO_SPACE ("foo");
@@ -28,5 +32,8 @@ void main () {
 	{
 		var code = FooError.EVEN_WORSE;
 		assert (code == 23);
+	}
+	{
+		bar (FooError.EVEN_WORSE);
 	}
 }
