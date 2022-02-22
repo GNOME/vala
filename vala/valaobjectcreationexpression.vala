@@ -38,6 +38,13 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 	}
 
 	/**
+	 * The construction method to call.
+	 */
+	public Expression call {
+		get { return member_name; }
+	}
+
+	/**
 	 * The construction method to use or the data type to be created
 	 * with the default construction method.
 	 */

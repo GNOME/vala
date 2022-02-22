@@ -37,6 +37,11 @@ public interface Vala.CallableExpression : Expression {
 	public abstract bool is_chainup { get; set; }
 
 	/**
+	 * The expression to call.
+	 */
+	public abstract Expression call { get; }
+
+	/**
 	 * Appends the specified expression to the list of arguments.
 	 *
 	 * @param arg an argument

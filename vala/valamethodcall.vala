@@ -31,10 +31,6 @@ public class Vala.MethodCall : Expression, CallableExpression {
 	 */
 	public Expression call {
 		get { return _call; }
-		private set {
-			_call = value;
-			_call.parent_node = this;
-		}
 	}
 
 	public bool is_yield_expression { get; set; }
@@ -61,7 +57,8 @@ public class Vala.MethodCall : Expression, CallableExpression {
 	 */
 	public MethodCall (Expression call, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
-		this.call = call;
+		this._call = call;
+		this._call.parent_node = this;
 	}
 
 	/**
@@ -99,7 +96,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (call == old_node) {
-			call = new_node;
+			_call = new_node;
 		}
 
 		int index = argument_list.index_of (old_node);
