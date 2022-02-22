@@ -911,7 +911,6 @@ public class Vala.Parser : CodeVisitor {
 		if (init_list.size > 0 && inner is MemberAccess) {
 			// struct creation expression
 			unowned MemberAccess member = (MemberAccess) inner;
-			member.creation_member = true;
 
 			var expr = new ObjectCreationExpression (member, src);
 			expr.struct_creation = true;
@@ -1031,7 +1030,6 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
-		member.creation_member = true;
 		var arg_list = parse_argument_list ();
 		var src = get_src (begin);
 

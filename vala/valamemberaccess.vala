@@ -63,11 +63,6 @@ public class Vala.MemberAccess : Expression {
 	public bool tainted_access { get; set; }
 
 	/**
-	 * Specifies whether the member is used for object creation.
-	 */
-	public bool creation_member { get; set; }
-
-	/**
 	 * Qualified access to global symbol.
 	 */
 	public bool qualified { get; set; }
@@ -904,7 +899,7 @@ public class Vala.MemberAccess : Expression {
 		} else if (member is Signal) {
 			instance = true;
 			access = member.access;
-		} else if (!creation_member && member is ErrorCode) {
+		} else if (member is ErrorCode) {
 			symbol_reference = ((ErrorCode) member).code;
 			member = symbol_reference;
 		}

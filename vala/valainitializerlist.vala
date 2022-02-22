@@ -202,7 +202,6 @@ public class Vala.InitializerList : Expression {
 			if (in_array_creation_initializer) {
 				unowned Symbol? sym = st;
 				var ma = new MemberAccess.simple (sym.name, source_reference);
-				ma.creation_member = true;
 				ma.symbol_reference = sym;
 				MemberAccess inner = ma;
 				while (sym.parent_symbol != null && sym.parent_symbol != context.root) {

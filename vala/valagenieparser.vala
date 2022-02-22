@@ -946,7 +946,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (init_list.size > 0 && inner is MemberAccess) {
 			// struct creation expression
 			var member = (MemberAccess) inner;
-			member.creation_member = true;
 
 			var expr = new ObjectCreationExpression (member, get_src (begin));
 			expr.struct_creation = true;
@@ -1065,7 +1064,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
-		member.creation_member = true;
 		List<Expression> arg_list;
 		if (accept (TokenType.OPEN_PARENS)) {
 			arg_list = parse_argument_list ();
@@ -1145,8 +1143,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		list_member = new MemberAccess (parent_member, "ArrayList", get_src (begin));
 		list_member.add_type_argument (element_type);
 
-		list_member.creation_member = true;
-
 		var expr = new ObjectCreationExpression (list_member, get_src (begin));
 		return expr;
 	}
@@ -1159,8 +1155,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		dict_member = new MemberAccess (parent_member, "HashMap", get_src (begin));
 		dict_member.add_type_argument (key_type);
 		dict_member.add_type_argument (value_type);
-
-		dict_member.creation_member = true;
 
 		var expr = new ObjectCreationExpression (dict_member, get_src (begin));
 
