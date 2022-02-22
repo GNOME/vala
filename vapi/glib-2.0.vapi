@@ -2091,6 +2091,8 @@ namespace GLib {
 		public unowned string? get_name ();
 		[Version (since = "2.26")]
 		public void set_name (string? name);
+		[Version (since = "2.70")]
+		public void set_static_name (string name);
 		[Version (since = "2.26")]
 		public static void set_name_by_id (uint tag, string? name);
 		public unowned MainContext get_context ();
@@ -2514,6 +2516,13 @@ namespace GLib {
 		[Version (since = "2.68")]
 		[CCode (cname = "g_memdup2")]
 		public static void* dup2 (void* mem, size_t n);
+	}
+
+	[Version (since = "2.72")]
+	namespace Aligned {
+		public static void* alloc (size_t n_blocks, size_t n_blocks_bytes, size_t alignment);
+		public static void* alloc0 (size_t n_blocks, size_t n_blocks_bytes, size_t alignment);
+		public static void free (void* mem);
 	}
 
 	[Version (since = "2.10")]
@@ -3418,6 +3427,9 @@ namespace GLib {
 		[Version (since = "2.14")]
 		[CCode (cname = "g_get_user_special_dir")]
 		public static unowned string get_user_special_dir (UserDirectory directory);
+		[Version (since = "2.72")]
+		[CCode (cname = "g_get_user_state_dir")]
+		public static unowned string get_user_state_dir ();
 		[Version (since = "2.6")]
 		[CCode (cname = "g_get_system_data_dirs", array_length = false, array_null_terminated = true)]
 		public static unowned string[] get_system_data_dirs ();
@@ -4890,6 +4902,9 @@ namespace GLib {
 		public static void expect_message (string? log_domain, LogLevelFlags log_level, string pattern);
 		[Version (since = "2.30")]
 		public static void fail ();
+		[PrintfFormat]
+		[Version (since = "2.70")]
+		public static void fail_printf (string format, ...);
 		[Version (since = "2.38")]
 		public static bool failed ();
 		[Version (since = "2.38")]
@@ -4900,6 +4915,9 @@ namespace GLib {
 		public static unowned string get_path ();
 		[Version (since = "2.38")]
 		public static void incomplete (string? msg = null);
+		[PrintfFormat]
+		[Version (since = "2.70")]
+		public static void incomplete_printf (string format, ...);
 		[Version (since = "2.36")]
 		public static bool initialized ();
 		[PrintfFormat]
@@ -4909,6 +4927,9 @@ namespace GLib {
 		public static void set_nonfatal_assertions ();
 		[Version (since = "2.38")]
 		public static void skip (string? msg = null);
+		[PrintfFormat]
+		[Version (since = "2.70")]
+		public static void skip_printf (string format, ...);
 		[Version (since = "2.38")]
 		public static bool subprocess ();
 		[Version (since = "2.16")]
@@ -4960,15 +4981,27 @@ namespace GLib {
 	public delegate bool LogFatalFunc (string? log_domain, LogLevelFlags log_levels, string message);
 
 	[Compact]
+#if GLIB_2_70
+	[CCode (cname = "GTestCase", free_function = "g_test_case_free")]
+#else
 	[CCode (cname = "GTestCase", ref_function = "", unref_function = "")]
+#endif
 	public class TestCase {
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_create_case")]
 		public TestCase (string test_name, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_setup, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_func, [CCode (delegate_target_pos = 1.9)] TestFixtureFunc data_teardown, [CCode (pos = 1.8)] size_t data_size = 0);
+		[Version (since = "2.70")]
+		[DestroysInstance]
+		[CCode (cname = "g_test_case_free")]
+		public void free ();
 	}
 
 	[Compact]
+#if GLIB_2_70
+	[CCode (cname = "GTestSuite", free_function = "g_test_suite_free")]
+#else
 	[CCode (cname = "GTestSuite", ref_function = "", unref_function = "")]
+#endif
 	public class TestSuite {
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_create_suite")]
@@ -4982,6 +5015,10 @@ namespace GLib {
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_suite_add_suite")]
 		public void add_suite (TestSuite test_suite);
+		[Version (since = "2.70")]
+		[DestroysInstance]
+		[CCode (cname = "g_test_suite_free")]
+		public void free ();
 	}
 
 	[Version (since = "2.26")]
