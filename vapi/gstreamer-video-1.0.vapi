@@ -592,6 +592,20 @@ namespace Gst {
 		[GIR (name = "Navigation")]
 		public interface Navigation : GLib.Object {
 			public static Gst.Video.NavigationEventType event_get_type (Gst.Event event);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_command (Gst.Video.NavigationCommand command);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_key_press (string key);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_key_release (string key);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_button_press (int button, double x, double y);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_button_release (int button, double x, double y);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_move (double x, double y);
+			[Version (since = "1.22")]
+			public static Gst.Event event_new_mouse_scroll (double x, double y, double delta_x, double delta_y);
 			public static bool event_parse_command (Gst.Event event, out Gst.Video.NavigationCommand command);
 			public static bool event_parse_key_event (Gst.Event event, out unowned string key);
 			public static bool event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
@@ -809,6 +823,8 @@ namespace Gst {
 			public uint tile_hs;
 			[Version (since = "1.18")]
 			public void component (uint plane, out int components);
+			[Version (since = "1.22")]
+			public int extrapolate_stride (int plane, int stride);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
@@ -1500,6 +1516,7 @@ namespace Gst {
 			MOUSE_BUTTON_RELEASE,
 			MOUSE_MOVE,
 			COMMAND,
+			[Version (since = "1.18")]
 			MOUSE_SCROLL
 		}
 		[CCode (cheader_filename = "gst/video/video.h", cname = "GstNavigationMessageType", cprefix = "GST_NAVIGATION_MESSAGE_", type_id = "gst_navigation_message_type_get_type ()")]
@@ -2064,6 +2081,27 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_get_type")]
 		[Version (replacement = "Navigation.event_get_type")]
 		public static Gst.Video.NavigationEventType navigation_event_get_type (Gst.Event event);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_command")]
+		[Version (replacement = "Navigation.event_new_command", since = "1.22")]
+		public static Gst.Event navigation_event_new_command (Gst.Video.NavigationCommand command);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_key_press")]
+		[Version (replacement = "Navigation.event_new_key_press", since = "1.22")]
+		public static Gst.Event navigation_event_new_key_press (string key);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_key_release")]
+		[Version (replacement = "Navigation.event_new_key_release", since = "1.22")]
+		public static Gst.Event navigation_event_new_key_release (string key);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_button_press")]
+		[Version (replacement = "Navigation.event_new_mouse_button_press", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_button_press (int button, double x, double y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_button_release")]
+		[Version (replacement = "Navigation.event_new_mouse_button_release", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_button_release (int button, double x, double y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_move")]
+		[Version (replacement = "Navigation.event_new_mouse_move", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_move (double x, double y);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_new_mouse_scroll")]
+		[Version (replacement = "Navigation.event_new_mouse_scroll", since = "1.22")]
+		public static Gst.Event navigation_event_new_mouse_scroll (double x, double y, double delta_x, double delta_y);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_command")]
 		[Version (replacement = "Navigation.event_parse_command")]
 		public static bool navigation_event_parse_command (Gst.Event event, out Gst.Video.NavigationCommand command);

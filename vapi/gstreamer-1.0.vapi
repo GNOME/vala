@@ -1070,7 +1070,7 @@ namespace Gst {
 		public unowned Gst.Context @ref ();
 		public static bool replace (ref Gst.Context old_context, Gst.Context? new_context);
 		public void unref ();
-		public Gst.Structure writable_structure ();
+		public unowned Gst.Structure writable_structure ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_control_binding_get_type ()")]
 	public abstract class ControlBinding : Gst.Object {
