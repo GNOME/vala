@@ -164,6 +164,7 @@ static void _vala_bar_get_property (GObject * object,
                              GValue * value,
                              GParamSpec * pspec);
 VALA_EXTERN GType ibaz_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IBaz, g_object_unref)
 VALA_EXTERN gint ibaz_get_read_only (IBaz* self);
 static GType ibaz_get_type_once (void);
 VALA_EXTERN GType baz_get_type (void) G_GNUC_CONST ;

@@ -137,6 +137,7 @@ VALA_EXTERN Maman* maman_construct (GType object_type);
 static void maman_finalize (Maman * obj);
 static GType maman_get_type_once (void);
 VALA_EXTERN GType ibar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IBar, maman_unref)
 static GType ibar_get_type_once (void);
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, maman_unref)

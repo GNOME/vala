@@ -388,6 +388,7 @@ static void sample_set_private_prop (Sample* self,
 static gint sample_main (void);
 VALA_EXTERN void maman_bar_run (void);
 VALA_EXTERN GType maman_ibaz_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanIbaz, g_object_unref)
 VALA_EXTERN MamanBaz* maman_baz_new (void);
 VALA_EXTERN MamanBaz* maman_baz_construct (GType object_type);
 VALA_EXTERN GType maman_baz_get_type (void) G_GNUC_CONST ;
@@ -471,6 +472,7 @@ static void _vala_maman_baz_get_property (GObject * object,
                                    GValue * value,
                                    GParamSpec * pspec);
 VALA_EXTERN GType maman_ibiz_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanIBiz, g_object_unref)
 VALA_EXTERN gint maman_ibiz_get_number (MamanIBiz* self);
 VALA_EXTERN void maman_ibiz_set_number (MamanIBiz* self,
                             gint value);

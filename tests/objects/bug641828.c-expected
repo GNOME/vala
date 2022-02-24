@@ -65,6 +65,7 @@ static gpointer foo_parent_class = NULL;
 static BarIface * foo_bar_parent_iface = NULL;
 
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 static void g_cclosure_user_marshal_INT__INT (GClosure * closure,
                                        GValue * return_value,
                                        guint n_param_values,

@@ -129,6 +129,7 @@ VALA_EXTERN Bar* bar_construct (GType object_type);
 static void bar_finalize (Bar * obj);
 static GType bar_get_type_once (void);
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manam, g_object_unref)
 static GType manam_get_type_once (void);
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)

@@ -403,6 +403,7 @@ VALA_EXTERN MamanDeepDerived* maman_deep_derived_new (void);
 VALA_EXTERN MamanDeepDerived* maman_deep_derived_construct (GType object_type);
 static GType maman_deep_derived_get_type_once (void);
 VALA_EXTERN GType maman_base_access_ifoo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBaseAccessIFoo, g_object_unref)
 VALA_EXTERN gint maman_base_access_ifoo_interface_method (MamanBaseAccessIFoo* self);
 VALA_EXTERN gint maman_base_access_ifoo_virtual_interface_method (MamanBaseAccessIFoo* self);
 static GType maman_base_access_ifoo_get_type_once (void);
