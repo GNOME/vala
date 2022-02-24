@@ -37,6 +37,7 @@ struct _Block1Data {
 };
 
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN void foo_foo (Foo* self);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);

@@ -129,6 +129,7 @@ VALA_EXTERN guint test_register_object (void* object,
                             const gchar* path,
                             GError** error);
 VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN void test_list_messages (Test* self,
                          GAsyncReadyCallback _callback_,
                          gpointer _user_data_);

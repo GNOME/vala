@@ -94,6 +94,7 @@ VALA_EXTERN GType maman_delegate_struct_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN MamanDelegateStruct* maman_delegate_struct_dup (const MamanDelegateStruct* self);
 VALA_EXTERN void maman_delegate_struct_free (MamanDelegateStruct* self);
 VALA_EXTERN GType maman_foo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanFoo, g_object_unref)
 VALA_EXTERN void maman_foo_foo_method (MamanFoo* self,
                            gint i);
 static GType maman_foo_get_type_once (void);

@@ -64,6 +64,7 @@ static gpointer bar_parent_class = NULL;
 static IFooIface * bar_ifoo_parent_iface = NULL;
 
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN void ifoo_foo (IFoo* self,
                gint i);
 static void ifoo_real_foo (IFoo* self,

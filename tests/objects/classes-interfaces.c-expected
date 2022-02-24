@@ -110,9 +110,11 @@ VALA_EXTERN Base* base_new (void);
 VALA_EXTERN Base* base_construct (GType object_type);
 static GType base_get_type_once (void);
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN gchar* ifoo_foo (IFoo* self);
 static GType ifoo_get_type_once (void);
 VALA_EXTERN GType ibar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IBar, g_object_unref)
 VALA_EXTERN gint ibar_foo (IBar* self);
 static GType ibar_get_type_once (void);
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;

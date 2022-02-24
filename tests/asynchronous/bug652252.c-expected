@@ -76,6 +76,7 @@ static gpointer bar_parent_class = NULL;
 static FooIface * bar_foo_parent_iface = NULL;
 
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static void foo_real_foo_data_free (gpointer _data);
 static void foo_real_foo (Foo* self,
                    GAsyncReadyCallback _callback_,

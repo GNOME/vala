@@ -169,9 +169,11 @@ static gpointer concrete_parent_class = NULL;
 static IfaceIface * concrete_iface_parent_iface = NULL;
 
 VALA_EXTERN GType iface1_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface1, g_object_unref)
 VALA_EXTERN gint iface1_foo (Iface1* self);
 static GType iface1_get_type_once (void);
 VALA_EXTERN GType iface2_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface2, g_object_unref)
 VALA_EXTERN gint iface2_foo (Iface2* self);
 static GType iface2_get_type_once (void);
 VALA_EXTERN GType obj1_get_type (void) G_GNUC_CONST ;
@@ -195,6 +197,7 @@ VALA_EXTERN Base* base_new (void);
 VALA_EXTERN Base* base_construct (GType object_type);
 static GType base_get_type_once (void);
 VALA_EXTERN GType iface_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface, g_object_unref)
 VALA_EXTERN gint iface_foo (Iface* self);
 static GType iface_get_type_once (void);
 VALA_EXTERN GType concrete_get_type (void) G_GNUC_CONST ;

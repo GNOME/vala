@@ -66,6 +66,7 @@ static gpointer foo_parent_class = NULL;
 static IBarIface * foo_ibar_parent_iface = NULL;
 
 VALA_EXTERN GType ibar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IBar, g_object_unref)
 static GType ibar_get_type_once (void);
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)

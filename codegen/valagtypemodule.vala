@@ -2148,8 +2148,9 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (iface)), new CCodeVariableDeclarator (get_ccode_name (iface))));
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (get_ccode_type_name (iface))));
 
+		unowned Class? prereq_cl = null;
 		foreach (DataType prerequisite in iface.get_prerequisites ()) {
-			unowned Class? prereq_cl = prerequisite.type_symbol as Class;
+			prereq_cl = prerequisite.type_symbol as Class;
 			unowned Interface? prereq_iface = prerequisite.type_symbol as Interface;
 			if (prereq_cl != null) {
 				generate_class_declaration (prereq_cl, decl_space);
@@ -2216,6 +2217,16 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 
 		requires_vala_extern = true;
+
+		if (prereq_cl != null) {
+			var base_class = prereq_cl;
+			while (base_class.base_class != null) {
+				base_class = base_class.base_class;
+			}
+			// Custom unref-methods need to be emitted before G_DEFINE_AUTOPTR_CLEANUP_FUNC,
+			// so we guard against that special case and handle it in generate_method_declaration.
+			generate_autoptr_cleanup (iface, base_class, decl_space);
+		}
 	}
 
 	public override void visit_interface (Interface iface) {

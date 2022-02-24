@@ -122,6 +122,7 @@ static IFooIface * baz_ifoo_parent_iface = NULL;
 static IFazIface * baz_ifaz_parent_iface = NULL;
 
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 static GType ifoo_get_type_once (void);
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)

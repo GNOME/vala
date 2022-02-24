@@ -68,6 +68,7 @@ VALA_EXTERN guint ifoo_register_object (void* object,
                             const gchar* path,
                             GError** error);
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN void ifoo_method0 (IFoo* self,
                    GError** error);
 VALA_EXTERN void ifoo_method1 (IFoo* self,
