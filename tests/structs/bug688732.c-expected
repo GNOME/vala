@@ -30,12 +30,14 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,
                Bar* dest);
 VALA_EXTERN void bar_destroy (Bar* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Bar, bar_destroy)
 static void _vala_main (void);
 
 void

@@ -39,6 +39,7 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 static void _vala_main (void);
 static gboolean* _bool_dup (gboolean* self);
 static gboolean* _variant_get1 (GVariant* value);

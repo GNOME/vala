@@ -75,6 +75,7 @@ VALA_EXTERN void baz_free (Baz* self);
 VALA_EXTERN void baz_copy (const Baz* self,
                Baz* dest);
 VALA_EXTERN void baz_destroy (Baz* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Baz, baz_destroy)
 VALA_EXTERN void foo_get_struct (Foo* self,
                      Baz* result);
 static void foo_real_bar (Foo* self);

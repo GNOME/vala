@@ -99,6 +99,7 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 VALA_EXTERN Foo* get_foo (void);
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manam, g_object_unref)

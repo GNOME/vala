@@ -34,6 +34,7 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 static gint* _vala_array_dup1 (gint* self,
                         gssize length);
 static void _vala_main (void);

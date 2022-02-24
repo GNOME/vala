@@ -79,6 +79,7 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 VALA_EXTERN void struct_conversion (void);
 static GVariant* _variant_new8 (Foo value);
 static void _variant_get8 (GVariant* value,

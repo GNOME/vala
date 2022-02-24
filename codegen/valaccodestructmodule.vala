@@ -156,6 +156,23 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			function.add_parameter (new CCodeParameter ("self", get_ccode_name (st) + "*"));
 			decl_space.add_function_declaration (function);
 		}
+
+		if (context.profile == Profile.GOBJECT) {
+			generate_auto_cleanup_clear (st, decl_space);
+		}
+	}
+
+	void generate_auto_cleanup_clear (Struct st, CCodeFile decl_space) {
+		if (st.is_disposable ()
+		    && (context.header_filename == null|| decl_space.file_type == CCodeFileType.PUBLIC_HEADER
+		        || (decl_space.file_type == CCodeFileType.INTERNAL_HEADER && st.is_internal_symbol ()))) {
+			string auto_cleanup_clear_func = get_ccode_destroy_function (st);
+			if (auto_cleanup_clear_func == null || auto_cleanup_clear_func == "") {
+				Report.error (st.source_reference, "internal error: auto_cleanup_clear_func not available");
+			}
+			decl_space.add_type_member_declaration (new CCodeIdentifier ("G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (%s, %s)".printf (get_ccode_name (st), auto_cleanup_clear_func)));
+			decl_space.add_type_member_declaration (new CCodeNewline ());
+		}
 	}
 
 	public override void visit_struct (Struct st) {

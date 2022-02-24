@@ -57,6 +57,7 @@ VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 static guint8* _vala_array_dup1 (guint8* self,
                           gssize length);
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
@@ -65,6 +66,7 @@ VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,
                Bar* dest);
 VALA_EXTERN void bar_destroy (Bar* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Bar, bar_destroy)
 static guint8* _vala_array_dup2 (guint8* self,
                           gssize length);
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;

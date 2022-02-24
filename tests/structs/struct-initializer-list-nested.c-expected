@@ -62,12 +62,14 @@ VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,
                Bar* dest);
 VALA_EXTERN void bar_destroy (Bar* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Bar, bar_destroy)
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Manam* manam_dup (const Manam* self);
 VALA_EXTERN void manam_free (Manam* self);
 VALA_EXTERN void manam_copy (const Manam* self,
                  Manam* dest);
 VALA_EXTERN void manam_destroy (Manam* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Manam, manam_destroy)
 VALA_EXTERN GType baz_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Baz* baz_dup (const Baz* self);
 VALA_EXTERN void baz_free (Baz* self);

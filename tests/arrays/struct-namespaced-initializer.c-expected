@@ -92,6 +92,7 @@ VALA_EXTERN void manam_baz_faz_free (ManamBazFaz* self);
 VALA_EXTERN void manam_baz_faz_copy (const ManamBazFaz* self,
                          ManamBazFaz* dest);
 VALA_EXTERN void manam_baz_faz_destroy (ManamBazFaz* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (ManamBazFaz, manam_baz_faz_destroy)
 static void manam_baz_finalize (ManamBaz * obj);
 static GType manam_baz_get_type_once (void);
 static void _vala_main (void);
