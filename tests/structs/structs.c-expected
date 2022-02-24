@@ -79,6 +79,7 @@ VALA_EXTERN void struct_with_func_free (StructWithFunc* self);
 VALA_EXTERN void struct_with_func_copy (const StructWithFunc* self,
                             StructWithFunc* dest);
 VALA_EXTERN void struct_with_func_destroy (StructWithFunc* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (StructWithFunc, struct_with_func_destroy)
 VALA_EXTERN void struct_with_func_init (StructWithFunc *self,
                             Func f,
                             gpointer f_target,

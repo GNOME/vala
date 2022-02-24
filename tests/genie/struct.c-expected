@@ -36,6 +36,7 @@ VALA_EXTERN void test_free (Test* self);
 VALA_EXTERN void test_copy (const Test* self,
                 Test* dest);
 VALA_EXTERN void test_destroy (Test* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Test, test_destroy)
 VALA_EXTERN void test_init (Test *self);
 
 static void

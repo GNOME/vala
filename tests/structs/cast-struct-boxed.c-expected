@@ -54,6 +54,7 @@ VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,
                Bar* dest);
 VALA_EXTERN void bar_destroy (Bar* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Bar, bar_destroy)
 VALA_EXTERN Bar* bar_heap_owned (void);
 VALA_EXTERN Bar* bar_heap_unowned (void);
 VALA_EXTERN void test_with_destroy (void);

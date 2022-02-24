@@ -101,6 +101,7 @@ VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,
                Bar* dest);
 VALA_EXTERN void bar_destroy (Bar* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Bar, bar_destroy)
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN Foo* foo_new (Bar* bar);

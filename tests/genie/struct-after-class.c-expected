@@ -84,6 +84,7 @@ VALA_EXTERN void test_struct_free (TestStruct* self);
 VALA_EXTERN void test_struct_copy (const TestStruct* self,
                        TestStruct* dest);
 VALA_EXTERN void test_struct_destroy (TestStruct* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (TestStruct, test_struct_destroy)
 VALA_EXTERN void test_struct_init (TestStruct *self);
 static void testclass_finalize (TestClass * obj);
 static GType testclass_get_type_once (void);

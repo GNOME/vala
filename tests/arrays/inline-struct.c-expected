@@ -29,6 +29,7 @@ VALA_EXTERN void foo_struct_free (FooStruct* self);
 VALA_EXTERN void foo_struct_copy (const FooStruct* self,
                       FooStruct* dest);
 VALA_EXTERN void foo_struct_destroy (FooStruct* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (FooStruct, foo_struct_destroy)
 static void _vala_main (void);
 static void _vala_FooStruct_array_destroy (FooStruct * array,
                                     gssize array_length);

@@ -50,6 +50,7 @@ VALA_EXTERN void manam_free (Manam* self);
 VALA_EXTERN void manam_copy (const Manam* self,
                  Manam* dest);
 VALA_EXTERN void manam_destroy (Manam* self);
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Manam, manam_destroy)
 VALA_EXTERN gchar** get_foo (gint* result_length1);
 static gchar** _vala_array_dup1 (gchar** self,
                           gssize length);
