@@ -1,3 +1,22 @@
+Vala 0.55.90
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Emit G_DEFINE_AUTOPTR_CLEANUP_FUNC() for interfaces with base class [#1292]
+    + Emit G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC() for structs [#1293]
+    + Default to "has_type_id = false" for external error-domains
+    + Emit GType definition for error domains [#699]
+  - vala:
+    + Catch and throw possible inner error of lock statements [#83]
+    + Keep error-code symbol reference in callable expression context
+    + Allow delegate without target to be used as constant type
+  - girparser: Pick up type_id of error domains
+
+ * Bindings:
+  - glib-2.0: Update 2.70/72 symbols
+  - gstreamer: Update from 1.21.0+ git main
+  - vapi: Update GIR-based bindings
+
 Vala 0.55.3
 ===========
  * Highlights:
