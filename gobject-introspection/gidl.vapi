@@ -67,7 +67,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeFunction {
+	public class IdlNodeFunction : IdlNode {
 		public bool deprecated;
 		
 		public bool is_method;
@@ -84,8 +84,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeVFunc 
-	{
+	public class IdlNodeVFunc : IdlNode {
 		public bool must_chain_up;
 		public bool must_be_implemented;
 		public bool must_not_be_implemented;
@@ -98,7 +97,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeSignal {
+	public class IdlNodeSignal : IdlNode {
 		public bool deprecated;
 		
 		public bool run_first;
@@ -120,7 +119,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeBoxed {
+	public class IdlNodeBoxed : IdlNode {
 		public bool deprecated;
 		
 		public string gtype_name;
@@ -131,7 +130,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeEnum {
+	public class IdlNodeEnum : IdlNode {
 		public bool deprecated;
 		
 		public string gtype_name;
@@ -142,7 +141,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeField {
+	public class IdlNodeField : IdlNode {
 		public bool readable;
 		public bool writable;
 		public int bits;
@@ -153,7 +152,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeConstant {
+	public class IdlNodeConstant : IdlNode {
 		public bool deprecated;
 		
 		public IdlNodeType type;
@@ -163,7 +162,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeInterface {
+	public class IdlNodeInterface : IdlNode {
 		public bool deprecated;
 		
 		public string gtype_name;
@@ -179,7 +178,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeParam {
+	public class IdlNodeParam : IdlNode {
 		public bool @in;
 		public bool @out;
 		public bool dipper;
@@ -194,7 +193,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeProperty {
+	public class IdlNodeProperty : IdlNode {
 		public bool deprecated;
 		
 		public string name;
@@ -209,7 +208,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeStruct {
+	public class IdlNodeStruct : IdlNode {
 		public bool deprecated;
 		
 		public List<IdlNode> members;
@@ -217,7 +216,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeUnion {
+	public class IdlNodeUnion : IdlNode {
 		public bool deprecated;
 		
 		public List<IdlNode> members;
@@ -225,7 +224,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
-	public class IdlNodeType {
+	public class IdlNodeType : IdlNode {
 		public bool is_pointer;
 		public bool is_basic;
 		public bool is_array;
