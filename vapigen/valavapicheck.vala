@@ -586,6 +586,8 @@ public class Codegen : Vala.CodeVisitor {
 		run.body = run_block;
 		context.root.add_method (run);
 
+		context.analyzer.current_symbol = run;
+
 		context.accept (this);
 		context = null;
 	}
@@ -686,6 +688,11 @@ public class Codegen : Vala.CodeVisitor {
 			return;
 		}
 
+		if (element.parent_symbol is Class && ((Class) element.parent_symbol).is_abstract) {
+			stdout.printf ("Skipping `%s'\n", element.get_full_name ());
+			return;
+		}
+
 		//TODO
 		if (element.coroutine || element.get_type_parameters ().size > 0) {
 			return;
@@ -715,6 +722,11 @@ public class Codegen : Vala.CodeVisitor {
 	}
 
 	public override void visit_method (Vala.Method element) {
+		if (element.source_reference == null) {
+			stdout.printf ("Skipping `%s'\n", element.get_full_name ());
+			return;
+		}
+
 		if (element.source_reference.file != file) {
 			return;
 		}

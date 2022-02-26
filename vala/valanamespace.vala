@@ -400,7 +400,10 @@ public class Vala.Namespace : Symbol {
 		}
 
 		if (m.owner == null) {
-			m.source_reference.file.add_node (m);
+			if (m.source_reference == null)
+				stdout.printf ("Missing source_reference for `%s'\n", m.get_full_name ());
+			else
+				m.source_reference.file.add_node (m);
 		}
 
 		methods.add (m);
