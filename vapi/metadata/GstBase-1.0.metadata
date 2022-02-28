@@ -8,15 +8,27 @@ PushSrc
   .create.buf out unowned=false
   .alloc.buf out unowned=false
 
-// Fields
-ByteWriter struct=false
-  .new* skip=false
-
 // Non-boxed types
 BitReader struct=false
 ByteReader struct=false
+ByteWriter struct=false
+
+BitReader free_function="gst_bit_reader_free"
+  .new* skip=false symbol_type="constructor"
+ByteReader free_function="gst_byte_reader_free"
+  .new* skip=false symbol_type="constructor"
+  .dup_data.val array_length_idx=-1
+  .dup_data.size out=false owned=false
+  .get_data.val array_length_idx=-1
+  .get_data.size out=false owned=false
+  .peek_data.val array_length_idx=-1
+  .peek_data.size out=false owned=false
+ByteWriter free_function="gst_byte_writer_free"
+  .new* skip=false symbol_type="constructor"
+  .new_with_data.data array array_length_idx=1
 
 Adapter
+  .copy.dest out=false
   .map skip
   .take skip
 BaseParse
@@ -26,7 +38,7 @@ BaseSink
   .get_times.start out
   .get_times.end out
 BitWriter
-  .put_bytes.data array array_length_idx=1
+  .put_bytes.data array_length_idx=1
 
 // Backwards compatibility
 Adapter
