@@ -4,6 +4,8 @@
 
 FeedChannel
 	.new_from_xml.doc type="Xml.Doc*"
+FeedItem
+	.get_geo_point.*tude out
 FeedParser
 	.parse.doc type="Xml.Doc*"
 	.parse_channel.doc type="Xml.Doc*"
