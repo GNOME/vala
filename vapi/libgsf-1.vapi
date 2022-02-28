@@ -16,7 +16,7 @@ namespace Gsf {
 		public Gsf.Blob get_data_blob ();
 		public Gsf.ClipFormat get_format ();
 		public Gsf.ClipFormatWindows get_windows_clipboard_format () throws GLib.Error;
-		public void* peek_real_data (size_t ret_size) throws GLib.Error;
+		public void* peek_real_data (out size_t ret_size) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_doc_meta_data_get_type ()")]
 	public class DocMetaData : GLib.Object {
@@ -77,7 +77,7 @@ namespace Gsf {
 	public class InfileMSOle : Gsf.Infile {
 		[CCode (has_construct_function = false, type = "GsfInfile*")]
 		public InfileMSOle (Gsf.Input source) throws GLib.Error;
-		public bool get_class_id (uint8 res);
+		public bool get_class_id (out uint8 res);
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_infile_msvba_get_type ()")]
 	public class InfileMSVBA : Gsf.Infile {
@@ -194,7 +194,7 @@ namespace Gsf {
 		public InputMemory.clone ([CCode (array_length_cname = "length", array_length_pos = 1.1)] uint8[] buf);
 		[CCode (has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
-		[CCode (has_construct_function = false, type = "GsfInput*")]
+		[CCode (cheader_filename = "gsf/gsf-input-iochannel.h", has_construct_function = false, type = "GsfInput*")]
 		public InputMemory.from_iochannel (GLib.IOChannel channel) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gsf/gsf.h", type_id = "gsf_input_proxy_get_type ()")]
@@ -772,7 +772,7 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static void le_set_float (void* p, float f);
 	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static void mem_dump (uint8 ptr, size_t len);
+	public static void mem_dump ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "gsize", type = "const guint8*")] uint8[] ptr);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static uint msole_codepage_to_lid (int codepage);
 	[CCode (cheader_filename = "gsf/gsf.h")]
@@ -822,8 +822,8 @@ namespace Gsf {
 	public static GLib.ValueArray value_get_docprop_varray (GLib.Value value);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static unowned Gsf.DocPropVector value_get_docprop_vector (GLib.Value value);
-	[CCode (cheader_filename = "gsf/gsf.h")]
-	public static uint8 vba_inflate (Gsf.Input input, Gsf.off_t offset, int size, bool add_null_terminator);
+	[CCode (array_length_pos = 2.5, cheader_filename = "gsf/gsf.h")]
+	public static uint8[] vba_inflate (Gsf.Input input, Gsf.off_t offset, bool add_null_terminator);
 	[CCode (cheader_filename = "gsf/gsf.h")]
 	public static int xmlDocFormatDump (Gsf.Output output, Xml.Doc cur, string? encoding, bool format);
 	[CCode (cheader_filename = "gsf/gsf.h")]
