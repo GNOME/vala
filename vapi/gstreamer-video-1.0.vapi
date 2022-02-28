@@ -15,7 +15,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn create_output_buffer (Gst.Buffer outbuffer);
 			[NoWrapper]
-			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, bool at_least_one_alpha);
+			public virtual void find_best_format (Gst.Caps downstream_caps, Gst.Video.Info best_info, out bool at_least_one_alpha);
 			[NoWrapper]
 			public virtual Gst.Caps update_caps (Gst.Caps caps);
 		}
@@ -61,13 +61,14 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstBufferPool*")]
 			public BufferPool ();
 		}
-		[CCode (cheader_filename = "gst/video/video.h")]
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[Compact]
 		[GIR (name = "VideoChromaResample")]
 		public class ChromaResample {
+			[CCode (cname = "gst_video_chroma_resample_new", has_construct_function = false)]
 			public ChromaResample (Gst.Video.ChromaMethod method, Gst.Video.ChromaSite site, Gst.Video.ChromaFlags flags, Gst.Video.Format format, int h_factor, int v_factor);
 			public void free ();
-			public void get_info (uint n_lines, int offset);
+			public void get_info (out uint n_lines, out int offset);
 			[CCode (cname = "gst_video_chroma_resample")]
 			public void resample (void* lines, int width);
 		}
@@ -405,7 +406,7 @@ namespace Gst {
 		public class Scaler {
 			public void @2d (Gst.Video.Scaler vscale, Gst.Video.Format format, void* src, int src_stride, void* dest, int dest_stride, uint x, uint y, uint width, uint height);
 			public void free ();
-			public double get_coeff (uint out_offset, uint in_offset, uint n_taps);
+			public double get_coeff (uint out_offset, out uint in_offset, out uint n_taps);
 			public uint get_max_taps ();
 			public void horizontal (Gst.Video.Format format, void* src, void* dest, uint dest_offset, uint width);
 			public void vertical (Gst.Video.Format format, void* src_lines, void* dest, uint dest_offset, uint width);
@@ -494,7 +495,7 @@ namespace Gst {
 			public bool add_ancillary (bool composite, uint8 DID, uint8 SDID_block_number, [CCode (array_length_cname = "data_count", array_length_pos = 4.1, array_length_type = "guint")] uint8[] data);
 			public Gst.Video.VBIEncoder copy ();
 			public void free ();
-			public void write_line (uint8 data);
+			public void write_line ([CCode (array_length = false, type = "guint8*")] uint8[] data);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_vbi_parser_get_type ()")]
 		[Compact]
