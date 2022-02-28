@@ -5985,7 +5985,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_rgba (Cairo.Context cr, Gdk.RGBA rgba);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+	public static async bool content_deserialize_async (GLib.InputStream stream, string mime_type, GLib.Type type, int io_priority, GLib.Cancellable? cancellable, out GLib.Value value) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[Version (replacement = "ContentFormats.parse", since = "4.4")]
 	public static Gdk.ContentFormats? content_formats_parse (string string);
