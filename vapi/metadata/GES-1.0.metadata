@@ -3,6 +3,10 @@
 Asset
 	.request_async symbol_type="constructor"
 	.request symbol_type="constructor"
+BaseEffect
+	.set_time_translation_funcs skip
+PitiviFormatter
+	.new cheader_filename="ges/ges-pitivi-formatter.h"
 Timeline
 	.tracks type_arguments="GES.Track"
 UriClipAsset
