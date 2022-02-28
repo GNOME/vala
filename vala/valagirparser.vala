@@ -1522,6 +1522,18 @@ public class Vala.GirParser : CodeVisitor {
 	const string GIR_VERSION = "1.2";
 
 	static void add_symbol_to_container (Symbol container, Symbol sym) {
+		if (sym.name == "") {
+			Report.warning (sym.source_reference, "node with empty name");
+			return;
+		} else if (sym.name != null) {
+			Symbol? old_sym = container.scope.lookup (sym.name);
+			if (old_sym != null) {
+				Report.warning (sym.source_reference, "`%s' already contains a definition for `%s'".printf (container.name, sym.name));
+				Report.notice (old_sym.source_reference, "previous definition of `%s' was here".printf (old_sym.name));
+				return;
+			}
+		}
+
 		if (container is Class) {
 			unowned Class cl = (Class) container;
 
