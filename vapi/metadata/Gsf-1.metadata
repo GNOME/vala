@@ -4,11 +4,20 @@ Gsf cheader_filename="gsf/gsf.h"
 
 gsf_off_t name="off_t"
 
+mem_dump.ptr array array_length_idx=1
+vba_inflate array array_length_idx=2 unowned=false
+
+ClipData
+  .peek_real_data.ret_size out
+
 DocMetaData
   .foreach.func type="GLib.HFunc<string,Gsf.DocProp>"
 
 Infile
   .child_by_vaname skip=false
+
+InfileMSOle
+  .get_class_id.res out
 
 InfileMSVBA
   .get_modules type="unowned GLib.HashTable<string,void*>"
@@ -16,6 +25,9 @@ InfileMSVBA
 
 Input
   .* skip=false
+
+InputMemory
+  .new_from_iochannel cheader_filename="gsf/gsf-input-iochannel.h"
 
 Outfile
   .* skip=false
