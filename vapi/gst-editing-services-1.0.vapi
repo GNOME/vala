@@ -77,7 +77,7 @@ namespace GES {
 		[Version (since = "1.18")]
 		public bool register_time_property (string child_property_name);
 		[Version (since = "1.18")]
-		public bool set_time_translation_funcs (GES.BaseEffectTimeTranslationFunc? source_to_sink_func, owned GES.BaseEffectTimeTranslationFunc? sink_to_source_func);
+		public bool set_time_translation_funcs ([CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GES.BaseEffectTimeTranslationFunc? source_to_sink_func, [CCode (delegate_target_pos = 2.33333, destroy_notify_pos = 2.66667)] owned GES.BaseEffectTimeTranslationFunc? sink_to_source_func);
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_base_effect_clip_get_type ()")]
 	public abstract class BaseEffectClip : GES.OperationClip, GES.Extractable, GES.MetaContainer {
@@ -361,7 +361,7 @@ namespace GES {
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_pitivi_formatter_get_type ()")]
 	[Version (deprecated = true, deprecated_since = "1.0")]
 	public class PitiviFormatter : GES.Formatter, GES.Extractable {
-		[CCode (has_construct_function = false)]
+		[CCode (cheader_filename = "ges/ges-pitivi-formatter.h", has_construct_function = false)]
 		public PitiviFormatter ();
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_project_get_type ()")]
