@@ -88,6 +88,8 @@ public class Vala.GirParser : CodeVisitor {
 		FLOATING,
 		TYPE_ID,
 		TYPE_GET_FUNCTION,
+		COPY_FUNCTION,
+		FREE_FUNCTION,
 		REF_FUNCTION,
 		REF_SINK_FUNCTION,
 		UNREF_FUNCTION,
@@ -3614,6 +3616,12 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (metadata.has_argument (ArgumentType.BASE_TYPE)) {
 			cl.add_base_type (parse_type_from_string (metadata.get_string (ArgumentType.BASE_TYPE), true, metadata.get_source_reference (ArgumentType.BASE_TYPE)));
+		}
+		if (metadata.has_argument (ArgumentType.COPY_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "copy_function", metadata.get_string (ArgumentType.COPY_FUNCTION));
+		}
+		if (metadata.has_argument (ArgumentType.FREE_FUNCTION)) {
+			cl.set_attribute_string ("CCode", "free_function", metadata.get_string (ArgumentType.FREE_FUNCTION));
 		}
 		if (metadata.has_argument (ArgumentType.REF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "ref_function", metadata.get_string (ArgumentType.REF_FUNCTION));
