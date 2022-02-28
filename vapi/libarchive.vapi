@@ -225,7 +225,7 @@ namespace Archive {
 		[CCode (cname="archive_read_data_into_fd")]
 		public Result read_data_into_fd (int fd);
 
-		public Result extract (Entry entry, ExtractFlags? flags=0);
+		public Result extract (Entry entry, ExtractFlags flags = 0);
 		public Result extract2 (Entry entry, Write dest);
 		public void extract_set_progress_callback (ExtractProgressCallback cb);
 		public void extract_set_skip_file (int64_t dev, int64_t ino);
@@ -245,21 +245,21 @@ namespace Archive {
 		public Result set_standard_lookup ();
 
 		// HACK, they have no name in C. May not work correctly.
-		[CCode (instance_pos = 0, cname="void")]
+		[CCode (cname = "archive_read_gnamelookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate unowned string GNameLookup (int64_t gid);
-		[CCode (instance_pos = 0, cname="void")]
+		[CCode (cname = "archive_read_unamelookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate unowned string UNameLookup (int64_t uid);
-		[CCode (instance_pos = 0, cname="void")]
+		[CCode (cname = "archive_read_cleanup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate void Cleanup ();
 
 		public Result set_gname_lookup (
-			GNameLookup lookup,
-			Cleanup? cleanup = null
+			[CCode (delegate_target_pos = 0.9)] GNameLookup lookup,
+			[CCode (delegate_target_pos = 0.9)] Cleanup? cleanup = null
 		);
 
 		public Result set_uname_lookup (
-			UNameLookup lookup,
-			Cleanup? cleanup = null
+			[CCode (delegate_target_pos = 0.9)] UNameLookup lookup,
+			[CCode (delegate_target_pos = 0.9)] Cleanup? cleanup = null
 		);
 	}
 
@@ -343,13 +343,13 @@ namespace Archive {
 		public Result set_standard_lookup ();
 
 		// "la_int64_t (*)(void *, const char *, la_int64_t)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_grouplookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate int64_t GroupLookup (string group, int64_t gid);
 		// "la_int64_t (*)(void *, const char *, la_int64_t)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_userlookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate int64_t UserLookup (string user, int64_t uid);
 		// "void (*)(void *)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_cleanup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate void Cleanup ();
 
 		public Result set_group_lookup (
@@ -471,9 +471,11 @@ namespace Archive {
 		public Result xattr_next(out unowned string name, out void* value, out size_t size);
 
 		[Compact]
+		[CCode (lower_case_cprefix = "archive_entry_linkresolver_")]
 		public class LinkResolver {
 			public LinkResolver ();
 			public void set_strategy (Format format_code);
+			[CCode (cname = "archive_entry_linkify")]
 			public void linkify (Entry a, Entry b);
 		}
 	}
