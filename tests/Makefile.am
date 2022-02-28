@@ -847,7 +847,9 @@ TESTS = \
 	gir/parameter-nullable-out-simple-type.test \
 	gir/property-non-readable.test \
 	gir/signal-virtual.test \
+	gir/symbol-redefined.test \
 	gir/symbol-type-csuffix.test \
+	gir/symbol-without-name.test \
 	gir/union.test \
 	gir/union-transparent.test \
 	girwriter/class-final.test \

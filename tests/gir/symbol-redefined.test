@@ -1,0 +1,27 @@
+GIR
+
+Input:
+
+<enumeration name="Test"
+             c:type="Test">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_BAR">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_FOO">
+  </member>
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_BAR">
+  </member>
+</enumeration>
+
+Output:
+
+[CCode (cheader_filename = "test.h", cname = "Test", cprefix = "TEST_", has_type_id = false)]
+public enum Test {
+	BAR,
+	FOO
+}
