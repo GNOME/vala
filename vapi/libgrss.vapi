@@ -105,7 +105,7 @@ namespace Grss {
 		public unowned string get_copyright ();
 		public unowned string get_description ();
 		public unowned GLib.List<Grss.FeedEnclosure> get_enclosures ();
-		public bool get_geo_point (double latitude, double longitude);
+		public bool get_geo_point (out double latitude, out double longitude);
 		public unowned string get_id ();
 		public unowned Grss.FeedChannel get_parent ();
 		public long get_publish_time ();
