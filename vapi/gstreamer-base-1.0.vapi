@@ -11,7 +11,7 @@ namespace Gst {
 			public size_t available ();
 			public size_t available_fast ();
 			public void clear ();
-			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] out unowned uint8[] dest, size_t offset);
+			public void copy ([CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "gsize")] uint8[] dest, size_t offset);
 			[Version (since = "1.4")]
 			public GLib.Bytes copy_bytes (size_t offset, size_t size);
 			[Version (since = "1.10")]
@@ -158,7 +158,7 @@ namespace Gst {
 			public bool emit_signals { get; set; }
 			public signal void buffer_consumed (Gst.Buffer object);
 		}
-		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader", has_type_id = false)]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstBitReader", free_function = "gst_bit_reader_free", has_type_id = false)]
 		[Compact]
 		[GIR (name = "BitReader")]
 		public class BitReader {
@@ -167,7 +167,8 @@ namespace Gst {
 			[CCode (array_length_cname = "size", array_length_type = "guint")]
 			public weak uint8[] data;
 			public uint size;
-			public BitReader ([CCode (array_length_type = "guint")] uint8[] data);
+			[CCode (cname = "gst_bit_reader_new", has_construct_function = false)]
+			public BitReader ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_bit_reader_free")]
 			[DestroysInstance]
 			public void free ();
@@ -202,7 +203,7 @@ namespace Gst {
 			[CCode (cname = "gst_bit_reader_skip_to_byte")]
 			public bool skip_to_byte ();
 		}
-		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader", has_type_id = false)]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstByteReader", free_function = "gst_byte_reader_free", has_type_id = false)]
 		[Compact]
 		[GIR (name = "ByteReader")]
 		public class ByteReader {
@@ -210,9 +211,10 @@ namespace Gst {
 			[CCode (array_length_cname = "size", array_length_type = "guint")]
 			public weak uint8[] data;
 			public uint size;
-			public ByteReader ([CCode (array_length_type = "guint")] uint8[] data);
+			[CCode (cname = "gst_byte_reader_new", has_construct_function = false)]
+			public ByteReader ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 			[CCode (cname = "gst_byte_reader_dup_data")]
-			public bool dup_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out uint8[] val);
+			public bool dup_data (uint size, out uint8[] val);
 			[CCode (cname = "gst_byte_reader_dup_string_utf16")]
 			public bool dup_string_utf16 ([CCode (array_length = false, array_null_terminated = true)] out uint16[] str);
 			[CCode (cname = "gst_byte_reader_dup_string_utf32")]
@@ -223,7 +225,7 @@ namespace Gst {
 			[DestroysInstance]
 			public void free ();
 			[CCode (cname = "gst_byte_reader_get_data")]
-			public bool get_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
+			public bool get_data (uint size, out unowned uint8[] val);
 			[CCode (cname = "gst_byte_reader_get_float32_be")]
 			public bool get_float32_be (out float val);
 			[CCode (cname = "gst_byte_reader_get_float32_le")]
@@ -284,7 +286,7 @@ namespace Gst {
 			[Version (since = "1.6")]
 			public uint masked_scan_uint32_peek (uint32 mask, uint32 pattern, uint offset, uint size, out uint32 value);
 			[CCode (cname = "gst_byte_reader_peek_data")]
-			public bool peek_data ([CCode (array_length_cname = "size", array_length_pos = 0.5, array_length_type = "guint")] out unowned uint8[] val);
+			public bool peek_data (uint size, out unowned uint8[] val);
 			[CCode (cname = "gst_byte_reader_peek_float32_be")]
 			public bool peek_float32_be (out float val);
 			[CCode (cname = "gst_byte_reader_peek_float32_le")]
@@ -342,7 +344,7 @@ namespace Gst {
 			[CCode (cname = "gst_byte_reader_skip_string_utf8")]
 			public bool skip_string_utf8 ();
 		}
-		[CCode (cheader_filename = "gst/base/gstadapter.h,gst/base/gstbaseparse.h,gst/base/gstbasesink.h,gst/base/gstbasesrc.h,gst/base/gstbasetransform.h,gst/base/gstbitreader.h,gst/base/gstbytereader.h,gst/base/gstbytewriter.h,gst/base/gstcollectpads.h,gst/base/gstpushsrc.h,gst/base/gsttypefindhelper.h", cname = "GstBitReader", has_type_id = false)]
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstByteWriter", free_function = "gst_byte_writer_free", has_type_id = false)]
 		[Compact]
 		[GIR (name = "ByteWriter")]
 		public class ByteWriter {
@@ -350,6 +352,7 @@ namespace Gst {
 			public bool fixed;
 			public bool @owned;
 			public weak Gst.Base.ByteReader parent;
+			[CCode (cname = "gst_byte_writer_new", has_construct_function = false)]
 			public ByteWriter ();
 			[CCode (cname = "gst_byte_writer_ensure_free_space")]
 			public bool ensure_free_space (uint size);
@@ -372,12 +375,6 @@ namespace Gst {
 			public void init_with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, bool initialized);
 			[CCode (cname = "gst_byte_writer_init_with_size")]
 			public void init_with_size (uint size, bool fixed);
-			[CCode (cname = "gst_byte_writer_new")]
-			public static Gst.Base.ByteWriter @new ();
-			[CCode (cname = "gst_byte_writer_new_with_data")]
-			public static Gst.Base.ByteWriter new_with_data (uint8 data, uint size, bool initialized);
-			[CCode (cname = "gst_byte_writer_new_with_size")]
-			public static Gst.Base.ByteWriter new_with_size (uint size, bool fixed);
 			[CCode (cname = "gst_byte_writer_put_buffer")]
 			public bool put_buffer (Gst.Buffer buffer, size_t offset, ssize_t size);
 			[CCode (cname = "gst_byte_writer_put_data")]
@@ -438,7 +435,9 @@ namespace Gst {
 			public Gst.Buffer reset_and_get_buffer ();
 			[CCode (array_length = false, cname = "gst_byte_writer_reset_and_get_data")]
 			public uint8[] reset_and_get_data ();
-			public ByteWriter.with_data ([CCode (array_length_type = "guint")] uint8[] data, uint size, bool initialized);
+			[CCode (cname = "gst_byte_writer_new_with_data", has_construct_function = false)]
+			public ByteWriter.with_data ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint", type = "guint8*")] uint8[] data, bool initialized);
+			[CCode (cname = "gst_byte_writer_new_with_size", has_construct_function = false)]
 			public ByteWriter.with_size (uint size, bool fixed);
 		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstCollectPads", lower_case_cprefix = "gst_collect_pads_", type_id = "gst_collect_pads_get_type ()")]
