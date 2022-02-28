@@ -5,6 +5,13 @@ video_* name="video_(.+)"
 
 *.ref unowned
 
+VideoAggregator
+  .find_best_format.at_least_one_alpha out
+video_chroma_resample parent="Gst.Video.ChromaResample" symbol_type="method" instance_idx=0 name="resample"
+video_chroma_resample_new skip=false parent="Gst.Video.ChromaResample" symbol_type="constructor" name=".new" replacement=() deprecated=false
+VideoChromaResample
+  .get_info.n_lines out
+  .get_info.offset out
 VideoFrame
   .data#field unowned=false
   .map#field name="map_info" unowned=false
@@ -18,6 +25,11 @@ VideoOverlay
   .set_render_rectangle#method name="try_set_render_rectangle"
   .set_window_handle.handle type="uint*"
   .got_window_handle.handle type="uint*"
+VideoScaler
+  .get_coeff.in_offset out
+  .get_coeff.n_taps out
+VideoVBIEncoder
+  .write_line.data array
 
 // Generics
 VideoCodecFrame
@@ -35,6 +47,3 @@ VideoCodecFrame
 
 VideoInfo
   .finfo nullable
-
-VideoChromaResample skip
-video_chroma_resample skip
