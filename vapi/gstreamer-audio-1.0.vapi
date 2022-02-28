@@ -216,7 +216,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool open ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn parse (Gst.Base.Adapter adapter, int offset, int length);
+			public virtual Gst.FlowReturn parse (Gst.Base.Adapter adapter, out int offset, out int length);
 			[NoWrapper]
 			public virtual Gst.FlowReturn pre_push (Gst.Buffer buffer);
 			[NoWrapper]
@@ -427,7 +427,7 @@ namespace Gst {
 			public void clear (int segment);
 			public virtual void clear_all ();
 			public virtual bool close_device ();
-			public virtual uint commit (uint64 sample, [CCode (array_length_cname = "in_samples", array_length_pos = 2.5)] uint8[] data, int out_samples, ref int accum);
+			public virtual uint commit (ref uint64 sample, [CCode (array_length_cname = "in_samples", array_length_pos = 2.5)] uint8[] data, int out_samples, ref int accum);
 			public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 			public static void debug_spec_buff (Gst.Audio.RingBufferSpec spec);
 			public static void debug_spec_caps (Gst.Audio.RingBufferSpec spec);
@@ -499,7 +499,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool prepare (Gst.Audio.RingBufferSpec spec);
 			[NoWrapper]
-			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "guint", type = "gpointer")] uint8[] data, Gst.ClockTime timestamp);
+			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "guint", type = "gpointer")] uint8[] data, out Gst.ClockTime timestamp);
 			[NoWrapper]
 			public virtual void reset ();
 			[NoWrapper]
@@ -905,7 +905,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 5.9)]
 		[Version (since = "1.6")]
-		public delegate void BaseSinkCustomSlavingCallback (Gst.Audio.BaseSink sink, Gst.ClockTime etime, Gst.ClockTime itime, Gst.ClockTimeDiff requested_skew, Gst.Audio.BaseSinkDiscontReason discont_reason);
+		public delegate void BaseSinkCustomSlavingCallback (Gst.Audio.BaseSink sink, Gst.ClockTime etime, Gst.ClockTime itime, out Gst.ClockTimeDiff requested_skew, Gst.Audio.BaseSinkDiscontReason discont_reason);
 		[CCode (cheader_filename = "gst/audio/audio.h", instance_pos = 1.9)]
 		public delegate Gst.ClockTime ClockGetTimeFunc (Gst.Clock clock);
 		[CCode (cheader_filename = "gst/audio/audio.h", has_target = false)]
@@ -1074,7 +1074,7 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public static unowned Gst.Audio.ClippingMeta? buffer_add_audio_clipping_meta (Gst.Buffer buffer, Gst.Format format, uint64 start, uint64 end);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_downmix_meta")]
-		public static unowned Gst.Audio.DownmixMeta? buffer_add_audio_downmix_meta (Gst.Buffer buffer, [CCode (array_length_cname = "from_channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from_position, [CCode (array_length_cname = "to_channels", array_length_pos = 3.5)] Gst.Audio.ChannelPosition[] to_position, float matrix);
+		public static unowned Gst.Audio.DownmixMeta? buffer_add_audio_downmix_meta (Gst.Buffer buffer, [CCode (array_length_cname = "from_channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from_position, [CCode (array_length_cname = "to_channels", array_length_pos = 3.5)] Gst.Audio.ChannelPosition[] to_position, [CCode (array_length = false, type = "const gfloat**")] float*[] matrix);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_buffer_add_audio_level_meta")]
 		[Version (since = "1.20")]
 		public static unowned Gst.Audio.LevelMeta? buffer_add_audio_level_meta (Gst.Buffer buffer, uint8 level, bool voice_activity);
