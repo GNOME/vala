@@ -42,11 +42,13 @@ foreach flag : supported_test_cflags
 endforeach
 
 foreach case : test_cases
+	suite = case.split('/')
 	test(case,
 		valac_exe,
 		workdir: meson.current_build_dir(),
 		args: vala_flags + [join_paths(meson.current_source_dir(), case)],
-		depends: [valacore_lib, libvaladoc_lib]
+		depends: [valacore_lib, libvaladoc_lib],
+		suite: suite[0],
 	)
 endforeach
 
@@ -67,4 +69,5 @@ driver_exe = executable('driver',
 test('valadoc/driver',
 	driver_exe,
 	workdir: meson.current_build_dir(),
+	suite: 'valadoc',
 )
