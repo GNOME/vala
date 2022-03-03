@@ -1430,12 +1430,14 @@ endforeach
 preparetest = find_program('prepare-test.py')
 
 foreach case : test_cases
+	suite = case.split('/')
 	if case.endswith('.vala') or case.endswith('.gs')
 		test(case,
 			valac_exe,
 			workdir: meson.current_build_dir(),
 			args: vala_flags + ['--pkg', 'gio-2.0', join_paths(meson.current_source_dir(), case)],
 			env: test_envars,
+			suite: suite[0],
 		)
 	else
 		invalid_case = run_command(preparetest,
@@ -1448,17 +1450,20 @@ foreach case : test_cases
 			should_fail: true,
 			args: vala_flags + ['--pkg', 'gio-2.0', case.underscorify() + '.vala'],
 			env: test_envars,
+			suite: suite[0],
 		)
 	endif
 endforeach
 
 foreach case : test_cases_non_null
+	suite = case.split('/')
 	if case.endswith('.vala') or case.endswith('.gs')
 		test(case,
 			valac_exe,
 			workdir: meson.current_build_dir(),
 			args: vala_flags + ['--enable-experimental-non-null', '--pkg', 'gio-2.0', join_paths(meson.current_source_dir(), case)],
 			env: test_envars,
+			suite: suite[0],
 		)
 	else
 		invalid_case = run_command(preparetest,
@@ -1471,39 +1476,46 @@ foreach case : test_cases_non_null
 			should_fail: true,
 			args: vala_flags + ['--enable-experimental-non-null', '--pkg', 'gio-2.0', case.underscorify() + '.vala'],
 			env: test_envars,
+			suite: suite[0],
 		)
 	endif
 endforeach
 
 foreach case : test_cases_linux
+	suite = case.split('/')
 	if case.endswith('.vala') or case.endswith('.gs')
 		test(case,
 			valac_exe,
 			workdir: meson.current_build_dir(),
 			args: vala_flags + ['--pkg', 'linux', join_paths(meson.current_source_dir(), case)],
 			env: test_envars,
+			suite: suite[0],
 		)
 	endif
 endforeach
 
 foreach case : test_cases_posix
+	suite = case.split('/')
 	if case.endswith('.vala') or case.endswith('.gs')
 		test(case,
 			valac_exe,
 			workdir: meson.current_build_dir(),
 			args: vala_flags + ['--profile', 'posix', '--pkg', 'posix', '--pkg', 'linux', join_paths(meson.current_source_dir(), case)],
 			env: test_envars,
+			suite: suite[0],
 		)
 	endif
 endforeach
 
 foreach case : test_cases_version_check
+	suite = case.split('/')
 	if case.endswith('.vala') or case.endswith('.gs')
 		test(case,
 			valac_exe,
 			workdir: meson.current_build_dir(),
 			args: vala_flags + [join_paths(meson.current_source_dir(), case)],
 			env: test_envars + ['PKG_CONFIG_PATH=' + join_paths(meson.current_source_dir(), 'version')],
+			suite: suite[0],
 		)
 	else
 		invalid_case = run_command(preparetest,
@@ -1516,6 +1528,7 @@ foreach case : test_cases_version_check
 			should_fail: true,
 			args: vala_flags + [case.underscorify() + '.vala'],
 			env: test_envars + ['PKG_CONFIG_PATH=' + join_paths(meson.current_source_dir(), 'version')],
+			suite: suite[0],
 		)
 	endif
 endforeach
