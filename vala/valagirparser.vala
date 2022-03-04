@@ -3469,10 +3469,12 @@ public class Vala.GirParser : CodeVisitor {
 
 			var current_parameter_idx = -1;
 			while (current_token == MarkupTokenType.START_ELEMENT) {
-				current_parameter_idx++;
-
 				var is_instance_parameter = (reader.name == "instance-parameter"
 					&& !(symbol_type == "function" || symbol_type == "constructor"));
+
+				if (!is_instance_parameter) {
+					current_parameter_idx++;
+				}
 
 				if (instance_idx > -2 && instance_idx == current_parameter_idx) {
 					skip_element ();
