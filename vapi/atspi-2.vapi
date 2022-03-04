@@ -97,7 +97,7 @@ namespace Atspi {
 		public Device ();
 		[NoWrapper]
 		public virtual void add_key_grab (Atspi.KeyDefinition kd);
-		public void add_key_watcher ();
+		public void add_key_watcher (owned Atspi.KeyCallback? callback);
 		public Atspi.KeyDefinition get_grab_by_id (uint id);
 		public virtual uint get_locked_modifiers ();
 		public virtual uint get_modifier (int keycode);
