@@ -5019,13 +5019,25 @@ namespace GLib {
 		public TestSuite (string name);
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_get_root")]
+#if GLIB_2_70
+		public static unowned TestSuite get_root ();
+#else
 		public static TestSuite get_root ();
+#endif
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_suite_add")]
+#if GLIB_2_70
+		public void add (owned TestCase test_case);
+#else
 		public void add (TestCase test_case);
+#endif
 		[Version (since = "2.16")]
 		[CCode (cname = "g_test_suite_add_suite")]
+#if GLIB_2_70
+		public void add_suite (owned TestSuite test_suite);
+#else
 		public void add_suite (TestSuite test_suite);
+#endif
 		[Version (since = "2.70")]
 		[DestroysInstance]
 		[CCode (cname = "g_test_suite_free")]
