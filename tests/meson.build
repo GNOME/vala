@@ -1445,6 +1445,7 @@ foreach case : test_cases
 		invalid_case = run_command(preparetest,
 			join_paths(meson.current_source_dir(), case),
 			join_paths(meson.current_build_dir(), case.underscorify() + '.vala'),
+			check: true,
 		)
 		test(case,
 			valac_exe,
@@ -1471,6 +1472,7 @@ foreach case : test_cases_non_null
 		invalid_case = run_command(preparetest,
 			join_paths(meson.current_source_dir(), case),
 			join_paths(meson.current_build_dir(), case.underscorify() + '.vala'),
+			check: true,
 		)
 		test(case,
 			valac_exe,
@@ -1523,6 +1525,7 @@ foreach case : test_cases_version_check
 		invalid_case = run_command(preparetest,
 			join_paths(meson.current_source_dir(), case),
 			join_paths(meson.current_build_dir(), case.underscorify() + '.vala'),
+			check: true,
 		)
 		test(case,
 			valac_exe,
