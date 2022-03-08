@@ -518,6 +518,7 @@ TESTS = \
 	objects/interface-abstract-async-override.vala \
 	objects/interface-async-captured-generic.vala \
 	objects/interface-generics.vala \
+	objects/interface-parameter-nowrapper.vala \
 	objects/interface-property-base-access.vala \
 	objects/interface-property-base-impl.vala \
 	objects/interface-property-delegate.vala \

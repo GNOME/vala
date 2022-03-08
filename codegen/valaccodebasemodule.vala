@@ -2652,10 +2652,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)));
 		}
 
-		if (cl != null && !cl.is_a (iface)) {
-			Report.warning (cl.source_reference, "internal: `%s' is not a `%s'", cl.get_full_name (), iface.get_full_name ());
-		}
-
 		CCodeExpression cast;
 		CCodeFunctionCall call;
 		if (instance != null) {
