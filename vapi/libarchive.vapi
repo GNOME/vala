@@ -245,11 +245,11 @@ namespace Archive {
 		public Result set_standard_lookup ();
 
 		// HACK, they have no name in C. May not work correctly.
-		[CCode (has_type_def = false, instance_pos = 0)]
+		[CCode (cname = "archive_read_gnamelookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate unowned string GNameLookup (int64_t gid);
-		[CCode (has_type_def = false, instance_pos = 0)]
+		[CCode (cname = "archive_read_unamelookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate unowned string UNameLookup (int64_t uid);
-		[CCode (has_type_def = false, instance_pos = 0)]
+		[CCode (cname = "archive_read_cleanup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate void Cleanup ();
 
 		public Result set_gname_lookup (
@@ -343,13 +343,13 @@ namespace Archive {
 		public Result set_standard_lookup ();
 
 		// "la_int64_t (*)(void *, const char *, la_int64_t)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_grouplookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate int64_t GroupLookup (string group, int64_t gid);
 		// "la_int64_t (*)(void *, const char *, la_int64_t)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_userlookup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate int64_t UserLookup (string user, int64_t uid);
 		// "void (*)(void *)"
-		[CCode (has_typedef = false, instance_pos = 0)]
+		[CCode (cname = "archive_write_cleanup_callback", has_typedef = false, instance_pos = 0)]
 		public delegate void Cleanup ();
 
 		public Result set_group_lookup (
