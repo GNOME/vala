@@ -1,3 +1,15 @@
+Vala 0.56.0
+===========
+ * Various improvements and bug fixes:
+  - codegen: Drop confusing warning when accessing interface members
+
+ * Bindings:
+  - Add webkit2gtk-4.1 bindings
+  - glib-2.0: Fix memory management of TestSuite.add*/get_root() with 2.70 [#1295]
+  - libarchive: Fix a few binding errors
+  - SDL2_ttf: Fix a few binding errors
+  - tiff: Fix a few binding errors
+
 Vala 0.55.91
 ============
  * Various improvements and bug fixes:
