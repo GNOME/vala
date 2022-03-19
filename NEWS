@@ -1,3 +1,30 @@
+Vala 0.54.8
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Emit G_DEFINE_AUTOPTR_CLEANUP_FUNC() for interfaces with base class [#1292]
+    + Emit G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC() for structs [#1293]
+    + Drop confusing warning when accessing interface members
+  - vala:
+    + Catch and throw possible inner error of lock statements [#83]
+  - girparser:
+    + Handle duplicated and unnamed symbols
+    + Add support for "copy_/free_function" metadata for compact classes
+    + Don't count instance-parameter when checking for backwards closure
+      reference [#721]
+
+ * Bindings:
+  - gst-editing-services-1.0: Fix BaseEffect.set_time_translation_funcs()
+  - gstreamer-audio-1.0: Fix a few binding errors
+  - gstreamer-base-1.0: Fix a few binding errors
+  - gstreamer-video-1.0: Fix a few binding errors
+  - gtk4: Fix content_deserialize_async()
+  - libarchive: Fix a few binding errors
+  - libgsf-1: Fix a few binding errors
+  - libgrss: Fix FeedItem.get_geo_point() parameters
+  - SDL2_ttf: Fix a few binding errors
+  - tiff: Fix a few binding errors
+
 Vala 0.54.7
 ===========
  * Various improvements and bug fixes:
