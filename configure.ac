@@ -118,6 +118,7 @@ AC_SUBST(COVERAGE_LIBS)
 # Check supported compiler flags used in testrunner.sh
 TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=implicit \
+-Werror=implicit-fallthrough \
 -Werror=pointer-arith \
 -Werror=redundant-decls \
 -Werror=return-local-addr \
@@ -125,20 +126,34 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=return-type \
 -Werror=sequence-point \
 -Werror=uninitialized \
+-Werror=init-self \
+-Werror=int-in-bool-context \
 -Werror=int-to-pointer-cast \
 -Werror=pointer-to-int-cast \
 -Werror=compare-distinct-pointer-types \
+-Werror=empty-body \
+-Werror=comment \
+-Werror=strict-overflow \
 -Wformat=2 \
 -Werror=format-security \
 -Werror=format-nonliteral \
+-Werror=format-overflow=2 \
+-Werror=format-truncation=2 \
 -Werror=int-conversion \
 -Werror=duplicated-branches \
 -Werror=duplicated-cond \
 -Werror=declaration-after-statement \
 -Werror=maybe-uninitialized \
+-Werror=missing-braces \
+-Werror=missing-declarations \
 -Werror=missing-prototypes \
 -Werror=strict-prototypes \
+-Werror=bool-compare \
+-Werror=tautological-pointer-compare \
+-Werror=logical-not-parentheses \
+-Werror=address \
 -Werror=array-bounds \
+-Werror=array-parameter=2 \
 -Werror=enum-conversion"
 
 TEST_CFLAGS=
