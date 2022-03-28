@@ -372,6 +372,9 @@ namespace Gst {
 		public const int PLUGINS_BASE_VERSION_NANO;
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static bool add_codec_description_to_tag_list (Gst.TagList taglist, string? codec_tag, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_caps_from_mime_codec")]
+		[Version (since = "1.22")]
+		public static Gst.Caps? codec_utils_caps_from_mime_codec (string codecs_field);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_caps_get_mime_codec")]
 		[Version (since = "1.20")]
 		public static string? codec_utils_caps_get_mime_codec (Gst.Caps caps);

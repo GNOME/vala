@@ -483,7 +483,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool unprepare ();
 			[NoWrapper]
-			public virtual int write ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "guint", type = "gpointer")] uint8[] data);
+			public virtual int write ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "guint")] uint8[] data);
 		}
 		[CCode (cheader_filename = "gst/audio/audio.h", type_id = "gst_audio_src_get_type ()")]
 		[GIR (name = "AudioSrc")]
@@ -499,7 +499,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual bool prepare (Gst.Audio.RingBufferSpec spec);
 			[NoWrapper]
-			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "guint", type = "gpointer")] uint8[] data, out Gst.ClockTime timestamp);
+			public virtual uint read ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, out Gst.ClockTime timestamp);
 			[NoWrapper]
 			public virtual void reset ();
 			[NoWrapper]
@@ -918,6 +918,9 @@ namespace Gst {
 		public const string CHANNELS_RANGE;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_DITHER_METHOD")]
 		public const string CONVERTER_OPT_DITHER_METHOD;
+		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_DITHER_THRESHOLD")]
+		[Version (since = "1.22")]
+		public const string CONVERTER_OPT_DITHER_THRESHOLD;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_MIX_MATRIX")]
 		public const string CONVERTER_OPT_MIX_MATRIX;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "GST_AUDIO_CONVERTER_OPT_NOISE_SHAPING_METHOD")]

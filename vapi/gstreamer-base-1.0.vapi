@@ -621,7 +621,7 @@ namespace Gst {
 			public virtual Gst.Caps fixate (Gst.Caps caps);
 			public uint get_blocksize ();
 			[NoWrapper]
-			public virtual Gst.Caps get_caps (Gst.Caps filter);
+			public virtual Gst.Caps get_caps (Gst.Caps? filter);
 			[Version (since = "1.12")]
 			public bool get_drop_out_of_segment ();
 			public Gst.Sample? get_last_sample ();
