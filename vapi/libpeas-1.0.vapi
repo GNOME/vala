@@ -61,7 +61,7 @@ namespace Peas {
 		public virtual bool call (string method_name, GI.Argument args);
 		[Version (since = "1.2")]
 		public void @foreach (Peas.ExtensionSetForeachFunc func);
-		public unowned Peas.Extension get_extension (Peas.PluginInfo info);
+		public unowned Peas.Extension? get_extension (Peas.PluginInfo info);
 		[CCode (cname = "peas_extension_set_newv", has_construct_function = false)]
 		public ExtensionSet.newv (Peas.Engine? engine, GLib.Type exten_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 2.5, array_length_type = "guint")] GLib.Parameter[] parameters);
 		[CCode (has_construct_function = false)]
@@ -104,14 +104,14 @@ namespace Peas {
 		public unowned string[] get_dependencies ();
 		public unowned string get_description ();
 		[Version (since = "1.6")]
-		public unowned string get_external_data (string key);
+		public unowned string? get_external_data (string key);
 		public unowned string get_help_uri ();
 		public unowned string get_icon_name ();
 		public unowned string get_module_dir ();
 		public unowned string get_module_name ();
 		public unowned string get_name ();
 		[Version (since = "1.4")]
-		public GLib.Settings get_settings (string? schema_id);
+		public GLib.Settings? get_settings (string? schema_id);
 		public unowned string get_version ();
 		public unowned string get_website ();
 		public bool has_dependency (string module_name);
@@ -142,6 +142,4 @@ namespace Peas {
 	public delegate void ExtensionSetForeachFunc (Peas.ExtensionSet @set, Peas.PluginInfo info, Peas.Extension exten);
 	[CCode (cheader_filename = "libpeas/peas.h", instance_pos = 1.9)]
 	public delegate GLib.Object FactoryFunc ([CCode (array_length_cname = "n_parameters", array_length_pos = 0.5, array_length_type = "guint")] GLib.Parameter[] parameters);
-	[CCode (cheader_filename = "libpeas/peas.h")]
-	public static void cclosure_marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 }

@@ -13,6 +13,9 @@ BGSlideShow
 DesktopThumbnail* cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
 desktop_thumbnail_* parent="Gnome.DesktopThumbnail" name="desktop_thumbnail_(.+)" cheader_filename="libgnome-desktop/gnome-desktop-thumbnail.h"
 
+DESKTOP_PLATFORM_VERSION cheader_filename="libgnome-desktop/gnome-desktop-version.h"
+get_platform_version cheader_filename="libgnome-desktop/gnome-desktop-version.h"
+
 get_language_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
 get_country_from_locale parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"
 get_all_locales parent="Gnome.Languages" cheader_filename="libgnome-desktop/gnome-languages.h"

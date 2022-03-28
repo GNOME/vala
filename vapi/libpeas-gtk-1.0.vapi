@@ -15,7 +15,7 @@ namespace PeasGtk {
 	public class PluginManagerView : Gtk.TreeView, Atk.Implementor, Gtk.Buildable, Gtk.Scrollable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PluginManagerView (Peas.Engine? engine);
-		public unowned Peas.PluginInfo get_selected_plugin ();
+		public unowned Peas.PluginInfo? get_selected_plugin ();
 		[Version (deprecated = true, deprecated_since = "1.2")]
 		public bool get_show_builtin ();
 		public void set_selected_plugin (Peas.PluginInfo info);

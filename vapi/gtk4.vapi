@@ -5357,6 +5357,8 @@ namespace Gdk {
 		protected ScrollEvent ();
 		public void get_deltas (out double delta_x, out double delta_y);
 		public Gdk.ScrollDirection get_direction ();
+		[Version (since = "4.8")]
+		public Gdk.ScrollUnit get_unit ();
 		public bool is_stop ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_seat_get_type ()")]
@@ -5859,6 +5861,12 @@ namespace Gdk {
 		RIGHT,
 		SMOOTH
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SCROLL_UNIT_", type_id = "gdk_scroll_unit_get_type ()")]
+	[Version (since = "4.8")]
+	public enum ScrollUnit {
+		WHEEL,
+		SURFACE
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_SEAT_CAPABILITY_", type_id = "gdk_seat_capabilities_get_type ()")]
 	[Flags]
 	public enum SeatCapabilities {
@@ -6173,7 +6181,7 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_node_get_type ()")]
 	public class GLShaderNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false, type = "GskRenderNode*")]
-		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1, array_length_type = "guint")] Gsk.RenderNode[] children);
+		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1, array_length_type = "guint")] Gsk.RenderNode[]? children);
 		public unowned GLib.Bytes get_args ();
 		public unowned Gsk.RenderNode get_child (uint idx);
 		public uint get_n_children ();
@@ -8285,6 +8293,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerScroll (Gtk.EventControllerScrollFlags flags);
 		public Gtk.EventControllerScrollFlags get_flags ();
+		[Version (since = "4.8")]
+		public Gdk.ScrollUnit get_unit ();
 		public void set_flags (Gtk.EventControllerScrollFlags flags);
 		public Gtk.EventControllerScrollFlags flags { get; set; }
 		public signal void decelerate (double vel_x, double vel_y);
@@ -10553,11 +10563,17 @@ namespace Gtk {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public SearchEntry ();
 		public unowned Gtk.Widget? get_key_capture_widget ();
+		[Version (since = "4.8")]
+		public uint get_search_delay ();
 		public void set_key_capture_widget (Gtk.Widget? widget);
+		[Version (since = "4.8")]
+		public void set_search_delay (uint delay);
 		[NoAccessorMethod]
 		public bool activates_default { get; set; }
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
+		[Version (since = "4.8")]
+		public uint search_delay { get; set; }
 		public signal void activate ();
 		public signal void next_match ();
 		public signal void previous_match ();

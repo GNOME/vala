@@ -123,6 +123,11 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-idle-monitor.h", instance_pos = 2.9)]
 	public delegate void IdleMonitorWatchFunc (Gnome.IdleMonitor monitor, uint id);
+	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-version.h", cname = "GNOME_DESKTOP_PLATFORM_VERSION")]
+	public const int DESKTOP_PLATFORM_VERSION;
+	[CCode (cheader_filename = "libgnome-desktop/gnome-desktop-version.h")]
+	[Version (since = "43.0")]
+	public static int get_platform_version ();
 	[CCode (cheader_filename = "libgnome-desktop/gnome-systemd.h")]
 	public static async bool start_systemd_scope (string name, int32 pid, string? description, GLib.DBusConnection? connection, GLib.Cancellable? cancellable) throws GLib.Error;
 }
