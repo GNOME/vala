@@ -493,6 +493,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		if (property_type is EnumValueType) {
+			return !property_type.nullable;
+		}
+
 		if (property_type is ArrayType && ((ArrayType) property_type).element_type.type_symbol != string_type.type_symbol) {
 			return false;
 		}
