@@ -919,6 +919,7 @@ public class Vala.MemberAccess : Expression {
 		}
 		member.version.check (context, source_reference);
 
+		// FIXME Code duplication with MemberInitializer.check()
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
 			unowned TypeSymbol target_type = (TypeSymbol) member.parent_symbol;
 
