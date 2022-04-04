@@ -89,11 +89,50 @@ public class Vala.MemberInitializer : Expression {
 			Report.error (source_reference, "Invalid member `%s' in `%s'", name, type.type_symbol.get_full_name ());
 			return false;
 		}
-		if (symbol_reference.access != SymbolAccessibility.PUBLIC) {
-			error = true;
-			Report.error (source_reference, "Access to private member `%s' denied", symbol_reference.get_full_name ());
-			return false;
+
+		// FIXME Code duplication with MemberAccess.check()
+		if (symbol_reference.access == SymbolAccessibility.PROTECTED && symbol_reference.parent_symbol is TypeSymbol) {
+			unowned TypeSymbol target_type = (TypeSymbol) symbol_reference.parent_symbol;
+
+			bool in_subtype = false;
+			for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+				if (this_symbol == target_type) {
+					// required for interfaces with non-abstract methods
+					// accessing protected interface members
+					in_subtype = true;
+					break;
+				}
+
+				unowned Class? cl = this_symbol as Class;
+				if (cl != null && cl.is_subtype_of (target_type)) {
+					in_subtype = true;
+					break;
+				}
+			}
+
+			if (!in_subtype) {
+				error = true;
+				Report.error (source_reference, "Access to protected member `%s' denied", symbol_reference.get_full_name ());
+				return false;
+			}
+		} else if (symbol_reference.access == SymbolAccessibility.PRIVATE) {
+			unowned Symbol? target_type = symbol_reference.parent_symbol;
+
+			bool in_target_type = false;
+			for (Symbol this_symbol = context.analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+				if (target_type == this_symbol) {
+					in_target_type = true;
+					break;
+				}
+			}
+
+			if (!in_target_type) {
+				error = true;
+				Report.error (source_reference, "Access to private member `%s' denied", symbol_reference.get_full_name ());
+				return false;
+			}
 		}
+
 		DataType member_type = null;
 		if (symbol_reference is Field) {
 			unowned Field f = (Field) symbol_reference;

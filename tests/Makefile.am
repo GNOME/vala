@@ -333,6 +333,7 @@ TESTS = \
 	control-semantic/member-incompatible-type.test \
 	control-semantic/member-invalid.test \
 	control-semantic/member-private.test \
+	control-semantic/member-protected.test \
 	control-semantic/member-readonly.test \
 	control-semantic/printf-too-few.test \
 	control-semantic/printf-too-many.test \
@@ -514,8 +515,10 @@ TESTS = \
 	objects/member-initializer-base-properties.vala \
 	objects/member-initializer-chained.vala \
 	objects/member-initializer-chained-2.vala \
+	objects/member-initializer-private.vala \
 	objects/member-initializer-property.vala \
 	objects/member-initializer-property-owned-setter.vala \
+	objects/member-initializer-protected.vala \
 	objects/methods.vala \
 	objects/paramspec.vala \
 	objects/plugin-module-init.vala \
@@ -1117,6 +1120,7 @@ TESTS = \
 	semantic/member-access-capture-valist-parameter.test \
 	semantic/member-access-capture-valist-variable.test \
 	semantic/member-access-not-found.test \
+	semantic/member-access-private-invalid.test \
 	semantic/member-access-protected-invalid.test \
 	semantic/member-access-this-invalid.test \
 	semantic/member-access-undefined.test \
