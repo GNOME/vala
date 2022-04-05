@@ -194,7 +194,7 @@ public class ValaDoc : Object {
 
 		doclet = modules.create_doclet (pluginpath);
 		if (doclet == null) {
-			reporter.simple_error (null, "failed to load doclet");
+			reporter.simple_error (null, "failed to load doclet '%s'", pluginpath);
 			return null;
 		}
 
