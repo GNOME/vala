@@ -4890,7 +4890,7 @@ namespace Gdk {
 		public ContentProvider.for_bytes (string mime_type, GLib.Bytes bytes);
 		[CCode (has_construct_function = false)]
 		public ContentProvider.for_value (GLib.Value value);
-		public virtual bool get_value (out GLib.Value value) throws GLib.Error;
+		public virtual bool get_value (ref GLib.Value value) throws GLib.Error;
 		public virtual Gdk.ContentFormats ref_formats ();
 		public virtual Gdk.ContentFormats ref_storable_formats ();
 		[CCode (has_construct_function = false)]

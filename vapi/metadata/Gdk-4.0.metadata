@@ -8,6 +8,8 @@ events_*#function parent="Gdk.Event" name="events_(.+)"
 
 Clipboard
         .set* skip=false
+ContentProvider
+        .get_value.value ref
 Cursor	abstract=false
 Device
         .get_surface_at_position skip=false
