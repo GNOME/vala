@@ -1,4 +1,6 @@
 * cheader_filename = "gdk/wayland/gdkwayland.h"
 
+WaylandSurface.get_wl_surface type="Wl.Surface" skip=false
+
 //wayland_* name="wayland_(.+)" parent="Gdk.Wayland"
 Wayland* name="Wayland(.+)" parent="Gdk.Wayland"

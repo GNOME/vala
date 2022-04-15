@@ -299,6 +299,7 @@ dist_vapi_DATA = \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
+	wayland-client.vapi \
 	webkit2gtk-4.0.vapi \
 	webkit2gtk-4.0.deps \
 	webkit2gtk-4.1.vapi \
@@ -644,7 +645,7 @@ gtk4:
 		$(METADATADIR)/Gtk-4.0-custom.vala $(GIRDIR)/Gtk-4.0.gir
 
 gtk4-wayland:
-	$(GENVAPI) --library $(srcdir)/gtk4-wayland --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-gobject-1.0 --pkg pango --pkg pangocairo --pkg gtk4 --metadatadir $(METADATADIR) $(METADATADIR)/GdkWayland-4.0-custom.vala $(GIRDIR)/GdkWayland-4.0.gir
+	$(GENVAPI) --library $(srcdir)/gtk4-wayland --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-gobject-1.0 --pkg pango --pkg pangocairo --pkg gtk4 --pkg wayland-client --metadatadir $(METADATADIR) $(METADATADIR)/GdkWayland-4.0-custom.vala $(GIRDIR)/GdkWayland-4.0.gir
 
 gtk4-x11:
 	$(GENVAPI) --library $(srcdir)/gtk4-x11 --pkg cairo --pkg gdk-pixbuf-2.0 --pkg gio-2.0 --pkg graphene-gobject-1.0 --pkg pango --pkg pangocairo --pkg gtk4 --pkg x11 --metadatadir $(METADATADIR) $(METADATADIR)/GdkX11-4.0-custom.vala $(GIRDIR)/GdkX11-4.0.gir

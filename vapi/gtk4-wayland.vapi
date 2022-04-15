@@ -53,6 +53,7 @@ namespace Gdk {
 		public class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
+			public Wl.Surface get_wl_surface ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
 		[GIR (name = "WaylandToplevel")]
