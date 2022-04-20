@@ -621,12 +621,12 @@ namespace Gst {
 			public static Gst.Event event_new_touch_up (uint identifier, double x, double y, Gst.Video.NavigationModifierType state);
 			public static bool event_parse_command (Gst.Event event, out Gst.Video.NavigationCommand command);
 			public static bool event_parse_key_event (Gst.Event event, out unowned string key);
+			[Version (since = "1.22")]
+			public static bool event_parse_modifier_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 			public static bool event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
 			public static bool event_parse_mouse_move_event (Gst.Event event, out double x, out double y);
 			[Version (since = "1.18")]
 			public static bool event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
-			[Version (since = "1.22")]
-			public static bool event_parse_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 			[Version (since = "1.22")]
 			public static bool event_parse_touch_event (Gst.Event event, out uint identifier, out double x, out double y, out double pressure);
 			[Version (since = "1.22")]
@@ -2188,6 +2188,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_key_event")]
 		[Version (replacement = "Navigation.event_parse_key_event")]
 		public static bool navigation_event_parse_key_event (Gst.Event event, out unowned string key);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_modifier_state")]
+		[Version (replacement = "Navigation.event_parse_modifier_state", since = "1.22")]
+		public static bool navigation_event_parse_modifier_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_button_event")]
 		[Version (replacement = "Navigation.event_parse_mouse_button_event")]
 		public static bool navigation_event_parse_mouse_button_event (Gst.Event event, out int button, out double x, out double y);
@@ -2197,9 +2200,6 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_mouse_scroll_event")]
 		[Version (replacement = "Navigation.event_parse_mouse_scroll_event", since = "1.18")]
 		public static bool navigation_event_parse_mouse_scroll_event (Gst.Event event, out double x, out double y, out double delta_x, out double delta_y);
-		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_state")]
-		[Version (replacement = "Navigation.event_parse_state", since = "1.22")]
-		public static bool navigation_event_parse_state (Gst.Event event, Gst.Video.NavigationModifierType state);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_navigation_event_parse_touch_event")]
 		[Version (replacement = "Navigation.event_parse_touch_event", since = "1.22")]
 		public static bool navigation_event_parse_touch_event (Gst.Event event, out uint identifier, out double x, out double y, out double pressure);

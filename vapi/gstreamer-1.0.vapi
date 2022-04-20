@@ -2313,6 +2313,8 @@ namespace Gst {
 		public void parse_scheduling (out Gst.SchedulingFlags flags, out int minsize, out int maxsize, out int align);
 		public void parse_seeking (out Gst.Format format, out bool seekable, out int64 segment_start, out int64 segment_end);
 		public void parse_segment (out double rate, out Gst.Format format, out int64 start_value, out int64 stop_value);
+		[Version (since = "1.22")]
+		public void parse_selectable (out bool selectable);
 		public void parse_uri (out string uri);
 		[Version (since = "1.2")]
 		public void parse_uri_redirection (out string uri);
@@ -2332,6 +2334,9 @@ namespace Gst {
 		public Query.seeking (Gst.Format format);
 		[CCode (has_construct_function = false)]
 		public Query.segment (Gst.Format format);
+		[CCode (has_construct_function = false)]
+		[Version (since = "1.22")]
+		public Query.selectable ();
 		public void set_accept_caps_result (bool result);
 		[Version (since = "1.16")]
 		public void set_bitrate (uint nominal_bitrate);
@@ -2353,6 +2358,8 @@ namespace Gst {
 		public void set_scheduling (Gst.SchedulingFlags flags, int minsize, int maxsize, int align);
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
+		[Version (since = "1.22")]
+		public void set_selectable (bool selectable);
 		public void set_uri (string uri);
 		[Version (since = "1.2")]
 		public void set_uri_redirection (string uri);
@@ -3733,7 +3740,9 @@ namespace Gst {
 		CAPS,
 		DRAIN,
 		CONTEXT,
-		BITRATE;
+		BITRATE,
+		[Version (since = "1.22")]
+		SELECTABLE;
 		public Gst.QueryTypeFlags get_flags ();
 		public unowned string get_name ();
 		public GLib.Quark to_quark ();

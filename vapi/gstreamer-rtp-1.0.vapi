@@ -342,8 +342,8 @@ namespace Gst {
 			public bool is_filled (uint size, Gst.ClockTime duration);
 			[Version (since = "1.16")]
 			public bool is_source_info_enabled ();
-			public Gst.FlowReturn push (Gst.Buffer buffer);
-			public Gst.FlowReturn push_list (Gst.BufferList list);
+			public Gst.FlowReturn push (owned Gst.Buffer buffer);
+			public Gst.FlowReturn push_list (owned Gst.BufferList list);
 			[NoWrapper]
 			public virtual bool query (Gst.Pad pad, Gst.Query query);
 			[NoWrapper]
