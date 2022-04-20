@@ -10469,7 +10469,7 @@ namespace Gtk {
 		[Version (since = "2.4")]
 		public string? get_current_folder ();
 		[Version (since = "2.14")]
-		public GLib.File get_current_folder_file ();
+		public GLib.File? get_current_folder_file ();
 		[Version (since = "2.4")]
 		public string? get_current_folder_uri ();
 		[Version (since = "3.10")]

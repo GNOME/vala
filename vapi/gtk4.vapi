@@ -9714,13 +9714,13 @@ namespace Gtk {
 		public bool get_shrink_start_child ();
 		public unowned Gtk.Widget? get_start_child ();
 		public bool get_wide_handle ();
-		public void set_end_child (Gtk.Widget child);
+		public void set_end_child (Gtk.Widget? child);
 		public void set_position (int position);
 		public void set_resize_end_child (bool resize);
 		public void set_resize_start_child (bool resize);
 		public void set_shrink_end_child (bool resize);
 		public void set_shrink_start_child (bool resize);
-		public void set_start_child (Gtk.Widget child);
+		public void set_start_child (Gtk.Widget? child);
 		public void set_wide_handle (bool wide);
 		public Gtk.Widget end_child { get; set; }
 		[NoAccessorMethod]
@@ -11299,6 +11299,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool letter_spacing_set { get; set; }
 		[NoAccessorMethod]
+		[Version (since = "4.6")]
 		public float line_height { get; set; }
 		[NoAccessorMethod]
 		public bool line_height_set { get; set; }

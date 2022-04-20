@@ -70,7 +70,6 @@ namespace Soup {
 		public void remove_path (string path);
 		public void set_filter (owned Soup.AuthDomainFilter filter);
 		public void set_generic_auth_callback (owned Soup.AuthDomainGenericAuthCallback auth_callback);
-		public bool try_generic_auth_callback (Soup.ServerMessage msg, string username);
 		[NoAccessorMethod]
 		public Soup.AuthDomainFilter filter { get; set; }
 		[NoAccessorMethod]
@@ -297,7 +296,7 @@ namespace Soup {
 		public unowned string get_method ();
 		public unowned Soup.MessageMetrics? get_metrics ();
 		public Soup.MessagePriority get_priority ();
-		public unowned string get_reason_phrase ();
+		public unowned string? get_reason_phrase ();
 		public unowned GLib.SocketAddress? get_remote_address ();
 		public unowned Soup.MessageHeaders get_request_headers ();
 		public unowned Soup.MessageHeaders get_response_headers ();
@@ -514,7 +513,7 @@ namespace Soup {
 		public Soup.HTTPVersion get_http_version ();
 		public unowned GLib.SocketAddress? get_local_address ();
 		public unowned string get_method ();
-		public unowned string get_reason_phrase ();
+		public unowned string? get_reason_phrase ();
 		public unowned GLib.SocketAddress? get_remote_address ();
 		public unowned string? get_remote_host ();
 		public unowned Soup.MessageBody get_request_body ();
@@ -666,12 +665,6 @@ namespace Soup {
 	public struct Range {
 		public int64 start;
 		public int64 end;
-	}
-	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_RESPONSE_", type_id = "soup_cache_response_get_type ()")]
-	public enum CacheResponse {
-		FRESH,
-		NEEDS_VALIDATION,
-		STALE
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", cprefix = "SOUP_CACHE_", type_id = "soup_cache_type_get_type ()")]
 	public enum CacheType {
