@@ -3,7 +3,7 @@
 <section>
 <title>Vala Reference Manual</title>
 <para>This is a draft version of the Vala Reference Manual, and so is not guaranteed to be correct.  </para>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Overview</title>
@@ -80,8 +80,8 @@
 <title>Memory management</title>
 <para>Vala automatically uses the memory management system in GLib, which is a reference counting system.  In order for this to work, the types used must support reference counting, as is the case with all GObject derived types and some others. </para>
 <para>Memory is allocated and initialised by Vala when needed.  The memory management scheme means it is also freed when possible.  There is though no garbage collector, and currently reference cycles are not automatically broken.  This can lead to memory being leaked.  The main way to avoid this problem is to use weak references - these are not counted references and so cannot prevent memory being released, at the cost that they can be left referring to non existent data. </para>
-<para>Vala also allows use of pointers in much the same way as C.  An instance of a pointer type refers directly to an address in memory.  Pointers are not references, and therefore the automatic memory management rules do not apply in the same way.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Pointer_types">Types/Pointer types</ulink>. </para>
-<para>There are more details about memory management elsewhere, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#">Concepts</ulink>. </para>
+<para>Vala also allows use of pointers in much the same way as C.  An instance of a pointer type refers directly to an address in memory.  Pointers are not references, and therefore the automatic memory management rules do not apply in the same way.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Pointer_types">Types/Pointer types</ulink>. </para>
+<para>There are more details about memory management elsewhere, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#">Concepts</ulink>. </para>
 </section>
 
 <section>
@@ -101,7 +101,7 @@
 <para>The entry point can be implicit, in the sense that you can write the main code block directly in the file outside the <code>main</code> function. </para>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Concepts</title>
@@ -109,7 +109,7 @@
 
 <section>
 <title>Variables, fields and parameters</title>
-<para>Any piece of data in a Vala application is considered an instance of a data type.  There are various different categories of data types, some being built into Vala, and others being user defined.  Details about types are described elsewhere in this documentation, in particular see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>. </para>
+<para>Any piece of data in a Vala application is considered an instance of a data type.  There are various different categories of data types, some being built into Vala, and others being user defined.  Details about types are described elsewhere in this documentation, in particular see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>. </para>
 <para>Instances of these types are created in various different ways, depending on the type.  For example, fundamental types are instantiated with literal expressions, and classed types with the new operator. </para>
 <para>In order to access data, the instance must be identifiable in some way, such as by a name.  In Vala, there are broadly three ways that this is done, with similar but not identical semantics. </para>
 <para>(All these subsections refer to ownership, so it may be useful to read the section on <link linkend="References_and_ownership">Concepts/References and ownership</link> in conjunction with this section) </para>
@@ -119,11 +119,11 @@
 <para>Within executable code in a method, an instance may be assigned to a variable.  A variable has a name and is declared to refer to an instance of a particular data type.  A typical variable declaration would be: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[a]]></methodname><![CDATA[;]]>
 </programlisting>
 <para>This declaration defines that &quot;a&quot; should become an expression that evaluates to an instance of the int type.  The actual value of this expression will depend on which int instance is assigned to the variable.  &quot;a&quot; can be assigned to more than once, with the most recent assignment being the only one considered when &quot;a&quot; is evaluated.  Assignment to the variable is achieved via an assignment expression. Generally, the semantics of an assignment expression depends on the type of the variable. </para>
-<para>A variable can take ownership of an instance, the precise meaning of which depends on the data type.  In the context of reference types, it is possible to declare that a variable should not ever take ownership of an instance, this is done with the <code>unowned</code> keyword.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Reference_types">Types/Reference types</ulink>. </para>
+<para>A variable can take ownership of an instance, the precise meaning of which depends on the data type.  In the context of reference types, it is possible to declare that a variable should not ever take ownership of an instance, this is done with the <code>unowned</code> keyword.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Reference_types">Types/Reference types</ulink>. </para>
 <para>If a type is directly instantiated in a variable declaration statement, then the variable will be created owning that new instance, for example: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[string]]></token><![CDATA[ ]]><methodname><![CDATA[s]]></methodname><![CDATA[ = ]]><phrase><![CDATA["]]></phrase><phrase><![CDATA[stringvalue]]></phrase><phrase><![CDATA["]]></phrase><![CDATA[;]]>
 </programlisting>
 <para>A variable ceases to exist when its scope is destroyed, that is when the code block it is defined in finishes.  After this, the name can no longer be used to access the instance, and no new assignment to the variable is allowed.  What happens to the instance itself is dependent on the type. </para>
-<para>For more details of the concepts in this section, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Statements#Variable_declaration">Statements/Variable declaration</ulink> and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Assignment_operations">Expressions/Assignment operations</ulink>. </para>
+<para>For more details of the concepts in this section, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Statements#Variable_declaration">Statements/Variable declaration</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Assignment_operations">Expressions/Assignment operations</ulink>. </para>
 </section>
 
 <section>
@@ -132,14 +132,14 @@
 <para>A field is valid as long as its scope still exists - for non-instance fields, this is the entire life of the application; for instance fields, this is the lifetime of the instance. </para>
 <para>Like variables, fields can take ownership of instances, and it is again possible to avoid this with the <code>unowned</code> keyword. </para>
 <para>If a type is directly instantiated in the declaration of the field, then that field will be created owning that new instance. </para>
-<para>For more details about fields, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Namespaces#">Namespaces</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>. </para>
+<para>For more details about fields, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Namespaces#">Namespaces</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>. </para>
 </section>
 
 <section>
 <title>Parameters</title>
 <para>Instances passed to methods are accessible within that method with names given in the method's parameter list. </para>
 <para>They act like variables, except that they cannot, by default, take ownership of the first instance that is assigned to them, i.e. the instance passed to the method.  This behaviour can be changed using explicit ownership transfer.  When reassigning to a parameter, the result depends on the parameter direction.  Assuming the parameter has no direction modifier, it will subsequently act exactly as a variable. </para>
-<para>For more details of methods and parameters, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>. </para>
+<para>For more details of methods and parameters, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>. </para>
 </section>
 </section>
 
@@ -154,9 +154,9 @@
 <para>Named scopes can be created directly with declarations like namespaces.  These are always in existence when the program is running, and can be referred to by their name. </para></listitem><listitem>
 <para>Transient scopes are created automatically as the program executes.  Every time a new code block is entered, a new scope is created.  For example, a new scope is created when a method is invoked.  There is no way to refer to this type of scope from outside. </para></listitem><listitem>
 <para>Instance scopes are created when a data type is instantiated, for example when a new instance of a classed type is created.  These scopes can be accessed via identifiers defined in other scopes, e.g. a variable to which the new instance is assigned. </para></listitem></itemizedlist>
-<para>To refer to an identifier in another scope, you must generally qualify the name.  For named scopes, the scope name is used; for instance scopes, any identifier to which the instance is assigned can be used.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Member_access">Expressions/Member access</ulink> for the syntax of accessing other scopes. </para>
+<para>To refer to an identifier in another scope, you must generally qualify the name.  For named scopes, the scope name is used; for instance scopes, any identifier to which the instance is assigned can be used.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Member_access">Expressions/Member access</ulink> for the syntax of accessing other scopes. </para>
 <para>Scopes have parent scopes.  If an identifier is not recognised in the current scope, the parent scope is searched.  This continues up to the the global scope.  The parent scope of any scope is inferred from its position in the program - the parent scope can easily be identified as it is the scope the current declaration is in. </para>
-<para>For example, a namespace method creates a transient scope when it is invoked - the parent of this scope if the namespace which contains the definition of the method.  There are slightly different rules applied when instances are involved, as are described at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_scope">Classes/Class scope</ulink>. </para>
+<para>For example, a namespace method creates a transient scope when it is invoked - the parent of this scope if the namespace which contains the definition of the method.  There are slightly different rules applied when instances are involved, as are described at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_scope">Classes/Class scope</ulink>. </para>
 <para>The ultimate parent of all other scopes is the global scope.  The scope contains the fundamental data types, e.g. int, float, string.  If a program has a declaration outside of any other, it is placed in this scope. </para>
 
 <section>
@@ -165,7 +165,7 @@
 <para>For names in the same scope as the current definition, just the name should be used. </para></listitem><listitem>
 <para>For names in scopes of which the current is parent, qualify with just the names of scopes that the current definition is not nested within. </para></listitem><listitem>
 <para>For names in other scopes entirely, or that are less deeply nested than the current, use the fully qualified name (starting from the global scope.) </para></listitem></itemizedlist>
-<para>There are some intricacies of scopes described elsewhere in this documentation. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> for how scopes are managed for inherited classes. </para>
+<para>There are some intricacies of scopes described elsewhere in this documentation. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> for how scopes are managed for inherited classes. </para>
 <para>Vala will lookup names assuming first that they are not fully qualified.  If a fully qualified name can be partially matched locally, or in a parent scope that is not the global scope, the compilation will fail.  To avoid problems with this, do not reuse names from the global scope in other scopes. </para>
 <para>There is one special scope qualifier that can be used to avoid the problem described in the previous paragraph.  Prefixing an identifier with <code>global::</code> will instruct the compiler to only attempt to find the identifier in the global scope, skipping all earlier searching. </para>
 </section>
@@ -174,8 +174,8 @@
 <section>
 <title>Object oriented programming</title>
 <para>Vala is primarily an object oriented language.  This documentation isn't going to describe object oriented programming in detail, but in order for other sections to make sense, some things need to be explained. </para>
-<para>A class in Vala is a definition of a potentially polymorphic type. A polymorphic type is one which can be viewed as more than one type.  The basic method for this is inheritance, whereby one type can be defined as a specialized version of another.  An instance of a subtype, descended from a particular supertype, has all the properties of the supertype, and can be used wherever an instance of the supertype is expected.  This sort of relationship is described as a &quot;subtype instance is-a supertype instance.&quot;  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
-<para>Vala provides inheritance functionality to any type of class (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>).  Given the following definition, every SubType instance is-a SuperType instance: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[SuperType]]></methodname><![CDATA[ {]]>
+<para>A class in Vala is a definition of a potentially polymorphic type. A polymorphic type is one which can be viewed as more than one type.  The basic method for this is inheritance, whereby one type can be defined as a specialized version of another.  An instance of a subtype, descended from a particular supertype, has all the properties of the supertype, and can be used wherever an instance of the supertype is expected.  This sort of relationship is described as a &quot;subtype instance is-a supertype instance.&quot;  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
+<para>Vala provides inheritance functionality to any type of class (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>).  Given the following definition, every SubType instance is-a SuperType instance: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[class]]></token><![CDATA[ ]]><methodname><![CDATA[SuperType]]></methodname><![CDATA[ {]]>
 <![CDATA[        ]]><token><![CDATA[public]]></token><![CDATA[ ]]><token><![CDATA[int]]></token><![CDATA[ ]]><methodname><![CDATA[act]]></methodname><![CDATA[() {]]>
 <![CDATA[                ]]><token><![CDATA[return]]></token><![CDATA[ 1;]]>
 <![CDATA[        }]]>
@@ -190,8 +190,8 @@
 <methodname><![CDATA[sub]]></methodname><![CDATA[.]]><methodname><![CDATA[act]]></methodname><![CDATA[();]]>
 <methodname><![CDATA[super]]></methodname><![CDATA[.]]><methodname><![CDATA[act]]></methodname><![CDATA[();]]>
 </programlisting>
-<para>Here, when sub.act() is called, the method invoked will be SubType's &quot;act&quot; method.  The call super.act() will call SuperType's &quot;act&quot;.  If the act method were virtual, the SubType.act method would have been called on both occasions.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink> for how to declare virtual methods. </para>
-<para>Interfaces are a variety of non-instantiatable type.  This means that it is not possible to create an instance of the type.  Instead, interfaces are implemented by other types.  Instances of these other types may then be used as though they were instances of the interface in question. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>. </para>
+<para>Here, when sub.act() is called, the method invoked will be SubType's &quot;act&quot; method.  The call super.act() will call SuperType's &quot;act&quot;.  If the act method were virtual, the SubType.act method would have been called on both occasions.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink> for how to declare virtual methods. </para>
+<para>Interfaces are a variety of non-instantiatable type.  This means that it is not possible to create an instance of the type.  Instead, interfaces are implemented by other types.  Instances of these other types may then be used as though they were instances of the interface in question. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>. </para>
 </section>
 
 <section>
@@ -201,8 +201,8 @@
 
 <section>
 <title>Value types</title>
-<para>When dealing with instances of value types (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>) knowledge of ownership is rarely important.  This is because the instance is copied whenever it is assigned to a new identifier.  This will cause each identifier to become owner of a unique instance - that instance will then be deallocated when the identifier ceases to be valid. </para>
-<para>There is one exception to this rule: when a struct type instance is passed to a method, Vala will, by default, create the method parameter as a reference to the instance instead of copying the instance.  This reference is a weak reference, as described in the following section.  If the struct should instead be copied, and the parameter created as a standard value type identifier, the ownership transfer operator should be used (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>). </para>
+<para>When dealing with instances of value types (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#">Types</ulink>) knowledge of ownership is rarely important.  This is because the instance is copied whenever it is assigned to a new identifier.  This will cause each identifier to become owner of a unique instance - that instance will then be deallocated when the identifier ceases to be valid. </para>
+<para>There is one exception to this rule: when a struct type instance is passed to a method, Vala will, by default, create the method parameter as a reference to the instance instead of copying the instance.  This reference is a weak reference, as described in the following section.  If the struct should instead be copied, and the parameter created as a standard value type identifier, the ownership transfer operator should be used (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>). </para>
 </section>
 
 <section>
@@ -210,16 +210,16 @@
 <para>With reference types, it is possible for several identifiers to reference the same data instance.  Not all identifiers that refer to reference type instance are capable of owning the instance, for reasons that will be explained.  It is therefore often required to think about instance ownership when writing Vala code. </para>
 <para>Most reference types support reference counting.  This means that the instance internally maintains a count of how many references to it currently exist.  This count is used to decide whether the instance is still in use, or if its memory can be deallocated.  Each reference that is counted in this way is therefore a potential owner of the instance, as it ensures the instance continues to exist.  There are situations when this is not desired, and so it is possible to define a field or variable as &quot;weak&quot;.  In this case the reference is not counted, and so the fact that the reference exists will not stop the instance being possibly deallocated, i.e. this sort of reference cannot take ownership of the instance. </para>
 <para>When using reference counted types, the main use for weak references is to prevent reference cycles.  These exist when a data instance contains internally a reference to another instance, which in turn contains a reference to the first.  In this case it would not be possible to deallocate the instances, as each would be potentially owning the other.  By ensuring that one of the references is weak, one of the instances can become unowned and be deallocated, and in the process the other will be dereferenced, and potentially become unowned and be deallocated also. </para>
-<para>It is also possible to have reference types which are not reference counted; an example of this is the fundamental string type, others are compact classed types.  If Vala were to allow several references to own such instances, it would not be able to keep track of when they all ceased to exist, and therefore would not be able to know when to deallocate the instance.  Instead, exactly one or zero identifiers will own the instance - when it is zero, the instance is deallocated.  This means that all references to an already owned instance must either be weak references, or ownership must be specifically passed to the new reference, using the ownership transfer operator (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>). </para>
+<para>It is also possible to have reference types which are not reference counted; an example of this is the fundamental string type, others are compact classed types.  If Vala were to allow several references to own such instances, it would not be able to keep track of when they all ceased to exist, and therefore would not be able to know when to deallocate the instance.  Instead, exactly one or zero identifiers will own the instance - when it is zero, the instance is deallocated.  This means that all references to an already owned instance must either be weak references, or ownership must be specifically passed to the new reference, using the ownership transfer operator (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Ownership_transfer_expressions">Expressions/Ownership transfer expressions</ulink>). </para>
 </section>
 
 <section>
 <title>Pointer types</title>
-<para>Pointer types are of great importance.  Pointer types are value types, whose instances are references to some other data instance.  They are therefore not actual references, and will never own the instance that they indirectly refer to. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Pointer_types">Types/Pointer types</ulink>. </para>
+<para>Pointer types are of great importance.  Pointer types are value types, whose instances are references to some other data instance.  They are therefore not actual references, and will never own the instance that they indirectly refer to. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Pointer_types">Types/Pointer types</ulink>. </para>
 </section>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Types</title>
@@ -278,7 +278,7 @@
 
 <section>
 <title>Struct types</title>
-<para>A struct type is one that provides just a data structure and some methods that act upon it.  Structs are not polymorphic, and cannot have advanced features such as signals or properties. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink> for documentation on how to define structs and more details about them.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Struct_instantiation">Expressions/Struct instantiation</ulink> for how to instantiate structs. </para>
+<para>A struct type is one that provides just a data structure and some methods that act upon it.  Structs are not polymorphic, and cannot have advanced features such as signals or properties. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink> for documentation on how to define structs and more details about them.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Struct_instantiation">Expressions/Struct instantiation</ulink> for how to instantiate structs. </para>
 <para>Each variable or field to which a struct stype instance is assigned gains a copy of the data, over which it has ownership. However, when a struct type instance is passed to a method, a copy is not made.  Instead a reference to the instance is passed.  This behaviour can be changed by declaring the struct to be a simple type. </para>
 </section>
 
@@ -292,26 +292,26 @@
 <title>Integral types</title>
 <para>Integral types can contain only integers.  They are either signed or unsigned, each of which is considered a different type, though it is possible to cast between them when needed. </para>
 <para>Some types define exactly how many bits of storage are used to represent the integer, others depend of the environment.  long, int short map to C data types and therefore depend on the machine architecture.  char is 1 byte.  unichar is 4 bytes, i.e. large enough to store any UTF-8 character. </para>
-<para>All these types can be instantiated using a literal expression, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
+<para>All these types can be instantiated using a literal expression, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
 </section>
 
 <section>
 <title>Floating point types</title>
 <para>Floating point types contain real floating point numbers in a fixed number of bits (see IEEE 754). </para>
-<para>All these types can be instantiated using a literal expression, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
+<para>All these types can be instantiated using a literal expression, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
 </section>
 
 <section>
 <title>The bool type</title>
 <para>Can have values of true of false.  Although there are only two values that a bool instance can take, this is not an enumerated type. Each instance is unique and will be copied when required, the same as for the other fundamental value types. </para>
-<para>This type can be instantiated using literal expressions, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
+<para>This type can be instantiated using literal expressions, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>. </para>
 </section>
 
 <section>
 <title>Enumerated types</title>
 <para>An enumerated type is one in which all possible values that instances of the type can hold are declared with the type.  In Vala enumerated types are real types, and will not be implicitly converted.  It is possible to explicitly cast between enumerated types, but this is not generally advisable.  When writing new code in Vala, don't rely on being able to cast in this way. </para>
 <para>A variation on an enumerated type is a flag type.  This represents a set of flags, any number of which can be combined in one instance of the flag type, in the same fashion as a bitfield in C. </para>
-<para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink> for documentation on defining and using enumerated types. </para>
+<para>See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink> for documentation on defining and using enumerated types. </para>
 </section>
 </section>
 
@@ -353,8 +353,8 @@
 
 <section>
 <title>Classed types</title>
-<para>A class definition introduces a new reference type - this is the most common way of creating a new type in Vala.  Classes are a very powerful mechanism, as they have features such as polymorphism and inheritance.  Full discussion of classes is found at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
-<para>Most classed types in Vala are reference counted.  This means that every time a classed type instance is assigned to a variable or field, not only is the reference copied, but the instance also records that another reference to it has been created.  When a field or variable goes out of scope, the fact that a reference to the instance has been removed is also recorded.  This means that a classed type instance can be automatically removed from memory when it is no longer needed.  The only classed types that are not reference counted are compact classes..  Memory management is discussed at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Overview#Memory_management">Overview/Memory management</ulink>.  If the instance is not of a reference counted type, then the ownership must be explicitly transferred using the # operator - this will cause the original variable to become invalid.  When a classed-type instance is passed to a method, the same rules apply.  The types of classes available are discussed at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>. </para>
+<para>A class definition introduces a new reference type - this is the most common way of creating a new type in Vala.  Classes are a very powerful mechanism, as they have features such as polymorphism and inheritance.  Full discussion of classes is found at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
+<para>Most classed types in Vala are reference counted.  This means that every time a classed type instance is assigned to a variable or field, not only is the reference copied, but the instance also records that another reference to it has been created.  When a field or variable goes out of scope, the fact that a reference to the instance has been removed is also recorded.  This means that a classed type instance can be automatically removed from memory when it is no longer needed.  The only classed types that are not reference counted are compact classes..  Memory management is discussed at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Overview#Memory_management">Overview/Memory management</ulink>.  If the instance is not of a reference counted type, then the ownership must be explicitly transferred using the # operator - this will cause the original variable to become invalid.  When a classed-type instance is passed to a method, the same rules apply.  The types of classes available are discussed at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>. </para>
 </section>
 
 <section>
@@ -364,33 +364,33 @@
 <para>A size can be retrieved from an array using the <code>length</code> member, this returns an int if the array has one dimension or an int[] if the array contains several dimensions. </para>
 <para>You can also move or copy and array using respectively the <code>move</code> and <code>copy</code> members. </para>
 <para>For single-dimension arrays, a <code>resize</code> member is also available to change the length of the array. </para>
-<para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Array_instantiation">Expressions/Array instantiation</ulink> for how to instantiate an array type. </para>
+<para>See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Array_instantiation">Expressions/Array instantiation</ulink> for how to instantiate an array type. </para>
 </section>
 
 <section>
 <title>Delegate types</title>
 <para>A delegate is a data structure that refers to a method.  A method executes in a given scope which is also stored, meaning that for instance methods a delegate will contain also a reference to the instance. </para>
 <para>Delegates are technically a referenced type, but since methods are immutable, this distinction is less important than for other types.  Assigning a delegate to a variable or field cannot copy the method indicated, and no delegate is able to change the method in any way. </para>
-<para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink> for full documentation. </para>
+<para>See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink> for full documentation. </para>
 </section>
 
 <section>
 <title>Error Types</title>
-<para>Instances of error types represent recoverable runtime errors.  All errors are described using error domains, a type of enumerated value, but errors themselves are not enumerated types.  Errors are discussed in detail in several sections of this documentation, see: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink> and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>. </para>
+<para>Instances of error types represent recoverable runtime errors.  All errors are described using error domains, a type of enumerated value, but errors themselves are not enumerated types.  Errors are discussed in detail in several sections of this documentation, see: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>. </para>
 </section>
 
 <section>
 <title>Strings</title>
-<para>Vala has built in support for Unicode strings, via the fundamental string type.  This is the only fundamental type that is a reference type.  Like other fundamental types, it can be instantiated with a literal expression (<ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>.)  Strings are UTF-8 encoded, the same as Vala source files, which means that they cannot be accessed like character arrays in C - each Unicode character is not guaranteed to be stored in just one byte.  Instead the string fundamental struct type (which all strings are instances of) provides access methods along with other tools. </para>
+<para>Vala has built in support for Unicode strings, via the fundamental string type.  This is the only fundamental type that is a reference type.  Like other fundamental types, it can be instantiated with a literal expression (<ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Literal_expressions">Expressions/Literal expressions</ulink>.)  Strings are UTF-8 encoded, the same as Vala source files, which means that they cannot be accessed like character arrays in C - each Unicode character is not guaranteed to be stored in just one byte.  Instead the string fundamental struct type (which all strings are instances of) provides access methods along with other tools. </para>
 <para>While strings are technically a reference type, they have the same default copy semantics as structs - the data is copied whenever a string value is assigned to a variable or field, but only a reference is passed as a parameter to a method.  This is required because strings are not reference counted, and so the only way for a variable or field to be able to take ownership of a string is by being assigned a copy of the string.  To avoid this behaviour, string values can be assigned to weak references (in such a case no copy is made). </para>
-<para>The concept of ownership is very important in understanding string semantics.  For more details see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#References_and_ownership">Concepts/References and ownership</ulink>. </para>
+<para>The concept of ownership is very important in understanding string semantics.  For more details see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#References_and_ownership">Concepts/References and ownership</ulink>. </para>
 </section>
 </section>
 
 <section>
 <title>Parameterised types</title>
 <para>TODO: Casting. </para>
-<para>Vala allows definitions of types that can be customised at runtime with type parameters.  For example, a list can be defined so that it can be instantiated as a list of ints, a list of Objects, etc.  This is achieved using generic declarations. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Generics#">Generics</ulink>. </para>
+<para>Vala allows definitions of types that can be customised at runtime with type parameters.  For example, a list can be defined so that it can be instantiated as a list of ints, a list of Objects, etc.  This is achieved using generic declarations. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Generics#">Generics</ulink>. </para>
 </section>
 
 <section>
@@ -402,19 +402,19 @@
 <section>
 <title>Pointer types</title>
 <para>The name of a type can be used to implicitly create a pointer type related to that type.  The value of a variable declared as being of type T* represents the memory address of an instance of type T. The instance is never made aware that its address has been recorded, and so cannot record the fact that it is referred to in this way. </para>
-<para>Instances of any type can be assigned to a variable that is declared to be a pointer to an instance of that type.  For referenced types, direct assignment is allowed in either direction.  For value types the pointer-to operator &quot;&amp;&quot; is required to assign to a pointer, and the pointer-indirection operator &quot;*&quot; is used to access the instance pointed to. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Pointer_expressions">Expressions/Pointer expressions</ulink>. </para>
-<para>The <code>void*</code> type represents a pointer to an unknown type. As the referent type is unknown, the indirection operator cannot be applied to a pointer of type <code>void*</code>, nor can any arithmetic be performed on such a pointer. However, a pointer of type <code>void*</code> can be cast to any other pointer type (and vice-versa) and compared to values of other pointer types.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Type_operations">Expressions/Type operations</ulink>. </para>
+<para>Instances of any type can be assigned to a variable that is declared to be a pointer to an instance of that type.  For referenced types, direct assignment is allowed in either direction.  For value types the pointer-to operator &quot;&amp;&quot; is required to assign to a pointer, and the pointer-indirection operator &quot;*&quot; is used to access the instance pointed to. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Pointer_expressions">Expressions/Pointer expressions</ulink>. </para>
+<para>The <code>void*</code> type represents a pointer to an unknown type. As the referent type is unknown, the indirection operator cannot be applied to a pointer of type <code>void*</code>, nor can any arithmetic be performed on such a pointer. However, a pointer of type <code>void*</code> can be cast to any other pointer type (and vice-versa) and compared to values of other pointer types.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Type_operations">Expressions/Type operations</ulink>. </para>
 <para>A pointer type itself has value type semantics. </para>
 </section>
 
 <section>
 <title>Type conversions</title>
-<para>There are two types if type conversions possible in Vala, implicit conversions and explicit casts.  In expressions, Vala will often convert fundamental types in order to make calculations possible. When the default conversion is not what you require, you can cast explicitly so that all operands are of compatible types. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#">Expressions</ulink> for details of automatic conversions. </para>
-<para>Vala will also automatically perform conversions related to polymorphism where the required cast is unambiguous and can be inferred from the context.  This allows you to use a classed-type instance when an instance of any of its superclasses or implemented interfaces is required.  Vala will never automatically cast to a subtype, as this must be done explicitly. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
-<para>For explicit casting expressions, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Type_operations">Expressions/Type operations</ulink>. </para>
+<para>There are two types if type conversions possible in Vala, implicit conversions and explicit casts.  In expressions, Vala will often convert fundamental types in order to make calculations possible. When the default conversion is not what you require, you can cast explicitly so that all operands are of compatible types. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#">Expressions</ulink> for details of automatic conversions. </para>
+<para>Vala will also automatically perform conversions related to polymorphism where the required cast is unambiguous and can be inferred from the context.  This allows you to use a classed-type instance when an instance of any of its superclasses or implemented interfaces is required.  Vala will never automatically cast to a subtype, as this must be done explicitly. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>. </para>
+<para>For explicit casting expressions, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Type_operations">Expressions/Type operations</ulink>. </para>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Expressions</title>
@@ -455,7 +455,7 @@
 <para>Floating point types... -?[:digit:]+(.[:digit:]+)? </para>
 <para>Strings... &quot;[^&quot;\n]*&quot;. &quot;&quot;&quot;.*&quot;&quot;&quot; </para>
 <para>Booleans... true|false </para>
-<para>A final literal expression is <code>null</code>.  This expression evaluates to a non-typed data instance, which is a legal value for any nullable type (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Nullable_types">Types/Nullable types</ulink>.) </para>
+<para>A final literal expression is <code>null</code>.  This expression evaluates to a non-typed data instance, which is a legal value for any nullable type (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Nullable_types">Types/Nullable types</ulink>.) </para>
 </section>
 
 <section>
@@ -620,8 +620,8 @@
 <para>If the parameter has a default value, then that value will be used as argument. </para></listitem><listitem>
 <para>Otherwise an error occurs. </para></listitem></orderedlist>
 <para>If the callable has an ellipsis parameter, then any number of arguments of any type can be provided past the ellipsis. </para>
-<para>Delegates... See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink> </para>
-<para>Firing a signal is basically the same. See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Signals">Classes/Signals</ulink> </para>
+<para>Delegates... See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink> </para>
+<para>Firing a signal is basically the same. See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Signals">Classes/Signals</ulink> </para>
 </section>
 
 <section>
@@ -718,8 +718,8 @@
 <title>Ownership transfer expressions</title><itemizedlist><listitem override="none">
 <para>ownership-transfer-expression:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">(owned)</emphasis> unary-expression</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>When an instance of a reference type is assigned to a variable or field, it is possible to request that the ownership of the instance is passed to the new field or variable.  The precise meaning of this depends on the reference type, for an explanation of ownership, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#References_and_ownership">Concepts/References and ownership</ulink>.  The identifier in this expression must refer to an instance of a reference type. </para>
-<para>Note that similar syntax is used to define that a method parameter should take ownership of a value assigned to it.  For this, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>. </para>
+<para>When an instance of a reference type is assigned to a variable or field, it is possible to request that the ownership of the instance is passed to the new field or variable.  The precise meaning of this depends on the reference type, for an explanation of ownership, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#References_and_ownership">Concepts/References and ownership</ulink>.  The identifier in this expression must refer to an instance of a reference type. </para>
+<para>Note that similar syntax is used to define that a method parameter should take ownership of a value assigned to it.  For this, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>. </para>
 </section>
 
 <section>
@@ -754,7 +754,7 @@
 <para>This expression evaluates to the value of the member identified by the identifier. The inner expression must be a valid pointer type and the member must be in the scope of the base type of the pointer type. </para>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Statements</title>
@@ -797,7 +797,7 @@
 <para><emphasis role="strong">{</emphasis> [ statement-list ] <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
 <para> statement-list:</para><itemizedlist><listitem override="none">
 <para>statement [ statement-list ]</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Blocks create anonymous, transient scopes.  For more details about scopes, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
+<para>Blocks create anonymous, transient scopes.  For more details about scopes, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
 </section>
 
 <section>
@@ -813,7 +813,7 @@
 <para>type-name identifier <emphasis role="strong">=</emphasis> expression <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> variable-declaration-with-type-inference:</para><itemizedlist><listitem override="none">
 <para>var identifier <emphasis role="strong">=</emphasis> expression <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Type inference is possible in any case where the variable is immediately assigned to.  The type chosen will always be the type of the assigned expression, as decided by the rules described at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#">Expressions</ulink>.  It is important to realise that the type of the variable will be fixed after the first assignment, and will not change on assigning another value to the variable.  If the variable should be created with a type other than that of the assigned expression, the expression should be wrapped with a cast expression, provided that the cast is valid. </para>
+<para>Type inference is possible in any case where the variable is immediately assigned to.  The type chosen will always be the type of the assigned expression, as decided by the rules described at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#">Expressions</ulink>.  It is important to realise that the type of the variable will be fixed after the first assignment, and will not change on assigning another value to the variable.  If the variable should be created with a type other than that of the assigned expression, the expression should be wrapped with a cast expression, provided that the cast is valid. </para>
 </section>
 
 <section>
@@ -890,7 +890,7 @@
 
 <section>
 <title>Jump Statements</title>
-<para>Jump statements move execution to an arbitrary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_Statements">Statements/Simple statements</link>. </para>
+<para>Jump statements move execution to an arbitrary point, dependent on the type of statement and its location.  In any of these cases any transient scopes are ended appropriately: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink> and <link linkend="Simple_Statements">Statements/Simple statements</link>. </para>
 <para>A <code>break</code> statement moves execution to the first statement after the nearest enclosing <code>while</code>, <code>do</code>, <code>for</code>, or <code>foreach</code> statement. </para><itemizedlist><listitem override="none">
 <para>break-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">break</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
@@ -908,7 +908,7 @@
 <section>
 <title>Try Statement</title>
 <para>The <code>try</code> statement provides a mechanism for catching exceptions that occur during execution of a block. Furthermore, the <code>try</code> statement provides the ability to specify a block of code that is always executed when control leaves the <code>try</code> statement. </para>
-<para>For the syntax of the try statement, See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#Error_catching">Errors/Error catching</ulink>. </para>
+<para>For the syntax of the try statement, See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#Error_catching">Errors/Error catching</ulink>. </para>
 </section>
 
 <section>
@@ -934,11 +934,11 @@
 <para><emphasis role="strong">with</emphasis> <emphasis role="strong">(</emphasis> [ var | unowned var | type-name) identifier <emphasis role="strong">=</emphasis> ] expression <emphasis role="strong">)</emphasis> embedded_statement</para></listitem></itemizedlist></listitem></itemizedlist>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Namespaces</title>
-<para>Namespaces are named scopes (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>).  Definitions in different namespaces can use the same names without causing conflicts.  A namespace can be declared across any number of Vala source files, and there can be multiple namespaces defined in a single Vala source file.  Namespaces can be nested to any depth. </para>
+<para>Namespaces are named scopes (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>).  Definitions in different namespaces can use the same names without causing conflicts.  A namespace can be declared across any number of Vala source files, and there can be multiple namespaces defined in a single Vala source file.  Namespaces can be nested to any depth. </para>
 <para>When code needs to access definitions from other namespaces, it must either refer to them using a fully qualified name, or be written in a file with an appropriate using statement. </para>
 <para>The simplest namespace declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[namespace]]></token><![CDATA[ ]]><methodname><![CDATA[NameSpaceName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
@@ -988,7 +988,7 @@
 <para>access-modifier:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">public</emphasis></para>
 <para> <emphasis role="strong">private</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>For the types of namespace members that are not described on this page: see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink>, and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink>. </para>
+<para>For the types of namespace members that are not described on this page: see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink>, and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink>. </para>
 </section>
 
 <section>
@@ -998,7 +998,7 @@
 <para>[ access-modifier ] qualified-type-name field-name [ <emphasis role="strong">=</emphasis> expression ] ;</para></listitem></itemizedlist>
 <para> field-name:</para><itemizedlist><listitem override="none">
 <para>identifier</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Fields in general are described at <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Variables,_fields_and_parameters">Concepts/Variables, fields and parameters</ulink>. </para>
+<para>Fields in general are described at <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Variables,_fields_and_parameters">Concepts/Variables, fields and parameters</ulink>. </para>
 </section>
 
 <section>
@@ -1012,7 +1012,7 @@
 
 <section>
 <title>The &quot;using&quot; statement</title>
-<para><code>using</code> statements can be used to avoid having to qualify names fully on a file-by-file basis.  For all identifiers in the same file as the using statement, Vala will first try to resolve them following the usual rules (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>).  If the identifier cannot be resolved in any scope, each namespace that is referenced in a <code>using</code> will be searched in turn. </para><itemizedlist><listitem override="none">
+<para><code>using</code> statements can be used to avoid having to qualify names fully on a file-by-file basis.  For all identifiers in the same file as the using statement, Vala will first try to resolve them following the usual rules (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>).  If the identifier cannot be resolved in any scope, each namespace that is referenced in a <code>using</code> will be searched in turn. </para><itemizedlist><listitem override="none">
 <para>using-statement:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">using</emphasis> namespace-list <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> namespace-list:</para><itemizedlist><listitem override="none">
@@ -1023,19 +1023,19 @@
 <para>TODO: Include examples. </para>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Methods</title>
 <para>TODO: Do we really need this discussion? Are we introducing Vala, or general programming? </para>
 <para>A method is an executable statement block that can be identified in one or more ways (i.e. by a name, or any number of delegate instances). A method can be invoked with an optional number of parameters, and may return a value. When invoked, the method's body will be executed with the parameters set to the values given by the invoker.  The body is run in sequence until the end is reached, or a return statement is encountered, resulting in a return of control (and possibly some value, in the case of a return) to the invoker. </para>
-<para>There are various contexts that may contain method declarations (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Namespaces#">Namespaces</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>, <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>).  A method is always declared inside one of these other declarations, and that declaration will mark the parent scope that the method will be executed within.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
-<para>The <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> section of this documentation talks about both methods and abstract methods.  It should be noted that the latter are not truly methods, as they cannot be invoked.  Instead, they provide a mechanism for declaring how other methods should be defined.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> for a description of abstract methods and how they are used. </para>
-<para>The syntax for invoking a method is described on the expressions page (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>). </para>
+<para>There are various contexts that may contain method declarations (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Namespaces#">Namespaces</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>, <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Structs#">Structs</ulink>).  A method is always declared inside one of these other declarations, and that declaration will mark the parent scope that the method will be executed within.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
+<para>The <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> section of this documentation talks about both methods and abstract methods.  It should be noted that the latter are not truly methods, as they cannot be invoked.  Instead, they provide a mechanism for declaring how other methods should be defined.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink> for a description of abstract methods and how they are used. </para>
+<para>The syntax for invoking a method is described on the expressions page (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>). </para>
 
 <section>
 <title>Parameter directions</title>
-<para>The basics of method parameter semantics are described on the concepts page (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Variables,_fields_and_parameters">Concepts/Variables, fields and parameters</ulink>).  This basic form of parameter is technically an &quot;in&quot; parameter, which is used to pass data needed for the method to operate.  If the parameter is of a reference type, the method may change the fields of the type instance it receives, but assignments to the parameter itself will not be visible to the invoking code.  If the parameter is of a value type, which is not a fundamental type, the same rules apply as for a reference type.  If the parameter is of a fundamental type, then the parameter will contain a copy of the value, and no changes made to it will be visible to the invoking code. </para>
+<para>The basics of method parameter semantics are described on the concepts page (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Variables,_fields_and_parameters">Concepts/Variables, fields and parameters</ulink>).  This basic form of parameter is technically an &quot;in&quot; parameter, which is used to pass data needed for the method to operate.  If the parameter is of a reference type, the method may change the fields of the type instance it receives, but assignments to the parameter itself will not be visible to the invoking code.  If the parameter is of a value type, which is not a fundamental type, the same rules apply as for a reference type.  If the parameter is of a fundamental type, then the parameter will contain a copy of the value, and no changes made to it will be visible to the invoking code. </para>
 <para>If the method wishes to return more than one value to the invoker, it should use &quot;out&quot; parameters.  Out parameters do not pass any data to the method - instead the method may assign a value to the parameter that will be visible to the invoking code after the method has executed, stored in the variable passed to the method.  If a method is invoked passing a variable which has already been assigned to as an out parameter, then the value of that variable will be dereferenced or freed as appropriate.  If the method does not assign a value to the parameter, then the invoker's variable will end with a value of &quot;null&quot;. </para>
 <para>The third parameter type is a &quot;ref&quot; argument (equivalent to &quot;inout&quot; in some other languages.)  This allows the method to receive data from the invoker, and also to assign another value to the parameter in a way that will be visible to the invoker.  This functions similarly to &quot;out&quot; parameters, except that if the method does not assign to the parameter, the same value is left in the invoker's variable. </para>
 </section>
@@ -1063,23 +1063,23 @@
 <para>qualified-error-domain [ <emphasis role="strong">,</emphasis> error-list ]</para></listitem></itemizedlist>
 <para> method-contracts:</para><itemizedlist><listitem override="none">
 <para>[ <emphasis role="strong">requires</emphasis> <emphasis role="strong">(</emphasis> expression <emphasis role="strong">)</emphasis> ] [ <emphasis role="strong">ensures</emphasis> <emphasis role="strong">(</emphasis> expression <emphasis role="strong">)</emphasis> ]</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>For more details see <link linkend="Contract_programming">Methods/Contract programming</link>, and <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>. </para>
+<para>For more details see <link linkend="Contract_programming">Methods/Contract programming</link>, and <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>. </para>
 </section>
 
 <section>
 <title>Invocation</title>
-<para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>. </para>
+<para>See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>. </para>
 </section>
 
 <section>
 <title>Scope</title>
 <para>The execution of a method happens in a scope created for each invocation, which ceases to exist after execution is complete. The parent scope of this transient scope is always the scope the method was declared in, regardless of where it is invoked from. </para>
-<para>Parameters and local variables exist in the invocation's transient scope.  For more on scoping see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
+<para>Parameters and local variables exist in the invocation's transient scope.  For more on scoping see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Scope_and_naming">Concepts/Scope and naming</ulink>. </para>
 </section>
 
 <section>
 <title>Lambdas</title>
-<para>As Vala supports delegates, it is possible to have a method that is identified by a variable (or field, or parameter.)  This section discusses a Vala syntax for defining inline methods and directly assigning them to an identifier.  This syntax does not add any new features to Vala, but it is a lot more succinct than the alternative (defining all methods normally, in order to assign them to variables at runtime). See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>. </para>
+<para>As Vala supports delegates, it is possible to have a method that is identified by a variable (or field, or parameter.)  This section discusses a Vala syntax for defining inline methods and directly assigning them to an identifier.  This syntax does not add any new features to Vala, but it is a lot more succinct than the alternative (defining all methods normally, in order to assign them to variables at runtime). See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>. </para>
 <para>Declaring an inline method must be done with relation to a delegate or signal, so that the method signature is already defined.  Parameter and return types are then learned from the signature.  A lambda definition is an expression that returns an instance of a particular delegate type, and so can be assigned to a variable declared for the same type.  Each time that the lambda expression is evaluated it will return a reference to exactly the same method, even though this is never an issue as methods are immutable in Vala. </para><itemizedlist><listitem override="none">
 <para>lambda-declaration:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">(</emphasis> [ lambda-params-list ] <emphasis role="strong">)</emphasis> <emphasis role="strong">=&gt;</emphasis> <emphasis role="strong">{</emphasis> statement-list <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
@@ -1123,12 +1123,12 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Delegates</title>
 <para>A delegate declaration defines a method type: a type that can be invoked, accepting a set of values of certain types, and returning a value of a set type. In Vala, methods are not first-class objects, and as such cannot be created dynamically; however, any method can be considered to be an instance of a delegate's type, provided that the method signature matches that of the delegate. </para>
-<para>Methods are considered to be an immutable reference type.  Any method can be referred to by name as an expression returning a reference to that method - this can be assigned to a field (or variable, or parameter), or else invoked directly as a standard method invocation (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>). </para>
+<para>Methods are considered to be an immutable reference type.  Any method can be referred to by name as an expression returning a reference to that method - this can be assigned to a field (or variable, or parameter), or else invoked directly as a standard method invocation (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>). </para>
 
 <section>
 <title>Types of delegate</title>
@@ -1151,13 +1151,13 @@
 <para>[ qualified-namespace-name <emphasis role="strong">.</emphasis> ] delegate-name</para></listitem></itemizedlist>
 <para> delegate-name:</para><itemizedlist><listitem override="none">
 <para>identifier</para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Parts of this syntax are based on the respective sections of the method declaration syntax (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> for details). </para>
+<para>Parts of this syntax are based on the respective sections of the method declaration syntax (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink> for details). </para>
 </section>
 
 <section>
 <title>Using delegates</title>
-<para>A delegate declaration defines a type.  Instances of this type can then be assigned to variables (or fields, or parameters) of this type.  Vala does not allow creating methods at runtime, and so the values of delegate-type instances will be references to methods known at compile time.  To simplify the process, inlined methods may be written (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>). </para>
-<para>To call the method referenced by a delegate-type instance, use the same notation as for calling a method; instead of giving the method's name, give the identifier of the variable, as described in <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>. </para>
+<para>A delegate declaration defines a type.  Instances of this type can then be assigned to variables (or fields, or parameters) of this type.  Vala does not allow creating methods at runtime, and so the values of delegate-type instances will be references to methods known at compile time.  To simplify the process, inlined methods may be written (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>). </para>
+<para>To call the method referenced by a delegate-type instance, use the same notation as for calling a method; instead of giving the method's name, give the identifier of the variable, as described in <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Invocation_expressions">Expressions/Invocation expressions</ulink>. </para>
 </section>
 
 <section>
@@ -1202,12 +1202,12 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Errors</title>
-<para>Vala Error handling is just for recoverable runtime errors, anything that can be reasonably foreseen should not be handled with errors, e.g. passing the wrong args to a method.  In that example, a better action is to state that the method's result is undefined on illegal input, and use method contracts or assertions to catch potential problems during development: See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Contract_programming">Methods/Contract programming</ulink>.  A more suitable use for errors would be reporting missing files, which of course cannot be detected until the program is running. </para>
-<para>A method may declare that it throws methods from any number of error domains.  Error domains are groups of related errors, each of which is denoted by a unique symbol in much the same way an enumerated type, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink> for declaration syntax.  In Vala it is not allowed to throw arbitrary data as in C++, and there is no class for errors, as in Java. </para>
+<para>Vala Error handling is just for recoverable runtime errors, anything that can be reasonably foreseen should not be handled with errors, e.g. passing the wrong args to a method.  In that example, a better action is to state that the method's result is undefined on illegal input, and use method contracts or assertions to catch potential problems during development: See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Contract_programming">Methods/Contract programming</ulink>.  A more suitable use for errors would be reporting missing files, which of course cannot be detected until the program is running. </para>
+<para>A method may declare that it throws methods from any number of error domains.  Error domains are groups of related errors, each of which is denoted by a unique symbol in much the same way an enumerated type, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#Error_domains">Enumerated types (Enums)/Error domains</ulink> for declaration syntax.  In Vala it is not allowed to throw arbitrary data as in C++, and there is no class for errors, as in Java. </para>
 <para>No error can be thrown must either be caught or declared as being thrown. </para>
 <para>When a method declares it may thrown an error, the invoker may choose to either catch the error (should one be thrown), or ignore it, meaning it will be thrown on to that methods caller.  In the latter case, the method failing to catch the error must also be declared to throw that type of error.  Errors can only be caught when the method throwing it is invoked within the try block of a try statement.  A try statement, with its associated catch blocks, can potentially catch all errors thrown in its scope, either with catch blocks for all error domains from which a thrown error might come, or with a generic catch block to catch any error. </para>
 <para>When an error is first thrown, the &quot;throw&quot; statement is considered the same as a method which from which an error has been thrown.  This means that it is possible to catch errors locally, but this is not good practise.  The only proper use of this functionality is to use a finally block to free resources before the error is thrown from the method. </para>
@@ -1287,7 +1287,7 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Classes</title>
@@ -1333,7 +1333,7 @@
 <title>Class member visibility</title>
 <para>All class members have a visibility.  Visibility is declared using the following mutually exclusive modifiers: </para><itemizedlist><listitem override="none">
 <para>class-member-visibility-modifier:</para><itemizedlist><listitem override="none">
-<para><emphasis role="strong">private</emphasis></para>
+<para><emphasis role="strong">private</emphasis>: this is the default when no modifier is given</para>
 <para> <emphasis role="strong">protected</emphasis></para>
 <para> <emphasis role="strong">internal</emphasis></para>
 <para> <emphasis role="strong">public</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
@@ -1343,7 +1343,7 @@
 <para>&quot;internal&quot; asserts that the member should be visible to any code in the project, but excludes the member from the public API of a shared object </para></listitem><listitem>
 <para>&quot;public&quot; asserts that the member should be visible to any code, including the public API of a shared object </para></listitem></itemizedlist><note>
 <para><emphasis role="strong">C Note</emphasis> </para>
-<para>A field or method's protected status cannot be enforced in the C translation of a Vala library. </para></note>
+<para>A field or method's marked <code>protected</code> or <code>internal</code> is public in the C translation of a Vala library; these visibility modifiers are only enforced by the Vala compiler. </para></note>
 </section>
 
 <section>
@@ -1485,7 +1485,7 @@
 <para> class-method-type-modifier:</para><itemizedlist><listitem override="none">
 <para><emphasis role="strong">virtual</emphasis></para>
 <para> <emphasis role="strong">override</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>Methods can be virtual, as described in <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>.  Methods in Vala classes are not virtual automatically, instead the &quot;virtual&quot; modifier must be used when it is needed.  Virtual methods will only chain up if overridden using the override keyword. </para>
+<para>Methods can be virtual, as described in <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>.  Methods in Vala classes are not virtual automatically, instead the &quot;virtual&quot; modifier must be used when it is needed.  Virtual methods will only chain up if overridden using the override keyword. </para>
 <para>Vala classes may also define abstract methods, by writing the declaration with the &quot;abstract&quot; modifier and replacing the method body with an empty statement &quot;;&quot;.  Abstract methods are not true methods, as they do not have an associated statement block, and so cannot be invoked.  Abstract methods can only exist in abstract classes, and must be overridden in derived classes.  For this reason an abstract method is always virtual.  The purpose of an abstract method is to define methods that all non-abstract subclasses of the current definition must implement, it is therefore always allowable to invoke the method on an instance of the abstract class, because it is required that that instance must in fact be of a non-abstract subclass. </para><itemizedlist><listitem override="none">
 <para>class-instance-abstract-method-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] <emphasis role="strong">abstract</emphasis> return-type method-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> method-contracts [ <emphasis role="strong">throws</emphasis> exception-list ] <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist><note><itemizedlist><listitem override="none">
@@ -1499,7 +1499,7 @@
 <para><emphasis>Class and static properties are not yet supported in current Vala releases.</emphasis> </para></listitem></itemizedlist></note><note><itemizedlist><listitem override="none">
 <para><emphasis role="strong">Note</emphasis> </para>
 <para><emphasis>Fully managed properties are only available to GObject derived classes - these are properties that can be set dynamically (by providing the property name at runtime) and can have attached metadata, as is often used in the GTK+ and GNOME libraries.  The other class types can have unmanaged properties, which appear similar when using Vala, but are actually implemented using simple methods.</emphasis> </para></listitem></itemizedlist></note>
-<para>Properties are an enhanced version of fields.  They allow custom code to be called whenever the property is retrieved or assigned to, but may be treated as fields by external Vala code.  Properties also function like methods to some extent, and so can be defined as virtual and overridden in subclasses.  Since they are also allowed in interfaces, they allow interfaces to declare data members that implementing classes must expose (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>.) </para>
+<para>Properties are an enhanced version of fields.  They allow custom code to be called whenever the property is retrieved or assigned to, but may be treated as fields by external Vala code.  Properties also function like methods to some extent, and so can be defined as virtual and overridden in subclasses.  Since they are also allowed in interfaces, they allow interfaces to declare data members that implementing classes must expose (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Interfaces#">Interfaces</ulink>.) </para>
 
 <section>
 <title>Declaration</title><itemizedlist><listitem override="none">
@@ -1547,7 +1547,7 @@
 
 <section>
 <title>Notify Changes Signals</title>
-<para>Managed properties may be annotated with Notify, See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>.  This will cause the class instance to emit a notify signal when the property has been assigned to. </para>
+<para>Managed properties may be annotated with Notify, See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>.  This will cause the class instance to emit a notify signal when the property has been assigned to. </para>
 </section>
 
 <section>
@@ -1567,7 +1567,7 @@
 <title>Signals</title><note><itemizedlist><listitem override="none">
 <para><emphasis role="strong">Note</emphasis> </para>
 <para><emphasis>Signals are only available to GObject derived classes.</emphasis> </para></listitem></itemizedlist></note>
-<para>Signals are a system allowing a classed-type instance to emit events which can be received by arbitrary listeners.  Receiving these events is achieved by connecting the signal to a handler, for which Vala has a specific syntax.  Signals are integrated with the GLib <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/MainLoop#">MainLoop</ulink> system, which provides a system for queueing events (i.e. signal emissions,) when needed - though this capability is not needed non-threaded applications. </para><itemizedlist><listitem override="none">
+<para>Signals are a system allowing a classed-type instance to emit events which can be received by arbitrary listeners.  Receiving these events is achieved by connecting the signal to a handler, for which Vala has a specific syntax.  Signals are integrated with the GLib <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/MainLoop#">MainLoop</ulink> system, which provides a system for queueing events (i.e. signal emissions,) when needed - though this capability is not needed non-threaded applications. </para><itemizedlist><listitem override="none">
 <para>class-instance-signal-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] [ class-method-type-modifier ] <emphasis role="strong">signal</emphasis> return-type signal-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> signal-name:</para><itemizedlist><listitem override="none">
@@ -1585,7 +1585,7 @@
 <para> qualified-method-name</para>
 <para> lambda-expression</para></listitem></itemizedlist></listitem></itemizedlist>
 <para>This expression will request that the signal handler given be invoked whenever the signal is emitted.  In order for such a connection expression to be legal, the handler must have the correct signature.  The handler should be defined to accept as parameters the same types as the signal, but with an extra parameter before.  This parameter should have the type of the class in which the signal is declared.  When a signal is emitted all handlers are called with this parameter being the object by which the signal was emitted. </para>
-<para>The time that an arbitrary expression is acceptable in this expression is when that expression evaluates to an instance of a delegate type, i.e. to a method that is a legal handler for the signal.  For details on delegates, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>.  For details on lambda expressions see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>. </para>
+<para>The time that an arbitrary expression is acceptable in this expression is when that expression evaluates to an instance of a delegate type, i.e. to a method that is a legal handler for the signal.  For details on delegates, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>.  For details on lambda expressions see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#Lambdas">Methods/Lambdas</ulink>. </para>
 <para>Note that optional signal detail should be directly appended to the signal name, with no white space, e.g. <code>o.notify[&quot;name&quot;] += ...</code> </para>
 <para>It is also possible to disconnect a signal handler using the following expression form: </para><itemizedlist><listitem override="none">
 <para>signal-disconnection-expression:</para><itemizedlist><listitem override="none">
@@ -1598,14 +1598,14 @@
 
 <section>
 <title>Class enums</title>
-<para>Enums defined in a class are basically the same as those defined in a namespace.  The only difference is the scope and the choice of visibilities available.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink>. </para><itemizedlist><listitem override="none">
+<para>Enums defined in a class are basically the same as those defined in a namespace.  The only difference is the scope and the choice of visibilities available.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Enumerated%20types%20%28Enums%29#">Enumerated types (Enums)</ulink>. </para><itemizedlist><listitem override="none">
 <para>class-enum-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] <emphasis role="strong">enum</emphasis> enum-name <emphasis role="strong">{</emphasis> [ enum-members ] <emphasis role="strong">}</emphasis> </para></listitem></itemizedlist></listitem></itemizedlist>
 </section>
 
 <section>
 <title>Class delegates</title>
-<para>Delegates defined in a class are basically the same as those defined in a namespace.  The only difference is the scope and the choice of visibilities available.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>. </para><itemizedlist><listitem override="none">
+<para>Delegates defined in a class are basically the same as those defined in a namespace.  The only difference is the scope and the choice of visibilities available.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Delegates#">Delegates</ulink>. </para><itemizedlist><listitem override="none">
 <para>class-delegate-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] return-type <emphasis role="strong">delegate</emphasis> delegate-name <emphasis role="strong">(</emphasis> method-params-list <emphasis role="strong">)</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
 </section>
@@ -1757,17 +1757,17 @@
 </section>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Interfaces</title>
-<para>An interface in Vala is a non-instantiable type.  A class may implement any number of interfaces, thereby declaring that an instance of that class should also be considered an instance of those interfaces.  Interfaces are part of the GType system, and so compact classes may not implement interfaces (see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>.) </para>
+<para>An interface in Vala is a non-instantiable type.  A class may implement any number of interfaces, thereby declaring that an instance of that class should also be considered an instance of those interfaces.  Interfaces are part of the GType system, and so compact classes may not implement interfaces (see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class">Classes/Types of class</ulink>.) </para>
 <para>The simplest interface declaration looks like this: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><token><![CDATA[interface]]></token><![CDATA[ ]]><methodname><![CDATA[InterfaceName]]></methodname><![CDATA[ {]]>
 <![CDATA[}]]>
 </programlisting>
 <para>Unlike C# or Java, Vala's interfaces may include implemented methods, and so provide premade functionality to an implementing class, similar to mixins in other languages.  All methods defined in a Vala interface are automatically considered to be virtual.  Interfaces in Vala may also have prerequisites - classes or other interfaces that implementing classes must inherit from or implement.  This is a more general form of the interface inheritance found in other languages.  It should be noted that if you want to guarantee that all implementors of an interface are GObject type classes, you should give that class as a prerequisite for the interface. </para>
 <para>Interfaces in Vala have a static scope, identified by the name of the interface.  This is the only scope associated with them (i.e. there is no class or instance scope created for them at any time.)  Non-instance members of the interface (static members and other declarations,) can be identified using this scope. </para>
-<para>For an overview of object oriented programming, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>. </para>
+<para>For an overview of object oriented programming, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Concepts#Object_oriented_programming">Concepts/Object oriented programming</ulink>. </para>
 
 <section>
 <title>Interface declaration</title><itemizedlist><listitem override="none">
@@ -1805,7 +1805,7 @@
 <section>
 <title>Interface fields</title>
 <para>As an interface is not instantiable, it may not contain data on a per instance basis.  It is though allowable to define static fields in an interface.  These are equivalent to static fields in a class: they exist exactly once regardless of how many instances there are of classes that implement the interface. </para>
-<para>The syntax for static interface fields is the same as the static class fields: See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_fields">Classes/Class fields</ulink>.  For more explanation of static vs instance members, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class_members">Classes/Types of class members</ulink>. </para>
+<para>The syntax for static interface fields is the same as the static class fields: See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_fields">Classes/Class fields</ulink>.  For more explanation of static vs instance members, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Types_of_class_members">Classes/Types of class members</ulink>. </para>
 </section>
 
 <section>
@@ -1818,7 +1818,7 @@
 <para>[ class-member-visibility-modifier ] <emphasis role="strong">abstract</emphasis> return-type method-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> method-contracts [ <emphasis role="strong">throws</emphasis> exception-list ] <emphasis role="strong">;</emphasis></para></listitem></itemizedlist>
 <para> interface-static-method-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] <emphasis role="strong">static</emphasis> return-type method-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> method-contracts [ <emphasis role="strong">throws</emphasis> exception-list ] <emphasis role="strong">{</emphasis> statement-list <emphasis role="strong">}</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>For discussion of methods in classes, see: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink>.  For information about methods in general, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>.  Of particular note is that an abstract method of an interface defines a method that can always be called in an instance of an interface, because that instance is guaranteed to be of a non-abstract class that implements the interface's abstract methods. </para>
+<para>For discussion of methods in classes, see: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink>.  For information about methods in general, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>.  Of particular note is that an abstract method of an interface defines a method that can always be called in an instance of an interface, because that instance is guaranteed to be of a non-abstract class that implements the interface's abstract methods. </para>
 </section>
 
 <section>
@@ -1828,7 +1828,7 @@
 <para>interface-instance-property-declaration:</para><itemizedlist><listitem override="none">
 <para>[ class-member-visibility-modifier ] [ class-method-type-modifier ] qualified-type-name property-name <emphasis role="strong">{</emphasis> accessors [ default-value ] <emphasis role="strong">}</emphasis> <emphasis role="strong">;</emphasis></para>
 <para> [ class-member-visibility-modifier ] <emphasis role="strong">abstract</emphasis> qualified-type-name property-name <emphasis role="strong">{</emphasis> automatic-accessors <emphasis role="strong">}</emphasis> <emphasis role="strong">;</emphasis></para></listitem></itemizedlist></listitem></itemizedlist>
-<para>For properties in classes see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Properties">Classes/Properties</ulink>. </para>
+<para>For properties in classes see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Properties">Classes/Properties</ulink>. </para>
 </section>
 
 <section>
@@ -1840,7 +1840,7 @@
 
 <section>
 <title>Other interface members</title>
-<para>Constants, Enums, Delegates and Inner Classes all function the same as when they are declared in a class.  See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>.  When declared in an interface, all these members can be accessed either using the name of the interface (that is, of the static interface scope), or through and instance of an implementing class. </para>
+<para>Constants, Enums, Delegates and Inner Classes all function the same as when they are declared in a class.  See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#">Classes</ulink>.  When declared in an interface, all these members can be accessed either using the name of the interface (that is, of the static interface scope), or through and instance of an implementing class. </para>
 </section>
 
 <section>
@@ -2023,7 +2023,7 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Generics</title>
@@ -2125,7 +2125,7 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Structs</title>
@@ -2183,7 +2183,7 @@
 
 <section>
 <title>Struct methods</title>
-<para>See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>, See <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink> </para><itemizedlist><listitem override="none">
+<para>See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Methods#">Methods</ulink>, See <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Classes#Class_methods">Classes/Class methods</ulink> </para><itemizedlist><listitem override="none">
 <para>struct-method-declaration:</para><itemizedlist><listitem override="none">
 <para>[ access-modifier ] [ struct-method-type-modifier ] return-type method-name <emphasis role="strong">(</emphasis> [ params-list ] <emphasis role="strong">)</emphasis> method-contracts [ <emphasis role="strong">throws</emphasis> exception-list ] <emphasis role="strong">{</emphasis> statement-list <emphasis role="strong">}</emphasis></para></listitem></itemizedlist>
 <para> struct-method-type-modifier:</para><itemizedlist><listitem override="none">
@@ -2197,7 +2197,7 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Enumerated types (Enums)</title>
@@ -2238,7 +2238,7 @@
 
 <section>
 <title>Flag types</title>
-<para>An enumerated type declaration can be converted into a flag type declaration by annotating the declaration with &quot;Flags&quot;.  A flag type represents a set of flags, any number of which can be combined in one instance of the flag type, in the same fashion as a bitfield in C.  For an explanation of the operations that can be performed on flag types, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Flag_operations">Expressions/Flag operations</ulink>.  For how to use attributes, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>. </para>
+<para>An enumerated type declaration can be converted into a flag type declaration by annotating the declaration with &quot;Flags&quot;.  A flag type represents a set of flags, any number of which can be combined in one instance of the flag type, in the same fashion as a bitfield in C.  For an explanation of the operations that can be performed on flag types, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Expressions#Flag_operations">Expressions/Flag operations</ulink>.  For how to use attributes, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">Attributes</ulink>. </para>
 <para>For example, say we want to draw the borders of a table cell: </para><programlisting format="linespecific" language="vala" linenumbering="numbered" startinglinenumber="1"><![CDATA[[]]><methodname><![CDATA[Flags]]></methodname><![CDATA[]]]>
 <token><![CDATA[enum]]></token><![CDATA[ ]]><methodname><![CDATA[Borders]]></methodname><![CDATA[ {]]>
 <![CDATA[    ]]><methodname><![CDATA[LEFT]]></methodname><![CDATA[,]]>
@@ -2263,7 +2263,7 @@
 <section>
 <title>Error domains</title>
 <para>Error domains are Vala's method for describing errors.  An error domain is declared using a similar syntax to enumerated types, but this does not define a type - instead it defines a class of errors, which is used to implicitly create a new error type for the error domain.  The error domain declaration syntax is effectively the same as for enumerated types, but the keyword <code>errordomain</code> is used instead of <code>enum</code>. </para>
-<para>For more information about handling errors in Vala, see <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>. </para>
+<para>For more information about handling errors in Vala, see <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Errors#">Errors</ulink>. </para>
 </section>
 
 <section>
@@ -2273,7 +2273,7 @@
 </programlisting>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Attributes</title>
@@ -2530,7 +2530,7 @@
 
 <section>
 <title>SimpleType attribute</title>
-<para>This attribute is applied to structs. Consider reading: <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Value_types">Vala Manual - Value Types</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Tutorial#Value_Types">Vala Tutorial - Value Types</ulink>. </para>
+<para>This attribute is applied to structs. Consider reading: <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Types#Value_types">Vala Manual - Value Types</ulink> and <ulink url="http://wiki.gnome.org/Projects/Vala/Tutorial#Value_Types">Vala Tutorial - Value Types</ulink>. </para>
 </section>
 
 <section>
@@ -2761,7 +2761,7 @@
 <para>TODO: write examples. </para>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>Preprocessor</title>
@@ -2868,11 +2868,11 @@ $ ./preprocessor-debug]]></screen>
 </section>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>GIDL metadata format</title>
-<para>This section describes the format of .metadata files as used by <emphasis>vapigen</emphasis> as additional information for .vapi file generation. Some of the information specified in the metadata can be used to set <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">symbol attributes</ulink> as well. </para>
+<para>This section describes the format of .metadata files as used by <emphasis>vapigen</emphasis> as additional information for .vapi file generation. Some of the information specified in the metadata can be used to set <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual/Attributes#">symbol attributes</ulink> as well. </para>
 
 <section>
 <title>Comments</title>
@@ -3191,7 +3191,7 @@ $ ./preprocessor-debug]]></screen>
 <para>Demonstrating... </para><screen><![CDATA[// ...]]></screen>
 </section>
 </section>
-<para>Back to <ulink url="https://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
+<para>Back to <ulink url="http://wiki.gnome.org/Projects/Vala/Manual/Export/Projects/Vala/Manual#">Vala Reference Manual</ulink> </para>
 
 <section>
 <title>GIR metadata format</title>
