@@ -1,3 +1,17 @@
+Vala 0.56.1
+===========
+ * Various improvements and bug fixes:
+  - vala: Improve accessibility check inside member initializer [#1300]
+  - vala: Don't allow nullable enum value as real GObject property [#1074]
+  - valadoc: Include path to doclet in error message
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - gtk4: Fix GLib.Value parameter in ContentProvider.get_value()
+  - gtk4: Split out gtk4-wayland and gtk4-x11 into separate bindings [#1308]
+  - gstreamer: Update from 1.21+ git main
+  - vapi: Update GIR-based bindings
+
 Vala 0.56.0
 ===========
  * Various improvements and bug fixes:
