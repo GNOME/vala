@@ -1,5 +1,6 @@
 [DBus (name = "org.project.Bar", timeout = 120000)]
 public interface OrgProjectBar : GLib.Object {
+	[Version (since = "0.58")]
 	public abstract void hello_world (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_primitive_types (char val_byte, bool val_boolean, int16 val_int16, uint16 val_uint16, int32 val_int32, uint32 val_uint32, int64 val_int64, uint64 val_uint64, double val_double, string val_string, GLib.ObjectPath val_objpath, string val_signature, string val_bytestring, out char ret_byte, out bool ret_boolean, out int16 ret_int16, out uint16 ret_uint16, out int32 ret_int32, out uint32 ret_uint32, out int64 ret_int64, out uint64 ret_uint64, out double ret_double, out string ret_string, out GLib.ObjectPath ret_objpath, out string ret_signature, out string ret_bytestring) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, [DBus (signature = "(iss)")] GLib.Variant a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
@@ -44,8 +45,10 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract string finally_normal_name { owned get; set; }
 	public abstract string readonly_property { owned get; }
 	public abstract string writeonly_property { set; }
+	[CCode (notify = false)]
 	[DBus (name = "quiet")]
 	public abstract string quiet { owned get; set; }
+	[CCode (notify = false)]
 	[DBus (name = "quiet_too")]
 	public abstract string quiet_too { owned get; set; }
 	[DBus (name = "unset_i")]
@@ -156,6 +159,7 @@ public interface ChangingInterfaceV2 : GLib.Object {
 }
 [DBus (name = "ChangingInterfaceV10", timeout = 120000)]
 public interface ChangingInterfaceV10 : GLib.Object {
+	[Version (since = "10.0")]
 	public abstract void added_method_in10 () throws GLib.DBusError, GLib.IOError;
 	public abstract void new_method_in2 () throws GLib.DBusError, GLib.IOError;
 	public abstract void baz_method () throws GLib.DBusError, GLib.IOError;

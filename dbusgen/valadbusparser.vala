@@ -229,7 +229,10 @@ public class Vala.DBusParser : CodeVisitor {
 				// This annotation is intended to be used by code generators to implement client-side caching of property values.
 				// For all properties for which the annotation is set to const, invalidates or true the client may unconditionally
 				// cache the values as the properties don't change or notifications are generated for them if they do.
-				//TODO
+				if (val == "false" || val == "const") {
+					// const is technically wrong, but if you can't change the value, notify will never be triggered
+					current_node.set_attribute_bool ("CCode", "notify", false);
+				}
 				break;
 			case "org.freedesktop.DBus.GLib.Async":
 				if (current_node is Method) {
@@ -266,12 +269,14 @@ public class Vala.DBusParser : CodeVisitor {
 			case "org.gtk.GDBus.C.UnixFD":
 				// If set to a non-empty string, the generated code will include parameters to exchange file descriptors using the
 				// #GUnixFDList type. This annotation can be used on <method> elements.
-				//TODO
+				// Ignore as we don't have to generate any special code
 				break;
 			case "org.gtk.GDBus.Since":
 				// Can be used on any <interface>, <method>, <signal> and <property> element to specify the version (any free-form
 				// string but compared using a version-aware sort function) the element appeared in.
-				//TODO
+				if (val != null) {
+					current_node.set_attribute_string ("Version", "since", val);
+				}
 				break;
 			case "org.gtk.GDBus.DocString":
 				// A string with Docbook content for documentation. This annotation can be used on <interface>, <method>, <signal>,

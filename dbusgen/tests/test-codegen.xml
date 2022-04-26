@@ -6,6 +6,7 @@
 
     <method name="HelloWorld">
       <annotation name="org.gtk.GDBus.DocString" value="Method &lt;emphasis&gt;documentation&lt;/emphasis&gt; blablablabla."/>
+      <annotation name="org.gtk.GDBus.Since" value="0.58"/>
       <annotation name="ExistingAnnotation" value="blah"/>
       <annotation name="org.gtk.GDBus.ExistingInternalAnnotation" value="booh"/>
       <arg name="greeting" direction="in" type="s">

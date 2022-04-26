@@ -109,6 +109,7 @@ public class Vala.DBusGen {
 		context.vapi_comments = true;
 
 		context.add_external_package ("gio-2.0");
+		context.add_external_package ("gio-unix-2.0");
 
 		if (packages != null) {
 			foreach (string package in packages) {
