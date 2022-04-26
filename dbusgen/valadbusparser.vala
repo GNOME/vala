@@ -229,7 +229,7 @@ public class Vala.DBusParser : CodeVisitor {
 				// This annotation is intended to be used by code generators to implement client-side caching of property values.
 				// For all properties for which the annotation is set to const, invalidates or true the client may unconditionally
 				// cache the values as the properties don't change or notifications are generated for them if they do.
-				if (val == "false" || val == "const") {
+				if (val != null && (val == "false" || val == "const")) {
 					// const is technically wrong, but if you can't change the value, notify will never be triggered
 					current_node.set_attribute_bool ("CCode", "notify", false);
 				}
@@ -281,6 +281,10 @@ public class Vala.DBusParser : CodeVisitor {
 			case "org.gtk.GDBus.DocString":
 				// A string with Docbook content for documentation. This annotation can be used on <interface>, <method>, <signal>,
 				// <property> and <arg> elements.
+				if (val != null) {
+					((Symbol) current_node).comment = new Vala.Comment (val, get_current_src ());
+				}
+				break;
 			case "org.gtk.GDBus.DocString.Short":
 				// A string with Docbook content for short/brief documentation. This annotation can only be used on <interface>
 				// elements.
