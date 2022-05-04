@@ -388,8 +388,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		cfile.add_include ("string.h");
 		generate_type_declaration (ssize_t_type, cfile);
 
-		// assumes that overwritten array elements are null before invocation
-		// FIXME will leak memory if that's not the case
+		var null_id = new CCodeIdentifier("NULL");
+
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
@@ -397,6 +397,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("length", get_ccode_name (ssize_t_type)));
+		fun.add_parameter (new CCodeParameter ("free_func", "GDestroyNotify"));
 
 		push_function (fun);
 
@@ -410,6 +411,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
 		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest_end, element_size));
+		var free_func = new CCodeIdentifier("free_func");
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
 		ccall.add_argument (dest_address);
@@ -419,6 +421,21 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src_end, dest)));
 
+		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
+		var init_expr = new CCodeVariableDeclarator("i", src_address);
+		var iterator_var = new CCodeIdentifier("i");
+		var cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, dest);
+		var iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+
+		ccode.open_for(init_expr, cond_expr, iter_expr);
+		var accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		var free_call = new CCodeFunctionCall(free_func);
+		free_call.add_argument(accessed_element);
+		ccode.add_expression(free_call);
+
+		ccode.close();
+		ccode.close();
+
 		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero1.add_argument (src_address);
 		czero1.add_argument (new CCodeConstant ("0"));
@@ -427,6 +444,21 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest_end)));
 
+		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
+		init_expr = new CCodeVariableDeclarator("i", dest);
+		iterator_var = new CCodeIdentifier("i");
+		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, src);
+		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+
+		ccode.open_for(init_expr, cond_expr, iter_expr);
+		accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		free_call = new CCodeFunctionCall(free_func);
+		free_call.add_argument(accessed_element);
+		ccode.add_expression(free_call);
+
+		ccode.close();
+		ccode.close();
+
 		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero2.add_argument (dest_end_address);
 		czero2.add_argument (new CCodeConstant ("0"));
@@ -434,6 +466,21 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccode.add_expression (czero2);
 
 		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, src, dest));
+
+		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
+		init_expr = new CCodeVariableDeclarator("i", src);
+		iterator_var = new CCodeIdentifier("i");
+		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, length);
+		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+
+		ccode.open_for(init_expr, cond_expr, iter_expr);
+		accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		free_call = new CCodeFunctionCall(free_func);
+		free_call.add_argument(accessed_element);
+		ccode.add_expression(free_call);
+
+		ccode.close();
+		ccode.close();
 
 		var czero3 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero3.add_argument (src_address);

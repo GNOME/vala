@@ -337,6 +337,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			in_arg_map.set (get_param_pos (0.1), csizeof);
+
+			in_arg_map.set (get_param_pos (0.5), get_destroy_func_expression(array_type.element_type));
 		} else if (m is DynamicMethod) {
 			emit_context.push_symbol (m);
 			m.clear_parameters ();
