@@ -415,16 +415,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
 		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest_end, element_size));
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
-		ccall.add_argument (dest_address);
-		ccall.add_argument (src_address);
-		ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
-		ccode.add_expression (ccall);
-
-		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src_end, dest)));
+		var moving_forward_overlapping = new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src_end, dest));
+		var moving_back_overlapping = new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest_end));
+		var move_without_overlapping = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, src, dest);
 
 		var free_func_not_null_check = new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id);
 		ccode.open_if (free_func_not_null_check);
+
+		ccode.open_if (moving_forward_overlapping);
 
 		var iterator_declarator = new CCodeVariableDeclarator ("i");
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
@@ -442,17 +440,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccode.add_expression(free_call);
 
 		ccode.close();
-		ccode.close();
 
-		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-		czero1.add_argument (src_address);
-		czero1.add_argument (new CCodeConstant ("0"));
-		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src), element_size));
-		ccode.add_expression (czero1);
+		ccode.else_if(moving_back_overlapping);
 
-		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest_end)));
-
-		ccode.open_if (free_func_not_null_check);
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
 		init_expr = new CCodeAssignment(iterator_var, dest);
@@ -466,17 +456,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccode.add_expression(free_call);
 
 		ccode.close();
-		ccode.close();
 
-		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-		czero2.add_argument (dest_end_address);
-		czero2.add_argument (new CCodeConstant ("0"));
-		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest), element_size));
-		ccode.add_expression (czero2);
+		ccode.else_if(move_without_overlapping);
 
-		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, src, dest));
-
-		ccode.open_if (free_func_not_null_check);
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
 		init_expr = new CCodeAssignment(iterator_var, src);
@@ -490,7 +472,32 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccode.add_expression(free_call);
 
 		ccode.close();
+
 		ccode.close();
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
+		ccall.add_argument (dest_address);
+		ccall.add_argument (src_address);
+		ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
+		ccode.add_expression (ccall);
+
+		ccode.open_if (moving_forward_overlapping);
+
+		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		czero1.add_argument (src_address);
+		czero1.add_argument (new CCodeConstant ("0"));
+		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src), element_size));
+		ccode.add_expression (czero1);
+
+		ccode.else_if (moving_back_overlapping);
+
+		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		czero2.add_argument (dest_end_address);
+		czero2.add_argument (new CCodeConstant ("0"));
+		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest), element_size));
+		ccode.add_expression (czero2);
+
+		ccode.else_if (move_without_overlapping);
 
 		var czero3 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero3.add_argument (src_address);
