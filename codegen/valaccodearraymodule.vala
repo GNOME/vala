@@ -390,10 +390,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var null_id = new CCodeIdentifier("NULL");
 		var free_func = new CCodeIdentifier("free_func");
+		var array_id = new CCodeIdentifier ("array");
 
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
-		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
+		fun.add_parameter (new CCodeParameter (array_id.name, get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("element_size", get_ccode_name (size_t_type)));
 		fun.add_parameter (new CCodeParameter (free_func.name, get_ccode_name (delegate_target_destroy_type)));
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (ssize_t_type)));
@@ -402,7 +403,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		push_function (fun);
 
-		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
+		var array = new CCodeCastExpression (array_id, "char*");
+		var void_array = new CCodeCastExpression(array_id, "void**");
 		var element_size = new CCodeIdentifier ("element_size");
 		var length = new CCodeIdentifier ("length");
 		var src = new CCodeIdentifier ("src");
@@ -434,7 +436,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
-		var accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		var accessed_element = new CCodeElementAccess(void_array, iterator_var);
 		var free_call = new CCodeFunctionCall(free_func);
 		free_call.add_argument(accessed_element);
 		ccode.add_expression(free_call);
@@ -458,7 +460,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
-		accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		accessed_element = new CCodeElementAccess(void_array, iterator_var);
 		free_call = new CCodeFunctionCall(free_func);
 		free_call.add_argument(accessed_element);
 		ccode.add_expression(free_call);
