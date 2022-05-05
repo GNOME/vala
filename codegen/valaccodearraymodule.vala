@@ -428,9 +428,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
 		var iterator_var = new CCodeIdentifier("i");
-		var init_expr = new CCodeAssignment(iterator_var, src);
+		var init_expr = new CCodeAssignment(iterator_var, dest);
 
-		var cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, dest);
+		var cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, src_end);
 		var iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
@@ -461,8 +461,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
-		init_expr = new CCodeAssignment(iterator_var, src);
-		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, length);
+		init_expr = new CCodeAssignment(iterator_var, dest);
+		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, dest_end);
 		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
