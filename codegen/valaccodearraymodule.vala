@@ -471,9 +471,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		free_call.add_argument(accessed_element);
 		ccode.add_expression(free_call);
 
-		ccode.close();
-
-		ccode.close();
+		ccode.close(); //close cycle
+		ccode.close(); //close endif
+		ccode.close(); //close if for free_func_not_null_check
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
 		ccall.add_argument (dest_address);
