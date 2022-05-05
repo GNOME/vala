@@ -484,7 +484,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
-		accessed_element = new CCodeElementAccess(array, new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size));
+		accessed_element = new CCodeElementAccess(void_array, iterator_var);
 		free_call = new CCodeFunctionCall(free_func);
 		free_call.add_argument(accessed_element);
 		ccode.add_expression(free_call);
