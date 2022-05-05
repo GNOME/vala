@@ -389,6 +389,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		generate_type_declaration (ssize_t_type, cfile);
 
 		var null_id = new CCodeIdentifier("NULL");
+		var free_func = new CCodeIdentifier("free_func");
 
 		var fun = new CCodeFunction ("_vala_array_move", "void");
 		fun.modifiers = CCodeModifiers.STATIC;
@@ -397,7 +398,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("length", get_ccode_name (ssize_t_type)));
-		fun.add_parameter (new CCodeParameter ("free_func", "GDestroyNotify"));
+		fun.add_parameter (new CCodeParameter (free_func.name, get_ccode_name (delegate_target_destroy_type)));
 
 		push_function (fun);
 
@@ -411,7 +412,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
 		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest_end, element_size));
-		var free_func = new CCodeIdentifier("free_func");
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
 		ccall.add_argument (dest_address);
@@ -421,9 +421,15 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src_end, dest)));
 
-		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
-		var init_expr = new CCodeVariableDeclarator("i", src_address);
+		var free_func_not_null_check = new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id);
+		ccode.open_if (free_func_not_null_check);
+
+		var iterator_declarator = new CCodeVariableDeclarator ("i");
+		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
+
 		var iterator_var = new CCodeIdentifier("i");
+		var init_expr = new CCodeAssignment(iterator_var, src);
+
 		var cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, dest);
 		var iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
@@ -444,9 +450,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, src, dest), new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest_end)));
 
-		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
-		init_expr = new CCodeVariableDeclarator("i", dest);
-		iterator_var = new CCodeIdentifier("i");
+		ccode.open_if (free_func_not_null_check);
+		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
+
+		init_expr = new CCodeAssignment(iterator_var, dest);
 		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, src);
 		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
@@ -467,9 +474,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.else_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, src, dest));
 
-		ccode.open_if (new CCodeBinaryExpression(CCodeBinaryOperator.INEQUALITY, free_func, null_id));
-		init_expr = new CCodeVariableDeclarator("i", src);
-		iterator_var = new CCodeIdentifier("i");
+		ccode.open_if (free_func_not_null_check);
+		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
+
+		init_expr = new CCodeAssignment(iterator_var, src);
 		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, length);
 		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
