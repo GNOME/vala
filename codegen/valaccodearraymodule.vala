@@ -395,10 +395,10 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeParameter ("array", get_ccode_name (pointer_type)));
 		fun.add_parameter (new CCodeParameter ("element_size", get_ccode_name (size_t_type)));
+		fun.add_parameter (new CCodeParameter (free_func.name, get_ccode_name (delegate_target_destroy_type)));
 		fun.add_parameter (new CCodeParameter ("src", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("dest", get_ccode_name (ssize_t_type)));
 		fun.add_parameter (new CCodeParameter ("length", get_ccode_name (ssize_t_type)));
-		fun.add_parameter (new CCodeParameter (free_func.name, get_ccode_name (delegate_target_destroy_type)));
 
 		push_function (fun);
 
