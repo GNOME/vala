@@ -22,11 +22,16 @@
 #define _free0(var) ((var == NULL) ? NULL : (var = (free (var), NULL)))
 typedef void (*ValaDestroyNotify) (void* data);
 typedef int (*SimpleFunc) (void);
+typedef struct _TestMoveCall TestMoveCall;
 typedef struct _Foo Foo;
 typedef struct _Bar Bar;
 typedef struct _Manam Manam;
 #define _manam_free0(var) ((var == NULL) ? NULL : (var = (manam_free (var), NULL)))
 #define VALA_N_ELEMENTS(arr) (sizeof (arr) / sizeof ((arr)[0]))
+
+struct _TestMoveCall {
+	int idx;
+};
 
 struct _Foo {
 	const char* array[2];
@@ -130,7 +135,15 @@ static bool _vala_valavoid_array_contains (void* * stack,
 VALA_EXTERN void test_explicit_copying (void);
 static int* _vala_array_dup11 (int* self,
                         ssize_t length);
-VALA_EXTERN void test_array_move (void);
+VALA_EXTERN void test_array_with_primitives_move (void);
+VALA_EXTERN TestMoveCall* test_move_call_dup (const TestMoveCall* self);
+VALA_EXTERN void test_move_call_free (TestMoveCall* self);
+VALA_EXTERN void test_move_call_init (TestMoveCall *self,
+                          int idx);
+VALA_EXTERN void test_array_with_struct_move (int src,
+                                  int dest,
+                                  int count,
+                                  int expected_destructor_calls);
 VALA_EXTERN void test_array_resize (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
@@ -157,6 +170,7 @@ static void _vala_array_free (void* array,
                        ValaDestroyNotify destroy_func);
 static void _vala_array_move (void* array,
                        size_t element_size,
+                       ValaDestroyNotify free_func,
                        ssize_t src,
                        ssize_t dest,
                        ssize_t length);
@@ -1338,7 +1352,7 @@ test_explicit_copying (void)
 }
 
 void
-test_array_move (void)
+test_array_with_primitives_move (void)
 {
 	int* a = NULL;
 	int* _tmp0_;
@@ -1346,6 +1360,7 @@ test_array_move (void)
 	int _a_size_;
 	int _tmp1_;
 	int _tmp2_;
+	int _tmp3_;
 	_tmp0_ = calloc (9, sizeof (int));
 	_tmp0_[0] = 1;
 	_tmp0_[1] = 2;
@@ -1361,10 +1376,97 @@ test_array_move (void)
 	_a_size_ = a_length1;
 	_tmp1_ = a[4];
 	assert (_tmp1_ == 5);
-	_vala_array_move (a, sizeof (int), 4, 0, 5);
+	_vala_array_move (a, sizeof (int), NULL, 4, 0, 5);
 	_tmp2_ = a[4];
 	assert (_tmp2_ == 9);
+	_tmp3_ = a[8];
+	assert (_tmp3_ == 0);
 	a = (free (a), NULL);
+}
+
+void
+test_move_call_init (TestMoveCall *self,
+                     int idx)
+{
+	memset (self, 0, sizeof (TestMoveCall));
+	(*self).idx = idx;
+}
+
+TestMoveCall*
+test_move_call_dup (const TestMoveCall* self)
+{
+	TestMoveCall* dup;
+	dup = calloc (1, sizeof (TestMoveCall));
+	memcpy (dup, self, sizeof (TestMoveCall));
+	return dup;
+}
+
+void
+test_move_call_free (TestMoveCall* self)
+{
+	free (self);
+}
+
+void
+test_array_with_struct_move (int src,
+                             int dest,
+                             int count,
+                             int expected_destructor_calls)
+{
+	static const int arr_size = 5;
+	TestMoveCall* arr = NULL;
+	TestMoveCall* _tmp0_;
+	int arr_length1;
+	int _arr_size_;
+	TestMoveCall testObj = {0};
+	TestMoveCall* _tmp5_;
+	int _tmp5__length1;
+	TestMoveCall _tmp6_;
+	TestMoveCall* _tmp7_;
+	int _tmp7__length1;
+	TestMoveCall _tmp8_;
+	TestMoveCall _tmp9_;
+	_tmp0_ = calloc (arr_size, sizeof (TestMoveCall));
+	arr = _tmp0_;
+	arr_length1 = arr_size;
+	_arr_size_ = arr_length1;
+	{
+		int i = 0;
+		i = 0;
+		{
+			bool _tmp1_ = false;
+			_tmp1_ = true;
+			while (true) {
+				TestMoveCall* _tmp3_;
+				int _tmp3__length1;
+				TestMoveCall _tmp4_ = {0};
+				if (!_tmp1_) {
+					int _tmp2_;
+					_tmp2_ = i;
+					i = _tmp2_ + 1;
+				}
+				_tmp1_ = false;
+				if (!(i < arr_size)) {
+					break;
+				}
+				_tmp3_ = arr;
+				_tmp3__length1 = arr_length1;
+				test_move_call_init (&_tmp4_, i);
+				_tmp3_[i] = _tmp4_;
+			}
+		}
+	}
+	_tmp5_ = arr;
+	_tmp5__length1 = arr_length1;
+	_tmp6_ = _tmp5_[src];
+	testObj = _tmp6_;
+	_vala_array_move (arr, sizeof (TestMoveCall), NULL, src, dest, count);
+	_tmp7_ = arr;
+	_tmp7__length1 = arr_length1;
+	_tmp8_ = _tmp7_[dest];
+	_tmp9_ = testObj;
+	assert (_tmp8_.idx == _tmp9_.idx);
+	arr = (free (arr), NULL);
 }
 
 void
@@ -1615,7 +1717,7 @@ _vala_main (void)
 	test_delegate_array ();
 	test_void_array ();
 	test_explicit_copying ();
-	test_array_move ();
+	test_array_with_primitives_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();
@@ -1656,10 +1758,29 @@ _vala_array_free (void* array,
 static void
 _vala_array_move (void* array,
                   size_t element_size,
+                  ValaDestroyNotify free_func,
                   ssize_t src,
                   ssize_t dest,
                   ssize_t length)
 {
+	if (free_func != NULL) {
+		if ((src < dest) && ((src + length) > dest)) {
+			ssize_t i;
+			for (i = dest; i < (src + length); i++) {
+				free_func (((void**) array)[i]);
+			}
+		} else if ((src > dest) && (src < (dest + length))) {
+			ssize_t i;
+			for (i = dest; i < src; i++) {
+				free_func (((void**) array)[i]);
+			}
+		} else if (src != dest) {
+			ssize_t i;
+			for (i = dest; i < (dest + length); i++) {
+				free_func (((void**) array)[i]);
+			}
+		}
+	}
 	memmove (((char*) array) + (dest * element_size), ((char*) array) + (src * element_size), length * element_size);
 	if ((src < dest) && ((src + length) > dest)) {
 		memset (((char*) array) + (src * element_size), 0, (dest - src) * element_size);

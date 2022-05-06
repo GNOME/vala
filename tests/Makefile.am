@@ -56,6 +56,7 @@ TESTS = \
 	basic-types/arrays.vala \
 	basic-types/arrays-generics.vala \
 	basic-types/arrays-fixed-assignment.vala \
+	basic-types/arrays-move-with-class.vala \
 	basic-types/array-uint8-uchar-compat.vala \
 	basic-types/pointers.vala \
 	basic-types/pointers-arithmetic.vala \

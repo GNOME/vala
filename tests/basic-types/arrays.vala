@@ -213,11 +213,32 @@ void test_explicit_copying () {
 	assert (a0[1] == a1[1]);
 }
 
-void test_array_move () {
+void test_array_with_primitives_move () {
 	int[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	assert (a[4] == 5);
 	a.move (4, 0, 5);
 	assert (a[4] == 9);
+	assert (a[8] == 0);
+}
+
+struct TestMoveCall {
+	int idx;
+
+	public TestMoveCall (int idx) { this.idx = idx; }
+}
+
+void test_array_with_struct_move (int src, int dest, int count, int expected_destructor_calls)
+{
+	const int arr_size = 5;
+	TestMoveCall[] arr = new TestMoveCall[arr_size];
+        for(int i=0; i<arr_size; i++)
+	{
+            arr[i] = TestMoveCall (i);
+	}
+
+	TestMoveCall testObj = arr[src];
+        arr.move (src, dest, count);
+	assert(arr[dest].idx == testObj.idx);
 }
 
 void test_array_resize () {
@@ -300,7 +321,10 @@ void main () {
 	test_delegate_array ();
 	test_void_array ();
 	test_explicit_copying ();
-	test_array_move ();
+	test_array_with_primitives_move ();
+	//test_array_with_struct_move(0, 2, 3, 1);
+	//test_array_with_struct_move(2, 0, 3, 2);
+	//test_array_with_struct_move(0, 3, 1, 1);
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();
