@@ -338,7 +338,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			in_arg_map.set (get_param_pos (0.1), csizeof);
 
-			CCodeExpression? free_func_expr = new CCodeIdentifier("NULL");
+			CCodeExpression free_func_expr = new CCodeIdentifier("NULL");
 			if (array_type.element_type.value_owned) {
 				free_func_expr = get_destroy_func_expression(array_type.element_type);
 			}

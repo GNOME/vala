@@ -322,9 +322,9 @@ void main () {
 	test_void_array ();
 	test_explicit_copying ();
 	test_array_with_primitives_move ();
-	//test_array_with_struct_move(0, 2, 3, 1);
-	//test_array_with_struct_move(2, 0, 3, 2);
-	//test_array_with_struct_move(0, 3, 1, 1);
+	test_array_with_struct_move(0, 2, 3, 1);
+	test_array_with_struct_move(2, 0, 3, 2);
+	test_array_with_struct_move(0, 3, 1, 1);
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();
