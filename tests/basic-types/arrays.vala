@@ -213,7 +213,7 @@ void test_explicit_copying () {
 	assert (a0[1] == a1[1]);
 }
 
-void test_array_with_primitives_move () {
+void test_array_with_simple_move () {
 	int[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	assert (a[4] == 5);
 	a.move (4, 0, 5);
@@ -221,24 +221,26 @@ void test_array_with_primitives_move () {
 	assert (a[8] == 0);
 }
 
-struct TestMoveCall {
-	int idx;
-
-	public TestMoveCall (int idx) { this.idx = idx; }
+void test_array_with_struct_move () {
+	Bar[] a = { {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9} };
+	a.move (0, 2, 3);
+	assert (a[2].bar == 1);
+	assert (a[3].bar == 2);
+	assert (a[4].bar == 3);
 }
 
-void test_array_with_struct_move (int src, int dest, int count, int expected_destructor_calls)
-{
-	const int arr_size = 5;
-	TestMoveCall[] arr = new TestMoveCall[arr_size];
-        for(int i=0; i<arr_size; i++)
-	{
-            arr[i] = TestMoveCall (i);
-	}
+void test_array_with_boxed_move () {
+	int?[] a1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	assert (a1[4] == 5);
+	a1.move (4, 0, 5);
+	assert (a1[4] == 9);
+	assert (a1[8] == 0);
 
-	TestMoveCall testObj = arr[src];
-        arr.move (src, dest, count);
-	assert(arr[dest].idx == testObj.idx);
+	Bar?[] a2 = { {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9} };
+	a2.move (0, 2, 3);
+	assert (a2[2].bar == 1);
+	assert (a2[3].bar == 2);
+	assert (a2[4].bar == 3);
 }
 
 void test_array_resize () {
@@ -321,10 +323,9 @@ void main () {
 	test_delegate_array ();
 	test_void_array ();
 	test_explicit_copying ();
-	test_array_with_primitives_move ();
-	test_array_with_struct_move(0, 2, 3, 1);
-	test_array_with_struct_move(2, 0, 3, 2);
-	test_array_with_struct_move(0, 3, 1, 1);
+	test_array_with_simple_move ();
+	test_array_with_struct_move ();
+	//FIXME test_array_with_boxed_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();

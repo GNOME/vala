@@ -20,14 +20,11 @@
 #define _g_free0(var) ((var == NULL) ? NULL : (var = (g_free (var), NULL)))
 typedef gint (*SimpleFunc) (void);
 
-#define TYPE_TEST_MOVE_CALL (test_move_call_get_type ())
-typedef struct _TestMoveCall TestMoveCall;
+#define TYPE_BAR (bar_get_type ())
+typedef struct _Bar Bar;
 
 #define TYPE_FOO (foo_get_type ())
 typedef struct _Foo Foo;
-
-#define TYPE_BAR (bar_get_type ())
-typedef struct _Bar Bar;
 
 #define TYPE_MANAM (manam_get_type ())
 typedef struct _Manam Manam;
@@ -37,16 +34,12 @@ typedef struct _Manam Manam;
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
-struct _TestMoveCall {
-	gint idx;
+struct _Bar {
+	gint bar;
 };
 
 struct _Foo {
 	const gchar* array[2];
-	gint bar;
-};
-
-struct _Bar {
 	gint bar;
 };
 
@@ -143,23 +136,16 @@ static gboolean _vala_valavoid_array_contains (void* * stack,
 VALA_EXTERN void test_explicit_copying (void);
 static gint* _vala_array_dup11 (gint* self,
                          gssize length);
-VALA_EXTERN void test_array_with_primitives_move (void);
-VALA_EXTERN GType test_move_call_get_type (void) G_GNUC_CONST ;
-VALA_EXTERN TestMoveCall* test_move_call_dup (const TestMoveCall* self);
-VALA_EXTERN void test_move_call_free (TestMoveCall* self);
-VALA_EXTERN void test_move_call_init (TestMoveCall *self,
-                          gint idx);
-VALA_EXTERN void test_array_with_struct_move (gint src,
-                                  gint dest,
-                                  gint count,
-                                  gint expected_destructor_calls);
+VALA_EXTERN void test_array_with_simple_move (void);
+VALA_EXTERN void test_array_with_struct_move (void);
+VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN Bar* bar_dup (const Bar* self);
+VALA_EXTERN void bar_free (Bar* self);
+VALA_EXTERN void test_array_with_boxed_move (void);
 VALA_EXTERN void test_array_resize (void);
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
-VALA_EXTERN Bar* bar_dup (const Bar* self);
-VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Manam* manam_dup (const Manam* self);
 VALA_EXTERN void manam_free (Manam* self);
@@ -1318,7 +1304,7 @@ test_explicit_copying (void)
 }
 
 void
-test_array_with_primitives_move (void)
+test_array_with_simple_move (void)
 {
 	gint* a = NULL;
 	gint* _tmp0_;
@@ -1351,108 +1337,217 @@ test_array_with_primitives_move (void)
 }
 
 void
-test_move_call_init (TestMoveCall *self,
-                     gint idx)
+test_array_with_struct_move (void)
 {
-	memset (self, 0, sizeof (TestMoveCall));
-	(*self).idx = idx;
+	Bar* a = NULL;
+	Bar _tmp0_ = {0};
+	Bar _tmp1_ = {0};
+	Bar _tmp2_ = {0};
+	Bar _tmp3_ = {0};
+	Bar _tmp4_ = {0};
+	Bar _tmp5_ = {0};
+	Bar _tmp6_ = {0};
+	Bar _tmp7_ = {0};
+	Bar _tmp8_ = {0};
+	Bar* _tmp9_;
+	gint a_length1;
+	gint _a_size_;
+	Bar _tmp10_;
+	Bar _tmp11_;
+	Bar _tmp12_;
+	memset (&_tmp0_, 0, sizeof (Bar));
+	_tmp0_.bar = 1;
+	memset (&_tmp1_, 0, sizeof (Bar));
+	_tmp1_.bar = 2;
+	memset (&_tmp2_, 0, sizeof (Bar));
+	_tmp2_.bar = 3;
+	memset (&_tmp3_, 0, sizeof (Bar));
+	_tmp3_.bar = 4;
+	memset (&_tmp4_, 0, sizeof (Bar));
+	_tmp4_.bar = 5;
+	memset (&_tmp5_, 0, sizeof (Bar));
+	_tmp5_.bar = 6;
+	memset (&_tmp6_, 0, sizeof (Bar));
+	_tmp6_.bar = 7;
+	memset (&_tmp7_, 0, sizeof (Bar));
+	_tmp7_.bar = 8;
+	memset (&_tmp8_, 0, sizeof (Bar));
+	_tmp8_.bar = 9;
+	_tmp9_ = g_new0 (Bar, 9);
+	_tmp9_[0] = _tmp0_;
+	_tmp9_[1] = _tmp1_;
+	_tmp9_[2] = _tmp2_;
+	_tmp9_[3] = _tmp3_;
+	_tmp9_[4] = _tmp4_;
+	_tmp9_[5] = _tmp5_;
+	_tmp9_[6] = _tmp6_;
+	_tmp9_[7] = _tmp7_;
+	_tmp9_[8] = _tmp8_;
+	a = _tmp9_;
+	a_length1 = 9;
+	_a_size_ = a_length1;
+	_vala_array_move (a, sizeof (Bar), NULL, FALSE, 0, 2, 3);
+	_tmp10_ = a[2];
+	_vala_assert (_tmp10_.bar == 1, "a[2].bar == 1");
+	_tmp11_ = a[3];
+	_vala_assert (_tmp11_.bar == 2, "a[3].bar == 2");
+	_tmp12_ = a[4];
+	_vala_assert (_tmp12_.bar == 3, "a[4].bar == 3");
+	a = (g_free (a), NULL);
 }
 
-TestMoveCall*
-test_move_call_dup (const TestMoveCall* self)
+static gpointer
+_bar_dup0 (gpointer self)
 {
-	TestMoveCall* dup;
-	dup = g_new0 (TestMoveCall, 1);
-	memcpy (dup, self, sizeof (TestMoveCall));
-	return dup;
+	return self ? bar_dup (self) : NULL;
 }
 
 void
-test_move_call_free (TestMoveCall* self)
+test_array_with_boxed_move (void)
 {
-	g_free (self);
-}
-
-static GType
-test_move_call_get_type_once (void)
-{
-	GType test_move_call_type_id;
-	test_move_call_type_id = g_boxed_type_register_static ("TestMoveCall", (GBoxedCopyFunc) test_move_call_dup, (GBoxedFreeFunc) test_move_call_free);
-	return test_move_call_type_id;
-}
-
-GType
-test_move_call_get_type (void)
-{
-	static volatile gsize test_move_call_type_id__once = 0;
-	if (g_once_init_enter (&test_move_call_type_id__once)) {
-		GType test_move_call_type_id;
-		test_move_call_type_id = test_move_call_get_type_once ();
-		g_once_init_leave (&test_move_call_type_id__once, test_move_call_type_id);
-	}
-	return test_move_call_type_id__once;
-}
-
-void
-test_array_with_struct_move (gint src,
-                             gint dest,
-                             gint count,
-                             gint expected_destructor_calls)
-{
-	static const gint arr_size = 5;
-	TestMoveCall* arr = NULL;
-	TestMoveCall* _tmp0_;
-	gint arr_length1;
-	gint _arr_size_;
-	TestMoveCall testObj = {0};
-	TestMoveCall* _tmp5_;
-	gint _tmp5__length1;
-	TestMoveCall _tmp6_;
-	TestMoveCall* _tmp7_;
-	gint _tmp7__length1;
-	TestMoveCall _tmp8_;
-	TestMoveCall _tmp9_;
-	_tmp0_ = g_new0 (TestMoveCall, arr_size);
-	arr = _tmp0_;
-	arr_length1 = arr_size;
-	_arr_size_ = arr_length1;
-	{
-		gint i = 0;
-		i = 0;
-		{
-			gboolean _tmp1_ = FALSE;
-			_tmp1_ = TRUE;
-			while (TRUE) {
-				TestMoveCall* _tmp3_;
-				gint _tmp3__length1;
-				TestMoveCall _tmp4_ = {0};
-				if (!_tmp1_) {
-					gint _tmp2_;
-					_tmp2_ = i;
-					i = _tmp2_ + 1;
-				}
-				_tmp1_ = FALSE;
-				if (!(i < arr_size)) {
-					break;
-				}
-				_tmp3_ = arr;
-				_tmp3__length1 = arr_length1;
-				test_move_call_init (&_tmp4_, i);
-				_tmp3_[i] = _tmp4_;
-			}
-		}
-	}
-	_tmp5_ = arr;
-	_tmp5__length1 = arr_length1;
-	_tmp6_ = _tmp5_[src];
-	testObj = _tmp6_;
-	_vala_array_move (arr, sizeof (TestMoveCall), NULL, FALSE, src, dest, count);
-	_tmp7_ = arr;
-	_tmp7__length1 = arr_length1;
-	_tmp8_ = _tmp7_[dest];
-	_tmp9_ = testObj;
-	_vala_assert (_tmp8_.idx == _tmp9_.idx, "arr[dest].idx == testObj.idx");
-	arr = (g_free (arr), NULL);
+	gint** a1 = NULL;
+	gint _tmp0_;
+	gint* _tmp1_;
+	gint _tmp2_;
+	gint* _tmp3_;
+	gint _tmp4_;
+	gint* _tmp5_;
+	gint _tmp6_;
+	gint* _tmp7_;
+	gint _tmp8_;
+	gint* _tmp9_;
+	gint _tmp10_;
+	gint* _tmp11_;
+	gint _tmp12_;
+	gint* _tmp13_;
+	gint _tmp14_;
+	gint* _tmp15_;
+	gint _tmp16_;
+	gint* _tmp17_;
+	gint** _tmp18_;
+	gint a1_length1;
+	gint _a1_size_;
+	gint* _tmp19_;
+	gint _tmp20_;
+	gint* _tmp21_;
+	gint _tmp22_;
+	gint* _tmp23_;
+	gint _tmp24_;
+	Bar** a2 = NULL;
+	Bar _tmp25_ = {0};
+	Bar* _tmp26_;
+	Bar _tmp27_ = {0};
+	Bar* _tmp28_;
+	Bar _tmp29_ = {0};
+	Bar* _tmp30_;
+	Bar _tmp31_ = {0};
+	Bar* _tmp32_;
+	Bar _tmp33_ = {0};
+	Bar* _tmp34_;
+	Bar _tmp35_ = {0};
+	Bar* _tmp36_;
+	Bar _tmp37_ = {0};
+	Bar* _tmp38_;
+	Bar _tmp39_ = {0};
+	Bar* _tmp40_;
+	Bar _tmp41_ = {0};
+	Bar* _tmp42_;
+	Bar** _tmp43_;
+	gint a2_length1;
+	gint _a2_size_;
+	Bar* _tmp44_;
+	Bar* _tmp45_;
+	Bar* _tmp46_;
+	_tmp0_ = 1;
+	_tmp1_ = __int_dup0 (&_tmp0_);
+	_tmp2_ = 2;
+	_tmp3_ = __int_dup0 (&_tmp2_);
+	_tmp4_ = 3;
+	_tmp5_ = __int_dup0 (&_tmp4_);
+	_tmp6_ = 4;
+	_tmp7_ = __int_dup0 (&_tmp6_);
+	_tmp8_ = 5;
+	_tmp9_ = __int_dup0 (&_tmp8_);
+	_tmp10_ = 6;
+	_tmp11_ = __int_dup0 (&_tmp10_);
+	_tmp12_ = 7;
+	_tmp13_ = __int_dup0 (&_tmp12_);
+	_tmp14_ = 8;
+	_tmp15_ = __int_dup0 (&_tmp14_);
+	_tmp16_ = 9;
+	_tmp17_ = __int_dup0 (&_tmp16_);
+	_tmp18_ = g_new0 (gint*, 9);
+	_tmp18_[0] = _tmp1_;
+	_tmp18_[1] = _tmp3_;
+	_tmp18_[2] = _tmp5_;
+	_tmp18_[3] = _tmp7_;
+	_tmp18_[4] = _tmp9_;
+	_tmp18_[5] = _tmp11_;
+	_tmp18_[6] = _tmp13_;
+	_tmp18_[7] = _tmp15_;
+	_tmp18_[8] = _tmp17_;
+	a1 = _tmp18_;
+	a1_length1 = 9;
+	_a1_size_ = a1_length1;
+	_tmp19_ = a1[4];
+	_tmp20_ = 5;
+	_vala_assert (_int_equal (_tmp19_, &_tmp20_) == TRUE, "a1[4] == 5");
+	_vala_array_move (a1, sizeof (gint*), g_free, TRUE, 4, 0, 5);
+	_tmp21_ = a1[4];
+	_tmp22_ = 9;
+	_vala_assert (_int_equal (_tmp21_, &_tmp22_) == TRUE, "a1[4] == 9");
+	_tmp23_ = a1[8];
+	_tmp24_ = 0;
+	_vala_assert (_int_equal (_tmp23_, &_tmp24_) == TRUE, "a1[8] == 0");
+	memset (&_tmp25_, 0, sizeof (Bar));
+	_tmp25_.bar = 1;
+	_tmp26_ = _bar_dup0 (&_tmp25_);
+	memset (&_tmp27_, 0, sizeof (Bar));
+	_tmp27_.bar = 2;
+	_tmp28_ = _bar_dup0 (&_tmp27_);
+	memset (&_tmp29_, 0, sizeof (Bar));
+	_tmp29_.bar = 3;
+	_tmp30_ = _bar_dup0 (&_tmp29_);
+	memset (&_tmp31_, 0, sizeof (Bar));
+	_tmp31_.bar = 4;
+	_tmp32_ = _bar_dup0 (&_tmp31_);
+	memset (&_tmp33_, 0, sizeof (Bar));
+	_tmp33_.bar = 5;
+	_tmp34_ = _bar_dup0 (&_tmp33_);
+	memset (&_tmp35_, 0, sizeof (Bar));
+	_tmp35_.bar = 6;
+	_tmp36_ = _bar_dup0 (&_tmp35_);
+	memset (&_tmp37_, 0, sizeof (Bar));
+	_tmp37_.bar = 7;
+	_tmp38_ = _bar_dup0 (&_tmp37_);
+	memset (&_tmp39_, 0, sizeof (Bar));
+	_tmp39_.bar = 8;
+	_tmp40_ = _bar_dup0 (&_tmp39_);
+	memset (&_tmp41_, 0, sizeof (Bar));
+	_tmp41_.bar = 9;
+	_tmp42_ = _bar_dup0 (&_tmp41_);
+	_tmp43_ = g_new0 (Bar*, 9);
+	_tmp43_[0] = _tmp26_;
+	_tmp43_[1] = _tmp28_;
+	_tmp43_[2] = _tmp30_;
+	_tmp43_[3] = _tmp32_;
+	_tmp43_[4] = _tmp34_;
+	_tmp43_[5] = _tmp36_;
+	_tmp43_[6] = _tmp38_;
+	_tmp43_[7] = _tmp40_;
+	_tmp43_[8] = _tmp42_;
+	a2 = _tmp43_;
+	a2_length1 = 9;
+	_a2_size_ = a2_length1;
+	_vala_array_move (a2, sizeof (Bar*), bar_free, TRUE, 0, 2, 3);
+	_tmp44_ = a2[2];
+	_vala_assert ((*_tmp44_).bar == 1, "a2[2].bar == 1");
+	_tmp45_ = a2[3];
+	_vala_assert ((*_tmp45_).bar == 2, "a2[3].bar == 2");
+	_tmp46_ = a2[4];
+	_vala_assert ((*_tmp46_).bar == 3, "a2[4].bar == 3");
+	a2 = (_vala_array_free (a2, a2_length1, (GDestroyNotify) bar_free), NULL);
+	a1 = (_vala_array_free (a1, a1_length1, (GDestroyNotify) g_free), NULL);
 }
 
 void
@@ -1763,10 +1858,8 @@ _vala_main (void)
 	test_delegate_array ();
 	test_void_array ();
 	test_explicit_copying ();
-	test_array_with_primitives_move ();
-	test_array_with_struct_move (0, 2, 3, 1);
-	test_array_with_struct_move (2, 0, 3, 2);
-	test_array_with_struct_move (0, 3, 1, 1);
+	test_array_with_simple_move ();
+	test_array_with_struct_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();
