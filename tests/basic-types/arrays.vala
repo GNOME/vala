@@ -242,7 +242,7 @@ void test_array_with_boxed_move () {
 	assert (a2[1] == null);
 	assert (a2[2].bar == 1);
 	assert (a2[3].bar == 2);
-	//FIXME assert (a2[4].bar == 3);
+	assert (a2[4].bar == 3);
 }
 
 void test_array_resize () {
@@ -327,7 +327,7 @@ void main () {
 	test_explicit_copying ();
 	test_array_with_simple_move ();
 	test_array_with_struct_move ();
-	test_array_with_boxed_move ();
+	//FIXME test_array_with_boxed_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();

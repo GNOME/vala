@@ -388,8 +388,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		cfile.add_include ("string.h");
 		generate_type_declaration (ssize_t_type, cfile);
 
-		var null_id = new CCodeIdentifier("NULL");
-		var free_func = new CCodeIdentifier("free_func");
+		var null_id = new CCodeIdentifier ("NULL");
+		var free_func = new CCodeIdentifier ("element_destroy_func");
 		var array_id = new CCodeIdentifier ("array");
 		var is_pointer_id = new CCodeIdentifier ("is_pointer");
 
@@ -406,7 +406,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		push_function (fun);
 
 		var array = new CCodeCastExpression (array_id, "char*");
-		var void_array = new CCodeCastExpression(array_id, "void**");
+		var void_array = new CCodeCastExpression (array_id, "void**");
 		var element_size = new CCodeIdentifier ("element_size");
 		var length = new CCodeIdentifier ("length");
 		var src = new CCodeIdentifier ("src");
@@ -432,8 +432,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var iterator_var = new CCodeIdentifier("i");
 		var init_expr = new CCodeAssignment(iterator_var, dest);
 
-		var cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, src_end);
-		var iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+		var cond_expr = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, iterator_var, src_end);
+		var iter_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_if (is_pointer_id);
 
@@ -447,73 +447,73 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		ccode.add_else ();
 
-		ccode.open_for(init_expr, cond_expr, iter_expr);
-		var offset = new CCodeBinaryExpression(CCodeBinaryOperator.MUL, iterator_var, element_size);
+		ccode.open_for (init_expr, cond_expr, iter_expr);
+		var offset = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, iterator_var, element_size);
 		var address_to_clean = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, offset);
-		free_call = new CCodeFunctionCall(free_func);
+		free_call = new CCodeFunctionCall (free_func);
 		free_call.add_argument (address_to_clean);
 		ccode.add_expression (free_call);
 
-		ccode.close();
-		ccode.close();
+		ccode.close ();
+		ccode.close ();
 
-		ccode.else_if(moving_back_overlapping);
+		ccode.else_if (moving_back_overlapping);
 
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
-		init_expr = new CCodeAssignment(iterator_var, dest);
-		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, src);
-		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+		init_expr = new CCodeAssignment (iterator_var, dest);
+		cond_expr = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, iterator_var, src);
+		iter_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_if (is_pointer_id);
 
 		ccode.open_for(init_expr, cond_expr, iter_expr);
-		free_call = new CCodeFunctionCall(free_func);
-		free_call.add_argument(accessed_element);
-		ccode.add_expression(free_call);
+		free_call = new CCodeFunctionCall (free_func);
+		free_call.add_argument (accessed_element);
+		ccode.add_expression (free_call);
 
 		ccode.close();
 
 		ccode.add_else ();
 
-		ccode.open_for(init_expr, cond_expr, iter_expr);
+		ccode.open_for (init_expr, cond_expr, iter_expr);
 		free_call = new CCodeFunctionCall(free_func);
 		free_call.add_argument (address_to_clean);
 		ccode.add_expression (free_call);
 
-		ccode.close();
-		ccode.close();
+		ccode.close ();
+		ccode.close ();
 
-		ccode.else_if(move_without_overlapping);
+		ccode.else_if (move_without_overlapping);
 
 		ccode.add_declaration (get_ccode_name (ssize_t_type), iterator_declarator);
 
-		init_expr = new CCodeAssignment(iterator_var, dest);
-		cond_expr = new CCodeBinaryExpression(CCodeBinaryOperator.LESS_THAN, iterator_var, dest_end);
-		iter_expr = new CCodeUnaryExpression(CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
+		init_expr = new CCodeAssignment (iterator_var, dest);
+		cond_expr = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, iterator_var, dest_end);
+		iter_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, iterator_var);
 
 		ccode.open_if (is_pointer_id);
 
-		ccode.open_for(init_expr, cond_expr, iter_expr);
-		accessed_element = new CCodeElementAccess(void_array, iterator_var);
-		free_call = new CCodeFunctionCall(free_func);
-		free_call.add_argument(accessed_element);
-		ccode.add_expression(free_call);
+		ccode.open_for (init_expr, cond_expr, iter_expr);
+		accessed_element = new CCodeElementAccess (void_array, iterator_var);
+		free_call = new CCodeFunctionCall (free_func);
+		free_call.add_argument (accessed_element);
+		ccode.add_expression (free_call);
 
-		ccode.close(); /*close cycle*/
+		ccode.close (); /*close cycle*/
 
 		ccode.add_else ();
 
-		ccode.open_for(init_expr, cond_expr, iter_expr);
-		free_call = new CCodeFunctionCall(free_func);
+		ccode.open_for (init_expr, cond_expr, iter_expr);
+		free_call = new CCodeFunctionCall (free_func);
 		free_call.add_argument (address_to_clean);
 		ccode.add_expression (free_call);
 
-		ccode.close(); /*close cycle*/
-		ccode.close(); /*close is_pointer_check*/
+		ccode.close (); /*close cycle*/
+		ccode.close (); /*close is_pointer_check*/
 
-		ccode.close(); /*close endif*/
-		ccode.close(); /*close if for free_func_not_null_check*/
+		ccode.close (); /*close endif*/
+		ccode.close (); /*close if for free_func_not_null_check*/
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("memmove"));
 		ccall.add_argument (dest_address);
