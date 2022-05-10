@@ -363,7 +363,19 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccode.add_expression (ccall);
+
 				set_cvalue (expr, ctemp);
+
+				if (get_ccode_array_null_terminated (prop)) {
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+					len_call.add_argument (ctemp);
+
+					var glib_value = (GLibValue) expr.target_value;
+					glib_value.array_length_cvalues = null;
+					glib_value.append_array_length_cvalue (len_call);
+					glib_value.lvalue = false;
+				}
 			}
 
 			if (prop.get_accessor.value_type is GenericType) {
