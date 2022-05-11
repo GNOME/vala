@@ -183,6 +183,7 @@ static void _vala_array_free (gpointer array,
 static void _vala_array_move (gpointer array,
                        gsize element_size,
                        GDestroyNotify free_func,
+                       gboolean is_pointer,
                        gssize src,
                        gssize dest,
                        gssize length);
@@ -1341,7 +1342,7 @@ test_array_with_primitives_move (void)
 	_a_size_ = a_length1;
 	_tmp1_ = a[4];
 	_vala_assert (_tmp1_ == 5, "a[4] == 5");
-	_vala_array_move (a, sizeof (gint), NULL, 4, 0, 5);
+	_vala_array_move (a, sizeof (gint), NULL, FALSE, 4, 0, 5);
 	_tmp2_ = a[4];
 	_vala_assert (_tmp2_ == 9, "a[4] == 9");
 	_tmp3_ = a[8];
@@ -1445,7 +1446,7 @@ test_array_with_struct_move (gint src,
 	_tmp5__length1 = arr_length1;
 	_tmp6_ = _tmp5_[src];
 	testObj = _tmp6_;
-	_vala_array_move (arr, sizeof (TestMoveCall), NULL, src, dest, count);
+	_vala_array_move (arr, sizeof (TestMoveCall), NULL, FALSE, src, dest, count);
 	_tmp7_ = arr;
 	_tmp7__length1 = arr_length1;
 	_tmp8_ = _tmp7_[dest];
@@ -1807,6 +1808,7 @@ static void
 _vala_array_move (gpointer array,
                   gsize element_size,
                   GDestroyNotify free_func,
+                  gboolean is_pointer,
                   gssize src,
                   gssize dest,
                   gssize length)
@@ -1814,18 +1816,36 @@ _vala_array_move (gpointer array,
 	if (free_func != NULL) {
 		if ((src < dest) && ((src + length) > dest)) {
 			gssize i;
-			for (i = dest; i < (src + length); i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < (src + length); i++) {
+					free_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < (src + length); i++) {
+					free_func (((char*) array) + (i * element_size));
+				}
 			}
 		} else if ((src > dest) && (src < (dest + length))) {
 			gssize i;
-			for (i = dest; i < src; i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < src; i++) {
+					free_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < src; i++) {
+					free_func (((char*) array) + (i * element_size));
+				}
 			}
 		} else if (src != dest) {
 			gssize i;
-			for (i = dest; i < (dest + length); i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < (dest + length); i++) {
+					free_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < (dest + length); i++) {
+					free_func (((char*) array) + (i * element_size));
+				}
 			}
 		}
 	}

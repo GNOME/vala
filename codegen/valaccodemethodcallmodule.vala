@@ -338,12 +338,16 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			csizeof.add_argument (new CCodeIdentifier (get_ccode_name (array_type.element_type)));
 			in_arg_map.set (get_param_pos (0.1), csizeof);
 
-			CCodeExpression free_func_expr = new CCodeIdentifier("NULL");
+			CCodeExpression free_func_expr = new CCodeIdentifier ("NULL");
 			if (array_type.element_type.value_owned) {
-				free_func_expr = get_destroy_func_expression(array_type.element_type);
+				free_func_expr = get_destroy_func_expression (array_type.element_type);
 			}
 
 			in_arg_map.set (get_param_pos (0.2), free_func_expr);
+
+			CCodeExpression is_pointer = get_boolean_cconstant (array_type.element_type.nullable || array_type.element_type.is_reference_type_or_type_parameter ());
+
+			in_arg_map.set (get_param_pos (0.3), is_pointer);
 		} else if (m is DynamicMethod) {
 			emit_context.push_symbol (m);
 			m.clear_parameters ();
