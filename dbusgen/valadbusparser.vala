@@ -281,14 +281,17 @@ public class Vala.DBusParser : CodeVisitor {
 			case "org.gtk.GDBus.DocString":
 				// A string with Docbook content for documentation. This annotation can be used on <interface>, <method>, <signal>,
 				// <property> and <arg> elements.
-				if (val != null) {
+				if (val != null && current_node is Symbol) {
 					((Symbol) current_node).comment = new Vala.Comment (val, get_current_src ());
 				}
 				break;
 			case "org.gtk.GDBus.DocString.Short":
 				// A string with Docbook content for short/brief documentation. This annotation can only be used on <interface>
 				// elements.
-				//TODO
+				// Prefer long comments over short comments
+				if (val != null && current_node is Symbol && ((Symbol) current_node).comment == null) {
+					((Symbol) current_node).comment = new Vala.Comment (val, get_current_src ());
+				}
 				break;
 			default:
 				break;
