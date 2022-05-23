@@ -1458,7 +1458,6 @@ test_array_with_boxed_move (void)
 	Bar* _tmp44_;
 	Bar* _tmp45_;
 	Bar* _tmp46_;
-	Bar* _tmp47_;
 	_tmp0_ = 1;
 	_tmp1_ = __int_dup0 (&_tmp0_);
 	_tmp2_ = 2;
@@ -1548,8 +1547,6 @@ test_array_with_boxed_move (void)
 	_vala_assert ((*_tmp45_).bar == 1, "a2[2].bar == 1");
 	_tmp46_ = a2[3];
 	_vala_assert ((*_tmp46_).bar == 2, "a2[3].bar == 2");
-	_tmp47_ = a2[4];
-	_vala_assert ((*_tmp47_).bar == 3, "a2[4].bar == 3");
 	a2 = (_vala_array_free (a2, a2_length1, (GDestroyNotify) bar_free), NULL);
 	a1 = (_vala_array_free (a1, a1_length1, (GDestroyNotify) g_free), NULL);
 }
@@ -1864,6 +1861,7 @@ _vala_main (void)
 	test_explicit_copying ();
 	test_array_with_simple_move ();
 	test_array_with_struct_move ();
+	test_array_with_boxed_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();

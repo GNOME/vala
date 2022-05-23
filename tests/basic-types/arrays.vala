@@ -327,7 +327,7 @@ void main () {
 	test_explicit_copying ();
 	test_array_with_simple_move ();
 	test_array_with_struct_move ();
-	//FIXME test_array_with_boxed_move ();
+	test_array_with_boxed_move ();
 	test_array_resize ();
 	test_struct_array ();
 	test_fixed_array ();
