@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<alias name="Bar" c:type="TestBar">
+  <type name="Foo" c:type="TestFoo"/>
+</alias>
+<alias name="IBar" c:type="TestIBar">
+  <type name="IFoo" c:type="TestIFoo"/>
+</alias>
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <implements name="Test.IFoo"/>
+  <method name="method_virtual" c:identifier="test_foo_method_virtual" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </method>
+  <virtual-method name="method_virtual" invoker="method_virtual" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </virtual-method>
+  <method name="method_async" c:identifier="test_foo_method_async">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="input" transfer-ownership="none">
+        <type name="utf8" c:type="const gchar*"/>
+      </parameter>
+      <parameter name="_callback_" transfer-ownership="none" allow-none="1" closure="2" scope="async">
+        <type name="Gio.AsyncReadyCallback" c:type="GAsyncReadyCallback"/>
+      </parameter>
+      <parameter name="_callback__target" transfer-ownership="none" allow-none="1">
+        <type name="gpointer" c:type="void*"/>
+      </parameter>
+    </parameters>
+  </method>
+  <method name="method_finish" c:identifier="test_foo_method_finish" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="_res_" transfer-ownership="none">
+        <type name="Gio.AsyncResult" c:type="GAsyncResult*"/>
+      </parameter>
+      <parameter name="output" direction="out" transfer-ownership="full">
+        <type name="utf8" c:type="gchar**"/>
+      </parameter>
+    </parameters>
+  </method>
+  <constructor name="new" c:identifier="test_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Test.Foo" c:type="TestFoo*"/>
+    </return-value>
+  </constructor>
+  <constructor name="bar" c:identifier="test_foo_new_bar">
+    <return-value transfer-ownership="full">
+      <type name="Test.Foo" c:type="TestFoo*"/>
+    </return-value>
+  </constructor>
+  <property name="prop" writable="1" construct="1">
+    <type name="utf8" c:type="gchar*"/>
+  </property>
+  <method name="get_prop" c:identifier="test_foo_get_prop">
+    <return-value transfer-ownership="full">
+      <type name="utf8" c:type="gchar*"/>
+    </return-value>
+  </method>
+  <method name="set_prop" c:identifier="test_foo_set_prop">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="value" transfer-ownership="none">
+        <type name="utf8" c:type="const gchar*"/>
+      </parameter>
+    </parameters>
+  </method>
+  <glib:signal name="sig">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="arg" transfer-ownership="none">
+        <type name="utf8" c:type="const gchar*"/>
+      </parameter>
+    </parameters>
+  </glib:signal>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo">
+  <field name="method_virtual">
+    <callback name="method_virtual" c:type="method_virtual" throws="1">
+      <return-value transfer-ownership="full">
+        <type name="none"/>
+      </return-value>
+      <parameters>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Test.Foo" c:type="TestFoo*"/>
+        </parameter>
+      </parameters>
+    </callback>
+  </field>
+</record>
+<record name="FooPrivate" c:type="TestFooPrivate" disguised="1"/>
+<interface name="IFoo" c:type="TestIFoo" glib:type-name="TestIFoo" glib:get-type="test_ifoo_get_type" glib:type-struct="IFooIface">
+  <prerequisite name="GObject.Object"/>
+  <method name="method" c:identifier="test_ifoo_method" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </method>
+  <virtual-method name="method" invoker="method" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </virtual-method>
+</interface>
+<record name="IFooIface" c:type="TestIFooIface" glib:is-gtype-struct-for="IFoo">
+  <field name="method">
+    <callback name="method" c:type="method" throws="1">
+      <return-value transfer-ownership="full">
+        <type name="none"/>
+      </return-value>
+      <parameters>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Test.IFoo" c:type="TestIFoo*"/>
+        </parameter>
+      </parameters>
+    </callback>
+  </field>
+</record>
+</namespace>
+</repository>

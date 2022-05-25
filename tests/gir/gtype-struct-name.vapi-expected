@@ -1,0 +1,11 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", type_cname = "TestBarKlass", type_id = "test_bar_get_type ()")]
+	public class Bar : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Bar ();
+	}
+	[CCode (cheader_filename = "test.h", type_cname = "TestFooInterface", type_id = "test_foo_get_type ()")]
+	public interface Foo : GLib.Object {
+	}
+}

@@ -1,0 +1,25 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", cname = "Test", cprefix = "TEST_", has_type_id = false)]
+	public enum Test {
+		BAR,
+		FOO
+	}
+	[CCode (cheader_filename = "test.h", cname = "TestFlag", cprefix = "TEST_FLAG_", has_type_id = false)]
+	[Flags]
+	public enum TestFlag {
+		BAR,
+		FOO
+	}
+	[CCode (cheader_filename = "test.h", cname = "TestFlagWithType", cprefix = "TEST_FLAG_WITH_TYPE_", type_id = "test_flag_with_type_get_type ()")]
+	[Flags]
+	public enum TestFlagWithType {
+		BAR,
+		FOO
+	}
+	[CCode (cheader_filename = "test.h", cname = "TestWithType", cprefix = "TEST_WITH_TYPE_", type_id = "test_with_type_get_type ()")]
+	public enum TestWithType {
+		BAR,
+		FOO
+	}
+}

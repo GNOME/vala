@@ -1,0 +1,7 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", cname = "TEST_FOO_CONSTANT")]
+	public const string FOO_CONSTANT;
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "test.h", cname = "TEST_FOO_CONSTANT_ARRAY")]
+	public const string[] FOO_CONSTANT_ARRAY;
+}

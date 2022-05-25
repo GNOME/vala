@@ -1,0 +1,13 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "test_foo_get_type ()")]
+	[Compact]
+	public class Foo {
+		[CCode (has_construct_function = false)]
+		public Foo ();
+		[DestroysInstance]
+		public Test.Foo bar ();
+		[DestroysInstance]
+		public void baz ();
+	}
+}

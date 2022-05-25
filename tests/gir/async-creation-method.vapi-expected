@@ -1,0 +1,8 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+	public class Foo : GLib.Object {
+		[CCode (cname = "test_foo_new_async", has_construct_function = false)]
+		public async Foo (GLib.Cancellable? cancellable) throws GLib.Error;
+	}
+}

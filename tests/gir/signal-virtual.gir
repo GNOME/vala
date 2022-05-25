@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <virtual-method name="signal_virtual">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="Foo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </virtual-method>
+  <constructor name="new" c:identifier="test_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Test.Foo" c:type="TestFoo*"/>
+    </return-value>
+  </constructor>
+  <glib:signal name="signal-virtual">
+    <return-value transfer-ownership="full">
+      <type name="none"/>
+    </return-value>
+  </glib:signal>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo">
+  <field name="signal_virtual">
+    <callback name="signal_virtual" c:type="signal_virtual">
+      <return-value transfer-ownership="full">
+        <type name="none"/>
+      </return-value>
+      <parameters>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Test.Foo" c:type="TestFoo*"/>
+        </parameter>
+      </parameters>
+    </callback>
+  </field>
+</record>
+</namespace>
+</repository>

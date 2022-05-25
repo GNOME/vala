@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<record name="Foo" c:type="TestFoo">
+  <field name="u" writable="1">
+    <type name="guint" c:type="guint"/>
+  </field>
+  <union>
+    <field name="a" writable="1">
+      <array zero-terminated="0" fixed-size="2">
+        <type name="int" c:type="int*"/>
+      </array>
+    </field>
+    <field name="pad" readable="0" private="1">
+      <array zero-terminated="0" fixed-size="4">
+        <type name="guint" c:type="guint"/>
+      </array>
+    </field>
+  </union>
+</record>
+</namespace>
+</repository>

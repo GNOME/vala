@@ -1,0 +1,13 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", cname = "TestError", cprefix = "TEST_ERROR_", has_type_id = false)]
+	public errordomain TestError {
+		BAR,
+		FOO
+	}
+	[CCode (cheader_filename = "test.h", cname = "TestErrorWithType", cprefix = "TEST_ERROR_WITH_TYPE_", type_id = "test_error_with_type_get_type ()")]
+	public errordomain TestErrorWithType {
+		BAR,
+		FOO
+	}
+}
