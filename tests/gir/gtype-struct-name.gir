@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<interface name="Foo"
+           c:symbol-prefix="foo"
+           c:type="TestFoo"
+           glib:type-name="TestFoo"
+           glib:get-type="test_foo_get_type"
+           glib:type-struct="FooInterface">
+</interface>
+<record name="FooInterface"
+        c:type="TestFooInterface"
+        glib:is-gtype-struct-for="Foo">
+  <field name="parent" readable="0" private="1">
+    <type name="GObject.TypeInterface" c:type="GTypeInterface"/>
+  </field>
+</record>
+<class name="Bar"
+       c:symbol-prefix="bar"
+       c:type="TestBar"
+       parent="GObject.Object"
+       glib:type-name="TestBar"
+       glib:get-type="test_bar_get_type"
+       glib:type-struct="BarKlass">
+  <field name="parent" readable="0" private="1">
+    <type name="GObject.Object" c:type="GObject"/>
+  </field>
+</class>
+<record name="BarKlass"
+        c:type="TestBarKlass"
+        glib:is-gtype-struct-for="Bar">
+  <field name="parent" readable="0" private="1">
+    <type name="GObject.ObjectClass" c:type="GObjectClass"/>
+  </field>
+</record>
+</namespace>
+</repository>

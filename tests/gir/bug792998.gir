@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <method name="get_prop1" c:identifier="test_foo_get_prop1" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="gint" c:type="gint"/>
+    </return-value>
+  </method>
+  <method name="set_prop2" c:identifier="test_foo_set_prop2" throws="1">
+    <return-value transfer-ownership="full">
+      <type name="gboolean" c:type="gboolean"/>
+    </return-value>
+    <parameters>
+      <parameter name="i" transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="prop1" writable="1">
+    <type name="gint" c:type="gint"/>
+  </property>
+  <method name="set_prop1" c:identifier="test_foo_set_prop1">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+    <parameters>
+      <parameter name="value" transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="prop2" writable="1">
+    <type name="gint" c:type="gint"/>
+  </property>
+  <method name="get_prop2" c:identifier="test_foo_get_prop2">
+    <return-value transfer-ownership="none">
+      <type name="gint" c:type="gint"/>
+    </return-value>
+  </method>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo"/>
+</namespace>
+</repository>

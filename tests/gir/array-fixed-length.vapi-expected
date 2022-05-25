@@ -1,0 +1,11 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h")]
+	public static void change_array ([CCode (array_length = false)] ref uint8 array[2]);
+	[CCode (cheader_filename = "test.h")]
+	public static void get_array_out ([CCode (array_length = false)] out uint8 array[8]);
+	[CCode (array_length = false, array_length_cexpr = "16", cheader_filename = "test.h")]
+	public static unowned uint8[] get_array_return ();
+	[CCode (cheader_filename = "test.h")]
+	public static void set_array ([CCode (array_length = false)] uint8 array[4]);
+}

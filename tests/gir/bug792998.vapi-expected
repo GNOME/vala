@@ -1,0 +1,16 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+	public class Foo : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Foo ();
+		public int get_prop1 () throws GLib.Error;
+		public int get_prop2 ();
+		public void set_prop1 (int value);
+		public bool set_prop2 (int i) throws GLib.Error;
+		[NoAccessorMethod]
+		public int prop1 { get; set; }
+		[NoAccessorMethod]
+		public int prop2 { get; set; }
+	}
+}

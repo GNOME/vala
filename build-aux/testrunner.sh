@@ -79,8 +79,6 @@ function testheader() {
 	elif [ "$1" = "D-Bus" ]; then
 		DBUSTEST=1
 		run_prefix="dbus-run-session -- $run_prefix"
-	elif [ "$1" = "GIR" ]; then
-		GIRTEST=1
 	elif [ "$1" = "GIRWriter" ]; then
 		GIRWRITERTEST=1
 	fi
@@ -96,28 +94,6 @@ function sourceheader() {
 		ns=${ns//-/_}
 		SOURCEFILE=$ns.vala
 		SOURCEFILES="$SOURCEFILES $SOURCEFILE"
-	elif [ $GIRTEST -eq 1 ]; then
-		if [ "$1" = "Input:" ]; then
-			ns=$testpath
-			SOURCEFILE=$ns.gir
-			cat <<EOF > $SOURCEFILE
-<?xml version="1.0"?>
-<repository version="1.2"
-			xmlns="http://www.gtk.org/introspection/core/1.0"
-			xmlns:c="http://www.gtk.org/introspection/c/1.0"
-			xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
-  <include name="GLib" version="2.0"/>
-  <include name="GObject" version="2.0"/>
-  <include name="Gio" version="2.0"/>
-  <c:include name="test.h"/>
-  <namespace name="Test"
-			 version="1.2"
-			 c:identifier-prefixes="Test"
-			 c:symbol-prefixes="test">
-EOF
-		elif [ "$1" = "Output:" ]; then
-			SOURCEFILE=$testpath.vapi.ref
-		fi
 	elif [ $GIRWRITERTEST -eq 1 ]; then
 		if [ "$1" = "Input:" ]; then
 			ns=$testpath
@@ -140,13 +116,6 @@ function sourceend() {
 		echo "RET=\$?" >> check
 		echo "if [ \$RET -ne 1 ]; then exit 1; fi" >> check
 		echo "exit 0" >> check
-	elif [ $GIRTEST -eq 1 ]; then
-		if [ $PART -eq 1 ]; then
-			echo "  </namespace>" >> $SOURCEFILE
-			echo "</repository>" >> $SOURCEFILE
-		fi
-		PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
-		echo "$VAPIGEN $VAPIGENFLAGS $PACKAGEFLAGS --library $ns $ns.gir && tail -n +5 $ns.vapi|sed '\$d'|diff -wu $ns.vapi.ref -" > check
 	elif [ $GIRWRITERTEST -eq 1 ]; then
 		if [ $PART -eq 1 ]; then
 			echo "}" >> $SOURCEFILE
@@ -203,6 +172,13 @@ case "$testfile" in
 	fi
 	./$testpath$EXEEXT
 	;;
+*.gir)
+	SOURCEFILE=$testpath.gir
+	cat "$abs_srcdir/$testfile" > ./$SOURCEFILE
+	PACKAGEFLAGS=$([ -z "$PACKAGES" ] || echo $PACKAGES | xargs -n 1 echo -n " --pkg")
+	$VAPIGEN $VAPIGENFLAGS $PACKAGEFLAGS --library $testpath $SOURCEFILE || exit 1
+	tail -n +3 ${SOURCEFILE%.*}.vapi | diff -wu $abs_srcdir/${testfile%.*}.vapi-expected - || exit 1
+	;;
 *.test)
 	rm -f prepare check
 	echo 'set -e' >> prepare
@@ -210,7 +186,6 @@ case "$testfile" in
 	PART=0
 	INHEADER=1
 	INVALIDCODE=0
-	GIRTEST=0
 	GIRWRITERTEST=0
 	DBUSTEST=0
 	ISSERVER=0

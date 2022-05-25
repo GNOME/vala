@@ -1,0 +1,9 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+	public class Foo : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Foo ();
+		public async void method_async (string input, string* sync_output, out string output) throws GLib.Error;
+	}
+}
