@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="TypeFoo" c:type="TestTypeFoo" glib:type-name="TestTypeFoo" glib:get-type="test_foo_get_type" glib:type-struct="TypeFooClass" parent="GObject.Object">
+  <constructor name="new" c:identifier="test_type_foo_new">
+    <return-value transfer-ownership="full">
+      <type name="Test.TypeFoo" c:type="TestTypeFoo*"/>
+    </return-value>
+  </constructor>
+  <method name="bar" c:identifier="test_type_foo_bar">
+    <return-value transfer-ownership="none">
+      <type name="none"/>
+    </return-value>
+  </method>
+</class>
+</namespace>
+</repository>

@@ -1,0 +1,9 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", has_type_id = false)]
+	public struct Foo {
+		public weak Test.FooBarCallbackFunc bar_callback;
+	}
+	[CCode (cheader_filename = "test.h", has_target = false, has_typedef = false)]
+	public delegate void* FooBarCallbackFunc (GLib.SourceFunc func) throws GLib.Error;
+}

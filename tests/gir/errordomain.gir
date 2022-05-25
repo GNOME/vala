@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<enumeration name="TestError"
+             c:type="TestError"
+             glib:error-domain="test-error-quark">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_ERROR_BAR">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_ERROR_FOO">
+  </member>
+</enumeration>
+<enumeration name="TestErrorWithType"
+             glib:type-name="TestErrorWithType"
+             glib:get-type="test_error_with_type_get_type"
+             c:type="TestErrorWithType"
+             glib:error-domain="test-error-with-type-quark">
+  <member name="bar"
+          value="0"
+          c:identifier="TEST_ERROR_WITH_TYPE_BAR"
+          glib:nick="bar">
+  </member>
+  <member name="foo"
+          value="1"
+          c:identifier="TEST_ERROR_WITH_TYPE_FOO"
+          glib:nick="foo">
+  </member>
+</enumeration>
+</namespace>
+</repository>

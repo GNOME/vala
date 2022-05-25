@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<constant name="FOO_CONSTANT"
+          value="foo-constant-string-value"
+          c:type="TEST_FOO_CONSTANT">
+  <type name="utf8" c:type="gchar*"/>
+</constant>
+<constant name="FOO_CONSTANT_ARRAY"
+          c:type="TEST_FOO_CONSTANT_ARRAY">
+  <array c:type="const gchar**">
+    <type name="utf8" c:type="const gchar*"/>
+  </array>
+</constant>
+</namespace>
+</repository>

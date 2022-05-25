@@ -1,0 +1,17 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", cname = "GcrCertificateRenderer", type_id = "gcr_certificate_renderer_get_type ()")]
+	public class CertificateRenderer : GLib.Object, Test.Renderer {
+		[CCode (has_construct_function = false)]
+		protected CertificateRenderer ();
+	}
+	[CCode (cheader_filename = "test.h", cname = "GcrRenderer", type_id = "gcr_renderer_get_type ()")]
+	public interface Renderer : GLib.Object {
+		[CCode (cname = "gcr_renderer_get_attributes")]
+		public unowned GLib.List get_attributes ();
+		[CCode (cname = "gcr_renderer_set_attributes")]
+		public void set_attributes (GLib.List? attrs);
+		[NoAccessorMethod]
+		public abstract GLib.List attributes { owned get; set; }
+	}
+}

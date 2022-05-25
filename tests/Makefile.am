@@ -18,11 +18,12 @@ BUILT_SOURCES = \
 noinst_PROGRAMS = \
 	$(NULL)
 
-TEST_EXTENSIONS = .vala .gs .test
+TEST_EXTENSIONS = .vala .gs .gir .test
 
 TEST_RUNNER = $(abs_top_srcdir)/build-aux/testrunner.sh
 VALA_LOG_COMPILER = $(TEST_RUNNER)
 GS_LOG_COMPILER = $(TEST_RUNNER)
+GIR_LOG_COMPILER = $(TEST_RUNNER)
 TEST_LOG_COMPILER = $(TEST_RUNNER)
 
 AM_TESTS_ENVIRONMENT = \
@@ -829,40 +830,40 @@ TESTS = \
 	dbus/bug792277.vala \
 	dbus/rawvariants.test \
 	dbus/interface-info.test \
-	gir/bug651773.test \
-	gir/bug667751.test \
-	gir/bug742012.test \
-	gir/bug788775.test \
-	gir/bug792998.test \
-	gir/alias.test \
-	gir/array-fixed-length.test \
-	gir/async-creation-method.test \
-	gir/async-result-pos.test \
-	gir/async-sync-out.test \
-	gir/class.test \
-	gir/class-final.test \
-	gir/constant.test \
-	gir/delegate-alias-without-target.test \
-	gir/delegate-anonymous.test \
-	gir/delegate-array-length-type.test \
-	gir/delegate-closure-destroy-index-conflict.test \
-	gir/delegate-error-pos.test \
-	gir/enum.test \
-	gir/errordomain.test \
-	gir/gtype-struct-name.test \
-	gir/instance-parameter-owned.test \
-	gir/method-array-length-type.test \
-	gir/method-class.test \
-	gir/method-nowrapper.test \
-	gir/parameter-array-length-type.test \
-	gir/parameter-nullable-out-simple-type.test \
-	gir/property-non-readable.test \
-	gir/signal-virtual.test \
-	gir/symbol-redefined.test \
-	gir/symbol-type-csuffix.test \
-	gir/symbol-without-name.test \
-	gir/union.test \
-	gir/union-transparent.test \
+	gir/bug651773.gir \
+	gir/bug667751.gir \
+	gir/bug742012.gir \
+	gir/bug788775.gir \
+	gir/bug792998.gir \
+	gir/alias.gir \
+	gir/array-fixed-length.gir \
+	gir/async-creation-method.gir \
+	gir/async-result-pos.gir \
+	gir/async-sync-out.gir \
+	gir/class.gir \
+	gir/class-final.gir \
+	gir/constant.gir \
+	gir/delegate-alias-without-target.gir \
+	gir/delegate-anonymous.gir \
+	gir/delegate-array-length-type.gir \
+	gir/delegate-closure-destroy-index-conflict.gir \
+	gir/delegate-error-pos.gir \
+	gir/enum.gir \
+	gir/errordomain.gir \
+	gir/gtype-struct-name.gir \
+	gir/instance-parameter-owned.gir \
+	gir/method-array-length-type.gir \
+	gir/method-class.gir \
+	gir/method-nowrapper.gir \
+	gir/parameter-array-length-type.gir \
+	gir/parameter-nullable-out-simple-type.gir \
+	gir/property-non-readable.gir \
+	gir/signal-virtual.gir \
+	gir/symbol-redefined.gir \
+	gir/symbol-type-csuffix.gir \
+	gir/symbol-without-name.gir \
+	gir/union.gir \
+	gir/union-transparent.gir \
 	girwriter/class-final.test \
 	girwriter/combined.test \
 	gtktemplate/gtkcallback-incompatible.test \
@@ -1448,4 +1449,5 @@ EXTRA_DIST = \
 	$(TESTS) \
 	$(LINUX_TESTS) \
 	$(wildcard $(srcdir)/*/*.c-expected) \
+	$(wildcard $(srcdir)/*/*.vapi-expected) \
 	$(NULL)

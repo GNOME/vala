@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="Foo"
+       c:symbol-prefix="foo"
+       c:type="TestFoo"
+       parent="GLib.Object"
+       abstract="1"
+       glib:type-name="TestFoo"
+       glib:get-type="test_foo_get_type"
+       glib:type-struct="FooClass">
+  <virtual-method name="bar">
+    <return-value transfer-ownership="none">
+      <type name="gboolean" c:type="gboolean"/>
+    </return-value>
+  </virtual-method>
+  <field name="parent">
+    <type name="GLib.Object" c:type="GObject"/>
+  </field>
+</class>
+<record name="FooClass"
+        c:type="TestFooClass"
+        glib:is-gtype-struct-for="Foo">
+  <field name="parent_class">
+    <type name="GLig.ObjectClass"
+          c:type="GObjectClass"/>
+  </field>
+  <field name="bar">
+    <callback name="bar">
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+      <parameters>
+        <parameter name="self" transfer-ownership="none">
+          <type name="Foo" c:type="TestFoo*"/>
+        </parameter>
+      </parameters>
+    </callback>
+  </field>
+</record>
+</namespace>
+</repository>
