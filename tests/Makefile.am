@@ -790,6 +790,7 @@ TESTS = \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/type-parameter-property-clash.vala \
+	generics/type-parameter-static-in-runtime.test \
 	generics/value-pointer-type-access.vala \
 	generics/bug640330.vala \
 	generics/bug640330-2.test \

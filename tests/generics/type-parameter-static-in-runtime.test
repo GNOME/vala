@@ -1,0 +1,14 @@
+Invalid Code
+
+[Compact]
+class Foo<T> {
+	public Bar<T> bar () {
+		return new Bar<T> ();
+	}
+}
+
+class Bar<T> {
+}
+
+void main () {
+}
