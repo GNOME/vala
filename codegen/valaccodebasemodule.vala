@@ -2839,6 +2839,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
+			unowned Symbol? parent = type_parameter.owner.owner;
+			if (parent is Class && ((Class) parent).is_compact) {
+				Report.error (type.source_reference, "static type-parameter `%s' can not be used in runtime context".printf (type_parameter.get_full_name ()));
+				return new CCodeInvalidExpression();
+			}
+
 			string var_name = "%s_type".printf (type_parameter.name.ascii_down ());
 
 			if (type_parameter.parent_symbol is Interface) {
