@@ -442,6 +442,8 @@ public struct ssize_t {
 	public static ssize_t max (ssize_t a, ssize_t b);
 	[CCode (cname = "CLAMP")]
 	public ssize_t clamp (ssize_t low, ssize_t high);
+	[CCode (cname = "ABS")]
+	public ssize_t abs ();
 }
 
 [SimpleType]
@@ -522,6 +524,8 @@ public struct int8 {
 	public static int8 max (int8 a, int8 b);
 	[CCode (cname = "CLAMP")]
 	public int8 clamp (int8 low, int8 high);
+	[CCode (cname = "ABS")]
+	public int8 abs ();
 }
 
 [SimpleType]
@@ -573,6 +577,8 @@ public struct int16 {
 	public static int16 max (int16 a, int16 b);
 	[CCode (cname = "CLAMP")]
 	public int16 clamp (int16 low, int16 high);
+	[CCode (cname = "ABS")]
+	public int16 abs ();
 
 	[CCode (cname = "GINT16_TO_BE")]
 	public int16 to_big_endian ();
@@ -661,6 +667,8 @@ public struct int32 {
 	public static int32 max (int32 a, int32 b);
 	[CCode (cname = "CLAMP")]
 	public int32 clamp (int32 low, int32 high);
+	[CCode (cname = "ABS")]
+	public int32 abs ();
 
 	[CCode (cname = "GINT32_TO_BE")]
 	public int32 to_big_endian ();
