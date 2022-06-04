@@ -171,6 +171,8 @@ public class Vala.DBusVariantModule {
 			return string_array_type.copy ();
 		} else if (type.is_array ()) {
 			var element = type.element ();
+			// TODO: Box primitive types
+			// TODO: Warn about arrays in generics
 			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
 				var res = dictionary_type.copy ();
 				var key = get_variant_type (element.key ());
