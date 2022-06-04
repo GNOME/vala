@@ -64,6 +64,16 @@
       <arg direction="out" type="ay" name="result" />
     </method>
 
+    <method name="TestGenericArray">
+      <!-- <arg direction="in" type="a{ass}" name="dict_array_key"/> -->
+      <arg direction="in" type="a{sas}" name="dict_array_value"/>
+    </method>
+
+    <method name="TestGenericPrimitive">
+      <arg direction="in" type="a{ts}" name="dict_primitive_key"/>
+      <arg direction="in" type="a{st}" name="dict_primitive_value"/>
+    </method>
+
     <method name="TestDuplicateArgname">
         <arg direction="in" type="s" name="arg" />
         <arg direction="out" type="s" name="arg" />

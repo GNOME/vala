@@ -152,6 +152,8 @@ public class Vala.DBusVariantModule {
 			} else if (type.equal (VariantType.SIGNATURE)) {
 				return string_type.copy ();
 			} else if (type.equal (VariantType.HANDLE)) {
+				// TODO: The spec says: 32-bit unsigned integer in the message's byte order.
+				// But usually e.g. `open()` returns an 32-bit signed integer
 				return int32_type.copy ();
 			}
 		} else if (type.is_variant ()) {
