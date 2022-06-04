@@ -6,7 +6,8 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract void hello_world (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_primitive_types (char val_byte, bool val_boolean, int16 val_int16, uint16 val_uint16, int32 val_int32, uint32 val_uint32, int64 val_int64, uint64 val_uint64, double val_double, string val_string, GLib.ObjectPath val_objpath, string val_signature, string val_bytestring, out char ret_byte, out bool ret_boolean, out int16 ret_int16, out uint16 ret_uint16, out int32 ret_int32, out uint32 ret_uint32, out int64 ret_int64, out uint64 ret_uint64, out double ret_double, out string ret_string, out GLib.ObjectPath ret_objpath, out string ret_signature, out string ret_bytestring) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, [DBus (signature = "(iss)")] GLib.Variant a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
-	public abstract void request_signal_emission (int32 which_one) throws GLib.DBusError, GLib.IOError;
+	public abstract void test_duplicate_argname (string arg, out string arg0) throws GLib.DBusError, GLib.IOError;
+    public abstract void request_signal_emission (int32 which_one) throws GLib.DBusError, GLib.IOError;
 	public abstract void request_multi_property_mods () throws GLib.DBusError, GLib.IOError;
 	public abstract void unimplemented_method () throws GLib.DBusError, GLib.IOError;
 	public abstract void property_cancellation () throws GLib.DBusError, GLib.IOError;

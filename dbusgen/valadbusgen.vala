@@ -25,7 +25,7 @@
 using GLib;
 
 public class Vala.DBusGen {
-
+	// TODO: Colored output
 	public class ConcatenationStrategy : NamespaceStrategy {
 
 		public override string? get_namespace (string ns) {

@@ -61,6 +61,11 @@
       <arg direction="out" type="ay" name="result" />
     </method>
 
+    <method name="TestDuplicateArgname">
+        <arg direction="in" type="s" name="arg" />
+        <arg direction="out" type="s" name="arg" />
+    </method>
+
     <method name="RequestSignalEmission">
       <arg direction="in" type="i" name="which_one" />
     </method>

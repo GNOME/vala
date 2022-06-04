@@ -189,7 +189,7 @@ public class Vala.DBusVariantModule {
 				}
 			}
 		} else if (type.equal (VariantType.TUPLE)) {
-			
+			// TODO: Emit structure
 		}
 
 		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));

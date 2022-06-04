@@ -51,6 +51,7 @@ public class Vala.DBusParser : CodeVisitor {
 	private SourceLocation end;
 
 	private HashMap<string, DBusExtension> extensions = new HashMap<string, DBusExtension> ();
+	private Set<string> argnames = new HashSet<string> (str_hash, str_equal);
 
 	public int dbus_timeout { get; set; }
 
@@ -305,7 +306,6 @@ public class Vala.DBusParser : CodeVisitor {
 	private void parse_method () {
 		start_element ("method");
 		string? name = reader.get_attribute ("name");
-
 		if (name == null) {
 			Report.error (get_current_src (), "Interface method declarations require a name attribute");
 			return;
@@ -340,7 +340,7 @@ public class Vala.DBusParser : CodeVisitor {
 
 	private void parse_method_body () {
 		current_param_index = 0U;
-
+		argnames.clear ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			switch (reader.name) {
 				case "annotation":
@@ -433,7 +433,10 @@ public class Vala.DBusParser : CodeVisitor {
 		string? name = reader.get_attribute ("name");
 		if (name == null) {
 			name = "arg%u".printf (current_param_index++);
+		} else if (argnames.contains (name)) {
+			name = "%s%u".printf (name, current_param_index++);
 		}
+		argnames.add (name);
 
 		string? type = reader.get_attribute ("type");
 		if (type == null) {
