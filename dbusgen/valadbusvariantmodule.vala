@@ -177,7 +177,7 @@ public class Vala.DBusVariantModule {
 				var res = dictionary_type.copy ();
 				var key = get_variant_type (element.key ());
 				var value = get_variant_type (element.value ());
-				if (key != null && value != null) {
+				if (key != null && value != null && !(key is ArrayType) && !(value is ArrayType)) {
 					res.add_type_argument (key);
 					res.add_type_argument (value);
 					return res;
