@@ -16,6 +16,9 @@
         <annotation name="org.gtk.GDBus.DocString" value="out param doc"/>
       </arg>
     </method>
+    <signal name="HelloWorld">
+      <arg name="greeting" direction="in" type="s" />
+    </signal>
 
     <method name="TestPrimitiveTypes">
       <arg direction="in"  type="y" name="val_byte" />

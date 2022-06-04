@@ -53,7 +53,11 @@ public class Vala.DBusParser : CodeVisitor {
 	private SourceLocation end;
 
 	private HashMap<string, DBusExtension> extensions = new HashMap<string, DBusExtension> ();
+	// Used for guarding against duplicate argument names
 	private Set<string> argnames = new HashSet<string> (str_hash, str_equal);
+	// Used for guarding against duplicate member names (signals, properties and methods)
+	private Set<string> member_names = new HashSet<string> (str_hash, str_equal);
+	private int duplicate_counter;
 
 	public int dbus_timeout { get; set; }
 
@@ -165,6 +169,8 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_interface_body () {
+		member_names.clear ();
+		duplicate_counter = 0;
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			switch (reader.name) {
 				case "annotation":
@@ -306,6 +312,7 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_method () {
+		var duplicate = false;
 		start_element ("method");
 		string? name = reader.get_attribute ("name");
 		if (name == null) {
@@ -320,15 +327,22 @@ public class Vala.DBusParser : CodeVisitor {
 		} else {
 			needs_name = true;
 		}
+		if (name in member_names) {
+			duplicate = true;
+			name = "%s%u".printf (name, duplicate_counter++);
+		}
 
 		current_node = current_method = new Method (name, dbus_module.void_type.copy (), get_current_src ());
 		((Method)current_method).is_abstract = true;
 		((Method)current_method).access = SymbolAccessibility.PUBLIC;
 		((Method)current_method).add_error_type (dbus_module.gio_error_type);
 		((Method)current_method).add_error_type (dbus_module.gdbus_error_type);
-
+		member_names.add (name);
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
+		}
+		if (duplicate) {
+			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
 		next ();
@@ -362,6 +376,7 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_property () {
+		var duplicate = false;
 		start_element ("property");
 
 		string? name = reader.get_attribute ("name");
@@ -392,13 +407,21 @@ public class Vala.DBusParser : CodeVisitor {
 		} else {
 			needs_name = true;
 		}
+		if (name in member_names) {
+			duplicate = true;
+			name = "%s%u".printf (name, duplicate_counter++);
+		}
 
 		current_node = current_property = new Property (name, data_type, null, null, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
+		member_names.add (name);
 
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
+		}
+		if (duplicate) {
+			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
 		next ();
@@ -534,6 +557,7 @@ public class Vala.DBusParser : CodeVisitor {
 	}
 
 	private void parse_signal () {
+		var duplicate = false;
 		start_element ("signal");
 
 		string? name = reader.get_attribute ("name");
@@ -549,12 +573,20 @@ public class Vala.DBusParser : CodeVisitor {
 		} else {
 			needs_name = true;
 		}
+		if (name in member_names) {
+			duplicate = true;
+			name = "%s%u".printf (name, duplicate_counter++);
+		}
 
 		current_node = current_method = new Signal (name, dbus_module.void_type.copy ());
 		((Signal)current_node).access = SymbolAccessibility.PUBLIC;
 
+		member_names.add (name);
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
+		}
+		if (duplicate) {
+			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
 		next ();

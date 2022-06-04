@@ -75,6 +75,8 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract string[] unset_ag { owned get; set; }
 	[DBus (name = "unset_struct", signature = "(idsogayasaoag)")]
 	public abstract GLib.Variant unset_struct { owned get; set; }
+	[DBus (name = "HelloWorld")]
+    public signal void hello_world0 (string greeting);
 	/*Signal documentation.*/
 	public signal void test_signal (int32 val_int32, string[] array_of_strings, string[] array_of_bytestrings, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs);
 	public signal void another_signal (string word);
