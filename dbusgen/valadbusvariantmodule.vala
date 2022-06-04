@@ -160,7 +160,22 @@ public class Vala.DBusVariantModule {
 		return get_complex_type (type);
 	}
 
+	private bool invalid_generic_type (VariantType type) {
+		return  type.equal (VariantType.BOOLEAN)
+				|| type.equal (VariantType.BYTE)
+				|| type.equal (VariantType.INT16)
+				|| type.equal (VariantType.UINT16)
+				|| type.equal (VariantType.INT32)
+				|| type.equal (VariantType.UINT32)
+				|| type.equal (VariantType.INT64)
+				|| type.equal (VariantType.UINT64)
+				|| type.equal (VariantType.DOUBLE);
+	}
+
 	private DataType? get_complex_type (VariantType type) {
+		// If we were able to interpret it, but it is false vala syntax
+		// E.g. generics with arrays/primitive types
+		var skipped_generation = false;
 		if (type.equal (VariantType.OBJECT_PATH_ARRAY)) {
 			return object_path_array_type.copy ();
 		} else if (type.equal (VariantType.BYTESTRING)) {
@@ -175,9 +190,10 @@ public class Vala.DBusVariantModule {
 			// TODO: Warn about arrays in generics
 			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
 				var res = dictionary_type.copy ();
+				var invalid_generic_arg = invalid_generic_type (element.key()) || invalid_generic_type (element.value ());
 				var key = get_variant_type (element.key ());
 				var value = get_variant_type (element.value ());
-				if (key != null && value != null && !(key is ArrayType) && !(value is ArrayType)) {
+				if (key != null && value != null && !(key is ArrayType) && !(value is ArrayType) && !invalid_generic_arg) {
 					res.add_type_argument (key);
 					res.add_type_argument (value);
 					return res;
@@ -194,8 +210,9 @@ public class Vala.DBusVariantModule {
 			// TODO: Emit structure
 		}
 
-		Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
-
+		if (!skipped_generation) {
+			Report.warning (null, "Unresolved type: %s".printf ((string) type.peek_string ()));
+		}
 		return null;
 
 		if (type.equal (VariantType.DICT_ENTRY) || type.is_dict_entry ()) {
