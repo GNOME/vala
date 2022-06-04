@@ -21,7 +21,9 @@
  */
 
 using GLib;
-
+// TODO: /usr/share/dbus-1/interfaces/org.freedesktop.portal.Documents.xml
+// error: Arrays are not supported as generic type arguments
+// GLib.HashTable<string,string[]> (a{sas})
 /**
  * Code visitor parsing all DBus Interface files.
  *
@@ -270,7 +272,7 @@ public class Vala.DBusParser : CodeVisitor {
 			case "org.gtk.GDBus.C.UnixFD":
 				// If set to a non-empty string, the generated code will include parameters to exchange file descriptors using the
 				// #GUnixFDList type. This annotation can be used on <method> elements.
-				// Ignore as we don't have to generate any special code
+				// TODO: Investigate what is needed!
 				break;
 			case "org.gtk.GDBus.Since":
 				// Can be used on any <interface>, <method>, <signal> and <property> element to specify the version (any free-form
@@ -570,14 +572,17 @@ public class Vala.DBusParser : CodeVisitor {
 
 	private void start_element (string name) {
 		if (current_token != MarkupTokenType.START_ELEMENT || reader.name != name) {
-			Report.error (get_current_src (), "expected start element of `%s'".printf (name));
+			Report.error (get_current_src (), "expected start element of `%s' (Got `%s')".printf (name, reader.name));
 		}
 	}
 
 	private void end_element (string name) {
 		while (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
-			Report.warning (get_current_src (), "expected end element of `%s'".printf (name));
+			Report.warning (get_current_src (), "expected end element of `%s' (Got `%s')".printf (name, reader.name));
 			skip_element ();
+			if (current_token == MarkupTokenType.EOF) {
+				return;
+			}
 		}
 		next ();
 	}
