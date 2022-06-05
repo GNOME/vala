@@ -447,7 +447,10 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		if (access == "read" || access == "readwrite") {
-			current_property.get_accessor = new PropertyAccessor (true, false, false, current_property.property_type.copy (), null, get_current_src ());
+			var get_type = current_property.property_type.copy ();
+			if (data_type is StructValueType)
+				get_type.value_owned = true;
+			current_property.get_accessor = new PropertyAccessor (true, false, false, get_type, null, get_current_src ());
 		}
 		if (access == "write" || access == "readwrite") {
 			var set_type = current_property.property_type.copy ();
