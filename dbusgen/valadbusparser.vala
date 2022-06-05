@@ -151,6 +151,18 @@ public class Vala.DBusParser : CodeVisitor {
 		}
 
 		string iface_name = namespace_strategy.get_name (name);
+
+		foreach (var iface in current_ns.get_interfaces ()) {
+			// The default interfaces can occur duplicated
+			if ((iface_name == namespace_strategy.get_name ("org.freedesktop.DBus.Peer")
+				 || iface_name == namespace_strategy.get_name ("org.freedesktop.DBus.Introspectable")
+				 || iface_name == namespace_strategy.get_name ("org.freedesktop.DBus.Properties")
+				 || iface_name == namespace_strategy.get_name ("org.freedesktop.DBus.ObjectManager")) && iface.name == iface_name) {
+				next ();
+				seek_end ("interface");
+				return;
+			}
+		}
 		current_node = current_iface = new Interface (iface_name, get_current_src ());
 
 		current_iface.access = SymbolAccessibility.PUBLIC;
@@ -611,6 +623,16 @@ public class Vala.DBusParser : CodeVisitor {
 	private void end_element (string name) {
 		while (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
 			Report.warning (get_current_src (), "expected end element of `%s' (Got `%s')".printf (name, reader.name));
+			skip_element ();
+			if (current_token == MarkupTokenType.EOF) {
+				return;
+			}
+		}
+		next ();
+	}
+
+	private void seek_end (string name) {
+		while (current_token != MarkupTokenType.END_ELEMENT || reader.name != name) {
 			skip_element ();
 			if (current_token == MarkupTokenType.EOF) {
 				return;

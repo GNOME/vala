@@ -202,14 +202,12 @@ public class Vala.DBusVariantModule {
 				}
 			} else {
 				var element_type = get_variant_type (element);
-				if (element != null && !(element_type is ArrayType)) {
+				if (element != null && !(element_type is ArrayType) && element_type != null) {
 					var array = new ArrayType (element_type, 1, null);
 					array.value_owned = true;
 					return array;
 				}
 			}
-		} else if (type.equal (VariantType.TUPLE)) {
-			// TODO: Emit structure
 		}
 
 		if (!skipped_generation) {
