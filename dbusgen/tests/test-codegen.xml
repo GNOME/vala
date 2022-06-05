@@ -65,7 +65,7 @@
     </method>
 
     <method name="TestGenericArray">
-      <!-- <arg direction="in" type="a{ass}" name="dict_array_key"/> -->
+      <!-- TODO: Does this gvariant exist? <arg direction="in" type="a{ass}" name="dict_array_key"/> -->
       <arg direction="in" type="a{sas}" name="dict_array_value"/>
     </method>
 
@@ -483,4 +483,16 @@
     <property name="Type" type="i" access="readwrite"/>
   </interface>
 
+  <!-- Wellknown, duplicate interfaces should be ignored instead of an error -->
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="xml_data" type="s" direction="out"/>
+    </method>
+  </interface>
+
+  <interface name="org.freedesktop.DBus.Introspectable">
+    <method name="Introspect">
+      <arg name="xml_data" type="s" direction="out"/>
+    </method>
+  </interface>
 </node>

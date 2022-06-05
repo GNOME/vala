@@ -8,8 +8,8 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, [DBus (signature = "(iss)")] GLib.Variant a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_generic_array ([DBus (signature = "a{sas}")] GLib.Variant dict_array_value) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_generic_primitive ([DBus (signature = "a{ts}")] GLib.Variant dict_primitive_key, [DBus (signature = "a{st}")] GLib.Variant dict_primitive_value) throws GLib.DBusError, GLib.IOError;
-    public abstract void test_duplicate_argname (string arg, out string arg0) throws GLib.DBusError, GLib.IOError;
-    public abstract void request_signal_emission (int32 which_one) throws GLib.DBusError, GLib.IOError;
+	public abstract void test_duplicate_argname (string arg, out string arg0) throws GLib.DBusError, GLib.IOError;
+	public abstract void request_signal_emission (int32 which_one) throws GLib.DBusError, GLib.IOError;
 	public abstract void request_multi_property_mods () throws GLib.DBusError, GLib.IOError;
 	public abstract void unimplemented_method () throws GLib.DBusError, GLib.IOError;
 	public abstract void property_cancellation () throws GLib.DBusError, GLib.IOError;
@@ -78,7 +78,7 @@ public interface OrgProjectBar : GLib.Object {
 	[DBus (name = "unset_struct", signature = "(idsogayasaoag)")]
 	public abstract GLib.Variant unset_struct { owned get; set; }
 	[DBus (name = "HelloWorld")]
-    public signal void hello_world0 (string greeting);
+	public signal void hello_world0 (string greeting);
 	/*Signal documentation.*/
 	public signal void test_signal (int32 val_int32, string[] array_of_strings, string[] array_of_bytestrings, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs);
 	public signal void another_signal (string word);
@@ -211,4 +211,8 @@ public interface FDPassing : GLib.Object {
 [DBus (name = "Naming", timeout = 120000)]
 public interface Naming : GLib.Object {
 	public abstract int32 type { get; set; }
+}
+[DBus (name = "org.freedesktop.DBus.Introspectable", timeout = 120000)]
+public interface OrgFreedesktopDBusIntrospectable : GLib.Object {
+	public abstract void introspect (out string xml_data) throws GLib.DBusError, GLib.IOError;
 }
