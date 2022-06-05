@@ -6478,7 +6478,7 @@ namespace GLib {
 		public unowned VariantType element ();
 		public unowned VariantType first ();
 		public unowned VariantType next ();
-		public unowned VariantType n_items ();
+		public size_t n_items ();
 		public unowned VariantType key ();
 		public unowned VariantType value ();
 
