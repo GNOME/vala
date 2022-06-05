@@ -21,9 +21,7 @@
  */
 
 using GLib;
-// TODO: /usr/share/dbus-1/interfaces/org.freedesktop.portal.Documents.xml
-// error: Arrays are not supported as generic type arguments
-// GLib.HashTable<string,string[]> (a{sas})
+
 /**
  * Code visitor parsing all DBus Interface files.
  *
