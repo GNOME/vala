@@ -72,6 +72,7 @@ public class Vala.DBusParser : CodeVisitor {
 		current_ns = context.root;
 
 		dbus_module = new DBusVariantModule (context);
+		dbus_module.current_ns = context.root;
 
 		context.accept (this);
 	}
@@ -136,6 +137,7 @@ public class Vala.DBusParser : CodeVisitor {
 			var ns = new Namespace (ns_name, get_current_src ());
 			current_ns.add_namespace (ns);
 			current_ns = ns;
+			dbus_module.current_ns = current_ns;
 		}
 	}
 

@@ -26,6 +26,8 @@ public class Vala.DBusVariantModule {
 
 	public Symbol root_symbol;
 
+	public Namespace current_ns;
+
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType char_type;
@@ -162,6 +164,15 @@ public class Vala.DBusVariantModule {
 		return get_complex_type (type);
 	}
 
+	private string generate_struct_name (VariantType type) {
+		return "DBusProxyStruct" + ((string) type.peek_string ())
+					.replace ("(", "_1")
+					.replace (")", "1_")
+					.replace ("{", "_2")
+					.replace ("}", "2_")
+					;
+	}
+
 	private bool invalid_generic_type (VariantType type) {
 		return  type.equal (VariantType.BOOLEAN)
 				|| type.equal (VariantType.BYTE)
@@ -195,7 +206,7 @@ public class Vala.DBusVariantModule {
 				var invalid_generic_arg = invalid_generic_type (element.key()) || invalid_generic_type (element.value ());
 				var key = get_variant_type (element.key ());
 				var value = get_variant_type (element.value ());
-				var valid_types = !((key is ArrayType) || (value is ArrayType) || invalid_generic_arg);
+				var valid_types = !((key is ArrayType) || (value is ArrayType) || (key is StructValueType) || (value is StructValueType) || invalid_generic_arg);
 				if (key != null && value != null && valid_types) {
 					res.add_type_argument (key);
 					res.add_type_argument (value);
@@ -208,6 +219,37 @@ public class Vala.DBusVariantModule {
 					array.value_owned = true;
 					return array;
 				}
+			}
+		} else if (type.is_tuple ()) {
+			var generated_name = generate_struct_name (type);
+			foreach (var st in current_ns.get_structs ()) {
+				if (st.name == generated_name) {
+					return new StructValueType (st, null);
+				}
+			}
+			var n = type.n_items ();
+			var able_to_add_all = true;
+			unowned var sub = type.first ();
+			var sref = new SourceReference (
+								new SourceFile (context, SourceFileType.NONE, "<artificial>", null, true),
+								new SourceLocation (null, 0, 0),
+								new SourceLocation (null, 0, 1));
+			var new_struct = new Struct (generated_name, sref);
+			new_struct.access = SymbolAccessibility.PUBLIC;
+			for (var i = 0; i < n; i++) {
+				var dt = get_dbus_type (sub.dup_string ());
+				if (dt == null) {
+					able_to_add_all = false;
+					break;
+				}
+				var field = new Field ("arg%d".printf (i), dt, null);
+				field.access = SymbolAccessibility.PUBLIC;
+				new_struct.add_field (field);
+				sub = sub.next();
+			}
+			if (able_to_add_all) {
+				current_ns.add_struct (new_struct);
+				return new StructValueType (new_struct, null);
 			}
 		}
 
