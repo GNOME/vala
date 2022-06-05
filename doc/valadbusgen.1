@@ -41,6 +41,17 @@ Namespace to strip
 \fB\-\-dbus\-timeout\fR
 DBus timeout
 .TP
+\fB\-\-no\-color\fR
+Disable colored output, alias for \fB\-\-color\fR=\fI\,never\/\fR
+.TP
+\fB\-\-color\fR=\fI\,WHEN\/\fR
+Enable color output, options are 'always', 'never', or 'auto'
+.RS
+When no value is given \fIalways\fR is implied. When neither \fB--color\fR
+or \fB--no-color\fR are declared then \fB--color\fR=\fIauto\fR is used where
+output is colored when stderr is a terminal.
+.RE
+.TP
 \fB\-\-version\fR
 Display version number
 .TP

@@ -25,7 +25,7 @@
 using GLib;
 
 public class Vala.DBusGen {
-	// TODO: Colored output
+
 	public class ConcatenationStrategy : NamespaceStrategy {
 
 		public override string? get_namespace (string ns) {
@@ -63,6 +63,8 @@ public class Vala.DBusGen {
 	static string[] rename_namespaces;
 	[CCode (array_length = false, array_null_terminated = true)]
 	static string[] strip_namespaces;
+	static bool disable_colored_output;
+	static Report.Colored colored_output = Report.Colored.AUTO;
 
 	CodeContext context;
 
@@ -75,11 +77,14 @@ public class Vala.DBusGen {
 		{ "rename-namespace", 0, 0, OptionArg.STRING_ARRAY, ref rename_namespaces, "Namespace to rename to", "SOURCE_NS:TARGET_NS..." },
 		{ "strip-namespace", 0, 0, OptionArg.STRING_ARRAY, ref strip_namespaces, "Namespace to strip", "NAMESPACE..." },
 		{ "dbus-timeout", 0, 0, OptionArg.INT, ref dbus_timeout, "DBus timeout", null },
+		{ "no-color", 0, 0, OptionArg.NONE, ref disable_colored_output, "Disable colored output, alias for --color=never", null },
+		{ "color", 0, OptionFlags.OPTIONAL_ARG, OptionArg.CALLBACK, (void*) option_parse_color, "Enable color output, options are 'always', 'never', or 'auto'", "WHEN" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ OPTION_REMAINING, 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
+	private const string DEFAULT_COLORS = "error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01";
 
 	private int quit () {
 		if (context.report.get_errors () == 0) {
@@ -97,12 +102,37 @@ public class Vala.DBusGen {
 		}
 	}
 
+	static bool option_parse_color (string option_name, string? val, void* data) throws OptionError {
+		switch (val) {
+			case "auto": colored_output = Report.Colored.AUTO; break;
+			case "never": colored_output = Report.Colored.NEVER; break;
+			case null:
+			case "always": colored_output = Report.Colored.ALWAYS; break;
+			default: throw new OptionError.FAILED ("Invalid --color argument '%s'", val);
+		}
+		return true;
+	}
+
 	private int run () {
 		context = new CodeContext ();
 
 		context.report.enable_warnings = !disable_warnings;
 		context.vapi_directories = vapi_directories;
 		context.report.set_verbose_errors (!quiet_mode);
+
+		if (disable_colored_output) {
+			colored_output = Report.Colored.NEVER;
+		}
+
+		if (colored_output != Report.Colored.NEVER) {
+			unowned string env_colors = Environment.get_variable ("VALA_COLORS");
+			if (env_colors != null) {
+				context.report.set_colors (env_colors, colored_output);
+			} else {
+				context.report.set_colors (DEFAULT_COLORS, colored_output);
+			}
+		}
+
 		CodeContext.push (context);
 
 		context.set_target_profile (Profile.GOBJECT);
