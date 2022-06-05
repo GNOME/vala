@@ -195,7 +195,8 @@ public class Vala.DBusVariantModule {
 				var invalid_generic_arg = invalid_generic_type (element.key()) || invalid_generic_type (element.value ());
 				var key = get_variant_type (element.key ());
 				var value = get_variant_type (element.value ());
-				if (key != null && value != null && !(key is ArrayType) && !(value is ArrayType) && !invalid_generic_arg) {
+				var valid_types = !((key is ArrayType) || (value is ArrayType) || invalid_generic_arg);
+				if (key != null && value != null && valid_types) {
 					res.add_type_argument (key);
 					res.add_type_argument (value);
 					return res;
