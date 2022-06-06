@@ -199,18 +199,20 @@ public class Vala.DBusVariantModule {
 			return string_array_type.copy ();
 		} else if (type.is_array ()) {
 			var element = type.element ();
-			// TODO: Box primitive types
-			// TODO: Warn about arrays in generics
 			if (element.equal (VariantType.DICTIONARY) || element.is_dict_entry ()) {
 				var res = dictionary_type.copy ();
 				var invalid_generic_arg = invalid_generic_type (element.key()) || invalid_generic_type (element.value ());
 				var key = get_variant_type (element.key ());
 				var value = get_variant_type (element.value ());
 				var valid_types = !((key is ArrayType) || (value is ArrayType) || (key is StructValueType) || (value is StructValueType) || invalid_generic_arg);
-				if (key != null && value != null && valid_types) {
-					res.add_type_argument (key);
-					res.add_type_argument (value);
-					return res;
+				if (key != null && value != null) {
+					if (valid_types) {
+						res.add_type_argument (key);
+						res.add_type_argument (value);
+						return res;
+					} else {
+						skipped_generation = true;
+					}
 				}
 			} else {
 				var element_type = get_variant_type (element);
