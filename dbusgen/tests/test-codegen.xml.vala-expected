@@ -5,7 +5,7 @@ public interface OrgProjectBar : GLib.Object {
 	[Version (since = "0.58")]
 	public abstract void hello_world (string greeting, out string response) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_primitive_types (char val_byte, bool val_boolean, int16 val_int16, uint16 val_uint16, int32 val_int32, uint32 val_uint32, int64 val_int64, uint64 val_uint64, double val_double, string val_string, GLib.ObjectPath val_objpath, string val_signature, string val_bytestring, out char ret_byte, out bool ret_boolean, out int16 ret_int16, out uint16 ret_uint16, out int32 ret_int32, out uint32 ret_uint32, out int64 ret_int64, out uint64 ret_uint64, out double ret_double, out string ret_string, out GLib.ObjectPath ret_objpath, out string ret_signature, out string ret_bytestring) throws GLib.DBusError, GLib.IOError;
-	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, [DBus (signature = "(iss)")] GLib.Variant a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
+	public abstract void test_non_primitive_types (GLib.HashTable<string,string> dict_s_to_s, [DBus (signature = "a{s(ii)}")] GLib.Variant dict_s_to_pairs, DBusProxyStruct_1iss1_ a_struct, string[] array_of_strings, out string[] ret_array_of_strings, GLib.ObjectPath[] array_of_objpaths, out GLib.ObjectPath[] ret_array_of_objpaths, string[] array_of_signatures, out string[] ret_array_of_signatures, string[] array_of_bytestrings, out string[] ret_array_of_bytestrings, out string result) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_generic_array ([DBus (signature = "a{sas}")] GLib.Variant dict_array_value) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_generic_primitive ([DBus (signature = "a{ts}")] GLib.Variant dict_primitive_key, [DBus (signature = "a{st}")] GLib.Variant dict_primitive_value) throws GLib.DBusError, GLib.IOError;
 	public abstract void test_duplicate_argname (string arg, out string arg0) throws GLib.DBusError, GLib.IOError;
@@ -75,8 +75,8 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract GLib.ObjectPath[] unset_ao { owned get; set; }
 	[DBus (name = "unset_ag")]
 	public abstract string[] unset_ag { owned get; set; }
-	[DBus (name = "unset_struct", signature = "(idsogayasaoag)")]
-	public abstract GLib.Variant unset_struct { owned get; set; }
+	[DBus (name = "unset_struct")]
+	public abstract DBusProxyStruct_1idsogayasaoag1_ unset_struct { owned get; set; }
 	[DBus (name = "HelloWorld")]
 	public signal void hello_world0 (string greeting);
 	/*Signal documentation.*/
@@ -105,8 +105,7 @@ public interface ComAcmeRocket : GLib.Object {
 	public abstract void ignite () throws GLib.DBusError, GLib.IOError;
 	[CCode (cname = "speed-xyz")]
 	public abstract double speed { get; }
-	[DBus (signature = "(ddd)")]
-	public abstract GLib.Variant direction { owned get; }
+	public abstract DBusProxyStruct_1ddd1_ direction { owned get; }
 	public abstract string type { owned get; }
 	[CCode (cname = "exploded-xyz")]
 	public signal void exploded ();
@@ -144,6 +143,8 @@ public interface OrgProjectInlineDocs : GLib.Object {
 	public abstract string property4 { owned get; }
 	public abstract string property5 { owned get; }
 	public abstract string fancy_property { owned get; }
+    [DBus (name = "foo-bar-property")]
+    public abstract string foo_bar_property { owned get; }
 	public signal void bar_signal (string blah, string boo);
 }
 [DBus (name = "ChangingInterfaceV1", timeout = 120000)]
@@ -215,4 +216,32 @@ public interface Naming : GLib.Object {
 [DBus (name = "org.freedesktop.DBus.Introspectable", timeout = 120000)]
 public interface OrgFreedesktopDBusIntrospectable : GLib.Object {
 	public abstract void introspect (out string xml_data) throws GLib.DBusError, GLib.IOError;
+}
+public struct DBusProxyStruct_1ii1_2_ {
+	public int32 arg0;
+	public int32 arg1;
+}
+public struct DBusProxyStruct_1iss1_ {
+	public int32 arg0;
+	public string arg1;
+	public string arg2;
+}
+public struct DBusProxyStruct_1idsogayasaoag1_ {
+	public int32 arg0;
+	public double arg1;
+	public string arg2;
+	public GLib.ObjectPath arg3;
+	public string arg4;
+	public string arg5;
+	public string[] arg6;
+	public GLib.ObjectPath[] arg7;
+	public string[] arg8;
+}
+public struct DBusProxyStruct_1ddd1_ {
+	public double arg0;
+	public double arg1;
+	public double arg2;
+}
+public struct DBusProxyStruct_1i1_ {
+	public int32 arg0;
 }

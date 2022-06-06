@@ -367,6 +367,8 @@
       </variablelist>
     -->
     <property name="FancyProperty" type="s" access="read"/>
+
+    <property name="foo-bar-property" type="s" access="read"/>
   </interface>
 
   <interface name="ChangingInterfaceV1">

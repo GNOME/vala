@@ -424,10 +424,10 @@ public class Vala.DBusParser : CodeVisitor {
 			name = "%s%u".printf (name, duplicate_counter++);
 		}
 
-		current_node = current_property = new Property (name, data_type, null, null, get_current_src ());
+		current_node = current_property = new Property (name.replace ("-", "_"), data_type, null, null, get_current_src ());
 		current_property.is_abstract = true;
 		current_property.access = SymbolAccessibility.PUBLIC;
-		member_names.add (name);
+		member_names.add (name.replace ("-", "_"));
 
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
