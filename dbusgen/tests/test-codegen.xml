@@ -345,6 +345,7 @@
     -->
     <property name="Property5" type="s" access="read"/>
 
+    <property name="type" type="s" access="readwrite"/>
 
     <!--
       FancyProperty:

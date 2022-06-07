@@ -14,68 +14,39 @@ public interface OrgProjectBar : GLib.Object {
 	public abstract void unimplemented_method () throws GLib.DBusError, GLib.IOError;
 	public abstract void property_cancellation () throws GLib.DBusError, GLib.IOError;
 	/*<para>Property docs, yah...</para><para>Second paragraph.</para>*/
-	[DBus (name = "y")]
 	public abstract char y { get; set; }
-	[DBus (name = "b")]
 	public abstract bool b { get; set; }
-	[DBus (name = "n")]
 	public abstract int16 n { get; set; }
-	[DBus (name = "q")]
 	public abstract uint16 q { get; set; }
-	[DBus (name = "i")]
 	public abstract int32 i { get; set; }
-	[DBus (name = "u")]
 	public abstract uint32 u { get; set; }
-	[DBus (name = "x")]
 	public abstract int64 x { get; set; }
-	[DBus (name = "t")]
 	public abstract uint64 t { get; set; }
-	[DBus (name = "d")]
 	public abstract double d { get; set; }
-	[DBus (name = "s")]
 	public abstract string s { owned get; set; }
-	[DBus (name = "o")]
 	public abstract GLib.ObjectPath o { owned get; set; }
-	[DBus (name = "g")]
 	public abstract string g { owned get; set; }
-	[DBus (name = "ay")]
 	public abstract string ay { owned get; set; }
-	[DBus (name = "as")]
 	public abstract string[] @as { owned get; set; }
-	[DBus (name = "aay")]
 	public abstract string[] aay { owned get; set; }
-	[DBus (name = "ao")]
 	public abstract GLib.ObjectPath[] ao { owned get; set; }
-	[DBus (name = "ag")]
 	public abstract string[] ag { owned get; set; }
 	public abstract string finally_normal_name { owned get; set; }
 	public abstract string readonly_property { owned get; }
 	public abstract string writeonly_property { set; }
 	[CCode (notify = false)]
-	[DBus (name = "quiet")]
 	public abstract string quiet { owned get; set; }
 	[CCode (notify = false)]
-	[DBus (name = "quiet_too")]
 	public abstract string quiet_too { owned get; set; }
-	[DBus (name = "unset_i")]
 	public abstract int32 unset_i { get; set; }
-	[DBus (name = "unset_d")]
 	public abstract double unset_d { get; set; }
-	[DBus (name = "unset_s")]
 	public abstract string unset_s { owned get; set; }
-	[DBus (name = "unset_o")]
 	public abstract GLib.ObjectPath unset_o { owned get; set; }
-	[DBus (name = "unset_g")]
 	public abstract string unset_g { owned get; set; }
-	[DBus (name = "unset_ay")]
 	public abstract string unset_ay { owned get; set; }
-	[DBus (name = "unset_as")]
 	public abstract string[] unset_as { owned get; set; }
-	[DBus (name = "unset_ao")]
 	public abstract GLib.ObjectPath[] unset_ao { owned get; set; }
-	[DBus (name = "unset_ag")]
 	public abstract string[] unset_ag { owned get; set; }
-	[DBus (name = "unset_struct")]
 	public abstract DBusProxyStruct_1idsogayasaoag1_ unset_struct { owned get; set; }
 	[DBus (name = "HelloWorld")]
 	public signal void hello_world0 (string greeting);
@@ -106,20 +77,21 @@ public interface ComAcmeRocket : GLib.Object {
 	[CCode (cname = "speed-xyz")]
 	public abstract double speed { get; }
 	public abstract DBusProxyStruct_1ddd1_ direction { owned get; }
-	public abstract string type { owned get; }
+	[DBus (name = "Type")]
+	public abstract string type_ { owned get; }
 	[CCode (cname = "exploded-xyz")]
 	public signal void exploded ();
 }
 [DBus (name = "org.project.Bat", timeout = 120000)]
 public interface OrgProjectBat : GLib.Object {
 	public abstract void force_method ([DBus (signature = "i")] GLib.Variant force_in_i, [DBus (signature = "s")] GLib.Variant force_in_s, [DBus (signature = "ay")] GLib.Variant force_in_ay, [DBus (signature = "(i)")] GLib.Variant force_in_struct, [DBus (signature = "i")] out GLib.Variant force_out_i, [DBus (signature = "s")] out GLib.Variant force_out_s, [DBus (signature = "ay")] out GLib.Variant force_out_ay, [DBus (signature = "(i)")] out GLib.Variant force_out_struct) throws GLib.DBusError, GLib.IOError;
-	[DBus (name = "force_i", signature = "i")]
+	[DBus (signature = "i")]
 	public abstract GLib.Variant force_i { owned get; set; }
-	[DBus (name = "force_s", signature = "s")]
+	[DBus (signature = "s")]
 	public abstract GLib.Variant force_s { owned get; set; }
-	[DBus (name = "force_ay", signature = "ay")]
+	[DBus (signature = "ay")]
 	public abstract GLib.Variant force_ay { owned get; set; }
-	[DBus (name = "force_struct", signature = "(i)")]
+	[DBus (signature = "(i)")]
 	public abstract GLib.Variant force_struct { owned get; set; }
 	public signal void force_signal ([DBus (signature = "i")] GLib.Variant force_i, [DBus (signature = "s")] GLib.Variant force_s, [DBus (signature = "ay")] GLib.Variant force_ay, [DBus (signature = "(i)")] GLib.Variant force_struct);
 }
@@ -142,9 +114,11 @@ public interface OrgProjectInlineDocs : GLib.Object {
 	public abstract string property3 { owned get; }
 	public abstract string property4 { owned get; }
 	public abstract string property5 { owned get; }
+	[DBus (name = "type")]
+	public abstract string type_ { owned get; set; }
 	public abstract string fancy_property { owned get; }
-    [DBus (name = "foo-bar-property")]
-    public abstract string foo_bar_property { owned get; }
+	[DBus (name = "foo-bar-property")]
+	public abstract string foo_bar_property { owned get; }
 	public signal void bar_signal (string blah, string boo);
 }
 [DBus (name = "ChangingInterfaceV1", timeout = 120000)]
@@ -211,7 +185,8 @@ public interface FDPassing : GLib.Object {
 }
 [DBus (name = "Naming", timeout = 120000)]
 public interface Naming : GLib.Object {
-	public abstract int32 type { get; set; }
+	[DBus (name = "Type")]
+	public abstract int32 type_ { get; set; }
 }
 [DBus (name = "org.freedesktop.DBus.Introspectable", timeout = 120000)]
 public interface OrgFreedesktopDBusIntrospectable : GLib.Object {

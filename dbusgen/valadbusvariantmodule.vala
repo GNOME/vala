@@ -232,10 +232,15 @@ public class Vala.DBusVariantModule {
 			var n = type.n_items ();
 			var able_to_add_all = true;
 			unowned var sub = type.first ();
+			var file = context.get_source_file ("<artificial>");
+			if (file == null) {
+				file = new SourceFile (context, SourceFileType.SOURCE, "<artificial>", null, true);
+				context.add_source_file (file);
+			}
 			var sref = new SourceReference (
-								new SourceFile (context, SourceFileType.NONE, "<artificial>", null, true),
-								new SourceLocation (null, 0, 0),
-								new SourceLocation (null, 0, 1));
+								file,
+								SourceLocation (null, 0, 0),
+								SourceLocation (null, 0, 1));
 			var new_struct = new Struct (generated_name, sref);
 			new_struct.access = SymbolAccessibility.PUBLIC;
 			for (var i = 0; i < n; i++) {
@@ -244,7 +249,7 @@ public class Vala.DBusVariantModule {
 					able_to_add_all = false;
 					break;
 				}
-				var field = new Field ("arg%d".printf (i), dt, null);
+				var field = new Field ("arg%d".printf (i), dt, null, sref);
 				field.access = SymbolAccessibility.PUBLIC;
 				new_struct.add_field (field);
 				sub = sub.next();

@@ -21,7 +21,10 @@
  */
 
 using GLib;
-
+// TODO: org.freedesktop.login1.Manager.xml.vala
+// 			org.freedesktop.NetworkManager.Device.Wireless.xml.vala
+// 			org.freedesktop.NetworkManager.xml.vala
+// Internal duplicated symbols
 /**
  * Code visitor parsing all DBus Interface files.
  *
@@ -55,6 +58,9 @@ public class Vala.DBusParser : CodeVisitor {
 	private Set<string> argnames = new HashSet<string> (str_hash, str_equal);
 	// Used for guarding against duplicate member names (signals, properties and methods)
 	private Set<string> member_names = new HashSet<string> (str_hash, str_equal);
+	// Used to avoid generating method names like "register", or properties like "type" that yield
+	// "foo_bar_get_type" that generate invalid C code
+	private Set<string> banned_names = new HashSet<string> (str_hash, str_equal);
 	private int duplicate_counter;
 
 	public int dbus_timeout { get; set; }
@@ -70,6 +76,13 @@ public class Vala.DBusParser : CodeVisitor {
 	public void parse (CodeContext context) {
 		this.context = context;
 		current_ns = context.root;
+		// TODO: Add all C keywords?
+		banned_names.add ("type");
+		banned_names.add ("register");
+		banned_names.add ("default");
+		banned_names.add ("continue");
+		banned_names.add ("restrict");
+		banned_names.add ("unsigned");
 
 		dbus_module = new DBusVariantModule (context);
 		dbus_module.current_ns = context.root;
@@ -344,6 +357,11 @@ public class Vala.DBusParser : CodeVisitor {
 			name = "%s%u".printf (name, duplicate_counter++);
 		}
 
+		var banned = name in banned_names;
+		if (banned) {
+			name = name + "_";
+		}
+
 		current_node = current_method = new Method (name, dbus_module.void_type.copy (), get_current_src ());
 		((Method)current_method).is_abstract = true;
 		((Method)current_method).access = SymbolAccessibility.PUBLIC;
@@ -353,7 +371,7 @@ public class Vala.DBusParser : CodeVisitor {
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
 		}
-		if (duplicate) {
+		if (duplicate || banned) {
 			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
@@ -414,7 +432,8 @@ public class Vala.DBusParser : CodeVisitor {
 
 		var needs_name = false;
 		var vala_name = Vala.Symbol.camel_case_to_lower_case (name);
-		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name)) {
+
+		if (name == Vala.Symbol.lower_case_to_camel_case (vala_name) || (name == vala_name && !name.contains ("-"))) {
 			name = vala_name;
 		} else {
 			needs_name = true;
@@ -422,6 +441,10 @@ public class Vala.DBusParser : CodeVisitor {
 		if (name in member_names) {
 			duplicate = true;
 			name = "%s%u".printf (name, duplicate_counter++);
+		}
+		var banned = name in banned_names;
+		if (banned) {
+			name = name + "_";
 		}
 
 		current_node = current_property = new Property (name.replace ("-", "_"), data_type, null, null, get_current_src ());
@@ -432,7 +455,7 @@ public class Vala.DBusParser : CodeVisitor {
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
 		}
-		if (duplicate) {
+		if (duplicate || banned) {
 			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
@@ -593,6 +616,11 @@ public class Vala.DBusParser : CodeVisitor {
 			name = "%s%u".printf (name, duplicate_counter++);
 		}
 
+		var banned = name in banned_names;
+		if (banned) {
+			name = name + "_";
+		}
+
 		current_node = current_method = new Signal (name, dbus_module.void_type.copy ());
 		((Signal)current_node).access = SymbolAccessibility.PUBLIC;
 
@@ -600,7 +628,7 @@ public class Vala.DBusParser : CodeVisitor {
 		if (needs_name) {
 			current_node.set_attribute_string ("DBus", "name", name);
 		}
-		if (duplicate) {
+		if (duplicate || banned) {
 			current_node.set_attribute_string ("DBus", "name", reader.get_attribute ("name"));
 		}
 
