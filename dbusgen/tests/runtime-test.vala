@@ -25,8 +25,8 @@ int main () {
                                                     "/org/gnome/Example");
         bool received_signal = false;
         example.emit_signal.connect (a => {
-        	assert (a == 42);
-        	received_signal = true;
+			assert (a == 42);
+			received_signal = true;
         });
         uint64 r_int;
         example.ret_int (out r_int);
