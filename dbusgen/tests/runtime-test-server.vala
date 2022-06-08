@@ -42,6 +42,12 @@ class DbusTestServer : GLib.Object, OrgGnomeExample {
 		ret[3] = 1;
 		ret[4] = 5;
 	}
+
+	public void trigger_signal () throws GLib.DBusError, GLib.IOError {
+		cnter_property++;
+		// Does not work
+		emit_signal (42);
+	}
 	public void ret_object (out DBusProxyStruct_1ii_1si1_1_ ret) throws GLib.DBusError, GLib.IOError {
 		ret = DBusProxyStruct_1ii_1si1_1_ () {
 			arg0 = -1,
@@ -55,6 +61,8 @@ class DbusTestServer : GLib.Object, OrgGnomeExample {
 	public void exit () throws GLib.DBusError, GLib.IOError {
 		Process.exit (0);
 	}
+
+	public override int32 cnter_property {get; set;}
 }
 
 void on_bus_aquired (DBusConnection conn) {

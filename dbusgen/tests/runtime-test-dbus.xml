@@ -15,7 +15,13 @@
     <method name="RetObject">
       <arg name="ret" type="(ii(si))" direction="out"/>
     </method>
+    <method name="TriggerSignal">
+    </method>
+    <signal name="EmitSignal">
+      <arg name="arg" type="i"/>
+    </signal>
     <method name="Exit">
     </method>
+    <property name="cnter_property" type="i" access="readwrite"/>
   </interface>
 </node>

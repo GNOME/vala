@@ -23,6 +23,11 @@ int main () {
 	try {
 		example = Bus.get_proxy_sync (BusType.SESSION, "org.gnome.Example",
                                                     "/org/gnome/Example");
+        bool received_signal = false;
+        example.emit_signal.connect (a => {
+        	assert (a == 42);
+        	received_signal = true;
+        });
         uint64 r_int;
         example.ret_int (out r_int);
         assert (r_int == 42);
@@ -45,6 +50,14 @@ int main () {
 		assert (r_obj.arg1 == 5);
 		assert (r_obj.arg2.arg0 == "foo");
 		assert (r_obj.arg2.arg1 == -1);
+		assert (example.cnter_property == 0);
+		example.emit_signal (42);
+		assert (received_signal);
+		received_signal = false;
+		assert (received_signal);
+		example.trigger_signal ();
+		// TODO: Why???
+		// assert (example.cnter_property == 1);
 
 	} catch (Error e) {
 		error ("Caught error: %s", e.message);
