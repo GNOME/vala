@@ -1,0 +1,21 @@
+<node>
+  <interface name="org.gnome.Example">
+    <method name="RetInt">
+      <arg name="ret" type="t" direction="out"/>
+    </method>
+    <method name="RetString">
+      <arg name="ret" type="s" direction="out"/>
+    </method>
+    <method name="RetDict">
+      <arg name="ret" type="a{sv}" direction="out"/>
+    </method>
+    <method name="RetArray">
+      <arg name="ret" type="at" direction="out"/>
+    </method>
+    <method name="RetObject">
+      <arg name="ret" type="(ii(si))" direction="out"/>
+    </method>
+    <method name="Exit">
+    </method>
+  </interface>
+</node>
