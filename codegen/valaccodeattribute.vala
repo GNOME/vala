@@ -734,7 +734,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 				}
 				if (cname[0].isdigit ()) {
 					Report.error (node.source_reference, "Field name starts with a digit. Use the `cname' attribute to provide a valid C name if intended");
-					return "";
+				} else if (CCodeBaseModule.reserved_identifiers.contains (cname)) {
+					Report.error (node.source_reference, "Field name `%s' collides with reserved identifier. Use the `cname' attribute to provide a valid C name if intended", cname);
 				}
 				return cname;
 			} else if (sym is CreationMethod) {
@@ -760,6 +761,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				if (m.signal_reference != null) {
 					return "%s%s".printf (get_ccode_lower_case_prefix (m.parent_symbol), get_ccode_lower_case_name (m.signal_reference));
 				}
+				string cname;
 				if (sym.name == "main" && sym.parent_symbol.name == null) {
 					// avoid conflict with generated main function
 					if (m.coroutine) {
@@ -768,10 +770,14 @@ public class Vala.CCodeAttribute : AttributeCache {
 						return "_vala_main";
 					}
 				} else if (sym.name.has_prefix ("_")) {
-					return "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
+					cname = "_%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name.substring (1));
 				} else {
-					return "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
+					cname = "%s%s".printf (get_ccode_lower_case_prefix (sym.parent_symbol), sym.name);
 				}
+				if (CCodeBaseModule.reserved_identifiers.contains (cname)) {
+					Report.error (node.source_reference, "Method name `%s' collides with reserved identifier. Use the `cname' attribute to provide a valid C name if intended", cname);
+				}
+				return cname;
 			} else if (sym is Property) {
 				return sym.name.replace ("_", "-");
 			} else if (sym is PropertyAccessor) {

@@ -1112,6 +1112,7 @@ TESTS = \
 	semantic/field-namespace-owned.test \
 	semantic/field-non-constant.test \
 	semantic/field-owned-to-unowned.test \
+	semantic/field-reserved-identifier.test \
 	semantic/field-static-instance-access.test \
 	semantic/field-too-few-type-arguments.test \
 	semantic/field-too-many-type-arguments.test \
@@ -1183,6 +1184,7 @@ TESTS = \
 	semantic/method-private-override.test \
 	semantic/method-private-virtual.test \
 	semantic/method-protected.test \
+	semantic/method-reserved-identifier.test \
 	semantic/method-return-accessibility.test \
 	semantic/method-return-too-few-type-arguments.test \
 	semantic/method-return-too-many-type-arguments.test \
