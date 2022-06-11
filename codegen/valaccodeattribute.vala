@@ -787,7 +787,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return Symbol.camel_case_to_lower_case (sym.name).replace ("_", "-");;
 			} else if (sym is LocalVariable) {
 				unowned string name = sym.name;
-				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
+				if (CCodeBaseModule.reserved_identifiers.contains (name) || CCodeBaseModule.reserved_vala_identifiers.contains (name)) {
 					return "_%s_".printf (name);
 				} else {
 					return name;
@@ -798,7 +798,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					return "...";
 				}
 				unowned string name = sym.name;
-				if (CCodeBaseModule.reserved_identifiers.contains (name)) {
+				if (CCodeBaseModule.reserved_identifiers.contains (name) || CCodeBaseModule.reserved_vala_identifiers.contains (name)) {
 					return "_%s_".printf (name);
 				} else {
 					return name;

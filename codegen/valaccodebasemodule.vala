@@ -275,6 +275,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public Set<string> predefined_marshal_set;
 	/* (constant) hash table with all reserved identifiers in the generated code */
 	public static Set<string> reserved_identifiers;
+	public static Set<string> reserved_vala_identifiers;
 
 	public int next_temp_var_id {
 		get { return emit_context.next_temp_var_id; }
@@ -467,10 +468,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		// MSVC keywords
 		reserved_identifiers.add ("cdecl");
 
+		reserved_vala_identifiers = new HashSet<string> (str_hash, str_equal);
+
 		// reserved for Vala/GObject naming conventions
-		reserved_identifiers.add ("error");
-		reserved_identifiers.add ("result");
-		reserved_identifiers.add ("self");
+		reserved_vala_identifiers.add ("error");
+		reserved_vala_identifiers.add ("result");
+		reserved_vala_identifiers.add ("self");
 	}
 
 	public override void emit (CodeContext context) {
@@ -2721,7 +2724,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				next_temp_var_id++;
 			}
 			return variable_name_map.get (name);
-		} else if (reserved_identifiers.contains (name)) {
+		} else if (reserved_identifiers.contains (name) || reserved_vala_identifiers.contains (name)) {
 			return "_%s_".printf (name);
 		} else {
 			return name;
