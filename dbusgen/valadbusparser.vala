@@ -304,6 +304,7 @@ public class Vala.DBusParser : CodeVisitor {
 				// If set to a non-empty string, the generated code will include parameters to exchange file descriptors using the
 				// #GUnixFDList type. This annotation can be used on <method> elements.
 				// TODO: Investigate what is needed!
+				Report.notice (null, "org.gtk.GDBus.C.UnixFD is unimplemented at the moment!");
 				break;
 			case "org.gtk.GDBus.Since":
 				// Can be used on any <interface>, <method>, <signal> and <property> element to specify the version (any free-form

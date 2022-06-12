@@ -54,11 +54,12 @@ int main () {
 		example.emit_signal (42);
 		assert (received_signal);
 		received_signal = false;
-		assert (received_signal);
 		example.trigger_signal ();
 		// TODO: Why???
+		// assert (received_signal);
 		// assert (example.cnter_property == 1);
-
+		// example.cnter_property = 5;
+		// assert (example.cnter_property == 5);
 	} catch (Error e) {
 		error ("Caught error: %s", e.message);
 	}

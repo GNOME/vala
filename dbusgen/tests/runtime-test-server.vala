@@ -62,7 +62,7 @@ class DbusTestServer : GLib.Object, OrgGnomeExample {
 		Process.exit (0);
 	}
 
-	public override int32 cnter_property {get; set;}
+	public override int32 cnter_property { get; set; }
 }
 
 void on_bus_aquired (DBusConnection conn) {

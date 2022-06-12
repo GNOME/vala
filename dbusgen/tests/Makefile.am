@@ -18,6 +18,7 @@ check-dbusgen: $(top_builddir)/dbusgen/valadbusgen
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gio-2.0 \
 		runtime-test-server.vala \
+		-X -O3 -X -g3 \
 		runtime-test-dbus.xml.vala 2>/dev/null; \
 	$(top_builddir)/compiler/valac \
 		--vapidir $(top_srcdir)/vapi \

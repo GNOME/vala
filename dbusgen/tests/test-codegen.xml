@@ -486,7 +486,7 @@
     <property name="Type" type="i" access="readwrite"/>
   </interface>
 
-  <!-- Wellknown, duplicate interfaces should be ignored instead of an error -->
+  <!-- Wellknown, duplicate interfaces should be ignored instead of yielding an error -->
   <interface name="org.freedesktop.DBus.Introspectable">
     <method name="Introspect">
       <arg name="xml_data" type="s" direction="out"/>
