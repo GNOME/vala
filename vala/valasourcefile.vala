@@ -362,6 +362,10 @@ public class Vala.SourceFile {
 			return content.length;
 		}
 
+		if (mapped_file == null) {
+			return 0;
+		}
+
 		return mapped_file.get_length ();
 	}
 
