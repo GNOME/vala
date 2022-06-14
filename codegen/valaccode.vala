@@ -26,6 +26,9 @@ namespace Vala {
 	static unowned CCodeAttribute get_ccode_attribute (CodeNode node) {
 		if (ccode_attribute_cache_index == null) {
 			ccode_attribute_cache_index = CodeNode.get_attribute_cache_index ();
+
+			// make sure static collections are initialized
+			CCodeBaseModule.init ();
 		}
 
 		unowned AttributeCache? attr = node.get_attribute_cache (ccode_attribute_cache_index);

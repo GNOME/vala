@@ -405,6 +405,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		predefined_marshal_set.add ("VOID:VARIANT");
 		predefined_marshal_set.add ("BOOLEAN:BOXED,BOXED");
 
+		init ();
+	}
+
+	public static void init () {
+		if (reserved_identifiers != null) {
+			return;
+		}
+
 		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
 
 		// C99 keywords
