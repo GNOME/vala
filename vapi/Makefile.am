@@ -273,6 +273,10 @@ dist_vapi_DATA = \
 	rest-0.7.vapi \
 	rest-extras-0.7.deps \
 	rest-extras-0.7.vapi \
+	rest-1.0.deps \
+	rest-1.0.vapi \
+	rest-extras-1.0.deps \
+	rest-extras-1.0.vapi \
 	sdl2-android.deps \
 	sdl2-android.vapi \
 	SDL2_gfx.deps \
@@ -437,6 +441,8 @@ GIR_BINDINGS = \
 	poppler-glib \
 	rest-0.7 \
 	rest-extras-0.7 \
+	rest-1.0 \
+	rest-extras-1.0 \
 	udisks2 \
 	webkit2gtk-4.0 \
 	webkit2gtk-4.1 \
@@ -777,6 +783,12 @@ rest-0.7:
 
 rest-extras-0.7:
 	$(GENVAPI) --library $(srcdir)/rest-extras-0.7 --metadatadir $(METADATADIR) --pkg rest-0.7 $(GIRDIR)/RestExtras-0.7.gir
+
+rest-1.0:
+	$(GENVAPI) --library $(srcdir)/rest-1.0 --metadatadir $(METADATADIR) --pkg gio-2.0 --pkg libsoup-3.0 $(GIRDIR)/Rest-1.0.gir
+
+rest-extras-1.0:
+	$(GENVAPI) --library $(srcdir)/rest-extras-1.0 --metadatadir $(METADATADIR) --pkg rest-1.0 $(GIRDIR)/RestExtras-1.0.gir
 
 udisks2:
 	$(GENVAPI) --library $(srcdir)/udisks2 --metadatadir $(METADATADIR) --pkg gio-2.0 $(GIRDIR)/UDisks-2.0.gir

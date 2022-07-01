@@ -1,0 +1,48 @@
+OAuth2Proxy cheader_filename="rest/rest-oauth2-proxy.h" cprefix="oauth2_proxy_"
+OAuth2ProxyCall cheader_filename="rest/rest-oauth2-proxy-call.h" cprefix="oauth2_proxy_call_"
+PkceCodeChallenge cheader_filename="rest/rest-pkce-code-challenge.h"
+Proxy cheader_filename="rest/rest-proxy.h"
+	.new_call skip=false
+	.bind skip=false
+ProxyAuth cheader_filename="rest/rest-proxy-auth.h"
+ProxyCall cheader_filename="rest/rest-proxy-call.h"
+	.get_params skip=false
+	.get_response_headers skip=false type_arguments="unowned string,unowned string"
+	.add_headers skip=false
+	.add_param_full.param owned
+	.add_params skip=false
+	.continuous skip=false
+	.upload skip=false
+  .cancel skip=false
+MemoryUse cheader_filename="rest/rest-param.h"
+ProxyError cheader_filename="rest/rest-proxy.h"
+ProxyCallError cheader_filename="rest/rest-proxy-call.h"
+Param cheader_filename="rest/rest-param.h"
+Params cheader_filename="rest/rest-params.h"
+	.add.param owned
+	.as_string_hash_table type_arguments="unowned string,unowned string"
+	.get unowned nullable
+ParamsIter cheader_filename="rest/rest-params.h"
+	.next.name out
+	.next.param out nullable
+XmlNode cheader_filename="rest/rest-xml-node.h"
+  .ref skip=false
+  .unref skip=false
+XmlParser cheader_filename="rest/rest-xml-parser.h"
+
+ProxyCallAsyncCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=3
+ProxyCallContinuousCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=5
+ProxyCallUploadCallback cheader_filename="rest/rest-proxy-call.h"
+	.error nullable=true
+	.weak_object nullable=true
+	.userdata closure=5
+
+random_string cheader_filename="rest/rest-utils.h"
+
+*.ref unowned
