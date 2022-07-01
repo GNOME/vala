@@ -54,6 +54,8 @@ dist_vapi_DATA = \
 	gconf-2.0.vapi \
 	geocode-glib-1.0.deps \
 	geocode-glib-1.0.vapi \
+	geocode-glib-2.0.deps \
+	geocode-glib-2.0.vapi \
 	glib-2.0.vapi \
 	gdesktopenums-3.0.vapi \
 	gdk-2.0.deps \
@@ -396,6 +398,7 @@ GIR_BINDINGS = \
 	gdk-pixbuf-2.0 \
 	gdl-3.0 \
 	geocode-glib-1.0 \
+	geocode-glib-2.0 \
 	gio-2.0 \
 	gmodule-2.0 \
 	gnome-bg-4 \
@@ -501,6 +504,9 @@ gconf-2.0:
 
 geocode-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/geocode-glib-1.0 --metadatadir $(METADATADIR) $(GIRDIR)/GeocodeGlib-1.0.gir
+
+geocode-glib-2.0:
+	$(GENVAPI) --library $(srcdir)/geocode-glib-2.0 --pkg gio-2.0 --pkg json-glib-1.0 --pkg libsoup-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/GeocodeGlib-2.0.gir
 
 gdesktopenums-3.0:
 	$(GENVAPI) --library $(srcdir)/gdesktopenums-3.0 --metadatadir $(METADATADIR) $(GIRDIR)/GDesktopEnums-3.0.gir

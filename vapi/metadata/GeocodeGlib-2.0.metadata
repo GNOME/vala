@@ -1,0 +1,12 @@
+// Default values
+Forward
+    .search_async.cancellable nullable default=null
+
+Location
+    .@new.accuracy default=LocationAccuracy.UNKNOWN
+
+Reverse
+    .resolve_async.cancellable nullable default=null
+
+// Move constants around
+LOCATION_ACCURACY_* parent="Geocode.LocationAccuracy" name="LOCATION_ACCURACY_(.*)"
