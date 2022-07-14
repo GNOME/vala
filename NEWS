@@ -1,3 +1,19 @@
+Vala 0.56.2
+===========
+ * Various improvements and bug fixes:
+  - codegen: Correctly set array-length for NoAccessorMethods properties [#1316]
+  - codegen: Detect usage of static type-parameter in runtime context [#1326]
+  - vala: Avoid critical in SourceFile.get_mapped_length() [#1330]
+  - codegen: Make sure to initialize static collections
+  - codegen: Split reserved identifiers for C and Vala
+  - codegen: Check cname of fields and methods against reserved identfiers [#1329]
+
+ * Bindings:
+  - glib2.0: Add abs() to int8/int16/int32/ssize_t [#1328]
+  - Add initial wayland-client binding
+  - Add geocode-glib-2.0 binding
+  - Add rest-1.0 bindings
+
 Vala 0.56.1
 ===========
  * Various improvements and bug fixes:
