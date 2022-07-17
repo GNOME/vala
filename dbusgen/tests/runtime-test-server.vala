@@ -75,7 +75,7 @@ void on_bus_aquired (DBusConnection conn) {
 
 int main () {
 	Bus.own_name (BusType.SESSION, "org.gnome.Example", BusNameOwnerFlags.REPLACE, on_bus_aquired, null, () => {
-		info ("Lost connection");
+		error ("Lost connection");
 	});
 	new MainLoop ().run ();
 	return 0;
