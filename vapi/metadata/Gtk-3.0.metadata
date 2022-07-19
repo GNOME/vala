@@ -167,7 +167,8 @@ VSeparator deprecated_since="3.2" replacement="Separator"
 Activatable deprecated_since="3.10"
 
 // G-I cannot handle returning non-boxed types
-binding_set_by_class skip=false
+BindingSet
+  .by_class skip=false
 ContainerClass
   .find_child_property skip=false
 get_option_group skip=false
@@ -690,7 +691,7 @@ Widget
   .intersect.intersection nullable unowned=false
 
 // Sure
-binding_set_by_class.object_class type="GLib.ObjectClass"
+BindingSet.by_class.object_class type="GLib.ObjectClass"
 ModuleInitFunc.argv ref unowned
 *.ref unowned
 
