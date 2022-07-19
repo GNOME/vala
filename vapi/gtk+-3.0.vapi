@@ -1089,8 +1089,6 @@ namespace Gtk {
 		public bool activate (uint keyval, Gdk.ModifierType modifiers, GLib.Object object);
 		[Version (deprecated = true, deprecated_since = "3.0")]
 		public void add_path (Gtk.PathType path_type, string path_pattern, Gtk.PathPriorityType priority);
-		[CCode (cheader_filename = "gtk/gtk.h")]
-		[Version (replacement = "BindingSet.by_class")]
 		public static unowned Gtk.BindingSet by_class ([CCode (type = "gpointer")] GLib.ObjectClass object_class);
 		public static unowned Gtk.BindingSet? find (string set_name);
 		public static unowned Gtk.BindingSet @new (string name);
