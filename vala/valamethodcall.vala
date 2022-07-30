@@ -152,7 +152,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 			if (!(m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end")) {
 				m.get_error_types (collection, source_reference);
 			}
-		} else if (mtype is ObjectType) {
+		} else if (mtype is ObjectType && mtype.type_symbol is Class) {
 			// constructor
 			unowned Class cl = (Class) ((ObjectType) mtype).type_symbol;
 			unowned Method m = cl.default_construction_method;

@@ -1161,6 +1161,7 @@ TESTS = \
 	semantic/method-virtual-body.test \
 	semantic/methodcall-field-initializer-throws.test \
 	semantic/methodcall-invalid-argument-lambda.test \
+	semantic/methodcall-invocation-invalid.test \
 	semantic/methodcall-void-expression.test \
 	semantic/methodcall-yield-with-begin.test \
 	semantic/objectcreation-abstract-class.test \
