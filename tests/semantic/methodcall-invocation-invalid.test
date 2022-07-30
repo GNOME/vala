@@ -1,0 +1,13 @@
+Invalid Code
+
+interface Bar {
+}
+
+class Foo {
+	public Bar bar { get; set; }
+}
+
+void main() {
+	var foo = new Foo ();
+	print ("%d", foo.bar ());
+}
