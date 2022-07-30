@@ -14,8 +14,16 @@ ul.external_link {
 	border-style: none;
 	display: block;
 	margin: 0px auto;
+	text-align: center;
 }
 
+.graph .node text {
+	font-size: 14px;
+}
+
+.graph .node a polygon {
+	fill: transparent;
+}
 
 .main_notification {
 	padding-right: 10px;

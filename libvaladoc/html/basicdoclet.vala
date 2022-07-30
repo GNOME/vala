@@ -1031,21 +1031,32 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		if (element is Class || element is Interface || element is Struct) {
 			unowned string format = (settings.use_svg_images ? "svg" : "png");
 			var chart = new Charts.Hierarchy (image_factory, element);
-			chart.save (this.get_img_path (element, format), format);
+			if (!settings.use_svg_images) {
+				chart.save (this.get_img_path (element, format), format);
+			}
 
 			writer.start_tag ("h2", {"class", css_title})
 				.text ("Object Hierarchy:")
 				.end_tag ("h2");
 
-			writer.simple_tag ("img", {"class",
-									   css_diagram,
-									   "usemap",
-									   "#"+element.get_full_name (),
-									   "alt",
-									   "Object hierarchy for %s".printf (element.name),
-									   "src",
-									   this.get_img_path_html (element, format)});
-			writer.add_usemap (chart);
+			if (settings.use_svg_images) {
+				writer.start_tag ("div", {"class",
+					css_diagram,
+					"alt",
+					"Object hierarchy for %s".printf (element.name)})
+					.text ((string) chart.write_buffer (format))
+					.end_tag ("div");
+			} else {
+				writer.simple_tag ("img", {"class",
+					css_diagram,
+					"usemap",
+					"#%s".printf (element.get_full_name ()),
+					"alt",
+					"Object hierarchy for %s".printf (element.name),
+					"src",
+					this.get_img_path_html (element, format)});
+				writer.add_usemap (chart);
+			}
 		}
 	}
 
