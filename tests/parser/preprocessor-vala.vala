@@ -55,6 +55,8 @@ void main () {
 	assert_not_reached ();
 #elif !VALA_0_56
 	assert_not_reached ();
+#elif !VALA_0_58
+	assert_not_reached ();
 #else
 	assert (true);
 #endif
