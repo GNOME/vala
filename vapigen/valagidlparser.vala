@@ -677,7 +677,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				ParameterDirection direction;
 				var param_type = parse_param (param, out direction);
-				var p = new Parameter (param_name, param_type);
+				var p = new Parameter (param_name, param_type, current_source_reference);
 				p.direction = direction;
 
 				bool hide_param = false;
@@ -2443,7 +2443,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new Parameter (param_name, param_type);
+			var p = new Parameter (param_name, param_type, current_source_reference);
 			p.direction = direction;
 
 			bool hide_param = false;
@@ -2622,7 +2622,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (last_param != null && last_param.name.has_prefix ("first_")) {
 			last_param.ellipsis = true;
 		} else if (add_ellipsis) {
-			m.add_parameter (new Parameter.with_ellipsis ());
+			m.add_parameter (new Parameter.with_ellipsis (current_source_reference));
 		}
 
 		if (container == null) {
@@ -3132,7 +3132,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			ParameterDirection direction;
 			var param_type = parse_param (param, out direction);
-			var p = new Parameter (param_node.name, param_type);
+			var p = new Parameter (param_node.name, param_type, current_source_reference);
 			p.direction = direction;
 
 			bool hide_param = false;
