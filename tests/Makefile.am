@@ -769,6 +769,7 @@ TESTS = \
 	generics/arrays-not-supported-2.test \
 	generics/arrays-not-supported-3.test \
 	generics/constructor-chain-up.vala \
+	generics/delegate-return-type-missing.test \
 	generics/floating-type-cast.vala \
 	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
@@ -779,14 +780,17 @@ TESTS = \
 	generics/parameter-invalid-initializer.test \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
+	generics/method-parameter-type-missing.test \
 	generics/method-parameter-unknown-type-parameter.test \
 	generics/method-parameter-unknown-type-parameter-2.test \
+	generics/method-return-type-missing.test \
 	generics/method-return-unknown-type-parameter.test \
 	generics/method-return-unknown-type-parameter-2.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \
 	generics/reference-transfer.vala \
+	generics/signal-return-type-missing.test \
 	generics/string-literal-comparison.vala \
 	generics/type-parameter-properties.vala \
 	generics/type-parameter-property-clash.vala \

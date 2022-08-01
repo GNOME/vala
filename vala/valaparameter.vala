@@ -208,6 +208,9 @@ public class Vala.Parameter : Variable {
 		if (!ellipsis) {
 			if (!external_package) {
 				context.analyzer.check_type (variable_type);
+				if (variable_type is DelegateType) {
+					variable_type.check_type_arguments (context);
+				}
 
 				// check symbol availability
 				if ((parent_symbol == null || !parent_symbol.external_package) && variable_type.type_symbol != null) {

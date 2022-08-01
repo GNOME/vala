@@ -866,6 +866,9 @@ public class Vala.Method : Subroutine, Callable {
 		return_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (return_type);
+			if (return_type is DelegateType) {
+				return_type.check_type_arguments (context);
+			}
 		}
 
 		if (return_type.type_symbol == context.analyzer.va_list_type.type_symbol) {

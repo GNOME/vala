@@ -1,0 +1,9 @@
+Invalid Code
+
+delegate T FooFunc<T> ();
+
+void foo (FooFunc f) {
+}
+
+void main () {
+}
