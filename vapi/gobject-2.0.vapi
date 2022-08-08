@@ -286,6 +286,9 @@ namespace GLib {
 		public bool value_convert (GLib.Value src_value, ref GLib.Value dest_value, bool strict_validation);
 		[CCode (cname = "g_param_value_defaults", vfunc_name = "value_defaults")]
 		public virtual bool value_defaults (GLib.Value value);
+		[Version (since = "2.74")]
+		[CCode (cname = "g_param_value_is_valid")]
+		public bool value_is_valid (GLib.Value value);
 		[CCode (cname = "g_param_value_validate", vfunc_name = "value_validate")]
 		public virtual bool value_validate (GLib.Value value);
 		[CCode (cname = "g_param_values_cmp", vfunc_name = "values_cmp")]
@@ -482,6 +485,8 @@ namespace GLib {
 		public void block ();
 		public void connect (string detailed_signal, GLib.Callback c_handler, void* data);
 		public void connect_after (string detailed_signal, GLib.Callback c_handler, void* data);
+		[Version (since = "2.74")]
+		public void connect_closure (string detailed_signal, GLib.Closure closure, bool after);
 		public void connect_data (string detailed_signal, GLib.Callback c_handler, void* data, GLib.ClosureNotify notify, GLib.ConnectFlags flags);
 		public void connect_object (string detailed_signal, GLib.Callback c_handler, void* object, GLib.ConnectFlags flags);
 		public void connect_swapped (string detailed_signal, GLib.Callback c_handler, void* data);

@@ -1844,9 +1844,13 @@ namespace GLib {
 		public static void set (ref int atomic, int newval);
 		[Version (since = "2.30")]
 		public static int add (ref int atomic, int val);
+		[Version (since = "2.74")]
+		public static int exchange (ref int atomic, int newval);
 		[Version (deprecated_since = "2.30", replacement = "add")]
 		public static int exchange_and_add (ref int atomic, int val);
 		public static bool compare_and_exchange (ref int atomic, int oldval, int newval);
+		[Version (since = "2.74")]
+		public static bool compare_and_exchange_full (ref int atomic, int oldval, int newval, out int preval);
 		public static void inc (ref int atomic);
 		public static bool dec_and_test (ref int atomic);
 	}
@@ -1860,11 +1864,17 @@ namespace GLib {
 		[Version (since = "2.30")]
 		[CCode (cname = "g_atomic_int_add")]
 		public static uint add (ref uint atomic, uint val);
+		[Version (since = "2.74")]
+		[CCode (cname = "g_atomic_int_exchange")]
+		public static uint exchange (ref uint atomic, uint newval);
 		[Version (deprecated_since = "2.30", replacement = "add")]
 		[CCode (cname = "g_atomic_int_exchange_and_add")]
 		public static uint exchange_and_add (ref uint atomic, uint val);
 		[CCode (cname = "g_atomic_int_compare_and_exchange")]
 		public static bool compare_and_exchange (ref uint atomic, uint oldval, uint newval);
+		[Version (since = "2.74")]
+		[CCode (cname = "g_atomic_int_compare_and_exchange_full")]
+		public static bool compare_and_exchange_full (ref uint atomic, uint oldval, uint newval, out uint preval);
 		[CCode (cname = "g_atomic_int_inc")]
 		public static void inc (ref uint atomic);
 		[CCode (cname = "g_atomic_int_dec_and_test")]
@@ -1876,6 +1886,8 @@ namespace GLib {
 		public static void* get (void** atomic);
 		public static void set (void** atomic, void* newval);
 		public static bool compare_and_exchange (void** atomic, void* oldval, void* newval);
+		[Version (since = "2.74")]
+		public static bool compare_and_exchange_full (void** atomic, void* oldval, void* newval, out void* preval);
 	}
 #else
 	[Version (since = "2.4")]
@@ -2017,6 +2029,8 @@ namespace GLib {
 		[CCode (cname = "g_timeout_add_full")]
 		public static uint add (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		public static uint add_full (int priority, uint interval, owned SourceFunc function);
+		[Version (since = "2.74")]
+		public static uint add_once (uint interval, SourceOnceFunc function);
 		[Version (since = "2.14")]
 		[CCode (cname = "g_timeout_add_seconds_full")]
 		public static uint add_seconds (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
@@ -2033,6 +2047,8 @@ namespace GLib {
 		[CCode (cname = "g_idle_add_full")]
 		public static uint add (owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT_IDLE);
 		public static uint add_full (int priority, owned SourceFunc function);
+		[Version (since = "2.74")]
+		public static uint add_once (SourceOnceFunc function);
 		public static bool remove_by_data (void* data);
 	}
 
@@ -2184,6 +2200,8 @@ namespace GLib {
 	}
 
 	public delegate bool SourceFunc ();
+	[Version (since = "2.74")]
+	public delegate bool SourceOnceFunc ();
 
 	[CCode (has_type_id = false)]
 	public errordomain ThreadError {
@@ -2664,6 +2682,8 @@ namespace GLib {
 	[CCode (cprefix = "G_IO_FLAG_", has_type_id = false)]
 	[Flags]
 	public enum IOFlags {
+		[Version (since = "2.74")]
+		NONE,
 		APPEND,
 		NONBLOCK,
 		IS_READABLE,
@@ -3577,7 +3597,12 @@ namespace GLib {
 	public enum FormatSizeFlags {
 		DEFAULT,
 		LONG_FORMAT,
-		IEC_UNITS
+		IEC_UNITS,
+		BITS,
+		[Version (since = "2.74")]
+		ONLY_VALUE,
+		[Version (since = "2.74")]
+		ONLY_UNIT
 	}
 
 	/* Lexical Scanner */
@@ -5067,6 +5092,9 @@ namespace GLib {
 	[CCode (cprefix = "G_TEST_SUBPROCESS_INHERIT_", has_type_id = false)]
 	[Flags]
 	public enum TestSubprocessFlags {
+		[Version (since = "2.74")]
+		[CCode (cname = "G_TEST_SUBPROCESS_DEFAULT")]
+		DEFAULT,
 		STDIN,
 		STDOUT,
 		STDERR
@@ -5581,6 +5609,8 @@ namespace GLib {
 	public delegate uint HashFunc<K> (K key);
 	[CCode (has_target = false)]
 	public delegate bool EqualFunc<G> (G a, G b);
+	[Version (since = "2.74")]
+	public delegate bool EqualFuncFull<G> (G a, G b);
 	public delegate void HFunc<K,V> (K key, V value);
 	public delegate bool HRFunc<K,V> (K key, V value);
 
@@ -5745,6 +5775,9 @@ namespace GLib {
 		[Version (since = "2.30")]
 		[CCode (cname = "g_ptr_array_new_full", simple_generics = true)]
 		public GenericArray (uint reserved_size = 0);
+		[Version (since = "2.74")]
+		[CCode (cname = "g_ptr_array_new_null_terminated", simple_generics = true)]
+		public GenericArray.null_terminated (uint reserved_size, [CCode (pos = -1)] bool null_terminated);
 		public void add (owned G data);
 		[Version (since = "2.62")]
 		public GenericArray<G> copy (CopyFunc<G> func);
@@ -5764,6 +5797,8 @@ namespace GLib {
 		public unowned G get (uint index);
 		[Version (since = "2.40")]
 		public void insert (int index, owned G data);
+		[Version (since = "2.74")]
+		public bool is_null_terminated ();
 		public bool remove (G data);
 		public void remove_index (uint index);
 		public bool remove_fast (G data);

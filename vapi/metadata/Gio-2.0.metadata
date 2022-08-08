@@ -297,8 +297,6 @@ PollableOutputStream
   .create_source type="GLib.PollableSource"
   .write_nonblocking#virtual_method name="write_nonblocking_fn" no_wrapper
   .writev_nonblocking#virtual_method name="writev_nonblocking_fn" no_wrapper
-TlsCertificate
-  .new_from_pkcs12.data array array_length_idx=1
 TlsClientConnection
   .new nullable
   .accepted_cas type="GLib.List<GLib.ByteArray>"
