@@ -47,19 +47,25 @@ namespace GUdev {
 		public unowned string get_subsystem ();
 		public unowned string? get_sysfs_attr (string name);
 		public bool get_sysfs_attr_as_boolean (string name);
+		[Version (since = "234")]
 		public bool get_sysfs_attr_as_boolean_uncached (string name);
 		public double get_sysfs_attr_as_double (string name);
+		[Version (since = "234")]
 		public double get_sysfs_attr_as_double_uncached (string name);
 		public int get_sysfs_attr_as_int (string name);
+		[Version (since = "234")]
 		public int get_sysfs_attr_as_int_uncached (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_sysfs_attr_as_strv (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (since = "234")]
 		public unowned string[]? get_sysfs_attr_as_strv_uncached (string name);
 		public uint64 get_sysfs_attr_as_uint64 (string name);
+		[Version (since = "234")]
 		public uint64 get_sysfs_attr_as_uint64_uncached (string name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_sysfs_attr_keys ();
+		[Version (since = "234")]
 		public unowned string? get_sysfs_attr_uncached (string name);
 		public unowned string get_sysfs_path ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -69,6 +75,7 @@ namespace GUdev {
 		public uint64 get_usec_since_initialized ();
 		public bool has_property (string key);
 		public bool has_sysfs_attr (string key);
+		[Version (since = "234")]
 		public bool has_sysfs_attr_uncached (string key);
 	}
 	[CCode (cheader_filename = "gudev/gudev.h", type_id = "g_udev_enumerator_get_type ()")]

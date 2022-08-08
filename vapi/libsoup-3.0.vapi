@@ -109,7 +109,6 @@ namespace Soup {
 		protected AuthManager ();
 		public void clear_cached_credentials ();
 		public void use_auth (GLib.Uri uri, Soup.Auth auth);
-		public signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_ntlm_get_type ()")]
 	public sealed class AuthNTLM : Soup.Auth {
@@ -522,6 +521,10 @@ namespace Soup {
 		public unowned Soup.MessageHeaders get_response_headers ();
 		public unowned GLib.Socket? get_socket ();
 		public uint get_status ();
+		[Version (since = "3.2")]
+		public unowned GLib.TlsCertificate? get_tls_peer_certificate ();
+		[Version (since = "3.2")]
+		public GLib.TlsCertificateFlags get_tls_peer_certificate_errors ();
 		public unowned GLib.Uri get_uri ();
 		public bool is_options_ping ();
 		public void set_http_version (Soup.HTTPVersion version);
@@ -529,6 +532,10 @@ namespace Soup {
 		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[]? resp_body);
 		public void set_status (uint status_code, string? reason_phrase);
 		public GLib.IOStream steal_connection ();
+		[Version (since = "3.2")]
+		public GLib.TlsCertificate tls_peer_certificate { get; }
+		[Version (since = "3.2")]
+		public GLib.TlsCertificateFlags tls_peer_certificate_errors { get; }
 		public signal bool accept_certificate (GLib.TlsCertificate tls_peer_certificate, GLib.TlsCertificateFlags tls_peer_errors);
 		public signal void disconnected ();
 		public signal void finished ();

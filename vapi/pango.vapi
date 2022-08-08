@@ -322,7 +322,7 @@ namespace Pango {
 		public virtual void list_sizes ([CCode (array_length_cname = "n_sizes", array_length_pos = 1.1)] out int[]? sizes);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_family_get_type ()")]
-	public abstract class FontFamily : GLib.Object {
+	public abstract class FontFamily : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
 		protected FontFamily ();
 		[Version (since = "1.46")]
@@ -333,9 +333,13 @@ namespace Pango {
 		[Version (since = "1.44")]
 		public virtual bool is_variable ();
 		public virtual void list_faces ([CCode (array_length_cname = "n_faces", array_length_pos = 1.1)] out (unowned Pango.FontFace)[] faces);
+		[NoAccessorMethod]
+		public GLib.Type item_type { get; }
+		[NoAccessorMethod]
+		public uint n_items { get; }
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_map_get_type ()")]
-	public abstract class FontMap : GLib.Object {
+	public abstract class FontMap : GLib.Object, GLib.ListModel {
 		[CCode (has_construct_function = false)]
 		protected FontMap ();
 		[Version (since = "1.34")]
@@ -349,6 +353,10 @@ namespace Pango {
 		public virtual void list_families ([CCode (array_length_cname = "n_families", array_length_pos = 1.1)] out (unowned Pango.FontFamily)[] families);
 		public virtual Pango.Font? load_font (Pango.Context context, Pango.FontDescription desc);
 		public virtual Pango.Fontset? load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
+		[NoAccessorMethod]
+		public GLib.Type item_type { get; }
+		[NoAccessorMethod]
+		public uint n_items { get; }
 	}
 	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_font_metrics_ref", type_id = "pango_font_metrics_get_type ()", unref_function = "pango_font_metrics_unref")]
 	[Compact]

@@ -10,6 +10,8 @@ namespace Notify {
 		public void clear_actions ();
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
+		[Version (since = "0.7.10")]
+		public unowned string get_activation_token ();
 		public int get_closed_reason ();
 		[Version (since = "0.7.3")]
 		public void set_app_name (string app_name);
@@ -48,6 +50,15 @@ namespace Notify {
 		public string summary { owned get; set construct; }
 		public virtual signal void closed ();
 	}
+	[CCode (cheader_filename = "libnotify/notify.h", cprefix = "NOTIFY_CLOSED_REASON_", type_id = "notify_closed_reason_get_type ()")]
+	[Version (since = "0.8.0")]
+	public enum ClosedReason {
+		UNSET,
+		EXPIRED,
+		DISMISSED,
+		API_REQUEST,
+		UNDEFIEND
+	}
 	[CCode (cheader_filename = "libnotify/notify.h", cprefix = "NOTIFY_URGENCY_", type_id = "notify_urgency_get_type ()")]
 	public enum Urgency {
 		LOW,
@@ -73,7 +84,7 @@ namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool get_server_info (out string ret_name, out string ret_vendor, out string ret_version, out string ret_spec_version);
 	[CCode (cheader_filename = "libnotify/notify.h")]
-	public static bool init (string app_name);
+	public static bool init (string? app_name);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool is_initted ();
 	[CCode (cheader_filename = "libnotify/notify.h")]

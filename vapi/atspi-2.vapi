@@ -156,8 +156,10 @@ namespace Atspi {
 		public bool register (string event_type) throws GLib.Error;
 		public static bool register_from_callback ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Atspi.EventListenerCB callback, string event_type) throws GLib.Error;
 		public static bool register_from_callback_full ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Atspi.EventListenerCB? callback, string event_type, GLib.Array<string> properties) throws GLib.Error;
+		public static bool register_from_callback_with_app ([CCode (delegate_target_pos = 1.33333, destroy_notify_pos = 1.66667)] owned Atspi.EventListenerCB? callback, string event_type, GLib.Array<string> properties, Atspi.Accessible? app) throws GLib.Error;
 		public bool register_full (string event_type, GLib.Array<string>? properties) throws GLib.Error;
 		public static bool register_no_data ([CCode (destroy_notify_pos = 1.5)] owned Atspi.EventListenerSimpleCB callback, string event_type) throws GLib.Error;
+		public bool register_with_app (string event_type, GLib.Array<string>? properties, Atspi.Accessible? app) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public EventListener.simple ([CCode (destroy_notify_pos = 1.1)] owned Atspi.EventListenerSimpleCB callback);
 	}
@@ -421,6 +423,8 @@ namespace Atspi {
 		public double get_maximum_value () throws GLib.Error;
 		public double get_minimum_increment () throws GLib.Error;
 		public double get_minimum_value () throws GLib.Error;
+		[Version (since = "2.46")]
+		public string get_text () throws GLib.Error;
 		public bool set_current_value (double new_value) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "atspi/atspi.h")]
