@@ -59,10 +59,86 @@ namespace Gst {
 		[HasEmitter]
 		public signal void send_string (string? str);
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice", type_id = "gst_webrtc_ice_get_type ()")]
+	public abstract class WebRTCICE : Gst.Object {
+		public Gst.WebRTCICEConnectionState ice_connection_state;
+		public Gst.WebRTCICEGatheringState ice_gathering_state;
+		[CCode (has_construct_function = false)]
+		protected WebRTCICE ();
+		[Version (since = "1.22")]
+		public virtual void add_candidate (Gst.WebRTCICEStream stream, string candidate);
+		[Version (since = "1.22")]
+		public virtual Gst.WebRTCICEStream? add_stream (uint session_id);
+		[Version (since = "1.22")]
+		public virtual bool add_turn_server (string uri);
+		[Version (since = "1.22")]
+		public static void candidate_stats_free (Gst.WebRTCICECandidateStats stats);
+		[Version (since = "1.22")]
+		public virtual Gst.WebRTCICETransport? find_transport (Gst.WebRTCICEStream stream, Gst.WebRTCICEComponent component);
+		[Version (since = "1.22")]
+		public virtual bool gather_candidates (Gst.WebRTCICEStream stream);
+		[Version (since = "1.22")]
+		public virtual bool get_is_controller ();
+		[Version (since = "1.22")]
+		public virtual GLib.Array<Gst.WebRTCICECandidateStats?> get_local_candidates (Gst.WebRTCICEStream stream);
+		[Version (since = "1.22")]
+		public virtual GLib.Array<Gst.WebRTCICECandidateStats?> get_remote_candidates (Gst.WebRTCICEStream stream);
+		[Version (since = "1.22")]
+		public virtual bool get_selected_pair (Gst.WebRTCICEStream stream, Gst.WebRTCICECandidateStats local_stats, Gst.WebRTCICECandidateStats remote_stats);
+		[Version (since = "1.22")]
+		public virtual string get_stun_server ();
+		[Version (since = "1.22")]
+		public virtual string get_turn_server ();
+		[Version (since = "1.22")]
+		public virtual void set_force_relay (bool force_relay);
+		[Version (since = "1.22")]
+		public virtual void set_is_controller (bool controller);
+		[Version (since = "1.22")]
+		public virtual bool set_local_credentials (Gst.WebRTCICEStream stream, string ufrag, string pwd);
+		[Version (since = "1.22")]
+		public virtual void set_on_ice_candidate (owned Gst.WebRTCICEOnCandidateFunc func);
+		[Version (since = "1.22")]
+		public virtual bool set_remote_credentials (Gst.WebRTCICEStream stream, string ufrag, string pwd);
+		[Version (since = "1.22")]
+		public virtual void set_stun_server (string uri);
+		[Version (since = "1.22")]
+		public virtual void set_tos (Gst.WebRTCICEStream stream, uint tos);
+		[Version (since = "1.22")]
+		public virtual void set_turn_server (string uri);
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public uint max_rtp_port { get; set construct; }
+		[NoAccessorMethod]
+		[Version (since = "1.20")]
+		public uint min_rtp_port { get; set construct; }
+		public signal bool add_local_ip_address (string address);
+	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice_stream", type_id = "gst_webrtc_ice_stream_get_type ()")]
+	public abstract class WebRTCICEStream : Gst.Object {
+		[CCode (has_construct_function = false)]
+		protected WebRTCICEStream ();
+		[Version (since = "1.22")]
+		public virtual Gst.WebRTCICETransport? find_transport (Gst.WebRTCICEComponent component);
+		[Version (since = "1.22")]
+		public virtual bool gather_candidates ();
+		[NoAccessorMethod]
+		public uint stream_id { get; construct; }
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice_transport", type_id = "gst_webrtc_ice_transport_get_type ()")]
 	public abstract class WebRTCICETransport : Gst.Object {
+		[CCode (array_length = false)]
+		public weak void* _padding[4];
+		public Gst.WebRTCICERole role;
+		public weak Gst.Element sink;
+		public weak Gst.Element src;
 		[CCode (has_construct_function = false)]
 		protected WebRTCICETransport ();
+		public void connection_state_change (Gst.WebRTCICEConnectionState new_state);
+		[NoWrapper]
+		public virtual bool gather_candidates ();
+		public void gathering_state_change (Gst.WebRTCICEGatheringState new_state);
+		public void new_candidate (uint stream_id, Gst.WebRTCICEComponent component, string attr);
+		public void selected_pair_change ();
 		[NoAccessorMethod]
 		public Gst.WebRTCICEComponent component { get; construct; }
 		[NoAccessorMethod]
@@ -143,6 +219,17 @@ namespace Gst {
 		[DestroysInstance]
 		public void free ();
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", has_type_id = false)]
+	public struct WebRTCICECandidateStats {
+		public weak string ipaddr;
+		public uint port;
+		public uint stream_id;
+		public weak string type;
+		public weak string proto;
+		public weak string relay_proto;
+		public uint prio;
+		public weak string url;
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_BUNDLE_POLICY_", type_id = "gst_webrtc_bundle_policy_get_type ()")]
 	[Version (since = "1.16")]
 	public enum WebRTCBundlePolicy {
@@ -169,7 +256,6 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_DATA_CHANNEL_STATE_", type_id = "gst_webrtc_data_channel_state_get_type ()")]
 	[Version (since = "1.16")]
 	public enum WebRTCDataChannelState {
-		NEW,
 		CONNECTING,
 		OPEN,
 		CLOSING,
@@ -299,10 +385,15 @@ namespace Gst {
 		HARDWARE_ENCODER_NOT_AVAILABLE,
 		ENCODER_ERROR,
 		INVALID_STATE,
-		INTERNAL_FAILURE;
+		INTERNAL_FAILURE,
+		[Version (since = "1.22")]
+		INVALID_MODIFICATION;
 		[CCode (cname = "gst_webrtc_error_quark")]
 		public static GLib.Quark quark ();
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", instance_pos = 3.9)]
+	[Version (since = "1.22")]
+	public delegate void WebRTCICEOnCandidateFunc (Gst.WebRTCICE ice, uint stream_id, string candidate);
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h")]
 	[Version (replacement = "WebRTCError.quark", since = "1.20")]
 	public static GLib.Quark webrtc_error_quark ();

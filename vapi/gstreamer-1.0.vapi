@@ -2540,6 +2540,8 @@ namespace Gst {
 		public bool get_double (string fieldname, out double value);
 		public bool get_enum (string fieldname, GLib.Type enumtype, out int value);
 		public GLib.Type get_field_type (string fieldname);
+		[Version (since = "1.22")]
+		public bool get_flags (string fieldname, GLib.Type flags_type, out uint value);
 		[Version (since = "1.6")]
 		public bool get_flagset (string fieldname, out uint value_flags, out uint value_mask);
 		public bool get_fraction (string fieldname, out int value_numerator, out int value_denominator);

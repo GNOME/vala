@@ -346,7 +346,9 @@ namespace Gst {
 			IMAGE,
 			SUBTITLE,
 			TAG,
-			GENERIC
+			GENERIC,
+			[Version (since = "1.22")]
+			METADATA
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstAudioVisualizerShaderFunc", has_target = false)]
 		public delegate void AudioVisualizerShaderFunc (Gst.PbUtils.AudioVisualizer scope, Gst.Video.Frame s, Gst.Video.Frame d);

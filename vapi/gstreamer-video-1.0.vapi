@@ -787,6 +787,8 @@ namespace Gst {
 			public bool from_string (string color);
 			[Version (since = "1.6")]
 			public bool is_equal (Gst.Video.Colorimetry other);
+			[Version (since = "1.22")]
+			public bool is_equivalent (uint bitdepth, Gst.Video.Colorimetry other, uint other_bitdepth);
 			public bool matches (string color);
 			public string? to_string ();
 		}
@@ -849,6 +851,8 @@ namespace Gst {
 			public void component (uint plane, out int components);
 			[Version (since = "1.22")]
 			public int extrapolate_stride (int plane, int stride);
+			[Version (since = "1.22")]
+			public uint get_tile_sizes (uint plane, uint? out_ws, uint? out_hs);
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoFrame")]
@@ -986,6 +990,17 @@ namespace Gst {
 			public double taps;
 			public void clear ();
 			public bool init (Gst.Video.ResamplerMethod method, Gst.Video.ResamplerFlags flags, uint n_phases, uint n_taps, double shift, uint in_size, uint out_size, Gst.Structure options);
+		}
+		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
+		[GIR (name = "VideoSEIUserDataUnregisteredMeta")]
+		[Version (since = "1.22")]
+		public struct SEIUserDataUnregisteredMeta {
+			public Gst.Meta meta;
+			[CCode (array_length = false)]
+			public weak uint8 uuid[16];
+			public uint8 data;
+			public size_t size;
+			public static unowned Gst.MetaInfo? get_info ();
 		}
 		[CCode (cheader_filename = "gst/video/video.h", has_type_id = false)]
 		[GIR (name = "VideoTimeCodeConfig")]
@@ -1182,6 +1197,8 @@ namespace Gst {
 			public static Gst.Video.ColorPrimaries from_iso (uint value);
 			[Version (since = "1.6")]
 			public unowned Gst.Video.ColorPrimariesInfo? get_info ();
+			[Version (since = "1.22")]
+			public bool is_equivalent (Gst.Video.ColorPrimaries other);
 			[Version (since = "1.18")]
 			public uint to_iso ();
 		}
@@ -1938,6 +1955,9 @@ namespace Gst {
 		public static unowned Gst.Video.RegionOfInterestMeta? buffer_add_video_region_of_interest_meta (Gst.Buffer buffer, string roi_type, uint x, uint y, uint w, uint h);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_region_of_interest_meta_id")]
 		public static unowned Gst.Video.RegionOfInterestMeta? buffer_add_video_region_of_interest_meta_id (Gst.Buffer buffer, GLib.Quark roi_type, uint x, uint y, uint w, uint h);
+		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_sei_user_data_unregistered_meta")]
+		[Version (since = "1.22")]
+		public static unowned Gst.Video.SEIUserDataUnregisteredMeta? buffer_add_video_sei_user_data_unregistered_meta (Gst.Buffer buffer, uint8 uuid, uint8 data, size_t size);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_buffer_add_video_time_code_meta")]
 		[Version (since = "1.10")]
 		public static unowned Gst.Video.TimeCodeMeta? buffer_add_video_time_code_meta (Gst.Buffer buffer, Gst.Video.TimeCode tc);
@@ -2003,6 +2023,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoColorPrimaries.get_info", since = "1.6")]
 		public static unowned Gst.Video.ColorPrimariesInfo? color_primaries_get_info (Gst.Video.ColorPrimaries primaries);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoColorPrimaries.is_equivalent", since = "1.22")]
+		public static bool color_primaries_is_equivalent (Gst.Video.ColorPrimaries primaries, Gst.Video.ColorPrimaries other);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoColorPrimaries.to_iso", since = "1.18")]
 		public static uint color_primaries_to_iso (Gst.Video.ColorPrimaries primaries);
@@ -2094,6 +2117,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoInterlaceMode.to_string", since = "1.6")]
 		public static unowned string interlace_mode_to_string (Gst.Video.InterlaceMode mode);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.22")]
+		public static bool is_common_aspect_ratio (int width, int height, int par_n, int par_d);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_is_video_overlay_prepare_window_handle_message")]
 		public static bool is_video_overlay_prepare_window_handle_message (Gst.Message msg);
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -2276,6 +2302,15 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoRegionOfInterestMeta.get_info")]
 		public static unowned Gst.MetaInfo? region_of_interest_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.22")]
+		public static GLib.Type sei_user_data_unregistered_meta_api_get_type ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoSEIUserDataUnregisteredMeta.get_info", since = "1.22")]
+		public static unowned Gst.MetaInfo? sei_user_data_unregistered_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.22")]
+		public static bool sei_user_data_unregistered_parse_precision_time_stamp (Gst.Video.SEIUserDataUnregisteredMeta user_data, out uint8 status, out uint64 precision_time_stamp);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.4")]
 		public static uint tile_get_index (Gst.Video.TileMode mode, int x, int y, int x_tiles, int y_tiles);

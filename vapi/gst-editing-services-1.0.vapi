@@ -1180,7 +1180,9 @@ namespace GES {
 		WINDSHIELD_U,
 		WINDSHIELD_V,
 		WINDSHIELD_H,
-		CROSSFADE
+		CROSSFADE,
+		[Version (since = "1.22")]
+		FADE_IN
 	}
 	[CCode (cheader_filename = "ges/ges.h", cprefix = "GES_VIDEO_TEST_", type_id = "ges_video_test_pattern_get_type ()")]
 	public enum VideoTestPattern {
