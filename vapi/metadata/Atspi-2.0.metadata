@@ -5,7 +5,17 @@ DeviceEvent struct
 
 DeviceListener
 	.new_simple skip=false
+DeviceListenerCB.stroke owned=false
+DeviceListenerSimpleCB.stroke owned=false
 
 EventListener
 	.*_no_data skip=false
 	.new_simple skip=false
+	.callback unowned=false delegate_target_cname="user_data" destroy_notify_cname="cb_destroyed"
+	.cb_destroyed skip
+	.user_data skip
+
+KeySet
+	.keysyms array array_length_field="len"
+	.keycodes array array_length_field="len"
+	.keystrings array array_length_field="len"
