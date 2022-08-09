@@ -12534,6 +12534,8 @@ namespace Gtk {
 		public void set_title (string? title);
 		public void set_titlebar (Gtk.Widget? titlebar);
 		public void set_transient_for (Gtk.Window? parent);
+		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_show_uri_full", finish_name = "gtk_show_uri_full_finish")]
+		public async bool show_uri_full (string uri, uint32 timestamp, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void unfullscreen ();
 		public void unmaximize ();
 		public void unminimize ();
@@ -14549,8 +14551,6 @@ namespace Gtk {
 	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_uri (Gtk.Window? parent, string uri, uint32 timestamp);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static async bool show_uri_full (Gtk.Window? parent, string uri, uint32 timestamp, GLib.Cancellable? cancellable) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void test_accessible_assertion_message_role (string domain, string file, int line, string func, string expr, Gtk.Accessible accessible, Gtk.AccessibleRole expected_role, Gtk.AccessibleRole actual_role);
 	[CCode (cheader_filename = "gtk/gtk.h")]

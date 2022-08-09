@@ -340,6 +340,8 @@ TreeModel
   .get_value return_void
   .rows_reordered skip
 show_about_dialog skip=false
+show_uri_full parent="Gtk.Window" symbol_type="method" instance_idx=0 finish_name="gtk_show_uri_full_finish"
+show_uri_full_finish parent="Gtk.Window" symbol_type="method" instance_idx=0
 test_init skip=false
 
 test_init.argvp unowned
