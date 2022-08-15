@@ -2345,8 +2345,10 @@ public class Vala.Parser : CodeVisitor {
 			if (current () == TokenType.FINALLY) {
 				finally_clause = parse_finally_clause ();
 			}
-		} else {
+		} else if (current () == TokenType.FINALLY) {
 			finally_clause = parse_finally_clause ();
+		} else {
+			report_parse_error (new ParseError.SYNTAX ("expected `catch' or `finally'"));
 		}
 		var stmt = new TryStatement (try_block, finally_clause, get_src (begin));
 		foreach (CatchClause clause in catch_clauses) {
