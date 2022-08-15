@@ -1,0 +1,16 @@
+Invalid Code
+
+void main () {
+	switch (42) {
+	case 42:
+		try {
+			GLib.print ("42");
+		 catch (GLib.Error e) {
+			debug ("foo");
+		}
+		break;
+	default:
+		debug ("bar");
+		break;
+	}
+}
