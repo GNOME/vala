@@ -990,6 +990,7 @@ TESTS = \
 	parser/switch-statement.vala \
 	parser/switch-section-outside-switch.test \
 	parser/template.vala \
+	parser/try-catch-in-switch-case-invalid.test \
 	parser/tuple.vala \
 	parser/unsupported-property-async.test \
 	parser/unsupported-property-throws.test \
