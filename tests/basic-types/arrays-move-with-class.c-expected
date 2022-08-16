@@ -63,7 +63,8 @@ static void _vala_array_free (gpointer array,
                        GDestroyNotify destroy_func);
 static void _vala_array_move (gpointer array,
                        gsize element_size,
-                       GDestroyNotify free_func,
+                       GDestroyNotify element_destroy_func,
+                       gboolean is_pointer,
                        gssize src,
                        gssize dest,
                        gssize length);
@@ -166,7 +167,7 @@ test_array_with_class_move (void)
 	a_length1 = 9;
 	_a_size_ = a_length1;
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 10), "foo.ref_count == 10");
-	_vala_array_move (a, sizeof (Foo*), g_object_unref, 0, 2, 3);
+	_vala_array_move (a, sizeof (Foo*), g_object_unref, TRUE, 0, 2, 3);
 	a = (_vala_array_free (a, a_length1, (GDestroyNotify) g_object_unref), NULL);
 	_g_object_unref0 (foo);
 }
@@ -197,7 +198,7 @@ test_unowned_array_with_class_move (void)
 	a_length1 = 9;
 	_a_size_ = a_length1;
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 1), "foo.ref_count == 1");
-	_vala_array_move (a, sizeof (Foo*), NULL, 0, 2, 3);
+	_vala_array_move (a, sizeof (Foo*), NULL, TRUE, 0, 2, 3);
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 1), "foo.ref_count == 1");
 	a = (g_free (a), NULL);
 	_g_object_unref0 (foo);
@@ -245,26 +246,45 @@ _vala_array_free (gpointer array,
 static void
 _vala_array_move (gpointer array,
                   gsize element_size,
-                  GDestroyNotify free_func,
+                  GDestroyNotify element_destroy_func,
+                  gboolean is_pointer,
                   gssize src,
                   gssize dest,
                   gssize length)
 {
-	if (free_func != NULL) {
+	if (element_destroy_func != NULL) {
 		if ((src < dest) && ((src + length) > dest)) {
 			gssize i;
-			for (i = dest; i < (src + length); i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < (src + length); i++) {
+					element_destroy_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < (src + length); i++) {
+					element_destroy_func (((char*) array) + (i * element_size));
+				}
 			}
 		} else if ((src > dest) && (src < (dest + length))) {
 			gssize i;
-			for (i = dest; i < src; i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < src; i++) {
+					element_destroy_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < src; i++) {
+					element_destroy_func (((char*) array) + (i * element_size));
+				}
 			}
 		} else if (src != dest) {
 			gssize i;
-			for (i = dest; i < (dest + length); i++) {
-				free_func (((void**) array)[i]);
+			if (is_pointer) {
+				for (i = dest; i < (dest + length); i++) {
+					element_destroy_func (((void**) array)[i]);
+				}
+			} else {
+				for (i = dest; i < (dest + length); i++) {
+					element_destroy_func (((char*) array) + (i * element_size));
+				}
 			}
 		}
 	}
