@@ -1,0 +1,9 @@
+Invalid Code
+
+namespace Foo {
+	public static void main () {
+	}
+}
+
+void main () {
+}
