@@ -245,6 +245,7 @@ TESTS = \
 	methods/argument-named.vala \
 	methods/delegate-target.vala \
 	methods/generics.vala \
+	methods/main-entry-exists.test \
 	methods/nowrapper-interface.vala \
 	methods/nowrapper-no-vfunc.test \
 	methods/parameter-ccode-type.vala \
