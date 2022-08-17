@@ -3711,7 +3711,11 @@ namespace GLib {
 		public static bool if_continued (int status);
 
 		[NoReturn]
+#if GLIB_2_50
+		[Version (since = "2.50")]
+#else
 		[CCode (cname = "abort", cheader_filename = "stdlib.h")]
+#endif
 		public void abort ();
 		[NoReturn]
 		[CCode (cname = "exit", cheader_filename = "stdlib.h")]
