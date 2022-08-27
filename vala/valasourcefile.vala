@@ -33,7 +33,14 @@ public class Vala.SourceFile {
 
 	public string? relative_filename {
 		set {
-			this._relative_filename = value;
+			if (Path.DIR_SEPARATOR != '/') {
+				// don't use backslashes internally,
+				// to avoid problems in #line / #include directives
+				string[] components = value.split ("\\");
+				_relative_filename = string.joinv ("/", components);
+			} else {
+				_relative_filename = value;
+			}
 		}
 	}
 
