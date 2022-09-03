@@ -274,6 +274,13 @@ namespace JSC {
 		[CCode (has_construct_function = false)]
 		protected Value ();
 		[CCode (has_construct_function = false)]
+		[Version (since = "2.38")]
+		public Value.array_buffer (JSC.Context context, void* data, size_t size, GLib.DestroyNotify? destroy_notify, void* user_data);
+		[Version (since = "2.38")]
+		public void* array_buffer_get_data (size_t? size);
+		[Version (since = "2.38")]
+		public size_t array_buffer_get_size ();
+		[CCode (has_construct_function = false)]
 		public Value.array_from_garray (JSC.Context context, GLib.GenericArray<JSC.Value>? array);
 		[CCode (has_construct_function = false)]
 		public Value.array_from_strv (JSC.Context context, [CCode (array_length = false, array_null_terminated = true)] global::string[] strv);
@@ -290,6 +297,8 @@ namespace JSC {
 		public Value.functionv (JSC.Context context, global::string? name, GLib.Callback callback, void* user_data, GLib.DestroyNotify? destroy_notify, GLib.Type return_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 6.5, array_length_type = "guint")] GLib.Type[]? parameter_types);
 		public unowned JSC.Context get_context ();
 		public bool is_array ();
+		[Version (since = "2.38")]
+		public bool is_array_buffer ();
 		public bool is_boolean ();
 		public bool is_constructor ();
 		public bool is_function ();
@@ -297,6 +306,8 @@ namespace JSC {
 		public bool is_number ();
 		public bool is_object ();
 		public bool is_string ();
+		[Version (since = "2.38")]
+		public bool is_typed_array ();
 		public bool is_undefined ();
 		[CCode (has_construct_function = false)]
 		public Value.@null (JSC.Context context);
@@ -327,6 +338,24 @@ namespace JSC {
 		public global::string to_json (uint indent);
 		public global::string to_string ();
 		public GLib.Bytes to_string_as_bytes ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.38")]
+		public Value.typed_array (JSC.Context context, JSC.TypedArrayType type, size_t length);
+		[Version (since = "2.38")]
+		public JSC.Value typed_array_get_buffer ();
+		[Version (since = "2.38")]
+		public void* typed_array_get_data (out size_t length);
+		[Version (since = "2.38")]
+		public size_t typed_array_get_length ();
+		[Version (since = "2.38")]
+		public size_t typed_array_get_offset ();
+		[Version (since = "2.38")]
+		public size_t typed_array_get_size ();
+		[Version (since = "2.38")]
+		public JSC.TypedArrayType typed_array_get_type ();
+		[CCode (has_construct_function = false)]
+		[Version (since = "2.38")]
+		public Value.typed_array_with_buffer (JSC.Value array_buffer, JSC.TypedArrayType type, size_t offset, ssize_t length);
 		[CCode (has_construct_function = false)]
 		public Value.undefined (JSC.Context context);
 		public JSC.Context context { get; construct; }
@@ -377,6 +406,22 @@ namespace JSC {
 		DOUBLE,
 		STRING,
 		RANGE_STRING
+	}
+	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_TYPED_ARRAY_", has_type_id = false)]
+	[Version (since = "2.38")]
+	public enum TypedArrayType {
+		NONE,
+		INT8,
+		INT16,
+		INT32,
+		INT64,
+		UINT8,
+		UINT8_CLAMPED,
+		UINT16,
+		UINT32,
+		UINT64,
+		FLOAT32,
+		FLOAT64
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", cprefix = "JSC_VALUE_PROPERTY_", has_type_id = false)]
 	[Flags]

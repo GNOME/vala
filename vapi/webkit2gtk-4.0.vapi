@@ -59,18 +59,14 @@ namespace WebKit {
 		public signal void cancelled ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_automation_session_get_type ()")]
+	[Version (since = "2.18")]
 	public class AutomationSession : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected AutomationSession ();
-		[Version (since = "2.18")]
 		public unowned WebKit.ApplicationInfo get_application_info ();
-		[Version (since = "2.18")]
 		public unowned string get_id ();
-		[Version (since = "2.18")]
 		public void set_application_info (WebKit.ApplicationInfo info);
-		[Version (since = "2.18")]
 		public string id { get; construct; }
-		[Version (since = "2.18")]
 		public signal unowned WebKit.WebView create_web_view ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_back_forward_list_get_type ()")]
@@ -110,6 +106,7 @@ namespace WebKit {
 		public Gdk.RGBA get_rgba ();
 		[Version (since = "2.8")]
 		public void set_rgba (Gdk.RGBA rgba);
+		[Version (since = "2.8")]
 		public Gdk.RGBA rgba { get; set construct; }
 		[Version (since = "2.8")]
 		public signal void finished ();
@@ -185,11 +182,10 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_credential_get_type ()")]
 	[Compact]
+	[Version (since = "2.2")]
 	public class Credential {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.2")]
 		public Credential (string username, string password, WebKit.CredentialPersistence persistence);
-		[Version (since = "2.2")]
 		public WebKit.Credential copy ();
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.34")]
@@ -197,20 +193,16 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.34")]
 		public Credential.for_certificate_pin (string pin, WebKit.CredentialPersistence persistence);
-		[Version (since = "2.2")]
 		public void free ();
 		[Version (since = "2.34")]
 		public unowned GLib.TlsCertificate get_certificate ();
-		[Version (since = "2.2")]
 		public unowned string get_password ();
-		[Version (since = "2.2")]
 		public WebKit.CredentialPersistence get_persistence ();
-		[Version (since = "2.2")]
 		public unowned string get_username ();
-		[Version (since = "2.2")]
 		public bool has_password ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_device_info_permission_request_get_type ()")]
+	[Version (since = "2.24")]
 	public class DeviceInfoPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected DeviceInfoPermissionRequest ();
@@ -244,10 +236,10 @@ namespace WebKit {
 		public signal void received_data (uint64 data_length);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_editor_state_get_type ()")]
+	[Version (since = "2.10")]
 	public class EditorState : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected EditorState ();
-		[Version (since = "2.10")]
 		public uint get_typing_attributes ();
 		[Version (since = "2.20")]
 		public bool is_copy_available ();
@@ -259,7 +251,6 @@ namespace WebKit {
 		public bool is_redo_available ();
 		[Version (since = "2.20")]
 		public bool is_undo_available ();
-		[Version (since = "2.10")]
 		public uint typing_attributes { get; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_favicon_database_get_type ()")]
@@ -324,20 +315,15 @@ namespace WebKit {
 		public void submit ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_geolocation_manager_get_type ()")]
+	[Version (since = "2.26")]
 	public class GeolocationManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected GeolocationManager ();
-		[Version (since = "2.26")]
 		public void failed (string error_message);
-		[Version (since = "2.26")]
 		public bool get_enable_high_accuracy ();
-		[Version (since = "2.26")]
 		public void update_position (WebKit.GeolocationPosition position);
-		[Version (since = "2.26")]
 		public bool enable_high_accuracy { get; }
-		[Version (since = "2.26")]
 		public signal bool start ();
-		[Version (since = "2.26")]
 		public signal void stop ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_geolocation_permission_request_get_type ()")]
@@ -385,88 +371,63 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_itp_first_party_ref", type_id = "webkit_itp_first_party_get_type ()", unref_function = "webkit_itp_first_party_unref")]
 	[Compact]
+	[Version (since = "2.30")]
 	public class ITPFirstParty {
-		[Version (since = "2.30")]
 		public unowned string get_domain ();
-		[Version (since = "2.30")]
 		public unowned GLib.DateTime get_last_update_time ();
-		[Version (since = "2.30")]
 		public bool get_website_data_access_allowed ();
-		[Version (since = "2.30")]
 		public unowned WebKit.ITPFirstParty @ref ();
-		[Version (since = "2.30")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_itp_third_party_ref", type_id = "webkit_itp_third_party_get_type ()", unref_function = "webkit_itp_third_party_unref")]
 	[Compact]
+	[Version (since = "2.30")]
 	public class ITPThirdParty {
-		[Version (since = "2.30")]
 		public unowned string get_domain ();
-		[Version (since = "2.30")]
 		public unowned GLib.List<WebKit.ITPFirstParty> get_first_parties ();
-		[Version (since = "2.30")]
 		public unowned WebKit.ITPThirdParty @ref ();
-		[Version (since = "2.30")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_input_method_context_get_type ()")]
+	[Version (since = "2.28")]
 	public abstract class InputMethodContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected InputMethodContext ();
-		[Version (since = "2.28")]
 		public virtual bool filter_key_event (Gdk.EventKey key_event);
-		[Version (since = "2.28")]
 		public WebKit.InputHints get_input_hints ();
-		[Version (since = "2.28")]
 		public WebKit.InputPurpose get_input_purpose ();
-		[Version (since = "2.28")]
 		public virtual void get_preedit (out string? text, out GLib.List<WebKit.InputMethodUnderline>? underlines, out uint cursor_offset);
-		[Version (since = "2.28")]
 		public virtual void notify_cursor_area (int x, int y, int width, int height);
-		[Version (since = "2.28")]
 		public virtual void notify_focus_in ();
-		[Version (since = "2.28")]
 		public virtual void notify_focus_out ();
-		[Version (since = "2.28")]
 		public virtual void notify_surrounding (string text, uint length, uint cursor_index, uint selection_index);
-		[Version (since = "2.28")]
 		public virtual void reset ();
-		[Version (since = "2.28")]
 		public virtual void set_enable_preedit (bool enabled);
 		public void set_input_hints (WebKit.InputHints hints);
-		[Version (since = "2.28")]
 		public void set_input_purpose (WebKit.InputPurpose purpose);
 		public WebKit.InputHints input_hints { get; set; }
 		public WebKit.InputPurpose input_purpose { get; set; }
-		[Version (since = "2.28")]
 		public virtual signal void committed (string text);
-		[Version (since = "2.28")]
 		public virtual signal void delete_surrounding (int offset, uint n_chars);
-		[Version (since = "2.28")]
 		public virtual signal void preedit_changed ();
-		[Version (since = "2.28")]
 		public virtual signal void preedit_finished ();
-		[Version (since = "2.28")]
 		public virtual signal void preedit_started ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_input_method_underline_get_type ()")]
 	[Compact]
+	[Version (since = "2.28")]
 	public class InputMethodUnderline {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public InputMethodUnderline (uint start_offset, uint end_offset);
-		[Version (since = "2.28")]
 		public WebKit.InputMethodUnderline copy ();
-		[Version (since = "2.28")]
 		public void free ();
-		[Version (since = "2.28")]
 		public void set_color (Gdk.RGBA? rgba);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_install_missing_media_plugins_permission_request_get_type ()")]
+	[Version (since = "2.10")]
 	public class InstallMissingMediaPluginsPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected InstallMissingMediaPluginsPermissionRequest ();
-		[Version (since = "2.10")]
 		public unowned string get_description ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_javascript_result_ref", type_id = "webkit_javascript_result_get_type ()", unref_function = "webkit_javascript_result_unref")]
@@ -488,40 +449,28 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_memory_pressure_settings_get_type ()")]
 	[Compact]
+	[Version (since = "2.34")]
 	public class MemoryPressureSettings {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.34")]
 		public MemoryPressureSettings ();
-		[Version (since = "2.34")]
 		public WebKit.MemoryPressureSettings copy ();
-		[Version (since = "2.34")]
 		public void free ();
-		[Version (since = "2.34")]
 		public double get_conservative_threshold ();
-		[Version (since = "2.34")]
 		public double get_kill_threshold ();
-		[Version (since = "2.34")]
 		public uint get_memory_limit ();
-		[Version (since = "2.34")]
 		public double get_poll_interval ();
-		[Version (since = "2.34")]
 		public double get_strict_threshold ();
-		[Version (since = "2.34")]
 		public void set_conservative_threshold (double value);
-		[Version (since = "2.34")]
 		public void set_kill_threshold (double value);
-		[Version (since = "2.34")]
 		public void set_memory_limit (uint memory_limit);
-		[Version (since = "2.34")]
 		public void set_poll_interval (double value);
-		[Version (since = "2.34")]
 		public void set_strict_threshold (double value);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_mime_info_ref", type_id = "webkit_mime_info_get_type ()", unref_function = "webkit_mime_info_unref")]
 	[Compact]
 	public class MimeInfo {
 		[Version (deprecated = true, deprecated_since = "2.32")]
-		public unowned string get_description ();
+		public unowned string? get_description ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (deprecated = true, deprecated_since = "2.32")]
 		public unowned string[] get_extensions ();
@@ -581,100 +530,78 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_network_proxy_settings_get_type ()")]
 	[Compact]
+	[Version (since = "2.16")]
 	public class NetworkProxySettings {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.16")]
 		public NetworkProxySettings (string? default_proxy_uri, [CCode (array_length = false, array_null_terminated = true)] string[]? ignore_hosts);
-		[Version (since = "2.16")]
 		public void add_proxy_for_scheme (string scheme, string proxy_uri);
-		[Version (since = "2.16")]
 		public WebKit.NetworkProxySettings copy ();
-		[Version (since = "2.16")]
 		public void free ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_get_type ()")]
+	[Version (since = "2.8")]
 	public class Notification : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Notification ();
-		[Version (since = "2.8")]
 		public void close ();
-		[Version (since = "2.8")]
 		public unowned string get_body ();
-		[Version (since = "2.8")]
 		public uint64 get_id ();
 		[Version (since = "2.16")]
 		public unowned string? get_tag ();
-		[Version (since = "2.8")]
 		public unowned string get_title ();
-		[Version (since = "2.8")]
 		public string body { get; }
-		[Version (since = "2.8")]
 		public uint64 id { get; }
 		[Version (since = "2.16")]
 		public string tag { get; }
-		[Version (since = "2.8")]
 		public string title { get; }
 		[HasEmitter]
 		[Version (since = "2.12")]
 		public signal void clicked ();
-		[Version (since = "2.8")]
 		public signal void closed ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_notification_permission_request_get_type ()")]
+	[Version (since = "2.8")]
 	public class NotificationPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected NotificationPermissionRequest ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_option_menu_get_type ()")]
+	[Version (since = "2.18")]
 	public class OptionMenu : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected OptionMenu ();
-		[Version (since = "2.18")]
 		public void activate_item (uint index);
-		[Version (since = "2.18")]
 		public unowned WebKit.OptionMenuItem get_item (uint index);
-		[Version (since = "2.18")]
 		public uint get_n_items ();
-		[Version (since = "2.18")]
 		public void select_item (uint index);
 		[HasEmitter]
-		[Version (since = "2.18")]
 		public signal void close ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_option_menu_item_get_type ()")]
 	[Compact]
+	[Version (since = "2.18")]
 	public class OptionMenuItem {
-		[Version (since = "2.18")]
 		public WebKit.OptionMenuItem copy ();
-		[Version (since = "2.18")]
 		public void free ();
-		[Version (since = "2.18")]
 		public unowned string get_label ();
-		[Version (since = "2.18")]
 		public unowned string get_tooltip ();
-		[Version (since = "2.18")]
 		public bool is_enabled ();
-		[Version (since = "2.18")]
 		public bool is_group_child ();
-		[Version (since = "2.18")]
 		public bool is_group_label ();
-		[Version (since = "2.18")]
 		public bool is_selected ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_plugin_get_type ()")]
+	[Version (deprecated = true, deprecated_since = "2.32")]
 	public class Plugin : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Plugin ();
-		[Version (deprecated = true, deprecated_since = "2.32")]
-		public unowned string get_description ();
-		[Version (deprecated = true, deprecated_since = "2.32")]
+		public unowned string? get_description ();
 		public unowned GLib.List<WebKit.MimeInfo> get_mime_info_list ();
-		[Version (deprecated = true, deprecated_since = "2.32")]
-		public unowned string get_name ();
-		[Version (deprecated = true, deprecated_since = "2.32")]
-		public unowned string get_path ();
+		public unowned string? get_name ();
+		public unowned string? get_path ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_pointer_lock_permission_request_get_type ()")]
+	[Version (since = "2.28")]
 	public class PointerLockPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected PointerLockPermissionRequest ();
@@ -690,21 +617,15 @@ namespace WebKit {
 		public void use_with_policies (WebKit.WebsitePolicies policies);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_print_custom_widget_get_type ()")]
+	[Version (since = "2.16")]
 	public class PrintCustomWidget : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.16")]
 		public PrintCustomWidget (Gtk.Widget widget, string title);
-		[Version (since = "2.16")]
 		public unowned string get_title ();
-		[Version (since = "2.16")]
 		public unowned Gtk.Widget get_widget ();
-		[Version (since = "2.16")]
 		public string title { get; construct; }
-		[Version (since = "2.16")]
 		public Gtk.Widget widget { get; construct; }
-		[Version (since = "2.16")]
 		public virtual signal void apply ();
-		[Version (since = "2.16")]
 		public virtual signal void update (Gtk.PageSetup widget, Gtk.PrintSettings page_setup);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_print_operation_get_type ()")]
@@ -771,26 +692,19 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_security_origin_ref", type_id = "webkit_security_origin_get_type ()", unref_function = "webkit_security_origin_unref")]
 	[Compact]
+	[Version (since = "2.16")]
 	public class SecurityOrigin {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.16")]
 		public SecurityOrigin (string protocol, string host, uint16 port);
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.16")]
 		public SecurityOrigin.for_uri (string uri);
-		[Version (since = "2.16")]
 		public unowned string? get_host ();
-		[Version (since = "2.16")]
 		public uint16 get_port ();
-		[Version (since = "2.16")]
 		public unowned string? get_protocol ();
 		[Version (deprecated = true, deprecated_since = "2.32", since = "2.16")]
 		public bool is_opaque ();
-		[Version (since = "2.16")]
 		public unowned WebKit.SecurityOrigin @ref ();
-		[Version (since = "2.16")]
 		public string? to_string ();
-		[Version (since = "2.16")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_settings_get_type ()")]
@@ -824,11 +738,13 @@ namespace WebKit {
 		public bool get_enable_dns_prefetching ();
 		[Version (since = "2.20")]
 		public bool get_enable_encrypted_media ();
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public bool get_enable_frame_flattening ();
 		public bool get_enable_fullscreen ();
 		public bool get_enable_html5_database ();
 		public bool get_enable_html5_local_storage ();
 		public bool get_enable_hyperlink_auditing ();
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public bool get_enable_java ();
 		public bool get_enable_javascript ();
 		[Version (since = "2.24")]
@@ -857,8 +773,11 @@ namespace WebKit {
 		public bool get_enable_tabs_to_links ();
 		public bool get_enable_webaudio ();
 		public bool get_enable_webgl ();
+		[Version (since = "2.38")]
+		public bool get_enable_webrtc ();
 		[Version (since = "2.2")]
 		public bool get_enable_write_console_messages_to_stdout ();
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public bool get_enable_xss_auditor ();
 		public unowned string get_fantasy_font_family ();
 		[Version (since = "2.16")]
@@ -901,11 +820,13 @@ namespace WebKit {
 		public void set_enable_dns_prefetching (bool enabled);
 		[Version (since = "2.20")]
 		public void set_enable_encrypted_media (bool enabled);
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public void set_enable_frame_flattening (bool enabled);
 		public void set_enable_fullscreen (bool enabled);
 		public void set_enable_html5_database (bool enabled);
 		public void set_enable_html5_local_storage (bool enabled);
 		public void set_enable_hyperlink_auditing (bool enabled);
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public void set_enable_java (bool enabled);
 		public void set_enable_javascript (bool enabled);
 		[Version (since = "2.24")]
@@ -934,8 +855,11 @@ namespace WebKit {
 		public void set_enable_tabs_to_links (bool enabled);
 		public void set_enable_webaudio (bool enabled);
 		public void set_enable_webgl (bool enabled);
+		[Version (since = "2.38")]
+		public void set_enable_webrtc (bool enabled);
 		[Version (since = "2.2")]
 		public void set_enable_write_console_messages_to_stdout (bool enabled);
+		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public void set_enable_xss_auditor (bool enabled);
 		public void set_fantasy_font_family (string fantasy_font_family);
 		[Version (since = "2.16")]
@@ -979,11 +903,13 @@ namespace WebKit {
 		public bool enable_dns_prefetching { get; set construct; }
 		[Version (since = "2.20")]
 		public bool enable_encrypted_media { get; set construct; }
+		[Version (deprecated = true, deprecated_since = "2.38")]
 		public bool enable_frame_flattening { get; set construct; }
 		public bool enable_fullscreen { get; set construct; }
 		public bool enable_html5_database { get; set construct; }
 		public bool enable_html5_local_storage { get; set construct; }
 		public bool enable_hyperlink_auditing { get; set construct; }
+		[Version (deprecated = true, deprecated_since = "2.38")]
 		public bool enable_java { get; set construct; }
 		public bool enable_javascript { get; set construct; }
 		[Version (since = "2.24")]
@@ -1012,8 +938,11 @@ namespace WebKit {
 		public bool enable_tabs_to_links { get; set construct; }
 		public bool enable_webaudio { get; set construct; }
 		public bool enable_webgl { get; set construct; }
+		[Version (since = "2.38")]
+		public bool enable_webrtc { get; set construct; }
 		[Version (since = "2.2")]
 		public bool enable_write_console_messages_to_stdout { get; set construct; }
+		[Version (deprecated = true, deprecated_since = "2.38")]
 		public bool enable_xss_auditor { get; set construct; }
 		public string fantasy_font_family { get; set construct; }
 		[Version (since = "2.16")]
@@ -1073,7 +1002,8 @@ namespace WebKit {
 		public void finish_error (GLib.Error error);
 		[Version (since = "2.36")]
 		public void finish_with_response (WebKit.URISchemeResponse response);
-		public Soup.MessageHeaders get_http_headers ();
+		[Version (since = "2.36")]
+		public unowned Soup.MessageHeaders get_http_headers ();
 		[Version (since = "2.36")]
 		public unowned string get_http_method ();
 		public unowned string get_path ();
@@ -1088,56 +1018,47 @@ namespace WebKit {
 		public URISchemeResponse (GLib.InputStream input_stream, int64 stream_length);
 		[Version (since = "2.36")]
 		public void set_content_type (string content_type);
-		public void set_http_headers (Soup.MessageHeaders headers);
+		[Version (since = "2.36")]
+		public void set_http_headers (owned Soup.MessageHeaders headers);
 		[Version (since = "2.36")]
 		public void set_status (uint status_code, string? reason_phrase);
 		[NoAccessorMethod]
 		[Version (since = "2.36")]
 		public GLib.InputStream stream { construct; }
 		[NoAccessorMethod]
+		[Version (since = "2.36")]
 		public int64 stream_length { construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_content_filter_ref", type_id = "webkit_user_content_filter_get_type ()", unref_function = "webkit_user_content_filter_unref")]
 	[Compact]
+	[Version (since = "2.24")]
 	public class UserContentFilter {
-		[Version (since = "2.24")]
 		public unowned string get_identifier ();
-		[Version (since = "2.24")]
 		public unowned WebKit.UserContentFilter @ref ();
-		[Version (since = "2.24")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_content_filter_store_get_type ()")]
+	[Version (since = "2.24")]
 	public class UserContentFilterStore : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.24")]
 		public UserContentFilterStore (string storage_path);
 		[CCode (array_length = false, array_null_terminated = true)]
-		[Version (since = "2.24")]
 		public async string[] fetch_identifiers (GLib.Cancellable? cancellable = null);
-		[Version (since = "2.24")]
 		public unowned string get_path ();
-		[Version (since = "2.24")]
 		public async WebKit.UserContentFilter load (string identifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.24")]
 		public async bool remove (string identifier, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.24")]
 		public async WebKit.UserContentFilter save (string identifier, GLib.Bytes source, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.24")]
 		public async WebKit.UserContentFilter save_from_file (string identifier, GLib.File file, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.24")]
 		public string path { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_content_manager_get_type ()")]
+	[Version (since = "2.6")]
 	public class UserContentManager : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.6")]
 		public UserContentManager ();
 		[Version (since = "2.24")]
 		public void add_filter (WebKit.UserContentFilter filter);
-		[Version (since = "2.6")]
 		public void add_script (WebKit.UserScript script);
-		[Version (since = "2.6")]
 		public void add_style_sheet (WebKit.UserStyleSheet stylesheet);
 		[Version (since = "2.8")]
 		public bool register_script_message_handler (string name);
@@ -1145,9 +1066,7 @@ namespace WebKit {
 		public bool register_script_message_handler_in_world (string name, string world_name);
 		[Version (since = "2.24")]
 		public void remove_all_filters ();
-		[Version (since = "2.6")]
 		public void remove_all_scripts ();
-		[Version (since = "2.6")]
 		public void remove_all_style_sheets ();
 		public void remove_filter (WebKit.UserContentFilter filter);
 		[Version (since = "2.26")]
@@ -1164,6 +1083,7 @@ namespace WebKit {
 		public signal void script_message_received (WebKit.JavascriptResult js_result);
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_media_permission_request_get_type ()")]
+	[Version (since = "2.8")]
 	public class UserMediaPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected UserMediaPermissionRequest ();
@@ -1173,54 +1093,42 @@ namespace WebKit {
 		public bool is_for_video_device { get; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_user_message_get_type ()")]
+	[Version (since = "2.28")]
 	public class UserMessage : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public UserMessage (string name, GLib.Variant? parameters);
-		[Version (since = "2.28")]
 		public unowned GLib.UnixFDList? get_fd_list ();
-		[Version (since = "2.28")]
 		public unowned string get_name ();
-		[Version (since = "2.28")]
 		public unowned GLib.Variant? get_parameters ();
-		[Version (since = "2.28")]
 		public void send_reply (WebKit.UserMessage reply);
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
-		[Version (since = "2.28")]
 		public GLib.UnixFDList fd_list { get; construct; }
-		[Version (since = "2.28")]
 		public string name { get; construct; }
-		[Version (since = "2.28")]
 		public GLib.Variant parameters { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_script_ref", type_id = "webkit_user_script_get_type ()", unref_function = "webkit_user_script_unref")]
 	[Compact]
+	[Version (since = "2.6")]
 	public class UserScript {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.6")]
 		public UserScript (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.22")]
 		public UserScript.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserScriptInjectionTime injection_time, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
-		[Version (since = "2.6")]
 		public unowned WebKit.UserScript @ref ();
-		[Version (since = "2.6")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_user_style_sheet_ref", type_id = "webkit_user_style_sheet_get_type ()", unref_function = "webkit_user_style_sheet_unref")]
 	[Compact]
+	[Version (since = "2.6")]
 	public class UserStyleSheet {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.6")]
 		public UserStyleSheet (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.22")]
 		public UserStyleSheet.for_world (string source, WebKit.UserContentInjectedFrames injected_frames, WebKit.UserStyleLevel level, string world_name, [CCode (array_length = false, array_null_terminated = true)] string[]? allow_list, [CCode (array_length = false, array_null_terminated = true)] string[]? block_list);
-		[Version (since = "2.6")]
 		public unowned WebKit.UserStyleSheet @ref ();
-		[Version (since = "2.6")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_web_context_get_type ()")]
@@ -1254,6 +1162,8 @@ namespace WebKit {
 		public bool get_spell_checking_enabled ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_spell_checking_languages ();
+		[Version (since = "2.38")]
+		public unowned string get_time_zone_override ();
 		[Version (deprecated = true, deprecated_since = "2.32.")]
 		public WebKit.TLSErrorsPolicy get_tls_errors_policy ();
 		[Version (since = "2.30")]
@@ -1311,6 +1221,8 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.28")]
 		public bool process_swap_on_cross_site_navigation_enabled { get; construct; }
+		[Version (since = "2.38")]
+		public string time_zone_override { get; construct; }
 		[Version (since = "2.30")]
 		public bool use_system_appearance_for_scrollbars { get; set construct; }
 		[Version (since = "2.10")]
@@ -1386,6 +1298,8 @@ namespace WebKit {
 		public WebKit.MediaCaptureState get_camera_capture_state ();
 		public unowned WebKit.WebContext get_context ();
 		public unowned string get_custom_charset ();
+		[Version (since = "2.38")]
+		public unowned string? get_default_content_security_policy ();
 		[Version (since = "2.34")]
 		public WebKit.MediaCaptureState get_display_capture_state ();
 		[Version (since = "2.10")]
@@ -1398,6 +1312,7 @@ namespace WebKit {
 		public unowned WebKit.WebInspector get_inspector ();
 		[Version (since = "2.30")]
 		public bool get_is_muted ();
+		[Version (since = "2.34")]
 		public bool get_is_web_process_responsive ();
 		[Version (deprecated = true, deprecated_since = "2.22")]
 		public unowned JS.GlobalContext get_javascript_global_context ();
@@ -1414,6 +1329,8 @@ namespace WebKit {
 		public unowned string get_uri ();
 		[Version (since = "2.6")]
 		public unowned WebKit.UserContentManager get_user_content_manager ();
+		[Version (since = "2.38")]
+		public WebKit.WebExtensionMode get_web_extension_mode ();
 		[Version (since = "2.16")]
 		public unowned WebKit.WebsiteDataManager get_website_data_manager ();
 		[Version (since = "2.30")]
@@ -1423,6 +1340,7 @@ namespace WebKit {
 		public void go_back ();
 		public void go_forward ();
 		public void go_to_back_forward_list_item (WebKit.BackForwardListItem list_item);
+		[Version (since = "2.8")]
 		public bool is_editable ();
 		public void load_alternate_html (string content, string content_uri, string? base_uri);
 		[Version (since = "2.6")]
@@ -1435,6 +1353,7 @@ namespace WebKit {
 		public void reload_bypass_cache ();
 		[Version (since = "2.12")]
 		public void restore_session_state (WebKit.WebViewSessionState state);
+		public async void run_async_javascript_function_in_world (string body, GLib.Variant arguments, string world_name, GLib.Cancellable? cancellable = null);
 		public async WebKit.JavascriptResult run_javascript (string script, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async WebKit.JavascriptResult run_javascript_from_gresource (string resource, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
@@ -1484,6 +1403,8 @@ namespace WebKit {
 		public WebKit.AutomationBrowsingContextPresentation automation_presentation_type { get; construct; }
 		[Version (since = "2.34")]
 		public WebKit.MediaCaptureState camera_capture_state { get; set; }
+		[Version (since = "2.38")]
+		public string default_content_security_policy { get; construct; }
 		[Version (since = "2.34")]
 		public WebKit.MediaCaptureState display_capture_state { get; set; }
 		[NoAccessorMethod]
@@ -1521,6 +1442,8 @@ namespace WebKit {
 		public WebKit.UserContentManager user_content_manager { get; construct; }
 		[NoAccessorMethod]
 		public WebKit.WebContext web_context { owned get; construct; }
+		[Version (since = "2.38")]
+		public WebKit.WebExtensionMode web_extension_mode { get; construct; }
 		[Version (since = "2.30")]
 		public WebKit.WebsitePolicies website_policies { get; construct; }
 		public double zoom_level { get; set; }
@@ -1568,41 +1491,34 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_web_view_session_state_ref", type_id = "webkit_web_view_session_state_get_type ()", unref_function = "webkit_web_view_session_state_unref")]
 	[Compact]
+	[Version (since = "2.12")]
 	public class WebViewSessionState {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.12")]
 		public WebViewSessionState (GLib.Bytes data);
-		[Version (since = "2.12")]
 		public unowned WebKit.WebViewSessionState @ref ();
-		[Version (since = "2.12")]
 		public GLib.Bytes serialize ();
-		[Version (since = "2.12")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_website_data_ref", type_id = "webkit_website_data_get_type ()", unref_function = "webkit_website_data_unref")]
 	[Compact]
+	[Version (since = "2.16")]
 	public class WebsiteData {
-		[Version (since = "2.16")]
 		public unowned string get_name ();
-		[Version (since = "2.16")]
 		public uint64 get_size (WebKit.WebsiteDataTypes types);
-		[Version (since = "2.16")]
 		public WebKit.WebsiteDataTypes get_types ();
-		[Version (since = "2.16")]
 		public unowned WebKit.WebsiteData @ref ();
-		[Version (since = "2.16")]
 		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_website_data_access_permission_request_get_type ()")]
+	[Version (since = "2.30")]
 	public class WebsiteDataAccessPermissionRequest : GLib.Object, WebKit.PermissionRequest {
 		[CCode (has_construct_function = false)]
 		protected WebsiteDataAccessPermissionRequest ();
-		[Version (since = "2.30")]
 		public unowned string get_current_domain ();
-		[Version (since = "2.30")]
 		public unowned string get_requesting_domain ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_website_data_manager_get_type ()")]
+	[Version (since = "2.10")]
 	public class WebsiteDataManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebsiteDataManager ();
@@ -1613,19 +1529,15 @@ namespace WebKit {
 		public WebsiteDataManager.ephemeral ();
 		[Version (since = "2.16")]
 		public async GLib.List<WebKit.WebsiteData> fetch (WebKit.WebsiteDataTypes types, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.10")]
 		public unowned string? get_base_cache_directory ();
-		[Version (since = "2.10")]
 		public unowned string? get_base_data_directory ();
 		[Version (since = "2.16")]
 		public unowned WebKit.CookieManager get_cookie_manager ();
-		[Version (since = "2.10")]
 		public unowned string? get_disk_cache_directory ();
 		[Version (since = "2.30")]
 		public unowned string? get_dom_cache_directory ();
 		[Version (since = "2.26")]
 		public unowned string? get_hsts_cache_directory ();
-		[Version (since = "2.10")]
 		public unowned string? get_indexeddb_directory ();
 		[Version (since = "2.30")]
 		public unowned string? get_itp_directory ();
@@ -1633,9 +1545,7 @@ namespace WebKit {
 		public bool get_itp_enabled ();
 		[Version (since = "2.30")]
 		public async GLib.List<WebKit.ITPThirdParty> get_itp_summary (GLib.Cancellable? cancellable = null) throws GLib.Error;
-		[Version (since = "2.10")]
 		public unowned string? get_local_storage_directory ();
-		[Version (since = "2.10")]
 		public unowned string? get_offline_application_cache_directory ();
 		[Version (since = "2.30")]
 		public bool get_persistent_credential_storage_enabled ();
@@ -1657,26 +1567,20 @@ namespace WebKit {
 		public void set_persistent_credential_storage_enabled (bool enabled);
 		[Version (since = "2.32")]
 		public void set_tls_errors_policy (WebKit.TLSErrorsPolicy policy);
-		[Version (since = "2.10")]
 		public string base_cache_directory { get; construct; }
-		[Version (since = "2.10")]
 		public string base_data_directory { get; construct; }
-		[Version (since = "2.10")]
 		public string disk_cache_directory { get; construct; }
 		[Version (since = "2.30")]
 		public string dom_cache_directory { get; construct; }
 		[Version (since = "2.26")]
 		public string hsts_cache_directory { get; construct; }
-		[Version (since = "2.10")]
 		public string indexeddb_directory { get; construct; }
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public bool is_ephemeral { get; construct; }
 		[Version (since = "2.30")]
 		public string itp_directory { get; construct; }
-		[Version (since = "2.10")]
 		public string local_storage_directory { get; construct; }
-		[Version (since = "2.10")]
 		public string offline_application_cache_directory { get; construct; }
 		[Version (since = "2.30")]
 		public string service_worker_registrations_directory { get; construct; }
@@ -1684,14 +1588,12 @@ namespace WebKit {
 		public string websql_directory { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_website_policies_get_type ()")]
+	[Version (since = "2.30")]
 	public class WebsitePolicies : GLib.Object {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.30")]
 		public WebsitePolicies ();
-		[Version (since = "2.30")]
 		public WebKit.AutoplayPolicy get_autoplay_policy ();
 		[NoAccessorMethod]
-		[Version (since = "2.30")]
 		public WebKit.AutoplayPolicy autoplay { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_window_properties_get_type ()")]
@@ -1979,6 +1881,13 @@ namespace WebKit {
 	public enum UserStyleLevel {
 		USER,
 		AUTHOR
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_EXTENSION_MODE_", type_id = "webkit_web_extension_mode_get_type ()")]
+	[Version (since = "2.38")]
+	public enum WebExtensionMode {
+		NONE,
+		MANIFESTV2,
+		MANIFESTV3
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_PROCESS_", type_id = "webkit_web_process_termination_reason_get_type ()")]
 	[Version (since = "2.20")]
