@@ -14,5 +14,6 @@ Class
 Value
   .new_function_variadic.callback closure=-1 destroy=-1 owned=false
   .new_functionv.callback closure=-1 destroy=-1 owned=false
+  .new_typed_array_with_buffer symbol_type="constructor"
   .object_define_property_accessor.getter closure=-1 destroy=-1 owned=false
   .object_define_property_accessor.setter closure=-1 destroy=-1 owned=false

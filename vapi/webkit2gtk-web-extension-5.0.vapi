@@ -4003,10 +4003,10 @@ namespace WebKit {
 		public ContextMenuItem.with_submenu (string label, WebKit.ContextMenu submenu);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_frame_get_type ()")]
+	[Version (since = "2.26")]
 	public class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
-		[Version (since = "2.26")]
 		public uint64 get_id ();
 		[Version (since = "2.22")]
 		public JSC.Context get_js_context ();
@@ -4091,36 +4091,27 @@ namespace WebKit {
 		public string uri { get; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_user_message_get_type ()")]
+	[Version (since = "2.28")]
 	public class UserMessage : GLib.InitiallyUnowned {
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public UserMessage (string name, GLib.Variant? parameters);
 		public static GLib.Quark error_quark ();
-		[Version (since = "2.28")]
 		public unowned GLib.UnixFDList? get_fd_list ();
-		[Version (since = "2.28")]
 		public unowned string get_name ();
-		[Version (since = "2.28")]
 		public unowned GLib.Variant? get_parameters ();
-		[Version (since = "2.28")]
 		public void send_reply (WebKit.UserMessage reply);
 		[CCode (has_construct_function = false)]
-		[Version (since = "2.28")]
 		public UserMessage.with_fd_list (string name, GLib.Variant? parameters, GLib.UnixFDList? fd_list);
-		[Version (since = "2.28")]
 		public GLib.UnixFDList fd_list { get; construct; }
-		[Version (since = "2.28")]
 		public string name { get; construct; }
-		[Version (since = "2.28")]
 		public GLib.Variant parameters { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_editor_get_type ()")]
+	[Version (since = "2.10")]
 	public class WebEditor : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebEditor ();
-		[Version (since = "2.10")]
 		public unowned WebKit.WebPage get_page ();
-		[Version (since = "2.10")]
 		public signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_extension_get_type ()")]
@@ -4135,10 +4126,10 @@ namespace WebKit {
 		public signal void user_message_received (WebKit.UserMessage message);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
+	[Version (since = "2.8")]
 	public class WebHitTestResult : WebKit.HitTestResult {
 		[CCode (has_construct_function = false)]
 		protected WebHitTestResult ();
-		[Version (since = "2.8")]
 		public unowned WebKit.DOM.Node get_node ();
 		public WebKit.DOM.Node node { get; construct; }
 	}
