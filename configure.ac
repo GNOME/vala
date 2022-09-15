@@ -254,8 +254,11 @@ AM_CONDITIONAL(HAVE_JING, test "$JING" != :)
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
 
-AC_CHECK_PROG([WEASYPRINT], [weasyprint], [weasyprint])
-AM_CONDITIONAL(HAVE_WEASYPRINT, [test x$WEASYPRINT = xweasyprint])
+AC_CHECK_PROGS([SPHINXBUILD], [sphinx-build sphinx-build3 sphinx-build2], [no])
+AM_CONDITIONAL(HAVE_SPHINXBUILD, [test "x$SPHINXBUILD" != xno])
+
+AC_CHECK_PROGS([LATEXMK], [latexmk], [no])
+AM_CONDITIONAL(HAVE_LATEXMK, [test "x$LATEXMK" != xno])
 
 AC_CHECK_PROG([HELP2MAN], [help2man], [help2man])
 AM_CONDITIONAL([HAVE_HELP2MAN], [test x$HELP2MAN = xhelp2man])
@@ -276,7 +279,6 @@ AC_CONFIG_FILES([Makefile
            tests/gtktemplate/Makefile
            doc/Makefile
            doc/manual/Makefile
-           doc/manual/version.xml
            gobject-introspection/Makefile
            vapigen/vapigen.pc
            vapigen/Makefile

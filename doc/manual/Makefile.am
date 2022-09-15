@@ -1,100 +1,77 @@
 NULL =
 
-BOOK_NAME = vala@PACKAGE_SUFFIX@
-
-bookdir = $(datadir)/devhelp/books/$(BOOK_NAME)
-
-if HAVE_XSLTPROC
-book_DATA = \
-	devhelp/* \
+manual_SOURCE = \
+	source/_static/bullet.svg \
+	source/_static/fonts \
+	source/_static/fonts/cantarell-bold-latin.woff2 \
+	source/_static/fonts/cantarell-extra-bold-latin.woff2 \
+	source/_static/fonts/cantarell-light.woff2 \
+	source/_static/fonts/cantarell-regular-latin.woff2 \
+	source/_static/gnome.css \
+	source/_static/right.svg \
+	source/_static/toc_bullet.svg \
+	source/_templates/page.html \
+	source/_templates/sidebar/brand.html \
+	source/attributes.rst \
+	source/classes.rst \
+	source/concepts.rst \
+	source/conf.py \
+	source/delegates.rst \
+	source/enumerated-types-enums.rst \
+	source/errors.rst \
+	source/expressions.rst \
+	source/generics.rst \
+	source/gidl-metadata-format.rst \
+	source/gir-metadata-format.rst \
+	source/index.rst \
+	source/interfaces.rst \
+	source/logo.png \
+	source/methods.rst \
+	source/namespaces.rst \
+	source/overview.rst \
+	source/preprocessor.rst \
+	source/statements.rst \
+	source/structs.rst \
+	source/types.rst \
 	$(NULL)
 
-$(builddir)/devhelp/*: devhelp
-devhelp: manual.xml version.xml common.xsl devhelp.xsl xhtml.xsl default.css
-	@$(MKDIR_P) $@
-	$(AM_V_GEN)$(XSLTPROC) \
-		--xinclude \
-		--path $(srcdir) \
-		--output $@/$(BOOK_NAME).devhelp2 \
-		$(srcdir)/devhelp.xsl \
-		$(srcdir)/manual.xml
-	@$(XSLTPROC) \
-		--xinclude \
-		--path $(srcdir) \
-		--output $@/index.html \
-		$(srcdir)/xhtml.xsl \
-		$(srcdir)/manual.xml
-	@cp $(srcdir)/default.css $@
-	@touch $@
+if HAVE_SPHINXBUILD
+.PHONY: html devhelp
+html: $(manual_SOURCE)
+	VERSION=$(VERSION) $(SPHINXBUILD) -M html $(srcdir)/source $(builddir)/build
 
-html: manual.xml version.xml common.xsl xhtml.xsl default.css
-	@$(MKDIR_P) $@
-	$(AM_V_GEN)$(XSLTPROC) \
-		--xinclude \
-		--stringparam body-class u-center \
-		--output $@/index.html \
-		$(srcdir)/xhtml.xsl \
-		$(srcdir)/manual.xml
-	@cp $(srcdir)/default.css $@
-	@touch $@
+devhelp: $(manual_SOURCE)
+	VERSION=$(VERSION) $(SPHINXBUILD) -M devhelp $(srcdir)/source $(builddir)/build
 
-print: manual.html
-manual.html: manual.xml version.xml common.xsl print.xsl default.css
-	$(AM_V_GEN)$(XSLTPROC) \
-		--xinclude \
-		--path $(srcdir) \
-		--output $@ \
-		$(srcdir)/print.xsl \
-		$(srcdir)/manual.xml
-
-if HAVE_WEASYPRINT
+if HAVE_LATEXMK
+.PHONY: pdf
 pdf: manual.pdf
-manual.pdf: manual.html default.css
-	@echo Generating PDF version of manual, this may take some time...
-	$(AM_V_GEN)$(WEASYPRINT) \
-		manual.html \
-		$@
-else
-pdf:
-	@echo Install weasyprint and re-run ./configure to generate a PDF of the Vala manual
-endif
+manual.pdf: $(manual_SOURCE)
+	VERSION=$(VERSION) $(SPHINXBUILD) -M latexpdf $(srcdir)/source $(builddir)/build
+	mv -f $(builddir)/build/latex/valareferencemanual.pdf $@
 
-endif
-
-mostlyclean-local:
-	rm -rf devhelp
-	rm -rf html
-
-CLEANFILES = \
-	manual.html \
+manualdir = $(docdir)
+dist_manual_DATA = \
 	manual.pdf \
-	version.xml \
 	$(NULL)
+else
+	@echo Install latexmk and re-run ./configure to generate the Vala manual PDF
+endif
+else
+	@echo Install sphinx-build and re-run ./configure to generate the Vala manual
+endif
+
+distclean-local:
+	rm -rf $(builddir)/build
 
 EXTRA_DIST = \
-	common.xsl \
-	default.css \
-	devhelp.xsl \
-	manual.xml \
-	print.xsl \
-	xhtml.xsl \
-	README \
+	$(manual_SOURCE) \
+	README.md \
 	$(NULL)
 
-MANUAL_DOCBOOK_URL=https://wiki.gnome.org/Projects/Vala/Manual/Export?action=format\&mimetype=text/docbook
+MAINTAINERCLEANFILES = \
+	build \
+	$(NULL)
 
-$(srcdir)/manual.xml:
-	@echo "Generating $@ from $(MANUAL_DOCBOOK_URL)"
-	@curl --silent $(MANUAL_DOCBOOK_URL) | \
-		sed -e 's/<articleinfo>.*<\/articleinfo>//g' | \
-		sed -e 's/<section>/\n\n<section>/g' | \
-		sed -e 's/<\/section>/\n<\/section>/g' | \
-		sed -e 's/<title>/\n<title>/g' | \
-		sed -e 's/<para>/\n<para>/g' \
-		> $@
-
-update-manual-from-wiki:
-	@rm $(srcdir)/manual.xml
-	$(MAKE) $(AM_MAKEFLAGS) manual.xml
-	$(MAKE) $(AM_MAKEFLAGS)
-
+CLEANFILES = \
+	$(NULL)

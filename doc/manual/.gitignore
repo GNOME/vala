@@ -1,5 +1,4 @@
 manual.html
 manual.pdf
 version.xml
-devhelp/
-html/
+build/
