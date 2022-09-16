@@ -1,3 +1,25 @@
+Vala 0.48.25
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Correctly set array-length for NoAccessorMethods properties [#1316]
+    + Detect usage of static type-parameter in runtime context [#1326]
+  - vala:
+    + Don't allow nullable enum value as real GObject property [#1074]
+    + Avoid critical in SourceFile.get_mapped_length() [#1330]
+    + Don't unconditionally expect ObjectType of Class [#1341]
+    + Make try-statement parsing more resilient [#1304]
+    + Avoid problems with '\' in #line directives on Windows [#1353]
+  - gidlparser: Set source reference of parameters
+  - valadoc: Include path to doclet in error message
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - atspi-2: Fix a few binding errors
+  - glib-2.0: Add abs() to int8/int16/int32/ssize_t [#1328]
+  - glib-2.0: Use g_abort for GLib.Process.abort() beginning with 2.50 [#1350]
+  - gtk+-3.0: Correctly unhide BindingSet.by_class to avoid Version attribute
+
 Vala 0.48.24
 ============
  * Various improvements and bug fixes:
