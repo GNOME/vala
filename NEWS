@@ -1,3 +1,16 @@
+Vala 0.56.3
+===========
+ * Various improvements and bug fixes:
+  - vala: Don't unconditionally expect ObjectType of Class [#1341]
+  - vala: Make try-statement parsing more resilient [#1304]
+  - vala: Avoid problems with '\' in #line directives on Windows [#1353]
+  - gidlparser: Set source reference of parameters
+
+ * Bindings:
+  - atspi-2: Fix a few binding errors
+  - glib-2.0: Use g_abort for GLib.Process.abort() beginning with 2.50 [#1350]
+  - gtk+-3.0: Correctly unhide BindingSet.by_class to avoid Version attribute
+
 Vala 0.56.2
 ===========
  * Various improvements and bug fixes:
