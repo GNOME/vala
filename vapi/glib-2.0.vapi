@@ -5591,6 +5591,12 @@ namespace GLib {
 	public static GLib.HashFunc<void*> direct_hash;
 	[CCode (cname = "g_direct_equal")]
 	public static GLib.EqualFunc<void*> direct_equal;
+	[Version (since = "2.22")]
+	[CCode (cname = "g_double_hash")]
+	public static GLib.HashFunc<double?> double_hash;
+	[Version (since = "2.22")]
+	[CCode (cname = "g_double_equal")]
+	public static GLib.EqualFunc<double?> double_equal;
 	[CCode (cname = "g_int64_hash")]
 	public static GLib.HashFunc<int64?> int64_hash;
 	[Version (since = "2.22")]
