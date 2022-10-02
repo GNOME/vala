@@ -6862,6 +6862,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_boolean_cconstant (bool b) {
 		if (context.profile == Profile.GOBJECT) {
+			cfile.add_include ("glib.h");
 			return new CCodeConstant (b ? "TRUE" : "FALSE");
 		} else {
 			cfile.add_include ("stdbool.h");
