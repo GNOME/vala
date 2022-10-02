@@ -48,6 +48,7 @@ TESTS = \
 	basic-types/floats.vala \
 	basic-types/floats-boxed-cast.vala \
 	basic-types/boolean.vala \
+	basic-types/boolean-literal.vala \
 	basic-types/custom-types.vala \
 	basic-types/default-gtype.vala \
 	basic-types/strings.vala \
