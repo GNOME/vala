@@ -866,6 +866,14 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		 * C code output.
 		 */
 		if (source_file.file_type == SourceFileType.FAST) {
+			if (requires_vala_extern) {
+				if (context.header_filename != null) {
+					if (!header_file.add_declaration ("VALA_EXTERN")) {
+						append_vala_extern_define (header_file);
+					}
+					internal_header_file.add_include (source_file.get_cinclude_filename (), true);
+				}
+			}
 			return;
 		}
 
