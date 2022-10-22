@@ -106,6 +106,7 @@ namespace Pixman {
 		public Region16.with_extents (Pixman.Box16 extents);
 
 		public void translate (int x, int y);
+		[CCode (instance_pos = 1.1)]
 		public bool copy (out Pixman.Region16 region);
 		[CCode (instance_pos = 1.1)]
 		public bool intersect (out Pixman.Region16 new_reg, Pixman.Region16 reg2);
@@ -155,6 +156,7 @@ namespace Pixman {
 		public Region32.with_extents (Pixman.Box32 extents);
 
 		public void translate (int x, int y);
+		[CCode (instance_pos = 1.1)]
 		public bool copy (out Pixman.Region32 region);
 		[CCode (instance_pos = 1.1)]
 		public bool intersect (out Pixman.Region32 new_reg, Pixman.Region32 reg2);
