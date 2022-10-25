@@ -71,6 +71,11 @@ public class Vala.RealLiteral : Literal {
 			type_name = "double";
 		}
 
+		if (value.has_suffix ("e") || value.has_suffix ("+") || value.has_suffix ("-")) {
+			Report.error (source_reference, "exponent has no digits");
+			error = true;
+		}
+
 		var st = (Struct) context.root.scope.lookup (type_name);
 		// ensure attributes are already processed
 		st.check (context);

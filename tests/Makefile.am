@@ -1243,6 +1243,9 @@ TESTS = \
 	semantic/property-too-few-type-arguments.test \
 	semantic/property-too-many-type-arguments.test \
 	semantic/property-void.test \
+	semantic/realliteral-exponent-has-no-digits.test \
+	semantic/realliteral-exponent-has-no-digits2.test \
+	semantic/realliteral-exponent-has-no-digits3.test \
 	semantic/reference-transfer-not-supported.test \
 	semantic/reference-transfer-unavailable.test \
 	semantic/return-in-nonvoid.test \
