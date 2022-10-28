@@ -149,6 +149,7 @@ public enum Vala.TokenType {
 	USING,
 	VAR,
 	VERBATIM_STRING_LITERAL,
+	VERBATIM_TEMPLATE_STRING_LITERAL,
 	VIRTUAL,
 	VOID,
 	VOLATILE,
@@ -284,6 +285,7 @@ public enum Vala.TokenType {
 		case USING: return "`using'";
 		case VAR: return "`var'";
 		case VERBATIM_STRING_LITERAL: return "verbatim string literal";
+		case VERBATIM_TEMPLATE_STRING_LITERAL: return "verbatim template string literal";
 		case VIRTUAL: return "`virtual'";
 		case VOID: return "`void'";
 		case VOLATILE: return "`volatile'";

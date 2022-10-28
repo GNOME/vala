@@ -1,5 +1,10 @@
+def m():string
+	return "foo"
+
 init
-	var a = "test"
-	var b = 100
-	var c = @"$( a )$b"
-	assert( c == "test100" )
+	result:string = @""
+	assert( result == "" )
+
+	i:int = 42
+	result = @"i=$i m=$( m() ) $$"
+	assert( result == "i=42 m=foo $" )

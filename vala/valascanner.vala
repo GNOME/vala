@@ -54,7 +54,8 @@ public class Vala.Scanner {
 		BRACKET,
 		TEMPLATE,
 		TEMPLATE_PART,
-		REGEX_LITERAL
+		REGEX_LITERAL,
+		VERBATIM_TEMPLATE
 	}
 
 	public Scanner (SourceFile source_file) {
@@ -80,6 +81,10 @@ public class Vala.Scanner {
 
 	bool in_template () {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE);
+	}
+
+	bool in_verbatim_template () {
+		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.VERBATIM_TEMPLATE);
 	}
 
 	bool in_template_part () {
@@ -686,6 +691,7 @@ public class Vala.Scanner {
 	}
 
 	public TokenType read_template_token (out SourceLocation token_begin, out SourceLocation token_end) {
+		bool is_verbatim = in_verbatim_template ();
 		TokenType type;
 		char* begin = current;
 		token_begin = SourceLocation (begin, line, column);
@@ -697,9 +703,22 @@ public class Vala.Scanner {
 		} else {
 			switch (current[0]) {
 			case '"':
-				type = TokenType.CLOSE_TEMPLATE;
-				current++;
-				state_stack.length--;
+				if (is_verbatim) {
+					if (current < end -2 && current[1] == '"' && current[2] == '"' && current[3] != '"') {
+						type = TokenType.CLOSE_TEMPLATE;
+						current += 3;
+						state_stack.length--;
+					} else {
+						type = TokenType.VERBATIM_TEMPLATE_STRING_LITERAL;
+						current++;
+						token_length_in_chars++;
+						state_stack += State.TEMPLATE_PART;
+					}
+				} else {
+					type = TokenType.CLOSE_TEMPLATE;
+					current++;
+					state_stack.length--;
+				}
 				break;
 			case '$':
 				token_begin.pos++; // $ is not part of following token
@@ -718,7 +737,7 @@ public class Vala.Scanner {
 					state_stack += State.PARENS;
 					return read_token (out token_begin, out token_end);
 				} else if (current[0] == '$') {
-					type = TokenType.TEMPLATE_STRING_LITERAL;
+					type = is_verbatim ? TokenType.VERBATIM_TEMPLATE_STRING_LITERAL : TokenType.TEMPLATE_STRING_LITERAL;
 					current++;
 					state_stack += State.TEMPLATE_PART;
 				} else {
@@ -727,10 +746,10 @@ public class Vala.Scanner {
 				}
 				break;
 			default:
-				type = TokenType.TEMPLATE_STRING_LITERAL;
+				type = is_verbatim ? TokenType.VERBATIM_TEMPLATE_STRING_LITERAL : TokenType.TEMPLATE_STRING_LITERAL;
 				token_length_in_chars = 0;
 				while (current < end && current[0] != '"' && current[0] != '$') {
-					if (current[0] == '\\') {
+					if (current[0] == '\\' && !is_verbatim) {
 						current++;
 						token_length_in_chars++;
 						if (current >= end) {
@@ -829,7 +848,7 @@ public class Vala.Scanner {
 	}
 
 	public TokenType read_token (out SourceLocation token_begin, out SourceLocation token_end) {
-		if (in_template ()) {
+		if (in_template () || in_verbatim_template ()) {
 			return read_template_token (out token_begin, out token_end);
 		} else if (in_template_part ()) {
 			state_stack.length--;
@@ -861,9 +880,15 @@ public class Vala.Scanner {
 			type = get_identifier_or_keyword (begin, len);
 		} else if (current[0] == '@') {
 			if (current < end - 1 && current[1] == '"') {
+				current += 1;
+				if (current < end - 5 && current[1] == '"' && current[2] == '"') {
+					current += 3;
+					state_stack += State.VERBATIM_TEMPLATE;
+				} else {
+					current += 1;
+					state_stack += State.TEMPLATE;
+				}
 				type = TokenType.OPEN_TEMPLATE;
-				current += 2;
-				state_stack += State.TEMPLATE;
 			} else {
 				token_begin.pos++; // @ is not part of the identifier
 				current++;
@@ -901,7 +926,7 @@ public class Vala.Scanner {
 				if (state_stack.length > 0) {
 					state_stack.length--;
 				}
-				if (in_template ()) {
+				if (in_template () || in_verbatim_template ()) {
 					type = TokenType.COMMA;
 				}
 				break;

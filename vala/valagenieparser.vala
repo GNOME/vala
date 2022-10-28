@@ -394,6 +394,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 			string raw_string = get_last_string ();
 			string escaped_string = raw_string.substring (3, raw_string.length - 6).escape ("");
 			return new StringLiteral ("\"%s\"".printf (escaped_string), get_src (begin));
+		case TokenType.VERBATIM_TEMPLATE_STRING_LITERAL:
+			next ();
+			string raw_string = get_last_string ();
+			string escaped_string = raw_string.escape ("");
+			return new StringLiteral ("\"%s\"".printf (escaped_string), get_src (begin));
 		case TokenType.NULL:
 			next ();
 			return new NullLiteral (get_src (begin));
@@ -701,6 +706,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.STRING_LITERAL:
 		case TokenType.TEMPLATE_STRING_LITERAL:
 		case TokenType.VERBATIM_STRING_LITERAL:
+		case TokenType.VERBATIM_TEMPLATE_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
 			break;
@@ -1285,6 +1291,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.STRING_LITERAL:
 					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:
+					case TokenType.VERBATIM_TEMPLATE_STRING_LITERAL:
 					case TokenType.NULL:
 					case TokenType.SELF:
 					case TokenType.SUPER:

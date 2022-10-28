@@ -46,27 +46,30 @@ _vala_main (void)
 {
 	gchar* _result_ = NULL;
 	gchar* _tmp0_;
+	const gchar* _tmp1_;
 	gint i = 0;
-	gchar* _tmp1_;
 	gchar* _tmp2_;
-	const gchar* _tmp3_;
+	gchar* _tmp3_;
 	const gchar* _tmp4_;
-	gchar* _tmp5_;
-	const gchar* _tmp6_;
+	const gchar* _tmp5_;
+	gchar* _tmp6_;
+	const gchar* _tmp7_;
 	_tmp0_ = g_strdup ("");
 	_g_free0 (_result_);
 	_result_ = _tmp0_;
+	_tmp1_ = _result_;
+	_vala_assert (g_strcmp0 (_tmp1_, "") == 0, "result == \"\"");
 	i = 42;
-	_tmp1_ = g_strdup_printf ("%i", i);
-	_tmp2_ = _tmp1_;
-	_tmp3_ = m ();
-	_tmp4_ = string_to_string (_tmp3_);
-	_tmp5_ = g_strconcat ("i=", _tmp2_, " m=", _tmp4_, " ", "$", NULL);
+	_tmp2_ = g_strdup_printf ("%i", i);
+	_tmp3_ = _tmp2_;
+	_tmp4_ = m ();
+	_tmp5_ = string_to_string (_tmp4_);
+	_tmp6_ = g_strconcat ("i=", _tmp3_, " m=", _tmp5_, " ", "$", NULL);
 	_g_free0 (_result_);
-	_result_ = _tmp5_;
-	_g_free0 (_tmp2_);
-	_tmp6_ = _result_;
-	_vala_assert (g_strcmp0 (_tmp6_, "i=42 m=foo $") == 0, "result == \"i=42 m=foo $\"");
+	_result_ = _tmp6_;
+	_g_free0 (_tmp3_);
+	_tmp7_ = _result_;
+	_vala_assert (g_strcmp0 (_tmp7_, "i=42 m=foo $") == 0, "result == \"i=42 m=foo $\"");
 	_g_free0 (_result_);
 }
 
