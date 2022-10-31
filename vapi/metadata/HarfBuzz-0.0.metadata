@@ -119,3 +119,7 @@ segment_properties_*#function name="segment_properties_(.+)" parent="HarfBuzz.Se
 shape_plan_*#function name="shape_plan_(.+)" parent="HarfBuzz.ShapePlan"
 unicode_*#function name="unicode_(.+)" parent="HarfBuzz.UnicodeFuncs"
 unicode_funcs_*#function name="unicode_funcs_(.+)" parent="HarfBuzz.UnicodeFuncs"
+variation_*#function name="variation_(.+)" parent="HarfBuzz.Variation"
+
+variation_to_string.buf out=false owned=false
+variation_t._string.buf out=false owned=false

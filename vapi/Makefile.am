@@ -681,7 +681,7 @@ gudev-1.0:
 	$(GENVAPI) --library $(srcdir)/gudev-1.0 --metadatadir $(METADATADIR) $(METADATADIR)/GUdev-1.0-custom.vala $(GIRDIR)/GUdev-1.0.gir
 
 harfbuzz-gobject:
-	$(GENVAPI) --library $(srcdir)/harfbuzz-gobject --metadatadir $(METADATADIR) $(GIRDIR)/HarfBuzz-0.0.gir
+	$(GENVAPI) --library $(srcdir)/harfbuzz-gobject --pkg freetype2 --metadatadir $(METADATADIR) $(GIRDIR)/HarfBuzz-0.0.gir
 
 hildon-1:
 	$(GENVAPI) --library $(srcdir)/hildon-1 $(PACKAGESDIR)/hildon-1/hildon-1-custom.vala $(PACKAGESDIR)/hildon-1/hildon-1.gi

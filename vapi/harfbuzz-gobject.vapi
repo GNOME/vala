@@ -11,11 +11,13 @@ namespace HarfBuzz {
 		public HarfBuzz.Blob copy_writable_or_fail ();
 		[Version (since = "1.7.7")]
 		public static HarfBuzz.Blob create_from_file (string file_name);
+		[Version (since = "2.8.2")]
+		public static HarfBuzz.Blob create_from_file_or_fail (string file_name);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Blob create_sub_blob (uint offset, uint length);
 		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
 		[Version (since = "0.9.2")]
-		public unowned string[] get_data ();
+		public unowned string[]? get_data ();
 		[CCode (array_length_pos = 0.2, array_length_type = "guint")]
 		[Version (since = "0.9.2")]
 		public unowned string[] get_data_writable ();
@@ -52,8 +54,10 @@ namespace HarfBuzz {
 		public void clear_contents ();
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Buffer create ();
+		[Version (since = "3.3.0")]
+		public HarfBuzz.Buffer create_similar ();
 		[Version (since = "0.9.7")]
-		public HarfBuzz.Bool deserialize_glyphs ([CCode (array_length_cname = "buf_len", array_length_pos = 1.5)] string[] buf, out string end_ptr, HarfBuzz.Font font, HarfBuzz.BufferSerializeFormat format);
+		public HarfBuzz.Bool deserialize_glyphs ([CCode (array_length_cname = "buf_len", array_length_pos = 1.5)] string[] buf, out string end_ptr, HarfBuzz.Font? font, HarfBuzz.BufferSerializeFormat format);
 		[Version (since = "2.7.3")]
 		public HarfBuzz.Bool deserialize_unicode ([CCode (array_length_cname = "buf_len", array_length_pos = 1.5)] string[] buf, out string end_ptr, HarfBuzz.BufferSerializeFormat format);
 		[Version (since = "1.5.0")]
@@ -80,6 +84,8 @@ namespace HarfBuzz {
 		public unowned HarfBuzz.Language get_language ();
 		[Version (since = "0.9.2")]
 		public uint get_length ();
+		[Version (since = "3.1.0")]
+		public HarfBuzz.Codepoint get_not_found_glyph ();
 		[Version (since = "0.9.31")]
 		public HarfBuzz.Codepoint get_replacement_codepoint ();
 		[Version (since = "0.9.2")]
@@ -90,6 +96,7 @@ namespace HarfBuzz {
 		public HarfBuzz.UnicodeFuncs get_unicode_funcs ();
 		[Version (since = "0.9.7")]
 		public void guess_segment_properties ();
+		[Version (since = "2.7.3")]
 		public HarfBuzz.Bool has_positions ();
 		[Version (since = "0.9.2")]
 		public void normalize_glyphs ();
@@ -132,6 +139,8 @@ namespace HarfBuzz {
 		public HarfBuzz.Bool set_length (uint length);
 		[Version (since = "1.1.3")]
 		public void set_message_func (owned HarfBuzz.BufferMessageFunc func);
+		[Version (since = "3.1.0")]
+		public void set_not_found_glyph (HarfBuzz.Codepoint not_found);
 		[Version (since = "0.9.31")]
 		public void set_replacement_codepoint (HarfBuzz.Codepoint replacement);
 		[Version (since = "0.9.2")]
@@ -141,6 +150,12 @@ namespace HarfBuzz {
 		[Version (since = "0.9.2")]
 		public void set_unicode_funcs (HarfBuzz.UnicodeFuncs unicode_funcs);
 	}
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_funcs_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_cprefix = "hb_gobject_draw_funcs_", type_id = "hb_gobject_draw_funcs_get_type ()")]
+	[Compact]
+	[GIR (name = "draw_funcs_t")]
+	[Version (since = "4.0.0")]
+	public class DrawFuncs {
+	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_face_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "hb_gobject_face_get_type ()")]
 	[Compact]
 	[GIR (name = "face_t")]
@@ -149,6 +164,8 @@ namespace HarfBuzz {
 		public HarfBuzz.Bool builder_add_table (HarfBuzz.Tag tag, HarfBuzz.Blob blob);
 		[Version (since = "1.9.0")]
 		public static HarfBuzz.Face builder_create ();
+		[Version (since = "5.3.0")]
+		public void builder_sort_tables ([CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[] tags);
 		[Version (since = "1.9.0")]
 		public void collect_unicodes (HarfBuzz.Set @out);
 		[Version (since = "1.9.0")]
@@ -207,7 +224,9 @@ namespace HarfBuzz {
 	[GIR (name = "font_t")]
 	public class Font {
 		[Version (since = "0.9.2")]
-		public void add_glyph_origin_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, out HarfBuzz.Position x, out HarfBuzz.Position y);
+		public void add_glyph_origin_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, ref HarfBuzz.Position x, ref HarfBuzz.Position y);
+		[Version (since = "4.4.0")]
+		public void changed ();
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Font create (HarfBuzz.Face face);
 		[Version (since = "0.9.2")]
@@ -223,7 +242,7 @@ namespace HarfBuzz {
 		[Version (since = "0.9.2")]
 		public void get_glyph_advance_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, out HarfBuzz.Position x, out HarfBuzz.Position y);
 		[Version (since = "1.8.6")]
-		public void get_glyph_advances_for_direction (HarfBuzz.Direction direction, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+		public void get_glyph_advances_for_direction (HarfBuzz.Direction direction, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, out uint advance_stride);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool get_glyph_contour_point (HarfBuzz.Codepoint glyph, uint point_index, out HarfBuzz.Position x, out HarfBuzz.Position y);
 		[Version (since = "0.9.2")]
@@ -237,7 +256,7 @@ namespace HarfBuzz {
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Position get_glyph_h_advance (HarfBuzz.Codepoint glyph);
 		[Version (since = "1.8.6")]
-		public void get_glyph_h_advances (uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+		public void get_glyph_h_advances (uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, uint advance_stride);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Position get_glyph_h_kerning (HarfBuzz.Codepoint left_glyph, HarfBuzz.Codepoint right_glyph);
 		[Version (since = "0.9.2")]
@@ -245,13 +264,15 @@ namespace HarfBuzz {
 		[Version (since = "0.9.2")]
 		public void get_glyph_kerning_for_direction (HarfBuzz.Codepoint first_glyph, HarfBuzz.Codepoint second_glyph, HarfBuzz.Direction direction, out HarfBuzz.Position x, out HarfBuzz.Position y);
 		[Version (since = "0.9.2")]
-		public HarfBuzz.Bool get_glyph_name (HarfBuzz.Codepoint glyph, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] string[] name);
+		public HarfBuzz.Bool get_glyph_name (HarfBuzz.Codepoint glyph, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] out string[] name);
 		[Version (since = "0.9.2")]
 		public void get_glyph_origin_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, out HarfBuzz.Position x, out HarfBuzz.Position y);
+		[Version (since = "4.0.0")]
+		public void get_glyph_shape (HarfBuzz.Codepoint glyph, HarfBuzz.DrawFuncs dfuncs, void* draw_data);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Position get_glyph_v_advance (HarfBuzz.Codepoint glyph);
 		[Version (since = "1.8.6")]
-		public void get_glyph_v_advances (uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+		public void get_glyph_v_advances (uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, out uint advance_stride);
 		[Version (deprecated = true, deprecated_since = "2.0.0", since = "0.9.2")]
 		public HarfBuzz.Position get_glyph_v_kerning (HarfBuzz.Codepoint top_glyph, HarfBuzz.Codepoint bottom_glyph);
 		[Version (since = "0.9.2")]
@@ -261,25 +282,31 @@ namespace HarfBuzz {
 		[Version (since = "1.2.3")]
 		public HarfBuzz.Bool get_nominal_glyph (HarfBuzz.Codepoint unicode, out HarfBuzz.Codepoint glyph);
 		[Version (since = "2.6.3")]
-		public uint get_nominal_glyphs (uint count, HarfBuzz.Codepoint first_unicode, uint unicode_stride, HarfBuzz.Codepoint first_glyph, uint glyph_stride);
+		public uint get_nominal_glyphs (uint count, HarfBuzz.Codepoint first_unicode, uint unicode_stride, out HarfBuzz.Codepoint first_glyph, uint glyph_stride);
 		[Version (since = "0.9.2")]
 		public unowned HarfBuzz.Font get_parent ();
 		[Version (since = "0.9.2")]
 		public void get_ppem (out uint x_ppem, out uint y_ppem);
-		[Version (since = "0.9.2")]
+		[Version (since = "1.6.0")]
 		public float get_ptem ();
 		[Version (since = "0.9.2")]
 		public void get_scale (out int x_scale, out int y_scale);
+		[Version (since = "4.4.0")]
+		public uint get_serial ();
+		[Version (since = "3.3.0")]
+		public float get_synthetic_slant ();
 		[Version (since = "1.1.3")]
 		public HarfBuzz.Bool get_v_extents (out HarfBuzz.FontExtents extents);
+		[Version (since = "3.3.0")]
+		public float get_var_coords_design (out uint length);
 		[Version (since = "1.4.2")]
-		public int get_var_coords_normalized (uint length);
+		public int get_var_coords_normalized (out uint length);
 		[Version (since = "1.2.3")]
 		public HarfBuzz.Bool get_variation_glyph (HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint variation_selector, out HarfBuzz.Codepoint glyph);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool glyph_from_string ([CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[] s, out HarfBuzz.Codepoint glyph);
 		[Version (since = "0.9.2")]
-		public void glyph_to_string (HarfBuzz.Codepoint glyph, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] string[] s);
+		public void glyph_to_string (HarfBuzz.Codepoint glyph, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] out string[] s);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool is_immutable ();
 		[Version (since = "0.9.2")]
@@ -298,16 +325,18 @@ namespace HarfBuzz {
 		public void set_ptem (float ptem);
 		[Version (since = "0.9.2")]
 		public void set_scale (int x_scale, int y_scale);
+		[Version (since = "3.3.0")]
+		public void set_synthetic_slant (float slant);
 		[Version (since = "1.4.2")]
-		public void set_var_coords_design (float coords, uint coords_length);
+		public void set_var_coords_design ([CCode (array_length_cname = "coords_length", array_length_pos = 1.1, array_length_type = "guint")] float[] coords);
 		[Version (since = "1.4.2")]
-		public void set_var_coords_normalized (int coords, uint coords_length);
+		public void set_var_coords_normalized ([CCode (array_length_cname = "coords_length", array_length_pos = 1.1, array_length_type = "guint")] int[] coords);
 		[Version (since = "2.6.0")]
 		public void set_var_named_instance (uint instance_index);
 		[Version (since = "1.4.2")]
-		public void set_variations (HarfBuzz.Variation variations, uint variations_length);
+		public void set_variations ([CCode (array_length_cname = "variations_length", array_length_pos = 1.1, array_length_type = "guint")] HarfBuzz.Variation[] variations);
 		[Version (since = "0.9.2")]
-		public void subtract_glyph_origin_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, out HarfBuzz.Position x, out HarfBuzz.Position y);
+		public void subtract_glyph_origin_for_direction (HarfBuzz.Codepoint glyph, HarfBuzz.Direction direction, ref HarfBuzz.Position x, ref HarfBuzz.Position y);
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_funcs_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "hb_gobject_font_funcs_get_type ()")]
 	[Compact]
@@ -343,6 +372,8 @@ namespace HarfBuzz {
 		public void set_glyph_h_origin_func (owned HarfBuzz.FontGetGlyphHOriginFunc func);
 		[Version (since = "0.9.2")]
 		public void set_glyph_name_func (owned HarfBuzz.FontGetGlyphNameFunc func);
+		[Version (since = "4.0.0")]
+		public void set_glyph_shape_func (owned HarfBuzz.font_get_glyph_shape_func_t func);
 		[Version (since = "0.9.2")]
 		public void set_glyph_v_advance_func (owned HarfBuzz.FontGetGlyphVAdvanceFunc func);
 		[Version (since = "1.8.6")]
@@ -385,6 +416,8 @@ namespace HarfBuzz {
 		public static unowned HarfBuzz.Language from_string ([CCode (array_length_cname = "len", array_length_pos = 1.1)] uint8[] str);
 		[Version (since = "0.9.2")]
 		public static unowned HarfBuzz.Language get_default ();
+		[Version (since = "5.0.0")]
+		public HarfBuzz.Bool matches (HarfBuzz.Language specific);
 		[Version (since = "0.9.2")]
 		public unowned string to_string ();
 	}
@@ -396,6 +429,8 @@ namespace HarfBuzz {
 		public HarfBuzz.Bool allocation_successful ();
 		[Version (since = "1.7.7")]
 		public void clear ();
+		[Version (since = "4.4.0")]
+		public HarfBuzz.Map copy ();
 		[Version (since = "1.7.7")]
 		public static HarfBuzz.Map create ();
 		[Version (since = "1.7.7")]
@@ -408,8 +443,12 @@ namespace HarfBuzz {
 		public uint get_population ();
 		[Version (since = "1.7.7")]
 		public HarfBuzz.Bool has (HarfBuzz.Codepoint key);
+		[Version (since = "4.4.0")]
+		public uint hash ();
 		[Version (since = "1.7.7")]
 		public HarfBuzz.Bool is_empty ();
+		[Version (since = "4.3.0")]
+		public HarfBuzz.Bool is_equal (HarfBuzz.Map other);
 		[Version (since = "1.7.7")]
 		public void @set (HarfBuzz.Codepoint key, HarfBuzz.Codepoint value);
 	}
@@ -443,6 +482,8 @@ namespace HarfBuzz {
 		public HarfBuzz.Bool equal (HarfBuzz.SegmentProperties b);
 		[Version (since = "0.9.7")]
 		public uint hash ();
+		[Version (since = "3.3.0")]
+		public void overlay (HarfBuzz.SegmentProperties src);
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_set_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "hb_gobject_set_get_type ()")]
 	[Compact]
@@ -452,10 +493,14 @@ namespace HarfBuzz {
 		public void add (HarfBuzz.Codepoint codepoint);
 		[Version (since = "0.9.7")]
 		public void add_range (HarfBuzz.Codepoint first, HarfBuzz.Codepoint last);
+		[Version (since = "4.1.0")]
+		public void add_sorted_array ([CCode (array_length_cname = "num_codepoints", array_length_pos = 1.1, array_length_type = "guint")] HarfBuzz.Codepoint[] sorted_codepoints);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool allocation_successful ();
 		[Version (since = "0.9.2")]
 		public void clear ();
+		[Version (since = "2.8.2")]
+		public HarfBuzz.Set copy ();
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Set create ();
 		[Version (since = "0.9.2")]
@@ -472,9 +517,11 @@ namespace HarfBuzz {
 		public uint get_population ();
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool has (HarfBuzz.Codepoint codepoint);
+		[Version (since = "4.4.0")]
+		public uint hash ();
 		[Version (since = "0.9.2")]
 		public void intersect (HarfBuzz.Set other);
-		[Version (deprecated = true, deprecated_since = "1.6.1", since = "0.9.10")]
+		[Version (since = "3.0.0")]
 		public void invert ();
 		[Version (since = "0.9.7")]
 		public HarfBuzz.Bool is_empty ();
@@ -484,6 +531,8 @@ namespace HarfBuzz {
 		public HarfBuzz.Bool is_subset (HarfBuzz.Set larger_set);
 		[Version (since = "0.9.2")]
 		public HarfBuzz.Bool next (ref HarfBuzz.Codepoint codepoint);
+		[Version (since = "4.2.0")]
+		public uint next_many (HarfBuzz.Codepoint codepoint, [CCode (array_length_cname = "size", array_length_pos = 2.1, array_length_type = "guint")] HarfBuzz.Codepoint[] @out);
 		[Version (since = "0.9.7")]
 		public HarfBuzz.Bool next_range (out HarfBuzz.Codepoint first, ref HarfBuzz.Codepoint last);
 		[Version (since = "1.8.0")]
@@ -686,13 +735,48 @@ namespace HarfBuzz {
 		public float value;
 		[CCode (cname = "hb_variation_to_string")]
 		[Version (replacement = "variation_to_string", since = "1.4.2")]
-		public void _string (string buf, uint size);
-		public static HarfBuzz.Bool from_string (string str, int len, HarfBuzz.Variation variation);
-		public void to_string (string buf, uint size);
+		public void _string ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] string[] buf);
+		public static HarfBuzz.Bool from_string ([CCode (array_length_cname = "len", array_length_pos = 1.5)] uint8[] str, out HarfBuzz.Variation variation);
+		public void to_string ([CCode (array_length_cname = "size", array_length_pos = 1.1, array_length_type = "guint")] string[] buf);
+	}
+	[CCode (cheader_filename = "hb-gobject.h", has_type_id = false)]
+	public struct aat_layout_feature_selector_info_t {
+		public HarfBuzz.OtNameId name_id;
+		public HarfBuzz.AatLayoutFeatureSelector enable;
+		public HarfBuzz.AatLayoutFeatureSelector disable;
+	}
+	[CCode (cheader_filename = "hb-gobject.h", has_type_id = false)]
+	[Version (since = "4.0.0")]
+	public struct draw_state_t {
+		public HarfBuzz.Bool path_open;
+		public float path_start_x;
+		public float path_start_y;
+		public float current_x;
+		public float current_y;
+	}
+	[CCode (cheader_filename = "hb-gobject.h", has_type_id = false)]
+	[Version (since = "3.4.0")]
+	public struct ot_math_kern_entry_t {
+		public HarfBuzz.Position max_correction_height;
+		public HarfBuzz.Position kern_value;
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_var_int_t")]
 	[GIR (name = "var_int_t")]
 	public struct var_int_t {
+		public uint32 u32;
+		public int32 i32;
+		[CCode (array_length = false)]
+		public weak uint16 u16[2];
+		[CCode (array_length = false)]
+		public weak int16 i16[2];
+		[CCode (array_length = false)]
+		public weak uint8 u8[4];
+		[CCode (array_length = false)]
+		public weak int8 i8[4];
+	}
+	[CCode (cheader_filename = "hb-gobject.h")]
+	public struct var_num_t {
+		public float f;
 		public uint32 u32;
 		public int32 i32;
 		[CCode (array_length = false)]
@@ -1003,7 +1087,9 @@ namespace HarfBuzz {
 		LOWER_CASE,
 		UPPER_CASE,
 		LANGUAGE_TAG_TYPE,
-		CJK_ROMAN_SPACING_TYPE
+		CJK_ROMAN_SPACING_TYPE;
+		public static HarfBuzz.OtNameId get_name_id (HarfBuzz.Face face, HarfBuzz.AatLayoutFeatureType feature_type);
+		public static uint get_selector_infos (HarfBuzz.Face face, HarfBuzz.AatLayoutFeatureType feature_type, uint start_offset, [CCode (array_length_cname = "selector_count", array_length_pos = 3.5, array_length_type = "guint")] out unowned HarfBuzz.aat_layout_feature_selector_info_t[] selectors, out uint default_index);
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_buffer_cluster_level_t", cprefix = "HB_BUFFER_CLUSTER_LEVEL_", type_id = "hb_gobject_buffer_cluster_level_get_type ()")]
 	[GIR (name = "buffer_cluster_level_t")]
@@ -1024,6 +1110,7 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_buffer_diff_flags_t", cprefix = "HB_BUFFER_DIFF_FLAG_", type_id = "hb_gobject_buffer_diff_flags_get_type ()")]
 	[Flags]
 	[GIR (name = "buffer_diff_flags_t")]
+	[Version (since = "1.5.0")]
 	public enum BufferDiffFlags {
 		EQUAL,
 		CONTENT_TYPE_MISMATCH,
@@ -1045,7 +1132,11 @@ namespace HarfBuzz {
 		EOT,
 		PRESERVE_DEFAULT_IGNORABLES,
 		REMOVE_DEFAULT_IGNORABLES,
-		DO_NOT_INSERT_DOTTED_CIRCLE
+		DO_NOT_INSERT_DOTTED_CIRCLE,
+		VERIFY,
+		PRODUCE_UNSAFE_TO_CONCAT,
+		PRODUCE_SAFE_TO_INSERT_TATWEEL,
+		DEFINED
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_buffer_serialize_flags_t", cprefix = "HB_BUFFER_SERIALIZE_FLAG_", type_id = "hb_gobject_buffer_serialize_flags_get_type ()")]
 	[Flags]
@@ -1058,7 +1149,8 @@ namespace HarfBuzz {
 		NO_GLYPH_NAMES,
 		GLYPH_EXTENTS,
 		GLYPH_FLAGS,
-		NO_ADVANCES
+		NO_ADVANCES,
+		DEFINED
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_buffer_serialize_format_t", cprefix = "HB_BUFFER_SERIALIZE_FORMAT_", type_id = "hb_gobject_buffer_serialize_format_get_type ()")]
 	[GIR (name = "buffer_serialize_format_t")]
@@ -1087,6 +1179,8 @@ namespace HarfBuzz {
 	[Version (since = "1.5.0")]
 	public enum GlyphFlags {
 		UNSAFE_TO_BREAK,
+		UNSAFE_TO_CONCAT,
+		SAFE_TO_INSERT_TATWEEL,
 		DEFINED
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_memory_mode_t", cprefix = "HB_MEMORY_MODE_", type_id = "hb_gobject_memory_mode_get_type ()")]
@@ -1119,8 +1213,10 @@ namespace HarfBuzz {
 		HANGING,
 		IDEO_FACE_BOTTOM_OR_LEFT,
 		IDEO_FACE_TOP_OR_RIGHT,
+		IDEO_FACE_CENTRAL,
 		IDEO_EMBOX_BOTTOM_OR_LEFT,
 		IDEO_EMBOX_TOP_OR_RIGHT,
+		IDEO_EMBOX_CENTRAL,
 		MATH
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_ot_layout_glyph_class_t", cprefix = "HB_OT_LAYOUT_GLYPH_CLASS_", type_id = "hb_gobject_ot_layout_glyph_class_get_type ()")]
@@ -1416,6 +1512,14 @@ namespace HarfBuzz {
 		DIVES_AKURU,
 		KHITAN_SMALL_SCRIPT,
 		YEZIDI,
+		CYPRO_MINOAN,
+		OLD_UYGHUR,
+		TANGSA,
+		TOTO,
+		VITHKUQI,
+		MATH,
+		KAWI,
+		NAG_MUNDARI,
 		INVALID;
 		[Version (since = "0.9.2")]
 		public static HarfBuzz.Script from_iso15924_tag (HarfBuzz.Tag tag);
@@ -1521,64 +1625,92 @@ namespace HarfBuzz {
 		PARAGRAPH_SEPARATOR,
 		SPACE_SEPARATOR
 	}
+	[CCode (cheader_filename = "hb-gobject.h", cprefix = "HB_STYLE_TAG_", type_id = "hb_gobject_style_tag_get_type ()")]
+	[Version (since = "3.0.0")]
+	public enum style_tag_t {
+		ITALIC,
+		OPTICAL_SIZE,
+		SLANT_ANGLE,
+		SLANT_RATIO,
+		WIDTH,
+		WEIGHT
+	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_buffer_message_func_t", instance_pos = 3.9)]
+	[Version (since = "1.1.3")]
 	public delegate HarfBuzz.Bool BufferMessageFunc (HarfBuzz.Buffer buffer, HarfBuzz.Font font, string message);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_destroy_func_t", instance_pos = 0.9)]
 	public delegate void DestroyFunc ();
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_close_path_func_t", instance_pos = 3.9)]
+	[Version (since = "4.0.0")]
+	public delegate void DrawClosePathFunc (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_cubic_to_func_t", instance_pos = 9.9)]
+	[Version (since = "4.0.0")]
+	public delegate void DrawCubicToFunc (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control1_x, float control1_y, float control2_x, float control2_y, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_line_to_func_t", instance_pos = 5.9)]
+	[Version (since = "4.0.0")]
+	public delegate void DrawLineToFunc (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_move_to_func_t", instance_pos = 5.9)]
+	[Version (since = "4.0.0")]
+	public delegate void DrawMoveToFunc (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_draw_quadratic_to_func_t", instance_pos = 7.9)]
+	[Version (since = "4.0.0")]
+	public delegate void DrawQuadraticToFunc (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control_x, float control_y, float to_x, float to_y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_font_extents_func_t", instance_pos = 3.9)]
-	public delegate HarfBuzz.Bool FontGetFontExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.FontExtents extents);
+	public delegate HarfBuzz.Bool FontGetFontExtentsFunc (HarfBuzz.Font font, void* font_data, out HarfBuzz.FontExtents extents);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_font_extents_func_t", instance_pos = 3.9)]
-	public delegate HarfBuzz.Bool FontGetFontHExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.FontExtents extents);
+	public delegate HarfBuzz.Bool FontGetFontHExtentsFunc (HarfBuzz.Font font, void* font_data, out HarfBuzz.FontExtents extents);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_font_extents_func_t", instance_pos = 3.9)]
-	public delegate HarfBuzz.Bool FontGetFontVExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.FontExtents extents);
+	public delegate HarfBuzz.Bool FontGetFontVExtentsFunc (HarfBuzz.Font font, void* font_data, out HarfBuzz.FontExtents extents);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advance_func_t", instance_pos = 3.9)]
 	public delegate HarfBuzz.Position FontGetGlyphAdvanceFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advances_func_t", instance_pos = 7.9)]
-	public delegate void FontGetGlyphAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+	public delegate void FontGetGlyphAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, uint advance_stride);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_contour_point_func_t", instance_pos = 6.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphContourFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, uint point_index, HarfBuzz.Position x, HarfBuzz.Position y);
+	public delegate HarfBuzz.Bool FontGetGlyphContourFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, uint point_index, out HarfBuzz.Position x, out HarfBuzz.Position y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_extents_func_t", instance_pos = 4.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, HarfBuzz.GlyphExtents extents);
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_from_name_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphFromNameFunc (HarfBuzz.Font font, void* font_data, string name, int len, HarfBuzz.Codepoint glyph);
+	public delegate HarfBuzz.Bool FontGetGlyphExtentsFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, out HarfBuzz.GlyphExtents extents);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_from_name_func_t", instance_pos = 4.9)]
+	public delegate HarfBuzz.Bool FontGetGlyphFromNameFunc (HarfBuzz.Font font, void* font_data, [CCode (array_length_cname = "len", array_length_pos = 3.5)] string[] name, out HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint variation_selector, HarfBuzz.Codepoint glyph);
+	[Version (deprecated = true, deprecated_since = "1.2.3")]
+	public delegate HarfBuzz.Bool FontGetGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint variation_selector, out HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advance_func_t", instance_pos = 3.9)]
 	public delegate HarfBuzz.Position FontGetGlyphHAdvanceFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advances_func_t", instance_pos = 7.9)]
-	public delegate void FontGetGlyphHAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+	public delegate void FontGetGlyphHAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, uint advance_stride);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_kerning_func_t", instance_pos = 4.9)]
 	public delegate HarfBuzz.Position FontGetGlyphHKerningFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint first_glyph, HarfBuzz.Codepoint second_glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_origin_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphHOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, HarfBuzz.Position x, HarfBuzz.Position y);
+	public delegate HarfBuzz.Bool FontGetGlyphHOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, out HarfBuzz.Position x, out HarfBuzz.Position y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_kerning_func_t", instance_pos = 4.9)]
 	public delegate HarfBuzz.Position FontGetGlyphKerningFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint first_glyph, HarfBuzz.Codepoint second_glyph);
-	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_name_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphNameFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, string name, uint size);
+	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_name_func_t", instance_pos = 4.9)]
+	public delegate HarfBuzz.Bool FontGetGlyphNameFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, [CCode (array_length_cname = "size", array_length_pos = 4.1, array_length_type = "guint")] out string[] name);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_origin_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, HarfBuzz.Position x, HarfBuzz.Position y);
+	public delegate HarfBuzz.Bool FontGetGlyphOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, out HarfBuzz.Position x, out HarfBuzz.Position y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advance_func_t", instance_pos = 3.9)]
 	public delegate HarfBuzz.Position FontGetGlyphVAdvanceFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_advances_func_t", instance_pos = 7.9)]
-	public delegate void FontGetGlyphVAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, HarfBuzz.Position first_advance, uint advance_stride);
+	public delegate void FontGetGlyphVAdvancesFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_glyph, uint glyph_stride, out HarfBuzz.Position first_advance, uint advance_stride);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_kerning_func_t", instance_pos = 4.9)]
 	public delegate HarfBuzz.Position FontGetGlyphVKerningFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint first_glyph, HarfBuzz.Codepoint second_glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_glyph_origin_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetGlyphVOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, HarfBuzz.Position x, HarfBuzz.Position y);
+	public delegate HarfBuzz.Bool FontGetGlyphVOriginFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, out HarfBuzz.Position x, out HarfBuzz.Position y);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_nominal_glyph_func_t", instance_pos = 4.9)]
-	public delegate HarfBuzz.Bool FontGetNominalGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint glyph);
+	public delegate HarfBuzz.Bool FontGetNominalGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, out HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_nominal_glyphs_func_t", instance_pos = 7.9)]
-	public delegate uint FontGetNominalGlyphsFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_unicode, uint unicode_stride, HarfBuzz.Codepoint first_glyph, uint glyph_stride);
+	public delegate uint FontGetNominalGlyphsFunc (HarfBuzz.Font font, void* font_data, uint count, HarfBuzz.Codepoint first_unicode, uint unicode_stride, out HarfBuzz.Codepoint first_glyph, uint glyph_stride);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_font_get_variation_glyph_func_t", instance_pos = 5.9)]
-	public delegate HarfBuzz.Bool FontGetVariantGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint variation_selector, HarfBuzz.Codepoint glyph);
+	public delegate HarfBuzz.Bool FontGetVariantGlyphFunc (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint unicode, HarfBuzz.Codepoint variation_selector, out HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_reference_table_func_t", instance_pos = 2.9)]
+	[Version (since = "0.9.2")]
 	public delegate HarfBuzz.Blob ReferenceTableFunc (HarfBuzz.Face face, HarfBuzz.Tag tag);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_unicode_combining_class_func_t", instance_pos = 2.9)]
 	public delegate HarfBuzz.UnicodeCombiningClass UnicodeCombiningClassFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint unicode);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_unicode_compose_func_t", instance_pos = 4.9)]
-	public delegate HarfBuzz.Bool UnicodeComposeFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint a, HarfBuzz.Codepoint b, HarfBuzz.Codepoint ab);
+	public delegate HarfBuzz.Bool UnicodeComposeFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint a, HarfBuzz.Codepoint b, out HarfBuzz.Codepoint ab);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_unicode_decompose_func_t", instance_pos = 4.9)]
-	public delegate HarfBuzz.Bool UnicodeDecomposeFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint ab, HarfBuzz.Codepoint a, HarfBuzz.Codepoint b);
+	public delegate HarfBuzz.Bool UnicodeDecomposeFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint ab, out HarfBuzz.Codepoint a, out HarfBuzz.Codepoint b);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_unicode_eastasian_width_func_t", instance_pos = 2.9)]
 	[Version (deprecated = true, deprecated_since = "2.0.0")]
 	public delegate uint UnicodeEastasianWidthFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint unicode);
@@ -1591,6 +1723,9 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_unicode_decompose_compatibility_func_t", instance_pos = 3.9)]
 	[Version (deprecated = true, deprecated_since = "2.0.0")]
 	public delegate uint UnicodedeComposeCompatibilityFunc (HarfBuzz.UnicodeFuncs ufuncs, HarfBuzz.Codepoint u, HarfBuzz.Codepoint decomposed);
+	[CCode (cheader_filename = "hb-gobject.h", instance_pos = 5.9)]
+	[Version (since = "4.0.0")]
+	public delegate void font_get_glyph_shape_func_t (HarfBuzz.Font font, void* font_data, HarfBuzz.Codepoint glyph, HarfBuzz.DrawFuncs draw_funcs, void* draw_data);
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_AAT_LAYOUT_NO_SELECTOR_INDEX")]
 	public const int AAT_LAYOUT_NO_SELECTOR_INDEX;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_BUFFER_REPLACEMENT_CODEPOINT_DEFAULT")]
@@ -1600,6 +1735,7 @@ namespace HarfBuzz {
 	[Version (since = "2.0.0")]
 	public const int FEATURE_GLOBAL_START;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_MAP_VALUE_INVALID")]
+	[Version (since = "1.7.7")]
 	public const HarfBuzz.Codepoint MAP_VALUE_INVALID;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_OT_LAYOUT_DEFAULT_LANGUAGE_INDEX")]
 	public const int OT_LAYOUT_DEFAULT_LANGUAGE_INDEX;
@@ -1619,6 +1755,7 @@ namespace HarfBuzz {
 	[Version (deprecated = true, deprecated_since = "2.2.0", since = "1.4.2")]
 	public const int OT_VAR_NO_AXIS_INDEX;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_SET_VALUE_INVALID")]
+	[Version (since = "0.9.21")]
 	public const HarfBuzz.Codepoint SET_VALUE_INVALID;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_UNICODE_MAX")]
 	[Version (since = "1.9.0")]
@@ -1635,7 +1772,74 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_VERSION_STRING")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.2.0")]
+	public static uint aat_layout_get_feature_types (HarfBuzz.Face face, uint start_offset, [CCode (array_length_cname = "feature_count", array_length_pos = 2.5, array_length_type = "guint")] out unowned HarfBuzz.AatLayoutFeatureType[] features);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.3.0")]
+	public static HarfBuzz.Bool aat_layout_has_positioning (HarfBuzz.Face face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.3.0")]
+	public static HarfBuzz.Bool aat_layout_has_substitution (HarfBuzz.Face face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "2.3.0")]
+	public static HarfBuzz.Bool aat_layout_has_tracking (HarfBuzz.Face face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_close_path (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_cubic_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control1_x, float control1_y, float control2_x, float control2_y, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static HarfBuzz.DrawFuncs draw_funcs_create ();
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static HarfBuzz.Bool draw_funcs_is_immutable (HarfBuzz.DrawFuncs dfuncs);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_make_immutable (HarfBuzz.DrawFuncs dfuncs);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_set_close_path_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawClosePathFunc func);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_set_cubic_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawCubicToFunc func);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_set_line_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawLineToFunc func);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_set_move_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawMoveToFunc func);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_funcs_set_quadratic_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawQuadraticToFunc func);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_line_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_move_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void draw_quadratic_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control_x, float control_y, float to_x, float to_y);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.2")]
+	public static HarfBuzz.Face ft_face_create ([CCode (destroy_notify_pos = 1.1)] owned FT.Face ft_face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.2")]
+	public static HarfBuzz.Face ft_face_create_cached (FT.Face ft_face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.38")]
+	public static HarfBuzz.Face ft_face_create_referenced (FT.Face ft_face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "1.0.5")]
 	public static void ft_font_changed (HarfBuzz.Font font);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.2")]
+	public static HarfBuzz.Font ft_font_create ([CCode (destroy_notify_pos = 1.1)] owned FT.Face ft_face);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.38")]
+	public static HarfBuzz.Font ft_font_create_referenced (FT.Face ft_face);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.0.5")]
 	public static int ft_font_get_load_flags (HarfBuzz.Font font);
@@ -1646,8 +1850,8 @@ namespace HarfBuzz {
 	[Version (since = "1.0.5")]
 	public static void ft_font_set_load_flags (HarfBuzz.Font font, int load_flags);
 	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "2.6.5")]
-	public static void ft_font_unlock_face (HarfBuzz.Font font);
+	[Version (since = "4.4.0")]
+	public static HarfBuzz.Bool ft_hb_font_changed (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.38")]
 	public static HarfBuzz.Blob glib_blob_create (GLib.Bytes gbytes);
@@ -1689,10 +1893,10 @@ namespace HarfBuzz {
 	public static void ot_font_set_funcs (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.8.5")]
-	public static void ot_layout_collect_features (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Tag scripts, HarfBuzz.Tag languages, HarfBuzz.Tag features, out unowned HarfBuzz.Set feature_indexes);
+	public static void ot_layout_collect_features (HarfBuzz.Face face, HarfBuzz.Tag table_tag, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? scripts, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? languages, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? features, out unowned HarfBuzz.Set feature_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.8")]
-	public static void ot_layout_collect_lookups (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Tag scripts, HarfBuzz.Tag languages, HarfBuzz.Tag features, out unowned HarfBuzz.Set lookup_indexes);
+	public static void ot_layout_collect_lookups (HarfBuzz.Face face, HarfBuzz.Tag table_tag, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? scripts, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? languages, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? features, out unowned HarfBuzz.Set lookup_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.0.0")]
 	public static uint ot_layout_feature_get_characters (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint feature_index, uint start_offset, [CCode (array_length_cname = "char_count", array_length_pos = 4.5, array_length_type = "guint")] out unowned HarfBuzz.Codepoint[] characters);
@@ -1703,6 +1907,7 @@ namespace HarfBuzz {
 	[Version (since = "2.0.0")]
 	public static HarfBuzz.Bool ot_layout_feature_get_name_ids (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint feature_index, out HarfBuzz.OtNameId label_id, out HarfBuzz.OtNameId tooltip_id, out HarfBuzz.OtNameId sample_id, out uint num_named_parameters, out HarfBuzz.OtNameId first_param_id);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "1.4.0")]
 	public static uint ot_layout_feature_with_variations_get_lookups (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint feature_index, uint variations_index, uint start_offset, [CCode (array_length_cname = "lookup_count", array_length_pos = 5.5, array_length_type = "guint")] out uint[] lookup_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static uint ot_layout_get_attach_points (HarfBuzz.Face face, HarfBuzz.Codepoint glyph, uint start_offset, [CCode (array_length_cname = "point_count", array_length_pos = 3.5, array_length_type = "guint")] out uint[] point_array);
@@ -1710,11 +1915,17 @@ namespace HarfBuzz {
 	[Version (since = "2.6.0")]
 	public static HarfBuzz.Bool ot_layout_get_baseline (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out HarfBuzz.Position coord);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void ot_layout_get_baseline_with_fallback (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out HarfBuzz.Position coord);
+	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]
 	public static HarfBuzz.OtLayoutGlyphClass ot_layout_get_glyph_class (HarfBuzz.Face face, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]
 	public static void ot_layout_get_glyphs_in_class (HarfBuzz.Face face, HarfBuzz.OtLayoutGlyphClass klass, out unowned HarfBuzz.Set glyphs);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static HarfBuzz.OtLayoutBaselineTag ot_layout_get_horizontal_baseline_tag_for_script (HarfBuzz.Script script);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static uint ot_layout_get_ligature_carets (HarfBuzz.Font font, HarfBuzz.Direction direction, HarfBuzz.Codepoint glyph, uint start_offset, [CCode (array_length_cname = "caret_count", array_length_pos = 4.5, array_length_type = "guint")] out HarfBuzz.Position[] caret_array);
 	[CCode (cheader_filename = "hb-gobject.h")]
@@ -1725,17 +1936,22 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static HarfBuzz.Bool ot_layout_has_positioning (HarfBuzz.Face face);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static HarfBuzz.Bool ot_layout_has_substitution (HarfBuzz.Face face);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static HarfBuzz.Bool ot_layout_language_find_feature (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, HarfBuzz.Tag feature_tag, out uint feature_index);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static uint ot_layout_language_get_feature_indexes (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, uint start_offset, [CCode (array_length_cname = "feature_count", array_length_pos = 5.5, array_length_type = "guint")] out uint[] feature_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static uint ot_layout_language_get_feature_tags (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, uint start_offset, [CCode (array_length_cname = "feature_count", array_length_pos = 5.5, array_length_type = "guint")] out HarfBuzz.Tag[] feature_tags);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.30")]
 	public static HarfBuzz.Bool ot_layout_language_get_required_feature (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, out uint feature_index, out HarfBuzz.Tag feature_tag);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static HarfBuzz.Bool ot_layout_language_get_required_feature_index (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, out uint feature_index);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]
@@ -1743,6 +1959,9 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.6.8")]
 	public static uint ot_layout_lookup_get_glyph_alternates (HarfBuzz.Face face, uint lookup_index, HarfBuzz.Codepoint glyph, uint start_offset, [CCode (array_length_cname = "alternate_count", array_length_pos = 4.5, array_length_type = "guint")] out unowned HarfBuzz.Codepoint[] alternate_glyphs);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "5.3.0")]
+	public static HarfBuzz.Position ot_layout_lookup_get_optical_bound (HarfBuzz.Font font, uint lookup_index, HarfBuzz.Direction direction, HarfBuzz.Codepoint glyph);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]
 	public static void ot_layout_lookup_substitute_closure (HarfBuzz.Face face, uint lookup_index, out unowned HarfBuzz.Set glyphs);
@@ -1753,9 +1972,10 @@ namespace HarfBuzz {
 	[Version (since = "1.8.1")]
 	public static void ot_layout_lookups_substitute_closure (HarfBuzz.Face face, HarfBuzz.Set lookups, out unowned HarfBuzz.Set glyphs);
 	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (deprecated = true)]
+	[Version (deprecated = true, deprecated_since = "2.0.0", since = "0.6.0")]
 	public static HarfBuzz.Bool ot_layout_script_find_language (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, HarfBuzz.Tag language_tag, uint language_index);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static uint ot_layout_script_get_language_tags (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint start_offset, [CCode (array_length_cname = "language_count", array_length_pos = 4.5, array_length_type = "guint")] out HarfBuzz.Tag[] language_tags);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.0.0")]
@@ -1763,10 +1983,12 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static HarfBuzz.Bool ot_layout_table_choose_script (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Tag script_tags, out uint script_index, out HarfBuzz.Tag chosen_script);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "1.4.0")]
 	public static HarfBuzz.Bool ot_layout_table_find_feature_variations (HarfBuzz.Face face, HarfBuzz.Tag table_tag, int coords, uint num_coords, out uint variations_index);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static HarfBuzz.Bool ot_layout_table_find_script (HarfBuzz.Face face, HarfBuzz.Tag table_tag, HarfBuzz.Tag script_tag, out uint script_index);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.6.0")]
 	public static uint ot_layout_table_get_feature_tags (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint start_offset, [CCode (array_length_cname = "feature_count", array_length_pos = 3.5, array_length_type = "guint")] out HarfBuzz.Tag[] feature_tags);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.22")]
@@ -1788,6 +2010,9 @@ namespace HarfBuzz {
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.3.3")]
 	public static HarfBuzz.Position ot_math_get_glyph_kerning (HarfBuzz.Font font, HarfBuzz.Codepoint glyph, HarfBuzz.OtMathKern kern, HarfBuzz.Position correction_height);
+	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "3.4.0")]
+	public static uint ot_math_get_glyph_kernings (HarfBuzz.Font font, HarfBuzz.Codepoint glyph, HarfBuzz.OtMathKern kern, uint start_offset, [CCode (array_length_cname = "entries_count", array_length_pos = 4.5, array_length_type = "guint")] out unowned HarfBuzz.ot_math_kern_entry_t[] kern_entries);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "1.3.3")]
 	public static HarfBuzz.Position ot_math_get_glyph_top_accent_attachment (HarfBuzz.Font font, HarfBuzz.Codepoint glyph);
@@ -1813,6 +2038,9 @@ namespace HarfBuzz {
 	[Version (since = "2.6.0")]
 	public static HarfBuzz.Bool ot_metrics_get_position (HarfBuzz.Font font, HarfBuzz.OtMetricsTag metrics_tag, out HarfBuzz.Position position);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "4.0.0")]
+	public static void ot_metrics_get_position_with_fallback (HarfBuzz.Font font, HarfBuzz.OtMetricsTag metrics_tag, out HarfBuzz.Position position);
+	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.6.0")]
 	public static float ot_metrics_get_variation (HarfBuzz.Font font, HarfBuzz.OtMetricsTag metrics_tag);
 	[CCode (cheader_filename = "hb-gobject.h")]
@@ -1837,20 +2065,23 @@ namespace HarfBuzz {
 	[Version (since = "0.9.2")]
 	public static void ot_shape_glyphs_closure (HarfBuzz.Font font, HarfBuzz.Buffer buffer, [CCode (array_length_cname = "num_features", array_length_pos = 3.5, array_length_type = "guint")] HarfBuzz.Feature[] features, out unowned HarfBuzz.Set glyphs);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "0.9.7")]
+	public static void ot_shape_plan_collect_lookups (HarfBuzz.ShapePlan shape_plan, HarfBuzz.Tag table_tag, out unowned HarfBuzz.Set lookup_indexes);
+	[CCode (cheader_filename = "hb-gobject.h")]
 	public static HarfBuzz.Tag ot_tag_from_language (HarfBuzz.Language language);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.2")]
-	public static unowned HarfBuzz.Language ot_tag_to_language (HarfBuzz.Tag tag);
+	public static unowned HarfBuzz.Language? ot_tag_to_language (HarfBuzz.Tag tag);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static HarfBuzz.Script ot_tag_to_script (HarfBuzz.Tag tag);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	public static void ot_tags_from_script (HarfBuzz.Script script, HarfBuzz.Tag script_tag_1, HarfBuzz.Tag script_tag_2);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.0.0")]
-	public static void ot_tags_from_script_and_language (HarfBuzz.Script script, HarfBuzz.Language language, uint? script_count, out HarfBuzz.Tag script_tags, uint? language_count, out HarfBuzz.Tag language_tags);
+	public static void ot_tags_from_script_and_language (HarfBuzz.Script script, HarfBuzz.Language language, ref uint script_count, out HarfBuzz.Tag script_tags, ref uint language_count, out HarfBuzz.Tag language_tags);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "2.0.0")]
-	public static void ot_tags_to_script_and_language (HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, HarfBuzz.Script? script, HarfBuzz.Language? language);
+	public static void ot_tags_to_script_and_language (HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out HarfBuzz.Script script, out unowned HarfBuzz.Language language);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (deprecated = true, deprecated_since = "2.2.0", since = "1.4.2")]
 	public static HarfBuzz.Bool ot_var_find_axis (HarfBuzz.Face face, HarfBuzz.Tag axis_tag, uint axis_index, out HarfBuzz.OtVarAxis axis_info);
@@ -1897,12 +2128,6 @@ namespace HarfBuzz {
 	[Version (since = "0.9.2")]
 	public static unowned string[] shape_list_shapers ();
 	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "0.9.2")]
-	public static void version (out uint major, out uint minor, out uint micro);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "0.9.30")]
-	public static HarfBuzz.Bool version_atleast (uint major, uint minor, uint micro);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "0.9.2")]
-	public static unowned string version_string ();
+	[Version (since = "3.0.0")]
+	public static float style_get_value (HarfBuzz.Font font, HarfBuzz.style_tag_t style_tag);
 }
