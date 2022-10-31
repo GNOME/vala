@@ -49,6 +49,7 @@ dist_vapi_DATA = \
 	dbus-glib-1.vapi \
 	enchant.vapi \
 	enchant-2.vapi \
+	freetype2.vapi \
 	fuse.deps \
 	fuse.vapi \
 	gconf-2.0.vapi \
