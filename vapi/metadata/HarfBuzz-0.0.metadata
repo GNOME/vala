@@ -109,6 +109,12 @@ unicode_general_category_t name="UnicodeGeneralCategory"
 // re-parenting
 blob_*#function name="blob_(.+)" parent="HarfBuzz.Blob"
 buffer_*#function name="buffer_(.+)" parent="HarfBuzz.Buffer"
+draw_funcs_*#function name="draw_funcs_(.+)" parent="HarfBuzz.DrawFuncs"
+draw_close_path#function name="close_path" parent="HarfBuzz.DrawFuncs"
+draw_cubic_to#function name="cubic_to" parent="HarfBuzz.DrawFuncs"
+draw_line_to#function name="line_to" parent="HarfBuzz.DrawFuncs"
+draw_move_to#function name="move_to" parent="HarfBuzz.DrawFuncs"
+draw_quadratic_to#function name="quadratic_to" parent="HarfBuzz.DrawFuncs"
 face_*#function name="face_(.+)" parent="HarfBuzz.Face"
 feature_*#function name="feature_(.+)" parent="HarfBuzz.Feature"
 font_*#function name="font_(.+)" parent="HarfBuzz.Font"
@@ -121,5 +127,7 @@ unicode_*#function name="unicode_(.+)" parent="HarfBuzz.UnicodeFuncs"
 unicode_funcs_*#function name="unicode_funcs_(.+)" parent="HarfBuzz.UnicodeFuncs"
 variation_*#function name="variation_(.+)" parent="HarfBuzz.Variation"
 
+ft_face_create.ft_face owned=false
+ft_font_create.ft_face owned=false
 variation_to_string.buf out=false owned=false
 variation_t._string.buf out=false owned=false

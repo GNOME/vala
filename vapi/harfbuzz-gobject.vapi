@@ -155,6 +155,32 @@ namespace HarfBuzz {
 	[GIR (name = "draw_funcs_t")]
 	[Version (since = "4.0.0")]
 	public class DrawFuncs {
+		[CCode (cname = "hb_draw_close_path")]
+		public void close_path (void* draw_data, HarfBuzz.draw_state_t st);
+		[CCode (cname = "hb_draw_funcs_create")]
+		public static HarfBuzz.DrawFuncs create ();
+		[CCode (cname = "hb_draw_cubic_to")]
+		public void cubic_to (void* draw_data, HarfBuzz.draw_state_t st, float control1_x, float control1_y, float control2_x, float control2_y, float to_x, float to_y);
+		[CCode (cname = "hb_draw_funcs_is_immutable")]
+		public HarfBuzz.Bool is_immutable ();
+		[CCode (cname = "hb_draw_line_to")]
+		public void line_to (void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+		[CCode (cname = "hb_draw_funcs_make_immutable")]
+		public void make_immutable ();
+		[CCode (cname = "hb_draw_move_to")]
+		public void move_to (void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
+		[CCode (cname = "hb_draw_quadratic_to")]
+		public void quadratic_to (void* draw_data, HarfBuzz.draw_state_t st, float control_x, float control_y, float to_x, float to_y);
+		[CCode (cname = "hb_draw_funcs_set_close_path_func")]
+		public void set_close_path_func (owned HarfBuzz.DrawClosePathFunc func);
+		[CCode (cname = "hb_draw_funcs_set_cubic_to_func")]
+		public void set_cubic_to_func (owned HarfBuzz.DrawCubicToFunc func);
+		[CCode (cname = "hb_draw_funcs_set_line_to_func")]
+		public void set_line_to_func (owned HarfBuzz.DrawLineToFunc func);
+		[CCode (cname = "hb_draw_funcs_set_move_to_func")]
+		public void set_move_to_func (owned HarfBuzz.DrawMoveToFunc func);
+		[CCode (cname = "hb_draw_funcs_set_quadratic_to_func")]
+		public void set_quadratic_to_func (owned HarfBuzz.DrawQuadraticToFunc func);
 	}
 	[CCode (cheader_filename = "hb-gobject.h", cname = "hb_face_t", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "hb_gobject_face_get_type ()")]
 	[Compact]
@@ -1784,47 +1810,8 @@ namespace HarfBuzz {
 	[Version (since = "2.3.0")]
 	public static HarfBuzz.Bool aat_layout_has_tracking (HarfBuzz.Face face);
 	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_close_path (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_cubic_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control1_x, float control1_y, float control2_x, float control2_y, float to_x, float to_y);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static HarfBuzz.DrawFuncs draw_funcs_create ();
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static HarfBuzz.Bool draw_funcs_is_immutable (HarfBuzz.DrawFuncs dfuncs);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_make_immutable (HarfBuzz.DrawFuncs dfuncs);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_set_close_path_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawClosePathFunc func);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_set_cubic_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawCubicToFunc func);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_set_line_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawLineToFunc func);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_set_move_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawMoveToFunc func);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_funcs_set_quadratic_to_func (HarfBuzz.DrawFuncs dfuncs, owned HarfBuzz.DrawQuadraticToFunc func);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_line_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_move_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float to_x, float to_y);
-	[CCode (cheader_filename = "hb-gobject.h")]
-	[Version (since = "4.0.0")]
-	public static void draw_quadratic_to (HarfBuzz.DrawFuncs dfuncs, void* draw_data, HarfBuzz.draw_state_t st, float control_x, float control_y, float to_x, float to_y);
-	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.2")]
-	public static HarfBuzz.Face ft_face_create ([CCode (destroy_notify_pos = 1.1)] owned FT.Face ft_face);
+	public static HarfBuzz.Face ft_face_create ([CCode (destroy_notify_pos = 1.1)] FT.Face ft_face);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.2")]
 	public static HarfBuzz.Face ft_face_create_cached (FT.Face ft_face);
@@ -1836,7 +1823,7 @@ namespace HarfBuzz {
 	public static void ft_font_changed (HarfBuzz.Font font);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.2")]
-	public static HarfBuzz.Font ft_font_create ([CCode (destroy_notify_pos = 1.1)] owned FT.Face ft_face);
+	public static HarfBuzz.Font ft_font_create ([CCode (destroy_notify_pos = 1.1)] FT.Face ft_face);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.38")]
 	public static HarfBuzz.Font ft_font_create_referenced (FT.Face ft_face);
