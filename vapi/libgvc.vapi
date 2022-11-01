@@ -21,10 +21,10 @@
  *      Martin Olsson <martin@minimum.se>
  */
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "graphviz/gvc.h")]
+[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "gvc.h")]
 namespace Gvc {
 
-	[CCode (cname = "aginitlib", cheader_filename="gvc.h")]
+	[CCode (cname = "aginitlib")]
 	public void initlib ( size_t graphinfo, size_t nodeinfo, size_t  edgeinfo);
 
 	[CCode (cname = "aginit")]
@@ -55,7 +55,7 @@ namespace Gvc {
 	}
 #endif
 
-	[CCode (cname = "agerrlevel_t", cheader_filename = "gvc.h", cprefix = "", has_type_id = false)]
+	[CCode (cname = "agerrlevel_t", cprefix = "", has_type_id = false)]
 	public enum ErrorLevel {
 		AGWARN,
 		AGERR,
