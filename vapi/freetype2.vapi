@@ -8,13 +8,18 @@ namespace FT {
 	[CCode (cheader_filename = "freetype/freetype.h", cname = "FT_Face", has_type_id = false)]
 	public struct Face {
 	}
+	[CCode (cheader_filename = "freetype/freetype.h", cname = "FT_Int")]
+	[SimpleType]
+	public struct Int : int {
+	}
 	[CCode (cheader_filename = "freetype/freetype.h", cname = "FT_Int32")]
 	[SimpleType]
 	public struct Int32 : int32 {
 	}
-	[CCode (cheader_filename = "freetype/freetype.h", cname = "FT_Library", has_type_id = false)]
-	public struct Library {
+	[CCode (cheader_filename = "freetype/freetype.h", cname = "struct FT_LibraryRec_", has_type_id = false)]
+	[Compact (opaque = true)]
+	public class Library {
 	}
 	[CCode (cheader_filename = "freetype/freetype.h", cname = "FT_Library_Version")]
-	public static void library_version ();
+	public static void library_version (FT.Library library, out FT.Int amajor, out FT.Int aminor, out FT.Int apatch);
 }
