@@ -79,23 +79,23 @@ public class Vala.Scanner {
 		state_stack = null;
 	}
 
-	bool in_template () {
+	inline bool in_template () {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE);
 	}
 
-	bool in_verbatim_template () {
+	inline bool in_verbatim_template () {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.VERBATIM_TEMPLATE);
 	}
 
-	bool in_template_part () {
+	inline bool in_template_part () {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE_PART);
 	}
 
-	bool in_regex_literal () {
+	inline bool in_regex_literal () {
 		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.REGEX_LITERAL);
 	}
 
-	bool is_ident_char (char c) {
+	inline bool is_ident_char (char c) {
 		return (c.isalnum () || c == '_');
 	}
 
