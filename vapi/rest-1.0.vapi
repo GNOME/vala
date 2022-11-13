@@ -216,13 +216,19 @@ namespace Rest {
 	[CCode (cheader_filename = "rest/rest-params.h", has_type_id = false)]
 	public struct ParamsIter {
 		public void init (Rest.Params @params);
-		public bool next (out string name, out Rest.Param? param);
+		public bool next (out unowned string? name, out unowned Rest.Param? param);
 	}
 	[CCode (cheader_filename = "rest/rest-param.h", cprefix = "REST_MEMORY_", has_type_id = false)]
 	public enum MemoryUse {
 		STATIC,
 		TAKE,
 		COPY
+	}
+	[CCode (cheader_filename = "rest/rest.h", cprefix = "REST_OAUTH2_ERROR_", has_type_id = false)]
+	public errordomain OAuth2Error {
+		NO_REFRESH_TOKEN,
+		ACCESS_TOKEN_EXPIRED;
+		public static GLib.Quark quark ();
 	}
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", cprefix = "REST_PROXY_CALL_", type_id = "rest_proxy_call_error_get_type ()")]
 	public errordomain ProxyCallError {
@@ -279,12 +285,10 @@ namespace Rest {
 	public delegate void ProxyCallContinuousCallback (Rest.ProxyCall call, string buf, size_t len, GLib.Error? error, GLib.Object? weak_object);
 	[CCode (cheader_filename = "rest/rest-proxy-call.h", instance_pos = 5.9)]
 	public delegate void ProxyCallUploadCallback (Rest.ProxyCall call, size_t total, size_t uploaded, GLib.Error? error, GLib.Object? weak_object);
-	[CCode (cheader_filename = "rest/rest-enum-types.h,rest/rest-oauth2-proxy-call.h,rest/rest-oauth2-proxy.h,rest/rest-param.h,rest/rest-params.h,rest/rest-pkce-code-challenge.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-utils.h,rest/rest-xml-node.h,rest/rest-xml-parser.h,rest/rest.h")]
-	public static GLib.Quark oauth2_error_quark ();
-	[CCode (cheader_filename = "rest/rest-enum-types.h,rest/rest-oauth2-proxy-call.h,rest/rest-oauth2-proxy.h,rest/rest-param.h,rest/rest-params.h,rest/rest-pkce-code-challenge.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-utils.h,rest/rest-xml-node.h,rest/rest-xml-parser.h,rest/rest.h")]
+	[CCode (cheader_filename = "rest/rest.h")]
 	[Version (replacement = "ProxyCallError.quark")]
 	public static GLib.Quark proxy_call_error_quark ();
-	[CCode (cheader_filename = "rest/rest-enum-types.h,rest/rest-oauth2-proxy-call.h,rest/rest-oauth2-proxy.h,rest/rest-param.h,rest/rest-params.h,rest/rest-pkce-code-challenge.h,rest/rest-proxy-auth.h,rest/rest-proxy-call.h,rest/rest-proxy.h,rest/rest-utils.h,rest/rest-xml-node.h,rest/rest-xml-parser.h,rest/rest.h")]
+	[CCode (cheader_filename = "rest/rest.h")]
 	[Version (replacement = "ProxyError.quark")]
 	public static GLib.Quark proxy_error_quark ();
 	[CCode (cheader_filename = "rest/rest-utils.h", cname = "random_string")]

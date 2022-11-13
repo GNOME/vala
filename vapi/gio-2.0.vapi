@@ -2974,7 +2974,7 @@ namespace GLib {
 		[Version (since = "2.36")]
 		public void attach_source (GLib.Source source, [CCode (type = "GSourceFunc")] GLib.TaskSourceFunc callback);
 		[Version (since = "2.36")]
-		public unowned GLib.Cancellable get_cancellable ();
+		public unowned GLib.Cancellable? get_cancellable ();
 		[Version (since = "2.36")]
 		public bool get_check_cancellable ();
 		[Version (since = "2.44")]
@@ -3040,6 +3040,8 @@ namespace GLib {
 		public bool set_return_on_cancel (bool return_on_cancel);
 		[Version (since = "2.36")]
 		public void set_source_tag (void* source_tag);
+		[Version (since = "2.76")]
+		public void set_static_name (string? name);
 		[Version (since = "2.36")]
 		public void set_task_data (void* task_data, GLib.DestroyNotify? task_data_destroy);
 		[Version (since = "2.44")]
@@ -3463,7 +3465,7 @@ namespace GLib {
 		[Version (since = "2.28")]
 		public abstract string[] list_actions ();
 		[Version (since = "2.32")]
-		public virtual bool query_action (string action_name, out bool enabled, out GLib.VariantType parameter_type, out GLib.VariantType state_type, out GLib.Variant state_hint, out GLib.Variant state);
+		public virtual bool query_action (string action_name, out bool enabled, out unowned GLib.VariantType parameter_type, out unowned GLib.VariantType state_type, out GLib.Variant state_hint, out GLib.Variant state);
 		[HasEmitter]
 		[Version (since = "2.28")]
 		public virtual signal void action_added (string action_name);

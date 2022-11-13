@@ -297,6 +297,8 @@ namespace Json {
 		public void end_element ();
 		public void end_member ();
 		public bool get_boolean_value ();
+		[Version (since = "1.8")]
+		public unowned Json.Node? get_current_node ();
 		public double get_double_value ();
 		public unowned GLib.Error? get_error ();
 		public int64 get_int_value ();

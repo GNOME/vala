@@ -130,6 +130,12 @@ namespace GDesktop {
 		FLAT,
 		ADAPTIVE
 	}
+	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_POINTING_STICK_SCROLL_METHOD_", has_type_id = false)]
+	public enum PointingStickScrollMethod {
+		DEFAULT,
+		NONE,
+		ON_BUTTON_DOWN
+	}
 	[CCode (cheader_filename = "gsettings-desktop-schemas/gdesktop-enums.h", cprefix = "G_DESKTOP_PROXY_MODE_", has_type_id = false)]
 	public enum ProxyMode {
 		NONE,

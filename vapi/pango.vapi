@@ -182,14 +182,14 @@ namespace Pango {
 		public Pango.Direction get_base_dir ();
 		[Version (since = "1.16")]
 		public Pango.Gravity get_base_gravity ();
-		public unowned Pango.FontDescription get_font_description ();
+		public unowned Pango.FontDescription? get_font_description ();
 		[Version (since = "1.6")]
-		public unowned Pango.FontMap get_font_map ();
+		public unowned Pango.FontMap? get_font_map ();
 		[Version (since = "1.16")]
 		public Pango.Gravity get_gravity ();
 		[Version (since = "1.16")]
 		public Pango.GravityHint get_gravity_hint ();
-		public Pango.Language get_language ();
+		public unowned Pango.Language get_language ();
 		[Version (since = "1.6")]
 		public unowned Pango.Matrix? get_matrix ();
 		public Pango.FontMetrics get_metrics (Pango.FontDescription? desc, Pango.Language? language);
@@ -203,11 +203,11 @@ namespace Pango {
 		public void set_base_dir (Pango.Direction direction);
 		[Version (since = "1.16")]
 		public void set_base_gravity (Pango.Gravity gravity);
-		public void set_font_description (Pango.FontDescription desc);
-		public void set_font_map (Pango.FontMap font_map);
+		public void set_font_description (Pango.FontDescription? desc);
+		public void set_font_map (Pango.FontMap? font_map);
 		[Version (since = "1.16")]
 		public void set_gravity_hint (Pango.GravityHint hint);
-		public void set_language (Pango.Language language);
+		public void set_language (Pango.Language? language);
 		[Version (since = "1.6")]
 		public void set_matrix (Pango.Matrix? matrix);
 		[Version (since = "1.44")]
@@ -304,7 +304,7 @@ namespace Pango {
 		[Version (since = "1.42")]
 		public void set_variations_static (string variations);
 		public void set_weight (Pango.Weight weight);
-		public string to_filename ();
+		public string? to_filename ();
 		public string to_string ();
 		public void unset_fields (Pango.FontMask to_unset);
 	}
@@ -415,7 +415,7 @@ namespace Pango {
 		[Version (since = "1.6")]
 		public void letter_space (string text, [CCode (array_length = false)] Pango.LogAttr[] log_attrs, int letter_spacing);
 		[Version (since = "1.2")]
-		public Pango.GlyphItem split (string text, int split_index);
+		public Pango.GlyphItem? split (string text, int split_index);
 	}
 	[CCode (cheader_filename = "pango/pango.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "pango_glyph_string_get_type ()")]
 	[Compact]
@@ -581,12 +581,12 @@ namespace Pango {
 		public void get_cluster_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public int get_index ();
 		[Version (since = "1.20")]
-		public unowned Pango.Layout get_layout ();
+		public unowned Pango.Layout? get_layout ();
 		public void get_layout_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
-		public unowned Pango.LayoutLine get_line ();
+		public unowned Pango.LayoutLine? get_line ();
 		public void get_line_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		[Version (since = "1.16")]
-		public unowned Pango.LayoutLine get_line_readonly ();
+		public unowned Pango.LayoutLine? get_line_readonly ();
 		public void get_line_yrange (out int y0_, out int y1_);
 		public unowned Pango.LayoutRun? get_run ();
 		[Version (since = "1.50")]
@@ -622,7 +622,7 @@ namespace Pango {
 		[Version (since = "1.50")]
 		public bool is_paragraph_start ();
 		[Version (since = "1.10")]
-		public unowned Pango.LayoutLine @ref ();
+		public unowned Pango.LayoutLine? @ref ();
 		public void unref ();
 		public bool x_to_index (int x_pos, out int index_, out int trailing);
 	}

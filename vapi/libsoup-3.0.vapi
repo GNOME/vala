@@ -485,6 +485,7 @@ namespace Soup {
 		public bool listen_all (uint port, Soup.ServerListenOptions options) throws GLib.Error;
 		public bool listen_local (uint port, Soup.ServerListenOptions options) throws GLib.Error;
 		public bool listen_socket (GLib.Socket socket, Soup.ServerListenOptions options) throws GLib.Error;
+		[Version (deprecated = true, deprecated_since = "3.2")]
 		public void pause_message (Soup.ServerMessage msg);
 		public void remove_auth_domain (Soup.AuthDomain auth_domain);
 		public void remove_handler (string path);
@@ -492,6 +493,7 @@ namespace Soup {
 		public void set_tls_auth_mode (GLib.TlsAuthenticationMode mode);
 		public void set_tls_certificate (GLib.TlsCertificate certificate);
 		public void set_tls_database (GLib.TlsDatabase tls_database);
+		[Version (deprecated = true, deprecated_since = "3.2")]
 		public void unpause_message (Soup.ServerMessage msg);
 		[NoAccessorMethod]
 		public bool raw_paths { get; construct; }
@@ -527,16 +529,21 @@ namespace Soup {
 		public GLib.TlsCertificateFlags get_tls_peer_certificate_errors ();
 		public unowned GLib.Uri get_uri ();
 		public bool is_options_ping ();
+		[Version (since = "3.2")]
+		public void pause ();
 		public void set_http_version (Soup.HTTPVersion version);
 		public void set_redirect (uint status_code, string redirect_uri);
 		public void set_response (string? content_type, Soup.MemoryUse resp_use, [CCode (array_length_cname = "resp_length", array_length_pos = 3.1, array_length_type = "gsize")] uint8[]? resp_body);
 		public void set_status (uint status_code, string? reason_phrase);
 		public GLib.IOStream steal_connection ();
 		[Version (since = "3.2")]
+		public void unpause ();
+		[Version (since = "3.2")]
 		public GLib.TlsCertificate tls_peer_certificate { get; }
 		[Version (since = "3.2")]
 		public GLib.TlsCertificateFlags tls_peer_certificate_errors { get; }
 		public signal bool accept_certificate (GLib.TlsCertificate tls_peer_certificate, GLib.TlsCertificateFlags tls_peer_errors);
+		public signal void connected ();
 		public signal void disconnected ();
 		public signal void finished ();
 		public signal void got_body ();

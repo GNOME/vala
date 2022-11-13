@@ -6,6 +6,7 @@ namespace GLib {
 	[Compact]
 	public class Module {
 		public const string SUFFIX;
+		[Version (deprecated = true, deprecated_since = "2.76")]
 		public static string build_path (string? directory, string module_name);
 		[DestroysInstance]
 		public bool close ();
@@ -45,7 +46,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gmodule.h", has_target = false)]
 	public delegate void ModuleUnload (GLib.Module module);
 	[CCode (cheader_filename = "gmodule.h")]
-	[Version (replacement = "Module.build_path")]
+	[Version (deprecated = true, deprecated_since = "2.76", replacement = "Module.build_path")]
 	public static string module_build_path (string? directory, string module_name);
 	[CCode (cheader_filename = "gmodule.h")]
 	[Version (replacement = "Module.error")]

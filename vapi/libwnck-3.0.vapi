@@ -61,6 +61,21 @@ namespace Wnck {
 		public virtual signal void icon_changed ();
 		public virtual signal void name_changed ();
 	}
+	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_handle_get_type ()")]
+	public class Handle : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Handle (Wnck.ClientType client_type);
+		public unowned Wnck.Application get_application (ulong xwindow);
+		public unowned Wnck.ClassGroup get_class_group (string id);
+		public unowned Wnck.Screen? get_default_screen ();
+		public unowned Wnck.Screen get_screen (int index);
+		public unowned Wnck.Screen get_screen_for_root (ulong root_window_id);
+		public unowned Wnck.Window get_window (ulong xwindow);
+		public void set_default_icon_size (size_t icon_size);
+		public void set_default_mini_icon_size (size_t icon_size);
+		[NoAccessorMethod]
+		public Wnck.ClientType client_type { get; set construct; }
+	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_image_menu_item_get_type ()")]
 	public class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -88,6 +103,10 @@ namespace Wnck {
 		public void set_show_all (bool show_all_workspaces);
 		[Version (since = "3.24.0")]
 		public void set_wrap_on_scroll (bool wrap_on_scroll);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Pager.with_handle (Wnck.Handle handle);
+		[NoAccessorMethod]
+		public Wnck.Handle handle { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_screen_get_type ()")]
 	public class Screen : GLib.Object {
@@ -106,6 +125,7 @@ namespace Wnck {
 		public ulong get_background_pixmap ();
 		public static unowned Wnck.Screen? get_default ();
 		public static unowned Wnck.Screen get_for_root (ulong root_window_id);
+		public unowned Wnck.Handle get_handle ();
 		public int get_height ();
 		[Version (since = "2.20")]
 		public int get_number ();
@@ -155,6 +175,10 @@ namespace Wnck {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "2.10")]
 		public Selector ();
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Selector.with_handle (Wnck.Handle handle);
+		[NoAccessorMethod]
+		public Wnck.Handle handle { owned get; construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_tasklist_get_type ()")]
 	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -176,6 +200,10 @@ namespace Wnck {
 		[Version (since = "3.24.0")]
 		public void set_scroll_enabled (bool scroll_enabled);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
+		[CCode (has_construct_function = false, type = "GtkWidget*")]
+		public Tasklist.with_handle (Wnck.Handle handle);
+		[NoAccessorMethod]
+		public Wnck.Handle handle { owned get; construct; }
 		public signal void task_enter_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
 		public signal void task_leave_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
 	}
