@@ -357,7 +357,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		var old_gir_version = ns.get_attribute_string ("CCode", "gir_version");
 		if ((old_gir_namespace != null && old_gir_namespace != gir_namespace)
 		    || (old_gir_version != null && old_gir_version != gir_version)) {
-			Report.warning (ns.source_reference, "Replace conflicting CCode.gir_* attributes for namespace `%s'".printf (ns.name));
+			Report.warning (ns.source_reference, "Replace conflicting CCode.gir_* attributes for namespace `%s'", ns.name);
 		}
 		ns.set_attribute_string ("CCode", "gir_namespace", gir_namespace);
 		ns.set_attribute_string ("CCode", "gir_version", gir_version);
