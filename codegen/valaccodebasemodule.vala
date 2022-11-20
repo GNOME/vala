@@ -380,7 +380,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	protected CCodeBaseModule () {
 		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
-			Report.error (null, "Integrity check failed (libvala %s doesn't match ccodegen %s)".printf (Vala.get_build_version (), Vala.BUILD_VERSION));
+			Report.error (null, "Integrity check failed (libvala %s doesn't match ccodegen %s)", Vala.get_build_version (), Vala.BUILD_VERSION);
 		}
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);

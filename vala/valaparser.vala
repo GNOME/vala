@@ -3039,19 +3039,19 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (old_cl != null && old_cl.is_partial) {
 			if (cl.is_partial != old_cl.is_partial) {
-				Report.error (cl.source_reference, "conflicting partial and not partial declarations of `%s'".printf (cl.name));
+				Report.error (cl.source_reference, "conflicting partial and not partial declarations of `%s'", cl.name);
 				cl.error = true;
 			}
 			if (cl.access != old_cl.access) {
-				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting accessiblity modifiers".printf (cl.name));
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting accessiblity modifiers", cl.name);
 				cl.error = true;
 			}
 			if (cl.is_abstract != old_cl.is_abstract) {
-				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting abstract modifiers".printf (cl.name));
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting abstract modifiers", cl.name);
 				cl.error = true;
 			}
 			if (cl.is_sealed != old_cl.is_sealed) {
-				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting sealed modifiers".printf (cl.name));
+				Report.error (cl.source_reference, "partial declarations of `%s' have conflicting sealed modifiers", cl.name);
 				cl.error = true;
 			}
 			if (cl.error) {
