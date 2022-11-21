@@ -78,7 +78,33 @@ public class Vala.IntegerLiteral : Literal {
 			value = value.substring (0, value.length - 1);
 		}
 
-		int64 n = int64.parse (value);
+		bool negative = value.has_prefix ("-");
+		if (negative && u) {
+			Report.error (source_reference, "unsigned integer literal cannot be negative");
+		}
+
+		int64 n = 0LL;
+		uint64 un = 0ULL;
+
+		errno = 0;
+		if (negative) {
+			n = int64.parse (value);
+		} else {
+			un = uint64.parse (value);
+		}
+		if (errno == ERANGE) {
+			Report.error (source_reference, "integer literal is too large");
+		} else if (errno == EINVAL) {
+			Report.error (source_reference, "invalid integer literal");
+		}
+
+		if (un > int64.MAX) {
+			// value doesn't fit into signed 64-bit
+			u = true;
+			l = 2;
+		} else if (!negative) {
+			n = (int64) un;
+		}
 		if (!u && (n > int.MAX || n < int.MIN)) {
 			// value doesn't fit into signed 32-bit
 			l = 2;

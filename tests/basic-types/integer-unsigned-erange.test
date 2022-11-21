@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	uint64 foo = 18446744073709551616;
+}

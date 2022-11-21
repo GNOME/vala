@@ -23,4 +23,8 @@ void main () {
 		int64 foo = 23LL;
 		int64 bar = 42ll;
 	}
+	{
+		uint64 foo = 18446744073709551615;
+		int64 bar = -9223372036854775808;
+	}
 }

@@ -44,6 +44,12 @@ _vala_main (void)
 		foo = 23LL;
 		bar = 42LL;
 	}
+	{
+		guint64 foo = 0ULL;
+		gint64 bar = 0LL;
+		foo = 18446744073709551615ULL;
+		bar = -9223372036854775808LL;
+	}
 }
 
 int
