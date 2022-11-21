@@ -42,6 +42,9 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	basic-types/gassert.vala \
 	basic-types/integer-literals.vala \
+	basic-types/integer-signed-erange.test \
+	basic-types/integer-unsigned-erange.test \
+	basic-types/integer-unsigned-invalid.test \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
 	basic-types/escape-chars.vala \

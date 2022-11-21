@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	uint foo = -23U;
+}
