@@ -607,12 +607,32 @@ public class Vala.Scanner {
 		var type = TokenType.INTEGER_LITERAL;
 
 		// integer part
-		if (current < end - 2 && current[0] == '0'
-		    && current[1] == 'x' && current[2].isxdigit ()) {
-			// hexadecimal integer literal
-			current += 2;
-			while (current < end && current[0].isxdigit ()) {
-				current++;
+		if (current < end - 2 && current[0] == '0') {
+			switch (current[1]) {
+			case 'x':
+			case 'X':
+				// hexadecimal integer literal
+				current += 2;
+				while (current < end && current[0].isxdigit ()) {
+					current++;
+				}
+				break;
+			case 'b':
+			case 'B':
+			case 'o':
+			case 'O':
+				// binary integer literal or octal integer literal
+				current += 2;
+				while (current < end && current[0].isdigit ()) {
+					current++;
+				}
+				break;
+			default:
+				// decimal number (also may be octal integer)
+				while (current < end && current[0].isdigit ()) {
+					current++;
+				}
+				break;
 			}
 		} else {
 			// decimal number

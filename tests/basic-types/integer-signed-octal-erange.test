@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	int64 foo = 0o1000000000000000000000;
+}

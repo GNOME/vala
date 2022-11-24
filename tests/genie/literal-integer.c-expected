@@ -18,8 +18,20 @@ _vala_main (gchar** args,
             gint args_length1)
 {
 	gint a = 0;
+	gint64 b = 0LL;
+	gint64 c = 0LL;
+	guint d = 0U;
+	gint e = 0;
 	a = 101;
 	_vala_assert (a == 101, "a == 101");
+	b = 0xdeadbeefLL;
+	_vala_assert (b == 3735928559LL, "b == 3735928559");
+	c = 2003LL;
+	_vala_assert (c == 2003LL, "c == 2003ll");
+	d = 01307U;
+	_vala_assert (d == 711U, "d == 711u");
+	e = -0110157032;
+	_vala_assert (e == (-18931226), "e == -18931226");
 }
 
 int

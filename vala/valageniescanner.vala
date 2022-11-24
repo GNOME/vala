@@ -1003,20 +1003,7 @@ public class Vala.Genie.Scanner {
 				current++;
 			}
 			type = TokenType.INTEGER_LITERAL;
-			if (current < end && current[0].tolower () == 'l') {
-				current++;
-				if (current < end && current[0].tolower () == 'l') {
-					current++;
-				}
-			} else if (current < end && current[0].tolower () == 'u') {
-				current++;
-				if (current < end && current[0].tolower () == 'l') {
-					current++;
-					if (current < end && current[0].tolower () == 'l') {
-						current++;
-					}
-				}
-			} else if (current < end - 1 && current[0] == '.' && current[1].isdigit ()) {
+			if (current < end - 1 && current[0] == '.' && current[1].isdigit ()) {
 				current++;
 				while (current < end && current[0].isdigit ()) {
 					current++;
@@ -1030,24 +1017,77 @@ public class Vala.Genie.Scanner {
 						current++;
 					}
 				}
-				if (current < end && current[0].tolower () == 'f') {
+				type = TokenType.REAL_LITERAL;
+			} else if (current < end && current[0].tolower () == 'e') {
+				current++;
+				if (current < end && (current[0] == '+' || current[0] == '-')) {
+					current++;
+				}
+				while (current < end && current[0].isdigit ()) {
 					current++;
 				}
 				type = TokenType.REAL_LITERAL;
 			} else if (current < end && current == begin + 1
-					   && begin[0] == '0' && begin[1] == 'x' && begin[2].isxdigit ()) {
+					   && begin[0] == '0'
+					   && (begin[1] == 'x' || begin[1] == 'X')
+					   && begin[2].isxdigit ()) {
 				// hexadecimal integer literal
 				current++;
 				while (current < end && current[0].isxdigit ()) {
 					current++;
 				}
-			} else if (current < end && is_ident_char (current[0])) {
-				// allow identifiers to start with a digit
-				// as long as they contain at least one char
-				while (current < end && is_ident_char (current[0])) {
+			} else if (current < end && current == begin + 1
+					   && begin[0] == '0'
+					   && (begin[1] == 'b' || begin[1] == 'B' || begin[1] == 'o' || begin[1] == 'O')
+					   && begin[2].isdigit ()) {
+				// binary or octal integer literal
+				current++;
+				while (current < end && current[0].isdigit ()) {
 					current++;
 				}
-				type = TokenType.IDENTIFIER;
+			}
+			if (current < end) {
+				bool real_literal = (type == TokenType.REAL_LITERAL);
+
+				switch (current[0]) {
+				case 'l':
+				case 'L':
+					if (type == TokenType.INTEGER_LITERAL) {
+						current++;
+						if (current < end && current[0].tolower () == 'l') {
+							current++;
+						}
+					}
+					break;
+				case 'u':
+				case 'U':
+					if (type == TokenType.INTEGER_LITERAL) {
+						current++;
+						if (current < end && current[0].tolower () == 'l') {
+							current++;
+							if (current < end && current[0].tolower () == 'l') {
+								current++;
+							}
+						}
+					}
+					break;
+				case 'f':
+				case 'F':
+				case 'd':
+				case 'D':
+					type = TokenType.REAL_LITERAL;
+					current++;
+					break;
+				}
+
+				if (!real_literal && is_ident_char (current[0])) {
+					// allow identifiers to start with a digit
+					// as long as they contain at least one char
+					while (current < end && is_ident_char (current[0])) {
+						current++;
+					}
+					type = TokenType.IDENTIFIER;
+				}
 			}
 		} else {
 			switch (current[0]) {

@@ -42,11 +42,20 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	basic-types/gassert.vala \
 	basic-types/integer-literals.vala \
+	basic-types/integer-signed-binary-erange.test \
 	basic-types/integer-signed-erange.test \
+	basic-types/integer-signed-erange2.test \
+	basic-types/integer-signed-octal-erange.test \
+	basic-types/integer-unsigned-binary-erange.test \
 	basic-types/integer-unsigned-erange.test \
 	basic-types/integer-unsigned-invalid.test \
+	basic-types/integer-unsigned-octal-erange.test \
+	basic-types/integers-binary-invalid.test \
+	basic-types/integers-binary.vala \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
+	basic-types/integers-octal-invalid.test \
+	basic-types/integers-octal.vala \
 	basic-types/escape-chars.vala \
 	basic-types/float-literals.vala \
 	basic-types/floats.vala \
