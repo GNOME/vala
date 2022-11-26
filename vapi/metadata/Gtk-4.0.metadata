@@ -234,8 +234,6 @@ Constraint
   .new_constant name="const"
 DragSource
   .drag_cancel#method name="cancel"
-DropTarget
-  .drop#signal name="on_drop"
 EntryCompletion
   .insert_prefix#method name="request_prefix_insertion"
 InfoBar
@@ -244,8 +242,6 @@ LayoutManager
   .get_request_mode#method name="get_size_request_mode"
 MediaStream
   .play#method name="play_now"
-Notebook
-  .insert_page_menu skip
 PopoverMenu
   .add_child new
 PopoverMenuBar

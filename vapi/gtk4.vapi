@@ -7915,10 +7915,12 @@ namespace Gtk {
 		public bool preload { get; set; }
 		public GLib.Value value { get; }
 		public signal bool accept (Gdk.Drop drop);
+		public signal bool drop (GLib.Value value, double x, double y);
 		public signal Gdk.DragAction enter (double x, double y);
 		public signal void leave ();
 		public signal Gdk.DragAction motion (double x, double y);
 		[CCode (cname = "drop")]
+		[Version (deprecated_since = "vala-0.58", replacement = "DropTarget.drop")]
 		public signal bool on_drop (GLib.Value value, double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_drop_target_async_get_type ()")]
@@ -9853,6 +9855,7 @@ namespace Gtk {
 		public Gtk.PositionType get_tab_pos ();
 		public bool get_tab_reorderable (Gtk.Widget child);
 		public int insert_page (Gtk.Widget child, Gtk.Widget? tab_label, int position);
+		public int insert_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label, int position);
 		public void next_page ();
 		public int page_num (Gtk.Widget child);
 		public void popup_disable ();
