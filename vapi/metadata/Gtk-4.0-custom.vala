@@ -29,4 +29,10 @@ namespace Gtk {
 		[CCode (delegate_target = false)]
 		public unowned Gtk.BuildableParserErrorFunc error;
 	}
+
+	public class DropTarget : Gtk.EventController {
+		[CCode (cname = "drop")]
+		[Version (replacement = "DropTarget.drop", deprecated_since = "vala-0.58")]
+		public signal bool on_drop (GLib.Value value, double x, double y);
+	}
 }
