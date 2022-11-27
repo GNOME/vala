@@ -94,7 +94,7 @@ public class Vala.CCodeCompiler {
 		}
 
 		if (context.verbose_mode) {
-			stdout.printf ("%s\n", cmdline);
+			print ("%s\n", cmdline);
 		}
 
 		try {

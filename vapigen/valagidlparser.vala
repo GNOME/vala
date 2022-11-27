@@ -1998,7 +1998,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		} else {
-			stdout.printf ("%d\n", type_node.tag);
+			print ("%d\n", type_node.tag);
 		}
 		return type;
 	}
