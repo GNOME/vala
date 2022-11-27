@@ -1,0 +1,16 @@
+*.*.cancellable#parameter nullable default=null
+
+//Forward upstream
+Download
+  .failed#signal.error type="WebKit.DownloadError"
+PrintOperation
+  .failed#signal.error type="WebKit.PrintError"
+WebContext
+  .initialize_notification_permissions#method name="init_notification_permissions"
+WebResource
+  .failed#signal.error type="GLib.Error"
+WebView
+  .load_failed#signal.error type="GLib.Error"
+  .show_option_menu#signal name="on_show_option_menu"
+
+*.ref unowned

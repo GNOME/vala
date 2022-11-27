@@ -1,0 +1,19 @@
+options_* parent="JSC.Options" name="options_(.+)"
+OPTIONS_* parent="JSC.Options" name="OPTIONS_(.+)"
+
+Class
+  .add_constructor skip
+  .add_constructorv skip
+  .add_constructor_variadic name="add_constructor"
+  .add_constructor_variadic.callback type="owned JSC.ClassConstructorCb"
+  .add_method skip
+  .add_methodv skip
+  .add_method_variadic name="add_method"
+  .add_method_variadic.callback type="owned JSC.ClassMethodCb"
+  .add_property skip
+Value
+  .new_function_variadic.callback closure=-1 destroy=-1 owned=false
+  .new_functionv.callback closure=-1 destroy=-1 owned=false
+  .new_typed_array_with_buffer symbol_type="constructor"
+  .object_define_property_accessor.getter closure=-1 destroy=-1 owned=false
+  .object_define_property_accessor.setter closure=-1 destroy=-1 owned=false

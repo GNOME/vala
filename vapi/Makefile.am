@@ -187,6 +187,7 @@ dist_vapi_DATA = \
 	javascriptcoregtk-4.0.vapi \
 	javascriptcoregtk-4.1.vapi \
 	javascriptcoregtk-5.0.vapi \
+	javascriptcoregtk-6.0.vapi \
 	json-glib-1.0.deps \
 	json-glib-1.0.vapi \
 	libarchive.deps \
@@ -319,6 +320,10 @@ dist_vapi_DATA = \
 	webkit2gtk-web-extension-4.1.deps \
 	webkit2gtk-web-extension-5.0.vapi \
 	webkit2gtk-web-extension-5.0.deps \
+	webkitgtk-6.0.vapi \
+	webkitgtk-6.0.deps \
+	webkitgtk-web-extension-6.0.vapi \
+	webkitgtk-web-extension-6.0.deps \
 	x11.vapi \
 	xcb.vapi \
 	xcb-icccm.vapi \
@@ -423,6 +428,7 @@ GIR_BINDINGS = \
 	javascriptcoregtk-4.0 \
 	javascriptcoregtk-4.1 \
 	javascriptcoregtk-5.0 \
+	javascriptcoregtk-6.0 \
 	json-glib-1.0 \
 	libgeoclue-2.0 \
 	libgnome-menu-3.0 \
@@ -451,6 +457,8 @@ GIR_BINDINGS = \
 	webkit2gtk-web-extension-4.0 \
 	webkit2gtk-web-extension-4.1 \
 	webkit2gtk-web-extension-5.0 \
+	webkitgtk-6.0 \
+	webkitgtk-web-extension-6.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 
@@ -698,6 +706,9 @@ javascriptcoregtk-4.1:
 javascriptcoregtk-5.0:
 	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-5.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-5.0-custom.vala $(GIRDIR)/JavaScriptCore-5.0.gir
 
+javascriptcoregtk-6.0:
+	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-6.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-6.0-custom.vala $(GIRDIR)/JavaScriptCore-6.0.gir
+
 json-glib-1.0:
 	$(GENVAPI) --library $(srcdir)/json-glib-1.0 --metadatadir $(METADATADIR) --pkg gio-2.0 $(METADATADIR)/Json-1.0-custom.vala $(GIRDIR)/Json-1.0.gir
 
@@ -814,3 +825,9 @@ webkit2gtk-web-extension-4.1:
 
 webkit2gtk-web-extension-5.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-web-extension-5.0 --metadatadir $(METADATADIR) --pkg gtk4 $(METADATADIR)/WebKit2WebExtension-5.0-custom.vala $(GIRDIR)/WebKit2WebExtension-5.0.gir
+
+webkitgtk-6.0:
+	$(GENVAPI) --library $(srcdir)/webkitgtk-6.0 --metadatadir $(METADATADIR) --pkg javascriptcoregtk-6.0 --pkg gtk4 --pkg libsoup-3.0 $(GIRDIR)/WebKit-6.0.gir
+
+webkitgtk-web-extension-6.0:
+	$(GENVAPI) --library $(srcdir)/webkitgtk-web-extension-6.0 --metadatadir $(METADATADIR) --pkg javascriptcoregtk-6.0 --pkg gtk4 --pkg libsoup-3.0 $(METADATADIR)/WebKitWebExtension-6.0-custom.vala $(GIRDIR)/WebKitWebExtension-6.0.gir
