@@ -295,10 +295,10 @@ public class Valadoc.Parser : ParserCallback {
 
 #if DEBUG
 	private void log_error (string message) {
-		stderr.printf ("An error occurred while parsing: %s\n", message);
-		stderr.printf ("\nDumping rule stack:\n");
+		printerr ("An error occurred while parsing: %s\n", message);
+		printerr ("\nDumping rule stack:\n");
 		for (int i = 0; i < rule_stack.size; i++) {
-			stderr.printf ("\t%2d: %s\n", i, rule_stack[i].to_string (rule_state_stack[i]));
+			printerr ("\t%2d: %s\n", i, rule_stack[i].to_string (rule_state_stack[i]));
 		}
 	}
 #endif

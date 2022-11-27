@@ -409,7 +409,7 @@ public class Vala.CodeContext {
 		}
 
 		if (verbose_mode) {
-			stdout.printf ("Loaded package `%s'\n", path);
+			print ("Loaded package `%s'\n", path);
 		}
 
 		var deps_filename = Path.build_path ("/", Path.get_dirname (path), pkg + ".deps");

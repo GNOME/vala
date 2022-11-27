@@ -136,17 +136,17 @@ public class ValaDoc : Object {
 	}
 
 	static bool option_deprecated (string option_name, string? val, void* data) throws OptionError {
-		stdout.printf ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
+		print ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
 		return true;
 	}
 
 	private static int quit (ErrorReporter reporter) {
 		if (reporter.errors == 0 && (!fatal_warnings || reporter.warnings == 0)) {
-			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
+			print ("Succeeded - %d warning(s)\n", reporter.warnings);
 			Vala.CodeContext.pop ();
 			return 0;
 		} else {
-			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
+			print ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
 			Vala.CodeContext.pop ();
 			return 1;
 		}
@@ -400,7 +400,7 @@ public class ValaDoc : Object {
 		Intl.setlocale (LocaleCategory.ALL, "");
 
 		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
-			stderr.printf ("Integrity check failed (libvala %s doesn't match valadoc %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			printerr ("Integrity check failed (libvala %s doesn't match valadoc %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
 			return 1;
 		}
 
@@ -410,13 +410,13 @@ public class ValaDoc : Object {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			stdout.printf ("%s\n", e.message);
-			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+			print ("%s\n", e.message);
+			print ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
 
 		if (version) {
-			stdout.printf ("Valadoc %s\n", Vala.BUILD_VERSION);
+			print ("Valadoc %s\n", Vala.BUILD_VERSION);
 			return 0;
 		}
 

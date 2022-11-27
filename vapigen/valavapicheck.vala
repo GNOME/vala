@@ -45,7 +45,7 @@ class Vala.VAPICheck {
 				parse_members (module.name, module.entries);
 			}
 		} catch (MarkupError e) {
-			stderr.printf ("%s: %s\n", gidl.filename, e.message);
+			printerr ("%s: %s\n", gidl.filename, e.message);
                 }
 	}
 
@@ -169,7 +169,7 @@ class Vala.VAPICheck {
 
 	static int main (string[] args) {
 		if (2 != args.length || !args[1].has_suffix (".gidl")) {
-			stdout.printf ("Usage: %s library.gidl\n",
+			print ("Usage: %s library.gidl\n",
 				       Path.get_basename (args[0]));
 			return 2;
 		}

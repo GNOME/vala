@@ -60,13 +60,13 @@ class Vala.VAPIGen {
 	private int quit () {
 		if (context.report.get_errors () == 0) {
 			if (!quiet_mode) {
-				stdout.printf ("Generation succeeded - %d warning(s)\n", context.report.get_warnings ());
+				print ("Generation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
 			CodeContext.pop ();
 			return 0;
 		} else {
 			if (!quiet_mode) {
-				stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
+				print ("Generation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
 			}
 			CodeContext.pop ();
 			return 1;
@@ -213,7 +213,7 @@ class Vala.VAPIGen {
 		Intl.setlocale (LocaleCategory.ALL, "");
 
 		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
-			stderr.printf ("Integrity check failed (libvala %s doesn't match vapigen %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			printerr ("Integrity check failed (libvala %s doesn't match vapigen %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
 			return 1;
 		}
 
@@ -223,18 +223,18 @@ class Vala.VAPIGen {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			stdout.printf ("%s\n", e.message);
-			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+			print ("%s\n", e.message);
+			print ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
 
 		if (version) {
-			stdout.printf ("Vala API Generator %s\n", Vala.BUILD_VERSION);
+			print ("Vala API Generator %s\n", Vala.BUILD_VERSION);
 			return 0;
 		}
 
 		if (sources == null) {
-			stderr.printf ("No source file specified.\n");
+			printerr ("No source file specified.\n");
 			return 1;
 		}
 		

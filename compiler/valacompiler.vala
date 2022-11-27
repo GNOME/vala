@@ -193,7 +193,7 @@ class Vala.Compiler {
 	}
 
 	static bool option_deprecated (string option_name, string? val, void* data) throws OptionError {
-		stdout.printf ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
+		print ("Command-line option `%s` is deprecated and will be ignored\n", option_name);
 		return true;
 	}
 
@@ -204,13 +204,13 @@ class Vala.Compiler {
 		}
 		if (context.report.get_errors () == 0 && (!fatal_warnings || context.report.get_warnings () == 0)) {
 			if (!quiet_mode) {
-				stdout.printf ("Compilation succeeded - %d warning(s)\n", context.report.get_warnings ());
+				print ("Compilation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
 			CodeContext.pop ();
 			return 0;
 		} else {
 			if (!quiet_mode) {
-				stdout.printf ("Compilation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
+				print ("Compilation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
 			}
 			CodeContext.pop ();
 			return 1;
@@ -545,21 +545,21 @@ class Vala.Compiler {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			stdout.printf ("%s\n", e.message);
-			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+			print ("%s\n", e.message);
+			print ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
 
 		if (version) {
-			stdout.printf ("Vala %s\n", Vala.BUILD_VERSION);
+			print ("Vala %s\n", Vala.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Vala.API_VERSION);
+			print ("%s\n", Vala.API_VERSION);
 			return 0;
 		}
 
 		if (sources == null) {
-			stderr.printf ("No source file specified.\n");
+			printerr ("No source file specified.\n");
 			return 1;
 		}
 
@@ -614,7 +614,7 @@ class Vala.Compiler {
 
 			return child_status;
 		} catch (SpawnError e) {
-			stdout.printf ("%s\n", e.message);
+			print ("%s\n", e.message);
 			return 1;
 		}
 	}
@@ -624,7 +624,7 @@ class Vala.Compiler {
 		Intl.setlocale (LocaleCategory.ALL, "");
 
 		if (Vala.get_build_version () != Vala.BUILD_VERSION) {
-			stderr.printf ("Integrity check failed (libvala %s doesn't match valac %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
+			printerr ("Integrity check failed (libvala %s doesn't match valac %s)\n", Vala.get_build_version (), Vala.BUILD_VERSION);
 			return 1;
 		}
 
@@ -638,21 +638,21 @@ class Vala.Compiler {
 			opt_context.add_main_entries (options, null);
 			opt_context.parse (ref args);
 		} catch (OptionError e) {
-			stdout.printf ("%s\n", e.message);
-			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
+			print ("%s\n", e.message);
+			print ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
 
 		if (version) {
-			stdout.printf ("Vala %s\n", Vala.BUILD_VERSION);
+			print ("Vala %s\n", Vala.BUILD_VERSION);
 			return 0;
 		} else if (api_version) {
-			stdout.printf ("%s\n", Vala.API_VERSION);
+			print ("%s\n", Vala.API_VERSION);
 			return 0;
 		}
 
 		if (sources == null && fast_vapis == null) {
-			stderr.printf ("No source file specified.\n");
+			printerr ("No source file specified.\n");
 			return 1;
 		}
 
