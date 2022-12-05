@@ -180,10 +180,6 @@ dist_vapi_DATA = \
 	hal.vapi \
 	harfbuzz-gobject.deps \
 	harfbuzz-gobject.vapi \
-	hildon-1.deps \
-	hildon-1.vapi \
-	hildon-fm-2.deps \
-	hildon-fm-2.vapi \
 	javascriptcoregtk-4.0.vapi \
 	javascriptcoregtk-4.1.vapi \
 	javascriptcoregtk-5.0.vapi \
@@ -352,8 +348,6 @@ GIDL_BINDINGS = \
 	gtk+-unix-print-2.0 \
 	gtk+-unix-print-3.0 \
 	gtksourceview-2.0 \
-	hildon-1 \
-	hildon-fm-2 \
 	libepc-1.0 \
 	libglade-2.0 \
 	libgnome-2.0 \
@@ -690,12 +684,6 @@ gudev-1.0:
 
 harfbuzz-gobject:
 	$(GENVAPI) --library $(srcdir)/harfbuzz-gobject --pkg freetype2 --metadatadir $(METADATADIR) $(GIRDIR)/HarfBuzz-0.0.gir
-
-hildon-1:
-	$(GENVAPI) --library $(srcdir)/hildon-1 $(PACKAGESDIR)/hildon-1/hildon-1-custom.vala $(PACKAGESDIR)/hildon-1/hildon-1.gi
-
-hildon-fm-2:
-	$(GENVAPI) --library $(srcdir)/hildon-fm-2 $(PACKAGESDIR)/hildon-fm-2/hildon-fm-2.gi
 
 javascriptcoregtk-4.0:
 	$(GENVAPI) --library $(srcdir)/javascriptcoregtk-4.0 --metadatadir $(METADATADIR) $(METADATADIR)/JavaScriptCore-4.0-custom.vala $(GIRDIR)/JavaScriptCore-4.0.gir
