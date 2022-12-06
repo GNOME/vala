@@ -77,6 +77,8 @@ namespace Cairo {
 		public void get_font_matrix (out Cairo.Matrix matrix);
 		public void get_font_options (out Cairo.FontOptions options);
 		public unowned Cairo.Surface get_group_target ();
+		[Version (since = "1.18")]
+		public bool get_hairline ();
 		public Cairo.LineCap get_line_cap ();
 		public Cairo.LineJoin get_line_join ();
 		public double get_line_width ();
@@ -127,6 +129,8 @@ namespace Cairo {
 		public void set_font_matrix (Cairo.Matrix matrix);
 		public void set_font_options (Cairo.FontOptions options);
 		public void set_font_size (double size);
+		[Version (since = "1.18")]
+		public void set_hairline (bool set_hairline);
 		public void set_line_cap (Cairo.LineCap line_cap);
 		public void set_line_join (Cairo.LineJoin line_join);
 		public void set_line_width (double width);
@@ -221,6 +225,10 @@ namespace Cairo {
 		public FontOptions ();
 		public bool equal (Cairo.FontOptions other);
 		public Cairo.Antialias get_antialias ();
+		[Version (since = "1.18")]
+		public Cairo.ColorMode get_color_mode ();
+		[Version (since = "1.18")]
+		public uint get_color_palette ();
 		public Cairo.HintMetrics get_hint_metrics ();
 		public Cairo.HintStyle get_hint_style ();
 		public Cairo.SubpixelOrder get_subpixel_order ();
@@ -229,6 +237,10 @@ namespace Cairo {
 		public ulong hash ();
 		public void merge (Cairo.FontOptions other);
 		public void set_antialias (Cairo.Antialias antialias);
+		[Version (since = "1.18")]
+		public void set_color_mode (Cairo.ColorMode color_mode);
+		[Version (since = "1.18")]
+		public void set_color_palette (uint palette_index);
 		public void set_hint_metrics (Cairo.HintMetrics hint_metrics);
 		public void set_hint_style (Cairo.HintStyle hint_style);
 		public void set_subpixel_order (Cairo.SubpixelOrder subpixel_order);
@@ -339,6 +351,8 @@ namespace Cairo {
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (Cairo.WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (Cairo.PdfVersion version);
+		[Version (since = "1.18")]
+		public void set_custom_metadata (string name, string value);
 		[Version (since = "1.16")]
 		public void set_metadata (Cairo.PdfMetadata metadata, string utf8);
 		[Version (since = "1.16")]
@@ -587,10 +601,14 @@ namespace Cairo {
 		[CCode (cname = "cairo_user_font_face_create")]
 		public UserFontFace ();
 		public Cairo.UserScaledFontInitFunc get_init_func ();
+		[Version (since = "1.18")]
+		public Cairo.UserScaledFontRenderGlyphFunc get_render_color_glyph_func ();
 		public Cairo.UserScaledFontRenderGlyphFunc get_render_glyph_func ();
 		public Cairo.UserScaledFontTextToGlyphsFunc get_text_to_glyphs_func ();
 		public Cairo.UserScaledFontUnicodeToGlyphFunc get_unicode_to_glyph_func ();
 		public void set_init_func (Cairo.UserScaledFontInitFunc init_func);
+		[Version (since = "1.18")]
+		public void set_render_color_glyph_func (Cairo.UserScaledFontRenderGlyphFunc render_glyph_func);
 		public void set_render_glyph_func (Cairo.UserScaledFontRenderGlyphFunc render_glyph_func);
 		public void set_text_to_glyphs_func (Cairo.UserScaledFontTextToGlyphsFunc text_to_glyphs_func);
 		public void set_unicode_to_glyph_func (Cairo.UserScaledFontUnicodeToGlyphFunc unicode_to_glyph_func);
@@ -730,6 +748,12 @@ namespace Cairo {
 		GOOD,
 		BEST
 	}
+	[CCode (cname = "cairo_color_mode_t", has_type_id = false)]
+	public enum ColorMode {
+		DEFAULT,
+		NO_COLOR,
+		COLOR
+	}
 #if GOBJECT
 	[CCode (cname = "cairo_content_t", type_id = "cairo_gobject_content_get_type ()")]
 #else
@@ -808,7 +832,8 @@ namespace Cairo {
 		FT,
 		WIN32,
 		QUARTZ,
-		USER
+		USER,
+		DWRITE
 	}
 #if GOBJECT
 	[CCode (cname = "cairo_font_weight_t", type_id = "cairo_gobject_font_weight_get_type ()")]
@@ -830,7 +855,9 @@ namespace Cairo {
 		A8,
 		A1,
 		RGB16_565,
-		RGB30;
+		RGB30,
+		RGB96F,
+		RGBA128F;
 		public int stride_for_width (int width);
 	}
 #if GOBJECT
@@ -956,7 +983,9 @@ namespace Cairo {
 	[CCode (cname = "cairo_pdf_version_t", cprefix = "CAIRO_PDF_", has_type_id = false)]
 	public enum PdfVersion {
 		VERSION_1_4,
-		VERSION_1_5;
+		VERSION_1_5,
+		VERSION_1_6,
+		VERSION_1_7;
 		[CCode (cname = "cairo_pdf_version_to_string")]
 		public unowned string to_string ();
 		[CCode (cname = "cairo_pdf_get_versions")]
@@ -1035,6 +1064,7 @@ namespace Cairo {
 		FREETYPE_ERROR,
 		WIN32_GDI_ERROR,
 		TAG_ERROR,
+		DWRITE_ERROR,
 		LAST_STATUS;
 		[CCode (cname = "cairo_status_to_string")]
 		public unowned string to_string ();
