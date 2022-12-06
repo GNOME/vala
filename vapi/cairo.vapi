@@ -362,7 +362,6 @@ namespace Cairo {
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
 		public PsSurface.for_stream (Cairo.WriteFunc write_func, double width_in_points, double height_in_points);
 		public bool get_eps ();
-		public static void get_levels (out unowned Cairo.PsLevel[] levels);
 		public void restrict_to_level (Cairo.PsLevel level);
 		public void set_eps (bool eps);
 		public void set_size (double width_in_points, double height_in_points);
