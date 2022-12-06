@@ -305,6 +305,7 @@ namespace Cairo {
 		public Cairo.Filter get_filter ();
 		public Cairo.Status get_linear_points (out double x0, out double y0, out double x1, out double y1);
 		public void get_matrix (out Cairo.Matrix matrix);
+		public Cairo.Status get_rgba (out double red, out double green, out double blue, out double alpha);
 		public Cairo.Status get_surface (out unowned Cairo.Surface surface);
 		public Cairo.PatternType get_type ();
 		[CCode (simple_generics = true)]
