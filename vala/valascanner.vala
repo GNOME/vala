@@ -611,10 +611,32 @@ public class Vala.Scanner {
 			switch (current[1]) {
 			case 'x':
 			case 'X':
-				// hexadecimal integer literal
+				// hexadecimal literal
 				current += 2;
 				while (current < end && current[0].isxdigit ()) {
 					current++;
+				}
+				// fractional part
+				// hexadecimal fractional part
+				if (current < end - 1 && current[0] == '.' && current[1].isxdigit ()) {
+					type = TokenType.REAL_LITERAL;
+					current++;
+					while (current < end && current[0].isxdigit ()) {
+						current++;
+					}
+				}
+				// hexadecimal exponent part
+				if (current < end && current[0].tolower () == 'p') {
+					type = TokenType.REAL_LITERAL;
+					current++;
+					if (current < end && (current[0] == '+' || current[0] == '-')) {
+						current++;
+					}
+					while (current < end && current[0].isdigit ()) {
+						current++;
+					}
+				} else if (type == TokenType.REAL_LITERAL) {
+					Report.error (get_source_reference (1), "hexadecimal floating constants require an exponent");
 				}
 				break;
 			case 'b':

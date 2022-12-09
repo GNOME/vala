@@ -58,6 +58,7 @@ TESTS = \
 	basic-types/integers-octal.vala \
 	basic-types/escape-chars.vala \
 	basic-types/float-literals.vala \
+	basic-types/floats-hexadecimal.vala \
 	basic-types/floats.vala \
 	basic-types/floats-boxed-cast.vala \
 	basic-types/boolean.vala \
@@ -906,6 +907,8 @@ TESTS = \
 	annotations/description.vala \
 	annotations/noaccessormethod.test \
 	scanner/comment-not-closed.test \
+	scanner/floats-hexadecimal-invalid1.test \
+	scanner/floats-hexadecimal-invalid2.test \
 	scanner/preprocessor-invalid.test \
 	scanner/preprocessor-missing-paren.test \
 	scanner/preprocessor-unexpected.test \
@@ -1271,6 +1274,8 @@ TESTS = \
 	semantic/realliteral-exponent-has-no-digits.test \
 	semantic/realliteral-exponent-has-no-digits2.test \
 	semantic/realliteral-exponent-has-no-digits3.test \
+	semantic/realliteral-exponent-has-no-digits4.test \
+	semantic/realliteral-exponent-has-no-digits5.test \
 	semantic/reference-transfer-not-supported.test \
 	semantic/reference-transfer-unavailable.test \
 	semantic/return-in-nonvoid.test \

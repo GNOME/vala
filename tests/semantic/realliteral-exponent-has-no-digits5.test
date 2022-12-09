@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	float foo = 0xf.fpf;
+}

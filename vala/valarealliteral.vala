@@ -65,15 +65,34 @@ public class Vala.RealLiteral : Literal {
 		checked = true;
 
 		string type_name;
-		if (value.has_suffix ("f") || value.has_suffix ("F")) {
-			type_name ="float";
-		} else {
+		int suf_len = 0;
+
+		switch (value[value.length - 1]) {
+		case 'f':
+		case 'F':
+			suf_len = 1;
+			type_name = "float";
+			break;
+		case 'd':
+		case 'D':
+			suf_len = 1;
 			type_name = "double";
+			break;
+		default:
+			type_name = "double";
+			break;
 		}
 
-		if (value.has_suffix ("e") || value.has_suffix ("E") || value.has_suffix ("+") || value.has_suffix ("-")) {
+		switch (value[value.length - suf_len - 1]) {
+		case 'e':
+		case 'E':
+		case 'p':
+		case 'P':
+		case '+':
+		case '-':
 			Report.error (source_reference, "exponent has no digits");
 			error = true;
+			break;
 		}
 
 		var st = (Struct) context.root.scope.lookup (type_name);
