@@ -37,3 +37,6 @@ tests/_test
 .DS_Store
 .vscode
 Makecache
+
+*.dll
+*.exe
