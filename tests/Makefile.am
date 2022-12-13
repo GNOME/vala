@@ -54,6 +54,7 @@ TESTS = \
 	basic-types/strings.vala \
 	basic-types/string-array-append.vala \
 	basic-types/string-concat-null.test \
+	basic-types/string-relation.vala \
 	basic-types/arrays.vala \
 	basic-types/arrays-generics.vala \
 	basic-types/arrays-fixed-assignment.vala \
