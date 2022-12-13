@@ -931,6 +931,8 @@ TESTS = \
 	parser/attribute-missing-literal.test \
 	parser/attribute-wrong-number.test \
 	parser/block-delimiter-missing.test \
+	parser/chained-equality-type-invalid.test \
+	parser/chained-equality.vala \
 	parser/constant-owned.test \
 	parser/constant-local-owned.test \
 	parser/constructor-class-exists.test \

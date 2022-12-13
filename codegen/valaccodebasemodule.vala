@@ -5842,8 +5842,17 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 		}
 
-		bool is_string_comparison = !(expr.left.value_type is NullType) && expr.left.value_type.compatible (string_type)
-			&& !(expr.right.value_type is NullType) && expr.right.value_type.compatible (string_type);
+		bool is_string_comparison = false;
+		if (!(expr.right.value_type is NullType) && expr.right.value_type.compatible (string_type)) {
+			if (!(expr.left.value_type is NullType) && expr.left.value_type.compatible (string_type)) {
+				is_string_comparison = true;
+			} else if (expr.is_chained) {
+				unowned BinaryExpression lbe = (BinaryExpression) expr.left;
+				if (!(lbe.right.value_type is NullType) && lbe.right.value_type.compatible (string_type)) {
+					is_string_comparison = true;
+				}
+			}
+		}
 		bool has_string_literal = (expr.left is StringLiteral || expr.right is StringLiteral);
 
 		if (is_string_comparison || (has_string_literal && expr.operator != BinaryOperator.PLUS)) {

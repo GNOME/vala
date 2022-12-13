@@ -1452,6 +1452,8 @@ public class Vala.Parser : CodeVisitor {
 			case BinaryOperator.LESS_THAN:
 			case BinaryOperator.LESS_THAN_OR_EQUAL:
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
+			case BinaryOperator.EQUALITY:
+			case BinaryOperator.INEQUALITY:
 				next ();
 				var right = parse_type_check_expression ();
 				if (first) {
@@ -1485,32 +1487,11 @@ public class Vala.Parser : CodeVisitor {
 		return left;
 	}
 
-	Expression parse_equality_expression () throws ParseError {
-		var begin = get_location ();
-		var left = parse_relational_expression ();
-		bool found = true;
-		while (found) {
-			var operator = get_binary_operator (current ());
-			switch (operator) {
-			case BinaryOperator.EQUALITY:
-			case BinaryOperator.INEQUALITY:
-				next ();
-				var right = parse_relational_expression ();
-				left = new BinaryExpression (operator, left, right, get_src (begin));
-				break;
-			default:
-				found = false;
-				break;
-			}
-		}
-		return left;
-	}
-
 	Expression parse_and_expression () throws ParseError {
 		var begin = get_location ();
-		var left = parse_equality_expression ();
+		var left = parse_relational_expression ();
 		while (accept (TokenType.BITWISE_AND)) {
-			var right = parse_equality_expression ();
+			var right = parse_relational_expression ();
 			left = new BinaryExpression (BinaryOperator.BITWISE_AND, left, right, get_src (begin));
 		}
 		return left;

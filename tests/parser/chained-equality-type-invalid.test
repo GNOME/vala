@@ -1,0 +1,8 @@
+Invalid Code
+
+void main () {
+    var foo = "world";
+    var bar = 0;
+    if (foo == "world" != 0) {
+    }
+}
