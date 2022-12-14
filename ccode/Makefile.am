@@ -20,6 +20,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccode.vala \
 	valaccodeassignment.vala \
 	valaccodebinaryexpression.vala \
+	valaccodebinarycompareexpression.vala \
 	valaccodeblock.vala \
 	valaccodebreakstatement.vala \
 	valaccodecasestatement.vala \

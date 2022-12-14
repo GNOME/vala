@@ -5912,24 +5912,23 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			case BinaryOperator.GREATER_THAN:
 			case BinaryOperator.LESS_THAN_OR_EQUAL:
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
-				CCodeFunctionCall ccall;
+				CCodeExpression call;
 				if (context.profile == Profile.POSIX) {
 					cfile.add_include ("string.h");
-					ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp"))));
+					call = new CCodeIdentifier (generate_cmp_wrapper (new CCodeIdentifier ("strcmp")));
 				} else {
-					ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
+					call = new CCodeIdentifier ("g_strcmp0");
 				}
-				ccall.add_argument (cleft);
-				ccall.add_argument (cright);
-				cleft = ccall;
-				cright = new CCodeConstant ("0");
+				set_cvalue (expr, new CCodeBinaryCompareExpression (call, op, cleft, cright, new CCodeConstant ("0")));
 				break;
 			default:
+				set_cvalue (expr, new CCodeBinaryExpression (op, cleft, cright));
 				break;
 			}
+		} else {
+			set_cvalue (expr, new CCodeBinaryExpression (op, cleft, cright));
 		}
 
-		set_cvalue (expr, new CCodeBinaryExpression (op, cleft, cright));
 		if (left_chain != null) {
 			set_cvalue (expr, new CCodeBinaryExpression (CCodeBinaryOperator.AND, left_chain, get_cvalue (expr)));
 		}
