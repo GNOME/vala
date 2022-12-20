@@ -1641,6 +1641,16 @@ namespace GLib {
 	public struct pointer {
 	}
 
+	/**
+	 * Binding to the C standard library's maths functions
+	 *
+	 * When compiling binary output with ``valac`` and some ``libc``
+	 * implementations, such as GNU's ``libc``, you will need to pass through
+	 * the math library linker flags, ``-lm``, if a function is not found.
+	 * For example:
+	 *
+	 * {{{valac -X -lm my_maths_program.vala}}}
+	*/
 	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
 	namespace Math {
 		[CCode (cname = "G_E", cheader_filename = "glib.h")]
