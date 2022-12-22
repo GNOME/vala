@@ -1427,9 +1427,22 @@ public class Vala.Parser : CodeVisitor {
 		return left;
 	}
 
-	Expression parse_relational_expression () throws ParseError {
+	Expression parse_type_check_expression () throws ParseError {
 		var begin = get_location ();
 		var left = parse_shift_expression ();
+		if (accept (TokenType.IS)) {
+			var type = parse_type (true, false);
+			left = new TypeCheck (left, type, get_src (begin));
+		} else if (accept (TokenType.AS)) {
+			var type = parse_type (true, false);
+			left = new CastExpression.silent (left, type, get_src (begin));
+		}
+		return left;
+	}
+
+	Expression parse_relational_expression () throws ParseError {
+		var begin = get_location ();
+		var left = parse_type_check_expression ();
 
 		bool first = true;
 		bool found = true;
@@ -1440,7 +1453,7 @@ public class Vala.Parser : CodeVisitor {
 			case BinaryOperator.LESS_THAN_OR_EQUAL:
 			case BinaryOperator.GREATER_THAN_OR_EQUAL:
 				next ();
-				var right = parse_shift_expression ();
+				var right = parse_type_check_expression ();
 				if (first) {
 					left = new BinaryExpression (operator, left, right, get_src (begin));
 				} else {
@@ -1452,7 +1465,7 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				// ignore >> and >>= (two tokens due to generics)
 				if (current () != TokenType.OP_GT && current () != TokenType.OP_GE) {
-					var right = parse_shift_expression ();
+					var right = parse_type_check_expression ();
 					if (first) {
 						left = new BinaryExpression (operator, left, right, get_src (begin));
 					} else {
@@ -1465,21 +1478,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 				break;
 			default:
-				switch (current ()) {
-				case TokenType.IS:
-					next ();
-					var type = parse_type (true, false);
-					left = new TypeCheck (left, type, get_src (begin));
-					break;
-				case TokenType.AS:
-					next ();
-					var type = parse_type (true, false);
-					left = new CastExpression.silent (left, type, get_src (begin));
-					break;
-				default:
-					found = false;
-					break;
-				}
+				found = false;
 				break;
 			}
 		}
