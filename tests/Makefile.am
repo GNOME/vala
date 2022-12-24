@@ -1387,6 +1387,7 @@ TESTS = \
 	version/since-local-variable.test \
 	version/since-method.test \
 	version/since-parameter.test \
+	genie/attributes.gs \
 	genie/case.gs \
 	genie/class.gs \
 	genie/class-abstract.gs \
