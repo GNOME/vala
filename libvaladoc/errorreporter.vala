@@ -240,11 +240,14 @@ public class Valadoc.ErrorReporter : Object {
 		void* _func;
 		module.symbol ("isatty", out _func);
 		if (_func == null) {
-			return false;
+			module.symbol ("_isatty", out _func);
+			if (_func == null) {
+				return false;
+			}
 		}
 
 		AttyFunc? func = (AttyFunc) _func;
-		return func (fd) == 1;
+		return func (fd) > 0;
 	}
 
 	[PrintfFormat]
