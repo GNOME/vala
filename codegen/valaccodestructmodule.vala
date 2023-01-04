@@ -339,7 +339,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 						continue;
 					}
 				}
-				store_field (f, dest_struct, value);
+				store_field (f, dest_struct, value, false);
 			}
 		}
 

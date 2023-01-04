@@ -226,15 +226,21 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		store_value (get_parameter_cvalue (param), value, source_reference);
 	}
 
-	public override void store_field (Field field, TargetValue? instance, TargetValue value, SourceReference? source_reference = null) {
+	public override void store_field (Field field, TargetValue? instance, TargetValue value, bool initializer, SourceReference? source_reference = null) {
 		var lvalue = get_field_cvalue (field, instance);
 		var type = lvalue.value_type;
 		if (lvalue.actual_value_type != null) {
 			type = lvalue.actual_value_type;
 		}
-		if ((!(field.variable_type is DelegateType) || get_ccode_delegate_target (field)) && requires_destroy (type)) {
+		if (!initializer && (!(field.variable_type is DelegateType) || get_ccode_delegate_target (field)) && requires_destroy (type)) {
 			/* unref old value */
 			ccode.add_expression (destroy_field (field, instance));
+		}
+		if (initializer && instance != null && get_ccode_delegate_target (field) && get_delegate_target_cvalue (value) == null) {
+			unowned DelegateType delegate_type = field.variable_type as DelegateType;
+			if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+				((GLibValue) value).delegate_target_cvalue = get_cvalue_ (instance);
+			}
 		}
 
 		store_value (lvalue, value, source_reference);

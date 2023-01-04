@@ -42,5 +42,5 @@ public abstract class Vala.CodeGenerator : CodeVisitor {
 
 	public abstract TargetValue load_field (Field field, TargetValue? instance, Expression? expr = null);
 
-	public abstract void store_field (Field field, TargetValue? instance, TargetValue value, SourceReference? source_reference = null);
+	public abstract void store_field (Field field, TargetValue? instance, TargetValue value, bool initializer, SourceReference? source_reference = null);
 }

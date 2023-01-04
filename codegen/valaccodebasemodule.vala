@@ -2999,7 +2999,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						}
 					}
 
-					store_field (field, instance, expr.target_value, expr.source_reference);
+					store_field (field, instance, expr.target_value, false, expr.source_reference);
 				}
 
 				list.target_value = instance;
@@ -5336,7 +5336,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = SemanticAnalyzer.get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 					var typed_inst = transform_value (new GLibValue (expr.type_reference, instance, true), instance_target_type, init);
-					store_field (f, typed_inst, init.initializer.target_value, init.source_reference);
+					store_field (f, typed_inst, init.initializer.target_value, false, init.source_reference);
 
 					var cl = f.parent_symbol as Class;
 					if (cl != null) {
@@ -6791,7 +6791,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 						continue;
 					}
 				}
-				store_field (f, dest_struct, value);
+				store_field (f, dest_struct, value, false);
 			}
 		}
 

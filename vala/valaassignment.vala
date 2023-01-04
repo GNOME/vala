@@ -530,7 +530,7 @@ public class Vala.Assignment : Expression {
 				} else if (param != null) {
 					codegen.store_parameter (param, new_value, false, source_reference);
 				} else if (field != null) {
-					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value, source_reference);
+					codegen.store_field (field, instance && ma.inner != null ? ma.inner.target_value : null, new_value, false, source_reference);
 				}
 
 				if (!(parent_node is ExpressionStatement)) {
