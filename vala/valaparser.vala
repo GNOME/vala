@@ -2793,6 +2793,7 @@ public class Vala.Parser : CodeVisitor {
 						return;
 					}
 				case TokenType.ASSIGN:
+				case TokenType.COMMA:
 				case TokenType.SEMICOLON:
 					rollback (begin);
 					switch (last_keyword) {
@@ -3143,46 +3144,48 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ((parent is Struct) ? SymbolAccessibility.PUBLIC : SymbolAccessibility.PRIVATE);
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type (true, true);
-		string id = parse_identifier ();
-		type = parse_inline_array_type (type);
+		do {
+			string id = parse_identifier ();
+			var ftype = parse_inline_array_type (type.copy ());
 
-		var f = new Field (id, type, null, get_src (begin), comment);
-		f.access = access;
+			var f = new Field (id, ftype, null, get_src (begin), comment);
+			f.access = access;
 
-		set_attributes (f, attrs);
-		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
-			Report.error (f.source_reference, "only one of `static' or `class' may be specified");
-		} else if (ModifierFlags.STATIC in flags) {
-			f.binding = MemberBinding.STATIC;
-		} else if (ModifierFlags.CLASS in flags) {
-			f.binding = MemberBinding.CLASS;
-		} else if (parent is Namespace) {
-			// default to static member binding in namespace
-			f.binding = MemberBinding.STATIC;
-		}
+			set_attributes (f, attrs);
+			if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
+				Report.error (f.source_reference, "only one of `static' or `class' may be specified");
+			} else if (ModifierFlags.STATIC in flags) {
+				f.binding = MemberBinding.STATIC;
+			} else if (ModifierFlags.CLASS in flags) {
+				f.binding = MemberBinding.CLASS;
+			} else if (parent is Namespace) {
+				// default to static member binding in namespace
+				f.binding = MemberBinding.STATIC;
+			}
 
-		if (!parent.external_package && parent is Struct
-		    && f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
-			Report.warning (f.source_reference, "accessibility of struct fields can only be `public`");
-		}
+			if (!parent.external_package && parent is Struct
+				&& f.access != SymbolAccessibility.PUBLIC && f.binding == MemberBinding.INSTANCE) {
+				Report.warning (f.source_reference, "accessibility of struct fields can only be `public`");
+			}
 
-		if (ModifierFlags.ABSTRACT in flags
-		    || ModifierFlags.VIRTUAL in flags
-		    || ModifierFlags.OVERRIDE in flags) {
-			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
-		}
-		if (ModifierFlags.EXTERN in flags) {
-			f.is_extern = true;
-		}
-		if (ModifierFlags.NEW in flags) {
-			f.hides = true;
-		}
-		if (accept (TokenType.ASSIGN)) {
-			f.initializer = parse_expression ();
-		}
+			if (ModifierFlags.ABSTRACT in flags
+				|| ModifierFlags.VIRTUAL in flags
+				|| ModifierFlags.OVERRIDE in flags) {
+				Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
+			}
+			if (ModifierFlags.EXTERN in flags) {
+				f.is_extern = true;
+			}
+			if (ModifierFlags.NEW in flags) {
+				f.hides = true;
+			}
+			if (accept (TokenType.ASSIGN)) {
+				f.initializer = parse_expression ();
+			}
+
+			parent.add_field (f);
+		} while (accept (TokenType.COMMA));
 		expect (TokenType.SEMICOLON);
-
-		parent.add_field (f);
 	}
 
 	InitializerList parse_initializer () throws ParseError {

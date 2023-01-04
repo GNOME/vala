@@ -958,6 +958,7 @@ TESTS = \
 	parser/do-statement.vala \
 	parser/expect-endbrace.test \
 	parser/expect-error.test \
+	parser/field-multi-one-line.vala \
 	parser/field-no-abstract.test \
 	parser/field-no-override.test \
 	parser/field-no-static-class.test \
