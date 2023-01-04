@@ -1293,73 +1293,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var cl = f.parent_symbol as Class;
 		bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
-		CCodeExpression lhs = null;
-
 		if (f.binding == MemberBinding.INSTANCE)  {
-			if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
-				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), get_ccode_name (f));
-			} else {
-				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_ccode_name (f));
-			}
-
 			if (f.initializer != null) {
 				push_context (instance_init_context);
 
 				f.initializer.emit (this);
 
-				var rhs = get_cvalue (f.initializer);
 				if (!is_simple_struct_creation (f, f.initializer)) {
 					// otherwise handled in visit_object_creation_expression
-
-					ccode.add_assignment (lhs, rhs);
-
-					if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-						var array_type = (ArrayType) f.variable_type;
-						var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-
-						var glib_value = (GLibValue) f.initializer.target_value;
-						if (glib_value.array_length_cvalues != null) {
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								var array_len_lhs = get_array_length_cvalue (field_value, dim);
-								ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
-							}
-						} else if (glib_value.array_null_terminated) {
-							requires_array_length = true;
-							var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-							len_call.add_argument (get_cvalue_ (glib_value));
-
-							ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
-						} else {
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
-							}
-						}
-
-						if (array_type.rank == 1 && f.is_internal_symbol ()) {
-							var lhs_array_size = get_array_size_cvalue (field_value);
-							var rhs_array_len = get_array_length_cvalue (field_value, 1);
-							ccode.add_assignment (lhs_array_size, rhs_array_len);
-						}
-					} else if (get_ccode_delegate_target (f)) {
-						var delegate_type = (DelegateType) f.variable_type;
-						if (delegate_type.delegate_symbol.has_target) {
-							var field_value = get_field_cvalue (f, load_this_parameter ((TypeSymbol) f.parent_symbol));
-							var target_cvalue = get_delegate_target_cvalue (f.initializer.target_value);
-							if (target_cvalue != null) {
-								ccode.add_assignment (get_delegate_target_cvalue (field_value), target_cvalue);
-							} else {
-								ccode.add_assignment (get_delegate_target_cvalue (field_value), new CCodeIdentifier ("self"));
-							}
-							if (delegate_type.is_disposable ()) {
-								var destroy_cvalue = get_delegate_target_destroy_notify_cvalue (f.initializer.target_value);
-								if (destroy_cvalue != null) {
-									ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), destroy_cvalue);
-								} else {
-									ccode.add_assignment (get_delegate_target_destroy_notify_cvalue (field_value), new CCodeConstant ("NULL"));
-								}
-							}
-						}
-					}
+					store_field (f, new GLibValue (null, new CCodeIdentifier ("self")), f.initializer.target_value, f.source_reference, true);
 				}
 
 				foreach (var value in temp_ref_values) {
@@ -1377,22 +1319,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				pop_context ();
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
-			if (f.access == SymbolAccessibility.PRIVATE) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_class_get_private_function (cl)));
-				ccall.add_argument (new CCodeIdentifier ("klass"));
-				lhs = new CCodeMemberAccess (ccall, get_ccode_name (f), true);
-			} else {
-				lhs = new CCodeMemberAccess (new CCodeIdentifier ("klass"), get_ccode_name (f), true);
-			}
-
 			if (f.initializer != null) {
 				push_context (class_init_context);
 
 				f.initializer.emit (this);
 
-				var rhs = get_cvalue (f.initializer);
-
-				ccode.add_assignment (lhs, rhs);
+				store_field (f, null, f.initializer.target_value, f.source_reference, true);
 
 				foreach (var value in temp_ref_values) {
 					ccode.add_expression (destroy_value (value));
@@ -1413,8 +1345,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 
 			if (!f.external) {
-				lhs = new CCodeIdentifier (get_ccode_name (f));
-
 				var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type));
 				var_decl.initializer = default_value_for_type (f.variable_type, true);
 
@@ -1509,43 +1439,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					var rhs = get_cvalue (f.initializer);
 					if (!is_constant_ccode_expression (rhs)) {
 						if (is_gtypeinstance) {
-							if (f.initializer is InitializerList) {
-								ccode.open_block ();
-
-								var temp_decl = get_temp_variable (f.variable_type);
-								var vardecl = new CCodeVariableDeclarator.zero (temp_decl.name, rhs);
-								ccode.add_declaration (get_ccode_name (temp_decl.variable_type), vardecl);
-
-								var tmp = get_variable_cexpression (temp_decl.name);
-								ccode.add_assignment (lhs, tmp);
-
-								ccode.close ();
-							} else {
-								ccode.add_assignment (lhs, rhs);
-							}
-
-							if (f.variable_type is ArrayType && get_ccode_array_length (f)) {
-								var array_type = (ArrayType) f.variable_type;
-								var field_value = get_field_cvalue (f, null);
-
-								var glib_value = (GLibValue) f.initializer.target_value;
-								if (glib_value.array_length_cvalues != null) {
-									for (int dim = 1; dim <= array_type.rank; dim++) {
-										var array_len_lhs = get_array_length_cvalue (field_value, dim);
-										ccode.add_assignment (array_len_lhs, get_array_length_cvalue (glib_value, dim));
-									}
-								} else if (glib_value.array_null_terminated) {
-									requires_array_length = true;
-									var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-									len_call.add_argument (get_cvalue_ (glib_value));
-
-									ccode.add_assignment (get_array_length_cvalue (field_value, 1), len_call);
-								} else {
-									for (int dim = 1; dim <= array_type.rank; dim++) {
-										ccode.add_assignment (get_array_length_cvalue (field_value, dim), new CCodeConstant ("-1"));
-									}
-								}
-							}
+							store_field (f, null, f.initializer.target_value, f.source_reference, true);
 						} else {
 							f.error = true;
 							Report.error (f.source_reference, "Non-constant field initializers not supported in this context");

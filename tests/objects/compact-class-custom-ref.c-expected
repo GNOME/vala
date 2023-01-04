@@ -73,7 +73,7 @@ foo_new (void)
 static void
 foo_instance_init (Foo * self)
 {
-	self->ref_count = 1;
+	self->ref_count = (volatile int) 1;
 }
 
 void
