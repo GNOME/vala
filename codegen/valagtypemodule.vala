@@ -479,11 +479,10 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	void generate_struct_field_declaration (Field f, CCodeStruct instance_struct, CCodeStruct type_struct, CCodeFile decl_space) {
-		CCodeModifiers modifiers = (f.is_volatile ? CCodeModifiers.VOLATILE : 0) | (f.version.deprecated ? CCodeModifiers.DEPRECATED : 0);
 		if (f.binding == MemberBinding.INSTANCE) {
 			append_field (instance_struct, f, decl_space);
 		} else if (f.binding == MemberBinding.CLASS) {
-			type_struct.add_field (get_ccode_name (f.variable_type), get_ccode_name (f), modifiers);
+			append_field (type_struct, f, decl_space);
 		}
 	}
 

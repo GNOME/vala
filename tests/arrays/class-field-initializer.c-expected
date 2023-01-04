@@ -379,6 +379,7 @@ foo_class_init (FooClass * klass,
 	_tmp1__length1 = _tmp0__length1;
 	foo_sf = _tmp1_;
 	foo_sf_length1 = _tmp1__length1;
+	_foo_sf_size_ = foo_sf_length1;
 	_tmp2_ = g_strdup ("baz");
 	_tmp3_ = g_strdup ("foo");
 	_tmp4_ = g_strdup ("bar");
@@ -388,6 +389,7 @@ foo_class_init (FooClass * klass,
 	_tmp5_[2] = _tmp4_;
 	foo_si = _tmp5_;
 	foo_si_length1 = 3;
+	_foo_si_size_ = foo_si_length1;
 	_tmp6_ = g_strdup ("baz");
 	_tmp7_ = manam;
 	_tmp7__length1 = _vala_array_length (manam);
@@ -400,6 +402,7 @@ foo_class_init (FooClass * klass,
 	_tmp11_[2] = _tmp10_;
 	foo_sa = _tmp11_;
 	foo_sa_length1 = 3;
+	_foo_sa_size_ = foo_sa_length1;
 }
 
 static void
@@ -707,6 +710,7 @@ bar_class_init (BarClass * klass,
 	_tmp1__length1 = _tmp0__length1;
 	bar_sf = _tmp1_;
 	bar_sf_length1 = _tmp1__length1;
+	_bar_sf_size_ = bar_sf_length1;
 }
 
 static void
