@@ -971,6 +971,7 @@ TESTS = \
 	parser/invalid-statement-delimiter.test \
 	parser/local-variable.vala \
 	parser/local-variable-array-type-invalid.test \
+	parser/local-variable-multi-one-line.vala \
 	parser/lock-statement.vala \
 	parser/main-block.vala \
 	parser/main-block-minimal.vala \
