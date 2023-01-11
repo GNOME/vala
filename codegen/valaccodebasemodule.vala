@@ -826,7 +826,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		var extern_define = new CCodeIfSection ("!defined(VALA_EXTERN)");
 
 		CCodeIfSection if_section;
-		if_section = new CCodeIfSection ("defined(_MSC_VER)");
+		if_section = new CCodeIfSection ("defined(_WIN32) || defined(__CYGWIN__)");
 		extern_define.append (if_section);
 		if_section.append (new CCodeDefine ("VALA_EXTERN", "__declspec(dllexport) extern"));
 		if_section = if_section.append_else ("__GNUC__ >= 4");
