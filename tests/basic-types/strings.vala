@@ -83,6 +83,12 @@ void test_string_replace () {
 
 	s = s.replace ("my", "whole");
 	assert (s == "hellowholeworld");
+
+	s = "Γειά σου Κόσμε".replace ("Γειά σου ", "");
+	assert (s == "Κόσμε");
+
+	s = "こんにちは世界".replace ("世界", "");
+	assert (s == "こんにちは");
 }
 
 void test_string_slice () {

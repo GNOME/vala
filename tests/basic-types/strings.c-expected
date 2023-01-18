@@ -581,6 +581,10 @@ test_string_replace (void)
 	const gchar* _tmp1_;
 	gchar* _tmp2_;
 	const gchar* _tmp3_;
+	gchar* _tmp4_;
+	const gchar* _tmp5_;
+	gchar* _tmp6_;
+	const gchar* _tmp7_;
 	_tmp0_ = g_strdup ("hellomyworld");
 	s = _tmp0_;
 	_tmp1_ = s;
@@ -589,6 +593,16 @@ test_string_replace (void)
 	s = _tmp2_;
 	_tmp3_ = s;
 	_vala_assert (g_strcmp0 (_tmp3_, "hellowholeworld") == 0, "s == \"hellowholeworld\"");
+	_tmp4_ = string_replace ("Γειά σου Κόσμε", "Γειά σου ", "");
+	_g_free0 (s);
+	s = _tmp4_;
+	_tmp5_ = s;
+	_vala_assert (g_strcmp0 (_tmp5_, "Κόσμε") == 0, "s == \"\316\232\317\214\317\203\316\274\316\265\"");
+	_tmp6_ = string_replace ("こんにちは世界", "世界", "");
+	_g_free0 (s);
+	s = _tmp6_;
+	_tmp7_ = s;
+	_vala_assert (g_strcmp0 (_tmp7_, "こんにちは") == 0, "s == \"\343\201\223\343\202\223\343\201\253\343\201\241\343\201\257\"");
 	_g_free0 (s);
 }
 
