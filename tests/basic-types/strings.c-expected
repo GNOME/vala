@@ -16,7 +16,6 @@
 #endif
 
 #define _g_free0(var) (var = (g_free (var), NULL))
-#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -37,6 +36,7 @@ static void _vala_array_destroy (gpointer array,
 static void _vala_array_free (gpointer array,
                        gssize array_length,
                        GDestroyNotify destroy_func);
+static gssize _vala_array_length (gpointer array);
 
 static gchar*
 string_slice (const gchar* self,
@@ -493,19 +493,31 @@ test_string_printf (void)
 static gchar*
 string_replace (const gchar* self,
                 const gchar* old,
-                const gchar* replacement)
+                const gchar* replacement,
+                gint max_tokens)
 {
 	gboolean _tmp0_ = FALSE;
 	gboolean _tmp1_ = FALSE;
-	GError* _inner_error0_ = NULL;
+	gboolean _tmp2_ = FALSE;
+	gchar** _tmp4_;
+	gchar** _tmp5_;
+	gchar** _tmp6_;
+	gint _tmp6__length1;
+	gchar* _tmp7_;
+	gchar* _tmp8_;
 	gchar* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
 	g_return_val_if_fail (replacement != NULL, NULL);
 	if ((*((gchar*) self)) == '\0') {
+		_tmp2_ = TRUE;
+	} else {
+		_tmp2_ = (*((gchar*) old)) == '\0';
+	}
+	if (_tmp2_) {
 		_tmp1_ = TRUE;
 	} else {
-		_tmp1_ = (*((gchar*) old)) == '\0';
+		_tmp1_ = max_tokens == 0;
 	}
 	if (_tmp1_) {
 		_tmp0_ = TRUE;
@@ -513,64 +525,19 @@ string_replace (const gchar* self,
 		_tmp0_ = g_strcmp0 (old, replacement) == 0;
 	}
 	if (_tmp0_) {
-		gchar* _tmp2_;
-		_tmp2_ = g_strdup (self);
-		result = _tmp2_;
-		return result;
-	}
-	{
-		GRegex* regex = NULL;
 		gchar* _tmp3_;
-		gchar* _tmp4_;
-		GRegex* _tmp5_;
-		GRegex* _tmp6_;
-		gchar* _tmp7_ = NULL;
-		GRegex* _tmp8_;
-		gchar* _tmp9_;
-		gchar* _tmp10_;
-		_tmp3_ = g_regex_escape_string (old, -1);
-		_tmp4_ = _tmp3_;
-		_tmp5_ = g_regex_new (_tmp4_, 0, 0, &_inner_error0_);
-		_tmp6_ = _tmp5_;
-		_g_free0 (_tmp4_);
-		regex = _tmp6_;
-		if (G_UNLIKELY (_inner_error0_ != NULL)) {
-			if (_inner_error0_->domain == G_REGEX_ERROR) {
-				goto __catch0_g_regex_error;
-			}
-			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
-			g_clear_error (&_inner_error0_);
-			return NULL;
-		}
-		_tmp8_ = regex;
-		_tmp9_ = g_regex_replace_literal (_tmp8_, self, (gssize) -1, 0, replacement, 0, &_inner_error0_);
-		_tmp7_ = _tmp9_;
-		if (G_UNLIKELY (_inner_error0_ != NULL)) {
-			_g_regex_unref0 (regex);
-			if (_inner_error0_->domain == G_REGEX_ERROR) {
-				goto __catch0_g_regex_error;
-			}
-			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
-			g_clear_error (&_inner_error0_);
-			return NULL;
-		}
-		_tmp10_ = _tmp7_;
-		_tmp7_ = NULL;
-		result = _tmp10_;
-		_g_free0 (_tmp7_);
-		_g_regex_unref0 (regex);
+		_tmp3_ = g_strdup (self);
+		result = _tmp3_;
 		return result;
 	}
-	goto __finally0;
-	__catch0_g_regex_error:
-	{
-		g_clear_error (&_inner_error0_);
-		g_assert_not_reached ();
-	}
-	__finally0:
-	g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
-	g_clear_error (&_inner_error0_);
-	return NULL;
+	_tmp5_ = _tmp4_ = g_strsplit (self, old, max_tokens + 1);
+	_tmp6_ = (gchar**) _tmp5_;
+	_tmp6__length1 = (_vala_array_length (_tmp4_) * sizeof (gchar*)) / sizeof (gchar*);
+	_tmp7_ = _vala_g_strjoinv (replacement, _tmp6_, (gint) ((_vala_array_length (_tmp4_) * sizeof (gchar*)) / sizeof (gchar*)));
+	_tmp8_ = _tmp7_;
+	_tmp6_ = (_vala_array_free (_tmp6_, _tmp6__length1, (GDestroyNotify) g_free), NULL);
+	result = _tmp8_;
+	return result;
 }
 
 void
@@ -588,17 +555,17 @@ test_string_replace (void)
 	_tmp0_ = g_strdup ("hellomyworld");
 	s = _tmp0_;
 	_tmp1_ = s;
-	_tmp2_ = string_replace (_tmp1_, "my", "whole");
+	_tmp2_ = string_replace (_tmp1_, "my", "whole", -1);
 	_g_free0 (s);
 	s = _tmp2_;
 	_tmp3_ = s;
 	_vala_assert (g_strcmp0 (_tmp3_, "hellowholeworld") == 0, "s == \"hellowholeworld\"");
-	_tmp4_ = string_replace ("Γειά σου Κόσμε", "Γειά σου ", "");
+	_tmp4_ = string_replace ("Γειά σου Κόσμε", "Γειά σου ", "", -1);
 	_g_free0 (s);
 	s = _tmp4_;
 	_tmp5_ = s;
 	_vala_assert (g_strcmp0 (_tmp5_, "Κόσμε") == 0, "s == \"\316\232\317\214\317\203\316\274\316\265\"");
-	_tmp6_ = string_replace ("こんにちは世界", "世界", "");
+	_tmp6_ = string_replace ("こんにちは世界", "世界", "", -1);
 	_g_free0 (s);
 	s = _tmp6_;
 	_tmp7_ = s;
@@ -941,5 +908,18 @@ _vala_array_free (gpointer array,
 {
 	_vala_array_destroy (array, array_length, destroy_func);
 	g_free (array);
+}
+
+static gssize
+_vala_array_length (gpointer array)
+{
+	gssize length;
+	length = 0;
+	if (array) {
+		while (((gpointer*) array)[length]) {
+			length++;
+		}
+	}
+	return length;
 }
 

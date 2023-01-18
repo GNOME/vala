@@ -1539,16 +1539,12 @@ public class string {
 		return strstr ((char*) this, (char*) needle) != null;
 	}
 
-	public string replace (string old, string replacement) {
-		if (*((char*) this) == '\0' || *((char*) old) == '\0' || old == replacement)
+	public string replace (string old, string replacement, int max_tokens = -1) {
+		if (*((char*) this) == '\0' || *((char*) old) == '\0'
+		    || max_tokens == 0 || old == replacement) {
 			return this;
-
-		try {
-			var regex = new GLib.Regex (GLib.Regex.escape_string (old));
-			return regex.replace_literal (this, -1, 0, replacement);
-		} catch (GLib.RegexError e) {
-			GLib.assert_not_reached ();
 		}
+		return string.joinv (replacement, (string?[]?) this.split (old, max_tokens + 1));
 	}
 
 	[CCode (cname = "g_utf8_strlen")]
