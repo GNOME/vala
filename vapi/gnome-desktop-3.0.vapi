@@ -290,6 +290,8 @@ namespace Gnome {
 		public string string_for_datetime (GLib.DateTime now, GDesktop.ClockFormat clock_format, bool show_weekday, bool show_full_date, bool show_seconds);
 		public string clock { get; }
 		[NoAccessorMethod]
+		public bool force_seconds { get; set; }
+		[NoAccessorMethod]
 		public bool time_only { get; set; }
 		public GLib.TimeZone timezone { get; }
 	}
