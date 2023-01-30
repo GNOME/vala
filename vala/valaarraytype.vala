@@ -256,6 +256,12 @@ public class Vala.ArrayType : ReferenceType {
 		if (element_type.compatible (target_array_type.element_type)
 		    && target_array_type.element_type.compatible (element_type)) {
 			return true;
+		} else if (element_type.type_symbol is Class) {
+			unowned Class cl = (Class) element_type.type_symbol;
+			if ((!cl.is_compact || cl == context.analyzer.string_type.type_symbol)
+			    && element_type.compatible (target_array_type.element_type)) {
+				return true;
+			}
 		}
 
 		return false;

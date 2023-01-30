@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+}
+
+class Bar : Foo {
+}
+
+void main () {
+	Foo[] foos = { new Foo () };
+	unowned Bar[] bars = foos;
+}

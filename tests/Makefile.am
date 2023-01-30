@@ -116,6 +116,8 @@ TESTS = \
 	arrays/class-field-initializer.vala \
 	arrays/class-field-length-cname.vala \
 	arrays/constant-element-access.vala \
+	arrays/element-class-assignment.vala \
+	arrays/element-class-assignment-invalid.test \
 	arrays/element-nullable-assignment.vala \
 	arrays/empty-length-0.vala \
 	arrays/expression-bracket.test \
@@ -1307,6 +1309,8 @@ TESTS = \
 	semantic/yield-creation-requires-async-context.test \
 	semantic/yield-creation-requires-async-method.test \
 	semantic/yield-statement-requires-async-context.test \
+	nullability/array-element-class.vala \
+	nullability/array-element-string.vala \
 	nullability/bug611223.vala \
 	nullability/local-variable-invalid-convert.test \
 	nullability/member-access-narrowed-instance.vala \
