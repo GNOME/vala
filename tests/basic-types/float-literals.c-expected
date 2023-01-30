@@ -24,6 +24,12 @@ _vala_main (void)
 	}
 	{
 		gdouble foo = 0.0;
+		gfloat bar = 0.0F;
+		foo = 23.42e+12;
+		bar = 47.11E-4f;
+	}
+	{
+		gdouble foo = 0.0;
 		gdouble bar = 0.0;
 		foo = 23.42;
 		bar = 47.11;

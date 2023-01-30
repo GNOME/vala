@@ -71,7 +71,7 @@ public class Vala.RealLiteral : Literal {
 			type_name = "double";
 		}
 
-		if (value.has_suffix ("e") || value.has_suffix ("+") || value.has_suffix ("-")) {
+		if (value.has_suffix ("e") || value.has_suffix ("E") || value.has_suffix ("+") || value.has_suffix ("-")) {
 			Report.error (source_reference, "exponent has no digits");
 			error = true;
 		}
