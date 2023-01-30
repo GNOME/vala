@@ -71,6 +71,8 @@ public class Vala.EnumValue : Constant {
 
 		checked = true;
 
+		base.check (context);
+
 		if (value != null) {
 			value.check (context);
 

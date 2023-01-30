@@ -2578,31 +2578,6 @@ public class Vala.Parser : CodeVisitor {
 		return new WithStatement (local, expr, body, src);
 	}
 
-	string parse_attribute_value () throws ParseError {
-		switch (current ()) {
-		case TokenType.NULL:
-		case TokenType.TRUE:
-		case TokenType.FALSE:
-		case TokenType.INTEGER_LITERAL:
-		case TokenType.REAL_LITERAL:
-		case TokenType.STRING_LITERAL:
-			next ();
-			return get_last_string ();
-		case TokenType.MINUS:
-			next ();
-			switch (current ()) {
-			case TokenType.INTEGER_LITERAL:
-			case TokenType.REAL_LITERAL:
-				next ();
-				return "-" + get_last_string ();
-			default:
-				throw new ParseError.SYNTAX ("expected number");
-			}
-		default:
-			throw new ParseError.SYNTAX ("expected literal");
-		}
-	}
-
 	List<Attribute>? parse_attributes () throws ParseError {
 		if (current () != TokenType.OPEN_BRACKET) {
 			return null;
@@ -2618,7 +2593,7 @@ public class Vala.Parser : CodeVisitor {
 						do {
 							id = parse_identifier ();
 							expect (TokenType.ASSIGN);
-							attr.add_argument (id, parse_attribute_value ());
+							attr.add_argument (id, parse_unary_expression ());
 						} while (accept (TokenType.COMMA));
 					}
 					expect (TokenType.CLOSE_PARENS);

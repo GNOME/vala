@@ -34,7 +34,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Vala.Map<string,string> args { get; private set; }
+	public Vala.Map<string,Expression> args { get; private set; }
 
 	/**
 	 * Creates a new attribute.
@@ -46,7 +46,7 @@ public class Vala.Attribute : CodeNode {
 	public Attribute (string name, SourceReference? source_reference = null) {
 		this.name = name;
 		this.source_reference = source_reference;
-		this.args = new HashMap<string,string> (str_hash, str_equal);
+		this.args = new HashMap<string,Expression> (str_hash, str_equal);
 
 		if (!CodeContext.get ().deprecated) {
 			if (name == "Deprecated") {
@@ -63,7 +63,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param key    argument name
 	 * @param value  argument value
 	 */
-	public void add_argument (string key, string value) {
+	public void add_argument (string key, Expression value) {
 		args.set (key, value);
 	}
 
@@ -78,22 +78,37 @@ public class Vala.Attribute : CodeNode {
 	}
 
 	/**
+	 * Returns the expression of the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     expression value
+	 */
+	public Expression? get_expression (string name, Expression? default_value = null) {
+		Expression? value = args.get (name);
+
+		if (value == null) {
+			return default_value;
+		}
+
+		return value;
+	}
+
+	/**
 	 * Returns the string value of the specified named argument.
 	 *
 	 * @param name argument name
 	 * @return     string value
 	 */
 	public string? get_string (string name, string? default_value = null) {
-		string value = args.get (name);
+		Expression? value = args.get (name);
 
 		if (value == null) {
 			return default_value;
 		}
 
-		/* remove quotes */
-		var noquotes = value.substring (1, (uint) (value.length - 2));
-		/* unescape string */
-		return noquotes.compress ();
+		assert (value is StringLiteral);
+
+		return ((StringLiteral) value).eval ();
 	}
 
 	/**
@@ -103,13 +118,15 @@ public class Vala.Attribute : CodeNode {
 	 * @return     integer value
 	 */
 	public int get_integer (string name, int default_value = 0) {
-		string value = args.get (name);
+		Expression? value = args.get (name);
 
 		if (value == null) {
 			return default_value;
 		}
 
-		return int.parse (value);
+		assert (value is IntegerLiteral);
+
+		return int.parse (((IntegerLiteral) value).value);
 	}
 
 	/**
@@ -119,13 +136,19 @@ public class Vala.Attribute : CodeNode {
 	 * @return     double value
 	 */
 	public double get_double (string name, double default_value = 0) {
-		string value = args.get (name);
+		Expression? value = args.get (name);
 
 		if (value == null) {
 			return default_value;
 		}
 
-		return double.parse (value);
+		assert (value is RealLiteral || value is IntegerLiteral);
+
+		if (value is IntegerLiteral) {
+			return int.parse (((IntegerLiteral) value).value);
+		} else {
+			return double.parse (((RealLiteral) value).value);
+		}
 	}
 
 	/**
@@ -135,12 +158,28 @@ public class Vala.Attribute : CodeNode {
 	 * @return     boolean value
 	 */
 	public bool get_bool (string name, bool default_value = false) {
-		string value = args.get (name);
+		Expression? value = args.get (name);
 
 		if (value == null) {
 			return default_value;
 		}
 
-		return bool.parse (value);
+		assert (value is BooleanLiteral);
+
+		return ((BooleanLiteral) value).value;
+	}
+
+	public override bool check (CodeContext context) {
+		foreach (var attr in args.get_values ()) {
+			if (!attr.check (context)) {
+				return false;
+			}
+			if (!attr.is_constant ()) {
+				Report.error (attr.source_reference, "attribute values must be constant");
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

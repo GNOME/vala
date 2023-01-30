@@ -1713,7 +1713,8 @@ public class Vala.CodeWriter : CodeVisitor {
 					if (arg_name == "cheader_filename") {
 						stream.printf ("%scheader_filename = \"%s\"", separator, get_cheaders (sym));
 					} else {
-						stream.printf ("%s%s = %s", separator, arg_name, attr.args.get (arg_name));
+						stream.printf ("%s%s = ", separator, arg_name);
+						attr.args.get (arg_name).accept (this);
 					}
 					separator = ", ";
 				}

@@ -748,6 +748,8 @@ public class Vala.Method : Subroutine, Callable, GenericSymbol {
 
 		checked = true;
 
+		base.check (context);
+
 		if (this_parameter != null) {
 			this_parameter.check (context);
 		}

@@ -112,6 +112,8 @@ public class Vala.ErrorCode : TypeSymbol {
 
 		checked = true;
 
+		base.check (context);
+
 		if (value != null) {
 			value.check (context);
 		}

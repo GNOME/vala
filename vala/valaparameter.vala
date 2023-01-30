@@ -140,6 +140,8 @@ public class Vala.Parameter : Variable {
 		}
 		context.analyzer.current_symbol = parent_symbol;
 
+		base.check (context);
+
 		if (variable_type != null) {
 			if (variable_type is VoidType) {
 				error = true;

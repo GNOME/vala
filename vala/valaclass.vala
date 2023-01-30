@@ -540,6 +540,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		context.analyzer.current_symbol = this;
 
+		base.check (context);
+
 		foreach (DataType base_type_reference in get_base_types ()) {
 			if (!base_type_reference.check (context)) {
 				error = true;

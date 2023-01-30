@@ -113,6 +113,8 @@ public class Vala.Constant : Symbol {
 			context.analyzer.current_symbol = this;
 		}
 
+		base.check (context);
+
 		type_reference.check (context);
 
 		if (!check_const_type (type_reference, context)) {

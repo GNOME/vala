@@ -506,6 +506,8 @@ public class Vala.Struct : TypeSymbol, GenericSymbol {
 		}
 		context.analyzer.current_symbol = this;
 
+		base.check (context);
+
 		if (base_type != null) {
 			base_type.check (context);
 

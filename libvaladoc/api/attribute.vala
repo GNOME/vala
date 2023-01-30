@@ -78,7 +78,7 @@ public class Valadoc.Api.Attribute : Item {
 				if (arg_name != "cheader_filename") {
 					builder.append_attribute (arg_name);
 					builder.append_attribute ("=");
-					builder.append_literal (attr.args.get (arg_name));
+					builder.append_literal (attr.args.get (arg_name).to_string ());
 				}
 				separator = ", ";
 			}

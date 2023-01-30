@@ -183,6 +183,8 @@ public class Vala.Signal : Symbol, Callable {
 
 		checked = true;
 
+		base.check (context);
+
 		// parent_symbol may be null for dynamic signals
 		unowned Class? parent_cl = parent_symbol as Class;
 		if (parent_cl != null && parent_cl.is_compact) {

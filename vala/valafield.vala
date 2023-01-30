@@ -92,6 +92,8 @@ public class Vala.Field : Variable, Lockable {
 		}
 		context.analyzer.current_symbol = this;
 
+		base.check (context);
+
 		if (variable_type is VoidType) {
 			error = true;
 			Report.error (source_reference, "'void' not supported as field type");

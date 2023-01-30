@@ -314,6 +314,8 @@ public class Vala.Delegate : TypeSymbol, Callable, GenericSymbol {
 			context.analyzer.current_source_file = source_reference.file;
 		}
 
+		base.check (context);
+
 		foreach (TypeParameter p in type_parameters) {
 			p.check (context);
 		}

@@ -29,17 +29,15 @@ public class Vala.GDBusClientModule : GDBusModule {
 		NO_REPLY
 	}
 
-	public CCodeConstant get_dbus_timeout (Symbol symbol) {
-		int timeout = -1;
-
+	public CCodeExpression get_dbus_timeout (Symbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
 		if (dbus != null && dbus.has_argument ("timeout")) {
-			timeout = dbus.get_integer ("timeout");
+			return get_ccodenode (dbus.get_expression ("timeout"));
 		} else if (symbol.parent_symbol != null) {
 			return get_dbus_timeout (symbol.parent_symbol);
 		}
 
-		return new CCodeConstant (timeout.to_string ());
+		return new CCodeConstant ("-1");
 	}
 
 	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
@@ -53,7 +51,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		push_function (func);
 
 		if (method.dynamic_type.type_symbol == dbus_proxy_type) {
-			generate_marshalling (method, CallType.SYNC, null, method.name, -1);
+			generate_marshalling (method, CallType.SYNC, null, method.name, null);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'", method.dynamic_type.to_string ());
 		}
@@ -555,7 +553,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		cfile.add_function (cfunc);
 	}
 
-	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name, int method_timeout) {
+	void generate_marshalling (Method m, CallType call_type, string? iface_name, string? method_name, CCodeExpression? method_timeout) {
 		var gdbusproxy = new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *");
 
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_connection"));
@@ -586,11 +584,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 			object_path.add_argument (gdbusproxy);
 
 			CCodeExpression timeout;
-			if (method_timeout <= 0) {
+			if (method_timeout == null) {
 				timeout = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_default_timeout"));
 				((CCodeFunctionCall) timeout).add_argument (gdbusproxy);
 			} else {
-				timeout = new CCodeConstant ("%d".printf (method_timeout));
+				timeout = method_timeout;
 			}
 
 			// register errors
@@ -962,7 +960,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		push_function (function);
 
-		generate_marshalling (m, CallType.FINISH, null, null, -1);
+		generate_marshalling (m, CallType.FINISH, null, null, null);
 
 		pop_function ();
 
