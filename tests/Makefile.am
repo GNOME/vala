@@ -798,11 +798,14 @@ TESTS = \
 	generics/integer-type-cast.vala \
 	generics/integer-type-cast-return.vala \
 	generics/parameter-invalid-initializer.test \
+	generics/parameter-in-cast.vala \
+	generics/parameter-out-cast.vala \
 	generics/parameter-sizeof-initializer.vala \
 	generics/member-dup-destroy.vala \
 	generics/method-parameter-type-missing.test \
 	generics/method-parameter-unknown-type-parameter.test \
 	generics/method-parameter-unknown-type-parameter-2.test \
+	generics/method-return-cast.vala \
 	generics/method-return-type-missing.test \
 	generics/method-return-unknown-type-parameter.test \
 	generics/method-return-unknown-type-parameter-2.test \
