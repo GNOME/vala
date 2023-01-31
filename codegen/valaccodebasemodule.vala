@@ -4287,6 +4287,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			CCodeExpression result_lhs = get_cexpression ("result");
 			if (current_return_type.is_real_non_null_struct_type () && !is_in_coroutine ()) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
+			} else if (current_return_type is GenericType) {
+				set_cvalue (stmt.return_expression, convert_to_generic_pointer (get_cvalue (stmt.return_expression), stmt.return_expression.value_type));
 			}
 			ccode.add_assignment (result_lhs, get_cvalue (stmt.return_expression));
 		}
@@ -4447,6 +4449,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.target_type));
 					((GLibValue) expr.target_value).lvalue = false;
 				}
+			} else if (expr.formal_target_type is GenericType && !(expr.value_type is GenericType)) {
+				set_cvalue (expr, convert_to_generic_pointer (get_cvalue (expr), expr.value_type));
 			}
 
 			// Allow null to initialize non-null struct inside initializer list

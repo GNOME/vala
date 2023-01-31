@@ -509,6 +509,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 									carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (param)), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_delegate_target_destroy_notify (arg)));
 								}
 							}
+						} else if (param.variable_type is GenericType) {
+							set_cvalue (arg, convert_from_generic_pointer (get_cvalue (arg), arg.target_type));
 						}
 					}
 
