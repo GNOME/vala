@@ -776,7 +776,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		foreach (var prop in iface.get_properties ()) {
 			if (prop.is_abstract || prop.is_virtual) {
-				if (prop.get_accessor != null) {
+				if (prop.get_accessor != null && prop.get_accessor.readable) {
 					var m = prop.get_accessor.get_method ();
 					write_indent ();
 					buffer.append_printf("<field name=\"%s\"", m.name);
@@ -1493,14 +1493,14 @@ public class Vala.GIRWriter : CodeVisitor {
 			buffer.append_printf ("</property>\n");
 		}
 
-		if (prop.get_accessor != null) {
+		if (prop.get_accessor != null && prop.get_accessor.readable) {
 			var m = prop.get_accessor.get_method ();
 			if (m != null) {
 				visit_method (m);
 			}
 		}
 
-		if (prop.set_accessor != null) {
+		if (prop.set_accessor != null && prop.set_accessor.writable) {
 			var m = prop.set_accessor.get_method ();
 			if (m != null) {
 				visit_method (m);

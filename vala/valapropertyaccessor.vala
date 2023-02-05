@@ -128,7 +128,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			m.copy_attribute_string (prop, "CCode", "array_length_type");
 			m.copy_attribute_bool (prop, "CCode", "array_null_terminated");
 			m.copy_attribute_bool (prop, "CCode", "delegate_target");
-		} else if (writable) {
+		} else if (writable || construction) {
 			m = new Method ("set_%s".printf (prop.name), new VoidType(), source_reference, comment);
 			m.add_parameter (value_parameter.copy ());
 		}
