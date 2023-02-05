@@ -210,19 +210,19 @@ bar_class_init (BarClass * klass,
 static GType
 bar_foo_get_g_type (Bar* self)
 {
-	return self->priv->g_type;
+	return (GType) self->priv->g_type;
 }
 
 static GBoxedCopyFunc
 bar_foo_get_g_dup_func (Bar* self)
 {
-	return self->priv->g_dup_func;
+	return (GBoxedCopyFunc) self->priv->g_dup_func;
 }
 
 static GDestroyNotify
 bar_foo_get_g_destroy_func (Bar* self)
 {
-	return self->priv->g_destroy_func;
+	return (GDestroyNotify) self->priv->g_destroy_func;
 }
 
 static void

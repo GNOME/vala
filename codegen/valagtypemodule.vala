@@ -1404,7 +1404,7 @@ public class Vala.GTypeModule : GErrorModule {
 		var this_type = SemanticAnalyzer.get_data_type_for_symbol (cl);
 		function.add_parameter (new CCodeParameter ("self", get_ccode_name (this_type)));
 		push_function (function);
-		ccode.add_return (expression);
+		ccode.add_return (new CCodeCastExpression (expression, return_type));
 		pop_function ();
 		cfile.add_function (function);
 

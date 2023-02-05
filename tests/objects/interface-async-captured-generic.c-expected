@@ -223,19 +223,19 @@ foo_class_init (FooClass * klass,
 static GType
 foo_ifoo_get_g_type (Foo* self)
 {
-	return G_TYPE_STRING;
+	return (GType) G_TYPE_STRING;
 }
 
 static GBoxedCopyFunc
 foo_ifoo_get_g_dup_func (Foo* self)
 {
-	return g_strdup;
+	return (GBoxedCopyFunc) g_strdup;
 }
 
 static GDestroyNotify
 foo_ifoo_get_g_destroy_func (Foo* self)
 {
-	return g_free;
+	return (GDestroyNotify) g_free;
 }
 
 static void
