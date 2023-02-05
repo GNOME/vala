@@ -134,6 +134,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=empty-body \
 -Werror=comment \
 -Werror=strict-overflow \
+-Werror=shift-overflow \
 -Wformat=2 \
 -Werror=format-security \
 -Werror=format-nonliteral \
@@ -153,6 +154,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=logical-not-parentheses \
 -Werror=address \
 -Werror=array-bounds \
+-Werror=array-parameter \
 -Werror=array-parameter=2 \
 -Werror=enum-conversion"
 
