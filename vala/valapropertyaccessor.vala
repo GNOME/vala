@@ -122,6 +122,12 @@ public class Vala.PropertyAccessor : Subroutine {
 		Method? m = null;
 		if (readable) {
 			m = new Method ("get_%s".printf (prop.name), value_type, source_reference, comment);
+
+			// Inherit important attributes
+			m.copy_attribute_bool (prop, "CCode", "array_length");
+			m.copy_attribute_string (prop, "CCode", "array_length_type");
+			m.copy_attribute_bool (prop, "CCode", "array_null_terminated");
+			m.copy_attribute_bool (prop, "CCode", "delegate_target");
 		} else if (writable) {
 			m = new Method ("set_%s".printf (prop.name), new VoidType(), source_reference, comment);
 			m.add_parameter (value_parameter.copy ());
@@ -162,6 +168,7 @@ public class Vala.PropertyAccessor : Subroutine {
 			value_parameter = new Parameter ("value", value_type, source_reference);
 			// Inherit important attributes
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_length");
+			value_parameter.copy_attribute_string (prop, "CCode", "array_length_type");
 			value_parameter.copy_attribute_bool (prop, "CCode", "array_null_terminated");
 			value_parameter.copy_attribute_bool (prop, "CCode", "delegate_target");
 		}
