@@ -151,13 +151,13 @@ _vala_main (void)
 	GError* _inner_error0_ = NULL;
 	{
 		FooFunc func = NULL;
-		func = foo;
+		func = (FooFunc) foo;
 		func ("foo", 42, "bar", NULL);
 	}
 	{
 		FooFunc func = NULL;
 		BarFunc f = NULL;
-		func = foo;
+		func = (FooFunc) foo;
 		f = func;
 	}
 	{
@@ -168,7 +168,7 @@ _vala_main (void)
 	}
 	{
 		BazFunc func = NULL;
-		func = baz;
+		func = (BazFunc) baz;
 		func ("baz", &_inner_error0_, 23, "bar", NULL);
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {
 			g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
@@ -178,7 +178,7 @@ _vala_main (void)
 	}
 	{
 		BazFunc func = NULL;
-		func = baz_fail;
+		func = (BazFunc) baz_fail;
 		{
 			BazFunc _tmp0_;
 			_tmp0_ = func;
@@ -210,7 +210,7 @@ _vala_main (void)
 		}
 	}
 	{
-		mamam (foo);
+		mamam ((FooFunc) foo);
 	}
 	{
 		mamam ((FooFunc) foo);

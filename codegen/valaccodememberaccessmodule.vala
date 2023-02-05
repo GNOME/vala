@@ -90,6 +90,12 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				set_cvalue (expr, new CCodeIdentifier (get_ccode_name (m)));
 			}
 
+			delegate_type = expr.target_type as DelegateType;
+			if (delegate_type != null) {
+				generate_type_declaration (delegate_type, cfile);
+				set_cvalue (expr, new CCodeCastExpression (get_cvalue (expr), get_ccode_name (delegate_type.delegate_symbol)));
+			}
+
 			set_delegate_target_destroy_notify (expr, new CCodeConstant ("NULL"));
 			if (m.binding == MemberBinding.STATIC) {
 				set_delegate_target (expr, new CCodeConstant ("NULL"));

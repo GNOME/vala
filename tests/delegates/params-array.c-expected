@@ -349,12 +349,12 @@ _vala_main (void)
 {
 	{
 		FooFunc func = NULL;
-		func = foo;
+		func = (FooFunc) foo;
 		func ("foo", "bar", "manam", NULL);
 	}
 	{
 		BarFunc func = NULL;
-		func = bar;
+		func = (BarFunc) bar;
 		func (23, 42, 4711, NULL);
 	}
 	{
@@ -362,7 +362,7 @@ _vala_main (void)
 		GValue* _tmp0_ = NULL;
 		GValue* _tmp1_ = NULL;
 		GValue* _tmp2_ = NULL;
-		func = manam;
+		func = (ManamFunc) manam;
 		_tmp0_ = g_new0 (GValue, 1);
 		g_value_init (_tmp0_, G_TYPE_STRING);
 		g_value_set_string (_tmp0_, "foo");
@@ -382,7 +382,7 @@ _vala_main (void)
 		GValue* _tmp3_ = NULL;
 		GValue* _tmp4_ = NULL;
 		GValue* _tmp5_ = NULL;
-		func = manam_owned;
+		func = (ManamOwnedFunc) manam_owned;
 		_tmp3_ = g_new0 (GValue, 1);
 		g_value_init (_tmp3_, G_TYPE_STRING);
 		g_value_set_string (_tmp3_, "foo");
@@ -399,7 +399,7 @@ _vala_main (void)
 		GVariant* _tmp6_;
 		GVariant* _tmp7_;
 		GVariant* _tmp8_;
-		func = minim;
+		func = (MinimFunc) minim;
 		_tmp6_ = _variant_new1 ("foo");
 		_tmp7_ = _variant_new2 (4711);
 		_tmp8_ = _variant_new3 (3.1415);
