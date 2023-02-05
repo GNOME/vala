@@ -507,10 +507,10 @@ foo_class_init (FooClass * klass,
 	foo_parent_class = g_type_class_peek_parent (klass);
 	((FooClass *) klass)->finalize = foo_finalize;
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
-	FOO_CLASS (klass)->get_deleg_v = foo_real_get_deleg_v;
-	FOO_CLASS (klass)->set_deleg_v = foo_real_set_deleg_v;
-	FOO_CLASS (klass)->get_deleg_no_target_v = foo_real_get_deleg_no_target_v;
-	FOO_CLASS (klass)->set_deleg_no_target_v = foo_real_set_deleg_no_target_v;
+	FOO_CLASS (klass)->get_deleg_v = (Manam (*) (Foo*, gpointer*)) foo_real_get_deleg_v;
+	FOO_CLASS (klass)->set_deleg_v = (void (*) (Foo*, Manam, gpointer)) foo_real_set_deleg_v;
+	FOO_CLASS (klass)->get_deleg_no_target_v = (Manam (*) (Foo*)) foo_real_get_deleg_no_target_v;
+	FOO_CLASS (klass)->set_deleg_no_target_v = (void (*) (Foo*, Manam)) foo_real_set_deleg_no_target_v;
 }
 
 static void
@@ -705,8 +705,8 @@ bar_class_init (BarClass * klass,
 {
 	bar_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
-	BAR_CLASS (klass)->get_deleg_v = bar_real_get_deleg_v;
-	BAR_CLASS (klass)->set_deleg_v = bar_real_set_deleg_v;
+	BAR_CLASS (klass)->get_deleg_v = (Manam (*) (Bar*)) bar_real_get_deleg_v;
+	BAR_CLASS (klass)->set_deleg_v = (void (*) (Bar*, Manam)) bar_real_set_deleg_v;
 	G_OBJECT_CLASS (klass)->get_property = _vala_bar_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_bar_set_property;
 	G_OBJECT_CLASS (klass)->finalize = bar_finalize;

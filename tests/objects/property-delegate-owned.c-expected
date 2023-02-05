@@ -588,10 +588,10 @@ foo_class_init (FooClass * klass,
 	foo_parent_class = g_type_class_peek_parent (klass);
 	((FooClass *) klass)->finalize = foo_finalize;
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
-	FOO_CLASS (klass)->get_foo = foo_real_get_foo;
-	FOO_CLASS (klass)->set_foo = foo_real_set_foo;
-	FOO_CLASS (klass)->get_bar = foo_real_get_bar;
-	FOO_CLASS (klass)->set_bar = foo_real_set_bar;
+	FOO_CLASS (klass)->get_foo = (FooFunc (*) (Foo*, gpointer*)) foo_real_get_foo;
+	FOO_CLASS (klass)->set_foo = (void (*) (Foo*, FooFunc, gpointer, GDestroyNotify)) foo_real_set_foo;
+	FOO_CLASS (klass)->get_bar = (FooFunc (*) (Foo*, gpointer*)) foo_real_get_bar;
+	FOO_CLASS (klass)->set_bar = (void (*) (Foo*, FooFunc, gpointer, GDestroyNotify)) foo_real_set_bar;
 }
 
 static void
@@ -599,10 +599,10 @@ foo_ifoo_interface_init (IFooIface * iface,
                          gpointer iface_data)
 {
 	foo_ifoo_parent_iface = g_type_interface_peek_parent (iface);
-	iface->get_foo = (FooFunc (*) (IFoo *)) foo_get_foo;
-	iface->set_foo = (void (*) (IFoo *, FooFunc)) foo_set_foo;
-	iface->get_bar = (FooFunc (*) (IFoo *)) foo_get_bar;
-	iface->set_bar = (void (*) (IFoo *, FooFunc)) foo_set_bar;
+	iface->get_foo = (FooFunc (*) (IFoo*, gpointer*)) foo_get_foo;
+	iface->set_foo = (void (*) (IFoo*, FooFunc, gpointer, GDestroyNotify)) foo_set_foo;
+	iface->get_bar = (FooFunc (*) (IFoo*, gpointer*)) foo_get_bar;
+	iface->set_bar = (void (*) (IFoo*, FooFunc, gpointer, GDestroyNotify)) foo_set_bar;
 }
 
 static void
@@ -826,10 +826,10 @@ bar_class_init (BarClass * klass,
 	bar_parent_class = g_type_class_peek_parent (klass);
 	((FooClass *) klass)->finalize = bar_finalize;
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
-	FOO_CLASS (klass)->get_foo = bar_real_get_foo;
-	FOO_CLASS (klass)->set_foo = bar_real_set_foo;
-	FOO_CLASS (klass)->get_bar = bar_real_get_bar;
-	FOO_CLASS (klass)->set_bar = bar_real_set_bar;
+	FOO_CLASS (klass)->get_foo = (FooFunc (*) (Foo*, gpointer*)) bar_real_get_foo;
+	FOO_CLASS (klass)->set_foo = (void (*) (Foo*, FooFunc, gpointer, GDestroyNotify)) bar_real_set_foo;
+	FOO_CLASS (klass)->get_bar = (FooFunc (*) (Foo*, gpointer*)) bar_real_get_bar;
+	FOO_CLASS (klass)->set_bar = (void (*) (Foo*, FooFunc, gpointer, GDestroyNotify)) bar_real_set_bar;
 }
 
 static void

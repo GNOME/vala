@@ -390,8 +390,8 @@ bar_class_init (BarClass * klass,
 	bar_parent_class = g_type_class_peek_parent (klass);
 	((BarClass *) klass)->finalize = bar_finalize;
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
-	BAR_CLASS (klass)->get_prop_v = bar_real_get_prop_v;
-	BAR_CLASS (klass)->set_prop_v = bar_real_set_prop_v;
+	BAR_CLASS (klass)->get_prop_v = (const gchar* (*) (Bar*)) bar_real_get_prop_v;
+	BAR_CLASS (klass)->set_prop_v = (void (*) (Bar*, const gchar*)) bar_real_set_prop_v;
 }
 
 static void
@@ -530,8 +530,8 @@ foo_class_init (FooClass * klass,
 	foo_parent_class = g_type_class_peek_parent (klass);
 	((BarClass *) klass)->finalize = foo_finalize;
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
-	BAR_CLASS (klass)->get_prop_v = foo_real_get_prop_v;
-	BAR_CLASS (klass)->set_prop_v = foo_real_set_prop_v;
+	BAR_CLASS (klass)->get_prop_v = (const gchar* (*) (Bar*)) foo_real_get_prop_v;
+	BAR_CLASS (klass)->set_prop_v = (void (*) (Bar*, const gchar*)) foo_real_set_prop_v;
 }
 
 static void

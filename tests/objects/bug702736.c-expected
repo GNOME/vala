@@ -263,7 +263,7 @@ class_b_class_init (ClassBClass * klass,
                     gpointer klass_data)
 {
 	class_b_parent_class = g_type_class_peek_parent (klass);
-	CLASS_A_CLASS (klass)->get_flags = class_b_real_get_flags;
+	CLASS_A_CLASS (klass)->get_flags = (gint (*) (ClassA*)) class_b_real_get_flags;
 	G_OBJECT_CLASS (klass)->get_property = _vala_class_b_get_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), CLASS_B_FLAGS_PROPERTY, class_b_properties[CLASS_B_FLAGS_PROPERTY] = g_param_spec_int ("flags", "flags", "flags", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }
@@ -400,7 +400,7 @@ class_d_class_init (ClassDClass * klass,
                     gpointer klass_data)
 {
 	class_d_parent_class = g_type_class_peek_parent (klass);
-	CLASS_A_CLASS (klass)->get_flags = class_d_real_get_flags;
+	CLASS_A_CLASS (klass)->get_flags = (gint (*) (ClassA*)) class_d_real_get_flags;
 	G_OBJECT_CLASS (klass)->get_property = _vala_class_d_get_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), CLASS_D_FLAGS_PROPERTY, class_d_properties[CLASS_D_FLAGS_PROPERTY] = g_param_spec_int ("flags", "flags", "flags", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }

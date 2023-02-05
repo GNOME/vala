@@ -324,8 +324,8 @@ manam_class_init (ManamClass * klass,
 {
 	manam_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &Manam_private_offset);
-	MANAM_CLASS (klass)->get_faz = manam_real_get_faz;
-	MANAM_CLASS (klass)->set_faz = manam_real_set_faz;
+	MANAM_CLASS (klass)->get_faz = (void (*) (Manam*, Foo*)) manam_real_get_faz;
+	MANAM_CLASS (klass)->set_faz = (void (*) (Manam*, Foo*)) manam_real_set_faz;
 	G_OBJECT_CLASS (klass)->get_property = _vala_manam_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_manam_set_property;
 	G_OBJECT_CLASS (klass)->finalize = manam_finalize;

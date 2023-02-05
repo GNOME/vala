@@ -352,8 +352,8 @@ base_foo_class_init (BaseFooClass * klass,
 {
 	base_foo_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &BaseFoo_private_offset);
-	BASE_FOO_CLASS (klass)->get_st = base_foo_real_get_st;
-	BASE_FOO_CLASS (klass)->set_st = base_foo_real_set_st;
+	BASE_FOO_CLASS (klass)->get_st = (void (*) (BaseFoo*, Manam*)) base_foo_real_get_st;
+	BASE_FOO_CLASS (klass)->set_st = (void (*) (BaseFoo*, Manam*)) base_foo_real_set_st;
 	G_OBJECT_CLASS (klass)->get_property = _vala_base_foo_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_base_foo_set_property;
 	G_OBJECT_CLASS (klass)->finalize = base_foo_finalize;
@@ -516,8 +516,8 @@ foo_class_init (FooClass * klass,
 {
 	foo_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
-	FOO_CLASS (klass)->get_st = foo_real_get_st;
-	FOO_CLASS (klass)->set_st = foo_real_set_st;
+	FOO_CLASS (klass)->get_st = (void (*) (Foo*, Manam*)) foo_real_get_st;
+	FOO_CLASS (klass)->set_st = (void (*) (Foo*, Manam*)) foo_real_set_st;
 	G_OBJECT_CLASS (klass)->get_property = _vala_foo_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_foo_set_property;
 	G_OBJECT_CLASS (klass)->finalize = foo_finalize;
@@ -646,8 +646,8 @@ bar_class_init (BarClass * klass,
                 gpointer klass_data)
 {
 	bar_parent_class = g_type_class_peek_parent (klass);
-	FOO_CLASS (klass)->get_st = bar_real_get_st;
-	FOO_CLASS (klass)->set_st = bar_real_set_st;
+	FOO_CLASS (klass)->get_st = (void (*) (Foo*, Manam*)) bar_real_get_st;
+	FOO_CLASS (klass)->set_st = (void (*) (Foo*, Manam*)) bar_real_set_st;
 	G_OBJECT_CLASS (klass)->get_property = _vala_bar_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_bar_set_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), BAR_ST_PROPERTY, bar_properties[BAR_ST_PROPERTY] = g_param_spec_boxed ("st", "st", "st", TYPE_MANAM, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));
@@ -765,8 +765,8 @@ baz_class_init (BazClass * klass,
                 gpointer klass_data)
 {
 	baz_parent_class = g_type_class_peek_parent (klass);
-	BASE_FOO_CLASS (klass)->get_st = baz_real_get_st;
-	BASE_FOO_CLASS (klass)->set_st = baz_real_set_st;
+	BASE_FOO_CLASS (klass)->get_st = (void (*) (BaseFoo*, Manam*)) baz_real_get_st;
+	BASE_FOO_CLASS (klass)->set_st = (void (*) (BaseFoo*, Manam*)) baz_real_set_st;
 	G_OBJECT_CLASS (klass)->get_property = _vala_baz_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_baz_set_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), BAZ_ST_PROPERTY, baz_properties[BAZ_ST_PROPERTY] = g_param_spec_boxed ("st", "st", "st", TYPE_MANAM, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE | G_PARAM_WRITABLE));

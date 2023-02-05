@@ -734,8 +734,8 @@ foo_class_init (FooClass * klass,
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
 	((FooClass *) klass)->get_bar = (gint* (*) (Foo*, guint8*)) foo_real_get_bar;
 	((FooClass *) klass)->set_bar = (void (*) (Foo*, gint**, guint8*)) foo_real_set_bar;
-	FOO_CLASS (klass)->get_manar = foo_real_get_manar;
-	FOO_CLASS (klass)->set_manar = foo_real_set_manar;
+	FOO_CLASS (klass)->get_manar = (gint* (*) (Foo*, guint8*)) foo_real_get_manar;
+	FOO_CLASS (klass)->set_manar = (void (*) (Foo*, gint*, guint8)) foo_real_set_manar;
 }
 
 static void
@@ -1031,8 +1031,8 @@ bar_class_init (BarClass * klass,
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
 	((FooClass *) klass)->get_bar = (gint* (*) (Foo*, guint8*)) bar_real_get_bar;
 	((FooClass *) klass)->set_bar = (void (*) (Foo*, gint**, guint8*)) bar_real_set_bar;
-	FOO_CLASS (klass)->get_manar = bar_real_get_manar;
-	FOO_CLASS (klass)->set_manar = bar_real_set_manar;
+	FOO_CLASS (klass)->get_manar = (gint* (*) (Foo*, guint8*)) bar_real_get_manar;
+	FOO_CLASS (klass)->set_manar = (void (*) (Foo*, gint*, guint8)) bar_real_set_manar;
 }
 
 static void
