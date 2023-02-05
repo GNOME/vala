@@ -1365,14 +1365,16 @@ public class Vala.GTypeModule : GErrorModule {
 				if (prop.get_accessor != null) {
 					generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
 
-					string cname = get_ccode_real_name (prop.get_accessor);
-					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
+					CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (prop.get_accessor));
+					cfunc = cast_method_pointer (prop.base_property.get_accessor.get_method (), cfunc, base_type);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), cfunc);
 				}
 				if (prop.set_accessor != null) {
 					generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
 
-					string cname = get_ccode_real_name (prop.set_accessor);
-					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+					CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (prop.set_accessor));
+					cfunc = cast_method_pointer (prop.base_property.set_accessor.get_method (), cfunc, base_type);
+					ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), cfunc);
 				}
 			}
 		}
@@ -1533,7 +1535,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
 					if (prop.is_abstract || prop.is_virtual) {
-						cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, base_type);
+						cfunc = cast_method_pointer (prop.base_interface_property.get_accessor.get_method (), cfunc, base_type);
 					}
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
 				}
@@ -1547,7 +1549,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
 					if (prop.is_abstract || prop.is_virtual) {
-						cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, base_type);
+						cfunc = cast_method_pointer (prop.base_interface_property.set_accessor.get_method (), cfunc, base_type);
 					}
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 				}
@@ -1587,7 +1589,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 					string cname = get_ccode_name (base_property.get_accessor);
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
-					cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, iface);
+					cfunc = cast_method_pointer (base_property.get_accessor.get_method (), cfunc, iface);
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc);
 				}
 				if (base_property.set_accessor != null && prop.set_accessor != null) {
@@ -1595,7 +1597,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 					string cname = get_ccode_name (base_property.set_accessor);
 					CCodeExpression cfunc = new CCodeIdentifier (cname);
-					cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, iface);
+					cfunc = cast_method_pointer (base_property.set_accessor.get_method (), cfunc, iface);
 					ccode.add_assignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc);
 				}
 			}
@@ -1603,20 +1605,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 		pop_function ();
 		cfile.add_function (iface_init);
-	}
-
-	CCodeExpression cast_property_accessor_pointer (PropertyAccessor acc, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
-		string cast;
-		if (acc.readable && acc.value_type.is_real_non_null_struct_type ()) {
-			cast = "void (*) (%s *, %s *)".printf (get_ccode_name (base_type), get_ccode_name (acc.value_type));
-		} else if (acc.readable) {
-			cast = "%s (*) (%s *)".printf (get_ccode_name (acc.value_type), get_ccode_name (base_type));
-		} else if (acc.value_type.is_real_non_null_struct_type ()) {
-			cast = "void (*) (%s *, %s *)".printf (get_ccode_name (base_type), get_ccode_name (acc.value_type));
-		} else {
-			cast = "void (*) (%s *, %s)".printf (get_ccode_name (base_type), get_ccode_name (acc.value_type));
-		}
-		return new CCodeCastExpression (cfunc, cast);
 	}
 
 	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type, int direction = 3) {
@@ -1710,7 +1698,7 @@ public class Vala.GTypeModule : GErrorModule {
 				if (prop.base_property == null || is_gsource) {
 					continue;
 				}
-				var base_type = prop.base_property.parent_symbol;
+				var base_type = (ObjectTypeSymbol) prop.base_property.parent_symbol;
 
 				var ccast = new CCodeCastExpression (new CCodeIdentifier ("self"), "%s *".printf (get_ccode_name (base_type)));
 
@@ -1718,14 +1706,16 @@ public class Vala.GTypeModule : GErrorModule {
 					if (prop.get_accessor != null) {
 						generate_property_accessor_declaration (prop.base_property.get_accessor, cfile);
 
-						string cname = get_ccode_real_name (prop.get_accessor);
-						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname));
+						CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (prop.get_accessor));
+						cfunc = cast_method_pointer (prop.base_property.get_accessor.get_method (), cfunc, base_type);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), cfunc);
 					}
 					if (prop.set_accessor != null) {
 						generate_property_accessor_declaration (prop.base_property.set_accessor, cfile);
 
-						string cname = get_ccode_real_name (prop.set_accessor);
-						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname));
+						CCodeExpression cfunc = new CCodeIdentifier (get_ccode_real_name (prop.set_accessor));
+						cfunc = cast_method_pointer (prop.base_property.set_accessor.get_method (), cfunc, base_type);
+						ccode.add_assignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), cfunc);
 					}
 				}
 			}

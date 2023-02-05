@@ -188,7 +188,7 @@ foo_ifoo_interface_init (IFooIface * iface,
                          gpointer iface_data)
 {
 	foo_ifoo_parent_iface = g_type_interface_peek_parent (iface);
-	iface->get_foo = (gint (*) (IFoo *)) foo_get_foo;
+	iface->get_foo = (gint (*) (IFoo*)) foo_get_foo;
 }
 
 static void
@@ -264,7 +264,7 @@ bar_class_init (BarClass * klass,
                 gpointer klass_data)
 {
 	bar_parent_class = g_type_class_peek_parent (klass);
-	FOO_CLASS (klass)->get_foo = bar_real_get_foo;
+	FOO_CLASS (klass)->get_foo = (gint (*) (Foo*)) bar_real_get_foo;
 	G_OBJECT_CLASS (klass)->get_property = _vala_bar_get_property;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), BAR_FOO_PROPERTY, bar_properties[BAR_FOO_PROPERTY] = g_param_spec_int ("foo", "foo", "foo", G_MININT, G_MAXINT, 0, G_PARAM_STATIC_STRINGS | G_PARAM_READABLE));
 }

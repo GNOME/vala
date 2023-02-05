@@ -318,8 +318,8 @@ bar_class_init (BarClass * klass,
 {
 	bar_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
-	FOO_CLASS (klass)->get_foo = bar_real_get_foo;
-	FOO_CLASS (klass)->set_foo = bar_real_set_foo;
+	FOO_CLASS (klass)->get_foo = (gconstpointer (*) (Foo*)) bar_real_get_foo;
+	FOO_CLASS (klass)->set_foo = (void (*) (Foo*, gconstpointer)) bar_real_set_foo;
 	G_OBJECT_CLASS (klass)->get_property = _vala_bar_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_bar_set_property;
 	G_OBJECT_CLASS (klass)->finalize = bar_finalize;

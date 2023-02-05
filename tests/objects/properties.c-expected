@@ -1637,8 +1637,8 @@ maman_bar_class_init (MamanBarClass * klass,
 {
 	maman_bar_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &MamanBar_private_offset);
-	MAMAN_FOO_CLASS (klass)->get_abstract_base_property = maman_bar_real_get_abstract_base_property;
-	MAMAN_FOO_CLASS (klass)->set_abstract_base_property = maman_bar_real_set_abstract_base_property;
+	MAMAN_FOO_CLASS (klass)->get_abstract_base_property = (gint (*) (MamanFoo*)) maman_bar_real_get_abstract_base_property;
+	MAMAN_FOO_CLASS (klass)->set_abstract_base_property = (void (*) (MamanFoo*, gint)) maman_bar_real_set_abstract_base_property;
 	G_OBJECT_CLASS (klass)->get_property = _vala_maman_bar_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_maman_bar_set_property;
 	G_OBJECT_CLASS (klass)->finalize = maman_bar_finalize;
@@ -2131,8 +2131,8 @@ maman_biz_class_init (MamanBizClass * klass,
 {
 	maman_biz_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &MamanBiz_private_offset);
-	MAMAN_ABIZ_CLASS (klass)->get_number2 = maman_biz_real_get_number2;
-	MAMAN_ABIZ_CLASS (klass)->set_number2 = maman_biz_real_set_number2;
+	MAMAN_ABIZ_CLASS (klass)->get_number2 = (gint (*) (MamanABiz*)) maman_biz_real_get_number2;
+	MAMAN_ABIZ_CLASS (klass)->set_number2 = (void (*) (MamanABiz*, gint)) maman_biz_real_set_number2;
 	G_OBJECT_CLASS (klass)->get_property = _vala_maman_biz_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_maman_biz_set_property;
 	G_OBJECT_CLASS (klass)->finalize = maman_biz_finalize;

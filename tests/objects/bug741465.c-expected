@@ -184,8 +184,8 @@ static void
 foo_instance_init (Foo * self)
 {
 	((AbstractFoo *) self)->foo = (const gchar* (*) (AbstractFoo*)) foo_real_foo;
-	((AbstractFoo *) self)->get_prop = foo_real_get_prop;
-	((AbstractFoo *) self)->set_prop = foo_real_set_prop;
+	((AbstractFoo *) self)->get_prop = (gint (*) (AbstractFoo*)) foo_real_get_prop;
+	((AbstractFoo *) self)->set_prop = (void (*) (AbstractFoo*, gint)) foo_real_set_prop;
 }
 
 Bar*
@@ -237,8 +237,8 @@ static void
 bar_instance_init (Bar * self)
 {
 	((AbstractFoo *) self)->foo = (const gchar* (*) (AbstractFoo*)) bar_real_foo;
-	((AbstractFoo *) self)->get_prop = bar_real_get_prop;
-	((AbstractFoo *) self)->set_prop = bar_real_set_prop;
+	((AbstractFoo *) self)->get_prop = (gint (*) (AbstractFoo*)) bar_real_get_prop;
+	((AbstractFoo *) self)->set_prop = (void (*) (AbstractFoo*, gint)) bar_real_set_prop;
 }
 
 static const gchar*
@@ -320,8 +320,8 @@ manam_instance_init (Manam * self)
 {
 	((Manam *) self)->foo = (const gchar* (*) (Manam*)) manam_real_foo;
 	((Manam *) self)->foo_plain = (gint (*) (Manam*)) manam_real_foo_plain;
-	((Manam *) self)->get_prop = manam_real_get_prop;
-	((Manam *) self)->set_prop = manam_real_set_prop;
+	((Manam *) self)->get_prop = (gint (*) (Manam*)) manam_real_get_prop;
+	((Manam *) self)->set_prop = (void (*) (Manam*, gint)) manam_real_set_prop;
 	self->field = 23;
 }
 

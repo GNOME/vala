@@ -810,12 +810,12 @@ foo_class_init (FooClass * klass,
 	foo_parent_class = g_type_class_peek_parent (klass);
 	((FooClass *) klass)->finalize = foo_finalize;
 	g_type_class_adjust_private_offset (klass, &Foo_private_offset);
-	FOO_CLASS (klass)->get_array_v = foo_real_get_array_v;
-	FOO_CLASS (klass)->set_array_v = foo_real_set_array_v;
-	FOO_CLASS (klass)->get_array_no_length_v = foo_real_get_array_no_length_v;
-	FOO_CLASS (klass)->set_array_no_length_v = foo_real_set_array_no_length_v;
-	FOO_CLASS (klass)->get_strv_v = foo_real_get_strv_v;
-	FOO_CLASS (klass)->set_strv_v = foo_real_set_strv_v;
+	FOO_CLASS (klass)->get_array_v = (Manam** (*) (Foo*, gint*)) foo_real_get_array_v;
+	FOO_CLASS (klass)->set_array_v = (void (*) (Foo*, Manam**, gint)) foo_real_set_array_v;
+	FOO_CLASS (klass)->get_array_no_length_v = (Manam** (*) (Foo*)) foo_real_get_array_no_length_v;
+	FOO_CLASS (klass)->set_array_no_length_v = (void (*) (Foo*, Manam**)) foo_real_set_array_no_length_v;
+	FOO_CLASS (klass)->get_strv_v = (gchar** (*) (Foo*)) foo_real_get_strv_v;
+	FOO_CLASS (klass)->set_strv_v = (void (*) (Foo*, gchar**)) foo_real_set_strv_v;
 }
 
 static void
@@ -1166,10 +1166,10 @@ bar_class_init (BarClass * klass,
 {
 	bar_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_adjust_private_offset (klass, &Bar_private_offset);
-	BAR_CLASS (klass)->get_array_v = bar_real_get_array_v;
-	BAR_CLASS (klass)->set_array_v = bar_real_set_array_v;
-	BAR_CLASS (klass)->get_strv_v = bar_real_get_strv_v;
-	BAR_CLASS (klass)->set_strv_v = bar_real_set_strv_v;
+	BAR_CLASS (klass)->get_array_v = (Manam** (*) (Bar*)) bar_real_get_array_v;
+	BAR_CLASS (klass)->set_array_v = (void (*) (Bar*, Manam**)) bar_real_set_array_v;
+	BAR_CLASS (klass)->get_strv_v = (gchar** (*) (Bar*)) bar_real_get_strv_v;
+	BAR_CLASS (klass)->set_strv_v = (void (*) (Bar*, gchar**)) bar_real_set_strv_v;
 	G_OBJECT_CLASS (klass)->get_property = _vala_bar_get_property;
 	G_OBJECT_CLASS (klass)->set_property = _vala_bar_set_property;
 	G_OBJECT_CLASS (klass)->finalize = bar_finalize;
