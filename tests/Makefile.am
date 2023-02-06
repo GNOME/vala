@@ -296,6 +296,7 @@ TESTS = \
 	control-flow/continue-invalid.test \
 	control-flow/double-catch.test \
 	control-flow/expressions-conditional.vala \
+	control-flow/finally-no-return.vala \
 	control-flow/finally-return.test \
 	control-flow/for.vala \
 	control-flow/for-switch-continue.vala \
