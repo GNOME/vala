@@ -1018,7 +1018,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				return;
 			}
 
-			jump_stack.add (new JumpTarget.finally_clause (finally_block, current_block));
+			if (current_block != null) {
+				jump_stack.add (new JumpTarget.finally_clause (finally_block, current_block));
+			}
 		}
 
 		int finally_jump_stack_size = jump_stack.size;
