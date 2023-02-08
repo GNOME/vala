@@ -19,9 +19,11 @@ namespace Gdk {
 			protected Display ();
 			[Version (since = "4.4")]
 			public void* get_egl_display ();
+			[Version (deprecated = true, deprecated_since = "4.10.")]
 			public unowned string? get_startup_notification_id ();
 			public bool query_registry (string global);
 			public void set_cursor_theme (string name, int size);
+			[Version (deprecated = true, deprecated_since = "4.10.")]
 			public void set_startup_notification_id (string startup_id);
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
