@@ -289,6 +289,8 @@ namespace Soup {
 		public uint64 get_connection_id ();
 		public unowned GLib.Uri get_first_party ();
 		public Soup.MessageFlags get_flags ();
+		[Version (since = "3.4")]
+		public bool get_force_http1 ();
 		public Soup.HTTPVersion get_http_version ();
 		public bool get_is_options_ping ();
 		public bool get_is_top_level_navigation ();
@@ -314,6 +316,8 @@ namespace Soup {
 		public void remove_flags (Soup.MessageFlags flags);
 		public void set_first_party (GLib.Uri first_party);
 		public void set_flags (Soup.MessageFlags flags);
+		[Version (since = "3.4")]
+		public void set_force_http1 (bool value);
 		public void set_is_options_ping (bool is_options_ping);
 		public void set_is_top_level_navigation (bool is_top_level_navigation);
 		public void set_method (string method);
@@ -348,6 +352,8 @@ namespace Soup {
 		public signal void content_sniffed (string type, GLib.HashTable<string,string> @params);
 		public signal void finished ();
 		public signal void got_body ();
+		[Version (since = "3.4")]
+		public signal void got_body_data (uint chunk_size);
 		public signal void got_headers ();
 		public signal void got_informational ();
 		public signal void hsts_enforced ();
@@ -444,7 +450,7 @@ namespace Soup {
 	public class Multipart {
 		[CCode (has_construct_function = false)]
 		public Multipart (string mime_type);
-		public void append_form_file (string control_name, string filename, string content_type, GLib.Bytes body);
+		public void append_form_file (string control_name, string? filename, string? content_type, GLib.Bytes body);
 		public void append_form_string (string control_name, string data);
 		public void append_part (Soup.MessageHeaders headers, GLib.Bytes body);
 		public void free ();
@@ -584,6 +590,10 @@ namespace Soup {
 		public GLib.InputStream send (Soup.Message msg, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public GLib.Bytes send_and_read (Soup.Message msg, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async GLib.Bytes send_and_read_async (Soup.Message msg, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "3.4")]
+		public ssize_t send_and_splice (Soup.Message msg, GLib.OutputStream out_stream, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "3.4")]
+		public async ssize_t send_and_splice_async (Soup.Message msg, GLib.OutputStream out_stream, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async GLib.InputStream send_async (Soup.Message msg, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_accept_language (string accept_language);
 		public void set_accept_language_auto (bool accept_language_auto);

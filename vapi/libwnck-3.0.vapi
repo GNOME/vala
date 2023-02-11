@@ -188,6 +188,8 @@ namespace Wnck {
 		public bool get_scroll_enabled ();
 		[Version (deprecated = true, deprecated_since = "3.42")]
 		public int get_size_hint_list (int n_elements);
+		[Version (since = "43.1")]
+		public bool get_tooltips_enabled ();
 		[Version (since = "2.12")]
 		public void set_button_relief (Gtk.ReliefStyle relief);
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
@@ -200,10 +202,13 @@ namespace Wnck {
 		[Version (since = "3.24.0")]
 		public void set_scroll_enabled (bool scroll_enabled);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
+		[Version (since = "43.1")]
+		public void set_tooltips_enabled (bool tooltips_enabled);
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public Tasklist.with_handle (Wnck.Handle handle);
 		[NoAccessorMethod]
 		public Wnck.Handle handle { owned get; construct; }
+		public bool tooltips_enabled { get; set; }
 		public signal void task_enter_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
 		public signal void task_leave_notify ([CCode (type = "gpointer")] GLib.List<weak Wnck.Window> windows);
 	}

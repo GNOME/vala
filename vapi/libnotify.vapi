@@ -11,10 +11,10 @@ namespace Notify {
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
 		[Version (since = "0.7.10")]
-		public unowned string get_activation_token ();
+		public unowned string? get_activation_token ();
 		public int get_closed_reason ();
 		[Version (since = "0.7.3")]
-		public void set_app_name (string app_name);
+		public void set_app_name (string? app_name);
 		public void set_category (string category);
 		[Version (since = "0.6")]
 		public void set_hint (string key, GLib.Variant? value);
@@ -30,14 +30,16 @@ namespace Notify {
 		public void set_hint_string (string key, string value);
 		[Version (deprecated = true, deprecated_since = "0.6.")]
 		public void set_hint_uint32 (string key, uint value);
-		[Version (deprecated = true)]
+		[Version (deprecated = true, deprecated_since = "0.5.")]
 		public void set_icon_from_pixbuf (Gdk.Pixbuf icon);
+		[Version (since = "0.5")]
 		public void set_image_from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void set_timeout (int timeout);
 		public void set_urgency (Notify.Urgency urgency);
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string? body, string? icon);
 		[NoAccessorMethod]
+		[Version (since = "0.7.3")]
 		public string app_name { owned get; set; }
 		[NoAccessorMethod]
 		public string body { owned get; set construct; }

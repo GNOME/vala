@@ -224,7 +224,11 @@ namespace GI {
 		public GI.FieldInfo find_field (string name);
 		public GI.FunctionInfo find_method (string name);
 		public size_t get_alignment ();
+		[Version (since = "1.76")]
+		public unowned string? get_copy_function ();
 		public GI.FieldInfo get_field (int n);
+		[Version (since = "1.76")]
+		public unowned string? get_free_function ();
 		public GI.FunctionInfo get_method (int n);
 		public int get_n_fields ();
 		public int get_n_methods ();
@@ -262,10 +266,14 @@ namespace GI {
 	public class UnionInfo : GI.BaseInfo {
 		public GI.FunctionInfo find_method (string name);
 		public size_t get_alignment ();
+		[Version (since = "1.76")]
+		public unowned string? get_copy_function ();
 		public GI.ConstantInfo get_discriminator (int n);
 		public int get_discriminator_offset ();
 		public GI.TypeInfo get_discriminator_type ();
 		public GI.FieldInfo get_field (int n);
+		[Version (since = "1.76")]
+		public unowned string? get_free_function ();
 		public GI.FunctionInfo get_method (int n);
 		public int get_n_fields ();
 		public int get_n_methods ();

@@ -738,6 +738,8 @@ namespace Pk {
 		public uint get_remaining_time ();
 		[Version (since = "1.0.12")]
 		public Pk.Role get_role ();
+		[Version (since = "1.2.6")]
+		public string get_sender ();
 		[Version (since = "1.0.12")]
 		public uint get_speed ();
 		[Version (since = "1.0.12")]
@@ -768,6 +770,8 @@ namespace Pk {
 		public bool set_remaining_time (uint remaining_time);
 		[Version (since = "0.5.2")]
 		public bool set_role (Pk.Role role);
+		[Version (since = "1.2.6")]
+		public bool set_sender (string bus_name);
 		[Version (since = "0.5.2")]
 		public bool set_speed (uint speed);
 		[Version (since = "0.5.2")]
@@ -798,6 +802,8 @@ namespace Pk {
 		public uint remaining_time { get; set; }
 		[Version (since = "0.5.2")]
 		public uint role { get; set; }
+		[Version (since = "1.2.6")]
+		public string sender { owned get; set; }
 		[Version (since = "0.5.2")]
 		public uint speed { get; set; }
 		[Version (since = "0.5.2")]
@@ -1654,7 +1660,8 @@ namespace Pk {
 		PACKAGE,
 		ITEM_PROGRESS,
 		TRANSACTION_FLAGS,
-		INVALID
+		INVALID,
+		SENDER
 	}
 	[CCode (cheader_filename = "packagekit-glib2/packagekit.h", cname = "PkRestartEnum", cprefix = "PK_RESTART_ENUM_", type_id = "pk_restart_enum_get_type ()")]
 	[GIR (name = "RestartEnum")]

@@ -1,6 +1,8 @@
 * skip=false
 *.* skip=false
 
+AnnotStamp
+  .set_custom_image.image type="Cairo.Surface"
 Page
   .get_bounding_box.rect out
   .get_image type="Cairo.Surface"
