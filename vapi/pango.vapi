@@ -454,8 +454,9 @@ namespace Pango {
 		public static unowned Pango.Language? from_string (string? language);
 		[Version (since = "1.16")]
 		public static unowned Pango.Language get_default ();
+		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "1.48")]
-		public static unowned Pango.Language? get_preferred ();
+		public static unowned Pango.Language[]? get_preferred ();
 		public unowned string get_sample_string ();
 		[CCode (array_length_pos = 0.1)]
 		[Version (since = "1.22")]
@@ -1415,9 +1416,9 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (replacement = "Language.get_default", since = "1.16")]
 	public static unowned Pango.Language language_get_default ();
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (array_length = false, array_null_terminated = true, cheader_filename = "pango/pango.h")]
 	[Version (replacement = "Language.get_preferred", since = "1.48")]
-	public static unowned Pango.Language? language_get_preferred ();
+	public static unowned Pango.Language[]? language_get_preferred ();
 	[CCode (cheader_filename = "pango/pango.h")]
 	[Version (replacement = "LayoutDeserializeError.quark")]
 	public static GLib.Quark layout_deserialize_error_quark ();
