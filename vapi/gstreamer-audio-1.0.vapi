@@ -20,6 +20,9 @@ namespace Gst {
 			[NoAccessorMethod]
 			public uint64 discont_wait { get; set; }
 			[NoAccessorMethod]
+			[Version (since = "1.22")]
+			public bool force_live { get; construct; }
+			[NoAccessorMethod]
 			[Version (since = "1.20")]
 			public bool ignore_inactive_pads { get; set; }
 			[NoAccessorMethod]
@@ -61,7 +64,7 @@ namespace Gst {
 			public weak Gst.Audio.RingBuffer ringbuffer;
 			[CCode (has_construct_function = false)]
 			protected BaseSink ();
-			public virtual unowned Gst.Audio.RingBuffer create_ringbuffer ();
+			public virtual unowned Gst.Audio.RingBuffer? create_ringbuffer ();
 			public Gst.ClockTime get_alignment_threshold ();
 			public Gst.ClockTime get_discont_wait ();
 			public int64 get_drift_tolerance ();
@@ -98,7 +101,7 @@ namespace Gst {
 			public weak Gst.Audio.RingBuffer ringbuffer;
 			[CCode (has_construct_function = false)]
 			protected BaseSrc ();
-			public virtual unowned Gst.Audio.RingBuffer create_ringbuffer ();
+			public virtual unowned Gst.Audio.RingBuffer? create_ringbuffer ();
 			public bool get_provide_clock ();
 			public Gst.Audio.BaseSrcSlaveMethod get_slave_method ();
 			public void set_provide_clock (bool provide);
@@ -194,7 +197,7 @@ namespace Gst {
 			public Gst.FlowReturn finish_subframe (owned Gst.Buffer? buf);
 			[NoWrapper]
 			public virtual void flush (bool hard);
-			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public void get_allocator (out Gst.Allocator? allocator, out Gst.AllocationParams @params);
 			public unowned Gst.Audio.Info get_audio_info ();
 			public int get_delay ();
 			public bool get_drainable ();
@@ -279,7 +282,7 @@ namespace Gst {
 			public Gst.FlowReturn finish_frame (owned Gst.Buffer? buffer, int samples);
 			[NoWrapper]
 			public virtual void flush ();
-			public void get_allocator (out Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public void get_allocator (out Gst.Allocator? allocator, out Gst.AllocationParams @params);
 			public unowned Gst.Audio.Info get_audio_info ();
 			public bool get_drainable ();
 			public int get_frame_max ();
@@ -547,7 +550,7 @@ namespace Gst {
 			public int n_planes;
 			public void* planes;
 			public weak Gst.Buffer buffer;
-			public static Gst.Buffer clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
+			public static Gst.Buffer? clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 			public bool map (Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);
 			public static bool reorder_channels (Gst.Buffer buffer, Gst.Audio.Format format, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] from, [CCode (array_length_cname = "channels", array_length_pos = 2.5)] Gst.Audio.ChannelPosition[] to);
 			public static Gst.Buffer truncate (owned Gst.Buffer buffer, int bpf, size_t trim, size_t samples);
@@ -988,7 +991,7 @@ namespace Gst {
 		public const int RESAMPLER_QUALITY_MIN;
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_clip")]
 		[Version (replacement = "AudioBuffer.clip")]
-		public static Gst.Buffer audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
+		public static Gst.Buffer? audio_buffer_clip (owned Gst.Buffer buffer, Gst.Segment segment, int rate, int bpf);
 		[CCode (cheader_filename = "gst/audio/audio.h", cname = "gst_audio_buffer_map")]
 		[Version (replacement = "AudioBuffer.map", since = "1.16")]
 		public static bool audio_buffer_map (out Gst.Audio.Buffer buffer, Gst.Audio.Info info, Gst.Buffer gstbuffer, Gst.MapFlags flags);

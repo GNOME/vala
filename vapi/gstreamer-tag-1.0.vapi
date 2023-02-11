@@ -76,15 +76,15 @@ namespace Gst {
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.TagList from_exif_buffer_with_tiff_header (Gst.Buffer buffer);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_id3v2_tag (Gst.Buffer buffer);
+			public static Gst.TagList? from_id3v2_tag (Gst.Buffer buffer);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_vorbiscomment ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
+			public static Gst.TagList? from_vorbiscomment ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] data, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_vorbiscomment_buffer (Gst.Buffer buffer, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
+			public static Gst.TagList? from_vorbiscomment_buffer (Gst.Buffer buffer, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, out string vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList from_xmp_buffer (Gst.Buffer buffer);
+			public static Gst.TagList? from_xmp_buffer (Gst.Buffer buffer);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.TagList new_from_id3v1 ([CCode (array_length = false)] uint8 data[128]);
+			public static Gst.TagList? new_from_id3v1 ([CCode (array_length = false)] uint8 data[128]);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.Buffer to_exif_buffer (Gst.TagList taglist, int byte_order, uint32 base_offset);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
@@ -92,7 +92,7 @@ namespace Gst {
 			[CCode (cheader_filename = "gst/tag/tag.h")]
 			public static Gst.Buffer to_vorbiscomment_buffer (Gst.TagList list, [CCode (array_length_cname = "id_data_length", array_length_pos = 2.5, array_length_type = "guint")] uint8[] id_data, string? vendor_string);
 			[CCode (cheader_filename = "gst/tag/tag.h")]
-			public static Gst.Buffer to_xmp_buffer (Gst.TagList list, bool read_only, [CCode (array_length = false, array_null_terminated = true)] string[] schemas);
+			public static Gst.Buffer? to_xmp_buffer (Gst.TagList list, bool read_only, [CCode (array_length = false, array_null_terminated = true)] string[] schemas);
 		}
 		namespace MusicBrainz {
 			[CCode (cheader_filename = "gst/tag/tag.h", cname = "GST_TAG_MUSICBRAINZ_ALBUMARTISTID")]
@@ -208,55 +208,55 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static bool check_language_code (string lang_code);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static string freeform_string_to_utf8 ([CCode (array_length_cname = "size", array_length_pos = 1.5)] char[] data, [CCode (array_length = false, array_null_terminated = true)] string[] env_vars);
+		public static string? freeform_string_to_utf8 ([CCode (array_length_cname = "size", array_length_pos = 1.5)] char[] data, [CCode (array_length = false, array_null_terminated = true)] string[] env_vars);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string from_id3_tag (string id3_tag);
+		public static unowned string? from_id3_tag (string id3_tag);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string from_id3_user_tag (string type, string id3_user_tag);
+		public static unowned string? from_id3_user_tag (string type, string id3_user_tag);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string from_vorbis_tag (string vorbis_tag);
+		public static unowned string? from_vorbis_tag (string vorbis_tag);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static uint get_id3v2_tag_size (Gst.Buffer buffer);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_language_code_iso_639_1 (string lang_code);
+		public static unowned string? get_language_code_iso_639_1 (string lang_code);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_language_code_iso_639_2B (string lang_code);
+		public static unowned string? get_language_code_iso_639_2B (string lang_code);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_language_code_iso_639_2T (string lang_code);
+		public static unowned string? get_language_code_iso_639_2T (string lang_code);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/tag/tag.h")]
 		public static string[] get_language_codes ();
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_language_name (string language_code);
+		public static unowned string? get_language_name (string language_code);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_license_description (string license_ref);
+		public static unowned string? get_license_description (string license_ref);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static Gst.Tag.LicenseFlags get_license_flags (string license_ref);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_license_jurisdiction (string license_ref);
+		public static unowned string? get_license_jurisdiction (string license_ref);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_license_nick (string license_ref);
+		public static unowned string? get_license_nick (string license_ref);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_license_title (string license_ref);
+		public static unowned string? get_license_title (string license_ref);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string get_license_version (string license_ref);
+		public static unowned string? get_license_version (string license_ref);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/tag/tag.h")]
 		public static string[] get_licenses ();
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static uint id3_genre_count ();
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string id3_genre_get (uint id);
+		public static unowned string? id3_genre_get (uint id);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static Gst.Sample image_data_to_image_sample ([CCode (array_length_cname = "image_data_len", array_length_pos = 1.5, array_length_type = "guint")] uint8[] image_data, Gst.Tag.ImageType image_type);
+		public static Gst.Sample? image_data_to_image_sample ([CCode (array_length_cname = "image_data_len", array_length_pos = 1.5, array_length_type = "guint")] uint8[] image_data, Gst.Tag.ImageType image_type);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static bool parse_extended_comment (string ext_comment, out string? key, out string? lang, out string value, bool fail_if_no_key);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static void register_musicbrainz_tags ();
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string to_id3_tag (string gst_tag);
+		public static unowned string? to_id3_tag (string gst_tag);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
 		public static GLib.List<string> to_vorbis_comments (Gst.TagList list, string tag);
 		[CCode (cheader_filename = "gst/tag/tag.h")]
-		public static unowned string to_vorbis_tag (string gst_tag);
+		public static unowned string? to_vorbis_tag (string gst_tag);
 		[CCode (cheader_filename = "gst/tag/tag.h", cname = "gst_vorbis_tag_add")]
 		public static void vorbis_tag_add (Gst.TagList list, string tag, string value);
 		[CCode (array_length = false, array_null_terminated = true, cheader_filename = "gst/tag/tag.h")]

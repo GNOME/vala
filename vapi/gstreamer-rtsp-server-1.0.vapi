@@ -59,7 +59,7 @@ namespace Gst {
 			public virtual void generate_authenticate_header (Gst.RTSPServer.Context ctx);
 			public Gst.RTSPServer.Token? get_default_token ();
 			[Version (since = "1.16")]
-			public string get_realm ();
+			public string? get_realm ();
 			[Version (since = "1.12")]
 			public Gst.RTSP.AuthMethod get_supported_methods ();
 			public GLib.TlsAuthenticationMode get_tls_authentication_mode ();
@@ -74,7 +74,7 @@ namespace Gst {
 			public void remove_digest (string user);
 			public void set_default_token (Gst.RTSPServer.Token? token);
 			[Version (since = "1.16")]
-			public void set_realm (string realm);
+			public void set_realm (string? realm);
 			[Version (since = "1.12")]
 			public void set_supported_methods (Gst.RTSP.AuthMethod methods);
 			[Version (since = "1.6")]
@@ -90,6 +90,9 @@ namespace Gst {
 		public class Client : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Client ();
+			[NoWrapper]
+			[Version (since = "1.22")]
+			public virtual Gst.RTSP.StatusCode adjust_error_code (Gst.RTSPServer.Context ctx, Gst.RTSP.StatusCode code);
 			[NoWrapper]
 			public virtual Gst.RTSP.StatusCode adjust_play_mode (Gst.RTSPServer.Context context, Gst.RTSP.TimeRange range, Gst.SeekFlags flags, double rate, Gst.ClockTime trickmode_interval, bool enable_rate_control);
 			[NoWrapper]
@@ -220,10 +223,8 @@ namespace Gst {
 			public Gst.RTSPServer.MediaStatus get_status ();
 			public unowned Gst.RTSPServer.Stream? get_stream (uint idx);
 			public Gst.RTSPServer.SuspendMode get_suspend_mode ();
-			public Gst.Net.TimeProvider get_time_provider (string? address, uint16 port);
+			public Gst.Net.TimeProvider? get_time_provider (string? address, uint16 port);
 			public Gst.RTSPServer.TransportMode get_transport_mode ();
-			[NoWrapper]
-			public virtual bool handle_message (Gst.Message message);
 			public virtual bool handle_sdp (Gst.SDP.Message sdp);
 			[Version (since = "1.18")]
 			public bool has_completed_sender ();
@@ -312,6 +313,8 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool time_provider { get; set; }
 			public Gst.RTSPServer.TransportMode transport_mode { get; set; }
+			[Version (since = "1.22")]
+			public virtual signal bool handle_message (Gst.Message message);
 			public virtual signal void new_state (int state);
 			public virtual signal void new_stream (Gst.RTSPServer.Stream stream);
 			public virtual signal void prepared ();
@@ -329,9 +332,9 @@ namespace Gst {
 			public void add_role_from_structure (Gst.Structure structure);
 			[NoWrapper]
 			public virtual void configure (Gst.RTSPServer.Media media);
-			public virtual Gst.RTSPServer.Media @construct (Gst.RTSP.Url url);
+			public virtual Gst.RTSPServer.Media? @construct (Gst.RTSP.Url url);
 			[CCode (returns_floating_reference = true)]
-			public virtual Gst.Element create_element (Gst.RTSP.Url url);
+			public virtual Gst.Element? create_element (Gst.RTSP.Url url);
 			[CCode (returns_floating_reference = true)]
 			[NoWrapper]
 			public virtual Gst.Pipeline create_pipeline (Gst.RTSPServer.Media media);
@@ -340,7 +343,7 @@ namespace Gst {
 			public Gst.RTSPServer.AddressPool? get_address_pool ();
 			public uint get_buffer_size ();
 			[Version (since = "1.8")]
-			public Gst.Clock get_clock ();
+			public Gst.Clock? get_clock ();
 			[Version (since = "1.16")]
 			public bool get_do_retransmission ();
 			[Version (since = "1.18")]
@@ -467,13 +470,13 @@ namespace Gst {
 			[CCode (has_construct_function = false, type = "GstRTSPMediaFactory*")]
 			public OnvifMediaFactory ();
 			public uint get_backchannel_bandwidth ();
-			public string get_backchannel_launch ();
+			public string? get_backchannel_launch ();
 			public virtual bool has_backchannel_support ();
 			[Version (since = "1.18")]
 			public bool has_replay_support ();
 			public static bool requires_backchannel (Gst.RTSPServer.MediaFactory factory, Gst.RTSPServer.Context ctx);
 			public void set_backchannel_bandwidth (uint bandwidth);
-			public void set_backchannel_launch (string launch);
+			public void set_backchannel_launch (string? launch);
 			[Version (since = "1.18")]
 			public void set_replay_support (bool has_replay_support);
 		}
@@ -524,7 +527,7 @@ namespace Gst {
 			[Version (since = "1.18")]
 			public uint get_content_length_limit ();
 			public Gst.RTSPServer.MountPoints? get_mount_points ();
-			public string? get_service ();
+			public string get_service ();
 			public Gst.RTSPServer.SessionPool? get_session_pool ();
 			public Gst.RTSPServer.ThreadPool? get_thread_pool ();
 			public static bool io_func (GLib.Socket socket, GLib.IOCondition condition, Gst.RTSPServer.Server server);
@@ -661,11 +664,11 @@ namespace Gst {
 			public GLib.Socket? get_rtp_multicast_socket (GLib.SocketFamily family);
 			public GLib.Socket? get_rtp_socket (GLib.SocketFamily family);
 			public bool get_rtpinfo (out uint rtptime, out uint seq, out uint clock_rate, out Gst.ClockTime running_time);
-			public GLib.Object get_rtpsession ();
+			public GLib.Object? get_rtpsession ();
 			public void get_server_port (out Gst.RTSP.Range server_port, GLib.SocketFamily family);
 			public Gst.Pad? get_sinkpad ();
 			public Gst.Pad? get_srcpad ();
-			public Gst.Element get_srtp_encoder ();
+			public Gst.Element? get_srtp_encoder ();
 			public void get_ssrc (out uint ssrc);
 			public bool get_ulpfec_enabled ();
 			[Version (since = "1.16")]
@@ -854,6 +857,9 @@ namespace Gst {
 			public void pop_current ();
 			[CCode (cname = "gst_rtsp_context_push_current")]
 			public void push_current ();
+			[CCode (cname = "gst_rtsp_context_set_token")]
+			[Version (since = "1.22")]
+			public void set_token (Gst.RTSPServer.Token token);
 		}
 		[CCode (cheader_filename = "gst/rtsp-server/rtsp-server.h", cname = "GstSDPInfo", has_type_id = false)]
 		[GIR (name = "SDPInfo")]

@@ -7,7 +7,7 @@ namespace Gst {
 		[GIR (name = "NetClientClock")]
 		public class ClientClock : Gst.SystemClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
-			public ClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
+			public ClientClock (string? name, string remote_address, int remote_port, Gst.ClockTime base_time);
 			[NoAccessorMethod]
 			public string address { owned get; set construct; }
 			[NoAccessorMethod]
@@ -30,7 +30,7 @@ namespace Gst {
 		public class NtpClock : Gst.Net.ClientClock {
 			[CCode (has_construct_function = false, type = "GstClock*")]
 			[Version (since = "1.6")]
-			public NtpClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
+			public NtpClock (string? name, string remote_address, int remote_port, Gst.ClockTime base_time);
 		}
 		[CCode (cheader_filename = "gst/net/net.h", cname = "GstPtpClock", lower_case_cprefix = "gst_ptp_clock_", type_id = "gst_ptp_clock_get_type ()")]
 		[GIR (name = "PtpClock")]
@@ -56,12 +56,13 @@ namespace Gst {
 			[CCode (cname = "GST_NET_TIME_PACKET_SIZE")]
 			public const int SIZE;
 			[CCode (has_construct_function = false)]
-			public TimePacket ([CCode (array_length = false)] uint8[] buffer);
+			public TimePacket ([CCode (array_length = false)] uint8 buffer[16]);
 			public Gst.Net.TimePacket copy ();
 			public void free ();
 			public static Gst.Net.TimePacket receive (GLib.Socket socket, out GLib.SocketAddress src_address) throws GLib.Error;
 			public bool send (GLib.Socket socket, GLib.SocketAddress dest_address) throws GLib.Error;
-			public uint8 serialize ();
+			[CCode (array_length = false, array_length_cexpr = "16")]
+			public uint8[] serialize ();
 		}
 		[CCode (cheader_filename = "gst/net/net.h", type_id = "gst_net_time_provider_get_type ()")]
 		[GIR (name = "NetTimeProvider")]

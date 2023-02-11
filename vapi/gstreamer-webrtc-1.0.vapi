@@ -24,6 +24,10 @@ namespace Gst {
 	public abstract class WebRTCDataChannel : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebRTCDataChannel ();
+		[Version (since = "1.22")]
+		public bool send_data_full (GLib.Bytes? data) throws GLib.Error;
+		[Version (since = "1.22")]
+		public bool send_string_full (string? str) throws GLib.Error;
 		[NoAccessorMethod]
 		public uint64 buffered_amount { get; }
 		[NoAccessorMethod]
@@ -60,51 +64,37 @@ namespace Gst {
 		public signal void send_string (string? str);
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice", type_id = "gst_webrtc_ice_get_type ()")]
+	[Version (since = "1.22")]
 	public abstract class WebRTCICE : Gst.Object {
+		[CCode (array_length = false)]
+		public weak void* _gst_reserved[4];
 		public Gst.WebRTCICEConnectionState ice_connection_state;
 		public Gst.WebRTCICEGatheringState ice_gathering_state;
 		[CCode (has_construct_function = false)]
 		protected WebRTCICE ();
-		[Version (since = "1.22")]
 		public virtual void add_candidate (Gst.WebRTCICEStream stream, string candidate);
-		[Version (since = "1.22")]
 		public virtual Gst.WebRTCICEStream? add_stream (uint session_id);
-		[Version (since = "1.22")]
 		public virtual bool add_turn_server (string uri);
-		[Version (since = "1.22")]
-		public static void candidate_stats_free (Gst.WebRTCICECandidateStats stats);
-		[Version (since = "1.22")]
 		public virtual Gst.WebRTCICETransport? find_transport (Gst.WebRTCICEStream stream, Gst.WebRTCICEComponent component);
-		[Version (since = "1.22")]
 		public virtual bool gather_candidates (Gst.WebRTCICEStream stream);
-		[Version (since = "1.22")]
+		public virtual string get_http_proxy ();
 		public virtual bool get_is_controller ();
-		[Version (since = "1.22")]
-		public virtual GLib.Array<Gst.WebRTCICECandidateStats?> get_local_candidates (Gst.WebRTCICEStream stream);
-		[Version (since = "1.22")]
-		public virtual GLib.Array<Gst.WebRTCICECandidateStats?> get_remote_candidates (Gst.WebRTCICEStream stream);
-		[Version (since = "1.22")]
-		public virtual bool get_selected_pair (Gst.WebRTCICEStream stream, Gst.WebRTCICECandidateStats local_stats, Gst.WebRTCICECandidateStats remote_stats);
-		[Version (since = "1.22")]
-		public virtual string get_stun_server ();
-		[Version (since = "1.22")]
-		public virtual string get_turn_server ();
-		[Version (since = "1.22")]
+		[NoWrapper]
+		public virtual Gst.WebRTCICECandidateStats get_local_candidates (Gst.WebRTCICEStream stream);
+		[NoWrapper]
+		public virtual Gst.WebRTCICECandidateStats get_remote_candidates (Gst.WebRTCICEStream stream);
+		public virtual bool get_selected_pair (Gst.WebRTCICEStream stream, out Gst.WebRTCICECandidateStats local_stats, out Gst.WebRTCICECandidateStats remote_stats);
+		public virtual string? get_stun_server ();
+		public virtual string? get_turn_server ();
 		public virtual void set_force_relay (bool force_relay);
-		[Version (since = "1.22")]
+		public virtual void set_http_proxy (string uri);
 		public virtual void set_is_controller (bool controller);
-		[Version (since = "1.22")]
 		public virtual bool set_local_credentials (Gst.WebRTCICEStream stream, string ufrag, string pwd);
-		[Version (since = "1.22")]
 		public virtual void set_on_ice_candidate (owned Gst.WebRTCICEOnCandidateFunc func);
-		[Version (since = "1.22")]
 		public virtual bool set_remote_credentials (Gst.WebRTCICEStream stream, string ufrag, string pwd);
-		[Version (since = "1.22")]
-		public virtual void set_stun_server (string uri);
-		[Version (since = "1.22")]
+		public virtual void set_stun_server (string? uri);
 		public virtual void set_tos (Gst.WebRTCICEStream stream, uint tos);
-		[Version (since = "1.22")]
-		public virtual void set_turn_server (string uri);
+		public virtual void set_turn_server (string? uri);
 		[NoAccessorMethod]
 		[Version (since = "1.20")]
 		public uint max_rtp_port { get; set construct; }
@@ -113,13 +103,29 @@ namespace Gst {
 		public uint min_rtp_port { get; set construct; }
 		public signal bool add_local_ip_address (string address);
 	}
+	[CCode (cheader_filename = "gst/webrtc/webrtc.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", lower_case_csuffix = "webrtc_ice_candidate_stats", type_id = "gst_webrtc_ice_candidate_stats_get_type ()")]
+	[Compact]
+	[Version (since = "1.22")]
+	public class WebRTCICECandidateStats {
+		[CCode (array_length = false)]
+		public weak void* _gst_reserved[20];
+		public weak string ipaddr;
+		public uint port;
+		public uint prio;
+		public weak string proto;
+		public weak string relay_proto;
+		public uint stream_id;
+		public weak string type;
+		public weak string url;
+		public Gst.WebRTCICECandidateStats copy ();
+		public void free ();
+	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_ice_stream", type_id = "gst_webrtc_ice_stream_get_type ()")]
+	[Version (since = "1.22")]
 	public abstract class WebRTCICEStream : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected WebRTCICEStream ();
-		[Version (since = "1.22")]
 		public virtual Gst.WebRTCICETransport? find_transport (Gst.WebRTCICEComponent component);
-		[Version (since = "1.22")]
 		public virtual bool gather_candidates ();
 		[NoAccessorMethod]
 		public uint stream_id { get; construct; }
@@ -218,17 +224,6 @@ namespace Gst {
 		public Gst.WebRTCSessionDescription copy ();
 		[DestroysInstance]
 		public void free ();
-	}
-	[CCode (cheader_filename = "gst/webrtc/webrtc.h", has_type_id = false)]
-	public struct WebRTCICECandidateStats {
-		public weak string ipaddr;
-		public uint port;
-		public uint stream_id;
-		public weak string type;
-		public weak string proto;
-		public weak string relay_proto;
-		public uint prio;
-		public weak string url;
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", cprefix = "GST_WEBRTC_BUNDLE_POLICY_", type_id = "gst_webrtc_bundle_policy_get_type ()")]
 	[Version (since = "1.16")]
@@ -387,7 +382,9 @@ namespace Gst {
 		INVALID_STATE,
 		INTERNAL_FAILURE,
 		[Version (since = "1.22")]
-		INVALID_MODIFICATION;
+		INVALID_MODIFICATION,
+		[Version (since = "1.22")]
+		TYPE_ERROR;
 		[CCode (cname = "gst_webrtc_error_quark")]
 		public static GLib.Quark quark ();
 	}

@@ -10,7 +10,7 @@ namespace Gst {
 			protected Sink ();
 			[Version (since = "1.12")]
 			public bool get_buffer_list_support ();
-			public Gst.Caps get_caps ();
+			public Gst.Caps? get_caps ();
 			public bool get_drop ();
 			public bool get_emit_signals ();
 			public uint get_max_buffers ();
@@ -37,24 +37,24 @@ namespace Gst {
 			[Version (since = "1.20")]
 			public signal bool new_serialized_event ();
 			[HasEmitter]
-			public virtual signal Gst.Sample pull_preroll ();
+			public virtual signal Gst.Sample? pull_preroll ();
 			[HasEmitter]
-			public virtual signal Gst.Sample pull_sample ();
+			public virtual signal Gst.Sample? pull_sample ();
 			[Version (since = "1.20")]
-			public virtual signal Gst.MiniObject try_pull_object (uint64 timeout);
+			public virtual signal Gst.MiniObject? try_pull_object (uint64 timeout);
 			[HasEmitter]
 			[Version (since = "1.10")]
-			public virtual signal Gst.Sample try_pull_preroll (uint64 timeout);
+			public virtual signal Gst.Sample? try_pull_preroll (uint64 timeout);
 			[HasEmitter]
 			[Version (since = "1.10")]
-			public virtual signal Gst.Sample try_pull_sample (uint64 timeout);
+			public virtual signal Gst.Sample? try_pull_sample (uint64 timeout);
 		}
 		[CCode (cheader_filename = "gst/app/app.h", type_id = "gst_app_src_get_type ()")]
 		[GIR (name = "AppSrc")]
 		public class Src : Gst.Base.Src, Gst.URIHandler {
 			[CCode (has_construct_function = false)]
 			protected Src ();
-			public Gst.Caps get_caps ();
+			public Gst.Caps? get_caps ();
 			[Version (since = "1.20")]
 			public uint64 get_current_level_buffers ();
 			[Version (since = "1.2")]

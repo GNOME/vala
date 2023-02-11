@@ -139,7 +139,7 @@ namespace Gst {
 			public signal void buffering (int object);
 			public signal void duration_changed (uint64 object);
 			public signal void end_of_stream ();
-			public signal void error (GLib.Error object, Gst.Structure p0);
+			public signal void error (GLib.Error error, Gst.Structure? details);
 			public signal void media_info_updated (Gst.Play.MediaInfo object);
 			public signal void mute_changed (bool object);
 			public signal void position_updated (uint64 object);
@@ -148,7 +148,7 @@ namespace Gst {
 			public signal void uri_loaded (string object);
 			public signal void video_dimensions_changed (uint object, uint p0);
 			public signal void volume_changed (double object);
-			public signal void warning (GLib.Error object, Gst.Structure p0);
+			public signal void warning (GLib.Error error, Gst.Structure? details);
 		}
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_stream_info_get_type ()")]
 		[GIR (name = "PlayStreamInfo")]

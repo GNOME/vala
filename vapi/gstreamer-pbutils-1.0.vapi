@@ -91,7 +91,7 @@ namespace Gst {
 			public uint64 get_channel_mask ();
 			public uint get_channels ();
 			public uint get_depth ();
-			public unowned string get_language ();
+			public unowned string? get_language ();
 			public uint get_max_bitrate ();
 			public uint get_sample_rate ();
 		}
@@ -102,7 +102,7 @@ namespace Gst {
 			protected DiscovererContainerInfo ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams ();
 			[Version (since = "1.20")]
-			public unowned Gst.TagList get_tags ();
+			public unowned Gst.TagList? get_tags ();
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererInfo", lower_case_cprefix = "gst_discoverer_info_", type_id = "gst_discoverer_info_get_type ()")]
 		[GIR (name = "DiscovererInfo")]
@@ -112,27 +112,27 @@ namespace Gst {
 			public Gst.PbUtils.DiscovererInfo copy ();
 			[Version (since = "1.6")]
 			public static Gst.PbUtils.DiscovererInfo from_variant (GLib.Variant variant);
-			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_audio_streams ();
-			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_container_streams ();
+			public GLib.List<Gst.PbUtils.DiscovererAudioInfo> get_audio_streams ();
+			public GLib.List<Gst.PbUtils.DiscovererContainerInfo> get_container_streams ();
 			public Gst.ClockTime get_duration ();
 			[Version (since = "1.14")]
 			public bool get_live ();
 			[Version (deprecated = true)]
-			public unowned Gst.Structure get_misc ();
+			public unowned Gst.Structure? get_misc ();
 			[CCode (array_length = false, array_null_terminated = true)]
 			[Version (since = "1.4")]
 			public unowned string[] get_missing_elements_installer_details ();
 			public Gst.PbUtils.DiscovererResult get_result ();
 			public bool get_seekable ();
-			public Gst.PbUtils.DiscovererStreamInfo get_stream_info ();
+			public Gst.PbUtils.DiscovererStreamInfo? get_stream_info ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_stream_list ();
 			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_streams (GLib.Type streamtype);
-			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_subtitle_streams ();
+			public GLib.List<Gst.PbUtils.DiscovererSubtitleInfo> get_subtitle_streams ();
 			[Version (deprecated = true, deprecated_since = "1.20")]
-			public unowned Gst.TagList get_tags ();
-			public unowned Gst.Toc get_toc ();
+			public unowned Gst.TagList? get_tags ();
+			public unowned Gst.Toc? get_toc ();
 			public unowned string get_uri ();
-			public GLib.List<Gst.PbUtils.DiscovererStreamInfo> get_video_streams ();
+			public GLib.List<Gst.PbUtils.DiscovererVideoInfo> get_video_streams ();
 			[Version (since = "1.6")]
 			public GLib.Variant to_variant (Gst.PbUtils.DiscovererSerializeFlags flags);
 		}
@@ -141,17 +141,17 @@ namespace Gst {
 		public class DiscovererStreamInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DiscovererStreamInfo ();
-			public Gst.Caps get_caps ();
+			public Gst.Caps? get_caps ();
 			[Version (deprecated = true)]
-			public unowned Gst.Structure get_misc ();
-			public Gst.PbUtils.DiscovererStreamInfo get_next ();
-			public Gst.PbUtils.DiscovererStreamInfo get_previous ();
+			public unowned Gst.Structure? get_misc ();
+			public Gst.PbUtils.DiscovererStreamInfo? get_next ();
+			public Gst.PbUtils.DiscovererStreamInfo? get_previous ();
 			public unowned string get_stream_id ();
 			[Version (since = "1.20")]
 			public int get_stream_number ();
 			public unowned string get_stream_type_nick ();
-			public unowned Gst.TagList get_tags ();
-			public unowned Gst.Toc get_toc ();
+			public unowned Gst.TagList? get_tags ();
+			public unowned Gst.Toc? get_toc ();
 			public static void list_free (GLib.List<Gst.PbUtils.DiscovererStreamInfo> infos);
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererSubtitleInfo", lower_case_cprefix = "gst_discoverer_subtitle_info_", type_id = "gst_discoverer_subtitle_info_get_type ()")]
@@ -159,7 +159,7 @@ namespace Gst {
 		public class DiscovererSubtitleInfo : Gst.PbUtils.DiscovererStreamInfo {
 			[CCode (has_construct_function = false)]
 			protected DiscovererSubtitleInfo ();
-			public unowned string get_language ();
+			public unowned string? get_language ();
 		}
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "GstDiscovererVideoInfo", lower_case_cprefix = "gst_discoverer_video_info_", type_id = "gst_discoverer_video_info_get_type ()")]
 		[GIR (name = "DiscovererVideoInfo")]
@@ -200,20 +200,20 @@ namespace Gst {
 			protected EncodingProfile ();
 			[Version (since = "1.12")]
 			public Gst.PbUtils.EncodingProfile copy ();
-			public static Gst.PbUtils.EncodingProfile find (string targetname, string? profilename, string? category);
-			public static Gst.PbUtils.EncodingProfile from_discoverer (Gst.PbUtils.DiscovererInfo info);
+			public static Gst.PbUtils.EncodingProfile? find (string targetname, string? profilename, string? category);
+			public static Gst.PbUtils.EncodingProfile? from_discoverer (Gst.PbUtils.DiscovererInfo info);
 			public bool get_allow_dynamic_output ();
-			public unowned string get_description ();
+			public unowned string? get_description ();
 			[Version (since = "1.20")]
 			public Gst.Structure? get_element_properties ();
-			public unowned string get_file_extension ();
+			public unowned string? get_file_extension ();
 			public Gst.Caps get_format ();
 			public Gst.Caps get_input_caps ();
-			public unowned string get_name ();
+			public unowned string? get_name ();
 			public uint get_presence ();
-			public unowned string get_preset ();
-			public unowned string get_preset_name ();
-			public Gst.Caps get_restriction ();
+			public unowned string? get_preset ();
+			public unowned string? get_preset_name ();
+			public Gst.Caps? get_restriction ();
 			[Version (since = "1.18")]
 			public bool get_single_segment ();
 			public unowned string get_type_nick ();
@@ -248,8 +248,8 @@ namespace Gst {
 			public unowned string get_description ();
 			public unowned string get_name ();
 			[Version (since = "1.18")]
-			public unowned string get_path ();
-			public Gst.PbUtils.EncodingProfile get_profile (string name);
+			public unowned string? get_path ();
+			public Gst.PbUtils.EncodingProfile? get_profile (string name);
 			public unowned GLib.List<Gst.PbUtils.EncodingProfile> get_profiles ();
 			public static Gst.PbUtils.EncodingTarget load (string name, string? category) throws GLib.Error;
 			public static Gst.PbUtils.EncodingTarget load_from_file (string filepath) throws GLib.Error;
@@ -397,13 +397,13 @@ namespace Gst {
 		public static unowned string? codec_utils_h265_get_tier ([CCode (array_length_cname = "len", array_length_pos = 1.1, array_length_type = "guint")] uint8[] profile_tier_level);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps")]
 		[Version (since = "1.8")]
-		public static Gst.Caps codec_utils_opus_create_caps (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping);
+		public static Gst.Caps? codec_utils_opus_create_caps (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_caps_from_header")]
 		[Version (since = "1.8")]
-		public static Gst.Caps codec_utils_opus_create_caps_from_header (Gst.Buffer header, Gst.Buffer? comments);
+		public static Gst.Caps? codec_utils_opus_create_caps_from_header (Gst.Buffer header, Gst.Buffer? comments);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_create_header")]
 		[Version (since = "1.8")]
-		public static Gst.Buffer codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping, uint16 pre_skip, int16 output_gain);
+		public static Gst.Buffer? codec_utils_opus_create_header (uint32 rate, uint8 channels, uint8 channel_mapping_family, uint8 stream_count, uint8 coupled_count, [CCode (array_length = false)] uint8[]? channel_mapping, uint16 pre_skip, int16 output_gain);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_codec_utils_opus_parse_caps")]
 		[Version (since = "1.8")]
 		public static bool codec_utils_opus_parse_caps (Gst.Caps caps, out uint32 rate, out uint8 channels, out uint8 channel_mapping_family, out uint8 stream_count, out uint8 coupled_count, [CCode (array_length = false)] out uint8 channel_mapping[256]);
@@ -418,7 +418,7 @@ namespace Gst {
 		[Version (since = "1.20")]
 		public static Gst.PbUtils.PbUtilsCapsDescriptionFlags get_caps_description_flags (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
-		public static string get_codec_description (Gst.Caps caps);
+		public static string? get_codec_description (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 		public static string get_decoder_description (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
@@ -462,7 +462,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_description")]
 		public static string missing_plugin_message_get_description (Gst.Message msg);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_plugin_message_get_installer_detail")]
-		public static string missing_plugin_message_get_installer_detail (Gst.Message msg);
+		public static string? missing_plugin_message_get_installer_detail (Gst.Message msg);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_installer_detail_new")]
 		public static string missing_uri_sink_installer_detail_new (string protocol);
 		[CCode (cheader_filename = "gst/pbutils/pbutils.h", cname = "gst_missing_uri_sink_message_new")]

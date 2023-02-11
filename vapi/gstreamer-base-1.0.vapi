@@ -76,6 +76,8 @@ namespace Gst {
 			public virtual Gst.FlowReturn flush ();
 			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 			public Gst.BufferPool? get_buffer_pool ();
+			[Version (since = "1.22")]
+			public bool get_force_live ();
 			[Version (since = "1.20")]
 			public bool get_ignore_inactive_pads ();
 			public Gst.ClockTime get_latency ();
@@ -91,6 +93,8 @@ namespace Gst {
 			public virtual bool propose_allocation (Gst.Base.AggregatorPad pad, Gst.Query decide_query, Gst.Query query);
 			[Version (since = "1.18")]
 			public void selected_samples (Gst.ClockTime pts, Gst.ClockTime dts, Gst.ClockTime duration, Gst.Structure? info);
+			[Version (since = "1.22")]
+			public void set_force_live (bool force_live);
 			[Version (since = "1.20")]
 			public void set_ignore_inactive_pads (bool ignore);
 			public void set_latency (Gst.ClockTime min_latency, Gst.ClockTime max_latency);
@@ -588,9 +592,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected PushSrc ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn alloc (out Gst.Buffer buf);
+			public virtual Gst.FlowReturn alloc (out Gst.Buffer? buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (out Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (out Gst.Buffer? buf);
 			[NoWrapper]
 			public virtual Gst.FlowReturn fill (Gst.Buffer buf);
 		}
@@ -725,9 +729,9 @@ namespace Gst {
 			[CCode (has_construct_function = false)]
 			protected Src ();
 			[NoWrapper]
-			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, out Gst.Buffer buf);
+			public virtual Gst.FlowReturn alloc (uint64 offset, uint size, out Gst.Buffer? buf);
 			[NoWrapper]
-			public virtual Gst.FlowReturn create (uint64 offset, uint size, ref Gst.Buffer buf);
+			public virtual Gst.FlowReturn create (uint64 offset, uint size, ref Gst.Buffer? buf);
 			[NoWrapper]
 			public virtual bool decide_allocation (Gst.Query query);
 			[NoWrapper]
@@ -737,7 +741,7 @@ namespace Gst {
 			[NoWrapper]
 			public virtual Gst.FlowReturn fill (uint64 offset, uint size, Gst.Buffer buf);
 			[NoWrapper]
-			public virtual Gst.Caps fixate (Gst.Caps caps);
+			public virtual Gst.Caps fixate (owned Gst.Caps caps);
 			public void get_allocator (out Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 			public uint get_blocksize ();
 			public Gst.BufferPool? get_buffer_pool ();
@@ -866,6 +870,12 @@ namespace Gst {
 			[NoAccessorMethod]
 			public bool qos { get; set; }
 		}
+		[CCode (cheader_filename = "gst/base/base.h", cname = "GstTypeFindData", has_type_id = false)]
+		[Compact]
+		[GIR (name = "TypeFindData")]
+		[Version (since = "1.22")]
+		public class TypeFindData {
+		}
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstBitWriter", has_type_id = false)]
 		[GIR (name = "BitWriter")]
 		[Version (since = "1.16")]
@@ -991,11 +1001,17 @@ namespace Gst {
 		public static Gst.Caps? type_find_helper (Gst.Pad src, uint64 size);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer")]
 		public static Gst.Caps? type_find_helper_for_buffer (Gst.Object? obj, Gst.Buffer buf, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer_with_caps")]
+		[Version (since = "1.22")]
+		public static Gst.Caps? type_find_helper_for_buffer_with_caps (Gst.Object? obj, Gst.Buffer buf, Gst.Caps caps, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_buffer_with_extension")]
 		[Version (since = "1.16")]
 		public static Gst.Caps? type_find_helper_for_buffer_with_extension (Gst.Object? obj, Gst.Buffer buf, string? extension, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data")]
 		public static Gst.Caps? type_find_helper_for_data (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data_with_caps")]
+		[Version (since = "1.22")]
+		public static Gst.Caps? type_find_helper_for_data_with_caps (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, Gst.Caps caps, out Gst.TypeFindProbability prob);
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_for_data_with_extension")]
 		[Version (since = "1.16")]
 		public static Gst.Caps? type_find_helper_for_data_with_extension (Gst.Object? obj, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data, string? extension, out Gst.TypeFindProbability prob);
@@ -1006,5 +1022,8 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_helper_get_range_full")]
 		[Version (since = "1.14.3")]
 		public static Gst.FlowReturn type_find_helper_get_range_full (Gst.Object obj, Gst.Object? parent, Gst.Base.TypeFindHelperGetRangeFunction func, uint64 size, string? extension, out Gst.Caps caps, out Gst.TypeFindProbability prob);
+		[CCode (cheader_filename = "gst/base/base.h", cname = "gst_type_find_list_factories_for_caps")]
+		[Version (since = "1.22")]
+		public static GLib.List<Gst.TypeFindFactory>? type_find_list_factories_for_caps (Gst.Object? obj, Gst.Caps caps);
 	}
 }

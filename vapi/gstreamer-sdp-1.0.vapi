@@ -45,7 +45,7 @@ namespace Gst {
 			[Version (since = "1.8")]
 			public string base64_encode ();
 			[Version (since = "1.4")]
-			public unowned Gst.SDP.MIKEYPayload find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
+			public unowned Gst.SDP.MIKEYPayload? find_payload (Gst.SDP.MIKEYPayloadType type, uint nth);
 			[CCode (has_construct_function = false)]
 			[Version (since = "1.4")]
 			public MIKEYMessage.from_bytes (GLib.Bytes bytes, Gst.SDP.MIKEYDecryptInfo info) throws GLib.Error;
@@ -62,7 +62,7 @@ namespace Gst {
 			[Version (since = "1.4")]
 			public uint get_n_payloads ();
 			[Version (since = "1.4")]
-			public unowned Gst.SDP.MIKEYPayload get_payload (uint idx);
+			public unowned Gst.SDP.MIKEYPayload? get_payload (uint idx);
 			[Version (since = "1.4")]
 			public bool insert_cs_srtp (int idx, Gst.SDP.MIKEYMapSRTP map);
 			[Version (since = "1.4")]
@@ -96,13 +96,13 @@ namespace Gst {
 			[Version (since = "1.4")]
 			public uint kemac_get_n_sub ();
 			[Version (since = "1.4")]
-			public unowned Gst.SDP.MIKEYPayload kemac_get_sub (uint idx);
+			public unowned Gst.SDP.MIKEYPayload? kemac_get_sub (uint idx);
 			[Version (since = "1.4")]
 			public bool kemac_remove_sub (uint idx);
 			[Version (since = "1.4")]
 			public bool kemac_set (Gst.SDP.MIKEYEncAlg enc_alg, Gst.SDP.MIKEYMacAlg mac_alg);
 			[Version (since = "1.4")]
-			public bool key_data_set_interval (uint8 vf_len, [CCode (array_length_cname = "vt_len", array_length_pos = 1.66667, array_length_type = "guint8")] uint8[] vt_data);
+			public bool key_data_set_interval ([CCode (array_length_cname = "vf_len", array_length_pos = 0.5, array_length_type = "guint8")] uint8[] vf_data, [CCode (array_length_cname = "vt_len", array_length_pos = 1.5, array_length_type = "guint8")] uint8[] vt_data);
 			[Version (since = "1.4")]
 			public bool key_data_set_key (Gst.SDP.MIKEYKeyDataType key_type, [CCode (array_length_cname = "key_len", array_length_pos = 1.5, array_length_type = "guint16")] uint8[] key_data);
 			[Version (since = "1.4")]
@@ -216,8 +216,8 @@ namespace Gst {
 			public uint emails_len ();
 			public Gst.SDP.Result free ();
 			public unowned Gst.SDP.Attribute? get_attribute (uint idx);
-			public unowned string get_attribute_val (string key);
-			public unowned string get_attribute_val_n (string key, uint nth);
+			public unowned string? get_attribute_val (string key);
+			public unowned string? get_attribute_val_n (string key, uint nth);
 			public unowned Gst.SDP.Bandwidth? get_bandwidth (uint idx);
 			public unowned Gst.SDP.Connection? get_connection ();
 			public unowned string get_email (uint idx);
@@ -369,11 +369,11 @@ namespace Gst {
 			public uint formats_len ();
 			public Gst.SDP.Result free ();
 			public unowned Gst.SDP.Attribute? get_attribute (uint idx);
-			public unowned string get_attribute_val (string key);
-			public unowned string get_attribute_val_n (string key, uint nth);
+			public unowned string? get_attribute_val (string key);
+			public unowned string? get_attribute_val_n (string key, uint nth);
 			public unowned Gst.SDP.Bandwidth? get_bandwidth (uint idx);
 			[Version (since = "1.8")]
-			public Gst.Caps get_caps_from_media (int pt);
+			public Gst.Caps? get_caps_from_media (int pt);
 			public unowned Gst.SDP.Connection? get_connection (uint idx);
 			public unowned string get_format (uint idx);
 			public unowned string get_information ();
@@ -414,7 +414,7 @@ namespace Gst {
 			public Gst.SDP.Result set_key (string type, string data);
 			public Gst.SDP.Result set_media (string med);
 			[Version (since = "1.8")]
-			public static Gst.SDP.Result set_media_from_caps (Gst.Caps caps, Gst.SDP.Media media);
+			public static Gst.SDP.Result set_media_from_caps (Gst.Caps caps, out Gst.SDP.Media media);
 			public Gst.SDP.Result set_port_info (uint port, uint num_ports);
 			public Gst.SDP.Result set_proto (string proto);
 			public Gst.SDP.Result uninit ();
@@ -584,14 +584,20 @@ namespace Gst {
 		[Version (since = "1.8")]
 		public static string make_keymgmt (string uri, string base64);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMedia.init")]
+		public static Gst.SDP.Result media_init (out Gst.SDP.Media media);
+		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMedia.new")]
 		public static Gst.SDP.Result media_new (out Gst.SDP.Media media);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMedia.set_media_from_caps", since = "1.8")]
-		public static Gst.SDP.Result media_set_media_from_caps (Gst.Caps caps, Gst.SDP.Media media);
+		public static Gst.SDP.Result media_set_media_from_caps (Gst.Caps caps, out Gst.SDP.Media media);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMessage.as_uri")]
 		public static string message_as_uri (string scheme, Gst.SDP.Message msg);
+		[CCode (cheader_filename = "gst/sdp/sdp.h")]
+		[Version (replacement = "SDPMessage.init")]
+		public static Gst.SDP.Result message_init (out unowned Gst.SDP.Message msg);
 		[CCode (cheader_filename = "gst/sdp/sdp.h")]
 		[Version (replacement = "SDPMessage.new")]
 		public static Gst.SDP.Result message_new (out Gst.SDP.Message msg);

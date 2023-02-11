@@ -112,34 +112,34 @@ namespace Gst {
 			[CCode (cname = "gst_harness_find_element")]
 			public Gst.Element? find_element (string element_name);
 			[CCode (cname = "gst_harness_get_allocator")]
-			public void get_allocator (out unowned Gst.Allocator allocator, out Gst.AllocationParams @params);
+			public void get_allocator (out unowned Gst.Allocator? allocator, out unowned Gst.AllocationParams @params);
 			[CCode (cname = "gst_harness_get_last_pushed_timestamp")]
 			public Gst.ClockTime get_last_pushed_timestamp ();
 			[CCode (cname = "gst_harness_get_testclock")]
-			public Gst.Check.TestClock get_testclock ();
+			public Gst.Check.TestClock? get_testclock ();
 			[CCode (cname = "gst_harness_play")]
 			public void play ();
 			[CCode (cname = "gst_harness_pull")]
-			public Gst.Buffer pull ();
+			public Gst.Buffer? pull ();
 			[CCode (cname = "gst_harness_pull_event")]
-			public Gst.Event pull_event ();
+			public Gst.Event? pull_event ();
 			[CCode (cname = "gst_harness_pull_until_eos")]
 			[Version (since = "1.18")]
-			public bool pull_until_eos (out Gst.Buffer buf);
+			public bool pull_until_eos (out Gst.Buffer? buf);
 			[CCode (cname = "gst_harness_pull_upstream_event")]
-			public Gst.Event pull_upstream_event ();
+			public Gst.Event? pull_upstream_event ();
 			[CCode (cname = "gst_harness_push")]
 			public Gst.FlowReturn push (owned Gst.Buffer buffer);
 			[CCode (cname = "gst_harness_push_and_pull")]
-			public Gst.Buffer push_and_pull (owned Gst.Buffer buffer);
+			public Gst.Buffer? push_and_pull (owned Gst.Buffer buffer);
 			[CCode (cname = "gst_harness_push_event")]
-			public bool push_event (Gst.Event event);
+			public bool push_event (owned Gst.Event event);
 			[CCode (cname = "gst_harness_push_from_src")]
 			public Gst.FlowReturn push_from_src ();
 			[CCode (cname = "gst_harness_push_to_sink")]
 			public Gst.FlowReturn push_to_sink ();
 			[CCode (cname = "gst_harness_push_upstream_event")]
-			public bool push_upstream_event (Gst.Event event);
+			public bool push_upstream_event (owned Gst.Event event);
 			[CCode (cname = "gst_harness_query_latency")]
 			public Gst.ClockTime query_latency ();
 			[CCode (cname = "gst_harness_set_blocking_push_mode")]
@@ -186,11 +186,11 @@ namespace Gst {
 			[CCode (cname = "gst_harness_teardown")]
 			public void teardown ();
 			[CCode (cname = "gst_harness_try_pull")]
-			public Gst.Buffer try_pull ();
+			public Gst.Buffer? try_pull ();
 			[CCode (cname = "gst_harness_try_pull_event")]
-			public Gst.Event try_pull_event ();
+			public Gst.Event? try_pull_event ();
 			[CCode (cname = "gst_harness_try_pull_upstream_event")]
-			public Gst.Event try_pull_upstream_event ();
+			public Gst.Event? try_pull_upstream_event ();
 			[CCode (cname = "gst_harness_upstream_events_in_queue")]
 			public uint upstream_events_in_queue ();
 			[CCode (cname = "gst_harness_upstream_events_received")]

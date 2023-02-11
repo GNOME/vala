@@ -11,9 +11,9 @@ namespace Gst {
 			[Version (since = "1.2")]
 			public DmaBufAllocator ();
 			[Version (since = "1.2")]
-			public static Gst.Memory alloc (Gst.Allocator allocator, int fd, size_t size);
+			public static Gst.Memory? alloc (Gst.Allocator allocator, int fd, size_t size);
 			[Version (since = "1.16")]
-			public static Gst.Memory alloc_with_flags (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
+			public static Gst.Memory? alloc_with_flags (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
 		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstFdAllocator", lower_case_cprefix = "gst_fd_allocator_", type_id = "gst_fd_allocator_get_type ()")]
 		[GIR (name = "FdAllocator")]
@@ -21,7 +21,7 @@ namespace Gst {
 		public class FdAllocator : Gst.Allocator {
 			[CCode (has_construct_function = false, type = "GstAllocator*")]
 			public FdAllocator ();
-			public static Gst.Memory alloc (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
+			public static Gst.Memory? alloc (Gst.Allocator allocator, int fd, size_t size, Gst.Allocators.FdMemoryFlags flags);
 		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstPhysMemoryAllocator", lower_case_cprefix = "gst_phys_memory_allocator_", type_cname = "GstPhysMemoryAllocatorInterface", type_id = "gst_phys_memory_allocator_get_type ()")]
 		[GIR (name = "PhysMemoryAllocator")]
