@@ -294,7 +294,7 @@ public class Vala.GtkModule : GSignalModule {
 			} else if (current_object != null && current_token == MarkupTokenType.START_ELEMENT && (current_name == "property" || current_name == "binding")) {
 				var property_name = reader.get_attribute ("name");
 				if (property_name == null) {
-					Report.error (node.source_reference, "Invalid binding in ui file `%s'", ui_file);
+					Report.error (node.source_reference, "Invalid %s without name in ui file `%s'", current_name, ui_file);
 					current_token = reader.read_token (null, null);
 					continue;
 				}
@@ -318,7 +318,7 @@ public class Vala.GtkModule : GSignalModule {
 
 				if (current_property != null) {
 					if (handler_name == null) {
-						Report.error (node.source_reference, "Invalid closure in ui file `%s'", ui_file);
+						Report.error (node.source_reference, "Invalid %s without function in ui file `%s'", current_name, ui_file);
 						current_token = reader.read_token (null, null);
 						continue;
 					}
