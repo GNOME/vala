@@ -7714,7 +7714,7 @@ namespace Gtk {
 	public class CssProvider : GLib.Object, Gtk.StyleProvider {
 		[CCode (has_construct_function = false)]
 		public CssProvider ();
-		public void load_from_data ([CCode (array_length_cname = "length", array_length_pos = 1.1, array_length_type = "gssize", type = "const char*")] string[] data);
+		public void load_from_data (string data, ssize_t length = -1);
 		public void load_from_file (GLib.File file);
 		public void load_from_path (string path);
 		public void load_from_resource (string resource_path);
