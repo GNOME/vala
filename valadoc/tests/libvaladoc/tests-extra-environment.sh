@@ -13,5 +13,5 @@ VALAFLAGS="\
 	-X -I$abs_top_srcdir/libvaladoc \
 	$abs_top_srcdir/valadoc/tests/libvaladoc/parser-generic-scanner.vala \
 "
-export PKG_CONFIG_PATH=$abs_top_builddir:$abs_top_builddir/libvaladoc
+export PKG_CONFIG_PATH=$abs_top_builddir:$abs_top_builddir/libvaladoc:$PKG_CONFIG_PATH
 export LD_LIBRARY_PATH=$abs_top_builddir/vala/.libs:$abs_top_builddir/libvaladoc/.libs
