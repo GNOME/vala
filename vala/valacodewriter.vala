@@ -1693,7 +1693,11 @@ public class Vala.CodeWriter : CodeVisitor {
 				}
 			}
 
-			if (!(node is Parameter) && !(node is PropertyAccessor)) {
+			if (node is PropertyAccessor) {
+				write_string (" ");
+			} else if (node is Parameter) {
+				// nothing
+			} else {
 				write_indent ();
 			}
 
@@ -1717,7 +1721,9 @@ public class Vala.CodeWriter : CodeVisitor {
 				stream.puts (")");
 			}
 			stream.puts ("]");
-			if (node is Parameter || node is PropertyAccessor) {
+			if (node is PropertyAccessor) {
+				// nothing
+			} else if (node is Parameter) {
 				write_string (" ");
 			} else {
 				write_newline ();
