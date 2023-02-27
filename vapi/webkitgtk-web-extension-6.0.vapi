@@ -50,7 +50,7 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_frame_get_type ()")]
 	[Version (since = "2.26")]
-	public class Frame : GLib.Object {
+	public sealed class Frame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Frame ();
 		public uint64 get_id ();
@@ -64,7 +64,7 @@ namespace WebKit {
 		public bool is_main_frame ();
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_hit_test_result_get_type ()")]
-	public class HitTestResult : GLib.Object {
+	public sealed class HitTestResult : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected HitTestResult ();
 		public bool context_is_editable ();
@@ -88,7 +88,7 @@ namespace WebKit {
 		public string media_uri { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_script_world_get_type ()")]
-	public class ScriptWorld : GLib.Object {
+	public sealed class ScriptWorld : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.2")]
 		public ScriptWorld ();
@@ -150,14 +150,14 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_web_editor_get_type ()")]
 	[Version (since = "2.10")]
-	public class WebEditor : GLib.Object {
+	public sealed class WebEditor : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebEditor ();
 		public unowned WebKit.WebPage get_page ();
 		public signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_web_extension_get_type ()")]
-	public class WebExtension : GLib.Object {
+	public sealed class WebExtension : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebExtension ();
 		public unowned WebKit.WebPage get_page (uint64 page_id);
@@ -181,14 +181,26 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
 	[Version (since = "2.8")]
-	public class WebHitTestResult : WebKit.HitTestResult {
+	public sealed class WebHitTestResult : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebHitTestResult ();
+		public bool context_is_editable ();
+		public bool context_is_image ();
+		public bool context_is_link ();
+		public bool context_is_media ();
+		public bool context_is_scrollbar ();
+		public bool context_is_selection ();
+		public uint get_context ();
+		public unowned string get_image_uri ();
 		[Version (since = "2.40")]
 		public JSC.Value? get_js_node (WebKit.ScriptWorld? world);
+		public unowned string get_link_label ();
+		public unowned string get_link_title ();
+		public unowned string get_link_uri ();
+		public unowned string get_media_uri ();
 	}
 	[CCode (cheader_filename = "webkit/webkit-web-extension.h", type_id = "webkit_web_page_get_type ()")]
-	public class WebPage : GLib.Object {
+	public sealed class WebPage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebPage ();
 		[Version (since = "2.10")]
