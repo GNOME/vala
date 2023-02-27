@@ -81,7 +81,7 @@ namespace JSC {
 		public JSC.Class parent { get; construct; }
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_context_get_type ()")]
-	public class Context : GLib.Object {
+	public sealed class Context : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Context ();
 		public JSC.CheckSyntaxResult check_syntax (string code, ssize_t length, JSC.CheckSyntaxMode mode, string uri, uint line_number, out JSC.Exception exception);
@@ -106,7 +106,7 @@ namespace JSC {
 		public JSC.VirtualMachine virtual_machine { get; construct; }
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_exception_get_type ()")]
-	public class Exception : GLib.Object {
+	public sealed class Exception : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Exception (JSC.Context context, string message);
 		public unowned string? get_backtrace_string ();
@@ -121,7 +121,7 @@ namespace JSC {
 		public Exception.with_name (JSC.Context context, string name, string message);
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_value_get_type ()")]
-	public class Value : GLib.Object {
+	public sealed class Value : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Value ();
 		[CCode (has_construct_function = false)]
@@ -212,12 +212,12 @@ namespace JSC {
 		public JSC.Context context { get; construct; }
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_virtual_machine_get_type ()")]
-	public class VirtualMachine : GLib.Object {
+	public sealed class VirtualMachine : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public VirtualMachine ();
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_weak_value_get_type ()")]
-	public class WeakValue : GLib.Object {
+	public sealed class WeakValue : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WeakValue (JSC.Value value);
 		public JSC.Value get_value ();
