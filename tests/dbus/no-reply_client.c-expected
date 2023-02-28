@@ -681,7 +681,7 @@ __lambda4_ (Block1Data* _data1_,
 {
 	gboolean _tmp0_ = FALSE;
 	const gchar* _tmp1_;
-	GDBusMessage* _tmp6_;
+	GDBusMessage* _tmp4_;
 	GDBusMessage* result;
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (conn, g_dbus_connection_get_type ()), NULL);
 	g_return_val_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (message, g_dbus_message_get_type ()), NULL);
@@ -698,12 +698,8 @@ __lambda4_ (Block1Data* _data1_,
 			case G_DBUS_MESSAGE_TYPE_METHOD_CALL:
 			{
 				GAsyncQueue* _tmp3_;
-				GFlagsValue* _tmp4_;
-				gchar* _tmp5_;
 				_tmp3_ = _data1_->events;
-				_tmp4_ = g_flags_get_first_value (g_type_class_ref (g_dbus_message_flags_get_type ()), g_dbus_message_get_flags (message));
-				_tmp5_ = g_strdup ((_tmp4_ != NULL) ? _tmp4_->value_name : NULL);
-				g_async_queue_push (_tmp3_, _tmp5_);
+				g_async_queue_push (_tmp3_, g_flags_to_string (g_dbus_message_flags_get_type (), g_dbus_message_get_flags (message)));
 				break;
 			}
 			default:
@@ -712,8 +708,8 @@ __lambda4_ (Block1Data* _data1_,
 			}
 		}
 	}
-	_tmp6_ = _g_object_ref0 (message);
-	result = _tmp6_;
+	_tmp4_ = _g_object_ref0 (message);
+	result = _tmp4_;
 	_g_object_unref0 (message);
 	return result;
 }

@@ -582,7 +582,7 @@ public class Vala.CodeContext {
 		}
 
 		target_glib_major = 2;
-		target_glib_minor = 48;
+		target_glib_minor = 56;
 
 		for (int i = 16; i <= target_glib_minor; i += 2) {
 			defines.add ("GLIB_2_%d".printf (i));

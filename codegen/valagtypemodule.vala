@@ -2423,26 +2423,11 @@ public class Vala.GTypeModule : GErrorModule {
 		bool is_flags = ((Enum) ((EnumValueType) ma.inner.value_type).type_symbol).is_flags;
 
 		push_line (expr.source_reference);
-		if (context.require_glib_version (2, 54)) {
-			var to_string = new CCodeFunctionCall (new CCodeIdentifier ((is_flags ? "g_flags_to_string" : "g_enum_to_string")));
-			to_string.add_argument (new CCodeIdentifier (get_ccode_type_id (ma.inner.value_type)));
-			to_string.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
-			expr.value_type.value_owned = true;
-			set_cvalue (expr, to_string);
-		} else {
-			var temp_var = get_temp_variable (new CType (is_flags ? "GFlagsValue*" : "GEnumValue*", "NULL"), false, expr, false);
-			emit_temp_var (temp_var);
-
-			var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
-			class_ref.add_argument (new CCodeIdentifier (get_ccode_type_id (ma.inner.value_type)));
-			var get_value = new CCodeFunctionCall (new CCodeIdentifier (is_flags ? "g_flags_get_first_value" : "g_enum_get_value"));
-			get_value.add_argument (class_ref);
-			get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
-
-			ccode.add_assignment (get_variable_cexpression (temp_var.name), get_value);
-			var is_null_value = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (temp_var.name), new CCodeConstant ("NULL"));
-			set_cvalue (expr, new CCodeConditionalExpression (is_null_value, new CCodeMemberAccess.pointer (get_variable_cexpression (temp_var.name), "value_name"), new CCodeConstant ("NULL")));
-		}
+		var to_string = new CCodeFunctionCall (new CCodeIdentifier ((is_flags ? "g_flags_to_string" : "g_enum_to_string")));
+		to_string.add_argument (new CCodeIdentifier (get_ccode_type_id (ma.inner.value_type)));
+		to_string.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
+		expr.value_type.value_owned = true;
+		set_cvalue (expr, to_string);
 		pop_line ();
 	}
 

@@ -35,6 +35,14 @@ void main () {
 	assert_not_reached ();
 #elif !GLIB_2_48
 	assert_not_reached ();
+#elif !GLIB_2_50
+	assert_not_reached ();
+#elif !GLIB_2_52
+	assert_not_reached ();
+#elif !GLIB_2_54
+	assert_not_reached ();
+#elif !GLIB_2_56
+	assert_not_reached ();
 #else
 	assert (true);
 #endif

@@ -29,6 +29,11 @@ enum  {
 	MODULE_NUM_PROPERTIES
 };
 static GParamSpec* module_properties[MODULE_NUM_PROPERTIES];
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
+#define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
+#define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
+#define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
 struct _Module {
 	GTypeModule parent_instance;
@@ -129,6 +134,15 @@ init_plugin (GTypeModule* m)
 static void
 _vala_main (void)
 {
+	GObject* o = NULL;
+	GObject* _tmp0_;
+	GObject* _tmp1_;
+	_tmp0_ = g_object_new (init_plugin (NULL), NULL);
+	_tmp1_ = G_IS_INITIALLY_UNOWNED (_tmp0_) ? g_object_ref_sink (_tmp0_) : _tmp0_;
+	o = _tmp1_;
+	_vala_assert (G_TYPE_CHECK_INSTANCE_TYPE (o, g_type_module_get_type ()), "o is TypeModule");
+	_vala_assert (IS_MODULE (o), "o is Module");
+	_g_object_unref0 (o);
 }
 
 int

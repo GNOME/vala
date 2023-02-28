@@ -2,6 +2,9 @@
  * generated from enums_bug763831.vala, do not modify */
 
 #include <glib-object.h>
+#include <stdlib.h>
+#include <string.h>
+#include <glib.h>
 
 #if !defined(VALA_EXTERN)
 #if defined(_WIN32) || defined(__CYGWIN__)
@@ -23,6 +26,7 @@ typedef enum  {
 } Bar;
 
 #define TYPE_BAR (bar_get_type ())
+#define _g_free0(var) (var = (g_free (var), NULL))
 
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
@@ -73,10 +77,12 @@ bar_get_type (void)
 static void
 _vala_main (void)
 {
-	GFlagsValue* _tmp0_;
-	GEnumValue* _tmp1_;
-	_tmp0_ = g_flags_get_first_value (g_type_class_ref (TYPE_FOO), FOO_TEST);
-	_tmp1_ = g_enum_get_value (g_type_class_ref (TYPE_BAR), BAR_TEST);
+	gchar* _tmp0_;
+	gchar* _tmp1_;
+	_tmp0_ = g_flags_to_string (TYPE_FOO, FOO_TEST);
+	_g_free0 (_tmp0_);
+	_tmp1_ = g_enum_to_string (TYPE_BAR, BAR_TEST);
+	_g_free0 (_tmp1_);
 }
 
 int

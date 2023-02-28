@@ -65,13 +65,11 @@ void main () {
 		assert (foo4.ref_count == 1);
 		assert (array.length == 3);
 
-#if GLIB_2_54
 		uint index;
 		assert (array.find (foo5, out index));
 		assert (foo5.ref_count == 2);
 		assert (index == 1);
 		assert (array.length == 3);
-#endif
 
 		array.sort (compare_foo);
 		array.sort_with_data (compare_foo);
@@ -136,13 +134,11 @@ void main () {
 		assert (foo4.ref_count == 1);
 		assert (array.length == 3);
 
-#if GLIB_2_54
 		uint index;
 		assert (array.find (foo5, out index));
 		assert (foo5.ref_count == 1);
 		assert (index == 1);
 		assert (array.length == 3);
-#endif
 
 		array.sort (compare_foo);
 		array.sort_with_data (compare_foo);
