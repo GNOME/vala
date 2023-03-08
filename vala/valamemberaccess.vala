@@ -1200,7 +1200,7 @@ public class Vala.MemberAccess : Expression {
 
 	bool is_tainted () {
 		unowned CodeNode node = this;
-		if (node.parent_node is MemberAccess) {
+		if (node.parent_node is ElementAccess || node.parent_node is MemberAccess) {
 			return false;
 		}
 
