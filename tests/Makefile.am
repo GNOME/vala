@@ -564,6 +564,7 @@ TESTS = \
 	objects/property-dynamic-not-supported.test \
 	objects/property-dynamic-type-inference.vala \
 	objects/property-enum.vala \
+	objects/property-error.vala \
 	objects/property-notify.vala \
 	objects/property-notify-owned-getter.vala \
 	objects/property-ownership.vala \
