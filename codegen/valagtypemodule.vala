@@ -1963,6 +1963,9 @@ public class Vala.GTypeModule : GErrorModule {
 			} else {
 				cspec.add_argument (new CCodeConstant (get_ccode_default_value (type_symbol)));
 			}
+		} else if (type_symbol is ErrorDomain) {
+			cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
+			cspec.add_argument (new CCodeIdentifier ("G_TYPE_ERROR"));
 		} else if (type_symbol is Struct) {
 			unowned Struct st = (Struct) type_symbol;
 			var type_id = get_ccode_type_id (st);

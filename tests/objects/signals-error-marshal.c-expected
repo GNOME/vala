@@ -39,6 +39,7 @@ static GParamSpec* foo_properties[FOO_NUM_PROPERTIES];
 enum  {
 	FOO_FOO_SIGNAL,
 	FOO_BAR_SIGNAL,
+	FOO_BAZ_SIGNAL,
 	FOO_NUM_SIGNALS
 };
 static guint foo_signals[FOO_NUM_SIGNALS] = {0};
@@ -84,18 +85,19 @@ static void _foo_callback_foo_bar (Foo* _sender,
                             void* p,
                             GError* e,
                             gpointer self);
+static void foo_callback2 (Foo* self,
+                    void* p,
+                    GError* e);
+static void _foo_callback2_foo_baz (Foo* _sender,
+                             void* p,
+                             GError* e,
+                             gpointer self);
 static void g_cclosure_user_marshal_VOID__POINTER_BOXED (GClosure * closure,
                                                   GValue * return_value,
                                                   guint n_param_values,
                                                   const GValue * param_values,
                                                   gpointer invocation_hint,
                                                   gpointer marshal_data);
-static void g_cclosure_user_marshal_VOID__POINTER_POINTER (GClosure * closure,
-                                                    GValue * return_value,
-                                                    guint n_param_values,
-                                                    const GValue * param_values,
-                                                    gpointer invocation_hint,
-                                                    gpointer marshal_data);
 static GType foo_get_type_once (void);
 static void _vala_main (void);
 
@@ -170,18 +172,34 @@ _foo_callback_foo_bar (Foo* _sender,
 	foo_callback ((Foo*) self, p, e);
 }
 
+static void
+_foo_callback2_foo_baz (Foo* _sender,
+                        void* p,
+                        GError* e,
+                        gpointer self)
+{
+	foo_callback2 ((Foo*) self, p, e);
+}
+
 Foo*
 foo_construct (GType object_type)
 {
 	Foo * self = NULL;
 	GError* _tmp0_;
 	GError* _tmp1_;
+	GError* _tmp2_;
+	GError* _tmp3_;
 	self = (Foo*) g_object_new (object_type, NULL);
 	g_signal_connect_object (self, "bar", (GCallback) _foo_callback_foo_bar, self, 0);
 	_tmp0_ = g_error_new_literal (FOO_ERROR, FOO_ERROR_BAD, "bad");
 	_tmp1_ = _tmp0_;
 	g_signal_emit (self, foo_signals[FOO_BAR_SIGNAL], 0, NULL, _tmp1_);
 	_g_error_free0 (_tmp1_);
+	g_signal_connect_object (self, "baz", (GCallback) _foo_callback2_foo_baz, self, 0);
+	_tmp2_ = g_error_new_literal (FOO_ERROR, FOO_ERROR_BAD, "bad");
+	_tmp3_ = _tmp2_;
+	g_signal_emit (self, foo_signals[FOO_BAZ_SIGNAL], 0, NULL, _tmp3_);
+	_g_error_free0 (_tmp3_);
 	return self;
 }
 
@@ -198,6 +216,16 @@ foo_callback (Foo* self,
 {
 	g_return_if_fail (IS_FOO (self));
 	g_return_if_fail (e != NULL);
+	_vala_assert (p == NULL, "p == null");
+	_vala_assert (e->code == FOO_ERROR_BAD, "e.code == FooError.BAD");
+}
+
+static void
+foo_callback2 (Foo* self,
+               void* p,
+               GError* e)
+{
+	g_return_if_fail (IS_FOO (self));
 	_vala_assert (p == NULL, "p == null");
 	_vala_assert (e->code == FOO_ERROR_BAD, "e.code == FooError.BAD");
 }
@@ -229,38 +257,13 @@ g_cclosure_user_marshal_VOID__POINTER_BOXED (GClosure * closure,
 }
 
 static void
-g_cclosure_user_marshal_VOID__POINTER_POINTER (GClosure * closure,
-                                               GValue * return_value,
-                                               guint n_param_values,
-                                               const GValue * param_values,
-                                               gpointer invocation_hint,
-                                               gpointer marshal_data)
-{
-	typedef void (*GMarshalFunc_VOID__POINTER_POINTER) (gpointer data1, gpointer arg_1, gpointer arg_2, gpointer data2);
-	register GMarshalFunc_VOID__POINTER_POINTER callback;
-	register GCClosure * cc;
-	register gpointer data1;
-	register gpointer data2;
-	cc = (GCClosure *) closure;
-	g_return_if_fail (n_param_values == 3);
-	if (G_CCLOSURE_SWAP_DATA (closure)) {
-		data1 = closure->data;
-		data2 = param_values->data[0].v_pointer;
-	} else {
-		data1 = param_values->data[0].v_pointer;
-		data2 = closure->data;
-	}
-	callback = (GMarshalFunc_VOID__POINTER_POINTER) (marshal_data ? marshal_data : cc->callback);
-	callback (data1, g_value_get_pointer (param_values + 1), g_value_get_pointer (param_values + 2), data2);
-}
-
-static void
 foo_class_init (FooClass * klass,
                 gpointer klass_data)
 {
 	foo_parent_class = g_type_class_peek_parent (klass);
 	foo_signals[FOO_FOO_SIGNAL] = g_signal_new ("foo", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_VOID__POINTER_BOXED, G_TYPE_NONE, 2, G_TYPE_POINTER, TYPE_BAR);
-	foo_signals[FOO_BAR_SIGNAL] = g_signal_new ("bar", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_VOID__POINTER_POINTER, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+	foo_signals[FOO_BAR_SIGNAL] = g_signal_new ("bar", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_VOID__POINTER_BOXED, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_ERROR);
+	foo_signals[FOO_BAZ_SIGNAL] = g_signal_new ("baz", TYPE_FOO, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_user_marshal_VOID__POINTER_BOXED, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_ERROR);
 }
 
 static void
