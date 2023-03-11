@@ -52,6 +52,7 @@ namespace Gdk {
 			public bool get_glx_version (out int major, out int minor);
 			public unowned Gdk.Monitor get_primary_monitor ();
 			public unowned Gdk.X11.Screen get_screen ();
+			[Version (deprecated = true, deprecated_since = "4.10")]
 			public unowned string get_startup_notification_id ();
 			public uint32 get_user_time ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_xatom_by_name_for_display")]
@@ -68,6 +69,7 @@ namespace Gdk {
 			public static Gdk.Display? open (string? display_name);
 			public void set_cursor_theme (string? theme, int size);
 			public static void set_program_class (Gdk.Display display, string program_class);
+			[Version (deprecated = true, deprecated_since = "4.10")]
 			public void set_startup_notification_id (string startup_id);
 			public void set_surface_scale (int scale);
 			public int string_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
