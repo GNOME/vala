@@ -273,7 +273,11 @@ public class Vala.GObjectModule : GTypeModule {
 					csetcall.call = get_value_setter_function (prop.property_type);
 				}
 				csetcall.add_argument (new CCodeIdentifier ("value"));
-				csetcall.add_argument (ccall);
+				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+					csetcall.add_argument (convert_from_generic_pointer (ccall, prop.property_type));
+				} else {
+					csetcall.add_argument (ccall);
+				}
 				add_guarded_expression (prop, csetcall);
 				if (array_type != null && get_ccode_array_length (prop) && array_type.element_type.type_symbol == string_type.type_symbol) {
 					ccode.close ();
@@ -407,7 +411,11 @@ public class Vala.GObjectModule : GTypeModule {
 					cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 				}
 				cgetcall.add_argument (new CCodeIdentifier ("value"));
-				ccall.add_argument (cgetcall);
+				if (base_prop != null && prop != base_prop && base_prop.property_type is GenericType) {
+					ccall.add_argument (convert_to_generic_pointer (cgetcall, prop.property_type));
+				} else {
+					ccall.add_argument (cgetcall);
+				}
 				add_guarded_expression (prop, ccall);
 			}
 			ccode.add_break ();

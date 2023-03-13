@@ -662,7 +662,6 @@ TESTS = \
 	objects/bug654702.vala \
 	objects/bug663134.vala \
 	objects/bug664529.vala \
-	objects/bug667668.vala \
 	objects/bug681356.vala \
 	objects/bug683646.vala \
 	objects/bug695671.vala \
@@ -791,6 +790,7 @@ TESTS = \
 	generics/arrays-not-supported.test \
 	generics/arrays-not-supported-2.test \
 	generics/arrays-not-supported-3.test \
+	generics/class-property-override.vala \
 	generics/constructor-chain-up.vala \
 	generics/delegate-return-type-missing.test \
 	generics/floating-type-cast.vala \
