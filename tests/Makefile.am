@@ -786,6 +786,7 @@ TESTS = \
 	generics/integer-member-access.vala \
 	generics/integer-type-cast.vala \
 	generics/integer-type-cast-return.vala \
+	generics/interface-property-impl.vala \
 	generics/parameter-invalid-initializer.test \
 	generics/parameter-in-cast.vala \
 	generics/parameter-out-cast.vala \

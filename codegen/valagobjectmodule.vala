@@ -142,12 +142,28 @@ public class Vala.GObjectModule : GTypeModule {
 				ccode.add_statement (new CCodeComment (prop.comment.content));
 			}
 
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			var cinst = new CCodeFunctionCall ();
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant ("%s_PROPERTY".printf (get_ccode_upper_case_name (prop))));
-			cinst.add_argument (get_param_spec (prop));
 
-			ccode.add_expression (cinst);
+			//TODO g_object_class_override_property should be used more regulary
+			unowned Property? base_prop = prop.base_interface_property;
+			if (base_prop != null && base_prop.property_type is GenericType) {
+				cinst.call = new CCodeIdentifier ("g_object_class_override_property");
+				cinst.add_argument (get_property_canonical_cconstant (prop));
+
+				ccode.add_expression (cinst);
+
+				var cfind = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_find_property"));
+				cfind.add_argument (ccall);
+				cfind.add_argument (get_property_canonical_cconstant (prop));
+				ccode.add_expression (new CCodeAssignment (get_param_spec_cexpression (prop), cfind));
+			} else {
+				cinst.call = new CCodeIdentifier ("g_object_class_install_property");
+				cinst.add_argument (get_param_spec (prop));
+
+				ccode.add_expression (cinst);
+			}
 		}
 	}
 
