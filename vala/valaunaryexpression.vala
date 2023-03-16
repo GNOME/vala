@@ -218,7 +218,12 @@ public class Vala.UnaryExpression : Expression {
 			    (ea != null && ea.container.value_type is ArrayType)) {
 				// ref and out can only be used with fields, parameters, local variables, and array element access
 				lvalue = true;
-				value_type = inner.value_type;
+				// `ref foo` or `out foo` is used as synonym for `&foo`
+				if (parent_node is InitializerList || parent_node is MemberInitializer) {
+					value_type = new PointerType (inner.value_type, inner.source_reference);
+				} else {
+					value_type = inner.value_type;
+				}
 			} else {
 				error = true;
 				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");

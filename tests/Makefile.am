@@ -1310,6 +1310,8 @@ TESTS = \
 	semantic/throw-unknown-error-type.test \
 	semantic/type-argument-ownership-mismatch.test \
 	semantic/unary-invalid-instance-member-access.test \
+	semantic/unary-ref-in-initializer-list.vala \
+	semantic/unary-ref-in-member-initializer.vala \
 	semantic/unary-unsupported-complement.test \
 	semantic/unary-unsupported-decrement.test \
 	semantic/unary-unsupported-increment.test \
