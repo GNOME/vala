@@ -392,6 +392,58 @@ editable_install_properties skip
 *.ref unowned
 *.unref destroys_instance=false
 
+// Add final types
+BinLayout sealed
+BookmarkList sealed
+BoolFilter sealed
+BoxLayout sealed
+CenterLayout sealed
+Constraint sealed
+ConstraintGuide sealed
+ConstraintLayoutChild sealed
+ConstraintLayout sealed
+CustomFilter sealed
+CustomLayout sealed
+CustomSorter sealed
+DirectoryList sealed
+DragIcon sealed
+DropDown sealed
+EditableLabel sealed
+FileChooserNative sealed
+FilterListModel sealed
+FixedLayoutChild sealed
+FixedLayout sealed
+FlattenListModel sealed
+GridLayoutChild sealed
+GridLayout sealed
+MapListModel sealed
+MediaControls sealed
+MultiSelection sealed
+MultiSorter sealed
+NoSelection sealed
+NumericSorter sealed
+OverlayLayoutChild sealed
+OverlayLayout sealed
+PasswordEntryBuffer sealed
+Picture sealed
+SelectionFilterModel sealed
+Shortcut sealed
+SingleSelection sealed
+SliceListModel sealed
+SortListModel sealed
+StringFilter sealed
+StringObject sealed
+StringList sealed
+StringSorter sealed
+TreeExpander sealed
+TreeListModel sealed
+TreeListRow sealed
+TreeListRowSorter sealed
+Video sealed
+WidgetPaintable sealed
+WindowControls sealed
+WindowHandle sealed
+
 // Possible TODO
 ////////////////
 
