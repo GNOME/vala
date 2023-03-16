@@ -270,10 +270,7 @@ public class Vala.InitializerList : Expression {
 				continue;
 			}
 
-			unowned UnaryExpression? unary = e as UnaryExpression;
-			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
-				// TODO check type for ref and out expressions
-			} else if (e is NullLiteral && e.target_type != null && e.target_type.is_real_non_null_struct_type ()) {
+			if (e is NullLiteral && e.target_type != null && e.target_type.is_real_non_null_struct_type ()) {
 				// Allow using null instead of {} to initialize struct
 			} else if (!e.value_type.compatible (e.target_type)) {
 				error = true;
