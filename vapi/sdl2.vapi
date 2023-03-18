@@ -3561,16 +3561,7 @@ namespace SDL {
 			public static Video.Window get_focus ();
 
 			[CCode (cname = "SDL_GetKeyboardState")]
-			public static unowned uint8* get_raw_state (out int numkeys = null);
-
-			[CCode (cname = "vala_get_keyboard_state")]
-			public static unowned bool[] get_state () {
-				size_t len;
-				uint8* raw = get_raw_state (out len);
-				unowned bool[] retval = (bool[])raw;
-				retval.length = (int)len;
-				return retval;
-			}
+			public static unowned uint8[] get_state ();
 
 			[CCode (cname = "SDL_GetModState")]
 			public static Input.Keymod get_modifierstate ();
