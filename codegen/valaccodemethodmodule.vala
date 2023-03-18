@@ -291,6 +291,12 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
+		unowned Interface? iface = type_symbol as Interface;
+		bool is_dbus_interface = false;
+		if (iface != null) {
+			is_dbus_interface = GDBusModule.get_dbus_name (type_symbol) != null;
+		}
+
 		// Add function prototypes for required register-type-calls which are likely external
 		if (type_symbol.source_reference.file != cfile.file) {
 			// TODO Duplicated source with TypeRegisterFunction.init_from_type()
@@ -298,22 +304,26 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			register_func.add_parameter (new CCodeParameter ("module", "GTypeModule *"));
 			register_func.is_declaration = true;
 			cfile.add_function_declaration (register_func);
+
+			// TODO Duplicated source with GDBusClientModule.generate_interface_declaration()
+			if (is_dbus_interface) {
+				var proxy_register_type = new CCodeFunction ("%sproxy_register_dynamic_type".printf (get_ccode_lower_case_prefix (iface)));
+				proxy_register_type.add_parameter (new CCodeParameter ("module", "GTypeModule*"));
+				proxy_register_type.modifiers |= CCodeModifiers.EXTERN;
+				cfile.add_function_declaration (proxy_register_type);
+				requires_vala_extern = true;
+			}
 		}
 
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (get_ccode_lower_case_name (type_symbol, null))));
 		register_call.add_argument (new CCodeIdentifier (module_init_param_name));
 		ccode.add_expression (register_call);
 
-		var iface = type_symbol as Interface;
-		if (iface != null) {
-			string? dbus_name = GDBusModule.get_dbus_name(type_symbol);
-
-			if (dbus_name != null) {
-				string proxy_cname = get_ccode_lower_case_prefix (type_symbol) + "proxy";
-				var register_proxy = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_dynamic_type".printf (proxy_cname)));
-				register_proxy.add_argument (new CCodeIdentifier (module_init_param_name));
-				ccode.add_expression (register_proxy);
-			}
+		if (is_dbus_interface) {
+			string proxy_cname = get_ccode_lower_case_prefix (type_symbol) + "proxy";
+			var register_proxy = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_dynamic_type".printf (proxy_cname)));
+			register_proxy.add_argument (new CCodeIdentifier (module_init_param_name));
+			ccode.add_expression (register_proxy);
 		}
 	}
 
