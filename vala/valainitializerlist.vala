@@ -149,16 +149,19 @@ public class Vala.InitializerList : Expression {
 			unowned ArrayType array_type = (ArrayType) target_type;
 
 			bool requires_constants_only = false;
+			bool is_global_constant_inline = false;
 			unowned CodeNode? node = parent_node;
 			while (node != null) {
 				if (node is Constant) {
 					requires_constants_only = true;
 					break;
+				} else if (node is Field && ((Field) node).parent_symbol is Namespace) {
+					is_global_constant_inline = array_type.inline_allocated && is_constant ();
 				}
 				node = node.parent_node;
 			}
 
-			if (!(parent_node is ArrayCreationExpression) && !requires_constants_only
+			if (!(parent_node is ArrayCreationExpression) && !requires_constants_only && !is_global_constant_inline
 			    && (!(parent_node is InitializerList) || ((InitializerList) parent_node).target_type.type_symbol is Struct)) {
 				// transform shorthand form
 				//     int[] array = { 42 };
