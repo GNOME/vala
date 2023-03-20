@@ -1,6 +1,6 @@
 void main () {
 	char foo[4];
-	foo[4] = '\0';
+	foo[3] = '\0';
 
 	var i = 0;
 	foo[i++] = 'b';
