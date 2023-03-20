@@ -145,6 +145,7 @@ TESTS = \
 	arrays/inline-field.test \
 	arrays/inline-local-instantiation.test \
 	arrays/inline-local-variable.test \
+	arrays/inline-namespace-field.vala \
 	arrays/inline-ownership-transfer.test \
 	arrays/inline-parameter.test \
 	arrays/inline-struct.vala \

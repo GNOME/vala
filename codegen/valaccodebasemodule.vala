@@ -1458,6 +1458,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	public static bool is_constant_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant || cexpr is CCodeConstantIdentifier) {
 			return true;
+		} else if (cexpr is CCodeInitializerList) {
+			return true;
 		} else if (cexpr is CCodeCastExpression) {
 			var ccast = (CCodeCastExpression) cexpr;
 			return is_constant_ccode_expression (ccast.inner);
