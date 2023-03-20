@@ -18,7 +18,7 @@ _vala_main (void)
 	gint _tmp0_;
 	gint _tmp1_;
 	gint _tmp2_;
-	foo[4] = '\0';
+	foo[3] = '\0';
 	i = 0;
 	_tmp0_ = i;
 	i = _tmp0_ + 1;
