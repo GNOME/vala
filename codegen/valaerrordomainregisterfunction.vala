@@ -29,7 +29,11 @@ public class Vala.ErrorDomainRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the error domain to be registered.
 	 */
-	public weak ErrorDomain error_domain_reference { get; set; }
+	public weak ErrorDomain error_domain_reference {
+		get {
+			return (ErrorDomain) type_symbol;
+		}
+	}
 
 	/**
 	 * Creates a new C function to register the specified error domain at runtime.
@@ -38,14 +42,6 @@ public class Vala.ErrorDomainRegisterFunction : TypeRegisterFunction {
 	 * @return        newly created error domain register function
 	 */
 	public ErrorDomainRegisterFunction (ErrorDomain edomain) {
-		error_domain_reference = edomain;
-	}
-
-	public override TypeSymbol get_type_declaration () {
-		return error_domain_reference;
-	}
-
-	public override SymbolAccessibility get_accessibility () {
-		return error_domain_reference.access;
+		base (edomain);
 	}
 }

@@ -29,7 +29,11 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the class to be registered.
 	 */
-	public weak Class class_reference { get; set; }
+	public weak Class class_reference {
+		get {
+			return (Class) type_symbol;
+		}
+	}
 
 	/**
 	 * Creates a new C function to register the specified class at runtime.
@@ -38,11 +42,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	 * @return   newly created class register function
 	 */
 	public ClassRegisterFunction (Class cl) {
-		class_reference = cl;
-	}
-
-	public override TypeSymbol get_type_declaration () {
-		return class_reference;
+		base (cl);
 	}
 
 	public override string get_type_struct_name () {
@@ -99,10 +99,6 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		} else {
 			return "0";
 		}
-	}
-
-	public override SymbolAccessibility get_accessibility () {
-		return class_reference.access;
 	}
 
 	public override string? get_gtype_value_table_init_function_name () {

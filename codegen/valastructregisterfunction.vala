@@ -29,7 +29,11 @@ public class Vala.StructRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the struct to be registered.
 	 */
-	public weak Struct struct_reference { get; set; }
+	public weak Struct struct_reference {
+		get {
+			return (Struct) type_symbol;
+		}
+	}
 
 	/**
 	 * Creates a new C function to register the specified struct at runtime.
@@ -38,14 +42,6 @@ public class Vala.StructRegisterFunction : TypeRegisterFunction {
 	 * @return   newly created struct register function
 	 */
 	public StructRegisterFunction (Struct st) {
-		struct_reference = st;
-	}
-
-	public override TypeSymbol get_type_declaration () {
-		return struct_reference;
-	}
-
-	public override SymbolAccessibility get_accessibility () {
-		return struct_reference.access;
+		base (st);
 	}
 }

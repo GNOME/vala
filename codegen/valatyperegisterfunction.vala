@@ -26,16 +26,23 @@ using GLib;
  * C function to register a type at runtime.
  */
 public abstract class Vala.TypeRegisterFunction {
+	/**
+	 * Specifies the enum to be registered.
+	 */
+	public weak TypeSymbol type_symbol { get; private set; }
+
 	CCodeFragment source_declaration_fragment = new CCodeFragment ();
 	CCodeFragment declaration_fragment = new CCodeFragment ();
 	CCodeFragment definition_fragment = new CCodeFragment ();
+
+	protected TypeRegisterFunction (TypeSymbol sym) {
+		type_symbol = sym;
+	}
 
 	/**
 	 * Constructs the C function from the specified type.
 	 */
 	public void init_from_type (CodeContext context, bool plugin, bool declaration_only) {
-		var type_symbol = get_type_declaration ();
-
 		bool fundamental = false;
 		unowned Class? cl = type_symbol as Class;
 		if (cl != null && !cl.is_compact && cl.base_class == null) {
@@ -70,10 +77,10 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.modifiers = CCodeModifiers.CONST;
 
 			/* Function will not be prototyped anyway */
-			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
+			if (type_symbol.access == SymbolAccessibility.PRIVATE) {
 				// avoid C warning as this function is not always used
 				fun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
-			} else if (context.hide_internal && get_accessibility () == SymbolAccessibility.INTERNAL) {
+			} else if (context.hide_internal && type_symbol.access == SymbolAccessibility.INTERNAL) {
 				// avoid C warning as this function is not always used
 				fun.modifiers |= CCodeModifiers.INTERNAL | CCodeModifiers.UNUSED;
 			} else {
@@ -309,13 +316,6 @@ public abstract class Vala.TypeRegisterFunction {
 	}
 
 	/**
-	 * Returns the data type to be registered.
-	 *
-	 * @return type to be registered
-	 */
-	public abstract TypeSymbol get_type_declaration ();
-
-	/**
 	 * Returns the name of the type struct in C code.
 	 *
 	 * @return C struct name
@@ -491,9 +491,4 @@ public abstract class Vala.TypeRegisterFunction {
 	public CCodeFragment get_definition () {
 		return definition_fragment;
 	}
-
-	/**
-	 * Returns the accessibility for this type.
-	 */
-	public abstract SymbolAccessibility get_accessibility ();
 }
