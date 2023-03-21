@@ -8685,7 +8685,7 @@ namespace Gtk {
 		public void set_style (Gtk.ToolbarStyle style);
 		public void unset_icon_size ();
 		public void unset_style ();
-		public Gtk.IconSize icon_size { owned get; set; }
+		public Gtk.IconSize icon_size { get; set; }
 		[NoAccessorMethod]
 		public bool icon_size_set { get; set; }
 		[NoAccessorMethod]
