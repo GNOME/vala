@@ -31,14 +31,14 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the interface to be registered.
 	 */
-	public weak Interface interface_reference { get; set; }
-
-	public InterfaceRegisterFunction (Interface iface) {
-		interface_reference = iface;
+	public weak Interface interface_reference {
+		get {
+			return (Interface) type_symbol;
+		}
 	}
 
-	public override TypeSymbol get_type_declaration () {
-		return interface_reference;
+	public InterfaceRegisterFunction (Interface iface) {
+		base (iface);
 	}
 
 	public override string get_type_struct_name () {
@@ -71,10 +71,6 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 
 	public override string get_parent_type_name () {
 		return "G_TYPE_INTERFACE";
-	}
-
-	public override SymbolAccessibility get_accessibility () {
-		return interface_reference.access;
 	}
 
 	public override void get_type_interface_init_statements (CodeContext context, CCodeBlock block, bool plugin) {

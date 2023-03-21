@@ -30,7 +30,11 @@ public class Vala.EnumRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the enum to be registered.
 	 */
-	public weak Enum enum_reference { get; set; }
+	public weak Enum enum_reference {
+		get {
+			return (Enum) type_symbol;
+		}
+	}
 
 	/**
 	 * Creates a new C function to register the specified enum at runtime.
@@ -39,14 +43,6 @@ public class Vala.EnumRegisterFunction : TypeRegisterFunction {
 	 * @return   newly created enum register function
 	 */
 	public EnumRegisterFunction (Enum en) {
-		enum_reference = en;
-	}
-
-	public override TypeSymbol get_type_declaration () {
-		return enum_reference;
-	}
-
-	public override SymbolAccessibility get_accessibility () {
-		return enum_reference.access;
+		base (en);
 	}
 }
