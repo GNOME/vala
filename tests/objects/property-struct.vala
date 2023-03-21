@@ -1,10 +1,8 @@
-[CCode (has_type_id = false)]
 struct Bar {
 	public string s;
 	public int i;
 }
 
-[CCode (has_type_id = false)]
 struct Baz : Bar {
 }
 
