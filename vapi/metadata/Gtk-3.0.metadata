@@ -569,7 +569,7 @@ ThemingEngine
 ToolItem
   .get_icon_size type="Gtk.IconSize"
 ToolPalette
-  .get_icon_size type="Gtk.IconSize"
+  .get_icon_size type="unowned Gtk.IconSize"
   .set_icon_size.icon_size type="Gtk.IconSize"
 TreePath
   .free destroys_instance
