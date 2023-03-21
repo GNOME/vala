@@ -613,6 +613,7 @@ TESTS = \
 	objects/signals-prototype-access.vala \
 	objects/signals-prototype-access-invalid.test \
 	objects/signals-prototype-access-invalid-2.test \
+	objects/signals-struct.vala \
 	objects/signals-struct-return.vala \
 	objects/simple-generics-chainup.vala \
 	objects/singleton.vala \
