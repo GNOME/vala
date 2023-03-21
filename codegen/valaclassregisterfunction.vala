@@ -94,6 +94,8 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			return "G_TYPE_FLAG_ABSTRACT";
 		} else if (CodeContext.get ().require_glib_version (2, 70) && class_reference.is_sealed) {
 			return "G_TYPE_FLAG_FINAL";
+		} else if (CodeContext.get ().require_glib_version (2, 74)) {
+			return "G_TYPE_FLAG_NONE";
 		} else {
 			return "0";
 		}
