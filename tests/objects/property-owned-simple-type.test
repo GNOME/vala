@@ -1,0 +1,12 @@
+Invalid Code
+
+enum Bar {
+	FOO
+}
+
+class Foo : Object {
+	public Bar bar { owned get; owned set; }
+}
+
+void main () {
+}

@@ -568,6 +568,7 @@ TESTS = \
 	objects/property-error.vala \
 	objects/property-notify.vala \
 	objects/property-notify-owned-getter.vala \
+	objects/property-owned-simple-type.test \
 	objects/property-ownership.vala \
 	objects/property-read-only-auto.vala \
 	objects/property-read-only-member-write.test \

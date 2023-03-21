@@ -218,6 +218,12 @@ public class Vala.PropertyAccessor : Subroutine {
 			return false;
 		}
 
+		if (value_type.value_owned && value_type.is_non_null_simple_type ()) {
+			error = true;
+			Report.error (source_reference, "`owned' accessor not allowed for specified property type");
+			return false;
+		}
+
 		if (context.profile == Profile.POSIX && construction) {
 			error = true;
 			Report.error (source_reference, "`construct' is not supported in POSIX profile");

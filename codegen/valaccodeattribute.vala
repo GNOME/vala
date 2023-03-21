@@ -1337,21 +1337,6 @@ public class Vala.CCodeAttribute : AttributeCache {
 			} else {
 				return "g_value_take_boxed";
 			}
-		} else if (sym is Enum) {
-			unowned Enum en = (Enum) sym;
-			if (get_ccode_has_type_id (en)) {
-				if (en.is_flags) {
-					return "g_value_take_flags";
-				} else {
-					return "g_value_take_enum";
-				}
-			} else {
-				if (en.is_flags) {
-					return "g_value_take_uint";
-				} else {
-					return "g_value_take_int";
-				}
-			}
 		} else if (sym is ErrorDomain) {
 			return "g_value_take_boxed";
 		} else if (sym is Interface) {
