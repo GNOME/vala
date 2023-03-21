@@ -448,7 +448,11 @@ public abstract class Vala.TypeRegisterFunction {
 	 * @return type flags
 	 */
 	public virtual string get_type_flags () {
-		return "0";
+		if (CodeContext.get ().require_glib_version (2, 74)) {
+			return "G_TYPE_FLAG_NONE";
+		} else {
+			return "0";
+		}
 	}
 
 	/**
