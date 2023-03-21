@@ -587,6 +587,7 @@ TESTS = \
 	objects/property-real-struct-no-accessor.test \
 	objects/property-simple-type-struct-nullable.vala \
 	objects/property-static.vala \
+	objects/property-struct.vala \
 	objects/property-struct-no-gtype.vala \
 	objects/property-strv-noaccessor.vala \
 	objects/property-write-only-member-read.test \
