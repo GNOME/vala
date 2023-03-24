@@ -4,15 +4,15 @@
 <c:include name="girtest.h"/>
 <namespace name="GirTest" version="1.0" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefixes="gir_test">
 	<enumeration name="EnumTest" c:type="GirTestEnumTest" glib:type-name="GirTestEnumTest" glib:get-type="gir_test_enum_test_get_type">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example enum.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="40" column="2">&lt;para&gt;An example comment for an example enum.&lt;/para&gt;</doc>
 		<member name="value1" c:identifier="GIR_TEST_ENUM_TEST_VALUE1" value="0"/>
 	</enumeration>
 	<enumeration name="ErrorTest" c:type="GirTestErrorTest" glib:type-name="GirTestErrorTest" glib:get-type="gir_test_error_test_get_type" glib:error-domain="gir-test-error-test-quark">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example errordomain.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="47" column="2">&lt;para&gt;An example comment for an example errordomain.&lt;/para&gt;</doc>
 		<member name="value1" c:identifier="GIR_TEST_ERROR_TEST_VALUE1" value="0"/>
 	</enumeration>
 	<class name="ObjectTest" c:type="GirTestObjectTest" c:symbol-prefix="object_test" glib:type-name="GirTestObjectTest" glib:get-type="gir_test_object_test_get_type" glib:type-struct="ObjectTestClass" parent="GObject.Object">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example class.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="75" column="2">&lt;para&gt;An example comment for an example class.&lt;/para&gt;</doc>
 		<field name="parent_instance" readable="0" private="1">
 			<type name="GObject.Object" c:type="GObject"/>
 		</field>
@@ -20,21 +20,21 @@
 			<type name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate*"/>
 		</field>
 		<constructor name="new" c:identifier="gir_test_object_test_new">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example class constructor.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="89" column="3">&lt;para&gt;An example comment for an example class constructor.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
 				<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="89" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
 		</constructor>
 		<method name="method" c:identifier="gir_test_object_test_method">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example class method.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="96" column="3">&lt;para&gt;An example comment for an example class method.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
-				<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
+				<doc xml:space="preserve" filename="girtest.vala" line="96" column="3">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
 				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
@@ -42,13 +42,13 @@
 					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
 				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="96" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
 		</method>
 		<property name="property" writable="1" construct="1">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example property.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="79" column="3">&lt;para&gt;An example comment for an example property.&lt;/para&gt;</doc>
 			<type name="gint" c:type="gint"/>
 		</property>
 		<method name="get_property" c:identifier="gir_test_object_test_get_property">
@@ -75,13 +75,13 @@
 			</parameters>
 		</method>
 		<glib:signal name="some-signal">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example signal.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="83" column="3">&lt;para&gt;An example comment for an example signal.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>
 			</return-value>
 			<parameters>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="83" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
@@ -94,12 +94,12 @@
 	</record>
 	<record name="ObjectTestPrivate" c:type="GirTestObjectTestPrivate" disguised="1"/>
 	<interface name="InterfaceTest" c:type="GirTestInterfaceTest" c:symbol-prefix="interface_test" glib:type-name="GirTestInterfaceTest" glib:get-type="gir_test_interface_test_get_type" glib:type-struct="InterfaceTestIface">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example interface.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="62" column="2">&lt;para&gt;An example comment for an example interface.&lt;/para&gt;</doc>
 		<prerequisite name="GObject.Object"/>
 		<method name="method" c:identifier="gir_test_interface_test_method">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example interface method.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example interface method.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
-				<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
+				<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
 				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
@@ -107,15 +107,15 @@
 					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
 		</method>
 		<virtual-method name="method" invoker="method">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example interface method.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example interface method.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
-				<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
+				<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
 				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
@@ -123,7 +123,7 @@
 					<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
@@ -143,7 +143,7 @@
 						<type name="GirTest.InterfaceTest" c:type="GirTestInterfaceTest*"/>
 					</parameter>
 					<parameter name="param" transfer-ownership="none">
-						<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+						<doc xml:space="preserve" filename="girtest.vala" line="66" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 						<type name="gint" c:type="gint"/>
 					</parameter>
 				</parameters>
@@ -151,13 +151,13 @@
 		</field>
 	</record>
 	<record name="StructTest" c:type="GirTestStructTest" c:symbol-prefix="struct_test" glib:type-name="GirTestStructTest" glib:get-type="gir_test_struct_test_get_type">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example struct.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="14" column="2">&lt;para&gt;An example comment for an example struct.&lt;/para&gt;</doc>
 		<field name="field" writable="1">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example field.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="18" column="3">&lt;para&gt;An example comment for an example field.&lt;/para&gt;</doc>
 			<type name="gint" c:type="gint"/>
 		</field>
 		<method name="init" c:identifier="gir_test_struct_test_init">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example struct constructor.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="22" column="3">&lt;para&gt;An example comment for an example struct constructor.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="none">
 				<type name="none" c:type="void"/>
 			</return-value>
@@ -166,15 +166,15 @@
 					<type name="GirTest.StructTest" c:type="GirTestStructTest*"/>
 				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="22" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
 		</method>
 		<method name="method" c:identifier="gir_test_struct_test_method">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example struct method.&lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="29" column="3">&lt;para&gt;An example comment for an example struct method.&lt;/para&gt;</doc>
 			<return-value transfer-ownership="full">
-				<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
+				<doc xml:space="preserve" filename="girtest.vala" line="29" column="3">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
 				<type name="gboolean" c:type="gboolean"/>
 			</return-value>
 			<parameters>
@@ -182,21 +182,21 @@
 					<type name="GirTest.StructTest" c:type="GirTestStructTest*"/>
 				</instance-parameter>
 				<parameter name="param" transfer-ownership="none">
-					<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+					<doc xml:space="preserve" filename="girtest.vala" line="29" column="3">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 					<type name="gint" c:type="gint"/>
 				</parameter>
 			</parameters>
 		</method>
 	</record>
 	<callback name="DelegateTest" c:type="GirTestDelegateTest">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example delegate.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="54" column="2">&lt;para&gt;An example comment for an example delegate.&lt;/para&gt;</doc>
 		<return-value transfer-ownership="full">
-			<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
+			<doc xml:space="preserve" filename="girtest.vala" line="54" column="2">&lt;para&gt;An example comment for an example return value. &lt;/para&gt;</doc>
 			<type name="gboolean" c:type="gboolean"/>
 		</return-value>
 		<parameters>
 			<parameter name="param" transfer-ownership="none">
-				<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
+				<doc xml:space="preserve" filename="girtest.vala" line="54" column="2">&lt;para&gt;An example comment for an example parameter. &lt;/para&gt;</doc>
 				<type name="gint" c:type="gint"/>
 			</parameter>
 			<parameter name="user_data" transfer-ownership="none" closure="1">
@@ -205,11 +205,11 @@
 		</parameters>
 	</callback>
 	<constant name="CONSTANT" c:identifier="GIR_TEST_CONSTANT" value="42">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example constant.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="3" column="2">&lt;para&gt;An example comment for an example constant.&lt;/para&gt;</doc>
 		<type name="gint" c:type="gint"/>
 	</constant>
 	<function name="function" c:identifier="gir_test_function">
-		<doc xml:whitespace="preserve">&lt;para&gt;An example comment for an example function.&lt;/para&gt;</doc>
+		<doc xml:space="preserve" filename="girtest.vala" line="8" column="2">&lt;para&gt;An example comment for an example function.&lt;/para&gt;</doc>
 		<return-value transfer-ownership="full">
 			<type name="none" c:type="void"/>
 		</return-value>
