@@ -1,3 +1,25 @@
+Vala 0.56.5
+===========
+ * Various improvements and bug fixes:
+  - codegen:
+    + Consistently handle GLib.Error as boxed type [#1418]
+    + Add cast to accessor calls for generic property implementations
+    + Use g_object_class_override_property to implement generic interface
+      properties [#1419]
+    + Add declaration for register call of dynamic DBus interfaces [#1422]
+  - vala:
+    + Correctly handle pre/post-increment expression as index of element
+      access [#1417]
+    + Set proper value-type of unary ref/out expression in initializers [#1421]
+    + Allow assignment of namespace fields with inline allocated arrays
+  - gtkmodule: Improve error messages
+
+ * Bindings:
+  - gtk4: Update to 4.10.1~40b154bf from 0.58
+  - gtk4: Add sealed to all the final types
+  - gtk+-3.0: Fix ToolPalette.icon_size get-accessor type
+  - webkitgtk-6.0: Update to 2.39.90
+
 Vala 0.56.4
 ===========
  * Various improvements and bug fixes:
