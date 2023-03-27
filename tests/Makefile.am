@@ -411,6 +411,8 @@ TESTS = \
 	structs/gtype-base-struct.vala \
 	structs/gvalue.vala \
 	structs/gvalue-implicit-comparison.vala \
+	structs/namespace-field-nested-initializer.vala \
+	structs/namespace-field-nested-initializer-2.test \
 	structs/properties.vala \
 	structs/simple-type-constructor.vala \
 	structs/simple-type-boxed.vala \

@@ -75,8 +75,8 @@ VALA_EXTERN Baz* baz_dup (const Baz* self);
 VALA_EXTERN void baz_free (Baz* self);
 static void _vala_main (void);
 
-const Baz BAZ = {(Foo) {23, 42}};
-const Baz BAZ_A[2] = {{(Foo) {23, 42}}, {(Foo) {47, 11}}};
+const Baz BAZ = {{23, 42}};
+const Baz BAZ_A[2] = {{{23, 42}}, {{47, 11}}};
 
 Foo*
 foo_dup (const Foo* self)
@@ -286,10 +286,10 @@ static void
 _vala_main (void)
 {
 	{
-		static const Baz LOCAL_BAZ = {(Foo) {23, 42}};
+		static const Baz LOCAL_BAZ = {{23, 42}};
 	}
 	{
-		static const Baz LOCAL_BAZ_A[2] = {{(Foo) {23, 42}}, {(Foo) {47, 11}}};
+		static const Baz LOCAL_BAZ_A[2] = {{{23, 42}}, {{47, 11}}};
 	}
 	{
 		Bar bar = {0};
