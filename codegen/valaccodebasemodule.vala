@@ -2826,6 +2826,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		return load_temp_value (lvalue);
 	}
 
+	bool is_static_field_initializer (CodeNode node) {
+		if (node is InitializerList) {
+			return is_static_field_initializer (node.parent_node);
+		}
+		return node is Constant || (node is Field && ((Field) node).binding == MemberBinding.STATIC);
+	}
+
 	public override void visit_initializer_list (InitializerList list) {
 		if (list.target_type.type_symbol is Struct) {
 			/* initializer is used as struct initializer */
@@ -2873,7 +2880,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					clist.append (new CCodeConstant ("0"));
 				}
 
-				if (list.parent_node is Constant
+				if (is_static_field_initializer (list.parent_node)
 				    || (list.parent_node is Expression && ((Expression) list.parent_node).value_type is ArrayType)) {
 					set_cvalue (list, clist);
 				} else {

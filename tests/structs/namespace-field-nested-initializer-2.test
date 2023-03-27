@@ -1,0 +1,15 @@
+Invalid Code
+
+struct Foo {
+	public string s;
+	public int i;
+}
+
+struct Bar {
+	public Foo foo;
+}
+
+Bar bar = {{"foo", 42}};
+
+void main () {
+}

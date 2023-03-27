@@ -84,7 +84,7 @@ public class Vala.InitializerList : Expression {
 				return false;
 			}
 		}
-		return true;
+		return !(target_type == null || target_type.is_disposable ());
 	}
 
 	public override bool is_pure () {
