@@ -19,6 +19,15 @@ Frame
 
 DOMNode
   .for_js_value.value type="JSC.Value"
+WebFormManager
+  .input_element_auto_fill.element type="JSC.Value"
+  .input_element_is_auto_filled.element type="JSC.Value"
+  .input_element_is_user_edited.element type="JSC.Value"
+  .form_controls_associated.elements type="GLib.GenericArray<JSC.Value>"
+  .will_send_submit_event.form type="JSC.Value"
+  .will_submit_form.form type="JSC.Value"
+WebHitTestResult
+  .get_js_node type="JSC.Value?"
 
 URIRequest.get_http_headers unowned
 URIResponse.get_http_headers unowned
