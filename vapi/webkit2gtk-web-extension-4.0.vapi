@@ -882,12 +882,13 @@ namespace WebKit {
 			public bool has_attribute_ns (string namespaceURI, string localName);
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool has_attributes ();
+			[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 			public bool html_input_element_get_auto_filled ();
-			[Version (since = "2.22")]
+			[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 			public bool html_input_element_is_user_edited ();
-			[Version (since = "2.22")]
+			[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 			public void html_input_element_set_auto_filled (bool auto_filled);
-			[Version (since = "2.22")]
+			[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 			public void html_input_element_set_editing_value (string value);
 			[Version (deprecated = true, deprecated_since = "2.22", since = "2.16")]
 			public unowned WebKit.DOM.Element insert_adjacent_element (string where, WebKit.DOM.Element element) throws GLib.Error;
@@ -3249,7 +3250,7 @@ namespace WebKit {
 			public ushort compare_document_position (WebKit.DOM.Node other);
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public bool contains (WebKit.DOM.Node other);
-			[Version (since = "2.22")]
+			[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 			public static unowned WebKit.DOM.Node for_js_value ([CCode (type = "JSCValue*")] JSC.Value value);
 			[Version (deprecated = true, deprecated_since = "2.22")]
 			public string get_base_uri ();
@@ -3943,19 +3944,19 @@ namespace WebKit {
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "webkit_console_message_get_type ()")]
 	[Compact]
 	public class ConsoleMessage {
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public WebKit.ConsoleMessage copy ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public void free ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public WebKit.ConsoleMessageLevel get_level ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public uint get_line ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public WebKit.ConsoleMessageSource get_source ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public unowned string get_source_id ();
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public unowned string get_text ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_context_menu_get_type ()")]
@@ -3964,6 +3965,8 @@ namespace WebKit {
 		public ContextMenu ();
 		public void append (WebKit.ContextMenuItem item);
 		public unowned WebKit.ContextMenuItem first ();
+		[Version (since = "2.40")]
+		public unowned Gdk.Event get_event ();
 		public unowned WebKit.ContextMenuItem get_item_at_position (uint position);
 		public unowned GLib.List<WebKit.ContextMenuItem> get_items ();
 		public uint get_n_items ();
@@ -4019,9 +4022,9 @@ namespace WebKit {
 		public JSC.Context get_js_context ();
 		[Version (since = "2.22")]
 		public JSC.Context get_js_context_for_script_world (WebKit.ScriptWorld world);
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 		public JSC.Value get_js_value_for_dom_object (WebKit.DOM.Object dom_object);
-		[Version (since = "2.22")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.22")]
 		public JSC.Value get_js_value_for_dom_object_in_script_world (WebKit.DOM.Object dom_object, WebKit.ScriptWorld world);
 		[Version (since = "2.2")]
 		public unowned string get_uri ();
@@ -4132,21 +4135,40 @@ namespace WebKit {
 		[Version (since = "2.28")]
 		public signal void user_message_received (WebKit.UserMessage message);
 	}
+	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_form_manager_get_type ()")]
+	[Version (since = "2.40")]
+	public class WebFormManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected WebFormManager ();
+		public static void input_element_auto_fill ([CCode (type = "JSCValue*")] JSC.Value element, string value);
+		public static bool input_element_is_auto_filled ([CCode (type = "JSCValue*")] JSC.Value element);
+		public static bool input_element_is_user_edited ([CCode (type = "JSCValue*")] JSC.Value element);
+		public signal void form_controls_associated (WebKit.Frame frame, GLib.GenericArray<JSC.Value> elements);
+		public signal void will_send_submit_event (JSC.Value form, WebKit.Frame source_frame, WebKit.Frame target_frame);
+		public signal void will_submit_form (JSC.Value form, WebKit.Frame source_frame, WebKit.Frame target_frame);
+	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_hit_test_result_get_type ()")]
 	[Version (since = "2.8")]
 	public class WebHitTestResult : WebKit.HitTestResult {
 		[CCode (has_construct_function = false)]
 		protected WebHitTestResult ();
+		[Version (since = "2.40")]
+		public JSC.Value? get_js_node (WebKit.ScriptWorld? world);
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.8")]
 		public unowned WebKit.DOM.Node get_node ();
+		[Version (deprecated = true, deprecated_since = "2.40")]
 		public WebKit.DOM.Node node { get; construct; }
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", type_id = "webkit_web_page_get_type ()")]
 	public class WebPage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebPage ();
+		[Version (deprecated = true, deprecated_since = "2.40.")]
 		public unowned WebKit.DOM.Document get_dom_document ();
 		[Version (since = "2.10")]
 		public unowned WebKit.WebEditor get_editor ();
+		[Version (since = "2.40")]
+		public unowned WebKit.WebFormManager get_form_manager (WebKit.ScriptWorld? world);
 		public uint64 get_id ();
 		[Version (since = "2.2")]
 		public unowned WebKit.Frame get_main_frame ();
@@ -4154,23 +4176,23 @@ namespace WebKit {
 		[Version (since = "2.28")]
 		public async WebKit.UserMessage send_message_to_view (WebKit.UserMessage message, GLib.Cancellable? cancellable) throws GLib.Error;
 		public string uri { get; }
-		[Version (since = "2.12")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 		public signal void console_message_sent (WebKit.ConsoleMessage console_message);
 		[Version (since = "2.8")]
 		public signal bool context_menu (WebKit.ContextMenu context_menu, WebKit.WebHitTestResult hit_test_result);
 		public signal void document_loaded ();
 		[Version (deprecated = true, deprecated_since = "2.26", since = "2.16")]
 		public signal void form_controls_associated (GLib.GenericArray<WebKit.DOM.Element> elements);
-		[Version (since = "2.26")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.26")]
 		public signal void form_controls_associated_for_frame (GLib.GenericArray<WebKit.DOM.Element> elements, WebKit.Frame frame);
 		public signal bool send_request (WebKit.URIRequest request, WebKit.URIResponse redirected_response);
 		[Version (since = "2.28")]
 		public signal bool user_message_received (WebKit.UserMessage message);
-		[Version (since = "2.20")]
+		[Version (deprecated = true, deprecated_since = "2.40", since = "2.20")]
 		public signal void will_submit_form (WebKit.DOM.Element form, WebKit.FormSubmissionStep step, WebKit.Frame source_frame, WebKit.Frame target_frame, GLib.GenericArray<string> text_field_names, GLib.GenericArray<string> text_field_values);
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_LEVEL_", type_id = "webkit_console_message_level_get_type ()")]
-	[Version (since = "2.12")]
+	[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 	public enum ConsoleMessageLevel {
 		INFO,
 		LOG,
@@ -4179,7 +4201,7 @@ namespace WebKit {
 		DEBUG
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_CONSOLE_MESSAGE_SOURCE_", type_id = "webkit_console_message_source_get_type ()")]
-	[Version (since = "2.12")]
+	[Version (deprecated = true, deprecated_since = "2.40", since = "2.12")]
 	public enum ConsoleMessageSource {
 		JAVASCRIPT,
 		NETWORK,
@@ -4238,7 +4260,7 @@ namespace WebKit {
 		CUSTOM
 	}
 	[CCode (cheader_filename = "webkit2/webkit-web-extension.h", cprefix = "WEBKIT_FORM_SUBMISSION_WILL_", type_id = "webkit_form_submission_step_get_type ()")]
-	[Version (since = "2.20")]
+	[Version (deprecated = true, deprecated_since = "2.40", since = "2.20")]
 	public enum FormSubmissionStep {
 		SEND_DOM_EVENT,
 		COMPLETE

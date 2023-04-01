@@ -1,6 +1,14 @@
 *.cancellable#parameter nullable default=null
 *.*.cancellable#parameter nullable default=null
 
+ScriptMessageReply
+  .return_value.reply_value type="JSC.Value"
+UserContentManager
+  .script_message_with_reply_received.value type="JSC.Value"
+WebView
+  .call_async_javascript_function_finish type="JSC.Value"
+  .evaluate_javascript_finish type="JSC.Value"
+
 //Forward upstream
 Download
   .failed#signal.error type="WebKit.DownloadError"
