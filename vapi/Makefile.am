@@ -800,7 +800,7 @@ webkit2gtk-4.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.0 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-2.4 $(METADATADIR)/WebKit2-4.0-custom.vala $(GIRDIR)/WebKit2-4.0.gir
 
 webkit2gtk-4.1:
-	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.1 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-3.0 $(GIRDIR)/WebKit2-4.1.gir
+	$(GENVAPI) --library $(srcdir)/webkit2gtk-4.1 --metadatadir $(METADATADIR) --pkg gtk+-3.0 --pkg libsoup-3.0 $(METADATADIR)/WebKit2-4.1-custom.vala $(GIRDIR)/WebKit2-4.1.gir
 
 webkit2gtk-5.0:
 	$(GENVAPI) --library $(srcdir)/webkit2gtk-5.0 --metadatadir $(METADATADIR) --pkg gtk4 --pkg libsoup-3.0 $(GIRDIR)/WebKit2-5.0.gir
