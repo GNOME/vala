@@ -323,6 +323,8 @@ dist_vapi_DATA = \
 	webkitgtk-6.0.deps \
 	webkitgtk-web-extension-6.0.vapi \
 	webkitgtk-web-extension-6.0.deps \
+	webkitgtk-web-process-extension-6.0.vapi \
+	webkitgtk-web-process-extension-6.0.deps \
 	x11.vapi \
 	xcb.vapi \
 	xcb-icccm.vapi \
@@ -458,6 +460,7 @@ GIR_BINDINGS = \
 	webkit2gtk-web-extension-5.0 \
 	webkitgtk-6.0 \
 	webkitgtk-web-extension-6.0 \
+	webkitgtk-web-process-extension-6.0 \
 	$(GSTREAMER_1_0_BINDINGS) \
 	$(NULL)
 
@@ -830,3 +833,6 @@ webkitgtk-6.0:
 
 webkitgtk-web-extension-6.0:
 	$(GENVAPI) --library $(srcdir)/webkitgtk-web-extension-6.0 --metadatadir $(METADATADIR) --pkg javascriptcoregtk-6.0 --pkg gtk4 --pkg libsoup-3.0 $(METADATADIR)/WebKitWebExtension-6.0-custom.vala $(GIRDIR)/WebKitWebExtension-6.0.gir
+
+webkitgtk-web-process-extension-6.0:
+	$(GENVAPI) --library $(srcdir)/webkitgtk-web-process-extension-6.0 --metadatadir $(METADATADIR) --pkg javascriptcoregtk-6.0 --pkg gtk4 --pkg libsoup-3.0 $(GIRDIR)/WebKitWebProcessExtension-6.0.gir

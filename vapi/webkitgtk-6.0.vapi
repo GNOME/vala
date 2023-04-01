@@ -206,7 +206,7 @@ namespace WebKit {
 		public void cancel ();
 		[Version (since = "2.6")]
 		public bool get_allow_overwrite ();
-		public unowned string get_destination ();
+		public unowned string? get_destination ();
 		public double get_elapsed_time ();
 		public double get_estimated_progress ();
 		public uint64 get_received_data_length ();
@@ -215,14 +215,14 @@ namespace WebKit {
 		public unowned WebKit.WebView get_web_view ();
 		[Version (since = "2.6")]
 		public void set_allow_overwrite (bool allowed);
-		public void set_destination (string uri);
+		public void set_destination (string destination);
 		[Version (since = "2.6")]
 		public bool allow_overwrite { get; set; }
 		public string destination { get; }
 		public double estimated_progress { get; }
 		public WebKit.URIResponse response { get; }
 		public signal void created_destination (string destination);
-		public virtual signal bool decide_destination (string suggested_filename);
+		public signal bool decide_destination (string suggested_filename);
 		public signal void failed (WebKit.DownloadError error);
 		public signal void finished ();
 		public signal void received_data (uint64 data_length);
@@ -412,14 +412,6 @@ namespace WebKit {
 		public WebKit.InputMethodUnderline copy ();
 		public void free ();
 		public void set_color (Gdk.RGBA? rgba);
-	}
-	[CCode (cheader_filename = "webkit/webkit.h", ref_function = "webkit_javascript_result_ref", type_id = "webkit_javascript_result_get_type ()", unref_function = "webkit_javascript_result_unref")]
-	[Compact]
-	public class JavascriptResult {
-		[Version (since = "2.22")]
-		public unowned JSC.Value get_js_value ();
-		public unowned WebKit.JavascriptResult @ref ();
-		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit/webkit.h", type_id = "webkit_media_key_system_permission_request_get_type ()")]
 	public sealed class MediaKeySystemPermissionRequest : GLib.Object, WebKit.PermissionRequest {
@@ -951,6 +943,8 @@ namespace WebKit {
 		public void finish_error (GLib.Error error);
 		[Version (since = "2.36")]
 		public void finish_with_response (WebKit.URISchemeResponse response);
+		[Version (since = "2.40")]
+		public GLib.InputStream get_http_body ();
 		[Version (since = "2.36")]
 		public unowned Soup.MessageHeaders get_http_headers ();
 		[Version (since = "2.36")]
@@ -1027,9 +1021,9 @@ namespace WebKit {
 		[Version (since = "2.40")]
 		public void unregister_script_message_handler (string name, string? world_name);
 		[Version (since = "2.8")]
-		public signal void script_message_received (WebKit.JavascriptResult js_result);
+		public signal void script_message_received (JSC.Value value);
 		[Version (since = "2.40")]
-		public signal bool script_message_with_reply_received (WebKit.JavascriptResult js_result, WebKit.ScriptMessageReply reply);
+		public signal bool script_message_with_reply_received (JSC.Value value, WebKit.ScriptMessageReply reply);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h", type_id = "webkit_user_media_permission_request_get_type ()")]
 	[Version (since = "2.8")]
@@ -1113,22 +1107,22 @@ namespace WebKit {
 		public void set_preferred_languages ([CCode (array_length = false, array_null_terminated = true)] string[]? languages);
 		public void set_spell_checking_enabled (bool enabled);
 		public void set_spell_checking_languages ([CCode (array_length = false, array_null_terminated = true)] string[] languages);
-		public void set_web_extensions_directory (string directory);
+		public void set_web_process_extensions_directory (string directory);
 		[Version (since = "2.4")]
-		public void set_web_extensions_initialization_user_data (GLib.Variant user_data);
+		public void set_web_process_extensions_initialization_user_data (GLib.Variant user_data);
 		[NoAccessorMethod]
 		[Version (since = "2.34")]
 		public WebKit.MemoryPressureSettings memory_pressure_settings { construct; }
 		[Version (since = "2.38")]
 		public string time_zone_override { get; construct; }
 		[Version (since = "2.18")]
-		public virtual signal void automation_started (WebKit.AutomationSession session);
+		public signal void automation_started (WebKit.AutomationSession session);
 		[Version (since = "2.16")]
-		public virtual signal void initialize_notification_permissions ();
+		public signal void initialize_notification_permissions ();
 		[Version (since = "2.4")]
-		public virtual signal void initialize_web_extensions ();
+		public signal void initialize_web_process_extensions ();
 		[Version (since = "2.28")]
-		public virtual signal bool user_message_received (WebKit.UserMessage message);
+		public signal bool user_message_received (WebKit.UserMessage message);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h", type_id = "webkit_web_inspector_get_type ()")]
 	public sealed class WebInspector : GLib.Object {
@@ -1174,14 +1168,14 @@ namespace WebKit {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView ();
 		[Version (since = "2.40")]
-		public async WebKit.JavascriptResult call_async_javascript_function (string body, ssize_t length, GLib.Variant? arguments, string? world_name, string? source_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async JSC.Value call_async_javascript_function (string body, ssize_t length, GLib.Variant? arguments, string? world_name, string? source_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public async bool can_execute_editing_command (string command, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public bool can_go_back ();
 		public bool can_go_forward ();
 		public bool can_show_mime_type (string mime_type);
 		public WebKit.Download download_uri (string uri);
 		[Version (since = "2.40")]
-		public async WebKit.JavascriptResult evaluate_javascript (string script, ssize_t length, string? world_name, string? source_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async JSC.Value evaluate_javascript (string script, ssize_t length, string? world_name, string? source_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void execute_editing_command (string command);
 		[Version (since = "2.10")]
 		public void execute_editing_command_with_argument (string command, string argument);
