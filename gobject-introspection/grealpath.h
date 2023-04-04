@@ -3,6 +3,14 @@
 
 #include <stdlib.h>
 
+#ifdef _WIN32
+/* We don't want to include <windows.h> as it clashes horribly
+ * with token names from scannerparser.h. So just declare
+ * GetFullPathNameA() here.
+ */
+extern unsigned long __stdcall GetFullPathNameA(const char*, unsigned long, char*, char**);
+#endif
+
 /**
  * g_realpath:
  *
@@ -22,11 +30,6 @@ g_realpath (const char *path)
 	else
 		return NULL;
 #else
-	/* We don't want to include <windows.h> as it clashes horribly
-	 * with token names from scannerparser.h. So just declare
-	 * GetFullPathNameA() here.
-	 */
-	extern __stdcall GetFullPathNameA(const char*, int, char*, char**);
 	char *buffer;
 	char dummy;
 	int rc, len;
