@@ -1,3 +1,14 @@
+Vala 0.56.6
+===========
+ * Regression fix:
+  - vala: Improve initialization of namespace fields with compound
+    literal [#1424]
+
+ * Bindings:
+  - gio-2.0,glib-2.0,gobject-2.0: Update 2.74 symbols
+  - webkit2gtk-4.*: Update to 2.40.0
+  - webkitgtk-6.0: Update to 2.40.0
+
 Vala 0.56.5
 ===========
  * Various improvements and bug fixes:
