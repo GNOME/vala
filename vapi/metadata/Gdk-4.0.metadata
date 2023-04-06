@@ -45,7 +45,8 @@ Surface
         .translate_coordinates.y ref
 Toplevel
         .compute_size.size nullable unowned
-ToplevelSize struct
+ToplevelSize type_id="gdk_toplevel_size_get_type ()"
+toplevel_size_get_type skip
 
 // Bug #: confused girparser
 content_register_deserializer
