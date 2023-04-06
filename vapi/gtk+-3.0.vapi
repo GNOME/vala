@@ -2875,11 +2875,6 @@ namespace Gtk {
 		[Version (since = "3.14")]
 		public virtual signal void no_matches ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_icon_accessible_get_type ()")]
-	public class EntryIconAccessible : Atk.Object, Atk.Action, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected EntryIconAccessible ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_box_get_type ()")]
 	public class EventBox : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
@@ -3087,12 +3082,6 @@ namespace Gtk {
 		public signal void search_shortcut ();
 		public signal void show_hidden ();
 		public signal void up_folder ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_file_chooser_widget_accessible_get_type ()")]
-	[Version (since = "3.24.30")]
-	public class FileChooserWidgetAccessible : Gtk.ContainerAccessible, Atk.Action, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected FileChooserWidgetAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_filter_get_type ()")]
 	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
@@ -3792,12 +3781,6 @@ namespace Gtk {
 		public int spacing { get; set; }
 		public string subtitle { get; set; }
 		public string title { get; set; }
-	}
-	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_header_bar_accessible_get_type ()")]
-	[Version (since = "3.24.11")]
-	public class HeaderBarAccessible : Gtk.ContainerAccessible, Atk.Component {
-		[CCode (has_construct_function = false)]
-		protected HeaderBarAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtkimmodule.h", type_id = "gtk_im_context_get_type ()")]
 	public abstract class IMContext : GLib.Object {
