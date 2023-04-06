@@ -377,6 +377,18 @@ DataInputStream
   .read_line_finish.length default=null
   .read_line.length default=null
 
+// delegates with target
+AsyncReadyCallback instance_idx=2
+CancellableSourceFunc instance_idx=1
+DBusProxyTypeFunc instance_idx=3
+DatagramBasedSourceFunc instance_idx=2
+FileMeasureProgressCallback instance_idx=4
+FileProgressCallback instance_idx=2
+FileReadMoreCallback instance_idx=2
+IOSchedulerJobFunc instance_idx=2
+PollableSourceFunc instance_idx=1
+SocketSourceFunc instance_idx=2
+
 // Forward upstream
 *.ref unowned
 ActionGroup

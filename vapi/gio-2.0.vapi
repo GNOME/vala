@@ -290,11 +290,47 @@ namespace GLib {
 		public const string STANDARD_TYPE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED")]
 		public const string THUMBNAILING_FAILED;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID")]
 		[Version (since = "2.40")]
 		public const string THUMBNAIL_IS_VALID;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH")]
 		public const string THUMBNAIL_PATH;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_TIME_ACCESS")]
 		public const string TIME_ACCESS;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_TIME_ACCESS_NSEC")]
@@ -1855,6 +1891,9 @@ namespace GLib {
 		public const string ATTRIBUTE_LABEL;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_ATTRIBUTE_TARGET")]
 		public const string ATTRIBUTE_TARGET;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_EXPORTER_MAX_SECTION_SIZE")]
+		[Version (since = "2.76")]
+		public const int EXPORTER_MAX_SECTION_SIZE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_LINK_SECTION")]
 		public const string LINK_SECTION;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_LINK_SUBMENU")]
