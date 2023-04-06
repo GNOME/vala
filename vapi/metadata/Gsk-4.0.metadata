@@ -1,6 +1,10 @@
 *.ref unowned
 *.unref destroys_instance=false
 
+BroadwayRenderer cheader_filename="gsk/broadway/gskbroadwayrenderer.h"
+GLRenderer cheader_filename="gsk/gl/gskglrenderer.h"
+NglRenderer cname="GskRenderer" cheader_filename="gsk/gl/gskglrenderer.h"
+
 Renderer
 	// Factory method
 	.new_for_surface symbol_type="function" name="for_surface"

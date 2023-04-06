@@ -5295,6 +5295,14 @@ namespace Gdk {
 		public void set_resizable (bool resizable);
 		public void unref ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gdk_toplevel_size_get_type ()")]
+	[Compact (opaque = true)]
+	public class ToplevelSize {
+		public void get_bounds (out int bounds_width, out int bounds_height);
+		public void set_min_size (int min_width, int min_height);
+		public void set_shadow_width (int left, int right, int top, int bottom);
+		public void set_size (int width, int height);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_touch_event_get_type ()")]
 	public class TouchEvent : Gdk.Event {
 		[CCode (has_construct_function = false)]
@@ -5438,14 +5446,6 @@ namespace Gdk {
 		public Gdk.AxisFlags flags;
 		[CCode (array_length = false)]
 		public weak double axes[12];
-	}
-	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
-	public struct ToplevelSize {
-		public void get_bounds (out int bounds_width, out int bounds_height);
-		public static GLib.Type get_type ();
-		public void set_min_size (int min_width, int min_height);
-		public void set_shadow_width (int left, int right, int top, int bottom);
-		public void set_size (int width, int height);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_ANCHOR_", type_id = "gdk_anchor_hints_get_type ()")]
 	[Flags]
@@ -5891,7 +5891,7 @@ namespace Gsk {
 		[CCode (array_length = false, array_length_cexpr = "4")]
 		public unowned float[] get_widths ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_broadway_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/broadway/gskbroadwayrenderer.h", type_id = "gsk_broadway_renderer_get_type ()")]
 	public class BroadwayRenderer : Gsk.Renderer {
 		[CCode (has_construct_function = false, type = "GskRenderer*")]
 		public BroadwayRenderer ();
@@ -5963,7 +5963,7 @@ namespace Gsk {
 		public unowned Gsk.RenderNode get_child ();
 		public unowned string get_message ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/gl/gskglrenderer.h", type_id = "gsk_gl_renderer_get_type ()")]
 	public class GLRenderer : Gsk.Renderer {
 		[CCode (has_construct_function = false, type = "GskRenderer*")]
 		[Version (since = "4.2")]
@@ -6038,9 +6038,9 @@ namespace Gsk {
 		public Gsk.MaskMode get_mask_mode ();
 		public unowned Gsk.RenderNode get_source ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_ngl_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/gl/gskglrenderer.h", cname = "GskRenderer", type_id = "gsk_ngl_renderer_get_type ()")]
 	public class NglRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[CCode (has_construct_function = false)]
 		[Version (deprecated = true, deprecated_since = "4.4")]
 		public NglRenderer ();
 	}
@@ -12221,10 +12221,6 @@ namespace Gtk {
 		public string? to_string ();
 		[Version (deprecated = true, deprecated_since = "4.10")]
 		public bool up ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_tree_row_data_get_type ()")]
-	[Compact]
-	public class TreeRowData {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gtk_tree_row_reference_get_type ()")]
 	[Compact]

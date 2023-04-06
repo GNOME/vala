@@ -260,6 +260,7 @@ Editable
 // Not sure what g-i was thinking
 TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
+TreeRowData skip
 
 // Vala-specific, not really bugs
 /////////////////////////////////
