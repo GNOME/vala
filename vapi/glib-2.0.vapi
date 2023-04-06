@@ -1586,6 +1586,9 @@ public class string {
 	[CCode (cname = "g_utf8_to_ucs4_fast")]
 	public string32 to_utf32_fast (long len = -1, out long items_written = null);
 
+	[Version (since = "2.76")]
+	[CCode (cname = "g_set_str")]
+	public static bool set_str (ref string str, string new_str);
 }
 
 [Compact]
@@ -2512,6 +2515,8 @@ namespace GLib {
 	public static void* try_realloc (void* mem, size_t n_bytes);
 
 	public static void free (void* mem);
+	[Version (since = "2.76")]
+	public static void free_sized (void* mem, size_t size);
 
 	public class MemVTable {
 	}
@@ -2549,6 +2554,8 @@ namespace GLib {
 		public static void* alloc (size_t n_blocks, size_t n_blocks_bytes, size_t alignment);
 		public static void* alloc0 (size_t n_blocks, size_t n_blocks_bytes, size_t alignment);
 		public static void free (void* mem);
+		[Version (since = "2.74")]
+		public static void free_sized (void* mem, size_t alignment, size_t size);
 	}
 
 	[Version (since = "2.10")]
@@ -3566,6 +3573,22 @@ namespace GLib {
 		public const char SEARCHPATH_SEPARATOR;
 		[CCode (cname = "G_SEARCHPATH_SEPARATOR_S")]
 		public const string SEARCHPATH_SEPARATOR_S;
+	}
+
+	[Version (since = "2.76")]
+	[Compact]
+	[CCode (copy_function = "g_path_buf_copy", free_function = "g_path_buf_free")]
+	public class PathBuf {
+		public PathBuf ();
+		public PathBuf.from_path (string path);
+		public bool equal (PathBuf v2);
+		[DestroysInstance]
+		public string free_to_path ();
+		public bool pop ();
+		public unowned PathBuf push (string path);
+		public bool set_extension (string extension);
+		public bool set_filename (string file_name);
+		public string? to_path ();
 	}
 
 	namespace Bit {
@@ -4826,9 +4849,15 @@ namespace GLib {
 
 	[Compact]
 	[Version (since = "2.12")]
+#if GLIB_2_76
+	[CCode (copy_function = "g_bookmark_file_copy", free_function = "g_bookmark_file_free", type_id = "G_TYPE_BOOKMARK_FILE")]
+#else
 	[CCode (free_function = "g_bookmark_file_free")]
+#endif
 	public class BookmarkFile {
 		public BookmarkFile ();
+		[Version (since = "2.76")]
+		public BookmarkFile copy ();
 		public bool load_from_file (string file) throws BookmarkFileError, FileError;
 		public bool load_from_data (string data, size_t length) throws BookmarkFileError;
 		public bool load_from_data_dirs (string file, out string full_path) throws BookmarkFileError, FileError;
@@ -5532,8 +5561,12 @@ namespace GLib {
 		[Version (since = "2.40")]
 		public (unowned K)[] get_keys_as_array ();
 #endif
+		[Version (since = "2.76")]
+		public GenericArray<unowned K> get_keys_as_ptr_array ();
 		[Version (since = "2.14")]
 		public List<unowned V> get_values ();
+		[Version (since = "2.76")]
+		public GenericArray<unowned V> get_values_as_ptr_array ();
 		public void @foreach (HFunc<K,V> func);
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc<K,V> func);
@@ -5543,6 +5576,10 @@ namespace GLib {
 		public bool steal (K key);
 		[Version (since = "2.12")]
 		public void steal_all ();
+		[Version (since = "2.76")]
+		public GenericArray<K> steal_all_keys ();
+		[Version (since = "2.76")]
+		public GenericArray<V> steal_all_values ();
 		[Version (since = "2.58")]
 		public bool steal_extended (K lookup_key, out K stolen_key, out V stolen_value);
 		[CCode (cname = "_vala_g_hash_table_take")]
@@ -5719,6 +5756,9 @@ namespace GLib {
 
 		[Version (since = "2.34")]
 		public static Bytes free_to_bytes (owned StringBuilder str);
+		[Version (since = "2.76")]
+		[DestroysInstance]
+		public string free_and_steal ();
 	}
 
 	/* String Chunks */
@@ -5821,6 +5861,10 @@ namespace GLib {
 				return compare_func ((G**) (*a), (G**) (*b));
 			});
 		}
+		[Version (since = "2.76")]
+		public void sort_values (GLib.CompareFunc<G> compare_func);
+		[Version (since = "2.76")]
+		public void sort_values_with_data (GLib.CompareDataFunc<G> compare_func);
 		[Version (since = "2.64")]
 		[CCode (array_length_type = "gsize")]
 		public G[] steal ();
@@ -6041,6 +6085,10 @@ namespace GLib {
 		public G[] data;
 
 		public Array (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G));
+		[Version (since = "2.76")]
+		public Array.take (owned G[] data, bool clear = true, size_t element_size = sizeof (G));
+		[Version (since = "2.76")]
+		public Array.take_zero_terminated ([CCode (array_length = false, array_null_terminated = true)] owned G[] data, bool clear = true, size_t element_size = sizeof (G));
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated = true, bool clear = true, ulong element_size = sizeof (G), uint reserved_size = 0);
 		public void append_val (owned G value);
@@ -6314,6 +6362,8 @@ namespace GLib {
 		public const uint @2_68;
 		public const uint @2_70;
 		public const uint @2_72;
+		public const uint @2_74;
+		public const uint @2_76;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
