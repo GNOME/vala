@@ -3458,6 +3458,13 @@ public class Vala.GirParser : CodeVisitor {
 				Report.error (get_current_src (), "instance_idx required when converting function to method");
 			}
 		}
+		if (element_name == "callback") {
+			if (metadata.has_argument (ArgumentType.INSTANCE_IDX)) {
+				instance_idx = metadata.get_integer (ArgumentType.INSTANCE_IDX);
+				s.set_attribute_double ("CCode", "instance_pos", instance_idx + 0.9);
+				((Delegate) s).has_target = true;
+			}
+		}
 
 		var parameters = new ArrayList<ParameterInfo> ();
 		current.array_length_parameters = new ArrayList<int> ();
