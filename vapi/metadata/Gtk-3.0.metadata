@@ -434,6 +434,9 @@ TreeModel
   .filter_new parent="Gtk.TreeModelFilter" name="new" symbol_type="constructor"
 
 // These aren't actually used publicly anywhere.
+EntryIconAccessible skip
+FileChooserWidgetAccessible skip
+HeaderBarAccessible skip
 TableChild skip
 TableRowCol skip
 TargetPair skip
