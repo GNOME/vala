@@ -696,12 +696,18 @@ public class Codegen : Vala.CodeVisitor {
 		}
 
 		if (element.parent_symbol is Class && ((Class) element.parent_symbol).is_abstract) {
-			stdout.printf ("Skipping `%s'\n", element.get_full_name ());
+			stdout.printf ("Skipping `%s': creation method of abstract class\n", element.get_full_name ());
 			return;
 		}
 
 		//TODO
 		if (element.coroutine || element.get_type_parameters ().size > 0) {
+			stdout.printf ("Skipping `%s': type-arguments for creation method\n", element.get_full_name ());
+			return;
+		}
+		if ((element.parent_symbol is Class && ((Class) element.parent_symbol).get_type_parameters ().size > 0)
+		    || (element.parent_symbol is Struct && ((Struct) element.parent_symbol).get_type_parameters ().size > 0)) {
+			stdout.printf ("Skipping `%s': type-arguments for creation method\n", element.get_full_name ());
 			return;
 		}
 
@@ -744,6 +750,7 @@ public class Codegen : Vala.CodeVisitor {
 
 		//TODO
 		if (element.get_type_parameters ().size > 0) {
+			stdout.printf ("Skipping `%s': type-arguments for method\n", element.get_full_name ());
 			return;
 		}
 
@@ -758,6 +765,7 @@ public class Codegen : Vala.CodeVisitor {
 			break;
 		case MemberBinding.INSTANCE:
 			var instance_type = SemanticAnalyzer.get_data_type_for_symbol (element.parent_symbol);
+			set_type_arguments (instance_type);
 			var decl = new DeclarationStatement (new LocalVariable (instance_type, "p", get_default_initializer (instance_type), element.source_reference));
 			b.add_statement (decl);
 			ma.inner = new MemberAccess (null, "p", element.source_reference);
@@ -892,6 +900,12 @@ public class Codegen : Vala.CodeVisitor {
 				type = param.variable_type.copy ();
 			}
 
+			if (type is GenericType) {
+				type = context.analyzer.string_type.copy ();
+				type.value_owned = true;
+			}
+			set_type_arguments (type);
+
 			switch (param.direction) {
 			case ParameterDirection.IN:
 				initializer = get_default_initializer (type);
@@ -932,6 +946,19 @@ public class Codegen : Vala.CodeVisitor {
 			inner = (MemberAccess) inner.inner;
 		}
 		return res;
+	}
+
+	DataType set_type_arguments (DataType d) {
+		if (d.has_type_arguments ()) {
+			var type = context.analyzer.string_type.copy ();
+			type.value_owned = true;
+			var type_args = d.get_type_arguments ();
+			int size = type_args.size;
+			for (int i = 0; i < size; i++) {
+				type_args[i] = type.copy ();
+			}
+		}
+		return d;
 	}
 
 	DataType get_local_type (DataType d) {
