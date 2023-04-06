@@ -23,24 +23,18 @@
 
 
 public class Valadoc.Content.TableRow : ContentElement {
-	public Vala.List<TableCell> cells {
-		get {
-			return _cells;
-		}
-	}
-
-	private Vala.List<TableCell> _cells;
+	public Vala.List<TableCell> cells { get; private set; }
 
 	internal TableRow () {
 		base ();
-		_cells = new Vala.ArrayList<TableCell> ();
+		cells = new Vala.ArrayList<TableCell> ();
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
 		// Check individual cells
-		foreach (var cell in _cells) {
+		foreach (var cell in cells) {
 			cell.parent = this;
 			cell.check (api_root, container, file_path, reporter, settings);
 		}
@@ -51,7 +45,7 @@ public class Valadoc.Content.TableRow : ContentElement {
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (TableCell element in _cells) {
+		foreach (TableCell element in cells) {
 			element.accept (visitor);
 		}
 	}
@@ -64,7 +58,7 @@ public class Valadoc.Content.TableRow : ContentElement {
 		TableRow row = new TableRow ();
 		row.parent = new_parent;
 
-		foreach (TableCell cell in _cells) {
+		foreach (TableCell cell in cells) {
 			TableCell copy = cell.copy (row) as TableCell;
 			row.cells.add (copy);
 		}

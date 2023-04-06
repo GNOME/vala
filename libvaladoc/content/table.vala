@@ -23,17 +23,11 @@
 
 
 public class Valadoc.Content.Table : ContentElement, Block {
-	public Vala.List<TableRow> rows {
-		get {
-			return _rows;
-		}
-	}
-
-	private Vala.List<TableRow> _rows;
+	public Vala.List<TableRow> rows { get; private set; }
 
 	internal Table () {
 		base ();
-		_rows = new Vala.ArrayList<TableRow> ();
+		rows = new Vala.ArrayList<TableRow> ();
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
@@ -42,7 +36,7 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		// Check the table consistency in term of row/column number
 
 		// Check individual rows
-		foreach (var row in _rows) {
+		foreach (var row in rows) {
 			row.parent = this;
 			row.check (api_root, container, file_path, reporter, settings);
 		}
@@ -53,7 +47,7 @@ public class Valadoc.Content.Table : ContentElement, Block {
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (TableRow element in _rows) {
+		foreach (TableRow element in rows) {
 			element.accept (visitor);
 		}
 	}
@@ -66,7 +60,7 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		Table table = new Table ();
 		table.parent = new_parent;
 
-		foreach (var row in _rows) {
+		foreach (var row in rows) {
 			TableRow copy = row.copy (table) as TableRow;
 			table.rows.add (copy);
 		}

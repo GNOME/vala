@@ -23,12 +23,10 @@
 
 
 public abstract class Valadoc.Content.BlockContent : ContentElement {
-	public Vala.List<Block> content { get { return _content; } }
-
-	private Vala.List<Block> _content;
+	public Vala.List<Block> content { get; private set; }
 
 	construct {
-		_content = new Vala.ArrayList<Block> ();
+		content = new Vala.ArrayList<Block> ();
 	}
 
 	internal BlockContent () {
@@ -40,14 +38,14 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
-		foreach (Block element in _content) {
+		foreach (Block element in content) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (Block element in _content) {
+		foreach (Block element in content) {
 			element.accept (visitor);
 		}
 	}

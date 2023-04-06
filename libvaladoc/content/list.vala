@@ -101,25 +101,19 @@ public class Valadoc.Content.List : ContentElement, Block {
 	}
 
 	// TODO add initial value (either a number or some letters)
-	public Vala.List<ListItem> items {
-		get {
-			return _items;
-		}
-	}
-
-	private Vala.List<ListItem> _items;
+	public Vala.List<ListItem> items { get; private set; }
 
 	internal List () {
 		base ();
-		_bullet = Bullet.NONE;
-		_items = new Vala.ArrayList<ListItem> ();
+		bullet = Bullet.NONE;
+		items = new Vala.ArrayList<ListItem> ();
 	}
 
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
 		// Check individual list items
-		foreach (ListItem element in _items) {
+		foreach (ListItem element in items) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
@@ -130,13 +124,13 @@ public class Valadoc.Content.List : ContentElement, Block {
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (ListItem element in _items) {
+		foreach (ListItem element in items) {
 			element.accept (visitor);
 		}
 	}
 
 	public override bool is_empty () {
-		return _items.size == 0;
+		return items.size == 0;
 	}
 
 	public override ContentElement copy (ContentElement? new_parent = null) {

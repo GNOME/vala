@@ -25,15 +25,14 @@
 using Valadoc.Taglets;
 
 public class Valadoc.Content.Comment : BlockContent {
-	public Vala.List<Taglet> taglets { get { return _taglets; } }
-	private Vala.List<Taglet> _taglets;
+	public Vala.List<Taglet> taglets { get; private set; }
 
 	private bool checked = false;
 
 
 	internal Comment () {
 		base ();
-		_taglets = new Vala.ArrayList<Taglet> ();
+		taglets = new Vala.ArrayList<Taglet> ();
 	}
 
 	public override void configure (Settings settings, ResourceLocator locator) {
@@ -51,7 +50,7 @@ public class Valadoc.Content.Comment : BlockContent {
 
 		base.check (api_root, container, file_path, reporter, settings);
 
-		foreach (Taglet element in _taglets) {
+		foreach (Taglet element in taglets) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
@@ -64,7 +63,7 @@ public class Valadoc.Content.Comment : BlockContent {
 	public override void accept_children (ContentVisitor visitor) {
 		base.accept_children (visitor);
 
-		foreach (Taglet element in _taglets) {
+		foreach (Taglet element in taglets) {
 			element.accept (visitor);
 		}
 	}
@@ -74,7 +73,7 @@ public class Valadoc.Content.Comment : BlockContent {
 
 		// TODO inherit stuff if needed
 
-		foreach (Taglet taglet in _taglets) {
+		foreach (Taglet taglet in taglets) {
 			if (taglet.get_type () == taglet_type) {
 				selected_taglets.add (taglet);
 			}
@@ -94,7 +93,7 @@ public class Valadoc.Content.Comment : BlockContent {
 			comment.content.add (copy);
 		}
 
-		foreach (Taglet taglet in _taglets) {
+		foreach (Taglet taglet in taglets) {
 			Taglet copy = taglet.copy (comment) as Taglet;
 			comment.taglets.add (copy);
 		}

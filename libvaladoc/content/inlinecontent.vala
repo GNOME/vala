@@ -23,16 +23,10 @@
 
 
 public abstract class Valadoc.Content.InlineContent : ContentElement {
-	public Vala.List<Inline> content {
-		get {
-			return _content;
-		}
-	}
-
-	private Vala.List<Inline> _content;
+	public Vala.List<Inline> content { get; private set; }
 
 	construct {
-		_content = new Vala.ArrayList<Inline> ();
+		content = new Vala.ArrayList<Inline> ();
 	}
 
 	internal InlineContent () {
@@ -41,14 +35,14 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 	public override void check (Api.Tree api_root, Api.Node container, string file_path,
 								ErrorReporter reporter, Settings settings)
 	{
-		foreach (Inline element in _content) {
+		foreach (Inline element in content) {
 			element.parent = this;
 			element.check (api_root, container, file_path, reporter, settings);
 		}
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (Inline element in _content) {
+		foreach (Inline element in content) {
 			element.accept (visitor);
 		}
 	}
@@ -64,10 +58,10 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 	}
 
 	internal void replace_node (Inline old, Inline replacement) {
-		int index = _content.index_of (old);
+		int index = content.index_of (old);
 		assert (index >= 0);
 
-		_content.set (index, replacement);
+		content.set (index, replacement);
 	}
 }
 
