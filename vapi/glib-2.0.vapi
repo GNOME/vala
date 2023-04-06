@@ -2143,7 +2143,7 @@ namespace GLib {
 		public void set_ready_time (int64 ready_time);
 		public int64 get_ready_time ();
 		public static bool remove (uint id);
-		public static bool remove_by_funcs_user_data (void* user_data);
+		public static bool remove_by_funcs_user_data (SourceFuncs funcs, void* user_data);
 		public static bool remove_by_user_data (void* user_data);
 		[Version (since = "2.32")]
 		[CCode (cname = "G_SOURCE_CONTINUE")]
@@ -2327,7 +2327,6 @@ namespace GLib {
 		public void lock ();
 		public bool trylock ();
 		public void unlock ();
-		public void lock_full ();
 	}
 
 	[Version (deprecated_since = "2.32", replacement = "RecMutex")]
@@ -2337,7 +2336,7 @@ namespace GLib {
 		public void lock ();
 		public bool trylock ();
 		public void unlock ();
-		public void lock_full ();
+		public void lock_full (uint depth);
 	}
 
 	[Version (deprecated_since = "2.32", replacement = "RWLock")]
@@ -3167,7 +3166,7 @@ namespace GLib {
 	public struct Date {
 		public void clear (uint n_dates = 1);
 		[Version (since = "2.56")]
-		public Date copy ();
+		public Date? copy ();
 		public void set_day (DateDay day);
 		public void set_month (DateMonth month);
 		public void set_year (DateYear year);
@@ -3854,7 +3853,7 @@ namespace GLib {
 	}
 
 	public delegate void SpawnChildSetupFunc ();
-	[CCode (has_target = false, cheader_filename = "signal.h")]
+	[CCode (cname = "__sighandler_t", has_target = false, cheader_filename = "signal.h")]
 	public delegate void SignalHandlerFunc (int signum);
 
 	public unowned string strsignal (int signum);
@@ -5043,9 +5042,9 @@ namespace GLib {
 		public static double rand_double_range (double begin, double end);
 		[Version (since = "2.22")]
 		public static void log_set_fatal_handler (LogFatalFunc log_func);
-	}
 
-	public delegate bool LogFatalFunc (string? log_domain, LogLevelFlags log_levels, string message);
+		public delegate bool LogFatalFunc (string? log_domain, LogLevelFlags log_levels, string message);
+	}
 
 	[Compact]
 #if GLIB_2_70
