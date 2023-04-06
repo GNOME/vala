@@ -70,15 +70,15 @@ static GType maman_foo_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__maman_foo_bar (MamanFoo* _sender,
-                                gpointer self);
-static void __lambda5_ (Block1Data* _data1_);
-static void ___lambda5__maman_foo_bar (MamanFoo* _sender,
-                                gpointer self);
-static void __lambda6_ (Block1Data* _data1_);
-static void ___lambda6__maman_foo_bar (MamanFoo* _sender,
-                                gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__maman_foo_bar (MamanFoo* _sender,
+                                    gpointer self);
+static void _vala_lambda1_ (Block1Data* _data1_);
+static void __vala_lambda1__maman_foo_bar (MamanFoo* _sender,
+                                    gpointer self);
+static void _vala_lambda2_ (Block1Data* _data1_);
+static void __vala_lambda2__maman_foo_bar (MamanFoo* _sender,
+                                    gpointer self);
 
 MamanFoo*
 maman_foo_construct (GType object_type)
@@ -147,42 +147,42 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	_data1_->detailed1 = TRUE;
 }
 
 static void
-___lambda4__maman_foo_bar (MamanFoo* _sender,
-                           gpointer self)
+__vala_lambda0__maman_foo_bar (MamanFoo* _sender,
+                               gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static void
-__lambda5_ (Block1Data* _data1_)
+_vala_lambda1_ (Block1Data* _data1_)
 {
 	_data1_->detailed2 = TRUE;
 }
 
 static void
-___lambda5__maman_foo_bar (MamanFoo* _sender,
-                           gpointer self)
+__vala_lambda1__maman_foo_bar (MamanFoo* _sender,
+                               gpointer self)
 {
-	__lambda5_ (self);
+	_vala_lambda1_ (self);
 }
 
 static void
-__lambda6_ (Block1Data* _data1_)
+_vala_lambda2_ (Block1Data* _data1_)
 {
 	_data1_->detailed3 = TRUE;
 }
 
 static void
-___lambda6__maman_foo_bar (MamanFoo* _sender,
-                           gpointer self)
+__vala_lambda2__maman_foo_bar (MamanFoo* _sender,
+                               gpointer self)
 {
-	__lambda6_ (self);
+	_vala_lambda2_ (self);
 }
 
 static void
@@ -223,15 +223,15 @@ _vala_main (void)
 	_tmp3_ = foo;
 	_tmp4_ = detail1;
 	_tmp5_ = g_strconcat ("bar::", _tmp4_, NULL);
-	g_signal_connect_data (_tmp3_, _tmp5_, (GCallback) ___lambda4__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	g_signal_connect_data (_tmp3_, _tmp5_, (GCallback) __vala_lambda0__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	_g_free0 (_tmp5_);
 	_tmp6_ = foo;
 	_tmp7_ = detail2;
 	_tmp8_ = g_strconcat ("bar::", _tmp7_, NULL);
-	g_signal_connect_data (_tmp6_, _tmp8_, (GCallback) ___lambda5__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	g_signal_connect_data (_tmp6_, _tmp8_, (GCallback) __vala_lambda1__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	_g_free0 (_tmp8_);
 	_tmp9_ = foo;
-	g_signal_connect_data (_tmp9_, "bar::detail3", (GCallback) ___lambda6__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	g_signal_connect_data (_tmp9_, "bar::detail3", (GCallback) __vala_lambda2__maman_foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	_tmp10_ = foo;
 	_tmp11_ = detail1;
 	g_signal_emit (_tmp10_, maman_foo_signals[MAMAN_FOO_BAR_SIGNAL], g_quark_from_string (_tmp11_));

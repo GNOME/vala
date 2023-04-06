@@ -212,12 +212,12 @@ static void _test_raw_unregister_object (gpointer user_data);
 VALA_EXTERN void test_raw (TestRaw* test);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_,
-                 GVariant* var_i);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     GVariant* var_i);
 static gint _variant_get1 (GVariant* value);
-static void ___lambda4__test_raw_test_signal (TestRaw* _sender,
-                                       GVariant* i,
-                                       gpointer self);
+static void __vala_lambda0__test_raw_test_signal (TestRaw* _sender,
+                                           GVariant* i,
+                                           gpointer self);
 static GVariant* _variant_new1 (gint value);
 static GVariant* _variant_new2 (gint value);
 static gint _variant_get2 (GVariant* value);
@@ -226,11 +226,11 @@ static gchar* _variant_get3 (GVariant* value);
 VALA_EXTERN void test (Test* test);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
-static void __lambda5_ (Block2Data* _data2_,
-                 gint i);
-static void ___lambda5__test_test_signal (Test* _sender,
-                                   gint i,
-                                   gpointer self);
+static void _vala_lambda1_ (Block2Data* _data2_,
+                     gint i);
+static void __vala_lambda1__test_test_signal (Test* _sender,
+                                       gint i,
+                                       gpointer self);
 static void _vala_main (void);
 
 static const GDBusArgInfo _test_dbus_arg_info_test_method_j = {-1, "j", "i", NULL};
@@ -1026,8 +1026,8 @@ _variant_get1 (GVariant* value)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_,
-            GVariant* var_i)
+_vala_lambda0_ (Block1Data* _data1_,
+                GVariant* var_i)
 {
 	gint i = 0;
 	gint _tmp0_;
@@ -1039,11 +1039,11 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static void
-___lambda4__test_raw_test_signal (TestRaw* _sender,
-                                  GVariant* i,
-                                  gpointer self)
+__vala_lambda0__test_raw_test_signal (TestRaw* _sender,
+                                      GVariant* i,
+                                      gpointer self)
 {
-	__lambda4_ (self, i);
+	_vala_lambda0_ (self, i);
 }
 
 static GVariant*
@@ -1104,7 +1104,7 @@ test_raw (TestRaw* test)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_main_loop_new (NULL, FALSE);
 	_data1_->main_loop = _tmp0_;
-	_tmp1_ = g_signal_connect_data (test, "test-signal", (GCallback) ___lambda4__test_raw_test_signal, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	_tmp1_ = g_signal_connect_data (test, "test-signal", (GCallback) __vala_lambda0__test_raw_test_signal, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	id = _tmp1_;
 	_tmp3_ = _variant_new1 (23);
 	_tmp4_ = _variant_new2 (11);
@@ -1162,19 +1162,19 @@ block2_data_unref (void * _userdata_)
 }
 
 static void
-__lambda5_ (Block2Data* _data2_,
-            gint i)
+_vala_lambda1_ (Block2Data* _data2_,
+                gint i)
 {
 	_vala_assert (i == 46, "i == 46");
 	g_main_loop_quit (_data2_->main_loop);
 }
 
 static void
-___lambda5__test_test_signal (Test* _sender,
-                              gint i,
-                              gpointer self)
+__vala_lambda1__test_test_signal (Test* _sender,
+                                  gint i,
+                                  gpointer self)
 {
-	__lambda5_ (self, i);
+	_vala_lambda1_ (self, i);
 }
 
 void
@@ -1195,7 +1195,7 @@ test (Test* test)
 	_data2_->_ref_count_ = 1;
 	_tmp0_ = g_main_loop_new (NULL, FALSE);
 	_data2_->main_loop = _tmp0_;
-	_tmp1_ = g_signal_connect_data (test, "test-signal", (GCallback) ___lambda5__test_test_signal, block2_data_ref (_data2_), (GClosureNotify) block2_data_unref, 0);
+	_tmp1_ = g_signal_connect_data (test, "test-signal", (GCallback) __vala_lambda1__test_test_signal, block2_data_ref (_data2_), (GClosureNotify) block2_data_unref, 0);
 	id = _tmp1_;
 	j = test_test_method (test, 23, 11, &_inner_error0_);
 	if (G_UNLIKELY (_inner_error0_ != NULL)) {

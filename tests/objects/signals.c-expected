@@ -211,12 +211,12 @@ static void maman_bar_activated (MamanBar* self,
                           MamanFoo* foo,
                           gboolean b);
 VALA_EXTERN void maman_bar_run (MamanBar* self);
-static void __lambda4_ (MamanBar* self,
-                 MamanFoo* foo,
-                 gboolean b);
-static void ___lambda4__maman_foo_activated (MamanFoo* _sender,
-                                      gboolean b,
-                                      gpointer self);
+static void _vala_lambda0_ (MamanBar* self,
+                     MamanFoo* foo,
+                     gboolean b);
+static void __vala_lambda0__maman_foo_activated (MamanFoo* _sender,
+                                          gboolean b,
+                                          gpointer self);
 static void _maman_bar_activated_maman_foo_activated (MamanFoo* _sender,
                                                gboolean b,
                                                gpointer self);
@@ -238,16 +238,16 @@ static GType maman_user_foo_get_type_once (void);
 VALA_EXTERN GType maman_user_bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanUserBar, g_object_unref)
 VALA_EXTERN void maman_user_bar_run (MamanUserBar* self);
-static void __lambda5_ (MamanUserBar* self,
-                 MamanUserFoo* foo,
-                 gint i1,
-                 gint i2,
-                 gint* i3);
-static void ___lambda5__maman_user_foo_activated (MamanUserFoo* _sender,
-                                           gint i1,
-                                           gint i2,
-                                           gint* i3,
-                                           gpointer self);
+static void _vala_lambda1_ (MamanUserBar* self,
+                     MamanUserFoo* foo,
+                     gint i1,
+                     gint i2,
+                     gint* i3);
+static void __vala_lambda1__maman_user_foo_activated (MamanUserFoo* _sender,
+                                               gint i1,
+                                               gint i2,
+                                               gint* i3,
+                                               gpointer self);
 VALA_EXTERN MamanUserBar* maman_user_bar_new (void);
 VALA_EXTERN MamanUserBar* maman_user_bar_construct (GType object_type);
 static GType maman_user_bar_get_type_once (void);
@@ -271,18 +271,18 @@ static GType maman_return_foo_get_type_once (void);
 VALA_EXTERN GType maman_return_bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanReturnBar, g_object_unref)
 VALA_EXTERN void maman_return_bar_run (MamanReturnBar* self);
-static gint __lambda6_ (MamanReturnBar* self,
-                 MamanReturnFoo* foo,
-                 gint arg);
-static gint ___lambda6__maman_return_foo_int_activated (MamanReturnFoo* _sender,
-                                                 gint arg,
-                                                 gpointer self);
-static gchar* __lambda7_ (MamanReturnBar* self,
-                   MamanReturnFoo* foo,
-                   const gchar* arg);
-static gchar* ___lambda7__maman_return_foo_string_activated (MamanReturnFoo* _sender,
-                                                      const gchar* arg,
-                                                      gpointer self);
+static gint _vala_lambda2_ (MamanReturnBar* self,
+                     MamanReturnFoo* foo,
+                     gint arg);
+static gint __vala_lambda2__maman_return_foo_int_activated (MamanReturnFoo* _sender,
+                                                     gint arg,
+                                                     gpointer self);
+static gchar* _vala_lambda3_ (MamanReturnBar* self,
+                       MamanReturnFoo* foo,
+                       const gchar* arg);
+static gchar* __vala_lambda3__maman_return_foo_string_activated (MamanReturnFoo* _sender,
+                                                          const gchar* arg,
+                                                          gpointer self);
 VALA_EXTERN MamanReturnBar* maman_return_bar_new (void);
 VALA_EXTERN MamanReturnBar* maman_return_bar_construct (GType object_type);
 static GType maman_return_bar_get_type_once (void);
@@ -366,9 +366,9 @@ maman_bar_activated (MamanBar* self,
 }
 
 static void
-__lambda4_ (MamanBar* self,
-            MamanFoo* foo,
-            gboolean b)
+_vala_lambda0_ (MamanBar* self,
+                MamanFoo* foo,
+                gboolean b)
 {
 	g_return_if_fail (MAMAN_IS_FOO (foo));
 	if (b) {
@@ -391,11 +391,11 @@ __lambda4_ (MamanBar* self,
 }
 
 static void
-___lambda4__maman_foo_activated (MamanFoo* _sender,
-                                 gboolean b,
-                                 gpointer self)
+__vala_lambda0__maman_foo_activated (MamanFoo* _sender,
+                                     gboolean b,
+                                     gpointer self)
 {
-	__lambda4_ ((MamanBar*) self, _sender, b);
+	_vala_lambda0_ ((MamanBar*) self, _sender, b);
 }
 
 static void
@@ -430,7 +430,7 @@ maman_bar_run (MamanBar* self)
 	_vala_assert (_tmp1_ == 2, "++counter == 2");
 	_tmp2_ = maman_foo_new ();
 	foo = _tmp2_;
-	g_signal_connect_object (foo, "activated", (GCallback) ___lambda4__maman_foo_activated, self, 0);
+	g_signal_connect_object (foo, "activated", (GCallback) __vala_lambda0__maman_foo_activated, self, 0);
 	g_signal_connect_object (foo, "activated", (GCallback) _maman_bar_activated_maman_foo_activated, self, 0);
 	_tmp3_ = stdout;
 	fprintf (_tmp3_, " 3");
@@ -594,11 +594,11 @@ maman_user_foo_get_type (void)
 }
 
 static void
-__lambda5_ (MamanUserBar* self,
-            MamanUserFoo* foo,
-            gint i1,
-            gint i2,
-            gint* i3)
+_vala_lambda1_ (MamanUserBar* self,
+                MamanUserFoo* foo,
+                gint i1,
+                gint i2,
+                gint* i3)
 {
 	gint _vala_i3 = 0;
 	FILE* _tmp0_;
@@ -616,13 +616,13 @@ __lambda5_ (MamanUserBar* self,
 }
 
 static void
-___lambda5__maman_user_foo_activated (MamanUserFoo* _sender,
-                                      gint i1,
-                                      gint i2,
-                                      gint* i3,
-                                      gpointer self)
+__vala_lambda1__maman_user_foo_activated (MamanUserFoo* _sender,
+                                          gint i1,
+                                          gint i2,
+                                          gint* i3,
+                                          gpointer self)
 {
-	__lambda5_ ((MamanUserBar*) self, _sender, i1, i2, i3);
+	_vala_lambda1_ ((MamanUserBar*) self, _sender, i1, i2, i3);
 }
 
 void
@@ -644,7 +644,7 @@ maman_user_bar_run (MamanUserBar* self)
 	_vala_assert (_tmp1_ == 2, "++counter == 2");
 	_tmp2_ = maman_user_foo_new ();
 	foo = _tmp2_;
-	g_signal_connect_object (foo, "activated", (GCallback) ___lambda5__maman_user_foo_activated, self, 0);
+	g_signal_connect_object (foo, "activated", (GCallback) __vala_lambda1__maman_user_foo_activated, self, 0);
 	_tmp3_ = stdout;
 	fprintf (_tmp3_, " 3");
 	counter = counter + 1;
@@ -816,9 +816,9 @@ maman_return_foo_get_type (void)
 }
 
 static gint
-__lambda6_ (MamanReturnBar* self,
-            MamanReturnFoo* foo,
-            gint arg)
+_vala_lambda2_ (MamanReturnBar* self,
+                MamanReturnFoo* foo,
+                gint arg)
 {
 	FILE* _tmp0_;
 	gint _tmp1_;
@@ -834,19 +834,19 @@ __lambda6_ (MamanReturnBar* self,
 }
 
 static gint
-___lambda6__maman_return_foo_int_activated (MamanReturnFoo* _sender,
-                                            gint arg,
-                                            gpointer self)
+__vala_lambda2__maman_return_foo_int_activated (MamanReturnFoo* _sender,
+                                                gint arg,
+                                                gpointer self)
 {
 	gint result;
-	result = __lambda6_ ((MamanReturnBar*) self, _sender, arg);
+	result = _vala_lambda2_ ((MamanReturnBar*) self, _sender, arg);
 	return result;
 }
 
 static gchar*
-__lambda7_ (MamanReturnBar* self,
-            MamanReturnFoo* foo,
-            const gchar* arg)
+_vala_lambda3_ (MamanReturnBar* self,
+                MamanReturnFoo* foo,
+                const gchar* arg)
 {
 	FILE* _tmp0_;
 	gint _tmp1_;
@@ -865,12 +865,12 @@ __lambda7_ (MamanReturnBar* self,
 }
 
 static gchar*
-___lambda7__maman_return_foo_string_activated (MamanReturnFoo* _sender,
-                                               const gchar* arg,
-                                               gpointer self)
+__vala_lambda3__maman_return_foo_string_activated (MamanReturnFoo* _sender,
+                                                   const gchar* arg,
+                                                   gpointer self)
 {
 	gchar* result;
-	result = __lambda7_ ((MamanReturnBar*) self, _sender, arg);
+	result = _vala_lambda3_ ((MamanReturnBar*) self, _sender, arg);
 	return result;
 }
 
@@ -898,8 +898,8 @@ maman_return_bar_run (MamanReturnBar* self)
 	_vala_assert (_tmp1_ == 2, "++counter == 2");
 	_tmp2_ = maman_return_foo_new ();
 	foo = _tmp2_;
-	g_signal_connect_object (foo, "int-activated", (GCallback) ___lambda6__maman_return_foo_int_activated, self, 0);
-	g_signal_connect_object (foo, "string-activated", (GCallback) ___lambda7__maman_return_foo_string_activated, self, 0);
+	g_signal_connect_object (foo, "int-activated", (GCallback) __vala_lambda2__maman_return_foo_int_activated, self, 0);
+	g_signal_connect_object (foo, "string-activated", (GCallback) __vala_lambda3__maman_return_foo_string_activated, self, 0);
 	_tmp3_ = stdout;
 	g_signal_emit (foo, maman_return_foo_signals[MAMAN_RETURN_FOO_INT_ACTIVATED_SIGNAL], 0, 3, &_tmp4_);
 	fprintf (_tmp3_, " %d", _tmp4_);

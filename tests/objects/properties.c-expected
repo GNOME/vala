@@ -366,12 +366,12 @@ VALA_EXTERN Sample* sample_construct (GType object_type,
 VALA_EXTERN void sample_set_name (Sample* self,
                       const gchar* value);
 VALA_EXTERN void sample_run (Sample* self);
-static void __lambda4_ (Sample* self,
-                 GObject* s,
-                 GParamSpec* p);
-static void ___lambda4__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
+static void _vala_lambda0_ (Sample* self,
+                     GObject* s,
+                     GParamSpec* p);
+static void __vala_lambda0__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
 static void sample_set_automatic (Sample* self,
                            const gchar* value);
 static const gchar* sample_get_automatic (Sample* self);
@@ -721,9 +721,9 @@ sample_new (const gchar* name)
 }
 
 static void
-__lambda4_ (Sample* self,
-            GObject* s,
-            GParamSpec* p)
+_vala_lambda0_ (Sample* self,
+                GObject* s,
+                GParamSpec* p)
 {
 	FILE* _tmp0_;
 	const gchar* _tmp1_;
@@ -735,11 +735,11 @@ __lambda4_ (Sample* self,
 }
 
 static void
-___lambda4__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda0__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda4_ ((Sample*) self, _sender, pspec);
+	_vala_lambda0_ ((Sample*) self, _sender, pspec);
 }
 
 void
@@ -757,7 +757,7 @@ sample_run (Sample* self)
 	const gchar* _tmp9_;
 	GError* _inner_error0_ = NULL;
 	g_return_if_fail (IS_SAMPLE (self));
-	g_signal_connect_object (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject), "notify", (GCallback) ___lambda4__g_object_notify, self, 0);
+	g_signal_connect_object (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject), "notify", (GCallback) __vala_lambda0__g_object_notify, self, 0);
 	sample_set_automatic (self, "TheNewAutomatic");
 	sample_set_name (self, "TheNewName");
 	_tmp0_ = stdout;

@@ -25,19 +25,19 @@ struct _Block1Data {
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gint ___lambda4_ (Block1Data* _data1_);
-static gint ____lambda4___localfunc0_ (gpointer self);
-static gboolean ___lambda5_ (gint a,
-                      gint b);
-static gboolean ____lambda5___localfunc1_ (gint a,
-                                    gint b,
-                                    gpointer self);
-static void ___lambda6_ (gchar** s);
-static void ____lambda6___localfunc2_ (gchar** s,
-                                gpointer self);
-static const gchar* ___lambda7_ (gchar** s);
-static const gchar* ____lambda7___localfunc3_ (gchar** s,
-                                        gpointer self);
+static gint _vala_lambda0_ (Block1Data* _data1_);
+static gint __vala_lambda0___localfunc0_ (gpointer self);
+static gboolean _vala_lambda1_ (gint a,
+                         gint b);
+static gboolean __vala_lambda1___localfunc1_ (gint a,
+                                       gint b,
+                                       gpointer self);
+static void _vala_lambda2_ (gchar** s);
+static void __vala_lambda2___localfunc2_ (gchar** s,
+                                   gpointer self);
+static const gchar* _vala_lambda3_ (gchar** s);
+static const gchar* __vala_lambda3___localfunc3_ (gchar** s,
+                                           gpointer self);
 
 static Block1Data*
 block1_data_ref (Block1Data* _data1_)
@@ -57,7 +57,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gint
-___lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gint result;
 	result = _data1_->x + _data1_->y;
@@ -65,16 +65,16 @@ ___lambda4_ (Block1Data* _data1_)
 }
 
 static gint
-____lambda4___localfunc0_ (gpointer self)
+__vala_lambda0___localfunc0_ (gpointer self)
 {
 	gint result;
-	result = ___lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
 static gboolean
-___lambda5_ (gint a,
-             gint b)
+_vala_lambda1_ (gint a,
+                gint b)
 {
 	gboolean result;
 	_vala_assert ((a * b) == 966, "a * b == 966");
@@ -83,17 +83,17 @@ ___lambda5_ (gint a,
 }
 
 static gboolean
-____lambda5___localfunc1_ (gint a,
-                           gint b,
-                           gpointer self)
+__vala_lambda1___localfunc1_ (gint a,
+                              gint b,
+                              gpointer self)
 {
 	gboolean result;
-	result = ___lambda5_ (a, b);
+	result = _vala_lambda1_ (a, b);
 	return result;
 }
 
 static void
-___lambda6_ (gchar** s)
+_vala_lambda2_ (gchar** s)
 {
 	gchar* _vala_s = NULL;
 	gchar* _tmp0_;
@@ -108,14 +108,14 @@ ___lambda6_ (gchar** s)
 }
 
 static void
-____lambda6___localfunc2_ (gchar** s,
-                           gpointer self)
+__vala_lambda2___localfunc2_ (gchar** s,
+                              gpointer self)
 {
-	___lambda6_ (s);
+	_vala_lambda2_ (s);
 }
 
 static const gchar*
-___lambda7_ (gchar** s)
+_vala_lambda3_ (gchar** s)
 {
 	gchar* _tmp0_;
 	const gchar* result;
@@ -129,11 +129,11 @@ ___lambda7_ (gchar** s)
 }
 
 static const gchar*
-____lambda7___localfunc3_ (gchar** s,
-                           gpointer self)
+__vala_lambda3___localfunc3_ (gchar** s,
+                              gpointer self)
 {
 	const gchar* result;
-	result = ___lambda7_ (s);
+	result = _vala_lambda3_ (s);
 	return result;
 }
 
@@ -148,7 +148,7 @@ _vala_main (void)
 		_data1_->_ref_count_ = 1;
 		_data1_->x = 23;
 		_data1_->y = 42;
-		foo = ____lambda4___localfunc0_;
+		foo = __vala_lambda0___localfunc0_;
 		foo_target = _data1_;
 		_vala_assert (foo (foo_target) == 65, "foo () == 65");
 		block1_data_unref (_data1_);
@@ -157,7 +157,7 @@ _vala_main (void)
 	{
 		_LocalFunc1_ foo = NULL;
 		gpointer foo_target;
-		foo = ____lambda5___localfunc1_;
+		foo = __vala_lambda1___localfunc1_;
 		foo_target = NULL;
 		_vala_assert (foo (23, 42, foo_target), "foo (23, 42)");
 	}
@@ -166,7 +166,7 @@ _vala_main (void)
 		gpointer foo_target;
 		gchar* s = NULL;
 		gchar* _tmp0_ = NULL;
-		foo = ____lambda6___localfunc2_;
+		foo = __vala_lambda2___localfunc2_;
 		foo_target = NULL;
 		foo (&_tmp0_, foo_target);
 		_g_free0 (s);
@@ -181,7 +181,7 @@ _vala_main (void)
 		gchar* _tmp1_;
 		const gchar* _tmp2_;
 		const gchar* _tmp3_;
-		foo = ____lambda7___localfunc3_;
+		foo = __vala_lambda3___localfunc3_;
 		foo_target = NULL;
 		_tmp1_ = g_strdup ("foo");
 		s = _tmp1_;

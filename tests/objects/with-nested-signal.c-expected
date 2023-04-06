@@ -112,11 +112,11 @@ static GType bar_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void ____lambda4_ (Block1Data* _data1_);
-static void _____lambda4__foo_manam (Foo* _sender,
-                              gpointer self);
-static void ______lambda5_ (Block1Data* _data1_);
-static void _______lambda5__foo_manam (Foo* _sender,
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__foo_manam (Foo* _sender,
+                                gpointer self);
+static void _vala_lambda1_ (Block1Data* _data1_);
+static void __vala_lambda1__foo_manam (Foo* _sender,
                                 gpointer self);
 
 static gint
@@ -433,29 +433,29 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-____lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	_vala_assert (foo_foo (_data1_->foo) == 23, "foo () == 23");
 }
 
 static void
-_____lambda4__foo_manam (Foo* _sender,
-                         gpointer self)
+__vala_lambda0__foo_manam (Foo* _sender,
+                           gpointer self)
 {
-	____lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static void
-______lambda5_ (Block1Data* _data1_)
+_vala_lambda1_ (Block1Data* _data1_)
 {
 	_vala_assert (foo_foo (G_TYPE_CHECK_INSTANCE_CAST (_data1_->bar, TYPE_FOO, Foo)) == 42, "foo () == 42");
 }
 
 static void
-_______lambda5__foo_manam (Foo* _sender,
+__vala_lambda1__foo_manam (Foo* _sender,
                            gpointer self)
 {
-	______lambda5_ (self);
+	_vala_lambda1_ (self);
 }
 
 static void
@@ -471,9 +471,9 @@ _vala_main (void)
 	_tmp1_ = bar_new ();
 	_data1_->bar = _tmp1_;
 	{
-		g_signal_connect_data (_data1_->foo, "manam", (GCallback) _____lambda4__foo_manam, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+		g_signal_connect_data (_data1_->foo, "manam", (GCallback) __vala_lambda0__foo_manam, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 		{
-			g_signal_connect_data (G_TYPE_CHECK_INSTANCE_CAST (_data1_->bar, TYPE_FOO, Foo), "manam", (GCallback) _______lambda5__foo_manam, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+			g_signal_connect_data (G_TYPE_CHECK_INSTANCE_CAST (_data1_->bar, TYPE_FOO, Foo), "manam", (GCallback) __vala_lambda1__foo_manam, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 		}
 	}
 	g_signal_emit (_data1_->foo, foo_signals[FOO_MANAM_SIGNAL], 0);

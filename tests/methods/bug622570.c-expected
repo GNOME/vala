@@ -12,17 +12,17 @@ typedef void (*Deleg2) (GValue* foo, gint* bar, gpointer user_data);
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
 static void _vala_main (void);
-static gint __lambda4_ (gint* foo);
-static gint ___lambda4__deleg1 (gint* foo,
-                         gpointer self);
-static void __lambda5_ (GValue* foo,
-                 gint* bar);
-static void ___lambda5__deleg2 (GValue* foo,
-                         gint* bar,
-                         gpointer self);
+static gint _vala_lambda0_ (gint* foo);
+static gint __vala_lambda0__deleg1 (gint* foo,
+                             gpointer self);
+static void _vala_lambda1_ (GValue* foo,
+                     gint* bar);
+static void __vala_lambda1__deleg2 (GValue* foo,
+                             gint* bar,
+                             gpointer self);
 
 static gint
-__lambda4_ (gint* foo)
+_vala_lambda0_ (gint* foo)
 {
 	gint result;
 	result = (*foo) + 5;
@@ -30,17 +30,17 @@ __lambda4_ (gint* foo)
 }
 
 static gint
-___lambda4__deleg1 (gint* foo,
-                    gpointer self)
+__vala_lambda0__deleg1 (gint* foo,
+                        gpointer self)
 {
 	gint result;
-	result = __lambda4_ (foo);
+	result = _vala_lambda0_ (foo);
 	return result;
 }
 
 static void
-__lambda5_ (GValue* foo,
-            gint* bar)
+_vala_lambda1_ (GValue* foo,
+                gint* bar)
 {
 	GValue _vala_foo = {0};
 	GValue _tmp0_ = {0};
@@ -57,11 +57,11 @@ __lambda5_ (GValue* foo,
 }
 
 static void
-___lambda5__deleg2 (GValue* foo,
-                    gint* bar,
-                    gpointer self)
+__vala_lambda1__deleg2 (GValue* foo,
+                        gint* bar,
+                        gpointer self)
 {
-	__lambda5_ (foo, bar);
+	_vala_lambda1_ (foo, bar);
 }
 
 static void
@@ -81,10 +81,10 @@ _vala_main (void)
 	GValue _tmp2_;
 	a = 3;
 	b = 4;
-	d1 = ___lambda4__deleg1;
+	d1 = __vala_lambda0__deleg1;
 	d1_target = NULL;
 	d1_target_destroy_notify = NULL;
-	d2 = ___lambda5__deleg2;
+	d2 = __vala_lambda1__deleg2;
 	d2_target = NULL;
 	d2_target_destroy_notify = NULL;
 	_tmp0_ = d1 (&a, d1_target);

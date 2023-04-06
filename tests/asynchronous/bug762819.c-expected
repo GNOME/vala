@@ -120,12 +120,12 @@ static GType foo_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_,
-                 GObject* obj,
-                 GAsyncResult* res);
-static void ___lambda4__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     GObject* obj,
+                     GAsyncResult* res);
+static void __vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -341,9 +341,9 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_,
-            GObject* obj,
-            GAsyncResult* res)
+_vala_lambda0_ (Block1Data* _data1_,
+                GObject* obj,
+                GAsyncResult* res)
 {
 	gchar** _result_ = NULL;
 	gchar** _tmp0_;
@@ -365,11 +365,11 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static void
-___lambda4__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda4_ (self, source_object, res);
+	_vala_lambda0_ (self, source_object, res);
 	block1_data_unref (self);
 }
 
@@ -385,7 +385,7 @@ _vala_main (void)
 	_data1_->loop = _tmp0_;
 	_tmp1_ = foo_new ();
 	_data1_->foo = _tmp1_;
-	bar_get_string_async (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_BAR, Bar), ___lambda4__gasync_ready_callback, block1_data_ref (_data1_));
+	bar_get_string_async (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_BAR, Bar), __vala_lambda0__gasync_ready_callback, block1_data_ref (_data1_));
 	g_main_loop_run (_data1_->loop);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;

@@ -10,12 +10,12 @@ typedef gint* (*ArrayReturnFunc) (gint* result_length1, gpointer user_data);
 #define _vala_warn_if_fail(expr, msg) if G_LIKELY (expr) ; else g_warn_message (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 
 static void _vala_main (void);
-static gint* __lambda4_ (gint* result_length1);
-static gint* ___lambda4__array_return_func (gint* result_length1,
-                                     gpointer self);
+static gint* _vala_lambda0_ (gint* result_length1);
+static gint* __vala_lambda0__array_return_func (gint* result_length1,
+                                         gpointer self);
 
 static gint*
-__lambda4_ (gint* result_length1)
+_vala_lambda0_ (gint* result_length1)
 {
 	gint* _tmp0_;
 	gint* _tmp1_;
@@ -35,11 +35,11 @@ __lambda4_ (gint* result_length1)
 }
 
 static gint*
-___lambda4__array_return_func (gint* result_length1,
-                               gpointer self)
+__vala_lambda0__array_return_func (gint* result_length1,
+                                   gpointer self)
 {
 	gint* result;
-	result = __lambda4_ (result_length1);
+	result = _vala_lambda0_ (result_length1);
 	return result;
 }
 
@@ -54,7 +54,7 @@ _vala_main (void)
 	gint* _tmp1_;
 	gint a_length1;
 	gint _a_size_;
-	f = ___lambda4__array_return_func;
+	f = __vala_lambda0__array_return_func;
 	f_target = NULL;
 	f_target_destroy_notify = NULL;
 	_tmp1_ = f (&_tmp0_, f_target);

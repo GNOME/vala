@@ -25,8 +25,8 @@ static void _vala_main (gchar** args,
                  gint args_length1);
 VALA_EXTERN TestFunction test (gpointer* result_target,
                    GDestroyNotify* result_target_destroy_notify);
-static gboolean __lambda4_ (void);
-static gboolean ___lambda4__test_function (gpointer self);
+static gboolean _vala_lambda0_ (void);
+static gboolean __vala_lambda0__test_function (gpointer self);
 
 static void
 _vala_main (gchar** args,
@@ -58,7 +58,7 @@ main (int argc,
 }
 
 static gboolean
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	gboolean result;
 	result = TRUE;
@@ -66,10 +66,10 @@ __lambda4_ (void)
 }
 
 static gboolean
-___lambda4__test_function (gpointer self)
+__vala_lambda0__test_function (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ ();
+	result = _vala_lambda0_ ();
 	return result;
 }
 
@@ -81,7 +81,7 @@ test (gpointer* result_target,
 	gpointer _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
 	TestFunction result;
-	_tmp0_ = ___lambda4__test_function;
+	_tmp0_ = __vala_lambda0__test_function;
 	_tmp0__target = NULL;
 	_tmp0__target_destroy_notify = NULL;
 	*result_target = _tmp0__target;

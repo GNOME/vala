@@ -66,18 +66,18 @@ VALA_EXTERN void do_something (GType g_type,
                    gpointer f_target);
 VALA_EXTERN GType test_enum_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void test_enum_f (TestEnum self);
-static TestEnum __lambda4_ (TestEnum self,
-                     TestEnum x);
-static gpointer ___lambda4__do_something (gconstpointer g,
-                                   gpointer self);
+static TestEnum _vala_lambda0_ (TestEnum self,
+                         TestEnum x);
+static gpointer __vala_lambda0__do_something (gconstpointer g,
+                                       gpointer self);
 VALA_EXTERN void test_enum_g (TestEnum self,
                   gint i);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static TestEnum __lambda5_ (Block1Data* _data1_,
-                     TestEnum x);
-static gpointer ___lambda5__do_something (gconstpointer g,
-                                   gpointer self);
+static TestEnum _vala_lambda1_ (Block1Data* _data1_,
+                         TestEnum x);
+static gpointer __vala_lambda1__do_something (gconstpointer g,
+                                       gpointer self);
 VALA_EXTERN gpointer test_ref (gpointer instance);
 VALA_EXTERN void test_unref (gpointer instance);
 VALA_EXTERN GParamSpec* param_spec_test (const gchar* name,
@@ -117,8 +117,8 @@ do_something (GType g_type,
 }
 
 static TestEnum
-__lambda4_ (TestEnum self,
-            TestEnum x)
+_vala_lambda0_ (TestEnum self,
+                TestEnum x)
 {
 	TestEnum result;
 	switch (self) {
@@ -135,18 +135,18 @@ __lambda4_ (TestEnum self,
 }
 
 static gpointer
-___lambda4__do_something (gconstpointer g,
-                          gpointer self)
+__vala_lambda0__do_something (gconstpointer g,
+                              gpointer self)
 {
 	gpointer result;
-	result = (gpointer) ((gintptr) __lambda4_ ((TestEnum) ((gintptr) self), (TestEnum) ((gintptr) g)));
+	result = (gpointer) ((gintptr) _vala_lambda0_ ((TestEnum) ((gintptr) self), (TestEnum) ((gintptr) g)));
 	return result;
 }
 
 void
 test_enum_f (TestEnum self)
 {
-	do_something (TYPE_TEST_ENUM, NULL, NULL, ___lambda4__do_something, (gpointer) ((gintptr) self));
+	do_something (TYPE_TEST_ENUM, NULL, NULL, __vala_lambda0__do_something, (gpointer) ((gintptr) self));
 }
 
 static Block1Data*
@@ -169,8 +169,8 @@ block1_data_unref (void * _userdata_)
 }
 
 static TestEnum
-__lambda5_ (Block1Data* _data1_,
-            TestEnum x)
+_vala_lambda1_ (Block1Data* _data1_,
+                TestEnum x)
 {
 	TestEnum self;
 	TestEnum result;
@@ -192,11 +192,11 @@ __lambda5_ (Block1Data* _data1_,
 }
 
 static gpointer
-___lambda5__do_something (gconstpointer g,
-                          gpointer self)
+__vala_lambda1__do_something (gconstpointer g,
+                              gpointer self)
 {
 	gpointer result;
-	result = (gpointer) ((gintptr) __lambda5_ (self, (TestEnum) ((gintptr) g)));
+	result = (gpointer) ((gintptr) _vala_lambda1_ (self, (TestEnum) ((gintptr) g)));
 	return result;
 }
 
@@ -209,7 +209,7 @@ test_enum_g (TestEnum self,
 	_data1_->_ref_count_ = 1;
 	_data1_->self =  (self);
 	_data1_->i = i;
-	do_something (TYPE_TEST_ENUM, NULL, NULL, ___lambda5__do_something, _data1_);
+	do_something (TYPE_TEST_ENUM, NULL, NULL, __vala_lambda1__do_something, _data1_);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
 }

@@ -115,8 +115,8 @@ VALA_EXTERN gchar* test_test_array_lifetime_finish (Test* self,
 static gboolean test_test_array_lifetime_co (TestTestArrayLifetimeData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 VALA_EXTERN Test* test_new (void);
 VALA_EXTERN Test* test_construct (GType object_type);
 static GType test_get_type_once (void);
@@ -248,7 +248,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	Test* self;
 	gboolean result;
@@ -259,10 +259,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -282,7 +282,7 @@ test_test_array_lifetime_co (TestTestArrayLifetimeData* _data_)
 	_data_->_data1_->_ref_count_ = 1;
 	_data_->_data1_->self = g_object_ref (_data_->self);
 	_data_->_data1_->_async_data_ = _data_;
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ___lambda4__gsource_func, block1_data_ref (_data_->_data1_), block1_data_unref);
+	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, __vala_lambda0__gsource_func, block1_data_ref (_data_->_data1_), block1_data_unref);
 	_data_->_state_ = 1;
 	return FALSE;
 	_state_1:

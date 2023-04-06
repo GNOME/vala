@@ -104,12 +104,12 @@ static void _vala_foo_set_property (GObject * object,
 VALA_EXTERN gint cb_foo (void);
 VALA_EXTERN gchar* cb_bar (void);
 static void _vala_main (void);
-static gint ___lambda4_ (void);
-static gpointer ____lambda4__foo_on_foo (Foo* _sender,
-                                  gpointer self);
-static gchar* ___lambda5_ (void);
-static gpointer ____lambda5__foo_on_bar (Foo* _sender,
-                                  gpointer self);
+static gint _vala_lambda0_ (void);
+static gpointer __vala_lambda0__foo_on_foo (Foo* _sender,
+                                     gpointer self);
+static gchar* _vala_lambda1_ (void);
+static gpointer __vala_lambda1__foo_on_bar (Foo* _sender,
+                                     gpointer self);
 static gpointer _cb_foo_foo_on_foo (Foo* _sender,
                              gpointer self);
 static gpointer _cb_bar_foo_on_bar (Foo* _sender,
@@ -313,7 +313,7 @@ cb_bar (void)
 }
 
 static gint
-___lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	gint result;
 	result = 42;
@@ -321,16 +321,16 @@ ___lambda4_ (void)
 }
 
 static gpointer
-____lambda4__foo_on_foo (Foo* _sender,
-                         gpointer self)
+__vala_lambda0__foo_on_foo (Foo* _sender,
+                            gpointer self)
 {
 	gpointer result;
-	result = (gpointer) ((gintptr) ___lambda4_ ());
+	result = (gpointer) ((gintptr) _vala_lambda0_ ());
 	return result;
 }
 
 static gchar*
-___lambda5_ (void)
+_vala_lambda1_ (void)
 {
 	gchar* _tmp0_;
 	gchar* result;
@@ -340,11 +340,11 @@ ___lambda5_ (void)
 }
 
 static gpointer
-____lambda5__foo_on_bar (Foo* _sender,
-                         gpointer self)
+__vala_lambda1__foo_on_bar (Foo* _sender,
+                            gpointer self)
 {
 	gpointer result;
-	result = ___lambda5_ ();
+	result = _vala_lambda1_ ();
 	return result;
 }
 
@@ -378,8 +378,8 @@ _vala_main (void)
 		gpointer _tmp2_ = NULL;
 		_tmp0_ = foo_new (G_TYPE_INT, NULL, NULL, G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free);
 		foo = _tmp0_;
-		g_signal_connect (foo, "on-foo", (GCallback) ____lambda4__foo_on_foo, NULL);
-		g_signal_connect (foo, "on-bar", (GCallback) ____lambda5__foo_on_bar, NULL);
+		g_signal_connect (foo, "on-foo", (GCallback) __vala_lambda0__foo_on_foo, NULL);
+		g_signal_connect (foo, "on-bar", (GCallback) __vala_lambda1__foo_on_bar, NULL);
 		g_signal_emit (foo, foo_signals[FOO_ON_FOO_SIGNAL], 0, &_tmp1_);
 		bar = (gint) ((gintptr) _tmp1_);
 		_vala_assert (bar == 42, "bar == 42");

@@ -50,8 +50,8 @@ VALA_EXTERN void foo_finish (GAsyncResult* _res_);
 static gboolean foo_co (FooData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__deleg (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__deleg (gpointer self);
 static void _vala_main (void);
 
 static void
@@ -112,15 +112,15 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	_data1_->deleg (_data1_->deleg_target);
 }
 
 static void
-___lambda4__deleg (gpointer self)
+__vala_lambda0__deleg (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static gboolean
@@ -143,7 +143,7 @@ foo_co (FooData* _data_)
 	_data_->_data1_->deleg_target = _data_->deleg_target;
 	_data_->_data1_->deleg_target_destroy_notify = _data_->deleg_target_destroy_notify;
 	_data_->_data1_->_async_data_ = _data_;
-	_data_->d = ___lambda4__deleg;
+	_data_->d = __vala_lambda0__deleg;
 	_data_->d_target = block1_data_ref (_data_->_data1_);
 	_data_->d_target_destroy_notify = block1_data_unref;
 	(_data_->d_target_destroy_notify == NULL) ? NULL : (_data_->d_target_destroy_notify (_data_->d_target), NULL);

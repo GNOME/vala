@@ -24,37 +24,37 @@ VALA_EXTERN gint result;
 gint result = 0;
 
 static void _vala_main (void);
-static FooFunc __lambda4_ (gpointer* result_target,
-                    GDestroyNotify* result_target_destroy_notify);
-static void __lambda5_ (gint data);
-static void ___lambda5__foo_func (gint i,
-                           gpointer self);
-static FooFunc ___lambda4__bar_func (gpointer* result_target,
-                              GDestroyNotify* result_target_destroy_notify,
-                              gpointer self);
+static FooFunc _vala_lambda0_ (gpointer* result_target,
+                        GDestroyNotify* result_target_destroy_notify);
+static void _vala_lambda1_ (gint data);
+static void __vala_lambda1__foo_func (gint i,
+                               gpointer self);
+static FooFunc __vala_lambda0__bar_func (gpointer* result_target,
+                                  GDestroyNotify* result_target_destroy_notify,
+                                  gpointer self);
 
 static void
-__lambda5_ (gint data)
+_vala_lambda1_ (gint data)
 {
 	result = data;
 }
 
 static void
-___lambda5__foo_func (gint i,
-                      gpointer self)
+__vala_lambda1__foo_func (gint i,
+                          gpointer self)
 {
-	__lambda5_ (i);
+	_vala_lambda1_ (i);
 }
 
 static FooFunc
-__lambda4_ (gpointer* result_target,
-            GDestroyNotify* result_target_destroy_notify)
+_vala_lambda0_ (gpointer* result_target,
+                GDestroyNotify* result_target_destroy_notify)
 {
 	FooFunc _tmp0_;
 	gpointer _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
 	FooFunc result;
-	_tmp0_ = ___lambda5__foo_func;
+	_tmp0_ = __vala_lambda1__foo_func;
 	_tmp0__target = NULL;
 	_tmp0__target_destroy_notify = NULL;
 	*result_target = _tmp0__target;
@@ -64,12 +64,12 @@ __lambda4_ (gpointer* result_target,
 }
 
 static FooFunc
-___lambda4__bar_func (gpointer* result_target,
-                      GDestroyNotify* result_target_destroy_notify,
-                      gpointer self)
+__vala_lambda0__bar_func (gpointer* result_target,
+                          GDestroyNotify* result_target_destroy_notify,
+                          gpointer self)
 {
 	FooFunc result;
-	result = __lambda4_ (result_target, result_target_destroy_notify);
+	result = _vala_lambda0_ (result_target, result_target_destroy_notify);
 	return result;
 }
 
@@ -85,7 +85,7 @@ _vala_main (void)
 	FooFunc _tmp2_;
 	gpointer func_target;
 	GDestroyNotify func_target_destroy_notify;
-	func_gen = ___lambda4__bar_func;
+	func_gen = __vala_lambda0__bar_func;
 	func_gen_target = NULL;
 	func_gen_target_destroy_notify = NULL;
 	_tmp2_ = func_gen (&_tmp0_, &_tmp1_, func_gen_target);

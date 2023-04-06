@@ -50,8 +50,8 @@ VALA_EXTERN void foo_finish (GAsyncResult* _res_);
 static gboolean foo_co (FooData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 static void _vala_main (void);
 
 static void
@@ -110,7 +110,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	GType t_type;
 	GBoxedCopyFunc t_dup_func;
@@ -124,10 +124,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -147,7 +147,7 @@ foo_co (FooData* _data_)
 	_data_->_data1_->t_dup_func = _data_->t_dup_func;
 	_data_->_data1_->t_destroy_func = _data_->t_destroy_func;
 	_data_->_data1_->_async_data_ = _data_;
-	_data_->c = ___lambda4__gsource_func;
+	_data_->c = __vala_lambda0__gsource_func;
 	_data_->c_target = block1_data_ref (_data_->_data1_);
 	_data_->c_target_destroy_notify = block1_data_unref;
 	(_data_->c_target_destroy_notify == NULL) ? NULL : (_data_->c_target_destroy_notify (_data_->c_target), NULL);

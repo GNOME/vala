@@ -126,19 +126,19 @@ static void _dbus_test_bar (GObject* _sender,
                      gpointer* _data);
 static void _test_unregister_object (gpointer user_data);
 static void _vala_main (void);
-static void __lambda4_ (gint i);
-static void ___lambda4__test_foo (Test* _sender,
-                           gint i,
-                           gpointer self);
-static void __lambda5_ (gchar** baz,
-                 gint baz_length1);
-static void ___lambda5__test_bar (Test* _sender,
-                           gchar** baz,
-                           gint baz_length1,
-                           gpointer self);
-static void __lambda6_ (void);
-static void ___lambda6__test_finish (Test* _sender,
-                              gpointer self);
+static void _vala_lambda0_ (gint i);
+static void __vala_lambda0__test_foo (Test* _sender,
+                               gint i,
+                               gpointer self);
+static void _vala_lambda1_ (gchar** baz,
+                     gint baz_length1);
+static void __vala_lambda1__test_bar (Test* _sender,
+                               gchar** baz,
+                               gint baz_length1,
+                               gpointer self);
+static void _vala_lambda2_ (void);
+static void __vala_lambda2__test_finish (Test* _sender,
+                                  gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -625,22 +625,22 @@ _test_unregister_object (gpointer user_data)
 }
 
 static void
-__lambda4_ (gint i)
+_vala_lambda0_ (gint i)
 {
 	_vala_assert (i == 42, "i == 42");
 }
 
 static void
-___lambda4__test_foo (Test* _sender,
-                      gint i,
-                      gpointer self)
+__vala_lambda0__test_foo (Test* _sender,
+                          gint i,
+                          gpointer self)
 {
-	__lambda4_ (i);
+	_vala_lambda0_ (i);
 }
 
 static void
-__lambda5_ (gchar** baz,
-            gint baz_length1)
+_vala_lambda1_ (gchar** baz,
+                gint baz_length1)
 {
 	const gchar* _tmp0_;
 	const gchar* _tmp1_;
@@ -658,25 +658,25 @@ __lambda5_ (gchar** baz,
 }
 
 static void
-___lambda5__test_bar (Test* _sender,
-                      gchar** baz,
-                      gint baz_length1,
-                      gpointer self)
+__vala_lambda1__test_bar (Test* _sender,
+                          gchar** baz,
+                          gint baz_length1,
+                          gpointer self)
 {
-	__lambda5_ (baz, baz_length1);
+	_vala_lambda1_ (baz, baz_length1);
 }
 
 static void
-__lambda6_ (void)
+_vala_lambda2_ (void)
 {
 	g_assert_not_reached ();
 }
 
 static void
-___lambda6__test_finish (Test* _sender,
-                         gpointer self)
+__vala_lambda2__test_finish (Test* _sender,
+                             gpointer self)
 {
-	__lambda6_ ();
+	_vala_lambda2_ ();
 }
 
 static void
@@ -706,11 +706,11 @@ _vala_main (void)
 		return;
 	}
 	_tmp1_ = test;
-	g_signal_connect (_tmp1_, "foo", (GCallback) ___lambda4__test_foo, NULL);
+	g_signal_connect (_tmp1_, "foo", (GCallback) __vala_lambda0__test_foo, NULL);
 	_tmp2_ = test;
-	g_signal_connect (_tmp2_, "bar", (GCallback) ___lambda5__test_bar, NULL);
+	g_signal_connect (_tmp2_, "bar", (GCallback) __vala_lambda1__test_bar, NULL);
 	_tmp3_ = test;
-	g_signal_connect (_tmp3_, "finish", (GCallback) ___lambda6__test_finish, NULL);
+	g_signal_connect (_tmp3_, "finish", (GCallback) __vala_lambda2__test_finish, NULL);
 	_tmp4_ = test;
 	test_do_foo (_tmp4_, 42, &_inner_error0_);
 	if (G_UNLIKELY (_inner_error0_ != NULL)) {

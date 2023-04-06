@@ -28,8 +28,6 @@ using GLib;
  * Lambda expressions are anonymous methods with implicitly typed parameters.
  */
 public class Vala.LambdaExpression : Expression {
-	private static int next_lambda_id = 0;
-
 	/**
 	 * The expression body of this lambda expression. Only one of
 	 * expression_body or statement_body may be set.
@@ -151,7 +149,7 @@ public class Vala.LambdaExpression : Expression {
 
 		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
 		var return_type = cb.return_type.get_actual_type (target_type, null, this);
-		method = new Method ("_lambda%d_".printf (next_lambda_id++), return_type, source_reference);
+		method = new Method ("@lambda", return_type, source_reference);
 		// track usage for flow analyzer
 		method.used = true;
 

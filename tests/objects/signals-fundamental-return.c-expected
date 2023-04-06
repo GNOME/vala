@@ -175,12 +175,12 @@ static void g_cclosure_user_marshal_MAMAN__VOID (GClosure * closure,
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);
 static void _vala_main (void);
-static Foo* __lambda4_ (void);
-static Foo* ___lambda4__foo_on_foo (Foo* _sender,
-                             gpointer self);
-static IBar* __lambda5_ (void);
-static IBar* ___lambda5__foo_on_bar (Foo* _sender,
-                              gpointer self);
+static Foo* _vala_lambda0_ (void);
+static Foo* __vala_lambda0__foo_on_foo (Foo* _sender,
+                                 gpointer self);
+static IBar* _vala_lambda1_ (void);
+static IBar* __vala_lambda1__foo_on_bar (Foo* _sender,
+                                  gpointer self);
 
 Maman*
 maman_construct (GType object_type)
@@ -754,7 +754,7 @@ foo_unref (gpointer instance)
 }
 
 static Foo*
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	Foo* _tmp0_;
 	Foo* result;
@@ -764,16 +764,16 @@ __lambda4_ (void)
 }
 
 static Foo*
-___lambda4__foo_on_foo (Foo* _sender,
-                        gpointer self)
+__vala_lambda0__foo_on_foo (Foo* _sender,
+                            gpointer self)
 {
 	Foo* result;
-	result = __lambda4_ ();
+	result = _vala_lambda0_ ();
 	return result;
 }
 
 static IBar*
-__lambda5_ (void)
+_vala_lambda1_ (void)
 {
 	Bar* _tmp0_;
 	IBar* result;
@@ -783,11 +783,11 @@ __lambda5_ (void)
 }
 
 static IBar*
-___lambda5__foo_on_bar (Foo* _sender,
-                        gpointer self)
+__vala_lambda1__foo_on_bar (Foo* _sender,
+                            gpointer self)
 {
 	IBar* result;
-	result = __lambda5_ ();
+	result = _vala_lambda1_ ();
 	return result;
 }
 
@@ -802,8 +802,8 @@ _vala_main (void)
 	IBar* _tmp2_ = NULL;
 	_tmp0_ = foo_new ();
 	foo = _tmp0_;
-	g_signal_connect (foo, "on-foo", (GCallback) ___lambda4__foo_on_foo, NULL);
-	g_signal_connect (foo, "on-bar", (GCallback) ___lambda5__foo_on_bar, NULL);
+	g_signal_connect (foo, "on-foo", (GCallback) __vala_lambda0__foo_on_foo, NULL);
+	g_signal_connect (foo, "on-bar", (GCallback) __vala_lambda1__foo_on_bar, NULL);
 	g_signal_emit (foo, foo_signals[FOO_ON_FOO_SIGNAL], 0, &_tmp1_);
 	bar = _tmp1_;
 	_vala_assert (IS_FOO (bar), "bar is Foo");

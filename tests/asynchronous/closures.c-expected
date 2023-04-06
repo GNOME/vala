@@ -60,8 +60,8 @@ VALA_EXTERN void foo_finish (GAsyncResult* _res_);
 static gboolean foo_co (FooData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__func (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__func (gpointer self);
 static gboolean _foo_co_gsource_func (gpointer self);
 static void _vala_main (void);
 
@@ -117,7 +117,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
 	_data1_->func = NULL;
@@ -128,9 +128,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__func (gpointer self)
+__vala_lambda0__func (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static gboolean
@@ -162,7 +162,7 @@ foo_co (FooData* _data_)
 	_data_->_data1_->func_target = NULL;
 	_data_->_tmp0_ = g_strdup ("hello");
 	_data_->_data1_->bar = _data_->_tmp0_;
-	_data_->foobar = ___lambda4__func;
+	_data_->foobar = __vala_lambda0__func;
 	_data_->foobar_target = block1_data_ref (_data_->_data1_);
 	_data_->foobar_target_destroy_notify = block1_data_unref;
 	_data_->foobar (_data_->foobar_target);

@@ -41,9 +41,9 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN void foo_foo (Foo* self);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
 VALA_EXTERN gint foo_get_i (Foo* self);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 VALA_EXTERN void foo_set_i (Foo* self,
                 gint value);
 static GType foo_get_type_once (void);
@@ -70,7 +70,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	Foo* self;
 	gint _tmp0_;
@@ -84,10 +84,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -102,7 +102,7 @@ foo_foo (Foo* self)
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_object_ref (self);
 	_data1_->j = 0;
-	bar = ___lambda4__gsource_func;
+	bar = __vala_lambda0__gsource_func;
 	bar_target = block1_data_ref (_data1_);
 	bar_target_destroy_notify = block1_data_unref;
 	(bar_target_destroy_notify == NULL) ? NULL : (bar_target_destroy_notify (bar_target), NULL);

@@ -56,13 +56,13 @@ struct _FooData {
 VALA_EXTERN gint bar (gint i);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__func (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__func (gpointer self);
 VALA_EXTERN void baz (gint i);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
-static void __lambda5_ (Block2Data* _data2_);
-static void ___lambda5__func (gpointer self);
+static void _vala_lambda1_ (Block2Data* _data2_);
+static void __vala_lambda1__func (gpointer self);
 static void foo_data_free (gpointer _data);
 VALA_EXTERN void foo (gint i,
           GAsyncReadyCallback _callback_,
@@ -71,8 +71,8 @@ VALA_EXTERN gint foo_finish (GAsyncResult* _res_);
 static gboolean foo_co (FooData* _data_);
 static Block3Data* block3_data_ref (Block3Data* _data3_);
 static void block3_data_unref (void * _userdata_);
-static void __lambda6_ (Block3Data* _data3_);
-static void ___lambda6__func (gpointer self);
+static void _vala_lambda2_ (Block3Data* _data3_);
+static void __vala_lambda2__func (gpointer self);
 static void _vala_main (void);
 
 static Block1Data*
@@ -93,16 +93,16 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	_vala_assert (_data1_->i == 23, "i == 23");
 	_data1_->i = 42;
 }
 
 static void
-___lambda4__func (gpointer self)
+__vala_lambda0__func (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 gint
@@ -117,7 +117,7 @@ bar (gint i)
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_data1_->i = i;
-	f = ___lambda4__func;
+	f = __vala_lambda0__func;
 	f_target = block1_data_ref (_data1_);
 	f_target_destroy_notify = block1_data_unref;
 	f (f_target);
@@ -150,16 +150,16 @@ block2_data_unref (void * _userdata_)
 }
 
 static void
-__lambda5_ (Block2Data* _data2_)
+_vala_lambda1_ (Block2Data* _data2_)
 {
 	_vala_assert (_data2_->i == 42, "i == 42");
 	_data2_->i = 23;
 }
 
 static void
-___lambda5__func (gpointer self)
+__vala_lambda1__func (gpointer self)
 {
-	__lambda5_ (self);
+	_vala_lambda1_ (self);
 }
 
 void
@@ -173,7 +173,7 @@ baz (gint i)
 	_data2_ = g_slice_new0 (Block2Data);
 	_data2_->_ref_count_ = 1;
 	_data2_->i = i;
-	f = ___lambda5__func;
+	f = __vala_lambda1__func;
 	f_target = block2_data_ref (_data2_);
 	f_target_destroy_notify = block2_data_unref;
 	f (f_target);
@@ -235,16 +235,16 @@ block3_data_unref (void * _userdata_)
 }
 
 static void
-__lambda6_ (Block3Data* _data3_)
+_vala_lambda2_ (Block3Data* _data3_)
 {
 	_vala_assert (_data3_->i == 23, "i == 23");
 	_data3_->i = 42;
 }
 
 static void
-___lambda6__func (gpointer self)
+__vala_lambda2__func (gpointer self)
 {
-	__lambda6_ (self);
+	_vala_lambda2_ (self);
 }
 
 static gboolean
@@ -262,7 +262,7 @@ foo_co (FooData* _data_)
 	_data_->_data3_->_ref_count_ = 1;
 	_data_->_data3_->i = _data_->i;
 	_data_->_data3_->_async_data_ = _data_;
-	_data_->f = ___lambda6__func;
+	_data_->f = __vala_lambda2__func;
 	_data_->f_target = block3_data_ref (_data_->_data3_);
 	_data_->f_target_destroy_notify = block3_data_unref;
 	_data_->f (_data_->f_target);

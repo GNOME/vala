@@ -22,14 +22,14 @@ struct _Block2Data {
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean ___lambda4__gsource_func (gpointer self);
-static gboolean __lambda5_ (void);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
+static gboolean _vala_lambda1_ (void);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
-static gboolean __lambda6_ (Block2Data* _data2_);
-static gboolean ___lambda6__gsource_func (gpointer self);
-static gboolean ___lambda5__gsource_func (gpointer self);
+static gboolean _vala_lambda2_ (Block2Data* _data2_);
+static gboolean __vala_lambda2__gsource_func (gpointer self);
+static gboolean __vala_lambda1__gsource_func (gpointer self);
 
 static Block1Data*
 block1_data_ref (Block1Data* _data1_)
@@ -50,7 +50,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
 	gboolean result;
@@ -62,10 +62,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -88,7 +88,7 @@ block2_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda6_ (Block2Data* _data2_)
+_vala_lambda2_ (Block2Data* _data2_)
 {
 	gchar* _tmp0_;
 	gboolean result;
@@ -100,15 +100,15 @@ __lambda6_ (Block2Data* _data2_)
 }
 
 static gboolean
-___lambda6__gsource_func (gpointer self)
+__vala_lambda2__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda6_ (self);
+	result = _vala_lambda2_ (self);
 	return result;
 }
 
 static gboolean
-__lambda5_ (void)
+_vala_lambda1_ (void)
 {
 	Block2Data* _data2_;
 	gchar* _tmp0_;
@@ -120,7 +120,7 @@ __lambda5_ (void)
 	_data2_->_ref_count_ = 1;
 	_tmp0_ = g_strdup ("innerfoo");
 	_data2_->innervar = _tmp0_;
-	innerfunc = ___lambda6__gsource_func;
+	innerfunc = __vala_lambda2__gsource_func;
 	innerfunc_target = block2_data_ref (_data2_);
 	innerfunc_target_destroy_notify = block2_data_unref;
 	result = FALSE;
@@ -134,10 +134,10 @@ __lambda5_ (void)
 }
 
 static gboolean
-___lambda5__gsource_func (gpointer self)
+__vala_lambda1__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda5_ ();
+	result = _vala_lambda1_ ();
 	return result;
 }
 
@@ -156,10 +156,10 @@ _vala_main (void)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_strdup ("outerfoo");
 	_data1_->outervar = _tmp0_;
-	firstfunc = ___lambda4__gsource_func;
+	firstfunc = __vala_lambda0__gsource_func;
 	firstfunc_target = block1_data_ref (_data1_);
 	firstfunc_target_destroy_notify = block1_data_unref;
-	secondfunc = ___lambda5__gsource_func;
+	secondfunc = __vala_lambda1__gsource_func;
 	secondfunc_target = NULL;
 	secondfunc_target_destroy_notify = NULL;
 	(secondfunc_target_destroy_notify == NULL) ? NULL : (secondfunc_target_destroy_notify (secondfunc_target), NULL);

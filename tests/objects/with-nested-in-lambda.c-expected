@@ -81,8 +81,8 @@ VALA_EXTERN void run (FooFunc func,
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__foo_func (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__foo_func (gpointer self);
 
 gint
 foo_bar (Foo* self)
@@ -332,7 +332,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	{
 		_vala_assert (foo_bar (_data1_->foo) == 23, "bar () == 23");
@@ -340,9 +340,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static void
@@ -354,7 +354,7 @@ _vala_main (void)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = foo_new ();
 	_data1_->foo = _tmp0_;
-	run (___lambda4__foo_func, _data1_);
+	run (__vala_lambda0__foo_func, _data1_);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
 }

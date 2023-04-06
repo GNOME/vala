@@ -39,8 +39,8 @@ VALA_EXTERN void do_foo_lambda (Foo* foo,
                     GValue* value);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__test_delegate (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__test_delegate (gpointer self);
 static void _vala_main (void);
 
 Foo*
@@ -103,7 +103,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	GValue _tmp0_ = {0};
 	GValue _tmp1_;
@@ -124,9 +124,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__test_delegate (gpointer self)
+__vala_lambda0__test_delegate (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 void
@@ -154,7 +154,7 @@ do_foo_lambda (Foo* foo,
 	}
 	G_IS_VALUE (&_data1_->value) ? (g_value_unset (&_data1_->value), NULL) : NULL;
 	_data1_->value = _tmp3_;
-	do_foo (___lambda4__test_delegate, _data1_);
+	do_foo (__vala_lambda0__test_delegate, _data1_);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
 }

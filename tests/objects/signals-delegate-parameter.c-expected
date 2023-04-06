@@ -122,23 +122,23 @@ VALA_EXTERN void bar_test_no_target (Bar* self);
 static void _no_target_cb_foo_delegate_param_no_target (Foo* _sender,
                                                  BarFunc f,
                                                  gpointer self);
-static void __lambda4_ (void);
-static void ___lambda4__bar_func (void);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__bar_func (void);
 VALA_EXTERN void bar_test_with_target (Bar* self);
 static void _with_target_cb_foo_delegate_param_with_target (Foo* _sender,
                                                      FooFunc f,
                                                      gpointer f_target,
                                                      gpointer self);
-static void __lambda5_ (Bar* self);
-static void ___lambda5__foo_func (gpointer self);
+static void _vala_lambda1_ (Bar* self);
+static void __vala_lambda1__foo_func (gpointer self);
 VALA_EXTERN void bar_test_with_destroy (Bar* self);
 static void _with_destroy_cb_foo_delegate_param_with_destroy (Foo* _sender,
                                                        FooFunc f,
                                                        gpointer f_target,
                                                        GDestroyNotify f_target_destroy_notify,
                                                        gpointer self);
-static void __lambda6_ (Bar* self);
-static void ___lambda6__foo_func (gpointer self);
+static void _vala_lambda2_ (Bar* self);
+static void __vala_lambda2__foo_func (gpointer self);
 static void bar_finalize (GObject * obj);
 static GType bar_get_type_once (void);
 static void _vala_main (void);
@@ -304,15 +304,15 @@ _no_target_cb_foo_delegate_param_no_target (Foo* _sender,
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	success1 = TRUE;
 }
 
 static void
-___lambda4__bar_func (void)
+__vala_lambda0__bar_func (void)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 void
@@ -324,7 +324,7 @@ bar_test_no_target (Bar* self)
 	_tmp0_ = self->priv->foo;
 	g_signal_connect (_tmp0_, "delegate-param-no-target", (GCallback) _no_target_cb_foo_delegate_param_no_target, NULL);
 	_tmp1_ = self->priv->foo;
-	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_NO_TARGET_SIGNAL], 0, ___lambda4__bar_func);
+	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_NO_TARGET_SIGNAL], 0, __vala_lambda0__bar_func);
 	_vala_assert (success1, "success1");
 }
 
@@ -338,16 +338,16 @@ _with_target_cb_foo_delegate_param_with_target (Foo* _sender,
 }
 
 static void
-__lambda5_ (Bar* self)
+_vala_lambda1_ (Bar* self)
 {
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 1), "this.ref_count == 1");
 	self->priv->success2 = TRUE;
 }
 
 static void
-___lambda5__foo_func (gpointer self)
+__vala_lambda1__foo_func (gpointer self)
 {
-	__lambda5_ ((Bar*) self);
+	_vala_lambda1_ ((Bar*) self);
 }
 
 void
@@ -359,7 +359,7 @@ bar_test_with_target (Bar* self)
 	_tmp0_ = self->priv->foo;
 	g_signal_connect (_tmp0_, "delegate-param-with-target", (GCallback) _with_target_cb_foo_delegate_param_with_target, NULL);
 	_tmp1_ = self->priv->foo;
-	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_WITH_TARGET_SIGNAL], 0, ___lambda5__foo_func, self);
+	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_WITH_TARGET_SIGNAL], 0, __vala_lambda1__foo_func, self);
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 1), "this.ref_count == 1");
 	_vala_assert (self->priv->success2, "success2");
 }
@@ -375,16 +375,16 @@ _with_destroy_cb_foo_delegate_param_with_destroy (Foo* _sender,
 }
 
 static void
-__lambda6_ (Bar* self)
+_vala_lambda2_ (Bar* self)
 {
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 2), "this.ref_count == 2");
 	self->priv->success3 = TRUE;
 }
 
 static void
-___lambda6__foo_func (gpointer self)
+__vala_lambda2__foo_func (gpointer self)
 {
-	__lambda6_ ((Bar*) self);
+	_vala_lambda2_ ((Bar*) self);
 }
 
 void
@@ -396,7 +396,7 @@ bar_test_with_destroy (Bar* self)
 	_tmp0_ = self->priv->foo;
 	g_signal_connect (_tmp0_, "delegate-param-with-destroy", (GCallback) _with_destroy_cb_foo_delegate_param_with_destroy, NULL);
 	_tmp1_ = self->priv->foo;
-	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_WITH_DESTROY_SIGNAL], 0, ___lambda6__foo_func, g_object_ref (self), g_object_unref);
+	g_signal_emit (_tmp1_, foo_signals[FOO_DELEGATE_PARAM_WITH_DESTROY_SIGNAL], 0, __vala_lambda2__foo_func, g_object_ref (self), g_object_unref);
 	_vala_assert (G_TYPE_CHECK_INSTANCE_CAST (self, G_TYPE_OBJECT, GObject)->ref_count == ((guint) 1), "this.ref_count == 1");
 	_vala_assert (self->priv->success3, "success3");
 }

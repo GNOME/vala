@@ -77,11 +77,11 @@ static GType test_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_,
-                 const gchar* s);
-static void ___lambda4__test_regex_test (Test* _sender,
-                                  const gchar* str,
-                                  gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     const gchar* s);
+static void __vala_lambda0__test_regex_test (Test* _sender,
+                                      const gchar* str,
+                                      gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -244,8 +244,8 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_,
-            const gchar* s)
+_vala_lambda0_ (Block1Data* _data1_,
+                const gchar* s)
 {
 	GMatchInfo* _tmp0_ = NULL;
 	gboolean _tmp1_;
@@ -293,11 +293,11 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static void
-___lambda4__test_regex_test (Test* _sender,
-                             const gchar* str,
-                             gpointer self)
+__vala_lambda0__test_regex_test (Test* _sender,
+                                 const gchar* str,
+                                 gpointer self)
 {
-	__lambda4_ (self, str);
+	_vala_lambda0_ (self, str);
 }
 
 static void
@@ -568,7 +568,7 @@ _vala_main (void)
 	_data1_->rc = _tmp70_;
 	_tmp71_ = test_new ();
 	test = _tmp71_;
-	g_signal_connect_data (test, "regex-test", (GCallback) ___lambda4__test_regex_test, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	g_signal_connect_data (test, "regex-test", (GCallback) __vala_lambda0__test_regex_test, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	test_run (test, "fooBar");
 	test_run (test, "foobAr");
 	_g_object_unref0 (test);

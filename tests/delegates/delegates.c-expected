@@ -122,8 +122,8 @@ static void maman_bar_real_foo_method (MamanFoo* base,
 static void maman_bar_test_delegates_interface_method (void);
 static void maman_bar_test_field_reference_transfer (MamanBar* self);
 static MamanVoidCallback maman_bar_test_unowned_delegate_return (void);
-static void __lambda4_ (void);
-static void ___lambda4__maman_void_callback (void);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__maman_void_callback (void);
 static gint maman_bar_main (void);
 static gint _maman_bar_do_action_maman_action_callback (void);
 static void _maman_bar_do_instance_action_maman_instance_callback (gint i,
@@ -422,21 +422,21 @@ maman_bar_test_field_reference_transfer (MamanBar* self)
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 }
 
 static void
-___lambda4__maman_void_callback (void)
+__vala_lambda0__maman_void_callback (void)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 static MamanVoidCallback
 maman_bar_test_unowned_delegate_return (void)
 {
 	MamanVoidCallback result;
-	result = ___lambda4__maman_void_callback;
+	result = __vala_lambda0__maman_void_callback;
 	return result;
 }
 

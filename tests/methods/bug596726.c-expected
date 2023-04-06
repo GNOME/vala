@@ -28,8 +28,8 @@ VALA_EXTERN void do_bar (Func f,
 VALA_EXTERN GObject* do_foo (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__func (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__func (gpointer self);
 static void _vala_main (void);
 
 void
@@ -63,7 +63,7 @@ _g_object_ref0 (gpointer self)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	GObject* v = NULL;
 	GObject* _tmp0_;
@@ -73,9 +73,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__func (gpointer self)
+__vala_lambda0__func (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 GObject*
@@ -89,7 +89,7 @@ do_foo (void)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_object_new (G_TYPE_OBJECT, NULL);
 	_data1_->_result_ = _tmp0_;
-	do_bar (___lambda4__func, _data1_);
+	do_bar (__vala_lambda0__func, _data1_);
 	_tmp1_ = _g_object_ref0 (_data1_->_result_);
 	result = _tmp1_;
 	block1_data_unref (_data1_);

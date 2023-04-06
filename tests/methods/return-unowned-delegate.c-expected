@@ -22,8 +22,8 @@ typedef gint (*FooFunc) (gpointer user_data);
 VALA_EXTERN FooFunc foo (gpointer* result_target);
 VALA_EXTERN gint manam (void);
 VALA_EXTERN FooFunc bar (gpointer* result_target);
-static gint __lambda4_ (void);
-static gint ___lambda4__foo_func (gpointer self);
+static gint _vala_lambda0_ (void);
+static gint __vala_lambda0__foo_func (gpointer self);
 static void _vala_main (void);
 
 FooFunc
@@ -40,7 +40,7 @@ foo (gpointer* result_target)
 }
 
 static gint
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	gint result;
 	result = 4711;
@@ -48,10 +48,10 @@ __lambda4_ (void)
 }
 
 static gint
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
 	gint result;
-	result = __lambda4_ ();
+	result = _vala_lambda0_ ();
 	return result;
 }
 
@@ -61,7 +61,7 @@ bar (gpointer* result_target)
 	FooFunc _tmp0_;
 	gpointer _tmp0__target;
 	FooFunc result;
-	_tmp0_ = ___lambda4__foo_func;
+	_tmp0_ = __vala_lambda0__foo_func;
 	_tmp0__target = NULL;
 	*result_target = _tmp0__target;
 	result = _tmp0_;

@@ -81,16 +81,16 @@ static void g_cclosure_user_marshal_VOID__FLAGS_STRING (GClosure * closure,
                                                  gpointer marshal_data);
 static GType manam_get_type_once (void);
 static void _vala_main (void);
-static void __lambda4_ (void);
-static void ___lambda4__manam_foo (Manam* _sender,
-                            Foo f,
-                            const gchar* s,
-                            gpointer self);
-static void __lambda5_ (void);
-static void ___lambda5__manam_bar (Manam* _sender,
-                            Bar b,
-                            const gchar* s,
-                            gpointer self);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__manam_foo (Manam* _sender,
+                                Foo f,
+                                const gchar* s,
+                                gpointer self);
+static void _vala_lambda1_ (void);
+static void __vala_lambda1__manam_bar (Manam* _sender,
+                                Bar b,
+                                const gchar* s,
+                                gpointer self);
 
 static GType
 foo_get_type_once (void)
@@ -237,31 +237,31 @@ manam_get_type (void)
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 }
 
 static void
-___lambda4__manam_foo (Manam* _sender,
-                       Foo f,
-                       const gchar* s,
-                       gpointer self)
+__vala_lambda0__manam_foo (Manam* _sender,
+                           Foo f,
+                           const gchar* s,
+                           gpointer self)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 static void
-__lambda5_ (void)
+_vala_lambda1_ (void)
 {
 }
 
 static void
-___lambda5__manam_bar (Manam* _sender,
-                       Bar b,
-                       const gchar* s,
-                       gpointer self)
+__vala_lambda1__manam_bar (Manam* _sender,
+                           Bar b,
+                           const gchar* s,
+                           gpointer self)
 {
-	__lambda5_ ();
+	_vala_lambda1_ ();
 }
 
 static void
@@ -271,9 +271,9 @@ _vala_main (void)
 	Manam* _tmp0_;
 	_tmp0_ = manam_new ();
 	manam = _tmp0_;
-	g_signal_connect (manam, "foo", (GCallback) ___lambda4__manam_foo, NULL);
+	g_signal_connect (manam, "foo", (GCallback) __vala_lambda0__manam_foo, NULL);
 	g_signal_emit (manam, manam_signals[MANAM_FOO_SIGNAL], 0, FOO_FOO, "foo");
-	g_signal_connect (manam, "bar", (GCallback) ___lambda5__manam_bar, NULL);
+	g_signal_connect (manam, "bar", (GCallback) __vala_lambda1__manam_bar, NULL);
 	g_signal_emit (manam, manam_signals[MANAM_BAR_SIGNAL], 0, BAR_BAR, "bar");
 	_g_object_unref0 (manam);
 }

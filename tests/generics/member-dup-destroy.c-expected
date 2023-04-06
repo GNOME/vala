@@ -110,8 +110,8 @@ VALA_EXTERN void foo_foo_finish (Foo* self,
                      GAsyncResult* _res_);
 static gboolean foo_foo_async_co (FooFooAsyncData* _data_);
 VALA_EXTERN void foo_foo_captured (Foo* self);
-static void __lambda4_ (Foo* self);
-static void ___lambda4__foo_func (gpointer self);
+static void _vala_lambda0_ (Foo* self);
+static void __vala_lambda0__foo_func (gpointer self);
 static GType foo_get_type_once (void);
 static void _vala_foo_get_property (GObject * object,
                              guint property_id,
@@ -140,8 +140,8 @@ VALA_EXTERN void bar_captured (GType t_type,
                    gconstpointer t);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda5_ (Block1Data* _data1_);
-static void ___lambda5__foo_func (gpointer self);
+static void _vala_lambda1_ (Block1Data* _data1_);
+static void __vala_lambda1__foo_func (gpointer self);
 static void _vala_main (void);
 
 static inline gpointer
@@ -261,7 +261,7 @@ foo_foo_async_co (FooFooAsyncData* _data_)
 }
 
 static void
-__lambda4_ (Foo* self)
+_vala_lambda0_ (Foo* self)
 {
 	gpointer g = NULL;
 	_vala_assert (self->priv->g_type == G_TYPE_STRING, "typeof (G) == typeof (string)");
@@ -274,9 +274,9 @@ __lambda4_ (Foo* self)
 }
 
 static void
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
-	__lambda4_ ((Foo*) self);
+	_vala_lambda0_ ((Foo*) self);
 }
 
 void
@@ -286,7 +286,7 @@ foo_foo_captured (Foo* self)
 	gpointer f_target;
 	GDestroyNotify f_target_destroy_notify;
 	g_return_if_fail (IS_FOO (self));
-	f = ___lambda4__foo_func;
+	f = __vala_lambda0__foo_func;
 	f_target = g_object_ref (self);
 	f_target_destroy_notify = g_object_unref;
 	f (f_target);
@@ -487,7 +487,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda5_ (Block1Data* _data1_)
+_vala_lambda1_ (Block1Data* _data1_)
 {
 	GType t_type;
 	GBoxedCopyFunc t_dup_func;
@@ -503,9 +503,9 @@ __lambda5_ (Block1Data* _data1_)
 }
 
 static void
-___lambda5__foo_func (gpointer self)
+__vala_lambda1__foo_func (gpointer self)
 {
-	__lambda5_ (self);
+	_vala_lambda1_ (self);
 }
 
 void
@@ -527,7 +527,7 @@ bar_captured (GType t_type,
 	_tmp0_ = ((t != NULL) && (t_dup_func != NULL)) ? t_dup_func ((gpointer) t) : ((gpointer) t);
 	((_data1_->t == NULL) || (t_destroy_func == NULL)) ? NULL : (_data1_->t = (t_destroy_func (_data1_->t), NULL));
 	_data1_->t = _tmp0_;
-	f = ___lambda5__foo_func;
+	f = __vala_lambda1__foo_func;
 	f_target = block1_data_ref (_data1_);
 	f_target_destroy_notify = block1_data_unref;
 	f (f_target);

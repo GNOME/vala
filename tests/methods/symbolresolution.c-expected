@@ -77,16 +77,16 @@ VALA_EXTERN void class_test (Class* self,
                  gpointer foo_target);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__class_foo (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__class_foo (gpointer self);
 static void class_active_scope (Class* self);
 VALA_EXTERN Class* class_new (void);
 VALA_EXTERN Class* class_construct (GType object_type);
 static void class_finalize (Class * obj);
 static GType class_get_type_once (void);
 static void _vala_main (void);
-static void __lambda5_ (void);
-static void ___lambda5__class_foo (gpointer self);
+static void _vala_lambda1_ (void);
+static void __vala_lambda1__class_foo (gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -122,7 +122,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	Class* self;
 	self = _data1_->self;
@@ -130,9 +130,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__class_foo (gpointer self)
+__vala_lambda0__class_foo (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 void
@@ -150,7 +150,7 @@ class_test (Class* self,
 	_data1_->self = class_ref (self);
 	_data1_->foo = foo;
 	_data1_->foo_target = foo_target;
-	func = ___lambda4__class_foo;
+	func = __vala_lambda0__class_foo;
 	func_target = block1_data_ref (_data1_);
 	func_target_destroy_notify = block1_data_unref;
 	func (func_target);
@@ -407,14 +407,14 @@ class_unref (gpointer instance)
 }
 
 static void
-__lambda5_ (void)
+_vala_lambda1_ (void)
 {
 }
 
 static void
-___lambda5__class_foo (gpointer self)
+__vala_lambda1__class_foo (gpointer self)
 {
-	__lambda5_ ();
+	_vala_lambda1_ ();
 }
 
 static void
@@ -424,7 +424,7 @@ _vala_main (void)
 	Class* _tmp0_;
 	_tmp0_ = class_new ();
 	cl = _tmp0_;
-	class_test (cl, ___lambda5__class_foo, NULL);
+	class_test (cl, __vala_lambda1__class_foo, NULL);
 	_class_unref0 (cl);
 }
 

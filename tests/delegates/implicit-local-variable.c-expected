@@ -7,13 +7,13 @@ typedef gboolean (*GSourceDispatchFunc) (GSource* source, GSourceFunc _callback,
 #define _g_source_unref0(var) ((var == NULL) ? NULL : (var = (g_source_unref (var), NULL)))
 
 static void _vala_main (void);
-static gboolean __lambda4_ (void);
-static gboolean ___lambda4__gsource_dispatch_func (GSource* source,
-                                            GSourceFunc _callback,
-                                            gpointer _callback_target);
+static gboolean _vala_lambda0_ (void);
+static gboolean __vala_lambda0__gsource_dispatch_func (GSource* source,
+                                                GSourceFunc _callback,
+                                                gpointer _callback_target);
 
 static gboolean
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	gboolean result;
 	result = FALSE;
@@ -21,12 +21,12 @@ __lambda4_ (void)
 }
 
 static gboolean
-___lambda4__gsource_dispatch_func (GSource* source,
-                                   GSourceFunc _callback,
-                                   gpointer _callback_target)
+__vala_lambda0__gsource_dispatch_func (GSource* source,
+                                       GSourceFunc _callback,
+                                       gpointer _callback_target)
 {
 	gboolean result;
-	result = __lambda4_ ();
+	result = _vala_lambda0_ ();
 	return result;
 }
 
@@ -40,7 +40,7 @@ _vala_main (void)
 	GSourceDispatchFunc _tmp2_;
 	_tmp0_.prepare = NULL;
 	_tmp0_.check = NULL;
-	_tmp0_.dispatch = ___lambda4__gsource_dispatch_func;
+	_tmp0_.dispatch = __vala_lambda0__gsource_dispatch_func;
 	_tmp0_.finalize = NULL;
 	foo = _tmp0_;
 	bar = NULL;

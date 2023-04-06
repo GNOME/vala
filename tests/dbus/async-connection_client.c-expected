@@ -87,11 +87,11 @@ static gboolean test_dbus_interface_set_property (GDBusConnection* connection,
                                            gpointer user_data);
 static void _test_unregister_object (gpointer user_data);
 static void _vala_main (void);
-static void __lambda4_ (GObject* o,
-                 GAsyncResult* r);
-static void ___lambda4__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda0_ (GObject* o,
+                     GAsyncResult* r);
+static void __vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 
 static const GDBusArgInfo _test_dbus_arg_info_get_test_result = {-1, "result", "i", NULL};
 static const GDBusArgInfo * const _test_dbus_arg_info_get_test_in[] = {NULL};
@@ -325,8 +325,8 @@ _test_unregister_object (gpointer user_data)
 }
 
 static void
-__lambda4_ (GObject* o,
-            GAsyncResult* r)
+_vala_lambda0_ (GObject* o,
+                GAsyncResult* r)
 {
 	GError* _inner_error0_ = NULL;
 	g_return_if_fail ((o == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT));
@@ -373,11 +373,11 @@ __lambda4_ (GObject* o,
 }
 
 static void
-___lambda4__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda4_ (source_object, res);
+	_vala_lambda0_ (source_object, res);
 }
 
 static void
@@ -395,7 +395,7 @@ _vala_main (void)
 		g_clear_error (&_inner_error0_);
 		return;
 	}
-	g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, ___lambda4__gasync_ready_callback, NULL, "g-flags", 0, "g-name", "org.example.Test", "g-connection", conn, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
+	g_async_initable_new_async (TYPE_TEST_PROXY, 0, NULL, __vala_lambda0__gasync_ready_callback, NULL, "g-flags", 0, "g-name", "org.example.Test", "g-connection", conn, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
 	_tmp1_ = g_main_loop_new (NULL, FALSE);
 	_g_main_loop_unref0 (main_loop);
 	main_loop = _tmp1_;

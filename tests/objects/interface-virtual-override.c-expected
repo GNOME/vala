@@ -113,11 +113,11 @@ VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);
 static GType bar_get_type_once (void);
 static void _vala_main (void);
-static void __lambda4_ (GObject* o,
-                 GAsyncResult* a);
-static void ___lambda4__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda0_ (GObject* o,
+                     GAsyncResult* a);
+static void __vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 
 static gint
 ifoo_real_foo (IFoo* self)
@@ -375,8 +375,8 @@ bar_get_type (void)
 }
 
 static void
-__lambda4_ (GObject* o,
-            GAsyncResult* a)
+_vala_lambda0_ (GObject* o,
+                GAsyncResult* a)
 {
 	GMainLoop* _tmp0_;
 	g_return_if_fail ((o == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT));
@@ -387,11 +387,11 @@ __lambda4_ (GObject* o,
 }
 
 static void
-___lambda4__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda4_ (source_object, res);
+	_vala_lambda0_ (source_object, res);
 }
 
 static void
@@ -407,7 +407,7 @@ _vala_main (void)
 	_tmp1_ = g_main_loop_new (NULL, FALSE);
 	_g_main_loop_unref0 (loop);
 	loop = _tmp1_;
-	ifoo_bar (G_TYPE_CHECK_INSTANCE_CAST (bar, TYPE_IFOO, IFoo), ___lambda4__gasync_ready_callback, NULL);
+	ifoo_bar (G_TYPE_CHECK_INSTANCE_CAST (bar, TYPE_IFOO, IFoo), __vala_lambda0__gasync_ready_callback, NULL);
 	_tmp2_ = loop;
 	g_main_loop_run (_tmp2_);
 	_g_object_unref0 (bar);

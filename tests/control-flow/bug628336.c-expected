@@ -20,8 +20,8 @@ struct _Block1Data {
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean ____lambda4_ (Block1Data* _data1_);
-static gboolean _____lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -48,7 +48,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-____lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	const gchar* _tmp0_;
 	gboolean result;
@@ -58,10 +58,10 @@ ____lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-_____lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = ____lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -111,7 +111,7 @@ _vala_main (void)
 				_data1_->bar = bar;
 				_tmp5_ = _data1_->bar;
 				_vala_assert (g_strcmp0 (_tmp5_, "bar") == 0, "bar == \"bar\"");
-				f = _____lambda4__gsource_func;
+				f = __vala_lambda0__gsource_func;
 				f_target = block1_data_ref (_data1_);
 				f_target_destroy_notify = block1_data_unref;
 				_tmp6_ = f;

@@ -47,8 +47,8 @@ static gboolean run_co (RunData* _data_);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 
 static void
 run_data_free (gpointer _data)
@@ -128,7 +128,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gboolean result;
 	run (NULL, NULL);
@@ -138,10 +138,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -154,7 +154,7 @@ _vala_main (void)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_main_loop_new (NULL, FALSE);
 	_data1_->loop = _tmp0_;
-	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ___lambda4__gsource_func, block1_data_ref (_data1_), block1_data_unref);
+	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, __vala_lambda0__gsource_func, block1_data_ref (_data1_), block1_data_unref);
 	g_main_loop_run (_data1_->loop);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;

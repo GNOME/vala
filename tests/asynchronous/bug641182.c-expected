@@ -106,8 +106,8 @@ VALA_EXTERN void test_finish (GAsyncResult* _res_);
 static gboolean test_co (TestData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__bar (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__bar (gpointer self);
 static void _vala_main (void);
 
 static inline gpointer
@@ -405,7 +405,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gint _tmp0_;
 	_tmp0_ = _data1_->i;
@@ -413,9 +413,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__bar (gpointer self)
+__vala_lambda0__bar (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static gboolean
@@ -434,7 +434,7 @@ test_co (TestData* _data_)
 	_data_->_tmp0_ = foo_new ();
 	_data_->foo = _data_->_tmp0_;
 	_data_->_data1_->i = 0;
-	foo_set_bar (_data_->foo, ___lambda4__bar, _data_->_data1_);
+	foo_set_bar (_data_->foo, __vala_lambda0__bar, _data_->_data1_);
 	_data_->_tmp1_ = NULL;
 	_data_->_tmp1__target = NULL;
 	_data_->_tmp1_ = foo_get_bar (_data_->foo, &_data_->_tmp1__target);

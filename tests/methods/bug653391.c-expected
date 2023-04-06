@@ -33,8 +33,8 @@ VALA_EXTERN Deleg foo (gchar* bar,
            GDestroyNotify* result_target_destroy_notify);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gchar* __lambda4_ (Block1Data* _data1_);
-static gchar* ___lambda4__deleg (gpointer self);
+static gchar* _vala_lambda0_ (Block1Data* _data1_);
+static gchar* __vala_lambda0__deleg (gpointer self);
 static void _vala_main (void);
 
 static Block1Data*
@@ -56,7 +56,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gchar*
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
 	gchar* result;
@@ -66,10 +66,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gchar*
-___lambda4__deleg (gpointer self)
+__vala_lambda0__deleg (gpointer self)
 {
 	gchar* result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -88,7 +88,7 @@ foo (gchar* bar,
 	_data1_->_ref_count_ = 1;
 	_g_free0 (_data1_->bar);
 	_data1_->bar = bar;
-	_tmp0_ = ___lambda4__deleg;
+	_tmp0_ = __vala_lambda0__deleg;
 	_tmp0__target = block1_data_ref (_data1_);
 	_tmp0__target_destroy_notify = block1_data_unref;
 	*result_target = _tmp0__target;

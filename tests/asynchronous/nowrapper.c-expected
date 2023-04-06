@@ -114,18 +114,18 @@ static GType foo_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_,
-                 GObject* o,
-                 GAsyncResult* r);
-static void ___lambda4__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
-static void __lambda5_ (Block1Data* _data1_,
-                 GObject* o,
-                 GAsyncResult* r);
-static void ___lambda5__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     GObject* o,
+                     GAsyncResult* r);
+static void __vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
+static void _vala_lambda1_ (Block1Data* _data1_,
+                     GObject* o,
+                     GAsyncResult* r);
+static void __vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 
 static void
 ifoo_default_init (IFooIface * iface,
@@ -355,9 +355,9 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_,
-            GObject* o,
-            GAsyncResult* r)
+_vala_lambda0_ (Block1Data* _data1_,
+                GObject* o,
+                GAsyncResult* r)
 {
 	g_return_if_fail ((o == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT));
 	g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (r, g_async_result_get_type ()));
@@ -365,18 +365,18 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static void
-___lambda4__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda4_ (self, source_object, res);
+	_vala_lambda0_ (self, source_object, res);
 	block1_data_unref (self);
 }
 
 static void
-__lambda5_ (Block1Data* _data1_,
-            GObject* o,
-            GAsyncResult* r)
+_vala_lambda1_ (Block1Data* _data1_,
+                GObject* o,
+                GAsyncResult* r)
 {
 	GMainLoop* _tmp0_;
 	g_return_if_fail ((o == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (o, G_TYPE_OBJECT));
@@ -387,11 +387,11 @@ __lambda5_ (Block1Data* _data1_,
 }
 
 static void
-___lambda5__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda5_ (self, source_object, res);
+	_vala_lambda1_ (self, source_object, res);
 	block1_data_unref (self);
 }
 
@@ -409,8 +409,8 @@ _vala_main (void)
 	loop = _tmp0_;
 	_tmp1_ = foo_new ();
 	_data1_->foo = _tmp1_;
-	FOO_GET_CLASS (_data1_->foo)->bar (_data1_->foo, ___lambda4__gasync_ready_callback, block1_data_ref (_data1_));
-	IFOO_GET_INTERFACE (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_IFOO, IFoo))->manam (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_IFOO, IFoo), ___lambda5__gasync_ready_callback, block1_data_ref (_data1_));
+	FOO_GET_CLASS (_data1_->foo)->bar (_data1_->foo, __vala_lambda0__gasync_ready_callback, block1_data_ref (_data1_));
+	IFOO_GET_INTERFACE (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_IFOO, IFoo))->manam (G_TYPE_CHECK_INSTANCE_CAST (_data1_->foo, TYPE_IFOO, IFoo), __vala_lambda1__gasync_ready_callback, block1_data_ref (_data1_));
 	_tmp2_ = loop;
 	g_main_loop_run (_tmp2_);
 	block1_data_unref (_data1_);

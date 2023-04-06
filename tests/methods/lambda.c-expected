@@ -55,14 +55,14 @@ static gint maman_bar_do_action (MamanActionCallback cb);
 static gint maman_bar_do_out_action (MamanActionOutCallback cb);
 static gint maman_bar_do_ref_action (MamanActionRefCallback cb);
 static gint maman_bar_main (void);
-static gint __lambda4_ (gint i);
-static gint ___lambda4__maman_action_callback (gint i);
-static gint __lambda5_ (gint i);
-static gint ___lambda5__maman_action_callback (gint i);
-static void __lambda6_ (gint* i);
-static void ___lambda6__maman_action_out_callback (gint* i);
-static void __lambda7_ (gint* i);
-static void ___lambda7__maman_action_ref_callback (gint* i);
+static gint _vala_lambda0_ (gint i);
+static gint __vala_lambda0__maman_action_callback (gint i);
+static gint _vala_lambda1_ (gint i);
+static gint __vala_lambda1__maman_action_callback (gint i);
+static void _vala_lambda2_ (gint* i);
+static void __vala_lambda2__maman_action_out_callback (gint* i);
+static void _vala_lambda3_ (gint* i);
+static void __vala_lambda3__maman_action_ref_callback (gint* i);
 VALA_EXTERN MamanBar* maman_bar_new (void);
 VALA_EXTERN MamanBar* maman_bar_construct (GType object_type);
 static GType maman_bar_get_type_once (void);
@@ -99,7 +99,7 @@ maman_bar_do_ref_action (MamanActionRefCallback cb)
 }
 
 static gint
-__lambda4_ (gint i)
+_vala_lambda0_ (gint i)
 {
 	gint result;
 	result = i * 2;
@@ -107,15 +107,15 @@ __lambda4_ (gint i)
 }
 
 static gint
-___lambda4__maman_action_callback (gint i)
+__vala_lambda0__maman_action_callback (gint i)
 {
 	gint result;
-	result = __lambda4_ (i);
+	result = _vala_lambda0_ (i);
 	return result;
 }
 
 static gint
-__lambda5_ (gint i)
+_vala_lambda1_ (gint i)
 {
 	gint result;
 	result = i * 3;
@@ -123,15 +123,15 @@ __lambda5_ (gint i)
 }
 
 static gint
-___lambda5__maman_action_callback (gint i)
+__vala_lambda1__maman_action_callback (gint i)
 {
 	gint result;
-	result = __lambda5_ (i);
+	result = _vala_lambda1_ (i);
 	return result;
 }
 
 static void
-__lambda6_ (gint* i)
+_vala_lambda2_ (gint* i)
 {
 	gint _vala_i = 0;
 	_vala_i = 4;
@@ -141,31 +141,31 @@ __lambda6_ (gint* i)
 }
 
 static void
-___lambda6__maman_action_out_callback (gint* i)
+__vala_lambda2__maman_action_out_callback (gint* i)
 {
-	__lambda6_ (i);
+	_vala_lambda2_ (i);
 }
 
 static void
-__lambda7_ (gint* i)
+_vala_lambda3_ (gint* i)
 {
 	*i = (*i) + 4;
 }
 
 static void
-___lambda7__maman_action_ref_callback (gint* i)
+__vala_lambda3__maman_action_ref_callback (gint* i)
 {
-	__lambda7_ (i);
+	_vala_lambda3_ (i);
 }
 
 static gint
 maman_bar_main (void)
 {
 	gint result;
-	_vala_assert (maman_bar_do_action (___lambda4__maman_action_callback) == 2, "do_action (i => i * 2) == 2");
-	_vala_assert (maman_bar_do_action (___lambda5__maman_action_callback) == 3, "do_action (i => { return i * 3; }) == 3");
-	_vala_assert (maman_bar_do_out_action (___lambda6__maman_action_out_callback) == 4, "do_out_action ((out i) => { i = 4; }) == 4");
-	_vala_assert (maman_bar_do_ref_action (___lambda7__maman_action_ref_callback) == 5, "do_ref_action ((ref i) => { i += 4; }) == 5");
+	_vala_assert (maman_bar_do_action (__vala_lambda0__maman_action_callback) == 2, "do_action (i => i * 2) == 2");
+	_vala_assert (maman_bar_do_action (__vala_lambda1__maman_action_callback) == 3, "do_action (i => { return i * 3; }) == 3");
+	_vala_assert (maman_bar_do_out_action (__vala_lambda2__maman_action_out_callback) == 4, "do_out_action ((out i) => { i = 4; }) == 4");
+	_vala_assert (maman_bar_do_ref_action (__vala_lambda3__maman_action_ref_callback) == 5, "do_ref_action ((ref i) => { i += 4; }) == 5");
 	result = 0;
 	return result;
 }

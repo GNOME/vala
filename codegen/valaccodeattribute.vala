@@ -25,6 +25,8 @@
  * Cache for the CCode attribute
  */
 public class Vala.CCodeAttribute : AttributeCache {
+	private static int next_lambda_id = 0;
+
 	private weak CodeNode node;
 	private weak Symbol? sym;
 	private Attribute ccode;
@@ -755,6 +757,9 @@ public class Vala.CCodeAttribute : AttributeCache {
 				return "_dynamic_%s%d".printf (sym.name, dynamic_method_id++);
 			} else if (sym is Method) {
 				unowned Method m = (Method) sym;
+				if (m.parent_node is LambdaExpression) {
+					return "_vala_lambda%d_".printf (next_lambda_id++);
+				}
 				if (m.is_async_callback) {
 					return "%s_co".printf (get_ccode_real_name ((Method) m.parent_symbol));
 				}

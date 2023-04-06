@@ -26,12 +26,12 @@ VALA_EXTERN gboolean success;
 gboolean success = FALSE;
 
 static void _vala_main (void);
-static void ___lambda4_ (gchar* s);
-static void ____lambda4__gfunc (gpointer data,
-                         gpointer self);
+static void _vala_lambda0_ (gchar* s);
+static void __vala_lambda0__gfunc (gpointer data,
+                            gpointer self);
 
 static void
-___lambda4_ (gchar* s)
+_vala_lambda0_ (gchar* s)
 {
 	gboolean _tmp0_ = FALSE;
 	g_return_if_fail (s != NULL);
@@ -46,10 +46,10 @@ ___lambda4_ (gchar* s)
 }
 
 static void
-____lambda4__gfunc (gpointer data,
-                    gpointer self)
+__vala_lambda0__gfunc (gpointer data,
+                       gpointer self)
 {
-	___lambda4_ ((gchar*) data);
+	_vala_lambda0_ ((gchar*) data);
 }
 
 static void
@@ -63,7 +63,7 @@ _vala_main (void)
 		gchar* _tmp2_;
 		GThreadPool* _tmp3_;
 		gchar* _tmp4_;
-		_tmp0_ = g_thread_pool_new (____lambda4__gfunc, NULL, 2, TRUE, &_inner_error0_);
+		_tmp0_ = g_thread_pool_new (__vala_lambda0__gfunc, NULL, 2, TRUE, &_inner_error0_);
 		pool = _tmp0_;
 		if (G_UNLIKELY (_inner_error0_ != NULL)) {
 			goto __catch0_g_error;

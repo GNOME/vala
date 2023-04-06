@@ -75,8 +75,8 @@ VALA_EXTERN FooFunc get_func (gpointer* result_target,
                   GDestroyNotify* result_target_destroy_notify);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gchar* __lambda4_ (Block1Data* _data1_);
-static gchar* ___lambda4__foo_func (gpointer self);
+static gchar* _vala_lambda0_ (Block1Data* _data1_);
+static gchar* __vala_lambda0__foo_func (gpointer self);
 VALA_EXTERN gpointer foo_ref (gpointer instance);
 VALA_EXTERN void foo_unref (gpointer instance);
 VALA_EXTERN GParamSpec* param_spec_foo (const gchar* name,
@@ -120,7 +120,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gchar*
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gchar* _tmp0_;
 	gchar* result;
@@ -130,10 +130,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gchar*
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
 	gchar* result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -151,7 +151,7 @@ get_func (gpointer* result_target,
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = g_strdup ("foo");
 	_data1_->s = _tmp0_;
-	_tmp1_ = ___lambda4__foo_func;
+	_tmp1_ = __vala_lambda0__foo_func;
 	_tmp1__target = block1_data_ref (_data1_);
 	_tmp1__target_destroy_notify = block1_data_unref;
 	*result_target = _tmp1__target;

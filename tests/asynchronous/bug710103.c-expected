@@ -102,12 +102,12 @@ static gpointer foo_parent_class = NULL;
 VALA_EXTERN void iostream (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_,
-                 GObject* obj,
-                 GAsyncResult* res);
-static void ___lambda4__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     GObject* obj,
+                     GAsyncResult* res);
+static void __vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static void foo_bar_data_free (gpointer _data);
@@ -140,20 +140,20 @@ static GType foo_get_type_once (void);
 static void _vala_main (void);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
-static void __lambda5_ (Block2Data* _data2_,
-                 GObject* obj,
-                 GAsyncResult* res);
+static void _vala_lambda1_ (Block2Data* _data2_,
+                     GObject* obj,
+                     GAsyncResult* res);
 static Block3Data* block3_data_ref (Block3Data* _data3_);
 static void block3_data_unref (void * _userdata_);
-static void __lambda6_ (Block3Data* _data3_,
-                 GObject* obj,
-                 GAsyncResult* res);
-static void ___lambda6__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
-static void ___lambda5__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda2_ (Block3Data* _data3_,
+                     GObject* obj,
+                     GAsyncResult* res);
+static void __vala_lambda2__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
+static void __vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 
 static Block1Data*
 block1_data_ref (Block1Data* _data1_)
@@ -174,9 +174,9 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_,
-            GObject* obj,
-            GAsyncResult* res)
+_vala_lambda0_ (Block1Data* _data1_,
+                GObject* obj,
+                GAsyncResult* res)
 {
 	GError* _inner_error0_ = NULL;
 	g_return_if_fail ((obj == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (obj, G_TYPE_OBJECT));
@@ -201,11 +201,11 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static void
-___lambda4__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda0__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda4_ (self, source_object, res);
+	_vala_lambda0_ (self, source_object, res);
 	block1_data_unref (self);
 }
 
@@ -218,7 +218,7 @@ iostream (void)
 	_data1_->_ref_count_ = 1;
 	_data1_->is0 = NULL;
 	is1 = NULL;
-	g_io_stream_splice_async (_data1_->is0, is1, G_IO_STREAM_SPLICE_NONE, G_PRIORITY_DEFAULT, NULL, ___lambda4__gasync_ready_callback, block1_data_ref (_data1_));
+	g_io_stream_splice_async (_data1_->is0, is1, G_IO_STREAM_SPLICE_NONE, G_PRIORITY_DEFAULT, NULL, __vala_lambda0__gasync_ready_callback, block1_data_ref (_data1_));
 	_g_object_unref0 (is1);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
@@ -519,9 +519,9 @@ block3_data_unref (void * _userdata_)
 }
 
 static void
-__lambda6_ (Block3Data* _data3_,
-            GObject* obj,
-            GAsyncResult* res)
+_vala_lambda2_ (Block3Data* _data3_,
+                GObject* obj,
+                GAsyncResult* res)
 {
 	Block2Data* _data2_;
 	_data2_ = _data3_->_data2_;
@@ -533,18 +533,18 @@ __lambda6_ (Block3Data* _data3_,
 }
 
 static void
-___lambda6__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda2__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda6_ (self, source_object, res);
+	_vala_lambda2_ (self, source_object, res);
 	block3_data_unref (self);
 }
 
 static void
-__lambda5_ (Block2Data* _data2_,
-            GObject* obj,
-            GAsyncResult* res)
+_vala_lambda1_ (Block2Data* _data2_,
+                GObject* obj,
+                GAsyncResult* res)
 {
 	Block3Data* _data3_;
 	Foo* _tmp0_;
@@ -556,17 +556,17 @@ __lambda5_ (Block2Data* _data2_,
 	_tmp0_ = foo_create_foo_finish (res);
 	_data3_->foo = _tmp0_;
 	_vala_assert (_data3_->foo->manam == 42, "foo.manam == 42");
-	foo_bar (_data3_->foo, ___lambda6__gasync_ready_callback, block3_data_ref (_data3_));
+	foo_bar (_data3_->foo, __vala_lambda2__gasync_ready_callback, block3_data_ref (_data3_));
 	block3_data_unref (_data3_);
 	_data3_ = NULL;
 }
 
 static void
-___lambda5__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda5_ (self, source_object, res);
+	_vala_lambda1_ (self, source_object, res);
 	block2_data_unref (self);
 }
 
@@ -579,7 +579,7 @@ _vala_main (void)
 	_data2_->_ref_count_ = 1;
 	_tmp0_ = g_main_loop_new (NULL, FALSE);
 	_data2_->loop = _tmp0_;
-	foo_create_foo_async (___lambda5__gasync_ready_callback, block2_data_ref (_data2_));
+	foo_create_foo_async (__vala_lambda1__gasync_ready_callback, block2_data_ref (_data2_));
 	g_main_loop_run (_data2_->loop);
 	block2_data_unref (_data2_);
 	_data2_ = NULL;

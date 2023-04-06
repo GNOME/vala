@@ -65,10 +65,10 @@ static void g_cclosure_user_marshal_INT__INT (GClosure * closure,
                                        gpointer marshal_data);
 static GType foo_get_type_once (void);
 static void _vala_main (void);
-static gint __lambda4_ (gint i);
-static gint ___lambda4__foo_bar (Foo* _sender,
-                          gint i,
-                          gpointer self);
+static gint _vala_lambda0_ (gint i);
+static gint __vala_lambda0__foo_bar (Foo* _sender,
+                              gint i,
+                              gpointer self);
 
 Foo*
 foo_construct (GType object_type)
@@ -161,7 +161,7 @@ foo_get_type (void)
 }
 
 static gint
-__lambda4_ (gint i)
+_vala_lambda0_ (gint i)
 {
 	gint result;
 	result = i + 12;
@@ -169,12 +169,12 @@ __lambda4_ (gint i)
 }
 
 static gint
-___lambda4__foo_bar (Foo* _sender,
-                     gint i,
-                     gpointer self)
+__vala_lambda0__foo_bar (Foo* _sender,
+                         gint i,
+                         gpointer self)
 {
 	gint result;
-	result = __lambda4_ (i);
+	result = _vala_lambda0_ (i);
 	return result;
 }
 
@@ -187,7 +187,7 @@ _vala_main (void)
 	gint _tmp1_ = 0;
 	_tmp0_ = foo_new ();
 	f = _tmp0_;
-	g_signal_connect (f, "bar", (GCallback) ___lambda4__foo_bar, NULL);
+	g_signal_connect (f, "bar", (GCallback) __vala_lambda0__foo_bar, NULL);
 	g_signal_emit (f, foo_signals[FOO_BAR_SIGNAL], 0, 30, &_tmp1_);
 	res = _tmp1_;
 	_vala_assert (res == 42, "res == 42");

@@ -76,17 +76,17 @@ VALA_EXTERN void foo_finish (GAsyncResult* _res_);
 static gboolean foo_co (FooData* _data_);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 static void _vala_main (void);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
 static guint8* _vala_array_dup1 (guint8* self,
                           gssize length);
-static void __lambda5_ (Block2Data* _data2_);
-static void ___lambda5__gasync_ready_callback (GObject* source_object,
-                                        GAsyncResult* res,
-                                        gpointer self);
+static void _vala_lambda1_ (Block2Data* _data2_);
+static void __vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                            GAsyncResult* res,
+                                            gpointer self);
 static inline gpointer _vala_memdup2 (gconstpointer mem,
                         gsize byte_size);
 
@@ -161,7 +161,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gboolean result;
 	_data1_->bar[0] = (guint8) 'b';
@@ -171,10 +171,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -194,7 +194,7 @@ foo_co (FooData* _data_)
 	_data_->_data1_->bar_length1 = _data_->bar_length1;
 	_data_->_data1_->baz = _data_->baz;
 	_data_->_data1_->_async_data_ = _data_;
-	_data_->f = ___lambda4__gsource_func;
+	_data_->f = __vala_lambda0__gsource_func;
 	_data_->f_target = block1_data_ref (_data_->_data1_);
 	_data_->f_target_destroy_notify = block1_data_unref;
 	_data_->f (_data_->f_target);
@@ -272,7 +272,7 @@ _vala_array_dup1 (guint8* self,
 }
 
 static void
-__lambda5_ (Block2Data* _data2_)
+_vala_lambda1_ (Block2Data* _data2_)
 {
 	guint8 _tmp0_;
 	_tmp0_ = _data2_->bar[0];
@@ -281,11 +281,11 @@ __lambda5_ (Block2Data* _data2_)
 }
 
 static void
-___lambda5__gasync_ready_callback (GObject* source_object,
-                                   GAsyncResult* res,
-                                   gpointer self)
+__vala_lambda1__gasync_ready_callback (GObject* source_object,
+                                       GAsyncResult* res,
+                                       gpointer self)
 {
-	__lambda5_ (self);
+	_vala_lambda1_ (self);
 	block2_data_unref (self);
 }
 
@@ -318,7 +318,7 @@ _vala_main (void)
 	_data2_->_bar_size_ = _data2_->bar_length1;
 	_tmp5_ = baz_new ();
 	_tmp6_ = _tmp5_;
-	foo (_data2_->bar, (gint) _data2_->bar_length1, _tmp6_, ___lambda5__gasync_ready_callback, block2_data_ref (_data2_));
+	foo (_data2_->bar, (gint) _data2_->bar_length1, _tmp6_, __vala_lambda1__gasync_ready_callback, block2_data_ref (_data2_));
 	_baz_free0 (_tmp6_);
 	g_main_loop_run (_data2_->loop);
 	block2_data_unref (_data2_);

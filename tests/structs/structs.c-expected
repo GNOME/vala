@@ -89,8 +89,8 @@ VALA_EXTERN void test_in_nullable_parameter (SimpleStruct* st);
 VALA_EXTERN void test_ref_parameter (SimpleStruct* st);
 VALA_EXTERN void test_out_parameter (SimpleStruct* st);
 VALA_EXTERN void test_struct_with_func (void);
-static void __lambda4_ (void);
-static void ___lambda4__func (gpointer self);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__func (gpointer self);
 static void _vala_StructWithFunc_array_free (StructWithFunc * array,
                                       gssize array_length);
 static void _vala_main (void);
@@ -388,14 +388,14 @@ test_out_parameter (SimpleStruct* st)
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 }
 
 static void
-___lambda4__func (gpointer self)
+__vala_lambda0__func (gpointer self)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 static void
@@ -419,7 +419,7 @@ test_struct_with_func (void)
 	StructWithFunc* _tmp1_;
 	gint foes_length1;
 	gint _foes_size_;
-	struct_with_func_init (&_tmp0_, ___lambda4__func, NULL, NULL);
+	struct_with_func_init (&_tmp0_, __vala_lambda0__func, NULL, NULL);
 	_tmp1_ = g_new0 (StructWithFunc, 1);
 	_tmp1_[0] = _tmp0_;
 	foes = _tmp1_;

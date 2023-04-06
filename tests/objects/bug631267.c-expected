@@ -147,30 +147,30 @@ static void _vala_foo_set_property (GObject * object,
                              const GValue * value,
                              GParamSpec * pspec);
 static void _vala_main (void);
-static void __lambda4_ (void);
-static void ___lambda4__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
-static void __lambda5_ (void);
-static void ___lambda5__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
-static void __lambda6_ (void);
-static void ___lambda6__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
-static void __lambda7_ (void);
-static void ___lambda7__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
-static void __lambda8_ (void);
-static void ___lambda8__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
-static void __lambda9_ (void);
-static void ___lambda9__g_object_notify (GObject* _sender,
-                                  GParamSpec* pspec,
-                                  gpointer self);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
+static void _vala_lambda1_ (void);
+static void __vala_lambda1__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
+static void _vala_lambda2_ (void);
+static void __vala_lambda2__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
+static void _vala_lambda3_ (void);
+static void __vala_lambda3__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
+static void _vala_lambda4_ (void);
+static void __vala_lambda4__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
+static void _vala_lambda5_ (void);
+static void __vala_lambda5__g_object_notify (GObject* _sender,
+                                      GParamSpec* pspec,
+                                      gpointer self);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -632,87 +632,87 @@ _vala_foo_set_property (GObject * object,
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	g_error ("objects_bug631267.vala:39: string-type equality failed");
 }
 
 static void
-___lambda4__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda0__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 static void
-__lambda5_ (void)
+_vala_lambda1_ (void)
 {
 	g_error ("objects_bug631267.vala:40: array-type equality failed");
 }
 
 static void
-___lambda5__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda1__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda5_ ();
+	_vala_lambda1_ ();
 }
 
 static void
-__lambda6_ (void)
+_vala_lambda2_ (void)
 {
 	g_error ("objects_bug631267.vala:41: simple-type equality failed");
 }
 
 static void
-___lambda6__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda2__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda6_ ();
+	_vala_lambda2_ ();
 }
 
 static void
-__lambda7_ (void)
+_vala_lambda3_ (void)
 {
 	g_error ("objects_bug631267.vala:42: object-type equality failed");
 }
 
 static void
-___lambda7__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda3__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda7_ ();
+	_vala_lambda3_ ();
 }
 
 static void
-__lambda8_ (void)
+_vala_lambda4_ (void)
 {
 	g_error ("objects_bug631267.vala:43: struct-type equality failed");
 }
 
 static void
-___lambda8__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda4__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda8_ ();
+	_vala_lambda4_ ();
 }
 
 static void
-__lambda9_ (void)
+_vala_lambda5_ (void)
 {
 	g_error ("objects_bug631267.vala:44: pointer-type equality failed");
 }
 
 static void
-___lambda9__g_object_notify (GObject* _sender,
-                             GParamSpec* pspec,
-                             gpointer self)
+__vala_lambda5__g_object_notify (GObject* _sender,
+                                 GParamSpec* pspec,
+                                 gpointer self)
 {
-	__lambda9_ ();
+	_vala_lambda5_ ();
 }
 
 static void
@@ -760,12 +760,12 @@ _vala_main (void)
 	_tmp7_ = t;
 	foo_set_t (foo, &_tmp7_);
 	foo_set_p (foo, p);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::s", (GCallback) ___lambda4__g_object_notify, NULL);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::a", (GCallback) ___lambda5__g_object_notify, NULL);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::i", (GCallback) ___lambda6__g_object_notify, NULL);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::o", (GCallback) ___lambda7__g_object_notify, NULL);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::t", (GCallback) ___lambda8__g_object_notify, NULL);
-	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::p", (GCallback) ___lambda9__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::s", (GCallback) __vala_lambda0__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::a", (GCallback) __vala_lambda1__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::i", (GCallback) __vala_lambda2__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::o", (GCallback) __vala_lambda3__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::t", (GCallback) __vala_lambda4__g_object_notify, NULL);
+	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::p", (GCallback) __vala_lambda5__g_object_notify, NULL);
 	foo_set_s (foo, s);
 	foo_set_a (foo, a, a_length1);
 	foo_set_i (foo, i);

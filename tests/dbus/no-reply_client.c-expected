@@ -186,14 +186,14 @@ static void run_ready (GObject* source_object,
                 GAsyncResult* _res_,
                 gpointer _user_data_);
 static void _g_free0_ (gpointer var);
-static GDBusMessage* __lambda4_ (Block1Data* _data1_,
-                          GDBusConnection* conn,
-                          GDBusMessage* message,
-                          gboolean incoming);
-static GDBusMessage* ___lambda4__gd_bus_message_filter_function (GDBusConnection* connection,
-                                                          GDBusMessage* message,
-                                                          gboolean incoming,
-                                                          gpointer self);
+static GDBusMessage* _vala_lambda0_ (Block1Data* _data1_,
+                              GDBusConnection* conn,
+                              GDBusMessage* message,
+                              gboolean incoming);
+static GDBusMessage* __vala_lambda0__gd_bus_message_filter_function (GDBusConnection* connection,
+                                                              GDBusMessage* message,
+                                                              gboolean incoming,
+                                                              gpointer self);
 static void _vala_main (void);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
@@ -674,10 +674,10 @@ _g_object_ref0 (gpointer self)
 }
 
 static GDBusMessage*
-__lambda4_ (Block1Data* _data1_,
-            GDBusConnection* conn,
-            GDBusMessage* message,
-            gboolean incoming)
+_vala_lambda0_ (Block1Data* _data1_,
+                GDBusConnection* conn,
+                GDBusMessage* message,
+                gboolean incoming)
 {
 	gboolean _tmp0_ = FALSE;
 	const gchar* _tmp1_;
@@ -715,13 +715,13 @@ __lambda4_ (Block1Data* _data1_,
 }
 
 static GDBusMessage*
-___lambda4__gd_bus_message_filter_function (GDBusConnection* connection,
-                                            GDBusMessage* message,
-                                            gboolean incoming,
-                                            gpointer self)
+__vala_lambda0__gd_bus_message_filter_function (GDBusConnection* connection,
+                                                GDBusMessage* message,
+                                                gboolean incoming,
+                                                gpointer self)
 {
 	GDBusMessage* result;
-	result = __lambda4_ (self, connection, message, incoming);
+	result = _vala_lambda0_ (self, connection, message, incoming);
 	return result;
 }
 
@@ -761,7 +761,7 @@ run_co (RunData* _data_)
 	_data_->_tmp4_ = _data_->_tmp3_;
 	_data_->connection = _data_->_tmp4_;
 	_data_->_tmp5_ = _data_->connection;
-	g_dbus_connection_add_filter (_data_->_tmp5_, ___lambda4__gd_bus_message_filter_function, block1_data_ref (_data_->_data1_), block1_data_unref);
+	g_dbus_connection_add_filter (_data_->_tmp5_, __vala_lambda0__gd_bus_message_filter_function, block1_data_ref (_data_->_data1_), block1_data_unref);
 	_data_->_tmp6_ = _data_->test;
 	_data_->_tmp7_ = 0;
 	_data_->_tmp8_ = test_list_messages (_data_->_tmp6_, &_data_->_tmp7_, &_data_->_inner_error0_);

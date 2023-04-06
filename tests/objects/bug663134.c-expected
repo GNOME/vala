@@ -78,10 +78,10 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_unref)
 VALA_EXTERN void foo_bar (Foo* self);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gboolean __lambda4_ (Block1Data* _data1_);
-static gboolean __lambda5_ (Block1Data* _data1_);
-static gboolean ___lambda5__gsource_func (gpointer self);
-static gboolean ___lambda4__gsource_func (gpointer self);
+static gboolean _vala_lambda0_ (Block1Data* _data1_);
+static gboolean _vala_lambda1_ (Block1Data* _data1_);
+static gboolean __vala_lambda1__gsource_func (gpointer self);
+static gboolean __vala_lambda0__gsource_func (gpointer self);
 VALA_EXTERN Foo* foo_new (GType t_type,
               GBoxedCopyFunc t_dup_func,
               GDestroyNotify t_destroy_func);
@@ -121,7 +121,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gboolean
-__lambda5_ (Block1Data* _data1_)
+_vala_lambda1_ (Block1Data* _data1_)
 {
 	Foo* self;
 	gboolean result;
@@ -133,15 +133,15 @@ __lambda5_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda5__gsource_func (gpointer self)
+__vala_lambda1__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda5_ (self);
+	result = _vala_lambda1_ (self);
 	return result;
 }
 
 static gboolean
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	Foo* self;
 	GSourceFunc ff = NULL;
@@ -151,7 +151,7 @@ __lambda4_ (Block1Data* _data1_)
 	self = _data1_->self;
 	((_data1_->baz == NULL) || (self->priv->t_destroy_func == NULL)) ? NULL : (_data1_->baz = (self->priv->t_destroy_func (_data1_->baz), NULL));
 	_data1_->baz = NULL;
-	ff = ___lambda5__gsource_func;
+	ff = __vala_lambda1__gsource_func;
 	ff_target = block1_data_ref (_data1_);
 	ff_target_destroy_notify = block1_data_unref;
 	ff (ff_target);
@@ -164,10 +164,10 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static gboolean
-___lambda4__gsource_func (gpointer self)
+__vala_lambda0__gsource_func (gpointer self)
 {
 	gboolean result;
-	result = __lambda4_ (self);
+	result = _vala_lambda0_ (self);
 	return result;
 }
 
@@ -183,7 +183,7 @@ foo_bar (Foo* self)
 	_data1_->_ref_count_ = 1;
 	_data1_->self = foo_ref (self);
 	_data1_->baz = NULL;
-	f = ___lambda4__gsource_func;
+	f = __vala_lambda0__gsource_func;
 	f_target = block1_data_ref (_data1_);
 	f_target_destroy_notify = block1_data_unref;
 	f (f_target);

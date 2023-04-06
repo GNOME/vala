@@ -117,47 +117,47 @@ VALA_EXTERN FooFunc foo_get_bar (Foo* self);
 VALA_EXTERN void foo_do_bar (Foo* self,
                  FooFunc f);
 static FooFunc foo_real_get_foo (Foo* self);
-static void __lambda4_ (Foo* self);
-static void ___lambda4__foo_func (gpointer self);
+static void _vala_lambda0_ (Foo* self);
+static void __vala_lambda0__foo_func (gpointer self);
 static void foo_real_do_foo (Foo* self,
                       FooFunc f);
 static FooFunc foo_real_get_bar (Foo* self);
-static void __lambda5_ (Foo* self);
-static void ___lambda5__foo_func (gpointer self);
+static void _vala_lambda1_ (Foo* self);
+static void __vala_lambda1__foo_func (gpointer self);
 static void foo_real_do_bar (Foo* self,
                       FooFunc f);
 VALA_EXTERN Foo* foo_new (void);
 VALA_EXTERN Foo* foo_construct (GType object_type);
-static void ___lambda6_ (Foo* self);
-static void ____lambda6__foo_func (gpointer self);
+static void _vala_lambda2_ (Foo* self);
+static void __vala_lambda2__foo_func (gpointer self);
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, foo_unref)
 static FooFunc bar_real_get_foo (Foo* base);
-static void __lambda7_ (Bar* self);
-static void ___lambda7__foo_func (gpointer self);
+static void _vala_lambda3_ (Bar* self);
+static void __vala_lambda3__foo_func (gpointer self);
 static void bar_real_do_foo (Foo* base,
                       FooFunc f);
 static FooFunc bar_real_get_bar (Foo* base);
-static void __lambda8_ (Bar* self);
-static void ___lambda8__foo_func (gpointer self);
+static void _vala_lambda4_ (Bar* self);
+static void __vala_lambda4__foo_func (gpointer self);
 static void bar_real_do_bar (Foo* base,
                       FooFunc f);
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);
-static void ___lambda9_ (Bar* self);
-static void ____lambda9__foo_func (gpointer self);
-static void ___lambda10_ (Bar* self);
-static void ____lambda10__foo_func (gpointer self);
+static void _vala_lambda5_ (Bar* self);
+static void __vala_lambda5__foo_func (gpointer self);
+static void _vala_lambda6_ (Bar* self);
+static void __vala_lambda6__foo_func (gpointer self);
 static GType bar_get_type_once (void);
 VALA_EXTERN FooFunc get_foo (void);
-static void __lambda11_ (void);
-static void ___lambda11__foo_func (gpointer self);
+static void _vala_lambda7_ (void);
+static void __vala_lambda7__foo_func (gpointer self);
 VALA_EXTERN void do_foo (FooFunc f);
 static void _vala_main (void);
-static void ___lambda12_ (void);
-static void ____lambda12__foo_func (gpointer self);
+static void _vala_lambda8_ (void);
+static void __vala_lambda8__foo_func (gpointer self);
 
 FooFunc
 ifoo_get_foo (IFoo* self)
@@ -211,21 +211,21 @@ ifoo_get_type (void)
 }
 
 static void
-__lambda4_ (Foo* self)
+_vala_lambda0_ (Foo* self)
 {
 }
 
 static void
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
-	__lambda4_ ((Foo*) self);
+	_vala_lambda0_ ((Foo*) self);
 }
 
 static FooFunc
 foo_real_get_foo (Foo* self)
 {
 	FooFunc result;
-	result = ___lambda4__foo_func;
+	result = __vala_lambda0__foo_func;
 	return result;
 }
 
@@ -262,21 +262,21 @@ foo_do_foo (Foo* self,
 }
 
 static void
-__lambda5_ (Foo* self)
+_vala_lambda1_ (Foo* self)
 {
 }
 
 static void
-___lambda5__foo_func (gpointer self)
+__vala_lambda1__foo_func (gpointer self)
 {
-	__lambda5_ ((Foo*) self);
+	_vala_lambda1_ ((Foo*) self);
 }
 
 static FooFunc
 foo_real_get_bar (Foo* self)
 {
 	FooFunc result;
-	result = ___lambda5__foo_func;
+	result = __vala_lambda1__foo_func;
 	return result;
 }
 
@@ -313,14 +313,14 @@ foo_do_bar (Foo* self,
 }
 
 static void
-___lambda6_ (Foo* self)
+_vala_lambda2_ (Foo* self)
 {
 }
 
 static void
-____lambda6__foo_func (gpointer self)
+__vala_lambda2__foo_func (gpointer self)
 {
-	___lambda6_ ((Foo*) self);
+	_vala_lambda2_ ((Foo*) self);
 }
 
 Foo*
@@ -345,7 +345,7 @@ foo_construct (GType object_type)
 		f_target_destroy_notify = NULL;
 	}
 	{
-		foo_do_foo (self, ____lambda6__foo_func);
+		foo_do_foo (self, __vala_lambda2__foo_func);
 	}
 	return self;
 }
@@ -571,14 +571,14 @@ foo_unref (gpointer instance)
 }
 
 static void
-__lambda7_ (Bar* self)
+_vala_lambda3_ (Bar* self)
 {
 }
 
 static void
-___lambda7__foo_func (gpointer self)
+__vala_lambda3__foo_func (gpointer self)
 {
-	__lambda7_ ((Bar*) self);
+	_vala_lambda3_ ((Bar*) self);
 }
 
 static FooFunc
@@ -587,7 +587,7 @@ bar_real_get_foo (Foo* base)
 	Bar * self;
 	FooFunc result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
-	result = ___lambda7__foo_func;
+	result = __vala_lambda3__foo_func;
 	return result;
 }
 
@@ -602,14 +602,14 @@ bar_real_do_foo (Foo* base,
 }
 
 static void
-__lambda8_ (Bar* self)
+_vala_lambda4_ (Bar* self)
 {
 }
 
 static void
-___lambda8__foo_func (gpointer self)
+__vala_lambda4__foo_func (gpointer self)
 {
-	__lambda8_ ((Bar*) self);
+	_vala_lambda4_ ((Bar*) self);
 }
 
 static FooFunc
@@ -618,7 +618,7 @@ bar_real_get_bar (Foo* base)
 	Bar * self;
 	FooFunc result;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
-	result = ___lambda8__foo_func;
+	result = __vala_lambda4__foo_func;
 	return result;
 }
 
@@ -633,25 +633,25 @@ bar_real_do_bar (Foo* base,
 }
 
 static void
-___lambda9_ (Bar* self)
+_vala_lambda5_ (Bar* self)
 {
 }
 
 static void
-____lambda9__foo_func (gpointer self)
+__vala_lambda5__foo_func (gpointer self)
 {
-	___lambda9_ ((Bar*) self);
+	_vala_lambda5_ ((Bar*) self);
 }
 
 static void
-___lambda10_ (Bar* self)
+_vala_lambda6_ (Bar* self)
 {
 }
 
 static void
-____lambda10__foo_func (gpointer self)
+__vala_lambda6__foo_func (gpointer self)
 {
-	___lambda10_ ((Bar*) self);
+	_vala_lambda6_ ((Bar*) self);
 }
 
 Bar*
@@ -676,7 +676,7 @@ bar_construct (GType object_type)
 		f_target_destroy_notify = NULL;
 	}
 	{
-		foo_do_foo (G_TYPE_CHECK_INSTANCE_CAST (self, TYPE_FOO, Foo), ____lambda9__foo_func);
+		foo_do_foo (G_TYPE_CHECK_INSTANCE_CAST (self, TYPE_FOO, Foo), __vala_lambda5__foo_func);
 	}
 	{
 		FooFunc f = NULL;
@@ -695,7 +695,7 @@ bar_construct (GType object_type)
 		f_target_destroy_notify = NULL;
 	}
 	{
-		foo_do_bar (G_TYPE_CHECK_INSTANCE_CAST (self, TYPE_FOO, Foo), ____lambda10__foo_func);
+		foo_do_bar (G_TYPE_CHECK_INSTANCE_CAST (self, TYPE_FOO, Foo), __vala_lambda6__foo_func);
 	}
 	return self;
 }
@@ -745,21 +745,21 @@ bar_get_type (void)
 }
 
 static void
-__lambda11_ (void)
+_vala_lambda7_ (void)
 {
 }
 
 static void
-___lambda11__foo_func (gpointer self)
+__vala_lambda7__foo_func (gpointer self)
 {
-	__lambda11_ ();
+	_vala_lambda7_ ();
 }
 
 FooFunc
 get_foo (void)
 {
 	FooFunc result;
-	result = ___lambda11__foo_func;
+	result = __vala_lambda7__foo_func;
 	return result;
 }
 
@@ -771,14 +771,14 @@ do_foo (FooFunc f)
 }
 
 static void
-___lambda12_ (void)
+_vala_lambda8_ (void)
 {
 }
 
 static void
-____lambda12__foo_func (gpointer self)
+__vala_lambda8__foo_func (gpointer self)
 {
-	___lambda12_ ();
+	_vala_lambda8_ ();
 }
 
 static void
@@ -801,7 +801,7 @@ _vala_main (void)
 		f_target_destroy_notify = NULL;
 	}
 	{
-		do_foo (____lambda12__foo_func);
+		do_foo (__vala_lambda8__foo_func);
 	}
 	{
 		Foo* foo = NULL;

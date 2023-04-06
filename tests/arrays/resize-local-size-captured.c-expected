@@ -17,8 +17,8 @@ struct _Block1Data {
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__foo_func (gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__foo_func (gpointer self);
 static void _vala_array_add1 (gint* * array,
                        gint* length,
                        gint* size,
@@ -43,7 +43,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	gint _tmp0_;
 	_tmp0_ = 1;
@@ -54,9 +54,9 @@ __lambda4_ (Block1Data* _data1_)
 }
 
 static void
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static void
@@ -88,7 +88,7 @@ _vala_main (void)
 	_data1_->a = _tmp0_;
 	_data1_->a_length1 = (10 * 1024) * 1024;
 	_data1_->_a_size_ = _data1_->a_length1;
-	func = ___lambda4__foo_func;
+	func = __vala_lambda0__foo_func;
 	func_target = block1_data_ref (_data1_);
 	func_target_destroy_notify = block1_data_unref;
 	_tmp1_ = func;

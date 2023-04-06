@@ -29,18 +29,18 @@ VALA_EXTERN void foo (gint i,
           FooFunc* func,
           gpointer* func_target,
           GDestroyNotify* func_target_destroy_notify);
-static gint __lambda4_ (void);
-static gint ___lambda4__foo_func (gpointer self);
+static gint _vala_lambda0_ (void);
+static gint __vala_lambda0__foo_func (gpointer self);
 VALA_EXTERN gint bar (void);
 static void _vala_main (void);
 static gint _bar_foo_func (gpointer self);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gint ___lambda5_ (Block1Data* _data1_);
-static gint ____lambda5__foo_func (gpointer self);
+static gint _vala_lambda1_ (Block1Data* _data1_);
+static gint __vala_lambda1__foo_func (gpointer self);
 
 static gint
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 	gint result;
 	result = 4711;
@@ -48,10 +48,10 @@ __lambda4_ (void)
 }
 
 static gint
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
 	gint result;
-	result = __lambda4_ ();
+	result = _vala_lambda0_ ();
 	return result;
 }
 
@@ -66,7 +66,7 @@ foo (gint i,
 	*func = NULL;
 	*func_target = NULL;
 	*func_target_destroy_notify = NULL;
-	*func = ___lambda4__foo_func;
+	*func = __vala_lambda0__foo_func;
 	*func_target = NULL;
 	*func_target_destroy_notify = NULL;
 }
@@ -105,7 +105,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gint
-___lambda5_ (Block1Data* _data1_)
+_vala_lambda1_ (Block1Data* _data1_)
 {
 	gint result;
 	result = _data1_->i;
@@ -113,10 +113,10 @@ ___lambda5_ (Block1Data* _data1_)
 }
 
 static gint
-____lambda5__foo_func (gpointer self)
+__vala_lambda1__foo_func (gpointer self)
 {
 	gint result;
-	result = ___lambda5_ (self);
+	result = _vala_lambda1_ (self);
 	return result;
 }
 
@@ -158,7 +158,7 @@ _vala_main (void)
 		_data1_ = g_slice_new0 (Block1Data);
 		_data1_->_ref_count_ = 1;
 		_data1_->i = 42;
-		func = ____lambda5__foo_func;
+		func = __vala_lambda1__foo_func;
 		func_target = block1_data_ref (_data1_);
 		func_target_destroy_notify = block1_data_unref;
 		_tmp2_ = func;

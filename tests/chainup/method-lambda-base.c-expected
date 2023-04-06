@@ -100,8 +100,8 @@ static void bar_execute (Bar* self,
                   Func func,
                   gpointer func_target);
 static void bar_real_foo (Foo* base);
-static void __lambda4_ (Bar* self);
-static void ___lambda4__func (gpointer self);
+static void _vala_lambda0_ (Bar* self);
+static void __vala_lambda0__func (gpointer self);
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);
 static GType bar_get_type_once (void);
@@ -348,15 +348,15 @@ bar_execute (Bar* self,
 }
 
 static void
-__lambda4_ (Bar* self)
+_vala_lambda0_ (Bar* self)
 {
 	FOO_CLASS (bar_parent_class)->foo (G_TYPE_CHECK_INSTANCE_CAST (self, TYPE_FOO, Foo));
 }
 
 static void
-___lambda4__func (gpointer self)
+__vala_lambda0__func (gpointer self)
 {
-	__lambda4_ ((Bar*) self);
+	_vala_lambda0_ ((Bar*) self);
 }
 
 static void
@@ -364,7 +364,7 @@ bar_real_foo (Foo* base)
 {
 	Bar * self;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
-	bar_execute (self, ___lambda4__func, self);
+	bar_execute (self, __vala_lambda0__func, self);
 }
 
 Bar*

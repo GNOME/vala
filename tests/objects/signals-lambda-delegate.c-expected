@@ -70,12 +70,12 @@ static GType foo_get_type_once (void);
 static void _vala_main (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void ___lambda4_ (Block1Data* _data1_,
-                  Foo* f,
-                  const gchar* s);
-static void ____lambda4__foo_func (Foo* foo,
-                            const gchar* s,
-                            gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_,
+                     Foo* f,
+                     const gchar* s);
+static void __vala_lambda0__foo_func (Foo* foo,
+                               const gchar* s,
+                               gpointer self);
 
 Foo*
 foo_construct (GType object_type)
@@ -145,9 +145,9 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-___lambda4_ (Block1Data* _data1_,
-             Foo* f,
-             const gchar* s)
+_vala_lambda0_ (Block1Data* _data1_,
+                Foo* f,
+                const gchar* s)
 {
 	gboolean _tmp0_ = FALSE;
 	g_return_if_fail (IS_FOO (f));
@@ -171,11 +171,11 @@ ___lambda4_ (Block1Data* _data1_,
 }
 
 static void
-____lambda4__foo_func (Foo* foo,
-                       const gchar* s,
-                       gpointer self)
+__vala_lambda0__foo_func (Foo* foo,
+                          const gchar* s,
+                          gpointer self)
 {
-	___lambda4_ (self, foo, s);
+	_vala_lambda0_ (self, foo, s);
 }
 
 static void
@@ -196,12 +196,12 @@ _vala_main (void)
 		GDestroyNotify callback_target_destroy_notify;
 		gulong _tmp1_;
 		gulong _tmp2_;
-		callback = ____lambda4__foo_func;
+		callback = __vala_lambda0__foo_func;
 		callback_target = block1_data_ref (_data1_);
 		callback_target_destroy_notify = block1_data_unref;
-		_tmp1_ = g_signal_connect_data (foo, "bar", (GCallback) ____lambda4__foo_func, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+		_tmp1_ = g_signal_connect_data (foo, "bar", (GCallback) __vala_lambda0__foo_func, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 		_data1_->bar_id = _tmp1_;
-		_tmp2_ = g_signal_connect_data (foo, "baz", (GCallback) ____lambda4__foo_func, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+		_tmp2_ = g_signal_connect_data (foo, "baz", (GCallback) __vala_lambda0__foo_func, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 		_data1_->baz_id = _tmp2_;
 		(callback_target_destroy_notify == NULL) ? NULL : (callback_target_destroy_notify (callback_target), NULL);
 		callback = NULL;

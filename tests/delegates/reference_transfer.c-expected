@@ -82,8 +82,8 @@ VALA_EXTERN Foo* foo_construct (GType object_type,
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);
 static void _vala_main (void);
-static void __lambda4_ (void);
-static void ___lambda4__foo_func (gpointer self);
+static void _vala_lambda0_ (void);
+static void __vala_lambda0__foo_func (gpointer self);
 
 static inline gpointer
 foo_get_instance_private (Foo* self)
@@ -338,14 +338,14 @@ foo_unref (gpointer instance)
 }
 
 static void
-__lambda4_ (void)
+_vala_lambda0_ (void)
 {
 }
 
 static void
-___lambda4__foo_func (gpointer self)
+__vala_lambda0__foo_func (gpointer self)
 {
-	__lambda4_ ();
+	_vala_lambda0_ ();
 }
 
 static void
@@ -353,7 +353,7 @@ _vala_main (void)
 {
 	Foo* foo = NULL;
 	Foo* _tmp0_;
-	_tmp0_ = foo_new (___lambda4__foo_func, NULL, NULL);
+	_tmp0_ = foo_new (__vala_lambda0__foo_func, NULL, NULL);
 	foo = _tmp0_;
 	_foo_unref0 (foo);
 }

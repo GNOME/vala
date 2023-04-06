@@ -65,9 +65,9 @@ static GType foo_get_type_once (void);
 VALA_EXTERN Foo* do_foo (void);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static void __lambda4_ (Block1Data* _data1_);
-static void ___lambda4__foo_bar (Foo* _sender,
-                          gpointer self);
+static void _vala_lambda0_ (Block1Data* _data1_);
+static void __vala_lambda0__foo_bar (Foo* _sender,
+                              gpointer self);
 static void _vala_main (void);
 
 Foo*
@@ -138,16 +138,16 @@ block1_data_unref (void * _userdata_)
 }
 
 static void
-__lambda4_ (Block1Data* _data1_)
+_vala_lambda0_ (Block1Data* _data1_)
 {
 	_vala_assert (IS_FOO (_data1_->foo), "foo is Foo");
 }
 
 static void
-___lambda4__foo_bar (Foo* _sender,
-                     gpointer self)
+__vala_lambda0__foo_bar (Foo* _sender,
+                         gpointer self)
 {
-	__lambda4_ (self);
+	_vala_lambda0_ (self);
 }
 
 static gpointer
@@ -167,7 +167,7 @@ do_foo (void)
 	_data1_->_ref_count_ = 1;
 	_tmp0_ = foo_new ();
 	_data1_->foo = _tmp0_;
-	g_signal_connect_data (_data1_->foo, "bar", (GCallback) ___lambda4__foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	g_signal_connect_data (_data1_->foo, "bar", (GCallback) __vala_lambda0__foo_bar, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
 	_tmp1_ = _g_object_ref0 (_data1_->foo);
 	result = _tmp1_;
 	block1_data_unref (_data1_);
