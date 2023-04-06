@@ -290,11 +290,47 @@ namespace GLib {
 		public const string STANDARD_TYPE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED")]
 		public const string THUMBNAILING_FAILED;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAILING_FAILED_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAILING_FAILED_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID")]
 		[Version (since = "2.40")]
 		public const string THUMBNAIL_IS_VALID;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_IS_VALID_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_IS_VALID_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH")]
 		public const string THUMBNAIL_PATH;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_LARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_LARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_NORMAL")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_NORMAL;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_XLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_XLARGE;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_THUMBNAIL_PATH_XXLARGE")]
+		[Version (since = "2.76")]
+		public const string THUMBNAIL_PATH_XXLARGE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_TIME_ACCESS")]
 		public const string TIME_ACCESS;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_FILE_ATTRIBUTE_TIME_ACCESS_NSEC")]
@@ -1764,9 +1800,9 @@ namespace GLib {
 		[Version (since = "2.64")]
 		public bool find (GLib.Object item, out uint position);
 		[Version (since = "2.64")]
-		public bool find_with_equal_func (GLib.Object item, GLib.EqualFunc<GLib.Object> equal_func, out uint position);
+		public bool find_with_equal_func (GLib.Object? item, GLib.EqualFunc<GLib.Object> equal_func, out uint position);
 		[Version (since = "2.74")]
-		public bool find_with_equal_func_full (GLib.Object item, [CCode (delegate_target_pos = 2.5)] GLib.EqualFuncFull equal_func, out uint position);
+		public bool find_with_equal_func_full (GLib.Object? item, [CCode (delegate_target_pos = 2.5)] GLib.EqualFuncFull equal_func, out uint position);
 		[Version (since = "2.44")]
 		public void insert (uint position, GLib.Object item);
 		[Version (since = "2.44")]
@@ -1855,6 +1891,9 @@ namespace GLib {
 		public const string ATTRIBUTE_LABEL;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_ATTRIBUTE_TARGET")]
 		public const string ATTRIBUTE_TARGET;
+		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_EXPORTER_MAX_SECTION_SIZE")]
+		[Version (since = "2.76")]
+		public const int EXPORTER_MAX_SECTION_SIZE;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_LINK_SECTION")]
 		public const string LINK_SECTION;
 		[CCode (cheader_filename = "gio/gio.h", cname = "G_MENU_LINK_SUBMENU")]
@@ -2834,7 +2873,7 @@ namespace GLib {
 	public abstract class SocketControlMessage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SocketControlMessage ();
-		public static GLib.SocketControlMessage deserialize (int level, int type, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data);
+		public static GLib.SocketControlMessage? deserialize (int level, int type, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] data);
 		public virtual int get_level ();
 		public int get_msg_type ();
 		public virtual size_t get_size ();
@@ -3429,7 +3468,7 @@ namespace GLib {
 		[Version (since = "2.38")]
 		public static bool name_is_valid (string action_name);
 		[Version (since = "2.38")]
-		public static bool parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
+		public static bool parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant? target_value) throws GLib.Error;
 		[Version (since = "2.38")]
 		public static string print_detailed_name (string action_name, GLib.Variant? target_value);
 		[Version (since = "2.28")]
@@ -5217,7 +5256,7 @@ namespace GLib {
 	public static bool action_name_is_valid (string action_name);
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "Action.parse_detailed_name", since = "2.38")]
-	public static bool action_parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant target_value) throws GLib.Error;
+	public static bool action_parse_detailed_name (string detailed_name, out string action_name, out GLib.Variant? target_value) throws GLib.Error;
 	[CCode (cheader_filename = "gio/gio.h")]
 	[Version (replacement = "Action.print_detailed_name", since = "2.38")]
 	public static string action_print_detailed_name (string action_name, GLib.Variant? target_value);
