@@ -117,7 +117,7 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 
 	protected override string? get_delegate_return_comment (Vala.Delegate vcb) {
 		Delegate cb = resolver.resolve (vcb) as Delegate;
-		if (cb.documentation == null) {
+		if (cb == null) {
 			return null;
 		}
 
@@ -136,7 +136,7 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 
 	protected override string? get_signal_return_comment (Vala.Signal vsig) {
 		Api.Signal sig = resolver.resolve (vsig) as Api.Signal;
-		if (sig.documentation == null) {
+		if (sig == null) {
 			return null;
 		}
 
@@ -155,7 +155,7 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 
 	protected override string? get_method_return_comment (Vala.Method vm) {
 		Method m = resolver.resolve (vm) as Method;
-		if (m.documentation == null) {
+		if (m == null) {
 			return null;
 		}
 
