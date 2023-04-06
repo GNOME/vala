@@ -672,6 +672,13 @@ public class Codegen : Vala.CodeVisitor {
 			b.add_statement (decl);
 		}
 
+		//FIXME
+		if (current_block == null) {
+			stdout.printf ("No current_block ... ");
+			stdout.printf ("Skipping `%s'\n", element.get_full_name ());
+			return;
+		}
+
 		current_block.add_statement (b);
 		current_block.check (context);
 	}
@@ -766,9 +773,9 @@ public class Codegen : Vala.CodeVisitor {
 		List<Parameter> parameters;
 		if (element.coroutine) {
 			parameters = element.get_async_begin_parameters ();
-			mcall = new MethodCall (new MemberAccess (ma, "begin"));
+			mcall = new MethodCall (new MemberAccess (ma, "begin"), element.source_reference);
 		} else {
-			mcall = new MethodCall (ma);
+			mcall = new MethodCall (ma, element.source_reference);
 			parameters = element.get_parameters ();
 		}
 
@@ -777,7 +784,7 @@ public class Codegen : Vala.CodeVisitor {
 
 		if (element.coroutine) {
 			parameters = element.get_async_end_parameters ();
-			mcall = new MethodCall (new MemberAccess (ma, "end"));
+			mcall = new MethodCall (new MemberAccess (ma, "end"), element.source_reference);
 
 			append_arguments (b, mcall, parameters, ref i);
 			b.add_statement (new ExpressionStatement (mcall));
