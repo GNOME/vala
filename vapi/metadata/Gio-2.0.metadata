@@ -166,6 +166,7 @@ ListModel
   .get_item#method skip=false abstract type="GLib.Object?"
 ListStore
   .find_with_equal_func.equal_func type_arguments="GLib.Object"
+  .find_with_equal_func_full.equal_func type_arguments="GLib.Object"
   .insert_sorted.compare_func type_arguments="GLib.Object"
   .sort.compare_func type_arguments="GLib.Object"
 MemoryInputStream
