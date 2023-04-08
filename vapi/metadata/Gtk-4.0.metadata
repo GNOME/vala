@@ -27,6 +27,49 @@ Requisition struct
 TextIter struct
 TreeIter struct
 
+BookmarkList implements="GLib.ListModel<GLib.FileInfo>"
+DirectoryList implements="GLib.ListModel<GLib.FileInfo>"
+StringList implements="GLib.ListModel<Gtk.StringObject>"
+
+AnyFilter implements="GLib.ListModel<Gtk.Widget>"
+EveryFilter implements="GLib.ListModel<Gtk.Widget>"
+MultiFilter implements="GLib.ListModel<Gtk.Widget>"
+SelectionFilterModel implements="GLib.ListModel<Gtk.Widget>"
+
+FilterListModel type_parameters="G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+FlattenListModel type_parameters="G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+SliceListModel type_parameters="G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+SortListModel type_parameters="G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+TreeListModel type_parameters="G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .new.root type_arguments="G"
+  .get_model* type_arguments="G"
+
+MapListModel type_parameters="K,V" implements="GLib.ListModel<V>"
+
+MultiSelection implements="GLib.ListModel<Gtk.Widget>"
+MultiSorter implements="GLib.ListModel<Gtk.Widget>"
+NoSelection implements="GLib.ListModel<Gtk.Widget>"
+SelectionModel prerequisites="GLib.ListModel<Gtk.Widget>"
+ShortcutController implements="GLib.ListModel<Gtk.Widget>"
+SingleSelection implements="GLib.ListModel<Gtk.Widget>"
+
+Widget
+  .observe_children type_arguments="Gtk.Widget"
+  .observe_controllers type_arguments="Gtk.EventController"
+
 // Hide dedicated constructors of former compact classes
 Border
   .new skip

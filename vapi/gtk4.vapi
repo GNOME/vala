@@ -6548,7 +6548,7 @@ namespace Gtk {
 		public Gtk.ShortcutTrigger second { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_any_filter_get_type ()")]
-	public sealed class AnyFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
+	public sealed class AnyFilter : Gtk.MultiFilter, GLib.ListModel<Gtk.Widget>, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public AnyFilter ();
 	}
@@ -6771,7 +6771,7 @@ namespace Gtk {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_bookmark_list_get_type ()")]
-	public sealed class BookmarkList : GLib.Object, GLib.ListModel {
+	public sealed class BookmarkList : GLib.Object, GLib.ListModel<GLib.FileInfo> {
 		[CCode (has_construct_function = false)]
 		public BookmarkList (string? filename, string? attributes);
 		public unowned string? get_attributes ();
@@ -7817,7 +7817,7 @@ namespace Gtk {
 		public virtual signal void response (int response_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_directory_list_get_type ()")]
-	public sealed class DirectoryList : GLib.Object, GLib.ListModel {
+	public sealed class DirectoryList : GLib.Object, GLib.ListModel<GLib.FileInfo> {
 		[CCode (has_construct_function = false)]
 		public DirectoryList (string? attributes, GLib.File? file);
 		public unowned string? get_attributes ();
@@ -8282,7 +8282,7 @@ namespace Gtk {
 		public signal void scroll_end ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_every_filter_get_type ()")]
-	public sealed class EveryFilter : Gtk.MultiFilter, GLib.ListModel, Gtk.Buildable {
+	public sealed class EveryFilter : Gtk.MultiFilter, GLib.ListModel<Gtk.Widget>, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public EveryFilter ();
 	}
@@ -8470,22 +8470,22 @@ namespace Gtk {
 		public signal void changed (Gtk.FilterChange change);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_filter_list_model_get_type ()")]
-	public sealed class FilterListModel : GLib.Object, GLib.ListModel {
+	public sealed class FilterListModel<G> : GLib.Object, GLib.ListModel<G> {
 		[CCode (has_construct_function = false)]
-		public FilterListModel (owned GLib.ListModel? model, owned Gtk.Filter? filter);
+		public FilterListModel (owned GLib.ListModel<G>? model, owned Gtk.Filter? filter);
 		public unowned Gtk.Filter? get_filter ();
 		public bool get_incremental ();
-		public unowned GLib.ListModel? get_model ();
+		public unowned GLib.ListModel<G>? get_model ();
 		public uint get_pending ();
 		public void set_filter (Gtk.Filter? filter);
 		public void set_incremental (bool incremental);
-		public void set_model (GLib.ListModel? model);
+		public void set_model (GLib.ListModel<G>? model);
 		public Gtk.Filter filter { get; set; }
 		public bool incremental { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public GLib.Type item_type { get; }
-		public GLib.ListModel model { get; set; }
+		public GLib.ListModel<G> model { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public uint n_items { get; }
@@ -8516,16 +8516,16 @@ namespace Gtk {
 		public Gsk.Transform transform { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_flatten_list_model_get_type ()")]
-	public sealed class FlattenListModel : GLib.Object, GLib.ListModel {
+	public sealed class FlattenListModel<G> : GLib.Object, GLib.ListModel<G> {
 		[CCode (has_construct_function = false)]
-		public FlattenListModel (owned GLib.ListModel? model);
-		public unowned GLib.ListModel? get_model ();
-		public unowned GLib.ListModel? get_model_for_item (uint position);
-		public void set_model (GLib.ListModel? model);
+		public FlattenListModel (owned GLib.ListModel<G>? model);
+		public unowned GLib.ListModel<G>? get_model ();
+		public unowned GLib.ListModel<G>? get_model_for_item (uint position);
+		public void set_model (GLib.ListModel<G>? model);
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public GLib.Type item_type { get; }
-		public GLib.ListModel model { get; set; }
+		public GLib.ListModel<G> model { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public uint n_items { get; }
@@ -9613,7 +9613,7 @@ namespace Gtk {
 		public string tooltip_unlock { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_map_list_model_get_type ()")]
-	public sealed class MapListModel : GLib.Object, GLib.ListModel {
+	public sealed class MapListModel<K,V> : GLib.Object, GLib.ListModel<V> {
 		[CCode (has_construct_function = false)]
 		public MapListModel (owned GLib.ListModel? model, owned Gtk.MapListModelMapFunc? map_func);
 		public unowned GLib.ListModel? get_model ();
@@ -9835,7 +9835,7 @@ namespace Gtk {
 		public Gtk.Window parent { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_filter_get_type ()")]
-	public abstract class MultiFilter : Gtk.Filter, GLib.ListModel, Gtk.Buildable {
+	public abstract class MultiFilter : Gtk.Filter, GLib.ListModel<Gtk.Widget>, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		protected MultiFilter ();
 		public void append (owned Gtk.Filter filter);
@@ -9848,7 +9848,7 @@ namespace Gtk {
 		public uint n_items { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_selection_get_type ()")]
-	public sealed class MultiSelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
+	public sealed class MultiSelection : GLib.Object, GLib.ListModel<Gtk.Widget>, Gtk.SelectionModel {
 		[CCode (has_construct_function = false)]
 		public MultiSelection (owned GLib.ListModel? model);
 		public unowned GLib.ListModel? get_model ();
@@ -9862,7 +9862,7 @@ namespace Gtk {
 		public uint n_items { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_multi_sorter_get_type ()")]
-	public sealed class MultiSorter : Gtk.Sorter, GLib.ListModel, Gtk.Buildable {
+	public sealed class MultiSorter : Gtk.Sorter, GLib.ListModel<Gtk.Widget>, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public MultiSorter ();
 		public void append (owned Gtk.Sorter sorter);
@@ -9909,7 +9909,7 @@ namespace Gtk {
 		public static unowned Gtk.NeverTrigger @get ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_no_selection_get_type ()")]
-	public sealed class NoSelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
+	public sealed class NoSelection : GLib.Object, GLib.ListModel<Gtk.Widget>, Gtk.SelectionModel {
 		[CCode (has_construct_function = false)]
 		public NoSelection (owned GLib.ListModel? model);
 		public unowned GLib.ListModel? get_model ();
@@ -10803,7 +10803,7 @@ namespace Gtk {
 		public signal void stop_search ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_selection_filter_model_get_type ()")]
-	public sealed class SelectionFilterModel : GLib.Object, GLib.ListModel {
+	public sealed class SelectionFilterModel : GLib.Object, GLib.ListModel<Gtk.Widget> {
 		[CCode (has_construct_function = false)]
 		public SelectionFilterModel (Gtk.SelectionModel? model);
 		public unowned Gtk.SelectionModel? get_model ();
@@ -10956,7 +10956,7 @@ namespace Gtk {
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcut_controller_get_type ()")]
-	public sealed class ShortcutController : Gtk.EventController, GLib.ListModel, Gtk.Buildable {
+	public sealed class ShortcutController : Gtk.EventController, GLib.ListModel<Gtk.Widget>, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public ShortcutController ();
 		public void add_shortcut (owned Gtk.Shortcut shortcut);
@@ -11088,7 +11088,7 @@ namespace Gtk {
 		public signal void unbind (GLib.Object object);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_single_selection_get_type ()")]
-	public sealed class SingleSelection : GLib.Object, GLib.ListModel, Gtk.SelectionModel {
+	public sealed class SingleSelection : GLib.Object, GLib.ListModel<Gtk.Widget>, Gtk.SelectionModel {
 		[CCode (has_construct_function = false)]
 		public SingleSelection (owned GLib.ListModel? model);
 		public bool get_autoselect ();
@@ -11124,19 +11124,19 @@ namespace Gtk {
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_slice_list_model_get_type ()")]
-	public sealed class SliceListModel : GLib.Object, GLib.ListModel {
+	public sealed class SliceListModel<G> : GLib.Object, GLib.ListModel<G> {
 		[CCode (has_construct_function = false)]
-		public SliceListModel (owned GLib.ListModel? model, uint offset, uint size);
-		public unowned GLib.ListModel? get_model ();
+		public SliceListModel (owned GLib.ListModel<G>? model, uint offset, uint size);
+		public unowned GLib.ListModel<G>? get_model ();
 		public uint get_offset ();
 		public uint get_size ();
-		public void set_model (GLib.ListModel? model);
+		public void set_model (GLib.ListModel<G>? model);
 		public void set_offset (uint offset);
 		public void set_size (uint size);
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public GLib.Type item_type { get; }
-		public GLib.ListModel model { get; set; }
+		public GLib.ListModel<G> model { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public uint n_items { get; }
@@ -11206,21 +11206,21 @@ namespace Gtk {
 		public void translate_3d (Graphene.Point3D point);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_sort_list_model_get_type ()")]
-	public sealed class SortListModel : GLib.Object, GLib.ListModel {
+	public sealed class SortListModel<G> : GLib.Object, GLib.ListModel<G> {
 		[CCode (has_construct_function = false)]
-		public SortListModel (owned GLib.ListModel? model, owned Gtk.Sorter? sorter);
+		public SortListModel (owned GLib.ListModel<G>? model, owned Gtk.Sorter? sorter);
 		public bool get_incremental ();
-		public unowned GLib.ListModel? get_model ();
+		public unowned GLib.ListModel<G>? get_model ();
 		public uint get_pending ();
 		public unowned Gtk.Sorter? get_sorter ();
 		public void set_incremental (bool incremental);
-		public void set_model (GLib.ListModel? model);
+		public void set_model (GLib.ListModel<G>? model);
 		public void set_sorter (Gtk.Sorter? sorter);
 		public bool incremental { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public GLib.Type item_type { get; }
-		public GLib.ListModel model { get; set; }
+		public GLib.ListModel<G> model { get; set; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public uint n_items { get; }
@@ -11399,7 +11399,7 @@ namespace Gtk {
 		public string search { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_string_list_get_type ()")]
-	public sealed class StringList : GLib.Object, GLib.ListModel, Gtk.Buildable {
+	public sealed class StringList : GLib.Object, GLib.ListModel<Gtk.StringObject>, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		public StringList ([CCode (array_length = false, array_null_terminated = true)] string[]? strings);
 		public void append (string str);
@@ -12084,12 +12084,12 @@ namespace Gtk {
 		public Gtk.TreeListRow list_row { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tree_list_model_get_type ()")]
-	public sealed class TreeListModel : GLib.Object, GLib.ListModel {
+	public sealed class TreeListModel<G> : GLib.Object, GLib.ListModel<G> {
 		[CCode (has_construct_function = false)]
-		public TreeListModel (owned GLib.ListModel root, bool passthrough, bool autoexpand, owned Gtk.TreeListModelCreateModelFunc create_func);
+		public TreeListModel (owned GLib.ListModel<G> root, bool passthrough, bool autoexpand, owned Gtk.TreeListModelCreateModelFunc create_func);
 		public bool get_autoexpand ();
 		public Gtk.TreeListRow? get_child_row (uint position);
-		public unowned GLib.ListModel get_model ();
+		public unowned GLib.ListModel<G> get_model ();
 		public bool get_passthrough ();
 		public Gtk.TreeListRow? get_row (uint position);
 		public void set_autoexpand (bool autoexpand);
@@ -12097,7 +12097,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public GLib.Type item_type { get; }
-		public GLib.ListModel model { get; }
+		public GLib.ListModel<G> model { get; }
 		[NoAccessorMethod]
 		[Version (since = "4.8")]
 		public uint n_items { get; }
@@ -12712,8 +12712,8 @@ namespace Gtk {
 		public bool is_visible ();
 		public GLib.List<weak Gtk.Widget> list_mnemonic_labels ();
 		public virtual void measure (Gtk.Orientation orientation, int for_size, out int minimum, out int natural, out int minimum_baseline, out int natural_baseline);
-		public GLib.ListModel observe_children ();
-		public GLib.ListModel observe_controllers ();
+		public GLib.ListModel<Gtk.Widget> observe_children ();
+		public GLib.ListModel<Gtk.EventController> observe_controllers ();
 		public unowned Gtk.Widget? pick (double x, double y, Gtk.PickFlags flags);
 		[CCode (cname = "gtk_widget_class_query_action")]
 		public class bool query_action (uint index_, out GLib.Type owner, out unowned string action_name, out unowned GLib.VariantType? parameter_type, out unowned string? property_name);
@@ -13311,7 +13311,7 @@ namespace Gtk {
 		public abstract Gtk.ScrollablePolicy vscroll_policy { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkSelectionModelInterface", type_id = "gtk_selection_model_get_type ()")]
-	public interface SelectionModel : GLib.ListModel, GLib.Object {
+	public interface SelectionModel : GLib.ListModel<Gtk.Widget>, GLib.Object {
 		public Gtk.Bitset get_selection ();
 		public abstract Gtk.Bitset get_selection_in_range (uint position, uint n_items);
 		public abstract bool is_selected (uint position);
