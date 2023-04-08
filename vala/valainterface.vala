@@ -177,6 +177,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 				Report.error (source_reference, "prerequisite `%s' is less accessible than interface `%s'", prerequisite_reference.to_string (), get_full_name ());
 				return false;
 			}
+
+			// check whether there is the expected amount of type-arguments
+			if (!prerequisite_reference.check_type_arguments (context)) {
+				error = true;
+				return false;
+			}
 		}
 
 		/* check prerequisites */
