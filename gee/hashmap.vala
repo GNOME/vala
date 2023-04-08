@@ -258,13 +258,13 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 			return (_node != null);
 		}
 
-		public override K? get_key () {
+		public override K get_key () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.key;
 		}
 
-		public override V? get_value () {
+		public override V get_value () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.value;
