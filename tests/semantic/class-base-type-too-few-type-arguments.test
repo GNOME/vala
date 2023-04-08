@@ -1,0 +1,10 @@
+Invalid Code
+
+interface IFoo<G> {
+}
+
+class Foo : IFoo {
+}
+
+void main () {
+}

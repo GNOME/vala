@@ -1098,6 +1098,8 @@ TESTS = \
 	semantic/class-base-type-invalid.test \
 	semantic/class-base-type-less-accessible.test \
 	semantic/class-base-type-multiple.test \
+	semantic/class-base-type-too-few-type-arguments.test \
+	semantic/class-base-type-too-many-type-arguments.test \
 	semantic/class-compact-field-class.test \
 	semantic/class-compact-field-lock.test \
 	semantic/class-compact-field-private.test \
@@ -1190,6 +1192,8 @@ TESTS = \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
 	semantic/interface-prerequisite-multiple.test \
+	semantic/interface-prerequisite-too-few-type-arguments.test \
+	semantic/interface-prerequisite-too-many-type-arguments.test \
 	semantic/literal-expression.test \
 	semantic/localvariable-owned-to-unowned.test \
 	semantic/localvariable-var-pointer-initializer.vala \

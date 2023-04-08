@@ -1,0 +1,10 @@
+Invalid Code
+
+interface IFoo<G> {
+}
+
+interface IBar<K,V> : IFoo<K,V> {
+}
+
+void main () {
+}
