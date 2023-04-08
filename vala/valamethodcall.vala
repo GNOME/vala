@@ -379,11 +379,11 @@ public class Vala.MethodCall : Expression, CallableExpression {
 			int n_type_args = ma.get_type_arguments ().size;
 			if (n_type_args > 0 && n_type_args < n_type_params) {
 				error = true;
-				Report.error (ma.source_reference, "too few type arguments");
+				Report.error (ma.source_reference, "too few type arguments for `%s'", m.to_string ());
 				return false;
 			} else if (n_type_args > 0 && n_type_args > n_type_params) {
 				error = true;
-				Report.error (ma.source_reference, "too many type arguments");
+				Report.error (ma.source_reference, "too many type arguments for `%s'", m.to_string ());
 				return false;
 			}
 		}
