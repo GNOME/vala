@@ -54,7 +54,7 @@ namespace Peas {
 		public Peas.PluginInfo plugin_info { get; construct; }
 	}
 	[CCode (cheader_filename = "libpeas/peas.h", type_id = "peas_extension_set_get_type ()")]
-	public class ExtensionSet : GLib.Object, GLib.ListModel {
+	public class ExtensionSet : GLib.Object, GLib.ListModel<GLib.Object> {
 		[CCode (has_construct_function = false)]
 		public ExtensionSet (Peas.Engine? engine, GLib.Type exten_type, ...);
 		[NoWrapper]
