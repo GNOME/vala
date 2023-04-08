@@ -44,11 +44,14 @@ public class Vala.GirParser : CodeVisitor {
 		NEW,
 		TYPE,
 		TYPE_ARGUMENTS,
+		TYPE_PARAMETERS,
 		CHEADER_FILENAME,
 		NAME,
 		OWNED,
 		UNOWNED,
 		PARENT,
+		IMPLEMENTS,
+		PREREQUISITES,
 		NULLABLE,
 		DEPRECATED,
 		REPLACEMENT,
@@ -550,6 +553,8 @@ public class Vala.GirParser : CodeVisitor {
 		public DataType base_type;
 		// struct-specific
 		public int array_length_idx = -1;
+		// objecttypesymbol-specific
+		public List<DataType> inherited_types;
 
 		public bool deprecated = false;
 		public uint64 deprecated_version = 0;
@@ -1210,6 +1215,8 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				} else if (symbol is Signal || symbol is Delegate) {
 					parser.process_callable (this);
+				} else if (symbol is Class) {
+					parser.process_class (this);
 				} else if (symbol is Interface) {
 					parser.process_interface (this);
 				} else if (symbol is Struct) {
@@ -1814,6 +1821,45 @@ public class Vala.GirParser : CodeVisitor {
 			return false;
 		}
 		parent_type.add_type_argument (dt);
+
+		return true;
+	}
+
+	List<DataType> parse_list_of_types_from_string (string type_list, SourceReference? source_reference = null) {
+		var types = new ArrayList<DataType> ();
+		var type_list_length = type_list.length;
+		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_list_length);
+
+		for (var c = 0 ; c < type_list_length ; c++) {
+			if (type_list[c] == ',') {
+				types.add (parse_type_from_string (current.str, true, source_reference));
+				current.truncate ();
+			} else {
+				current.append_unichar (type_list[c]);
+			}
+		}
+
+		types.add (parse_type_from_string (current.str, true, source_reference));
+
+		return types;
+	}
+
+	bool parse_type_parameters_from_string (GenericSymbol type_symbol, string type_parameters, SourceReference? source_reference = null) {
+		var type_parameters_length = type_parameters.length;
+		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_parameters_length);
+
+		for (var c = 0 ; c < type_parameters_length ; c++) {
+			if (type_parameters[c] == ',') {
+				var p = new TypeParameter (current.str, source_reference);
+				type_symbol.add_type_parameter (p);
+				current.truncate ();
+			} else {
+				current.append_unichar (type_parameters[c]);
+			}
+		}
+
+		var p = new TypeParameter (current.str, source_reference);
+		type_symbol.add_type_parameter (p);
 
 		return true;
 	}
@@ -2932,6 +2978,9 @@ public class Vala.GirParser : CodeVisitor {
 			current.gtype_struct_for = parse_symbol_from_string (gtype_struct_for, current.source_reference);
 			unresolved_gir_symbols.add (current.gtype_struct_for);
 		}
+		if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+			parse_type_parameters_from_string (st, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+		}
 
 		bool first_field = true;
 		next ();
@@ -3023,6 +3072,12 @@ public class Vala.GirParser : CodeVisitor {
 		if (metadata.has_argument (ArgumentType.UNREF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "unref_function", metadata.get_string (ArgumentType.UNREF_FUNCTION));
 		}
+		if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+			parse_type_parameters_from_string (cl, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+		}
+		if (metadata.has_argument (ArgumentType.IMPLEMENTS)) {
+			current.inherited_types = parse_list_of_types_from_string (metadata.get_string (ArgumentType.IMPLEMENTS), metadata.get_source_reference (ArgumentType.IMPLEMENTS));
+		}
 
 		next ();
 
@@ -3105,6 +3160,13 @@ public class Vala.GirParser : CodeVisitor {
 		set_type_id_ccode (iface);
 
 		iface.access = SymbolAccessibility.PUBLIC;
+
+		if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+			parse_type_parameters_from_string (iface, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+		}
+		if (metadata.has_argument (ArgumentType.PREREQUISITES)) {
+			current.inherited_types = parse_list_of_types_from_string (metadata.get_string (ArgumentType.PREREQUISITES), metadata.get_source_reference (ArgumentType.PREREQUISITES));
+		}
 
 		next ();
 
@@ -3303,6 +3365,9 @@ public class Vala.GirParser : CodeVisitor {
 		if (symbol_type == "callback") {
 			s = new Delegate (name, return_type, current.source_reference);
 			((Delegate) s).has_target = false;
+			if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+				parse_type_parameters_from_string ((Delegate) s, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+			}
 		} else if (symbol_type == "constructor") {
 			if (name == "new") {
 				name = null;
@@ -3323,11 +3388,17 @@ public class Vala.GirParser : CodeVisitor {
 			if (return_ctype != null && (parent_ctype == null || return_ctype != parent_ctype + "*")) {
 				m.set_attribute_string ("CCode", "type", return_ctype);
 			}
+			if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+				parse_type_parameters_from_string (m, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+			}
 			s = m;
 		} else if (symbol_type == "glib:signal") {
 			s = new Signal (name, return_type, current.source_reference);
 		} else {
 			s = new Method (name, return_type, current.source_reference);
+			if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+				parse_type_parameters_from_string ((Method) s, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+			}
 		}
 
 		s.access = SymbolAccessibility.PUBLIC;
@@ -3740,6 +3811,10 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		st.access = SymbolAccessibility.PUBLIC;
 
+		if (metadata.has_argument (ArgumentType.TYPE_PARAMETERS)) {
+			parse_type_parameters_from_string (st, metadata.get_string (ArgumentType.TYPE_PARAMETERS), metadata.get_source_reference (ArgumentType.TYPE_PARAMETERS));
+		}
+
 		next ();
 
 		st.comment = parse_symbol_doc ();
@@ -3886,7 +3961,54 @@ public class Vala.GirParser : CodeVisitor {
 		}
 	}
 
+	void resolve_inherited_types (Node object_node) {
+		if (object_node.inherited_types == null) {
+			return;
+		}
+
+		int i = 0;
+		foreach (var t in object_node.inherited_types) {
+			Symbol? sym = null;
+			if (t is UnresolvedType) {
+				var unresolved_symbol = ((UnresolvedType) t).unresolved_symbol;
+				sym = resolve_symbol (object_node.parent, unresolved_symbol);
+			}
+			if (sym is ObjectTypeSymbol) {
+				var type = new ObjectType ((ObjectTypeSymbol) sym, t.source_reference);
+				foreach (var arg in t.get_type_arguments ()) {
+					type.add_type_argument (arg);
+				}
+				object_node.inherited_types[i] = type;
+			}
+			i++;
+		}
+	}
+
+	void process_class (Node class_node) {
+		resolve_inherited_types (class_node);
+
+		Class cl = (Class) class_node.symbol;
+		foreach (DataType base_type in cl.get_base_types ()) {
+			Symbol sym = null;
+			if (base_type is UnresolvedType) {
+				var unresolved_symbol = ((UnresolvedType) base_type).unresolved_symbol;
+				sym = resolve_symbol (class_node.parent, unresolved_symbol);
+			} else {
+				sym = base_type.type_symbol;
+			}
+			if (class_node.inherited_types != null) {
+				foreach (var t in class_node.inherited_types) {
+					if (sym == t.type_symbol) {
+						cl.replace_type (base_type, t);
+					}
+				}
+			}
+		}
+	}
+
 	void process_interface (Node iface_node) {
+		resolve_inherited_types (iface_node);
+
 		/* Temporarily workaround G-I bug not adding GLib.Object prerequisite:
 		   ensure we have at least one instantiable prerequisite */
 		Interface iface = (Interface) iface_node.symbol;
@@ -3899,9 +4021,15 @@ public class Vala.GirParser : CodeVisitor {
 			} else {
 				sym = prereq.type_symbol;
 			}
+			if (iface_node.inherited_types != null) {
+				foreach (var t in iface_node.inherited_types) {
+					if (sym == t.type_symbol) {
+						iface.replace_type (prereq, t);
+					}
+				}
+			}
 			if (sym is Class) {
 				has_instantiable_prereq = true;
-				break;
 			}
 		}
 
