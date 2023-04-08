@@ -693,11 +693,11 @@ public abstract class Vala.DataType : CodeNode {
 
 		if ((!allow_none || n_type_args > 0) && n_type_args < expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.get_full_name ());
+			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
 			return false;
 		} else if ((!allow_none || n_type_args > 0) && n_type_args > expected_n_type_args) {
 			error = true;
-			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.get_full_name ());
+			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.to_string ());
 			return false;
 		}
 
