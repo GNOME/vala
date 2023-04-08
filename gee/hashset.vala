@@ -118,7 +118,7 @@ public class Vala.HashSet<G> : Set<G> {
 		for (int i = 0; i < _array_size; i++) {
 			Node<G> node = (owned) _nodes[i];
 			while (node != null) {
-				Node next = (owned) node.next;
+				Node<G> next = (owned) node.next;
 				node.key = null;
 				node = (owned) next;
 			}
