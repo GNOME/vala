@@ -234,7 +234,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			gsequence_type = new ObjectType ((Class) glib_ns.scope.lookup ("Sequence"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
-			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
+			regex_type = new ObjectType ((Class) glib_ns.scope.lookup ("Regex"));
 
 			gsource_type = (Class) glib_ns.scope.lookup ("Source");
 

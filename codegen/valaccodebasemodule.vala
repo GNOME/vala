@@ -529,7 +529,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			gsequence_iter_type = (Class) glib_ns.scope.lookup ("SequenceIter");
 			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
 
-			gerror = (Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
+			gerror = (Class) glib_ns.scope.lookup ("Error");
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 			gvariant_type = (Class) glib_ns.scope.lookup ("Variant");
@@ -544,7 +544,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
 
-			regex_type = new ObjectType ((Class) root_symbol.scope.lookup ("GLib").scope.lookup ("Regex"));
+			regex_type = new ObjectType ((Class) glib_ns.scope.lookup ("Regex"));
 
 			if (context.module_init_method != null) {
 				foreach (Parameter parameter in context.module_init_method.get_parameters ()) {
