@@ -105,6 +105,7 @@ public class Vala.LocalVariable : Variable {
 			}
 			if (!external_package) {
 				context.analyzer.check_type (variable_type);
+				variable_type.check_type_arguments (context, true);
 			}
 		}
 

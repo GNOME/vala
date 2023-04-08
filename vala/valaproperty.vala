@@ -493,6 +493,7 @@ public class Vala.Property : Symbol, Lockable {
 		property_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (property_type);
+			property_type.check_type_arguments (context, true);
 		}
 
 		if (get_accessor == null && set_accessor == null) {

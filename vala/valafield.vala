@@ -112,6 +112,7 @@ public class Vala.Field : Variable, Lockable {
 		variable_type.check (context);
 		if (!external_package) {
 			context.analyzer.check_type (variable_type);
+			variable_type.check_type_arguments (context, true);
 
 			// check symbol availability
 			if (variable_type.type_symbol != null) {
