@@ -508,7 +508,33 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	public override string to_string () {
-		return get_full_name ();
+		var builder = new StringBuilder (get_full_name ());
+
+		unowned List<TypeParameter>? type_params = null;
+		if (this is Delegate) {
+			type_params = ((Delegate) this).get_type_parameters ();
+		} else if (this is Method) {
+			type_params = ((Method) this).get_type_parameters ();
+		} else if (this is ObjectTypeSymbol) {
+			type_params = ((ObjectTypeSymbol) this).get_type_parameters ();
+		} else if (this is Struct) {
+			type_params = ((Struct) this).get_type_parameters ();
+		}
+		if (type_params != null && type_params.size > 0) {
+			builder.append_c ('<');
+			bool first = true;
+			foreach (var type_param in type_params) {
+				if (!first) {
+					builder.append_c (',');
+				} else {
+					first = false;
+				}
+				builder.append (type_param.name);
+			}
+			builder.append_c ('>');
+		}
+
+		return builder.str;
 	}
 }
 
