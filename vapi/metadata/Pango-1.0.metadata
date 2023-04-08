@@ -40,6 +40,8 @@ Coverage
   .copy skip=false
 Font
   .get_coverage skip=false
+FontMap implements="GLib.ListModel<Pango.FontFamily>"
+FontFamily implements="GLib.ListModel<Pango.FontFace>"
 
 // Variadic
 TabArray
