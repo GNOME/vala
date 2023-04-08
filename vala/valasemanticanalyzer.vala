@@ -172,6 +172,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType delegate_target_type;
 	public DelegateType delegate_target_destroy_type;
 	public DelegateType generics_dup_func_type;
+	public Interface? glistmodel_type;
+	public Class? gliststore_type;
 
 	Delegate destroy_notify;
 
@@ -237,6 +239,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			regex_type = new ObjectType ((Class) glib_ns.scope.lookup ("Regex"));
 
 			gsource_type = (Class) glib_ns.scope.lookup ("Source");
+
+			glistmodel_type = glib_ns.scope.lookup ("ListModel") as Interface;
+			gliststore_type = glib_ns.scope.lookup ("ListStore") as Class;
 
 			delegate_target_type = new StructValueType ((Struct) glib_ns.scope.lookup ("pointer"));
 			destroy_notify = (Delegate) glib_ns.scope.lookup ("DestroyNotify");

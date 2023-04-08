@@ -692,9 +692,17 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if ((!allow_none || n_type_args > 0) && n_type_args < expected_n_type_args) {
-			error = true;
-			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
-			return false;
+			if (n_type_args == 0 && type_symbol != null
+			    && (type_symbol == context.analyzer.glistmodel_type || type_symbol == context.analyzer.gliststore_type)) {
+				Report.notice (source_reference, "`%s' requires a type argument, defaulting to `GLib.Object'", type_symbol.to_string ());
+				var type = new ObjectType (context.analyzer.object_type, source_reference);
+				type.value_owned = true;
+				add_type_argument (type);
+			} else {
+				error = true;
+				Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
+				return false;
+			}
 		} else if ((!allow_none || n_type_args > 0) && n_type_args > expected_n_type_args) {
 			error = true;
 			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.to_string ());
