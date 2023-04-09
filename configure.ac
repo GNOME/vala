@@ -292,6 +292,7 @@ AC_CONFIG_FILES([Makefile
            valadoc/doclets/gtkdoc/Makefile
            valadoc/icons/Makefile
            valadoc/tests/Makefile
+           valadoc/tests/girwriter/Makefile
 ])
 
 AC_OUTPUT
