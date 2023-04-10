@@ -62,6 +62,11 @@ public class Vala.CodeContext {
 	public bool experimental_non_null { get; set; }
 
 	/**
+	 * Enable pedantic warnings.
+	 */
+	public bool pedantic { get; set; }
+
+	/**
 	 * Enable GObject creation tracing.
 	 */
 	public bool gobject_tracing { get; set; }
