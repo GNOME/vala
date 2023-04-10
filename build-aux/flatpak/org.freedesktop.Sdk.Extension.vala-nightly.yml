@@ -1,0 +1,117 @@
+id: "org.freedesktop.Sdk.Extension.vala-nightly"
+branch: "master"
+runtime: "org.freedesktop.Sdk"
+build-extension: true
+sdk: "org.freedesktop.Sdk"
+runtime-version: "22.08"
+sdk-extensions: ["org.freedesktop.Sdk.Extension.vala"]
+separate-locales: false
+appstream-compose: false
+build-options:
+  prefix: "/usr/lib/sdk/vala-nightly"
+  prepend-pkg-config-path: "/usr/lib/sdk/vala-nightly/lib/pkgconfig/:/usr/lib/sdk/vala/lib/pkgconfig/"
+  prepend-path: "/usr/lib/sdk/vala-nightly/bin/:/usr/lib/sdk/vala/bin/"
+cleanup:
+  - "/share/info"
+  - "/share/man"
+  - "/share/doc"
+  - "/share/gir-1.0"
+  - "/lib/girepository-1.0"
+  - "/share/aclocal"
+  - "/include"
+  - "/lib/pkgconfig"
+  - "*.la"
+  - "/share/vala/Makefile.vapigen"
+  - "/lib/libgvpr.so*"
+  - "/share/graphviz/gvpr"
+modules:
+  - name: valac
+    buildsystem: autotools
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/gnome/vala.git
+        branch: main
+        disable-shallow-clone: true
+    run-tests: false
+    modules:
+      - name: graphviz
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: "https://gitlab.com/graphviz/graphviz/-/archive/7.1.0/graphviz-7.1.0.tar.gz"
+            sha256: "8b28a283644a8442e6925b15d95055228d25172c7c30681810625616cbb23913"
+            x-checker-data:
+              type: anitya
+              project-id: 1249
+              stable-only: true
+              url-template: "https://gitlab.com/graphviz/graphviz/-/archive/$version/graphviz-$version.tar.gz"
+        cleanup: ["/include", "*.pc", "/share/graphviz/doc", "/bin"]
+      - name: dbus-run-session
+        sources:
+          - type: archive
+            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.15.4/dbus-dbus-1.15.4.tar.gz"
+            sha256: "dc31de363ae150d3caef7a5b5afd0b1205c74a743fe17a446a2f049a1dde5e60"
+            x-checker-data:
+              type: anitya
+              project-id: 5356
+              stable-only: true
+              url-template: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-$version/dbus-dbus-$version.tar.gz"
+        buildsystem: autotools
+        cleanup: ["*"]
+  - name: vls
+    buildsystem: meson
+    sources:
+      - type: git
+        url: "https://github.com/vala-lang/vala-language-server.git"
+        branch: "master"
+    build-options:
+      env:
+        {
+          XDG_DATA_DIRS: "/usr/lib/sdk/vala/share/:/usr/lib/sdk/vala-nightly/share/",
+        }
+    modules:
+      - name: jsonrpc
+        buildsystem: meson
+        sources:
+          - type: git
+            url: "https://gitlab.gnome.org/GNOME/jsonrpc-glib.git"
+            branch: "main"
+      - name: gee
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.6.tar.xz"
+            sha256: "1bf834f5e10d60cc6124d74ed3c1dd38da646787fbf7872220b8b4068e476d4d"
+            x-checker-data:
+              type: gnome
+              name: libgee
+              stable-only: true
+      - name: uncrustify
+        buildsystem: cmake-ninja
+        config-opts:
+          - "-DCMAKE_BUILD_TYPE=Release"
+        builddir: true
+        sources:
+          - type: archive
+            url: "https://github.com/uncrustify/uncrustify/archive/uncrustify-0.75.1.tar.gz"
+            sha256: "fd14acc0a31ed88b33137bdc26d32964327488c835f885696473ef07caf2e182"
+  - name: scripts
+    buildsystem: simple
+    sources:
+      - type: script
+        commands:
+          - export PATH=/usr/lib/sdk/vala-nightly/bin/:$PATH
+          - export LD_LIBRARY_PATH=/usr/lib/sdk/vala-nightly/lib/:$LD_LIBRARY_PATH
+        dest-filename: "enable.sh"
+    build-commands:
+      - cp enable.sh /usr/lib/sdk/vala-nightly/
+  - name: appdata
+    buildsystem: simple
+    sources:
+      - type: file
+        path: "org.freedesktop.Sdk.Extension.vala-nightly.appdata.xml"
+    build-commands:
+      - mkdir -p ${FLATPAK_DEST}/share/metainfo
+      - cp ${FLATPAK_ID}.appdata.xml ${FLATPAK_DEST}/share/metainfo
+      - appstream-compose --basename ${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak
+        ${FLATPAK_ID}

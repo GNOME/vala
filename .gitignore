@@ -12,7 +12,13 @@ Makefile
 .libs
 libvala-*.vapi
 
-build-aux
+build-aux/compile
+build-aux/depcomp
+build-aux/install-sh
+build-aux/ltmain.sh
+build-aux/missing
+build-aux/test-driver
+build-aux/ylwrap
 config.*
 aclocal.m4
 autom4te.cache
@@ -40,3 +46,5 @@ Makecache
 
 *.dll
 *.exe
+
+.flatpak-builder

@@ -1,0 +1,41 @@
+{
+    "id": "dev.vala.valac",
+    "runtime": "org.gnome.Platform",
+    "sdk": "org.gnome.Sdk",
+    "runtime-version": "44",
+    "sdk-extensions" : [
+        "org.freedesktop.Sdk.Extension.vala"
+    ],
+    "build-options": {
+        "append-path" : "/usr/lib/sdk/vala/bin",
+        "append-ld-library-path" : "/usr/lib/sdk/vala/lib"
+    },
+    "command": "valac",
+    "modules": [
+        {
+            "name": "valac",
+            "buildsystem": "autotools",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/gnome/vala",
+                    "branch": "main"
+                }
+            ],
+            "run-tests": true,
+            "modules": [
+                {
+                    "name": "graphviz",
+                    "buildsystem": "autotools",
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://gitlab.com/graphviz/graphviz/-/archive/7.1.0/graphviz-7.1.0.tar.gz",
+                            "sha256": "8b28a283644a8442e6925b15d95055228d25172c7c30681810625616cbb23913"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
