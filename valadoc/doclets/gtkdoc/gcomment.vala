@@ -71,7 +71,7 @@ public class Gtkdoc.GComment {
 			builder.append_printf ("\n * @short_description: %s", commentize (brief_comment));
 		}
 
-		headers.sort ((CompareDataFunc) Header.cmp);
+		headers.sort ((CompareDataFunc<Header>) Header.cmp);
 		foreach (var header in headers) {
 			builder.append_printf ("\n * @%s:", header.name);
 			if (header.annotations != null && header.annotations.length > 0) {
@@ -167,7 +167,7 @@ public class Gtkdoc.GComment {
 			builder.append (long_comment);
 		}
 
-		headers.sort ((CompareDataFunc) Header.cmp);
+		headers.sort ((CompareDataFunc<Header>) Header.cmp);
 		if (headers.size > 0 || returns != null) {
 			builder.append ("""<variablelist role="params">""");
 			foreach (var header in headers) {

@@ -306,7 +306,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void fetch_subnamespace_names (Api.Node node, Vala.ArrayList<Namespace> namespaces) {
 		var children = node.get_children_by_type (Api.NodeType.NAMESPACE);
-		children.sort ((CompareDataFunc) Api.Node.compare_to);
+		children.sort ((CompareDataFunc<Api.Node>) Api.Node.compare_to);
 		foreach (Api.Node child in children) {
 			namespaces.add ((Namespace) child);
 			this.fetch_subnamespace_names (child, namespaces);
@@ -388,7 +388,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_navi_children (Api.Node node, Api.NodeType type, Api.Node? parent) {
 		var children = node.get_children_by_type (type);
-		children.sort ((CompareDataFunc) Api.Node.compare_to);
+		children.sort ((CompareDataFunc<Api.Node>) Api.Node.compare_to);
 		foreach (Api.Node child in children) {
 			write_navi_entry (child, parent, cssresolver.resolve (child), child != parent);
 		}
@@ -628,7 +628,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			return ;
 		}
 
-		nodes.sort ((CompareDataFunc) Api.Node.compare_to);
+		nodes.sort ((CompareDataFunc<Api.Node>) Api.Node.compare_to);
 
 		// Box:
 		var html_id = "box-content-" + html_id_counter.to_string ();
@@ -985,7 +985,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		if (children.size > 0) {
 			// Follow Vala.Codewriter.visit_struct() and don't sort struct fields
 			if (!(node is Api.Struct && type == Api.NodeType.FIELD)) {
-				children.sort ((CompareDataFunc) Api.Node.compare_to);
+				children.sort ((CompareDataFunc<Api.Node>) Api.Node.compare_to);
 			}
 			writer.start_tag ("h3", {"class", css_title})
 				.text (type_string)
