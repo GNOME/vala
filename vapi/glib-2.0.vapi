@@ -2836,12 +2836,17 @@ namespace GLib {
 		UNHANDLED
 	}
 
-	[CCode (has_type_id = false, simple_generics = true)]
+	[CCode (has_type_id = false)]
 	[Version (since = "2.50")]
-	public struct LogField<T> {
+	public struct LogField {
 		public unowned string key;
-		public unowned T @value;
-		public ssize_t length;
+		[CCode (array_length_cname = "length", array_length_type = "gssize")]
+		public unowned uint8[] @value;
+		[CCode (cname = "vala_g_log_field_get_value_as_string")]
+		public unowned string get_value_as_string () {
+			assert (@value.length < 0);
+			return (string) @value;
+		}
 	}
 
 	public void logv (string? log_domain, LogLevelFlags log_level, string format, va_list args);
