@@ -676,12 +676,8 @@ public abstract class Vala.DataType : CodeNode {
 		int n_type_args = get_type_arguments ().size;
 		int expected_n_type_args = 0;
 
-		if (type_symbol is ObjectTypeSymbol) {
-			expected_n_type_args = ((ObjectTypeSymbol) type_symbol).get_type_parameters ().size;
-		} else if (type_symbol is Struct) {
-			expected_n_type_args = ((Struct) type_symbol).get_type_parameters ().size;
-		} else if (type_symbol is Delegate) {
-			expected_n_type_args = ((Delegate) type_symbol).get_type_parameters ().size;
+		if (type_symbol is GenericSymbol) {
+			expected_n_type_args = ((GenericSymbol) type_symbol).get_type_parameters ().size;
 		} else if (n_type_args > 0) {
 			Report.error (source_reference, "`%s' does not support type arguments", type_symbol.get_full_name ());
 			error = true;

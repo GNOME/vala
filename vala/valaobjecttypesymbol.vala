@@ -28,7 +28,7 @@
  * be defined in Vala source code or imported from an external library with a
  * Vala API file.
  */
-public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
+public abstract class Vala.ObjectTypeSymbol : TypeSymbol, GenericSymbol {
 	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private List<Symbol> members = new ArrayList<Symbol> ();

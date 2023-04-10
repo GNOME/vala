@@ -27,7 +27,7 @@ using GLib;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : Subroutine, Callable {
+public class Vala.Method : Subroutine, Callable, GenericSymbol {
 	List<TypeParameter> type_parameters;
 
 	/**

@@ -93,6 +93,7 @@ libvala_la_VALASOURCES = \
 	valagirparser.vala \
 	valagenericdestroyfield.vala \
 	valagenericdupfield.vala \
+	valagenericsymbol.vala \
 	valagenerictype.vala \
 	valagenieparser.vala \
 	valageniescanner.vala \

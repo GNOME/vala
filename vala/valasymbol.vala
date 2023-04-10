@@ -511,14 +511,8 @@ public abstract class Vala.Symbol : CodeNode {
 		var builder = new StringBuilder (get_full_name ());
 
 		unowned List<TypeParameter>? type_params = null;
-		if (this is Delegate) {
-			type_params = ((Delegate) this).get_type_parameters ();
-		} else if (this is Method) {
-			type_params = ((Method) this).get_type_parameters ();
-		} else if (this is ObjectTypeSymbol) {
-			type_params = ((ObjectTypeSymbol) this).get_type_parameters ();
-		} else if (this is Struct) {
-			type_params = ((Struct) this).get_type_parameters ();
+		if (this is GenericSymbol) {
+			type_params = ((GenericSymbol) this).get_type_parameters ();
 		}
 		if (type_params != null && type_params.size > 0) {
 			builder.append_c ('<');
