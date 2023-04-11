@@ -1043,7 +1043,8 @@ public class Vala.Method : Subroutine, Callable {
 		if (overrides && base_method == null && base_interface_method != null && base_interface_method.is_abstract) {
 			Report.warning (source_reference, "`override' not required to implement `abstract' interface method `%s'", base_interface_method.get_full_name ());
 			overrides = false;
-		} else if (overrides && base_method == null && base_interface_method == null) {
+		} else if (!error && overrides && base_method == null && base_interface_method == null) {
+			error = true;
 			Report.error (source_reference, "`%s': no suitable method found to override", get_full_name ());
 		} else if ((is_abstract || is_virtual || overrides) && access == SymbolAccessibility.PRIVATE) {
 			error = true;
