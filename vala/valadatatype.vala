@@ -707,6 +707,8 @@ public abstract class Vala.DataType : CodeNode {
 			error = true;
 			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.to_string ());
 			return false;
+		} else if (context.pedantic && n_type_args < expected_n_type_args) {
+			Report.warning (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
 		}
 
 		foreach (DataType type in get_type_arguments ()) {
