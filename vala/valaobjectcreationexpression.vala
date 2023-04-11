@@ -248,6 +248,18 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 			type_reference.add_type_argument (type_arg);
 		}
 
+		if (!type_reference.check (context)) {
+			error = true;
+			return false;
+		}
+
+		context.analyzer.check_type (type_reference);
+		// check whether there is the expected amount of type-arguments
+		if (!type_reference.check_type_arguments (context)) {
+			error = true;
+			return false;
+		}
+
 		value_type = type_reference.copy ();
 		value_type.value_owned = true;
 
@@ -323,12 +335,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				Report.error (source_reference, "`%s' does not have a default constructor", st.get_full_name ());
 				return false;
 			}
-		}
-
-		// check whether there is the expected amount of type-arguments
-		if (!type_reference.check_type_arguments (context)) {
-			error = true;
-			return false;
 		}
 
 		if (symbol_reference == null && argument_list.size != 0) {
@@ -432,10 +438,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			context.analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), argument_list);
 		} else if (type_reference is ErrorType) {
-			if (type_reference != null) {
-				type_reference.check (context);
-			}
-
 			if (member_name != null) {
 				member_name.check (context);
 			}
@@ -485,10 +487,6 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (type_reference, type_reference.get_type_arguments (), this);
 				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
 			}
-		}
-
-		if (!type.external_package) {
-			context.analyzer.check_type (type_reference);
 		}
 
 		// Unwrap chained member initializers
