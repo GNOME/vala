@@ -443,7 +443,14 @@ public class Vala.Scanner {
 				if (matches (begin, "using")) return TokenType.USING;
 				break;
 			case 'w':
-				if (matches (begin, "while")) return TokenType.WHILE;
+				switch (begin[2]) {
+				case 'e':
+					if (matches (begin, "where")) return TokenType.WHERE;
+					break;
+				case 'i':
+					if (matches (begin, "while")) return TokenType.WHILE;
+					break;
+				}
 				break;
 			case 'y':
 				if (matches (begin, "yield")) return TokenType.YIELD;
