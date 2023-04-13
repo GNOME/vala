@@ -632,7 +632,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public AtomicQueue (uint initial_size);
 		public uint length ();
-		public unowned T peek<T> ();
+		public unowned T? peek<T> ();
 		public T pop ();
 		public void push (owned T data);
 		public void @ref ();
