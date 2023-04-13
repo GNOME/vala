@@ -1,0 +1,11 @@
+Invalid Code
+
+interface IFoo {
+}
+
+class Foo<T> {
+}
+
+void main () {
+	var foo = new Foo<IFoo> ();
+}

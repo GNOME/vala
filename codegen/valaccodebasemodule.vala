@@ -3519,7 +3519,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 					unref_function = get_ccode_unref_function ((ObjectTypeSymbol) type.type_symbol);
 					if (type.type_symbol is Interface && unref_function == null) {
 						Report.error (type.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure", type.type_symbol.get_full_name ());
-						return null;
+						return new CCodeInvalidExpression ();
 					}
 				} else {
 					if (get_ccode_is_gboxed (type.type_symbol)) {
@@ -6296,10 +6296,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (!gvalue_boxing && !gvariant_boxing && target_type.value_owned && (!type.value_owned || boxing || unboxing || array_needs_copy) && requires_copy (target_type) && !(type is NullType)) {
 			// need to copy value
 			var copy = (GLibValue) copy_value (result, node);
-			if (target_type.type_symbol is Interface && copy == null) {
-				Report.error (node.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure", target_type.type_symbol.get_full_name ());
-				return result;
-			}
+
 			// need to free old array after copying it
 			if (array_needs_copy && requires_destroy (type)) {
 				result.value_type = type.copy ();

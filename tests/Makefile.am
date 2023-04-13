@@ -1191,6 +1191,7 @@ TESTS = \
 	semantic/initializer-unknown-type.test \
 	semantic/interface-prerequisite-invalid.test \
 	semantic/interface-prerequisite-less-accessible.test \
+	semantic/interface-prerequisite-missing-class.test \
 	semantic/interface-prerequisite-multiple.test \
 	semantic/interface-prerequisite-too-few-type-arguments.test \
 	semantic/interface-prerequisite-too-many-type-arguments.test \
