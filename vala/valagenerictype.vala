@@ -52,6 +52,15 @@ public class Vala.GenericType : DataType {
 		return result;
 	}
 
+	public override bool compatible (DataType target_type) {
+		unowned DataType? constraint_type = type_parameter.type_constraint;
+		if (constraint_type != null) {
+			return constraint_type.compatible (target_type);
+		}
+
+		return base.compatible (target_type);
+	}
+
 	public override DataType get_actual_type (DataType? derived_instance_type, List<DataType>? method_type_arguments, CodeNode? node_reference) {
 		var result = this.copy ();
 

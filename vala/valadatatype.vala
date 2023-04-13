@@ -319,6 +319,10 @@ public abstract class Vala.DataType : CodeNode {
 
 		/* temporarily ignore type parameters */
 		if (target_type is GenericType) {
+			unowned DataType? constraint_type = ((GenericType) target_type).type_parameter.type_constraint;
+			if (constraint_type != null) {
+				return compatible (constraint_type);
+			}
 			return true;
 		}
 
@@ -721,8 +725,17 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 
+		var it = ((GenericSymbol) type_symbol).get_type_parameters ().iterator ();
 		foreach (DataType type in get_type_arguments ()) {
 			if (!type.check (context)) {
+				return false;
+			}
+
+			it.next ();
+			unowned DataType? constraint_type = it.get ().type_constraint;
+			if (constraint_type != null && !type.compatible (constraint_type)) {
+				error = true;
+				Report.error (type.source_reference, "Cannot convert from `%s' to `%s'", type.to_string (), constraint_type.to_string ());
 				return false;
 			}
 		}
