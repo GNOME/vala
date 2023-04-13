@@ -1,0 +1,16 @@
+Invalid Code
+
+class Bar {
+}
+
+class SubBar : Bar {
+}
+
+interface IFoo<G> where G : SubBar {
+}
+
+class Foo<T> : IFoo<T> where T : Bar {
+}
+
+void main () {
+}

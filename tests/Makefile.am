@@ -811,6 +811,7 @@ TESTS = \
 	generics/arrays-not-supported-3.test \
 	generics/class-property-override.vala \
 	generics/constraints.vala \
+	generics/constraints-incompatible.test \
 	generics/constructor-chain-up.vala \
 	generics/delegate-return-type-missing.test \
 	generics/floating-type-cast.vala \
