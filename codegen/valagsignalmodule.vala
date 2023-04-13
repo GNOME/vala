@@ -605,6 +605,7 @@ public class Vala.GSignalModule : GObjectModule {
 			// Use actual lambda expression if available for proper target/destroy handling
 			if (((Variable) handler.symbol_reference).initializer is LambdaExpression) {
 				handler = ((Variable) handler.symbol_reference).initializer;
+				dt = null;
 			}
 		}
 		var m = handler.symbol_reference as Method;
