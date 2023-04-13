@@ -599,6 +599,7 @@ TESTS = \
 	objects/signals-generic-return.vala \
 	objects/signals-gobject-return.vala \
 	objects/signals-lambda-delegate.vala \
+	objects/signals-lambda-delegate-2.vala \
 	objects/signals-prototype-access.vala \
 	objects/signals-prototype-access-invalid.test \
 	objects/signals-prototype-access-invalid-2.test \
