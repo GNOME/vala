@@ -613,6 +613,12 @@ public class Vala.MethodCall : Expression, CallableExpression {
 							type_arg = m.return_type.infer_type_argument (type_param, target_type);
 						}
 
+						unowned DataType? ct = type_param.type_constraint;
+						if (ct != null) {
+							Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", m.to_string (), type_param.name, ct.to_qualified_string ());
+							type_arg = ct.copy ();
+						}
+
 						if (type_arg == null) {
 							error = true;
 							Report.error (ma.source_reference, "cannot infer generic type argument for type parameter `%s'", type_param.get_full_name ());

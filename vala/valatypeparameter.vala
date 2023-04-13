@@ -26,6 +26,23 @@ using GLib;
  * Represents a generic type parameter in the source code.
  */
 public class Vala.TypeParameter : TypeSymbol {
+	public DataType? type_constraint {
+		get {
+			if (_type_constraint is GenericType) {
+				return ((GenericType) _type_constraint).type_parameter.type_constraint;
+			}
+			return _type_constraint;
+		}
+		set {
+			_type_constraint = value;
+			if (_type_constraint != null) {
+				_type_constraint.parent_node = this;
+			}
+		}
+	}
+
+	DataType? _type_constraint;
+
 	/**
 	 * Creates a new generic type parameter.
 	 *
@@ -40,6 +57,18 @@ public class Vala.TypeParameter : TypeSymbol {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_type_parameter (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		if (_type_constraint != null) {
+			_type_constraint.accept (visitor);
+		}
+	}
+
+	public override void replace_type (DataType old_type, DataType new_type) {
+		if (_type_constraint == old_type) {
+			type_constraint = new_type;
+		}
 	}
 
 	/**

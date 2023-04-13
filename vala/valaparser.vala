@@ -305,6 +305,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.VOID:
 		case TokenType.VOLATILE:
 		case TokenType.WEAK:
+		case TokenType.WHERE:
 		case TokenType.WHILE:
 		case TokenType.WITH:
 		case TokenType.YIELD:
@@ -2767,6 +2768,29 @@ public class Vala.Parser : CodeVisitor {
 					break;
 				}
 				break;
+			case TokenType.WHERE:
+				next ();
+				if (accept (TokenType.OPEN_PARENS)) {
+					rollback (begin);
+					parse_method_declaration (parent, attrs);
+					return;
+				} else {
+					rollback (begin);
+					switch (last_keyword) {
+					case TokenType.CLASS:
+						parse_class_declaration (parent, attrs);
+						return;
+					case TokenType.INTERFACE:
+						parse_interface_declaration (parent, attrs);
+						return;
+					case TokenType.STRUCT:
+						parse_struct_declaration (parent, attrs);
+						return;
+					default:
+						break;
+					}
+				}
+				break;
 			case TokenType.OPEN_PARENS:
 				rollback (begin);
 				if (!(parent is TypeSymbol)) {
@@ -2892,6 +2916,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.STRUCT:
 			case TokenType.VIRTUAL:
 			case TokenType.VOLATILE:
+			case TokenType.WHERE:
 				return RecoveryState.DECLARATION_BEGIN;
 			case TokenType.BREAK:
 			case TokenType.CONTINUE:
@@ -2983,6 +3008,7 @@ public class Vala.Parser : CodeVisitor {
 				base_types.add (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
+		parse_type_parameter_constraints (type_param_list);
 
 		var cl = new Class (sym.name, get_src (begin), comment);
 		cl.access = access;
@@ -3301,6 +3327,7 @@ public class Vala.Parser : CodeVisitor {
 			method.add_postcondition (parse_expression ());
 			expect (TokenType.CLOSE_PARENS);
 		}
+		parse_type_parameter_constraints (type_param_list);
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
 			method.external = false;
@@ -3517,6 +3544,8 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.COLON)) {
 			base_type = parse_type (true, false);
 		}
+		parse_type_parameter_constraints (type_param_list);
+
 		var st = new Struct (sym.name, get_src (begin), comment);
 		st.access = access;
 		if (ModifierFlags.EXTERN in flags) {
@@ -3560,6 +3589,8 @@ public class Vala.Parser : CodeVisitor {
 				base_types.add (type);
 			} while (accept (TokenType.COMMA));
 		}
+		parse_type_parameter_constraints (type_param_list);
+
 		var iface = new Interface (sym.name, get_src (begin), comment);
 		iface.access = access;
 		if (ModifierFlags.EXTERN in flags) {
@@ -3960,6 +3991,7 @@ public class Vala.Parser : CodeVisitor {
 				d.add_error_type (parse_type (true, false));
 			} while (accept (TokenType.COMMA));
 		}
+		parse_type_parameter_constraints (type_param_list);
 		expect (TokenType.SEMICOLON);
 
 		Symbol result = d;
@@ -3991,6 +4023,36 @@ public class Vala.Parser : CodeVisitor {
 				_empty_type_parameter_list = new ArrayList<TypeParameter> ();
 			}
 			return _empty_type_parameter_list;
+		}
+	}
+
+	void parse_type_parameter_constraints (List<TypeParameter> type_params) throws ParseError {
+		while (accept (TokenType.WHERE)) {
+			var begin = get_location ();
+			string id = parse_identifier ();
+			TypeParameter? type_param = null;
+			foreach (var t in type_params) {
+				if (t.name == id) {
+					type_param = t;
+					break;
+				}
+			}
+			if (type_param == null) {
+				Report.error (get_src (begin), "Unknown type parameter `%s'", id);
+				type_param = new TypeParameter (id, get_src (begin));
+				type_param.error = true;
+			}
+			expect (TokenType.COLON);
+			do {
+				/*
+				where T : <base class name>
+				where T : <interface name>
+				where T : U
+				*/
+				begin = get_location ();
+				var type = parse_type (true, false);
+				type_param.type_constraint = type;
+			} while (accept (TokenType.COMMA));
 		}
 	}
 

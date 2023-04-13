@@ -250,6 +250,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 		d.accept_children (this);
 	}
 
+	public override void visit_type_parameter (TypeParameter p) {
+		if (p.checked) {
+			return;
+		}
+		p.accept_children (this);
+	}
+
 	public override void visit_block (Block b) {
 		if (b.checked) {
 			return;

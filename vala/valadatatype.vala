@@ -570,7 +570,7 @@ public abstract class Vala.DataType : CodeNode {
 			}
 		}
 
-		return null;
+		return get_constrained_type (type_param);
 	}
 
 	/**
@@ -699,9 +699,22 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if ((!allow_none || n_type_args > 0) && n_type_args < expected_n_type_args) {
-			error = true;
-			Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
-			return false;
+			var type_params = ((GenericSymbol) type_symbol).get_type_parameters ();
+			bool mitigated = true;
+			foreach (var t in type_params) {
+				var ct = get_constrained_type (t);
+				if (ct != null) {
+					Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", type_symbol.to_string (), t.name, ct.to_qualified_string ());
+					add_type_argument (ct);
+				} else {
+					mitigated = false;
+				}
+			}
+			if (!mitigated) {
+				error = true;
+				Report.error (source_reference, "too few type arguments for `%s'", type_symbol.to_string ());
+				return false;
+			}
 		} else if ((!allow_none || n_type_args > 0) && n_type_args > expected_n_type_args) {
 			error = true;
 			Report.error (source_reference, "too many type arguments for `%s'", type_symbol.to_string ());
@@ -715,5 +728,14 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		return true;
+	}
+
+	DataType? get_constrained_type (TypeParameter type_param) {
+		unowned DataType? type = type_param.type_constraint;
+		if (type != null) {
+			return type.copy ();
+		}
+
+		return null;
 	}
 }
