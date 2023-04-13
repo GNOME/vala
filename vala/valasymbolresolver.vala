@@ -473,15 +473,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		type.source_reference = unresolved_type.source_reference;
 		type.value_owned = unresolved_type.value_owned;
+		type.nullable = unresolved_type.nullable;
 		sym.used = true;
-
-		if (type is GenericType) {
-			// type parameters are always considered nullable
-			// actual type argument may or may not be nullable
-			type.nullable = true;
-		} else {
-			type.nullable = unresolved_type.nullable;
-		}
 
 		type.is_dynamic = unresolved_type.is_dynamic;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {

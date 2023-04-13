@@ -40,7 +40,7 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public class GenericsTest<G,T> {
 		public GenericsTest (owned GirTest.DelegateTest cb);
-		public void method (T param);
+		public void method (T? param);
 		public GenericsTest.typed (owned GirTest.DelegateGenericsTest<G,T> cb);
 	}
 	[CCode (cheader_filename = "girtest.h")]
@@ -258,7 +258,7 @@ namespace GirTest {
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateErrorTest () throws GirTest.ErrorTest;
 	[CCode (cheader_filename = "girtest.h")]
-	public delegate bool DelegateGenericsTest<G,T> (G g, T t);
+	public delegate bool DelegateGenericsTest<G,T> (G g, T? t);
 	[CCode (cheader_filename = "girtest.h")]
 	public delegate bool DelegateTest (void* a, void* b);
 	[CCode (cheader_filename = "girtest.h")]

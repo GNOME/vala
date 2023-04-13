@@ -40,8 +40,6 @@ public class Vala.GenericType : DataType {
 
 	public GenericType (TypeParameter type_parameter, SourceReference? source_reference = null) {
 		base.with_symbol (type_parameter, source_reference);
-		// type parameters are always considered nullable
-		this.nullable = true;
 	}
 
 	public override DataType copy () {
@@ -62,6 +60,9 @@ public class Vala.GenericType : DataType {
 		}
 
 		result = SemanticAnalyzer.get_actual_type (derived_instance_type, method_type_arguments, (GenericType) result, node_reference);
+		if (!result.is_non_null_simple_type ()) {
+			result.nullable = result.nullable || nullable;
+		}
 
 		return result;
 	}
@@ -77,7 +78,7 @@ public class Vala.GenericType : DataType {
 	}
 
 	public override string to_qualified_string (Scope? scope = null) {
-		return type_parameter.name;
+		return "%s%s".printf (type_parameter.name, nullable ? "?" : "");
 	}
 
 	public override Symbol? get_member (string member_name) {

@@ -204,7 +204,11 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 		if (type2.nullable != nullable) {
-			return false;
+			//TODO Allow equality between nullable and non-nullable generic-types
+			// This mitigation allows fixing affected source code without breaking it.
+			// It has to be removed at some point
+			var context = CodeContext.get ();
+			return !context.experimental_non_null && this is GenericType == type2 is GenericType;
 		}
 		if (type2.type_symbol != type_symbol) {
 			return false;

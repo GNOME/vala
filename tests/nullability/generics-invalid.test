@@ -1,0 +1,16 @@
+Invalid Code
+
+G? foo<G> () {
+	return null;
+}
+
+void manam<K> (K k) {
+}
+
+void bar<T> () {
+	T t = foo<T> ();
+	manam (t);
+}
+
+void main () {
+}

@@ -2935,7 +2935,7 @@
 			<parameter name="t_destroy_func" transfer-ownership="none">
 				<type name="GLib.DestroyNotify" c:type="GDestroyNotify"/>
 			</parameter>
-			<parameter name="g" transfer-ownership="none" nullable="1">
+			<parameter name="g" transfer-ownership="none">
 				<type name="gpointer" c:type="gpointer"/>
 			</parameter>
 			<parameter name="t" transfer-ownership="none" nullable="1">

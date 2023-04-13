@@ -620,6 +620,7 @@ public class Vala.MemberAccess : Expression {
 		} else if (symbol_reference.error) {
 			//ignore previous error
 			error = true;
+			value_type = new InvalidType ();
 			return false;
 		}
 

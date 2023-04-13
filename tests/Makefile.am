@@ -801,6 +801,7 @@ TESTS = \
 	generics/constructor-chain-up.vala \
 	generics/delegate-return-type-missing.test \
 	generics/floating-type-cast.vala \
+	generics/foreach-iterator-nullable.vala \
 	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
 	generics/inference-static-function.vala \
@@ -1361,6 +1362,8 @@ TESTS = \
 	nullability/array-element-class.vala \
 	nullability/array-element-string.vala \
 	nullability/bug611223.vala \
+	nullability/generics-invalid.test \
+	nullability/generics.vala \
 	nullability/local-variable-invalid-convert.test \
 	nullability/member-access-narrowed-instance.vala \
 	nullability/member-access-nullable-instance.test \
