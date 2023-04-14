@@ -107,6 +107,9 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 
 	protected override string? get_method_comment (Vala.Method vm) {
 		Method m = resolver.resolve (vm) as Method;
+		if (m == null) {
+			return null;
+		}
 		return translate (m.documentation);
 	}
 
