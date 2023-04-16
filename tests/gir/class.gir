@@ -14,6 +14,9 @@
 </alias>
 <class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
   <implements name="Test.IFoo"/>
+  <field name="parent_instance">
+    <type name="GObject.Object" c:type="GObject"/>
+  </field>
   <method name="method_virtual" c:identifier="test_foo_method_virtual" throws="1">
     <return-value transfer-ownership="full">
       <type name="none"/>
