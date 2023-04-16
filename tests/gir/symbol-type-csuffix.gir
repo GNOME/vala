@@ -7,6 +7,9 @@
 <c:include name="test.h"/>
 <namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
 <class name="TypeFoo" c:type="TestTypeFoo" glib:type-name="TestTypeFoo" glib:get-type="test_foo_get_type" glib:type-struct="TypeFooClass" parent="GObject.Object">
+  <field name="parent_instance">
+    <type name="GObject.Object" c:type="GObject"/>
+  </field>
   <constructor name="new" c:identifier="test_type_foo_new">
     <return-value transfer-ownership="full">
       <type name="Test.TypeFoo" c:type="TestTypeFoo*"/>
