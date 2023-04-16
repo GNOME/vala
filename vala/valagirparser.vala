@@ -3137,6 +3137,16 @@ public class Vala.GirParser : CodeVisitor {
 			pop_metadata ();
 		}
 
+		// There is no instance field therefore this type might be final/sealed
+		if (first_field && !cl.is_abstract && !(cl.is_opaque || cl.is_sealed)) {
+			if (!cl.is_compact
+			    && !metadata.has_argument (ArgumentType.ABSTRACT)
+			    && !metadata.has_argument (ArgumentType.COMPACT)
+			    && !metadata.has_argument (ArgumentType.SEALED)) {
+				cl.is_sealed = true;
+			}
+		}
+
 		pop_node ();
 		end_element ("class");
 	}
