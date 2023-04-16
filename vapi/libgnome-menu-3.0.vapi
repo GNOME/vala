@@ -3,7 +3,7 @@
 [CCode (cprefix = "GMenu", gir_namespace = "GMenu", gir_version = "3.0", lower_case_cprefix = "gmenu_")]
 namespace GMenu {
 	[CCode (cheader_filename = "gmenu-tree.h", type_id = "gmenu_tree_get_type ()")]
-	public class Tree : GLib.Object {
+	public sealed class Tree : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Tree (string menu_basename, GMenu.TreeFlags flags);
 		[CCode (has_construct_function = false)]

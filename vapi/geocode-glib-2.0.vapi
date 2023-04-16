@@ -86,7 +86,7 @@ namespace Geocode {
 	}
 	[CCode (cheader_filename = "geocode-glib/geocode-glib.h", type_id = "geocode_mock_backend_get_type ()")]
 	[Version (since = "3.23.1")]
-	public class MockBackend : GLib.Object, Geocode.Backend {
+	public sealed class MockBackend : GLib.Object, Geocode.Backend {
 		[CCode (has_construct_function = false)]
 		public MockBackend ();
 		public void add_forward_result (GLib.HashTable<string,GLib.Value?> @params, GLib.List<Geocode.Place>? results, GLib.Error? error);

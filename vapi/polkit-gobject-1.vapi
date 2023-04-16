@@ -3,7 +3,7 @@
 [CCode (cprefix = "Polkit", gir_namespace = "Polkit", gir_version = "1.0", lower_case_cprefix = "polkit_")]
 namespace Polkit {
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_action_description_get_type ()")]
-	public class ActionDescription : GLib.Object {
+	public sealed class ActionDescription : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ActionDescription ();
 		public unowned string get_action_id ();
@@ -20,7 +20,7 @@ namespace Polkit {
 		public unowned string get_vendor_url ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_authority_get_type ()")]
-	public class Authority : GLib.Object, GLib.AsyncInitable, GLib.Initable {
+	public sealed class Authority : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (has_construct_function = false)]
 		protected Authority ();
 		public async bool authentication_agent_response (string cookie, Polkit.Identity identity, GLib.Cancellable? cancellable = null) throws GLib.Error;
@@ -55,7 +55,7 @@ namespace Polkit {
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_authorization_result_get_type ()")]
-	public class AuthorizationResult : GLib.Object {
+	public sealed class AuthorizationResult : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public AuthorizationResult (bool is_authorized, bool is_challenge, Polkit.Details? details);
 		public unowned Polkit.Details? get_details ();
@@ -67,7 +67,7 @@ namespace Polkit {
 		public unowned string? get_temporary_authorization_id ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_details_get_type ()")]
-	public class Details : GLib.Object {
+	public sealed class Details : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Details ();
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -76,7 +76,7 @@ namespace Polkit {
 		public unowned string? lookup (string key);
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_permission_get_type ()")]
-	public class Permission : GLib.Permission, GLib.AsyncInitable, GLib.Initable {
+	public sealed class Permission : GLib.Permission, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "polkit_permission_new", has_construct_function = false)]
 		public async Permission (string action_id, Polkit.Subject? subject, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public unowned string get_action_id ();
@@ -87,7 +87,7 @@ namespace Polkit {
 		public Polkit.Subject subject { get; construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_system_bus_name_get_type ()")]
-	public class SystemBusName : GLib.Object, Polkit.Subject {
+	public sealed class SystemBusName : GLib.Object, Polkit.Subject {
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
 		public SystemBusName (string name);
 		public unowned string get_name ();
@@ -97,7 +97,7 @@ namespace Polkit {
 		public string name { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_temporary_authorization_get_type ()")]
-	public class TemporaryAuthorization : GLib.Object {
+	public sealed class TemporaryAuthorization : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected TemporaryAuthorization ();
 		public unowned string get_action_id ();
@@ -107,7 +107,7 @@ namespace Polkit {
 		public uint64 get_time_obtained ();
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_group_get_type ()")]
-	public class UnixGroup : GLib.Object, Polkit.Identity {
+	public sealed class UnixGroup : GLib.Object, Polkit.Identity {
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
 		public UnixGroup (int gid);
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
@@ -117,7 +117,7 @@ namespace Polkit {
 		public int gid { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_netgroup_get_type ()")]
-	public class UnixNetgroup : GLib.Object, Polkit.Identity {
+	public sealed class UnixNetgroup : GLib.Object, Polkit.Identity {
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
 		public UnixNetgroup (string name);
 		public unowned string get_name ();
@@ -125,7 +125,7 @@ namespace Polkit {
 		public string name { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_process_get_type ()")]
-	public class UnixProcess : GLib.Object, Polkit.Subject {
+	public sealed class UnixProcess : GLib.Object, Polkit.Subject {
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
 		public UnixProcess (int pid);
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
@@ -144,7 +144,7 @@ namespace Polkit {
 		public int uid { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_session_get_type ()")]
-	public class UnixSession : GLib.Object, GLib.AsyncInitable, GLib.Initable, Polkit.Subject {
+	public sealed class UnixSession : GLib.Object, GLib.AsyncInitable, GLib.Initable, Polkit.Subject {
 		[CCode (has_construct_function = false, type = "PolkitSubject*")]
 		public UnixSession (string session_id);
 		[CCode (has_construct_function = false, type = "void")]
@@ -158,7 +158,7 @@ namespace Polkit {
 		public string session_id { get; set construct; }
 	}
 	[CCode (cheader_filename = "polkit/polkit.h", type_id = "polkit_unix_user_get_type ()")]
-	public class UnixUser : GLib.Object, Polkit.Identity {
+	public sealed class UnixUser : GLib.Object, Polkit.Identity {
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]
 		public UnixUser (int uid);
 		[CCode (has_construct_function = false, type = "PolkitIdentity*")]

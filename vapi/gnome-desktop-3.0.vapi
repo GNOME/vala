@@ -43,7 +43,7 @@ namespace Gnome {
 		public static bool parse_locale (string locale, out string language_codep, out string? country_codep, out string? codesetp, out string? modifierp);
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-bg.h", type_id = "gnome_bg_get_type ()")]
-	public class BG : GLib.Object {
+	public sealed class BG : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public BG ();
 		public bool changes_with_time ();

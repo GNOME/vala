@@ -5,13 +5,13 @@ namespace Gdk {
 	namespace X11 {
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_app_launch_context_get_type ()")]
 		[GIR (name = "X11AppLaunchContext")]
-		public class AppLaunchContext : Gdk.AppLaunchContext {
+		public sealed class AppLaunchContext : Gdk.AppLaunchContext {
 			[CCode (has_construct_function = false)]
 			protected AppLaunchContext ();
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_device_manager_xi2_get_type ()")]
 		[GIR (name = "X11DeviceManagerXI2")]
-		public class DeviceManagerXI2 : GLib.Object {
+		public sealed class DeviceManagerXI2 : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected DeviceManagerXI2 ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
@@ -27,7 +27,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_device_xi2_get_type ()")]
 		[GIR (name = "X11DeviceXI2")]
-		public class DeviceXI2 : Gdk.Device {
+		public sealed class DeviceXI2 : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected DeviceXI2 ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_get_id")]
@@ -37,7 +37,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_display_get_type ()")]
 		[GIR (name = "X11Display")]
-		public class Display : Gdk.Display {
+		public sealed class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
 			protected Display ();
 			public void broadcast_startup_message (string message_type, ...);
@@ -80,7 +80,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_drag_get_type ()")]
 		[GIR (name = "X11Drag")]
-		public class Drag : Gdk.Drag {
+		public sealed class Drag : Gdk.Drag {
 			[CCode (has_construct_function = false)]
 			protected Drag ();
 		}
@@ -92,7 +92,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_monitor_get_type ()")]
 		[GIR (name = "X11Monitor")]
-		public class Monitor : Gdk.Monitor {
+		public sealed class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
 			protected Monitor ();
 			public X.ID get_output ();
@@ -100,7 +100,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
 		[GIR (name = "X11Screen")]
-		public class Screen : GLib.Object {
+		public sealed class Screen : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected Screen ();
 			public uint32 get_current_desktop ();
@@ -114,7 +114,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_surface_get_type ()")]
 		[GIR (name = "X11Surface")]
-		public class Surface : Gdk.Surface {
+		public sealed class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
 			public uint32 get_desktop ();

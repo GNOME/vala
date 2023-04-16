@@ -12,7 +12,7 @@ namespace PolkitAgent {
 		public static void unregister (void* registration_handle);
 	}
 	[CCode (cheader_filename = "polkitagent/polkitagent.h", type_id = "polkit_agent_session_get_type ()")]
-	public class Session : GLib.Object {
+	public sealed class Session : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Session (Polkit.Identity identity, string cookie);
 		public void cancel ();
@@ -28,7 +28,7 @@ namespace PolkitAgent {
 		public signal void show_info (string text);
 	}
 	[CCode (cheader_filename = "polkitagent/polkitagent.h", type_id = "polkit_agent_text_listener_get_type ()")]
-	public class TextListener : PolkitAgent.Listener, GLib.Initable {
+	public sealed class TextListener : PolkitAgent.Listener, GLib.Initable {
 		[CCode (has_construct_function = false, type = "PolkitAgentListener*")]
 		public TextListener (GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}

@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstWebRTC", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_dtls_transport", type_id = "gst_webrtc_dtls_transport_get_type ()")]
-	public class WebRTCDTLSTransport : Gst.Object {
+	public sealed class WebRTCDTLSTransport : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected WebRTCDTLSTransport ();
 		[NoAccessorMethod]
@@ -155,7 +155,7 @@ namespace Gst {
 		public signal void on_selected_candidate_pair_change ();
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_receiver", type_id = "gst_webrtc_rtp_receiver_get_type ()")]
-	public class WebRTCRTPReceiver : Gst.Object {
+	public sealed class WebRTCRTPReceiver : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPReceiver ();
 		[NoAccessorMethod]
@@ -163,7 +163,7 @@ namespace Gst {
 		public Gst.WebRTCDTLSTransport transport { owned get; }
 	}
 	[CCode (cheader_filename = "gst/webrtc/webrtc.h", lower_case_csuffix = "webrtc_rtp_sender", type_id = "gst_webrtc_rtp_sender_get_type ()")]
-	public class WebRTCRTPSender : Gst.Object {
+	public sealed class WebRTCRTPSender : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected WebRTCRTPSender ();
 		[Version (since = "1.20")]

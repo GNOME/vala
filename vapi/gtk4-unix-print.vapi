@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gtk", gir_namespace = "Gtk", gir_version = "4.0", lower_case_cprefix = "gtk_")]
 namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_page_setup_unix_dialog_get_type ()")]
-	public class PageSetupUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
+	public sealed class PageSetupUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PageSetupUnixDialog (string? title, Gtk.Window? parent);
 		public unowned Gtk.PageSetup get_page_setup ();
@@ -15,7 +15,7 @@ namespace Gtk {
 	public abstract class PrintBackend : GLib.Object {
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_print_job_get_type ()")]
-	public class PrintJob : GLib.Object {
+	public sealed class PrintJob : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public PrintJob (string title, Gtk.Printer printer, Gtk.PrintSettings settings, Gtk.PageSetup page_setup);
 		public bool get_collate ();
@@ -58,7 +58,7 @@ namespace Gtk {
 		public signal void status_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_print_unix_dialog_get_type ()")]
-	public class PrintUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
+	public sealed class PrintUnixDialog : Gtk.Dialog, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Native, Gtk.Root, Gtk.ShortcutManager {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public PrintUnixDialog (string? title, Gtk.Window? parent);
 		public void add_custom_tab (Gtk.Widget child, Gtk.Widget tab_label);
@@ -89,7 +89,7 @@ namespace Gtk {
 		public bool support_selection { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtkunixprint.h", type_id = "gtk_printer_get_type ()")]
-	public class Printer : GLib.Object {
+	public sealed class Printer : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Printer (string name, Gtk.PrintBackend backend, bool virtual_);
 		public int compare (Gtk.Printer b);

@@ -478,7 +478,7 @@ namespace Gtk {
 		public Gtk.Widget accel_widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_accel_map_get_type ()")]
-	public class AccelMap : GLib.Object {
+	public sealed class AccelMap : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected AccelMap ();
 		public static void add_entry (string accel_path, uint accel_key, Gdk.ModifierType accel_mods);
@@ -1974,7 +1974,7 @@ namespace Gtk {
 		protected CheckMenuItemAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_clipboard_get_type ()")]
-	public class Clipboard : GLib.Object {
+	public sealed class Clipboard : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Clipboard ();
 		public void clear ();
@@ -2910,7 +2910,7 @@ namespace Gtk {
 		public Gtk.Widget widget { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_key_get_type ()")]
-	public class EventControllerKey : Gtk.EventController {
+	public sealed class EventControllerKey : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerKey (Gtk.Widget widget);
 		public bool forward (Gtk.Widget widget);
@@ -2928,7 +2928,7 @@ namespace Gtk {
 		public signal bool modifiers (Gdk.ModifierType object);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_motion_get_type ()")]
-	public class EventControllerMotion : Gtk.EventController {
+	public sealed class EventControllerMotion : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		[Version (since = "3.24")]
 		public EventControllerMotion (Gtk.Widget widget);
@@ -2937,7 +2937,7 @@ namespace Gtk {
 		public signal void motion (double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_scroll_get_type ()")]
-	public class EventControllerScroll : Gtk.EventController {
+	public sealed class EventControllerScroll : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		[Version (since = "3.24")]
 		public EventControllerScroll (Gtk.Widget widget, Gtk.EventControllerScrollFlags flags);
@@ -3046,7 +3046,7 @@ namespace Gtk {
 		public FileChooserDialog (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, ...);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_native_get_type ()")]
-	public class FileChooserNative : Gtk.NativeDialog, Gtk.FileChooser {
+	public sealed class FileChooserNative : Gtk.NativeDialog, Gtk.FileChooser {
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.20")]
 		public FileChooserNative (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, string? accept_label, string? cancel_label);
@@ -3084,7 +3084,7 @@ namespace Gtk {
 		public signal void up_folder ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_filter_get_type ()")]
-	public class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
+	public sealed class FileFilter : GLib.InitiallyUnowned, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.4")]
 		public FileFilter ();
@@ -3463,7 +3463,7 @@ namespace Gtk {
 		public signal void update (Gdk.EventSequence? sequence);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_drag_get_type ()")]
-	public class GestureDrag : Gtk.GestureSingle {
+	public sealed class GestureDrag : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureDrag (Gtk.Widget widget);
@@ -3479,7 +3479,7 @@ namespace Gtk {
 		public signal void drag_update (double offset_x, double offset_y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_long_press_get_type ()")]
-	public class GestureLongPress : Gtk.GestureSingle {
+	public sealed class GestureLongPress : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureLongPress (Gtk.Widget widget);
@@ -3491,7 +3491,7 @@ namespace Gtk {
 		public signal void pressed (double x, double y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_multi_press_get_type ()")]
-	public class GestureMultiPress : Gtk.GestureSingle {
+	public sealed class GestureMultiPress : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureMultiPress (Gtk.Widget widget);
@@ -3507,7 +3507,7 @@ namespace Gtk {
 		public signal void stopped ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_pan_get_type ()")]
-	public class GesturePan : Gtk.GestureDrag {
+	public sealed class GesturePan : Gtk.GestureDrag {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GesturePan (Gtk.Widget widget, Gtk.Orientation orientation);
@@ -3521,7 +3521,7 @@ namespace Gtk {
 		public signal void pan (Gtk.PanDirection direction, double offset);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_rotate_get_type ()")]
-	public class GestureRotate : Gtk.Gesture {
+	public sealed class GestureRotate : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureRotate (Gtk.Widget widget);
@@ -3531,7 +3531,7 @@ namespace Gtk {
 		public signal void angle_changed (double angle, double angle_delta);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_single_get_type ()")]
-	public class GestureSingle : Gtk.Gesture {
+	public sealed class GestureSingle : Gtk.Gesture {
 		[CCode (has_construct_function = false)]
 		protected GestureSingle ();
 		[Version (since = "3.14")]
@@ -3558,7 +3558,7 @@ namespace Gtk {
 		public bool touch_only { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_stylus_get_type ()")]
-	public class GestureStylus : Gtk.GestureSingle {
+	public sealed class GestureStylus : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.24")]
 		public GestureStylus (Gtk.Widget widget);
@@ -3574,7 +3574,7 @@ namespace Gtk {
 		public signal void up (double object, double p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_swipe_get_type ()")]
-	public class GestureSwipe : Gtk.GestureSingle {
+	public sealed class GestureSwipe : Gtk.GestureSingle {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureSwipe (Gtk.Widget widget);
@@ -3584,7 +3584,7 @@ namespace Gtk {
 		public signal void swipe (double velocity_x, double velocity_y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_gesture_zoom_get_type ()")]
-	public class GestureZoom : Gtk.Gesture {
+	public sealed class GestureZoom : Gtk.Gesture {
 		[CCode (has_construct_function = false, type = "GtkGesture*")]
 		[Version (since = "3.14")]
 		public GestureZoom (Gtk.Widget widget);
@@ -3839,7 +3839,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_icon_info_get_type ()")]
 	[Version (since = "3.8")]
-	public class IconInfo : GLib.Object {
+	public sealed class IconInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IconInfo ();
 		[CCode (has_construct_function = false)]
@@ -5095,7 +5095,7 @@ namespace Gtk {
 		public int ypad { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_model_button_get_type ()")]
-	public class ModelButton : Gtk.Button, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
+	public sealed class ModelButton : Gtk.Button, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.16")]
 		public ModelButton ();
@@ -5343,7 +5343,7 @@ namespace Gtk {
 		public virtual signal bool get_child_position (Gtk.Widget widget, out Gdk.Rectangle allocation);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_pad_controller_get_type ()")]
-	public class PadController : Gtk.EventController {
+	public sealed class PadController : Gtk.EventController {
 		[CCode (has_construct_function = false)]
 		[Version (since = "3.22")]
 		public PadController (Gtk.Window window, GLib.ActionGroup group, Gdk.Device? pad);
@@ -5357,7 +5357,7 @@ namespace Gtk {
 		public Gdk.Device pad { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_page_setup_get_type ()")]
-	public class PageSetup : GLib.Object {
+	public sealed class PageSetup : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public PageSetup ();
@@ -5529,7 +5529,7 @@ namespace Gtk {
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_places_sidebar_get_type ()")]
-	public class PlacesSidebar : Gtk.ScrolledWindow, Atk.Implementor, Gtk.Buildable {
+	public sealed class PlacesSidebar : Gtk.ScrolledWindow, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.10")]
 		public PlacesSidebar ();
@@ -5705,7 +5705,7 @@ namespace Gtk {
 		protected PopoverAccessible ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_popover_menu_get_type ()")]
-	public class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable {
+	public sealed class PopoverMenu : Gtk.Popover, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.16")]
 		public PopoverMenu ();
@@ -5715,7 +5715,7 @@ namespace Gtk {
 		public string visible_submenu { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_print_context_get_type ()")]
-	public class PrintContext : GLib.Object {
+	public sealed class PrintContext : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PrintContext ();
 		[Version (since = "2.10")]
@@ -5874,7 +5874,7 @@ namespace Gtk {
 		public virtual signal void update_custom_widget (Gtk.Widget widget, Gtk.PageSetup setup, Gtk.PrintSettings settings);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_print_settings_get_type ()")]
-	public class PrintSettings : GLib.Object {
+	public sealed class PrintSettings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public PrintSettings ();
@@ -6341,7 +6341,7 @@ namespace Gtk {
 		public RecentChooserWidget.for_manager (Gtk.RecentManager manager);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_recent_filter_get_type ()")]
-	public class RecentFilter : GLib.InitiallyUnowned, Gtk.Buildable {
+	public sealed class RecentFilter : GLib.InitiallyUnowned, Gtk.Buildable {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.10")]
 		public RecentFilter ();
@@ -6984,7 +6984,7 @@ namespace Gtk {
 		public string gtk_xft_rgba { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcut_label_get_type ()")]
-	public class ShortcutLabel : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public sealed class ShortcutLabel : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		[Version (since = "3.22")]
 		public ShortcutLabel (string accelerator);
@@ -7002,7 +7002,7 @@ namespace Gtk {
 		public string disabled_text { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcuts_group_get_type ()")]
-	public class ShortcutsGroup : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public sealed class ShortcutsGroup : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsGroup ();
 		[NoAccessorMethod]
@@ -7017,7 +7017,7 @@ namespace Gtk {
 		public string view { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcuts_section_get_type ()")]
-	public class ShortcutsSection : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public sealed class ShortcutsSection : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsSection ();
 		[NoAccessorMethod]
@@ -7031,7 +7031,7 @@ namespace Gtk {
 		public signal bool change_current_page (int object);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_shortcuts_shortcut_get_type ()")]
-	public class ShortcutsShortcut : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
+	public sealed class ShortcutsShortcut : Gtk.Box, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (has_construct_function = false)]
 		protected ShortcutsShortcut ();
 		[NoAccessorMethod]
@@ -8712,7 +8712,7 @@ namespace Gtk {
 		public virtual signal void style_changed (Gtk.ToolbarStyle style);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_tooltip_get_type ()")]
-	public class Tooltip : GLib.Object {
+	public sealed class Tooltip : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Tooltip ();
 		[Version (since = "2.12")]

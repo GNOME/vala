@@ -5,7 +5,7 @@ namespace Gst {
 	namespace Base {
 		[CCode (cheader_filename = "gst/base/base.h", cname = "GstAdapter", lower_case_cprefix = "gst_adapter_", type_id = "gst_adapter_get_type ()")]
 		[GIR (name = "Adapter")]
-		public class Adapter : GLib.Object {
+		public sealed class Adapter : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Adapter ();
 			public size_t available ();

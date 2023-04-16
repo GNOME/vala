@@ -93,7 +93,7 @@ namespace Goo {
 		public virtual signal void item_created (Goo.CanvasItem item, Goo.CanvasItemModel model);
 	}
 	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_accessible_factory_get_type ()")]
-	public class CanvasAccessibleFactory : Atk.ObjectFactory {
+	public sealed class CanvasAccessibleFactory : Atk.ObjectFactory {
 		[CCode (has_construct_function = false)]
 		protected CanvasAccessibleFactory ();
 	}
@@ -345,7 +345,7 @@ namespace Goo {
 		public double y { get; set; }
 	}
 	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_item_accessible_factory_get_type ()")]
-	public class CanvasItemAccessibleFactory : Atk.ObjectFactory {
+	public sealed class CanvasItemAccessibleFactory : Atk.ObjectFactory {
 		[CCode (has_construct_function = false)]
 		protected CanvasItemAccessibleFactory ();
 	}
@@ -775,7 +775,7 @@ namespace Goo {
 		public double y { get; set; }
 	}
 	[CCode (cheader_filename = "goocanvas.h", type_id = "goo_canvas_widget_accessible_factory_get_type ()")]
-	public class CanvasWidgetAccessibleFactory : Atk.ObjectFactory {
+	public sealed class CanvasWidgetAccessibleFactory : Atk.ObjectFactory {
 		[CCode (has_construct_function = false)]
 		protected CanvasWidgetAccessibleFactory ();
 	}

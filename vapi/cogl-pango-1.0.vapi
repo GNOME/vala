@@ -3,7 +3,7 @@
 [CCode (cprefix = "CoglPango", gir_namespace = "CoglPango", gir_version = "1.0", lower_case_cprefix = "cogl_pango_")]
 namespace CoglPango {
 	[CCode (cheader_filename = "cogl-pango/cogl-pango.h", type_id = "cogl_pango_renderer_get_type ()")]
-	public class Renderer : Pango.Renderer {
+	public sealed class Renderer : Pango.Renderer {
 		[CCode (has_construct_function = false)]
 		protected Renderer ();
 		[NoAccessorMethod]

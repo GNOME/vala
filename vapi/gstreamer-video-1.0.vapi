@@ -426,7 +426,7 @@ namespace Gst {
 		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
 		[GIR (name = "VideoMultiviewFlagsSet")]
-		public class MultiviewFlagsSet : Gst.FlagSet {
+		public sealed class MultiviewFlagsSet : Gst.FlagSet {
 			[CCode (has_construct_function = false)]
 			protected MultiviewFlagsSet ();
 		}

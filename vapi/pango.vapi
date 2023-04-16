@@ -174,7 +174,7 @@ namespace Pango {
 		public void init (Pango.AttrClass klass);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_context_get_type ()")]
-	public class Context : GLib.Object {
+	public sealed class Context : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Context ();
 		[Version (since = "1.32.4")]
@@ -214,7 +214,7 @@ namespace Pango {
 		public void set_round_glyph_positions (bool round_positions);
 	}
 	[CCode (cheader_filename = "pango/pango.h", ref_function = "pango_coverage_ref", type_id = "pango_coverage_get_type ()", unref_function = "pango_coverage_unref")]
-	public class Coverage : GLib.Object {
+	public sealed class Coverage : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Coverage ();
 		public Pango.Coverage copy ();
@@ -390,7 +390,7 @@ namespace Pango {
 		public virtual Pango.FontMetrics get_metrics ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_fontset_simple_get_type ()")]
-	public class FontsetSimple : Pango.Fontset {
+	public sealed class FontsetSimple : Pango.Fontset {
 		[CCode (has_construct_function = false)]
 		public FontsetSimple (Pango.Language language);
 		public void append (owned Pango.Font font);
@@ -475,7 +475,7 @@ namespace Pango {
 		public unowned string to_string ();
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_layout_get_type ()")]
-	public class Layout : GLib.Object {
+	public sealed class Layout : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Layout (Pango.Context context);
 		public void context_changed ();

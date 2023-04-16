@@ -5,7 +5,7 @@ namespace Gdk {
 	namespace Wayland {
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_device_get_type ()")]
 		[GIR (name = "WaylandDevice")]
-		public class Device : Gdk.Device {
+		public sealed class Device : Gdk.Device {
 			[CCode (has_construct_function = false)]
 			protected Device ();
 			public unowned string? get_node_path ();
@@ -14,7 +14,7 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_display_get_type ()")]
 		[GIR (name = "WaylandDisplay")]
-		public class Display : Gdk.Display {
+		public sealed class Display : Gdk.Display {
 			[CCode (has_construct_function = false)]
 			protected Display ();
 			[Version (since = "4.4")]
@@ -28,38 +28,38 @@ namespace Gdk {
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_gl_context_get_type ()")]
 		[GIR (name = "WaylandGLContext")]
-		public class GLContext : Gdk.GLContext {
+		public sealed class GLContext : Gdk.GLContext {
 			[CCode (has_construct_function = false)]
 			protected GLContext ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_monitor_get_type ()")]
 		[GIR (name = "WaylandMonitor")]
-		public class Monitor : Gdk.Monitor {
+		public sealed class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
 			protected Monitor ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_popup_get_type ()")]
 		[GIR (name = "WaylandPopup")]
-		public class Popup : Gdk.Wayland.Surface, Gdk.Popup {
+		public sealed class Popup : Gdk.Wayland.Surface, Gdk.Popup {
 			[CCode (has_construct_function = false)]
 			protected Popup ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_seat_get_type ()")]
 		[GIR (name = "WaylandSeat")]
-		public class Seat : Gdk.Seat {
+		public sealed class Seat : Gdk.Seat {
 			[CCode (has_construct_function = false)]
 			protected Seat ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_surface_get_type ()")]
 		[GIR (name = "WaylandSurface")]
-		public class Surface : Gdk.Surface {
+		public sealed class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
 			public Wl.Surface get_wl_surface ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
 		[GIR (name = "WaylandToplevel")]
-		public class Toplevel : Gdk.Wayland.Surface, Gdk.Toplevel {
+		public sealed class Toplevel : Gdk.Wayland.Surface, Gdk.Toplevel {
 			[CCode (has_construct_function = false)]
 			protected Toplevel ();
 			public bool export_handle (owned Gdk.Wayland.ToplevelExported callback);

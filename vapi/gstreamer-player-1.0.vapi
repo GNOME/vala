@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstPlayer", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_get_type ()")]
-	public class Player : Gst.Object {
+	public sealed class Player : Gst.Object {
 		[CCode (has_construct_function = false)]
 		public Player (owned Gst.PlayerVideoRenderer? video_renderer, owned Gst.PlayerSignalDispatcher? signal_dispatcher);
 		[Version (since = "1.10")]
@@ -117,7 +117,7 @@ namespace Gst {
 		public signal void warning (GLib.Error object);
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_audio_info_get_type ()")]
-	public class PlayerAudioInfo : Gst.PlayerStreamInfo {
+	public sealed class PlayerAudioInfo : Gst.PlayerStreamInfo {
 		[CCode (has_construct_function = false)]
 		protected PlayerAudioInfo ();
 		public int get_bitrate ();
@@ -127,14 +127,14 @@ namespace Gst {
 		public int get_sample_rate ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", lower_case_csuffix = "player_g_main_context_signal_dispatcher", type_id = "gst_player_g_main_context_signal_dispatcher_get_type ()")]
-	public class PlayerGMainContextSignalDispatcher : GLib.Object, Gst.PlayerSignalDispatcher {
+	public sealed class PlayerGMainContextSignalDispatcher : GLib.Object, Gst.PlayerSignalDispatcher {
 		[CCode (has_construct_function = false, type = "GstPlayerSignalDispatcher*")]
 		public PlayerGMainContextSignalDispatcher (GLib.MainContext? application_context);
 		[NoAccessorMethod]
 		public GLib.MainContext application_context { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_media_info_get_type ()")]
-	public class PlayerMediaInfo : GLib.Object {
+	public sealed class PlayerMediaInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected PlayerMediaInfo ();
 		public unowned GLib.List<Gst.PlayerAudioInfo> get_audio_streams ();
@@ -169,13 +169,13 @@ namespace Gst {
 		public unowned Gst.TagList? get_tags ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_subtitle_info_get_type ()")]
-	public class PlayerSubtitleInfo : Gst.PlayerStreamInfo {
+	public sealed class PlayerSubtitleInfo : Gst.PlayerStreamInfo {
 		[CCode (has_construct_function = false)]
 		protected PlayerSubtitleInfo ();
 		public unowned string? get_language ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_video_info_get_type ()")]
-	public class PlayerVideoInfo : Gst.PlayerStreamInfo {
+	public sealed class PlayerVideoInfo : Gst.PlayerStreamInfo {
 		[CCode (has_construct_function = false)]
 		protected PlayerVideoInfo ();
 		public int get_bitrate ();
@@ -186,7 +186,7 @@ namespace Gst {
 		public int get_width ();
 	}
 	[CCode (cheader_filename = "gst/player/player.h", type_id = "gst_player_video_overlay_video_renderer_get_type ()")]
-	public class PlayerVideoOverlayVideoRenderer : GLib.Object, Gst.PlayerVideoRenderer {
+	public sealed class PlayerVideoOverlayVideoRenderer : GLib.Object, Gst.PlayerVideoRenderer {
 		[CCode (has_construct_function = false, type = "GstPlayerVideoRenderer*")]
 		public PlayerVideoOverlayVideoRenderer (void* window_handle);
 		public void expose ();

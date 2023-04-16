@@ -289,7 +289,7 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_marker_get_type ()")]
 	[Version (since = "1.18")]
-	public class Marker : GLib.Object, GES.MetaContainer {
+	public sealed class Marker : GLib.Object, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
 		protected Marker ();
 		[NoAccessorMethod]
@@ -297,7 +297,7 @@ namespace GES {
 	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_marker_list_get_type ()")]
 	[Version (since = "1.18")]
-	public class MarkerList : GLib.Object {
+	public sealed class MarkerList : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public MarkerList ();
 		public unowned GES.Marker add (Gst.ClockTime position);

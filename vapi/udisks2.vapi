@@ -19,7 +19,7 @@ namespace UDisks {
 		public BlockSkeleton ();
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_client_get_type ()")]
-	public class Client : GLib.Object, GLib.AsyncInitable, GLib.Initable {
+	public sealed class Client : GLib.Object, GLib.AsyncInitable, GLib.Initable {
 		[CCode (cname = "udisks_client_new", has_construct_function = false)]
 		public async Client (GLib.Cancellable? cancellable) throws GLib.Error;
 		[Version (since = "2.1")]
@@ -204,7 +204,7 @@ namespace UDisks {
 	}
 	[CCode (cheader_filename = "udisks/udisks.h", type_id = "udisks_object_info_get_type ()")]
 	[Version (since = "2.1")]
-	public class ObjectInfo : GLib.Object {
+	public sealed class ObjectInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ObjectInfo ();
 		public unowned string get_description ();

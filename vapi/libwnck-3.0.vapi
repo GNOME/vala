@@ -62,7 +62,7 @@ namespace Wnck {
 		public virtual signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_handle_get_type ()")]
-	public class Handle : GLib.Object {
+	public sealed class Handle : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Handle (Wnck.ClientType client_type);
 		public unowned Wnck.Application get_application (ulong xwindow);
@@ -77,7 +77,7 @@ namespace Wnck {
 		public Wnck.ClientType client_type { get; set construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h", type_id = "wnck_image_menu_item_get_type ()")]
-	public class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
+	public sealed class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Actionable, Gtk.Activatable, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public ImageMenuItem ();
 		public void make_label_bold ();

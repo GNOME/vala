@@ -5414,7 +5414,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_align_constraint_get_type ()")]
 	[Version (since = "1.4")]
-	public class AlignConstraint : Clutter.Constraint {
+	public sealed class AlignConstraint : Clutter.Constraint {
 		[CCode (has_construct_function = false, type = "ClutterConstraint*")]
 		public AlignConstraint (Clutter.Actor? source, Clutter.AlignAxis axis, float factor);
 		public Clutter.AlignAxis get_align_axis ();
@@ -5539,7 +5539,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_backend_get_type ()")]
 	[Version (since = "0.4")]
-	public class Backend : GLib.Object {
+	public sealed class Backend : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Backend ();
 		[NoWrapper]
@@ -5769,7 +5769,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_bind_constraint_get_type ()")]
 	[Version (since = "1.4")]
-	public class BindConstraint : Clutter.Constraint {
+	public sealed class BindConstraint : Clutter.Constraint {
 		[CCode (has_construct_function = false, type = "ClutterConstraint*")]
 		public BindConstraint (Clutter.Actor? source, Clutter.BindCoordinate coordinate, float offset);
 		public Clutter.BindCoordinate get_coordinate ();
@@ -5784,7 +5784,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_binding_pool_get_type ()")]
 	[Version (since = "1.0")]
-	public class BindingPool : GLib.Object {
+	public sealed class BindingPool : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public BindingPool (string name);
 		public bool activate (uint key_val, Clutter.ModifierType modifiers, GLib.Object gobject);
@@ -5803,7 +5803,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_blur_effect_get_type ()")]
 	[Version (since = "1.4")]
-	public class BlurEffect : Clutter.OffscreenEffect {
+	public sealed class BlurEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
 		public BlurEffect ();
 	}
@@ -5902,7 +5902,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_brightness_contrast_effect_get_type ()")]
 	[Version (since = "1.10")]
-	public class BrightnessContrastEffect : Clutter.OffscreenEffect {
+	public sealed class BrightnessContrastEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
 		public BrightnessContrastEffect ();
 		public void get_brightness (out float red, out float green, out float blue);
@@ -6022,7 +6022,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_clip_node_get_type ()")]
 	[Version (since = "1.10")]
-	public class ClipNode : Clutter.PaintNode {
+	public sealed class ClipNode : Clutter.PaintNode {
 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
 		public ClipNode ();
 	}
@@ -6037,13 +6037,13 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_color_node_get_type ()")]
 	[Version (since = "1.10")]
-	public class ColorNode : Clutter.PipelineNode {
+	public sealed class ColorNode : Clutter.PipelineNode {
 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
 		public ColorNode (Clutter.Color? color);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_colorize_effect_get_type ()")]
 	[Version (since = "1.4")]
-	public class ColorizeEffect : Clutter.OffscreenEffect {
+	public sealed class ColorizeEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
 		public ColorizeEffect (Clutter.Color tint);
 		public Clutter.Color get_tint ();
@@ -6093,7 +6093,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_desaturate_effect_get_type ()")]
 	[Version (since = "1.4")]
-	public class DesaturateEffect : Clutter.OffscreenEffect {
+	public sealed class DesaturateEffect : Clutter.OffscreenEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
 		public DesaturateEffect (double factor);
 		public double get_factor ();
@@ -6462,7 +6462,7 @@ namespace Clutter {
 		public bool set_data ([CCode (array_length = false)] uint8[] data, Cogl.PixelFormat pixel_format, uint width, uint height, uint row_stride) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_input_device_get_type ()")]
-	public class InputDevice : GLib.Object {
+	public sealed class InputDevice : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected InputDevice ();
 		[Version (since = "1.6")]
@@ -6763,7 +6763,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_page_turn_effect_get_type ()")]
 	[Version (since = "1.4")]
-	public class PageTurnEffect : Clutter.DeformEffect {
+	public sealed class PageTurnEffect : Clutter.DeformEffect {
 		[CCode (has_construct_function = false, type = "ClutterEffect*")]
 		public PageTurnEffect (double period, double angle, float radius);
 		public double get_angle ();
@@ -6817,7 +6817,7 @@ namespace Clutter {
 		public virtual signal void pan_stopped (Clutter.Actor actor);
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", lower_case_csuffix = "param_units", type_id = "clutter_param_units_get_type ()")]
-	public class ParamSpecUnit : GLib.ParamSpec {
+	public sealed class ParamSpecUnit : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamSpecUnit ();
 	}
@@ -6856,7 +6856,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_path_constraint_get_type ()")]
 	[Version (since = "1.6")]
-	public class PathConstraint : Clutter.Constraint {
+	public sealed class PathConstraint : Clutter.Constraint {
 		[CCode (has_construct_function = false, type = "ClutterConstraint*")]
 		public PathConstraint (Clutter.Path? path, float offset);
 		public float get_offset ();
@@ -6869,7 +6869,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_pipeline_node_get_type ()")]
 	[Version (since = "1.10")]
-	public class PipelineNode : Clutter.PaintNode {
+	public sealed class PipelineNode : Clutter.PaintNode {
 		[CCode (has_construct_function = false)]
 		protected PipelineNode ();
 	}
@@ -7029,7 +7029,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_settings_get_type ()")]
 	[Version (since = "1.4")]
-	public class Settings : GLib.Object {
+	public sealed class Settings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Settings ();
 		public static unowned Clutter.Settings get_default ();
@@ -7117,23 +7117,23 @@ namespace Clutter {
 		public Clutter.ShaderType shader_type { construct; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_float_get_type ()")]
-	public class ShaderFloat {
+	public sealed class ShaderFloat {
 		[CCode (has_construct_function = false)]
 		protected ShaderFloat ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_int_get_type ()")]
-	public class ShaderInt {
+	public sealed class ShaderInt {
 		[CCode (has_construct_function = false)]
 		protected ShaderInt ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_shader_matrix_get_type ()")]
-	public class ShaderMatrix {
+	public sealed class ShaderMatrix {
 		[CCode (has_construct_function = false)]
 		protected ShaderMatrix ();
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_snap_constraint_get_type ()")]
 	[Version (since = "1.6")]
-	public class SnapConstraint : Clutter.Constraint {
+	public sealed class SnapConstraint : Clutter.Constraint {
 		[CCode (has_construct_function = false, type = "ClutterConstraint*")]
 		public SnapConstraint (Clutter.Actor? source, Clutter.SnapEdge from_edge, Clutter.SnapEdge to_edge, float offset);
 		public void get_edges (out Clutter.SnapEdge from_edge, out Clutter.SnapEdge to_edge);
@@ -7276,7 +7276,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_stage_manager_get_type ()")]
 	[Version (since = "1.0")]
-	public class StageManager : GLib.Object {
+	public sealed class StageManager : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected StageManager ();
 		[Version (since = "0.8")]
@@ -7599,7 +7599,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_text_node_get_type ()")]
 	[Version (since = "1.10")]
-	public class TextNode : Clutter.PaintNode {
+	public sealed class TextNode : Clutter.PaintNode {
 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
 		public TextNode (Pango.Layout? layout, Clutter.Color? color);
 	}
@@ -7696,7 +7696,7 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_texture_node_get_type ()")]
 	[Version (since = "1.10")]
-	public class TextureNode : Clutter.PipelineNode {
+	public sealed class TextureNode : Clutter.PipelineNode {
 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
 		public TextureNode (Cogl.Texture texture, Clutter.Color? color, Clutter.ScalingFilter min_filter, Clutter.ScalingFilter mag_filter);
 	}

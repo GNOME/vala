@@ -694,7 +694,7 @@ namespace Gst {
 		public virtual signal void element_removed (Gst.Element child);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_bitmask_get_type ()")]
-	public class Bitmask {
+	public sealed class Bitmask {
 		[CCode (has_construct_function = false)]
 		protected Bitmask ();
 	}
@@ -1248,7 +1248,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_device_provider_factory_get_type ()")]
 	[Version (since = "1.4")]
-	public class DeviceProviderFactory : Gst.PluginFeature {
+	public sealed class DeviceProviderFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected DeviceProviderFactory ();
 		public static Gst.DeviceProviderFactory? find (string name);
@@ -1263,13 +1263,13 @@ namespace Gst {
 		public static GLib.List<Gst.DeviceProviderFactory> list_get_device_providers (Gst.Rank minrank);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_double_range_get_type ()")]
-	public class DoubleRange {
+	public sealed class DoubleRange {
 		[CCode (has_construct_function = false)]
 		protected DoubleRange ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_dynamic_type_factory_get_type ()")]
 	[Version (since = "1.12")]
-	public class DynamicTypeFactory : Gst.PluginFeature {
+	public sealed class DynamicTypeFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected DynamicTypeFactory ();
 		public static GLib.Type load (string factoryname);
@@ -1424,7 +1424,7 @@ namespace Gst {
 		public virtual signal void pad_removed (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_element_factory_get_type ()")]
-	public class ElementFactory : Gst.PluginFeature {
+	public sealed class ElementFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected ElementFactory ();
 		public bool can_sink_all_caps (Gst.Caps caps);
@@ -1595,19 +1595,19 @@ namespace Gst {
 		public unowned Gst.Structure writable_structure ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "flagset", type_id = "gst_flagset_get_type ()")]
-	public class FlagSet {
+	public sealed class FlagSet {
 		[CCode (has_construct_function = false)]
 		protected FlagSet ();
 		[Version (since = "1.6")]
 		public static GLib.Type register (GLib.Type flags_type);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_fraction_get_type ()")]
-	public class Fraction {
+	public sealed class Fraction {
 		[CCode (has_construct_function = false)]
 		protected Fraction ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_fraction_range_get_type ()")]
-	public class FractionRange {
+	public sealed class FractionRange {
 		[CCode (has_construct_function = false)]
 		protected FractionRange ();
 	}
@@ -1629,12 +1629,12 @@ namespace Gst {
 		public bool set_target (Gst.Pad? newtarget);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_int64_range_get_type ()")]
-	public class Int64Range {
+	public sealed class Int64Range {
 		[CCode (has_construct_function = false)]
 		protected Int64Range ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_int_range_get_type ()")]
-	public class IntRange {
+	public sealed class IntRange {
 		[CCode (has_construct_function = false)]
 		protected IntRange ();
 	}
@@ -2094,12 +2094,12 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "param_spec_array", type_id = "gst_param_spec_array_get_type ()")]
 	[Version (since = "1.12")]
-	public class ParamArray : GLib.ParamSpec {
+	public sealed class ParamArray : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamArray ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "param_spec_fraction", type_id = "gst_param_spec_fraction_get_type ()")]
-	public class ParamFraction : GLib.ParamSpec {
+	public sealed class ParamFraction : GLib.ParamSpec {
 		[CCode (has_construct_function = false)]
 		protected ParamFraction ();
 	}
@@ -2157,7 +2157,7 @@ namespace Gst {
 		public uint64 latency { get; set; }
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_plugin_get_type ()")]
-	public class Plugin : Gst.Object {
+	public sealed class Plugin : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected Plugin ();
 		public void add_dependency ([CCode (array_length = false, array_null_terminated = true)] string[]? env_vars, [CCode (array_length = false, array_null_terminated = true)] string[]? paths, [CCode (array_length = false, array_null_terminated = true)] string[]? names, Gst.PluginDependencyFlags flags);
@@ -2768,7 +2768,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_factory_get_type ()")]
 	[Version (since = "1.8")]
-	public class TracerFactory : Gst.PluginFeature {
+	public sealed class TracerFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected TracerFactory ();
 		public static GLib.List<Gst.TracerFactory> get_list ();
@@ -2777,12 +2777,12 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_tracer_record_get_type ()")]
 	[Version (since = "1.8")]
-	public class TracerRecord : Gst.Object {
+	public sealed class TracerRecord : Gst.Object {
 		[CCode (has_construct_function = false)]
 		protected TracerRecord ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", lower_case_csuffix = "type_find_factory", type_id = "gst_type_find_factory_get_type ()")]
-	public class TypeFindFactory : Gst.PluginFeature {
+	public sealed class TypeFindFactory : Gst.PluginFeature {
 		[CCode (has_construct_function = false)]
 		protected TypeFindFactory ();
 		public void call_function (Gst.TypeFind find);
@@ -2899,7 +2899,7 @@ namespace Gst {
 		public void unref ();
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_array_get_type ()")]
-	public class ValueArray {
+	public sealed class ValueArray {
 		[CCode (has_construct_function = false)]
 		protected ValueArray ();
 		[Version (since = "1.2")]
@@ -2912,7 +2912,7 @@ namespace Gst {
 		public static void prepend_value (ref GLib.Value value, GLib.Value prepend_value);
 	}
 	[CCode (cheader_filename = "gst/gst.h", type_id = "gst_value_list_get_type ()")]
-	public class ValueList {
+	public sealed class ValueList {
 		[CCode (has_construct_function = false)]
 		protected ValueList ();
 		[Version (since = "1.2")]

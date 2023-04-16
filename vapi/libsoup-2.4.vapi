@@ -181,12 +181,12 @@ namespace Soup {
 		public string scheme_name { get; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_basic_get_type ()")]
-	public class AuthBasic : Soup.Auth {
+	public sealed class AuthBasic : Soup.Auth {
 		[CCode (has_construct_function = false)]
 		protected AuthBasic ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_digest_get_type ()")]
-	public class AuthDigest : Soup.Auth {
+	public sealed class AuthDigest : Soup.Auth {
 		[CCode (has_construct_function = false)]
 		protected AuthDigest ();
 	}
@@ -251,12 +251,12 @@ namespace Soup {
 		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_ntlm_get_type ()")]
-	public class AuthNTLM : Soup.Auth {
+	public sealed class AuthNTLM : Soup.Auth {
 		[CCode (has_construct_function = false)]
 		protected AuthNTLM ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h", type_id = "soup_auth_negotiate_get_type ()")]
-	public class AuthNegotiate : Soup.Auth {
+	public sealed class AuthNegotiate : Soup.Auth {
 		[CCode (has_construct_function = false)]
 		protected AuthNegotiate ();
 		[Version (since = "2.54")]

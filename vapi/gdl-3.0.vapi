@@ -273,7 +273,7 @@ namespace Gdl {
 		public uint position { get; set; }
 	}
 	[CCode (cheader_filename = "gdl/gdl.h", type_id = "gdl_dock_param_get_type ()")]
-	public class DockParam {
+	public sealed class DockParam {
 		[CCode (has_construct_function = false)]
 		protected DockParam ();
 	}

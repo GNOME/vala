@@ -6,7 +6,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_audio_info_get_type ()")]
 		[GIR (name = "PlayAudioInfo")]
 		[Version (since = "1.20")]
-		public class AudioInfo : Gst.Play.StreamInfo {
+		public sealed class AudioInfo : Gst.Play.StreamInfo {
 			[CCode (has_construct_function = false)]
 			protected AudioInfo ();
 			public int get_bitrate ();
@@ -18,7 +18,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_media_info_get_type ()")]
 		[GIR (name = "PlayMediaInfo")]
 		[Version (since = "1.20")]
-		public class MediaInfo : GLib.Object {
+		public sealed class MediaInfo : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected MediaInfo ();
 			public unowned GLib.List<Gst.Play.AudioInfo> get_audio_streams ();
@@ -41,7 +41,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", cname = "GstPlay", lower_case_cprefix = "gst_play_", type_id = "gst_play_get_type ()")]
 		[GIR (name = "Play")]
 		[Version (since = "1.20")]
-		public class Play : Gst.Object {
+		public sealed class Play : Gst.Object {
 			[CCode (has_construct_function = false)]
 			public Play (owned Gst.Play.VideoRenderer? video_renderer);
 			public static uint config_get_position_update_interval (Gst.Structure config);
@@ -127,7 +127,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_signal_adapter_get_type ()")]
 		[GIR (name = "PlaySignalAdapter")]
 		[Version (since = "1.20")]
-		public class SignalAdapter : GLib.Object {
+		public sealed class SignalAdapter : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public SignalAdapter (Gst.Play.Play play);
 			public unowned Gst.Play.Play get_play ();
@@ -165,7 +165,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_subtitle_info_get_type ()")]
 		[GIR (name = "PlaySubtitleInfo")]
 		[Version (since = "1.20")]
-		public class SubtitleInfo : Gst.Play.StreamInfo {
+		public sealed class SubtitleInfo : Gst.Play.StreamInfo {
 			[CCode (has_construct_function = false)]
 			protected SubtitleInfo ();
 			public unowned string? get_language ();
@@ -173,7 +173,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_video_info_get_type ()")]
 		[GIR (name = "PlayVideoInfo")]
 		[Version (since = "1.20")]
-		public class VideoInfo : Gst.Play.StreamInfo {
+		public sealed class VideoInfo : Gst.Play.StreamInfo {
 			[CCode (has_construct_function = false)]
 			protected VideoInfo ();
 			public int get_bitrate ();
@@ -186,7 +186,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/play/play.h", type_id = "gst_play_video_overlay_video_renderer_get_type ()")]
 		[GIR (name = "PlayVideoOverlayVideoRenderer")]
 		[Version (since = "1.20")]
-		public class VideoOverlayVideoRenderer : GLib.Object, Gst.Play.VideoRenderer {
+		public sealed class VideoOverlayVideoRenderer : GLib.Object, Gst.Play.VideoRenderer {
 			[CCode (has_construct_function = false, type = "GstPlayVideoRenderer*")]
 			public VideoOverlayVideoRenderer (void* window_handle);
 			public void expose ();

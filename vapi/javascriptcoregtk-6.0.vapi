@@ -65,7 +65,7 @@ namespace JSC {
 		public static bool set_uint (string option, uint value);
 	}
 	[CCode (cheader_filename = "jsc/jsc.h", type_id = "jsc_class_get_type ()")]
-	public class Class : GLib.Object {
+	public sealed class Class : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Class ();
 		[CCode (cname = "jsc_class_add_constructor_variadic")]

@@ -3,7 +3,7 @@
 [CCode (cprefix = "GnomeRR", gir_namespace = "GnomeRR", gir_version = "4.0", lower_case_cprefix = "gnome_rr_")]
 namespace GnomeRR {
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr-config.h", type_id = "gnome_rr_config_get_type ()")]
-	public class Config : GLib.Object {
+	public sealed class Config : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected Config ();
 		public bool applicable (GnomeRR.Screen screen) throws GLib.Error;
@@ -77,7 +77,7 @@ namespace GnomeRR {
 		public bool supports_underscanning ();
 	}
 	[CCode (cheader_filename = "libgnome-desktop/gnome-rr-config.h", type_id = "gnome_rr_output_info_get_type ()")]
-	public class OutputInfo : GLib.Object {
+	public sealed class OutputInfo : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected OutputInfo ();
 		public double get_aspect_ratio ();

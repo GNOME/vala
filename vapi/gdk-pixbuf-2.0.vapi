@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gdk", gir_namespace = "GdkPixbuf", gir_version = "2.0", lower_case_cprefix = "gdk_")]
 namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_get_type ()")]
-	public class Pixbuf : GLib.Object, GLib.Icon, GLib.LoadableIcon {
+	public sealed class Pixbuf : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		[CCode (has_construct_function = false)]
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public Gdk.Pixbuf add_alpha (bool substitute_color, uint8 r, uint8 g, uint8 b);
@@ -227,12 +227,12 @@ namespace Gdk {
 		public virtual signal void size_prepared (int width, int height);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_non_anim_get_type ()")]
-	public class PixbufNonAnim : Gdk.PixbufAnimation {
+	public sealed class PixbufNonAnim : Gdk.PixbufAnimation {
 		[CCode (has_construct_function = false, type = "GdkPixbufAnimation*")]
 		public PixbufNonAnim (Gdk.Pixbuf pixbuf);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_simple_anim_get_type ()")]
-	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
+	public sealed class PixbufSimpleAnim : Gdk.PixbufAnimation {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.8")]
 		public PixbufSimpleAnim (int width, int height, float rate);
@@ -246,7 +246,7 @@ namespace Gdk {
 		public bool loop { get; set; }
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h", type_id = "gdk_pixbuf_simple_anim_iter_get_type ()")]
-	public class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
+	public sealed class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
 		[CCode (has_construct_function = false)]
 		protected PixbufSimpleAnimIter ();
 	}
