@@ -169,7 +169,7 @@ namespace GirTest {
 
 	public delegate bool DelegateErrorTest () throws ErrorTest;
 
-	public delegate bool DelegateGenericsTest<G,T> (G g, T? t);
+	public delegate bool DelegateGenericsTest<G,T> (G g, T? t) where G : TypeTest;
 
 	[GIR (visible = false)]
 	public delegate void SkippedDelegate ();
@@ -442,7 +442,7 @@ namespace GirTest {
 		public int i;
 	}
 
-	public class GenericsTest<G,T> {
+	public class GenericsTest<G,T> where G : TypeTest {
 		public GenericsTest (owned DelegateTest cb) {
 		}
 
@@ -454,7 +454,7 @@ namespace GirTest {
 	}
 
 	public class GenericsObjectTest<G,T> : Object {
-		public void method<K> (K[] param) {
+		public void method<K> (K[] param) where K : TypeTest {
 		}
 	}
 
