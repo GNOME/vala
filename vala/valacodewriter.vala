@@ -268,6 +268,9 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_type (base_type);
 			}
 		}
+
+		write_type_parameter_constraints (cl.get_type_parameters ());
+
 		write_begin_block ();
 
 		current_scope = cl.scope;
@@ -357,6 +360,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_type (st.base_type);
 		}
 
+		write_type_parameter_constraints (st.get_type_parameters ());
+
 		write_begin_block ();
 
 		current_scope = st.scope;
@@ -410,6 +415,9 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_type (prerequisite);
 			}
 		}
+
+		write_type_parameter_constraints (iface.get_type_parameters ());
+
 		write_begin_block ();
 
 		current_scope = iface.scope;
@@ -735,6 +743,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		cb.get_error_types (error_types);
 		write_error_domains (error_types);
 
+		write_type_parameter_constraints (cb.get_type_parameters ());
+
 		write_string (";");
 
 		write_newline ();
@@ -852,6 +862,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		var error_types = new ArrayList<DataType> ();
 		m.get_error_types (error_types);
 		write_error_domains (error_types);
+
+		write_type_parameter_constraints (m.get_type_parameters ());
 
 		write_code_block (m.body);
 
@@ -1775,6 +1787,30 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_identifier (type_param.name);
 			}
 			write_string (">");
+		}
+	}
+
+	void write_type_parameter_constraints (List<TypeParameter> type_params) {
+		if (type_params.size > 0) {
+			foreach (TypeParameter type_param in type_params) {
+				unowned DataType? type_constraint = type_param.type_constraint;
+				if (type_constraint == null) {
+					continue;
+				}
+				write_string (" where ");
+				write_identifier (type_param.name);
+				write_string (" : ");
+				bool first = true;
+				//FIXME
+				foreach (DataType type in new DataType[] { type_constraint }) {
+					if (first) {
+						first = false;
+					} else {
+						write_string (",");
+					}
+					write_type (type);
+				}
+			}
 		}
 	}
 }
