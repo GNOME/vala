@@ -592,7 +592,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			add_constructor (c);
 		}
 
-		if (base_class != null && base_class.is_sealed) {
+		if (!external_package && base_class != null && base_class.is_sealed) {
 			error = true;
 			Report.error (source_reference, "`%s' cannot inherit from sealed class `%s'", get_full_name (), base_class.get_full_name ());
 		}
