@@ -3485,7 +3485,7 @@ namespace GLib {
 		[CCode (cname = "g_atexit")]
 		public static void atexit (VoidFunc func);
 		[Version (since = "2.8")]
-		[CCode (cname = "g_chdir")]
+		[CCode (cname = "g_chdir", cheader_filename = "glib/gstdio.h")]
 		public static int set_current_dir (string path);
 	}
 
