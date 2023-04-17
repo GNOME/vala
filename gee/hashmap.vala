@@ -387,7 +387,7 @@ public class Vala.HashMap<K,V> : Map<K,V> {
 			}
 		}
 
-		private HashMap<V,K> _map;
+		private HashMap<K,V> _map;
 		private int _index = -1;
 		private weak Node<K,V> _node;
 		private weak Node<K,V> _next;
