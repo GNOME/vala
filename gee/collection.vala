@@ -108,17 +108,17 @@ public abstract class Vala.Collection<G> : Iterable<G> {
 		} else if (t == typeof (uint)) {
 			return (G[]) to_uint_array ((Collection<uint>) this);
 		} else if (t == typeof (int64)) {
-			return (G[]) to_int64_array ((Collection<int64>) this);
+			return (G[]) to_int64_array ((Collection<int64?>) this);
 		} else if (t == typeof (uint64)) {
-			return (G[]) to_uint64_array ((Collection<uint64>) this);
+			return (G[]) to_uint64_array ((Collection<uint64?>) this);
 		} else if (t == typeof (long)) {
 			return (G[]) to_long_array ((Collection<long>) this);
 		} else if (t == typeof (ulong)) {
 			return (G[]) to_ulong_array ((Collection<ulong>) this);
 		} else if (t == typeof (float)) {
-			return (G[]) to_float_array ((Collection<float>) this);
+			return (G[]) to_float_array ((Collection<float?>) this);
 		} else if (t == typeof (double)) {
-			return (G[]) to_double_array ((Collection<double>) this);
+			return (G[]) to_double_array ((Collection<double?>) this);
 		} else if (t.is_enum () || t.is_flags ()) {
 			return (G[]) to_int_array ((Collection<int>) this);
 		} else {
