@@ -74,6 +74,7 @@ AC_PATH_PROG([VALAC], [valac], :)
 AC_SUBST(VALAC)
 
 VALAC_BOOTSTRAP_REQUIRED=0.39.5.8
+VALAC_VALADOC_REQUIRED=0.18.1
 
 AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
 	AS_VERSION_COMPARE(["$VALAC_BOOTSTRAP_REQUIRED"], ["$FOUND_VALAC_VERION"],
@@ -195,6 +196,12 @@ AC_SUBST(GMODULE_LIBS)
 
 AC_ARG_WITH(cgraph, AS_HELP_STRING([--with-cgraph], [Required flag for cross-compilation to define capability of graphviz]), [], with_cgraph=check)
 AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)
+AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
+	AS_VERSION_COMPARE(["$FOUND_VALAC_VERION"], ["$VALAC_VALADOC_REQUIRED"], [
+		AC_MSG_WARN([Force disable build of valadoc, valac >= $VALAC_VALADOC_REQUIRED is required])
+		enable_valadoc=no
+	])
+])
 if test x$enable_valadoc = xyes; then
 	PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED)
 	AC_MSG_CHECKING([for CGRAPH])
