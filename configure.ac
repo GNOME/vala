@@ -70,12 +70,12 @@ if test "$YACC" = :; then
 	AC_MSG_ERROR([bison not found but required])
 fi
 
-AC_PATH_PROG(VALAC, valac, valac)
+AC_PATH_PROG([VALAC], [valac], :)
 AC_SUBST(VALAC)
 
 VALAC_BOOTSTRAP_REQUIRED=0.39.5.8
 
-AS_IF([test "$VALAC" != valac], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
+AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
 	AS_VERSION_COMPARE(["$VALAC_BOOTSTRAP_REQUIRED"], ["$FOUND_VALAC_VERION"],
 		[enable_boostrap=yes], [enable_boostrap=yes], [enable_boostrap=no])])
 
