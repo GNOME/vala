@@ -1,0 +1,29 @@
+include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
+
+.flatpak rules:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PROJECT_NAMESPACE == "gnome" && $CI_PIPELINE_SOURCE == "schedule"
+
+.vars-extension:
+  extends: ".flatpak rules"
+  variables:
+    MANIFEST_PATH: "build-aux/flatpak/org.freedesktop.Sdk.Extension.vala-nightly.yml"
+    FLATPAK_MODULE: "valac"
+    APP_ID: "org.freedesktop.Sdk.Extension.vala-nightly"
+    BUNDLE: "vala-extension.flatpak"
+    EXPORT_RUNTIME: "--runtime"
+    RUN_TESTS: "no"
+
+flatpak-extension@x86_64:
+  extends: [".flatpak@x86_64", ".vars-extension"]
+
+flatpak-extension@aarch64:
+  extends: [".flatpak@aarch64", ".vars-extension"]
+
+nightly@x86_64:
+  extends: ['.publish_nightly', ".flatpak rules"]
+  needs: ['flatpak-extension@x86_64']
+
+nightly@aarch64:
+  extends: ['.publish_nightly', ".flatpak rules"]
+  needs: ['flatpak-extension@aarch64']
