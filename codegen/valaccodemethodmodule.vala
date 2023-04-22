@@ -1036,6 +1036,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else if (m.parent_symbol is Class && m is CreationMethod) {
 			var cl = (Class) m.parent_symbol;
 			if (!cl.is_compact && vcall == null && (direction & 1) == 1) {
+				cfile.add_include ("glib-object.h");
 				cparam_map.set (get_param_pos (get_ccode_instance_pos (m)), new CCodeParameter ("object_type", "GType"));
 			}
 		} else if (m.binding == MemberBinding.INSTANCE && (direction != 2 || get_ccode_finish_instance (m))) {
@@ -1079,6 +1080,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (type_parameters != null) {
 			int type_param_index = 0;
 			foreach (var type_param in type_parameters) {
+				cfile.add_include ("glib-object.h");
 				var type = get_ccode_type_id (type_param);
 				var dup_func = get_ccode_copy_function (type_param);
 				var destroy_func = get_ccode_destroy_function (type_param);
