@@ -12803,6 +12803,7 @@ namespace Gtk {
 		protected StyleContext ();
 		public void add_class (string class_name);
 		public void add_provider (Gtk.StyleProvider provider, uint priority);
+		[Version (deprecated = false)]
 		public static void add_provider_for_display (Gdk.Display display, Gtk.StyleProvider provider, uint priority);
 		[NoWrapper]
 		public virtual void changed ();
@@ -12817,6 +12818,7 @@ namespace Gtk {
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public void remove_class (string class_name);
 		public void remove_provider (Gtk.StyleProvider provider);
+		[Version (deprecated = false)]
 		public static void remove_provider_for_display (Gdk.Display display, Gtk.StyleProvider provider);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_activity")]
 		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
