@@ -556,7 +556,7 @@ public class Vala.GirParser : CodeVisitor {
 		// objecttypesymbol-specific
 		public List<DataType> inherited_types;
 
-		public bool deprecated = false;
+		public bool? deprecated = null;
 		public uint64 deprecated_version = 0;
 		public string? deprecated_since = null;
 		public string? deprecated_replacement = null;
@@ -1264,7 +1264,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (metadata.has_argument (ArgumentType.DEPRECATED)) {
 					deprecated = metadata.get_bool (ArgumentType.DEPRECATED, true);
-					if (!deprecated) {
+					if (deprecated == false) {
 						deprecated_since = null;
 						deprecated_replacement = null;
 					}
@@ -1322,13 +1322,13 @@ public class Vala.GirParser : CodeVisitor {
 				foreach (var node in members) {
 					if (this.deprecated_version > 0 && node.deprecated_version > 0) {
 						if (this.deprecated_version <= node.deprecated_version) {
-							node.deprecated = false;
+							node.deprecated = null;
 							node.deprecated_since = null;
 							node.deprecated_replacement = null;
 						}
 					}
-					if (node.deprecated) {
-						node.symbol.version.deprecated = true;
+					if (node.deprecated != null) {
+						node.symbol.version.deprecated = node.deprecated;
 					}
 					if (node.deprecated_since != null) {
 						node.symbol.version.deprecated_since = node.deprecated_since;
