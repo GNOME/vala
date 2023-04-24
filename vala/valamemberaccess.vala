@@ -921,7 +921,9 @@ public class Vala.MemberAccess : Expression {
 		if (parent != member) {
 			member.used = true;
 		}
-		member.version.check (context, source_reference);
+		if (!(parent_node is MemberAccess)) {
+			member.version.check (context, source_reference);
+		}
 
 		// FIXME Code duplication with MemberInitializer.check()
 		if (access == SymbolAccessibility.PROTECTED && member.parent_symbol is TypeSymbol) {
