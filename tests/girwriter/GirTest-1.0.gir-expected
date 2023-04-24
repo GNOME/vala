@@ -1924,7 +1924,7 @@
 		<field name="priv" readable="0" private="1">
 			<type name="DeprecatedClassTestPrivate" c:type="GirTestDeprecatedClassTestPrivate*"/>
 		</field>
-		<constructor name="new" c:identifier="gir_test_deprecated_class_test_new">
+		<constructor name="new" c:identifier="gir_test_deprecated_class_test_new" deprecated="1">
 			<return-value transfer-ownership="full">
 				<type name="GirTest.DeprecatedClassTest" c:type="GirTestDeprecatedClassTest*"/>
 			</return-value>

@@ -33,6 +33,7 @@ namespace GirTest {
 	public class DeprecatedClassTest {
 		public int ref_count;
 		[CCode (has_construct_function = false)]
+		[Version (deprecated = true)]
 		public DeprecatedClassTest ();
 	}
 	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_generics_object_test_get_type ()")]

@@ -15,7 +15,7 @@
 typedef struct _Foo Foo;
 
 struct _Foo {
-	void* bar;
+	void* bar G_GNUC_DEPRECATED ;
 } G_GNUC_DEPRECATED ;
 
 static void _vala_main (void);
