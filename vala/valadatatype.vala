@@ -319,9 +319,10 @@ public abstract class Vala.DataType : CodeNode {
 
 		/* temporarily ignore type parameters */
 		if (target_type is GenericType) {
-			unowned DataType? constraint_type = ((GenericType) target_type).type_parameter.type_constraint;
-			if (constraint_type != null) {
-				return compatible (constraint_type);
+			foreach (DataType type_constraint in ((GenericType) target_type).type_parameter.get_type_constraints ()) {
+				if (!compatible (type_constraint)) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -574,7 +575,7 @@ public abstract class Vala.DataType : CodeNode {
 			}
 		}
 
-		return get_constrained_type (type_param);
+		return type_param.get_constrained_type ();
 	}
 
 	/**
@@ -706,7 +707,7 @@ public abstract class Vala.DataType : CodeNode {
 			var type_params = ((GenericSymbol) type_symbol).get_type_parameters ();
 			bool mitigated = true;
 			foreach (var t in type_params) {
-				var ct = get_constrained_type (t);
+				var ct = t.get_constrained_type ();
 				if (ct != null) {
 					Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", type_symbol.to_string (), t.name, ct.to_qualified_string ());
 					add_type_argument (ct);
@@ -732,23 +733,16 @@ public abstract class Vala.DataType : CodeNode {
 			}
 
 			it.next ();
-			unowned DataType? constraint_type = it.get ().type_constraint;
-			if (constraint_type != null && !type.compatible (constraint_type)) {
-				error = true;
-				Report.error (type.source_reference, "Cannot convert from `%s' to `%s'", type.to_string (), constraint_type.to_string ());
-				return false;
+			unowned List<DataType> type_constraints = it.get ().get_type_constraints ();
+			foreach (DataType type_constraint in type_constraints) {
+				if (!type.compatible (type_constraint)) {
+					error = true;
+					Report.error (type.source_reference, "Cannot convert from `%s' to `%s'", type.to_string (), type_constraint.to_string ());
+					return false;
+				}
 			}
 		}
 
 		return true;
-	}
-
-	DataType? get_constrained_type (TypeParameter type_param) {
-		unowned DataType? type = type_param.type_constraint;
-		if (type != null) {
-			return type.copy ();
-		}
-
-		return null;
 	}
 }

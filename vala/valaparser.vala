@@ -4046,12 +4046,12 @@ public class Vala.Parser : CodeVisitor {
 			do {
 				/*
 				where T : <base class name>
-				where T : <interface name>
+				where T : <interface name>[, <interface name>]
 				where T : U
 				*/
 				begin = get_location ();
 				var type = parse_type (true, false);
-				type_param.type_constraint = type;
+				type_param.add_type_constraint (type);
 			} while (accept (TokenType.COMMA));
 		}
 	}
