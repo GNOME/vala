@@ -1793,16 +1793,14 @@ public class Vala.CodeWriter : CodeVisitor {
 	void write_type_parameter_constraints (List<TypeParameter> type_params) {
 		if (type_params.size > 0) {
 			foreach (TypeParameter type_param in type_params) {
-				unowned DataType? type_constraint = type_param.type_constraint;
-				if (type_constraint == null) {
+				if (!type_param.has_type_constraints ()) {
 					continue;
 				}
 				write_string (" where ");
 				write_identifier (type_param.name);
 				write_string (" : ");
 				bool first = true;
-				//FIXME
-				foreach (DataType type in new DataType[] { type_constraint }) {
+				foreach (DataType type in type_param.get_type_constraints ()) {
 					if (first) {
 						first = false;
 					} else {

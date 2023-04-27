@@ -26,22 +26,8 @@ using GLib;
  * Represents a generic type parameter in the source code.
  */
 public class Vala.TypeParameter : TypeSymbol {
-	public DataType? type_constraint {
-		get {
-			if (_type_constraint is GenericType) {
-				return ((GenericType) _type_constraint).type_parameter.type_constraint;
-			}
-			return _type_constraint;
-		}
-		set {
-			_type_constraint = value;
-			if (_type_constraint != null) {
-				_type_constraint.parent_node = this;
-			}
-		}
-	}
-
-	DataType? _type_constraint;
+	List<DataType> type_constraint_list;
+	static List<DataType> _empty_type_list;
 
 	/**
 	 * Creates a new generic type parameter.
@@ -55,19 +41,86 @@ public class Vala.TypeParameter : TypeSymbol {
 		access = SymbolAccessibility.PUBLIC;
 	}
 
+	/**
+	 * Appends the specified type as generic type constraint.
+	 *
+	 * @param arg a type reference
+	 */
+	public void add_type_constraint (DataType arg) {
+		if (type_constraint_list == null) {
+			type_constraint_list = new ArrayList<DataType> ();
+		}
+		type_constraint_list.add (arg);
+		arg.parent_node = this;
+	}
+
+	/**
+	 * Returns the list of generic type constraints.
+	 *
+	 * @return type constraint list
+	 */
+	public unowned List<DataType> get_type_constraints () {
+		if (type_constraint_list != null) {
+			if (type_constraint_list.size > 0 && type_constraint_list[0] is GenericType) {
+				return ((GenericType) type_constraint_list[0]).type_parameter.get_type_constraints ();
+			}
+			return type_constraint_list;
+		}
+		if (_empty_type_list == null) {
+			_empty_type_list = new ArrayList<DataType> ();
+		}
+		return _empty_type_list;
+	}
+
+	public bool has_type_constraints () {
+		if (type_constraint_list == null) {
+			return false;
+		}
+
+		return type_constraint_list.size > 0;
+	}
+
+	public DataType? get_constrained_type () {
+		if (!has_type_constraints ()) {
+			return null;
+		}
+
+		unowned List<DataType> type_constraints = get_type_constraints ();
+		if (type_constraints.size == 1) {
+			return type_constraints[0].copy ();
+		}
+		foreach (DataType type_constraint in type_constraints) {
+			if (type_constraint is ClassType) {
+				return type_constraint.copy ();
+			} else if (type_constraint is InterfaceType) {
+				//FIXME Represent all given interfaces
+				return type_constraint.copy ();
+			}
+		}
+
+		return null;
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_type_parameter (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		if (_type_constraint != null) {
-			_type_constraint.accept (visitor);
+		if (type_constraint_list != null && type_constraint_list.size > 0) {
+			foreach (DataType type_constraint in type_constraint_list) {
+				type_constraint.accept (visitor);
+			}
 		}
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (_type_constraint == old_type) {
-			type_constraint = new_type;
+		if (type_constraint_list != null) {
+			for (int i = 0; i < type_constraint_list.size; i++) {
+				if (type_constraint_list[i] == old_type) {
+					type_constraint_list[i] = new_type;
+					return;
+				}
+			}
 		}
 	}
 

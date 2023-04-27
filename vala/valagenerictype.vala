@@ -53,9 +53,13 @@ public class Vala.GenericType : DataType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		unowned DataType? constraint_type = type_parameter.type_constraint;
-		if (constraint_type != null) {
-			return constraint_type.compatible (target_type);
+		if (type_parameter.has_type_constraints ()) {
+			foreach (DataType type_constraint in type_parameter.get_type_constraints ()) {
+				if (!type_constraint.compatible (target_type)) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		return base.compatible (target_type);
