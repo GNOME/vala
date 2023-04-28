@@ -31,7 +31,7 @@ a library, so that all compile-time information is available when generating a
 binding.</description>
 
   <homepage rdf:resource="https://wiki.gnome.org/Projects/Vala" />
-  <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/vala-list" />
+  <developer-forum rdf:resource="https://discourse.gnome.org/tag/vala" />
   <download-page rdf:resource="https://wiki.gnome.org/Projects/Vala/Release" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/vala/issues" />
 
