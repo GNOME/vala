@@ -53,4 +53,14 @@ public interface Vala.GenericSymbol : Symbol {
 	 * @return index of a type parameter, or -1
 	 */
 	public abstract int get_type_parameter_index (string name);
+
+	public bool check_constraints () {
+		bool error = false;
+		foreach (var parameter in this.get_type_parameters ()) {
+			if (!parameter.check_constraint ()) {
+				error = true;
+			}
+		}
+		return !error;
+	}
 }

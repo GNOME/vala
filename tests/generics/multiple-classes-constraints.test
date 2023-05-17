@@ -1,0 +1,9 @@
+Invalid Code
+
+class Foo {}
+class Fuu {}
+
+class Bar<G> where G : Foo, Fuu {
+}
+
+void main () {}
