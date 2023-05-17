@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo {
+	public virtual void foo () {
+	}
+}
+
+interface Bar : Foo {
+	public override void foo () {
+	}
+}
+
+void main () {
+}

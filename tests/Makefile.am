@@ -1208,6 +1208,7 @@ TESTS = \
 	semantic/method-main-inline.test \
 	semantic/method-main-throws.test \
 	semantic/method-override.test \
+	semantic/method-override-no-class.test \
 	semantic/method-postcondition.test \
 	semantic/method-precondition.test \
 	semantic/method-private-abstract.test \
@@ -1223,6 +1224,7 @@ TESTS = \
 	semantic/method-too-many-type-arguments.test \
 	semantic/method-virtual.test \
 	semantic/method-virtual-body.test \
+	semantic/method-virtual-no-class-or-interface.test \
 	semantic/methodcall-field-initializer-throws.test \
 	semantic/methodcall-invalid-argument-lambda.test \
 	semantic/methodcall-invocation-invalid.test \
