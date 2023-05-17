@@ -841,6 +841,7 @@ TESTS = \
 	generics/method-to-delegate-incompatible.test \
 	generics/method-to-delegate-incompatible-2.test \
 	generics/method-to-delegate-incompatible-3.test \
+	generics/multiple-classes-constraints.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \

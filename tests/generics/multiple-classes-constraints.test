@@ -1,9 +1,13 @@
 Invalid Code
 
-class Foo {}
-class Fuu {}
-
-class Bar<G> where G : Foo, Fuu {
+class Foo {
 }
 
-void main () {}
+class Faz {
+}
+
+class Bar<G> where G : Foo, Faz {
+}
+
+void main () {
+}

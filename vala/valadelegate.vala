@@ -315,7 +315,9 @@ public class Vala.Delegate : TypeSymbol, Callable, GenericSymbol {
 		}
 
 		foreach (TypeParameter p in type_parameters) {
-			p.check (context);
+			if (!p.check (context)) {
+				error = true;
+			}
 		}
 
 		return_type.check (context);
