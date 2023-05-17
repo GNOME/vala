@@ -141,20 +141,6 @@ public class Vala.TypeParameter : TypeSymbol {
 		return name == param2.name && parent_symbol == param2.parent_symbol;
 	}
 
-	public bool check_constraint () {
-		bool class_constraint = false;
-		foreach (var type in get_type_constraints ()) {
-			if (type.symbol is Class) {
-				if (class_constraint) {
-					Report.error (source_reference, "a type parameter can only be constrained with one class type");
-					return false;
-				}
-				class_constraint = true;
-			}
-		}
-		return true;
-	}
-
 	public override bool check (CodeContext context) {
 		if (checked) {
 			return !error;
@@ -166,6 +152,18 @@ public class Vala.TypeParameter : TypeSymbol {
 			Report.error (source_reference, "internal error: Incompatible parent_symbol");
 			error = true;
 			return false;
+		}
+
+		bool class_constraint = false;
+		foreach (var type in get_type_constraints ()) {
+			if (type.symbol is Class) {
+				if (class_constraint) {
+					Report.error (source_reference, "a type parameter may only be constrained by a single class type");
+					error = true;
+					break;
+				}
+				class_constraint = true;
+			}
 		}
 
 		return !error;
