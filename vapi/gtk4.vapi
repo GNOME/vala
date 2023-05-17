@@ -6514,7 +6514,8 @@ namespace Gtk {
 	[Version (since = "4.10")]
 	public class AlertDialog : GLib.Object {
 		[CCode (has_construct_function = false)]
-		protected AlertDialog ();
+		[PrintfFormat]
+		public AlertDialog (string format, ...);
 		public async int choose (Gtk.Window? parent, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_buttons ();

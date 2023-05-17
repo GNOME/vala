@@ -83,6 +83,8 @@ Accessible
   .update_property skip=false sentinel="-1"
   .update_relation skip=false sentinel="-1"
   .update_state skip=false sentinel="-1"
+AlertDialog
+  .new skip=false printf_format
 BuilderCScope
   .* skip=false
 CellArea
