@@ -160,6 +160,10 @@ public class Vala.TypeParameter : TypeSymbol {
 			}
 		}
 
+		if (type_constraint_list != null && type_constraint_list.size > 1) {
+			Report.error (source_reference, "currently it is only supported to constrain a type parameter with one type");
+			error = true;
+		}
 		return !error;
 	}
 }
