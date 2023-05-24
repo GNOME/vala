@@ -76,14 +76,14 @@ static void _vala_main (void);
 static void _g_object_unref0_ (gpointer var);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-static gint ___lambda1__gcompare_data_func (gconstpointer a,
+static gint ___lambda0__gcompare_data_func (gconstpointer a,
                                      gconstpointer b,
                                      gpointer self);
 static gint _compare_foo_gcompare_func (gconstpointer a,
                                  gconstpointer b);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (void * _userdata_);
-static gint ___lambda2__gcompare_data_func (gconstpointer a,
+static gint ___lambda1__gcompare_data_func (gconstpointer a,
                                      gconstpointer b,
                                      gpointer self);
 static gint _compare_foo_gcompare_data_func (gconstpointer a,
@@ -215,7 +215,7 @@ block1_data_unref (void * _userdata_)
 }
 
 static gint
-__lambda1_ (Block1Data* _data1_,
+__lambda0_ (Block1Data* _data1_,
             gconstpointer** a,
             gconstpointer** b)
 {
@@ -227,12 +227,12 @@ __lambda1_ (Block1Data* _data1_,
 }
 
 static gint
-___lambda1__gcompare_data_func (gconstpointer a,
+___lambda0__gcompare_data_func (gconstpointer a,
                                 gconstpointer b,
                                 gpointer self)
 {
 	gint result;
-	result = __lambda1_ (self, a, b);
+	result = __lambda0_ (self, a, b);
 	return result;
 }
 
@@ -246,7 +246,7 @@ vala_g_ptr_array_sort (GPtrArray* self,
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_ptr_array_ref (self);
 	_data1_->compare_func = compare_func;
-	g_ptr_array_sort_with_data (self, ___lambda1__gcompare_data_func, _data1_);
+	g_ptr_array_sort_with_data (self, ___lambda0__gcompare_data_func, _data1_);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
 }
@@ -281,7 +281,7 @@ block2_data_unref (void * _userdata_)
 }
 
 static gint
-__lambda2_ (Block2Data* _data2_,
+__lambda1_ (Block2Data* _data2_,
             gconstpointer** a,
             gconstpointer** b)
 {
@@ -293,12 +293,12 @@ __lambda2_ (Block2Data* _data2_,
 }
 
 static gint
-___lambda2__gcompare_data_func (gconstpointer a,
+___lambda1__gcompare_data_func (gconstpointer a,
                                 gconstpointer b,
                                 gpointer self)
 {
 	gint result;
-	result = __lambda2_ (self, a, b);
+	result = __lambda1_ (self, a, b);
 	return result;
 }
 
@@ -314,7 +314,7 @@ vala_g_ptr_array_sort_with_data (GPtrArray* self,
 	_data2_->self = g_ptr_array_ref (self);
 	_data2_->compare_func = compare_func;
 	_data2_->compare_func_target = compare_func_target;
-	g_ptr_array_sort_with_data (self, ___lambda2__gcompare_data_func, _data2_);
+	g_ptr_array_sort_with_data (self, ___lambda1__gcompare_data_func, _data2_);
 	block2_data_unref (_data2_);
 	_data2_ = NULL;
 }
