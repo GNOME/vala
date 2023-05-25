@@ -1,3 +1,18 @@
+Vala 0.56.8
+===========
+ * Various improvements and bug fixes:
+  - codegen: Include "glib-object.h" when using GType/GBoxedCopyFunc
+  - valadoc: Backing method of lambda-expression isn't included in valadoc AST
+  - valadoc/tests: Add girwriter test
+  - build: Improve usage of AC_PATH_PROG() for valacs
+  - build: valadoc requires valac 0.18.1
+
+ * Bindings:
+  - gio-2.0: Add new symbols from 2.76
+  - glib-2.0: Add new symbols from 2.76
+  - glib-2.0: Fix binding of g_variant_type_n_items()
+  - gtk4: Don't skip AlertDialog ctor
+
 Vala 0.56.7
 ===========
  * Various improvements and bug fixes:
