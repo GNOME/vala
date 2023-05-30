@@ -837,9 +837,11 @@
 <para>case-clause</para>
 <para> [ case-clauses ]</para></listitem></itemizedlist>
 <para> case-clause:</para><itemizedlist><listitem override="none">
-<para><emphasis role="strong">case</emphasis> literal-expression <emphasis role="strong">:</emphasis> embedded-statement</para></listitem></itemizedlist>
+<para><emphasis role="strong">case</emphasis> literal-expression <emphasis role="strong">:</emphasis> embedded-statement</para>
+<para> break-statement</para></listitem></itemizedlist>
 <para> default-clause:</para><itemizedlist><listitem override="none">
-<para><emphasis role="strong">default</emphasis> <emphasis role="strong">:</emphasis> embedded-statement</para></listitem></itemizedlist></listitem></itemizedlist>
+<para><emphasis role="strong">default</emphasis> <emphasis role="strong">:</emphasis> embedded-statement</para>
+<para> break-statement</para></listitem></itemizedlist></listitem></itemizedlist>
 </section>
 
 <section>
