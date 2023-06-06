@@ -3016,12 +3016,16 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (metadata.has_argument (ArgumentType.REF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "ref_function", metadata.get_string (ArgumentType.REF_FUNCTION));
+		} else if (reader.has_attribute ("glib:ref-func")) {
+			cl.set_attribute_string ("CCode", "ref_function", reader.get_attribute ("glib:ref-func"));
 		}
 		if (metadata.has_argument (ArgumentType.REF_SINK_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "ref_sink_function", metadata.get_string (ArgumentType.REF_SINK_FUNCTION));
 		}
 		if (metadata.has_argument (ArgumentType.UNREF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "unref_function", metadata.get_string (ArgumentType.UNREF_FUNCTION));
+		} else if (reader.has_attribute ("glib:unref-func")) {
+			cl.set_attribute_string ("CCode", "unref_function", reader.get_attribute ("glib:unref-func"));
 		}
 
 		next ();
@@ -3628,18 +3632,26 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		if (metadata.has_argument (ArgumentType.COPY_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "copy_function", metadata.get_string (ArgumentType.COPY_FUNCTION));
+		} else if (reader.has_attribute ("copy-function")) {
+			cl.set_attribute_string ("CCode", "copy_function", reader.get_attribute ("copy-function"));
 		}
 		if (metadata.has_argument (ArgumentType.FREE_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "free_function", metadata.get_string (ArgumentType.FREE_FUNCTION));
+		} else if (reader.has_attribute ("free-function")) {
+			cl.set_attribute_string ("CCode", "free_function", reader.get_attribute ("free-function"));
 		}
 		if (metadata.has_argument (ArgumentType.REF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "ref_function", metadata.get_string (ArgumentType.REF_FUNCTION));
+		} else if (reader.has_attribute ("glib:ref-func")) {
+			cl.set_attribute_string ("CCode", "ref_function", reader.get_attribute ("glib:ref-func"));
 		}
 		if (metadata.has_argument (ArgumentType.REF_SINK_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "ref_sink_function", metadata.get_string (ArgumentType.REF_SINK_FUNCTION));
 		}
 		if (metadata.has_argument (ArgumentType.UNREF_FUNCTION)) {
 			cl.set_attribute_string ("CCode", "unref_function", metadata.get_string (ArgumentType.UNREF_FUNCTION));
+		} else if (reader.has_attribute ("glib:unref-func")) {
+			cl.set_attribute_string ("CCode", "unref_function", reader.get_attribute ("glib:unref-func"));
 		}
 
 		next ();

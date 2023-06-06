@@ -861,6 +861,7 @@ TESTS = \
 	gir/async-sync-out.gir \
 	gir/class.gir \
 	gir/class-final.gir \
+	gir/class-ref-unref-function.gir \
 	gir/constant.gir \
 	gir/delegate-alias-without-target.gir \
 	gir/delegate-anonymous.gir \
@@ -878,6 +879,7 @@ TESTS = \
 	gir/parameter-nullable-out-simple-type.gir \
 	gir/property-non-readable.gir \
 	gir/signal-virtual.gir \
+	gir/record-copy-free-func.gir \
 	gir/symbol-redefined.gir \
 	gir/symbol-type-csuffix.gir \
 	gir/symbol-without-name.gir \
