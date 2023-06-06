@@ -1,0 +1,9 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", ref_function = "foo_custom_ref_function", type_id = "test_foo_get_type ()", unref_function = "foo_custom_unref_function")]
+	public class Foo {
+		public uint u;
+		[CCode (has_construct_function = false)]
+		protected Foo ();
+	}
+}

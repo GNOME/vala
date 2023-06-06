@@ -28,7 +28,7 @@ namespace GirTest {
 		[CCode (has_construct_function = false)]
 		public CompactClass ();
 	}
-	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_deprecated_class_test_get_type ()")]
+	[CCode (cheader_filename = "girtest.h", ref_function = "gir_test_deprecated_class_test_ref", type_id = "gir_test_deprecated_class_test_get_type ()", unref_function = "gir_test_deprecated_class_test_unref")]
 	[Version (deprecated = true, deprecated_since = "0.1.2", since = "0.1.0")]
 	public class DeprecatedClassTest {
 		public int ref_count;
@@ -53,7 +53,7 @@ namespace GirTest {
 		[NoAccessorMethod]
 		public GLib.Type t_type { get; construct; }
 	}
-	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_generics_test_get_type ()")]
+	[CCode (cheader_filename = "girtest.h", ref_function = "gir_test_generics_test_ref", type_id = "gir_test_generics_test_get_type ()", unref_function = "gir_test_generics_test_unref")]
 	public class GenericsTest {
 		public int ref_count;
 		[CCode (has_construct_function = false)]
@@ -142,7 +142,7 @@ namespace GirTest {
 		public virtual signal void signal_with_default_handlder (int i1);
 		public signal void some_signal (int param);
 	}
-	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedClass", lower_case_csuffix = "namedclass", type_id = "gir_test_namedclass_get_type ()")]
+	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedClass", lower_case_csuffix = "namedclass", ref_function = "gir_test_namedclass_ref", type_id = "gir_test_namedclass_get_type ()", unref_function = "gir_test_namedclass_unref")]
 	public class RenamedClass {
 		public int ref_count;
 		[CCode (has_construct_function = false)]
@@ -167,7 +167,7 @@ namespace GirTest {
 		[CCode (has_construct_function = false)]
 		public SubTypeTest ();
 	}
-	[CCode (cheader_filename = "girtest.h", type_id = "gir_test_typetest_get_type ()")]
+	[CCode (cheader_filename = "girtest.h", ref_function = "gir_test_typetest_ref", type_id = "gir_test_typetest_get_type ()", unref_function = "gir_test_typetest_unref")]
 	public class TypeTest {
 		public int ref_count;
 		[CCode (has_construct_function = false)]

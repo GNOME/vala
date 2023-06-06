@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="Foo" c:type="TestFoo" c:symbol-prefix="foo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="TestFooClass" glib:fundamental="1" glib:ref-func="foo_custom_ref_function" glib:unref-func="foo_custom_unref_function">
+  <field name="u" writable="1">
+    <type name="guint" c:type="guint"/>
+  </field>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="FooClass">
+  <field name="parent_class" readable="0" private="1">
+    <type name="GObject.TypeClass" c:type="GTypeClass"/>
+  </field>
+</record>
+</namespace>
+</repository>

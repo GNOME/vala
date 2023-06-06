@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<record name="Foo" c:type="TestFoo" c:symbol-prefix="foo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" copy-function="foo_custom_copy_func" free-function="foo_custom_free_func">
+  <field name="u" writable="1">
+    <type name="guint" c:type="guint"/>
+  </field>
+</record>
+</namespace>
+</repository>

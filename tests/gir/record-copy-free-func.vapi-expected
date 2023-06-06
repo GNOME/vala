@@ -1,0 +1,8 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", copy_function = "foo_custom_copy_func", free_function = "foo_custom_free_func", type_id = "test_foo_get_type ()")]
+	[Compact]
+	public class Foo {
+		public uint u;
+	}
+}
