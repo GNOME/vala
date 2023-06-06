@@ -1,5 +1,5 @@
 id: "org.freedesktop.Sdk.Extension.vala-nightly"
-branch: "master"
+branch: "22.08"
 runtime: "org.freedesktop.Sdk"
 build-extension: true
 sdk: "org.freedesktop.Sdk"
