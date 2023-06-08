@@ -13,6 +13,7 @@ include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
     BUNDLE: "vala-extension.flatpak"
     EXPORT_RUNTIME: "--runtime"
     RUN_TESTS: "no"
+    BRANCH: "22.08"
 
 flatpak-extension@x86_64:
   extends: [".flatpak@x86_64", ".vars-extension"]
