@@ -340,7 +340,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
 
-		bool profile = m.get_attribute ("Profile") != null;
+		bool profile = m.has_attribute ("Profile");
 
 		string real_name = get_ccode_real_name (m);
 

@@ -171,7 +171,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		    && !(m is CreationMethod)) {
 			if (!m.is_private_symbol () && (context.internal_header_filename != null || context.use_fast_vapi)) {
 				// do not warn if internal member may be used outside this compilation unit
-			} else if (m.parent_symbol != null && m.parent_symbol.get_attribute ("DBus") != null
+			} else if (m.parent_symbol != null && m.parent_symbol.has_attribute ("DBus")
 			    && m.get_attribute_bool ("DBus", "visible", true)) {
 				// do not warn if internal member is a visible DBus method
 			} else {
@@ -594,7 +594,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (stmt.expression is MethodCall) {
 			unowned MethodCall expr = (MethodCall) stmt.expression;
 			unowned MemberAccess? ma = expr.call as MemberAccess;
-			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
+			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.has_attribute ("NoReturn")) {
 				mark_unreachable ();
 				return;
 			}

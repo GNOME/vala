@@ -312,7 +312,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 			while (cl != null) {
 				// FIXME: use target values in the codegen
-				if (cl.get_attribute_string ("CCode", "ref_sink_function") != null) {
+				if (cl.has_attribute_argument ("CCode", "ref_sink_function")) {
 					value_type.floating_reference = true;
 					break;
 				}

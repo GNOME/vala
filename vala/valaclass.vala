@@ -56,7 +56,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				if (base_class != null && !base_class.is_subtype_of (this)) {
 					_is_compact = base_class.is_compact;
 				} else {
-					_is_compact = get_attribute ("Compact") != null;
+					_is_compact = has_attribute ("Compact");
 				}
 			}
 			return _is_compact;
@@ -85,7 +85,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				if (base_class != null && !base_class.is_subtype_of (this)) {
 					_is_immutable = base_class.is_immutable;
 				} else {
-					_is_immutable = get_attribute ("Immutable") != null;
+					_is_immutable = has_attribute ("Immutable");
 				}
 			}
 			return _is_immutable;
@@ -98,7 +98,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_singleton {
 		get {
 			if (_is_singleton == null) {
-				_is_singleton = get_attribute ("SingleInstance") != null;
+				_is_singleton = has_attribute ("SingleInstance");
 			}
 			return _is_singleton;
 		}
@@ -210,7 +210,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool is_error_base {
 		get {
-			return get_attribute ("ErrorBase") != null;
+			return has_attribute ("ErrorBase");
 		}
 	}
 
@@ -644,7 +644,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		foreach (Property prop in get_properties ()) {
-			if (prop.get_attribute ("NoAccessorMethod") != null && !is_subtype_of (context.analyzer.object_type)) {
+			if (prop.has_attribute ("NoAccessorMethod") && !is_subtype_of (context.analyzer.object_type)) {
 				error = true;
 				Report.error (prop.source_reference, "NoAccessorMethod is only allowed for properties in classes derived from GLib.Object");
 				return false;

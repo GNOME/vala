@@ -148,6 +148,16 @@ public abstract class Vala.CodeNode {
 	}
 
 	/**
+	 * Returns true if the specified attribute is set.
+	 *
+	 * @param  attribute attribute name
+	 * @return           true if the node has the given attribute
+	 */
+	public bool has_attribute (string attribute) {
+		return get_attribute (attribute) != null;
+	}
+
+	/**
 	 * Returns true if the specified attribute argument is set.
 	 *
 	 * @param  attribute attribute name

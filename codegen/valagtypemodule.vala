@@ -1474,7 +1474,7 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (iface.get_attribute ("GenericAccessors") != null) {
+		if (iface.has_attribute ("GenericAccessors")) {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
 				GenericType p_type = new GenericType (p);
 				DataType p_data_type = p_type.get_actual_type (SemanticAnalyzer.get_data_type_for_symbol (cl), null, cl);
@@ -2153,7 +2153,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
-		if (iface.get_attribute ("GenericAccessors") != null) {
+		if (iface.has_attribute ("GenericAccessors")) {
 			foreach (TypeParameter p in iface.get_type_parameters ()) {
 				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (get_ccode_type_id (p)));
 				var this_type = SemanticAnalyzer.get_data_type_for_symbol (iface);
@@ -2355,7 +2355,7 @@ public class Vala.GTypeModule : GErrorModule {
 
 	public override void visit_struct (Struct st) {
 		// custom simple type structs cannot have a type id which depends on head-allocation
-		if (st.get_attribute ("SimpleType") != null && !st.has_attribute_argument ("CCode", "type_id")) {
+		if (st.has_attribute ("SimpleType") && !st.has_attribute_argument ("CCode", "type_id")) {
 			st.set_attribute_bool ("CCode", "has_type_id", false);
 		}
 
@@ -2445,7 +2445,7 @@ public class Vala.GTypeModule : GErrorModule {
 			base_prop = prop.base_interface_property;
 		}
 
-		if (base_prop.get_attribute ("NoAccessorMethod") == null &&
+		if (!base_prop.has_attribute ("NoAccessorMethod") &&
 			prop.name == "type" && ((cl != null && !cl.is_compact) || (st != null && get_ccode_has_type_id (st)))) {
 			Report.error (prop.source_reference, "Property 'type' not allowed");
 			return;

@@ -46,7 +46,7 @@ public class Vala.Parameter : Variable {
 
 	public bool format_arg {
 		get {
-			return get_attribute ("FormatArg") != null;
+			return has_attribute ("FormatArg");
 		}
 	}
 

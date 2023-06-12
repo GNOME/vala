@@ -633,7 +633,7 @@ public class Vala.MemberAccess : Expression {
 			unowned CodeNode? parent = ma.parent_node;
 			if (parent != null && !(parent is ElementAccess) && !(((MemberAccess) ma).inner is BaseAccess)
 			    && (!(parent is MethodCall) || ((MethodCall) parent).get_argument_list ().contains (this))) {
-				if (sig.get_attribute ("HasEmitter") != null) {
+				if (sig.has_attribute ("HasEmitter")) {
 					if (!sig.check (context)) {
 						return false;
 					}
@@ -1161,7 +1161,7 @@ public class Vala.MemberAccess : Expression {
 			}
 		}
 
-		if (symbol_reference is Method && ((Method) symbol_reference).get_attribute ("DestroysInstance") != null) {
+		if (symbol_reference is Method && ((Method) symbol_reference).has_attribute ("DestroysInstance")) {
 			unowned Class? cl = ((Method) symbol_reference).parent_symbol as Class;
 			if (cl != null && cl.is_compact && ma != null) {
 				ma.lvalue = true;

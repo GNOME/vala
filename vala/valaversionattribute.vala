@@ -52,10 +52,10 @@ public class Vala.VersionAttribute {
 		get {
 			if (_deprecated == null) {
 				_deprecated = symbol.get_attribute_bool ("Version", "deprecated", false)
-					|| symbol.get_attribute_string ("Version", "deprecated_since") != null
-					|| symbol.get_attribute_string ("Version", "replacement") != null
+					|| symbol.has_attribute_argument ("Version", "deprecated_since")
+					|| symbol.has_attribute_argument ("Version", "replacement")
 					// [Deprecated] is deprecated
-					|| symbol.get_attribute ("Deprecated") != null;
+					|| symbol.has_attribute ("Deprecated");
 			}
 			return _deprecated;
 		}
@@ -102,8 +102,8 @@ public class Vala.VersionAttribute {
 		get {
 			if (_experimental == null) {
 				_experimental = symbol.get_attribute_bool ("Version", "experimental", false)
-					|| symbol.get_attribute_string ("Version", "experimental_until") != null
-					|| symbol.get_attribute ("Experimental") != null;
+					|| symbol.has_attribute_argument ("Version", "experimental_until")
+					|| symbol.has_attribute ("Experimental");
 			}
 			return _experimental;
 		}

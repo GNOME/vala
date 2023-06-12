@@ -44,7 +44,7 @@ public class Vala.NullType : ReferenceType {
 		if (target_type is GenericType ||
 		    target_type is PointerType ||
 		    target_type.nullable ||
-		    target_type.type_symbol.get_attribute ("PointerType") != null) {
+		    target_type.type_symbol.has_attribute ("PointerType")) {
 			return true;
 		}
 

@@ -249,7 +249,7 @@ public class Vala.Signal : Symbol, Callable {
 			default_handler.check (context);
 		}
 
-		if (get_attribute ("HasEmitter") != null) {
+		if (has_attribute ("HasEmitter")) {
 			emitter = new Method (name, return_type, source_reference);
 
 			emitter.owner = owner;

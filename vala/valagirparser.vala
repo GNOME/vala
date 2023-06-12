@@ -645,7 +645,7 @@ public class Vala.GirParser : CodeVisitor {
 
 			for (unowned Node? node = this ; node != null ; node = node.parent) {
 				if (node.symbol is Namespace) {
-					if (node.symbol.get_attribute_string ("CCode", "gir_namespace") != null) {
+					if (node.symbol.has_attribute_argument ("CCode", "gir_namespace")) {
 						break;
 					}
 				}
@@ -960,8 +960,8 @@ public class Vala.GirParser : CodeVisitor {
 						} else if (sym is Method && !(sym is CreationMethod) && node != this) {
 							if (m.is_virtual || m.is_abstract) {
 								bool different_invoker = false;
-								var attr = m.get_attribute ("NoWrapper");
-								if (attr != null) {
+								var no_wrapper = m.has_attribute ("NoWrapper");
+								if (no_wrapper) {
 									/* no invoker but this method has the same name,
 									   most probably the invoker has a different name
 									   and g-ir-scanner missed it */
@@ -975,7 +975,7 @@ public class Vala.GirParser : CodeVisitor {
 									}
 								}
 								if (!different_invoker) {
-									if (attr != null) {
+									if (no_wrapper) {
 										Report.warning (symbol.source_reference, "Virtual method `%s' conflicts with method of the same name", get_full_name ());
 									}
 									node.merged = true;
@@ -1089,7 +1089,7 @@ public class Vala.GirParser : CodeVisitor {
 						}
 					}
 
-					if (prop.get_attribute ("NoAccessorMethod") == null && prop.set_accessor != null && prop.set_accessor.writable) {
+					if (!prop.has_attribute ("NoAccessorMethod") && prop.set_accessor != null && prop.set_accessor.writable) {
 						var m = setter != null ? setter.symbol as Method : null;
 						// ensure setter vfunc if the property is abstract
 						if (m != null) {
@@ -1099,7 +1099,7 @@ public class Vala.GirParser : CodeVisitor {
 								prop.set_attribute ("ConcreteAccessor", false);
 							} else {
 								prop.set_accessor.value_type.value_owned = m.get_parameters()[0].variable_type.value_owned;
-								if (prop.get_attribute ("ConcreteAccessor") != null && !m.is_abstract && !m.is_virtual && prop.is_abstract) {
+								if (prop.has_attribute ("ConcreteAccessor") && !m.is_abstract && !m.is_virtual && prop.is_abstract) {
 									prop.set_attribute ("ConcreteAccessor", true);
 									prop.set_attribute ("NoAccessorMethod", false);
 								}
@@ -1110,7 +1110,7 @@ public class Vala.GirParser : CodeVisitor {
 						}
 					}
 
-					if (prop.get_attribute ("NoAccessorMethod") != null) {
+					if (prop.has_attribute ("NoAccessorMethod")) {
 						if (!prop.overrides && parent.symbol is Class) {
 							// bug 742012
 							// find base interface property with ConcreteAccessor and this overriding property with NoAccessorMethod
@@ -1119,7 +1119,7 @@ public class Vala.GirParser : CodeVisitor {
 								base_prop_node.process (parser);
 
 								var base_property = (Property) base_prop_node.symbol;
-								if (base_property.get_attribute ("ConcreteAccessor") != null) {
+								if (base_property.has_attribute ("ConcreteAccessor")) {
 									prop.set_attribute ("NoAccessorMethod", false);
 									if (prop.get_accessor != null) {
 										prop.get_accessor.value_type.value_owned = base_property.get_accessor.value_type.value_owned;
@@ -1137,7 +1137,7 @@ public class Vala.GirParser : CodeVisitor {
 						prop.set_attribute ("NoAccessorMethod", metadata.get_bool (ArgumentType.NO_ACCESSOR_METHOD));
 					}
 
-					if (prop.get_attribute ("NoAccessorMethod") != null) {
+					if (prop.has_attribute ("NoAccessorMethod")) {
 						// gobject defaults
 						if (prop.get_accessor != null) {
 							prop.get_accessor.value_type.value_owned = true;

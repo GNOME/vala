@@ -602,7 +602,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 	public bool array_length {
 		get {
 			if (_array_length == null) {
-				if (node.get_attribute ("NoArrayLength") != null) {
+				if (node.has_attribute ("NoArrayLength")) {
 					Report.deprecated (node.source_reference, "[NoArrayLength] is deprecated, use [CCode (array_length = false)] instead.");
 					_array_length = false;
 				} else if (ccode != null && ccode.has_argument ("array_length")) {
