@@ -2325,7 +2325,7 @@ public class Vala.GirParser : CodeVisitor {
 						parse_enumeration ();
 					}
 				} else {
-					if ((reader.get_attribute ("glib:error-quark") != null) || (reader.get_attribute ("glib:error-domain") != null)) {
+					if (reader.has_attribute ("glib:error-quark") || reader.has_attribute ("glib:error-domain")) {
 						parse_error_domain ();
 					} else {
 						parse_enumeration ();
@@ -2349,7 +2349,7 @@ public class Vala.GirParser : CodeVisitor {
 				} else if (element_get_type_id () != null) {
 					parse_boxed ("record");
 				} else if (!reader.get_attribute ("name").has_suffix ("Private")) {
-					if (reader.get_attribute ("glib:is-gtype-struct-for") == null && reader.get_attribute ("disguised") == "1") {
+					if (!reader.has_attribute ("glib:is-gtype-struct-for") && reader.get_attribute ("disguised") == "1") {
 						parse_boxed ("record");
 					} else {
 						parse_record ();
@@ -2771,12 +2771,12 @@ public class Vala.GirParser : CodeVisitor {
 			var src = get_current_src ();
 
 			if (type_name == null) {
-				if (reader.get_attribute ("length") != null) {
+				if (reader.has_attribute ("length")) {
 					array_length_idx = int.parse (reader.get_attribute ("length"));
 					no_array_length = false;
 					array_null_terminated = false;
 				}
-				if (reader.get_attribute ("fixed-size") != null) {
+				if (reader.has_attribute ("fixed-size")) {
 					fixed_length = int.parse (reader.get_attribute ("fixed-size"));
 					array_null_terminated = false;
 				}
@@ -2784,7 +2784,7 @@ public class Vala.GirParser : CodeVisitor {
 					no_array_length = true;
 					array_null_terminated = true;
 				}
-				if (reader.get_attribute ("zero-terminated") != null) {
+				if (reader.has_attribute ("zero-terminated")) {
 					array_null_terminated = int.parse (reader.get_attribute ("zero-terminated")) != 0;
 				}
 				next ();
