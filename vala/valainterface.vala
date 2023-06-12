@@ -211,10 +211,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 			context.analyzer.check_type (type);
 		}
 
-		foreach (TypeParameter p in get_type_parameters ()) {
-			p.check (context);
-		}
-
 		foreach (Enum en in get_enums ()) {
 			en.check (context);
 		}
