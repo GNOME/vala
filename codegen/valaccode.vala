@@ -436,15 +436,15 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_no_accessor_method (Property p) {
-		return p.get_attribute ("NoAccessorMethod") != null;
+		return p.has_attribute ("NoAccessorMethod");
 	}
 
 	public static bool get_ccode_concrete_accessor (Property p) {
-		return p.get_attribute ("ConcreteAccessor") != null;
+		return p.has_attribute ("ConcreteAccessor");
 	}
 
 	public static bool get_ccode_has_emitter (Signal sig) {
-		return sig.get_attribute ("HasEmitter") != null;
+		return sig.has_attribute ("HasEmitter");
 	}
 
 	public static bool get_ccode_has_type_id (TypeSymbol sym) {
@@ -469,7 +469,7 @@ namespace Vala {
 	}
 
 	public static bool get_ccode_no_wrapper (Method m) {
-		return m.get_attribute ("NoWrapper") != null;
+		return m.has_attribute ("NoWrapper");
 	}
 
 	public static string get_ccode_sentinel (Method m) {

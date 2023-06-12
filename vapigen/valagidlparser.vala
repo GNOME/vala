@@ -1661,7 +1661,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				prop.set_attribute ("NoAccessorMethod", true);
 			}
 
-			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
+			if (prop.has_attribute ("NoAccessorMethod") && prop.get_accessor != null) {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
@@ -1773,7 +1773,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				prop.set_attribute ("NoAccessorMethod", true);
 			}
 
-			if (prop.get_attribute ("NoAccessorMethod") != null && prop.get_accessor != null) {
+			if (prop.has_attribute ("NoAccessorMethod") && prop.get_accessor != null) {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}

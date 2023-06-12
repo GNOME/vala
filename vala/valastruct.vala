@@ -81,7 +81,7 @@ public class Vala.Struct : TypeSymbol {
 	public bool is_immutable {
 		get {
 			if (_is_immutable == null) {
-				_is_immutable = get_attribute ("Immutable") != null;
+				_is_immutable = has_attribute ("Immutable");
 			}
 			return _is_immutable;
 		}
@@ -339,7 +339,7 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 		if (boolean_type == null) {
-			boolean_type = get_attribute ("BooleanType") != null;
+			boolean_type = has_attribute ("BooleanType");
 		}
 		return boolean_type;
 	}
@@ -355,7 +355,7 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 		if (integer_type == null) {
-			integer_type = get_attribute ("IntegerType") != null;
+			integer_type = has_attribute ("IntegerType");
 		}
 		return integer_type;
 	}
@@ -371,7 +371,7 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 		if (floating_type == null) {
-			floating_type = get_attribute ("FloatingType") != null;
+			floating_type = has_attribute ("FloatingType");
 		}
 		return floating_type;
 	}
@@ -410,7 +410,7 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 		if (simple_type == null) {
-			simple_type = get_attribute ("SimpleType") != null || get_attribute ("BooleanType") != null || get_attribute ("IntegerType") != null || get_attribute ("FloatingType") != null;
+			simple_type = has_attribute ("SimpleType") || has_attribute ("BooleanType") || has_attribute ("IntegerType") || has_attribute ("FloatingType");
 		}
 		return simple_type;
 	}
@@ -445,7 +445,7 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public bool is_disposable () {
-		if (get_attribute_string ("CCode", "destroy_function") != null) {
+		if (has_attribute_argument ("CCode", "destroy_function")) {
 			return true;
 		}
 

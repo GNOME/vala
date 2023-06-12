@@ -384,7 +384,7 @@ public class Vala.GtkModule : GSignalModule {
 	}
 
 	public override void visit_property (Property prop) {
-		if (prop.get_attribute ("GtkChild") != null && prop.field == null) {
+		if (prop.has_attribute ("GtkChild") && prop.field == null) {
 			Report.error (prop.source_reference, "[GtkChild] is only allowed on automatic properties");
 		}
 
@@ -399,7 +399,7 @@ public class Vala.GtkModule : GSignalModule {
 			return;
 		}
 
-		if (f.binding != MemberBinding.INSTANCE || f.get_attribute ("GtkChild") == null) {
+		if (f.binding != MemberBinding.INSTANCE || !f.has_attribute ("GtkChild")) {
 			return;
 		}
 
@@ -465,7 +465,7 @@ public class Vala.GtkModule : GSignalModule {
 			return;
 		}
 
-		if (m.get_attribute ("GtkCallback") == null) {
+		if (!m.has_attribute ("GtkCallback")) {
 			return;
 		}
 

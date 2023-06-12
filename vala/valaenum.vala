@@ -32,7 +32,7 @@ public class Vala.Enum : TypeSymbol {
 	public bool is_flags {
 		get {
 			if (_is_flags == null) {
-				_is_flags = get_attribute ("Flags") != null;
+				_is_flags = has_attribute ("Flags");
 			}
 			return _is_flags;
 		}

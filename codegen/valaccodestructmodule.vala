@@ -34,7 +34,7 @@ public abstract class Vala.CCodeStructModule : CCodeBaseModule {
 			generate_struct_declaration (st.base_struct, decl_space);
 		} else if (!st.external_package) {
 			// custom simple type structs cannot have a type id which depends on head-allocation
-			if (st.get_attribute ("SimpleType") != null && !st.has_attribute_argument ("CCode", "type_id")) {
+			if (st.has_attribute ("SimpleType") && !st.has_attribute_argument ("CCode", "type_id")) {
 				st.set_attribute_bool ("CCode", "has_type_id", false);
 			}
 		}

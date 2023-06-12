@@ -116,7 +116,7 @@ public class Vala.Property : Symbol, Lockable {
 						Report.error (source_reference, "Property setter must have a body");
 					}
 					if (!get_has_body && !set_has_body) {
-						if (get_attribute ("GtkChild") != null && property_type.value_owned) {
+						if (has_attribute ("GtkChild") && property_type.value_owned) {
 							Report.warning (source_reference, "[GtkChild] properties must be declared as `unowned'");
 							property_type.value_owned = false;
 						}
@@ -126,7 +126,7 @@ public class Vala.Property : Symbol, Lockable {
 						_field.access = SymbolAccessibility.PRIVATE;
 						_field.binding = binding;
 						// apply gtk-child attribute to backing field for gtk-template support
-						if (get_attribute ("GtkChild") != null) {
+						if (has_attribute ("GtkChild")) {
 							_field.set_attribute_string ("GtkChild", "name", get_attribute_string ("GtkChild", "name", name));
 							_field.set_attribute_bool ("GtkChild", "internal", get_attribute_bool ("GtkChild", "internal"));
 						}
@@ -505,7 +505,7 @@ public class Vala.Property : Symbol, Lockable {
 			get_accessor.check (context);
 		}
 		if (set_accessor != null) {
-			if (get_attribute ("GtkChild") != null) {
+			if (has_attribute ("GtkChild")) {
 				Report.warning (set_accessor.source_reference, "[GtkChild] property `%s' is not allowed to have `set' accessor", get_full_name ());
 			}
 			set_accessor.check (context);

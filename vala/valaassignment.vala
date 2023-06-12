@@ -178,7 +178,7 @@ public class Vala.Assignment : Expression {
 				return false;
 			}
 
-			if (ma.symbol_reference.get_attribute ("GtkChild") != null) {
+			if (ma.symbol_reference.has_attribute ("GtkChild")) {
 				error = true;
 				Report.error (source_reference, "Assignment of [GtkChild] `%s' is not allowed", ma.symbol_reference.get_full_name ());
 				return false;

@@ -130,7 +130,7 @@ public class Vala.Namespace : Symbol {
 				old_ns.add_comment (c);
 			}
 			foreach (Attribute a in ns.attributes) {
-				if (old_ns.get_attribute (a.name) == null) {
+				if (!old_ns.has_attribute (a.name)) {
 					old_ns.attributes.append(a);
 				}
 			}

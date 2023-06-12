@@ -2946,7 +2946,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 	}
 
 	void require_generic_accessors (Interface iface) {
-		if (iface.get_attribute ("GenericAccessors") == null) {
+		if (!iface.has_attribute ("GenericAccessors")) {
 			Report.error (iface.source_reference,
 			              "missing generic type for interface `%s', add GenericAccessors attribute to interface declaration",
 			              iface.get_full_name ());
@@ -4224,7 +4224,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		}
 
 		// TODO: don't duplicate the code in CCodeMethodModule, we do this right now because it needs to be before return
-		if (current_method != null && current_method.get_attribute ("Profile") != null) {
+		if (current_method != null && current_method.has_attribute ("Profile")) {
 			string prefix = "_vala_prof_%s".printf (get_ccode_real_name (current_method));
 
 			var level = new CCodeIdentifier (prefix + "_level");
@@ -4320,7 +4320,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		unowned Class? cl = expr.value_type.type_symbol as Class;
 		if (cl != null && cl.is_compact && expr.parent_node is MemberAccess) {
 			unowned MethodType? mt = ((MemberAccess) expr.parent_node).value_type as MethodType;
-			if (mt != null && mt.method_symbol != null && mt.method_symbol.get_attribute ("DestroysInstance") != null) {
+			if (mt != null && mt.method_symbol != null && mt.method_symbol.has_attribute ("DestroysInstance")) {
 				return true;
 			}
 		}

@@ -227,7 +227,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 				}
 			}
 
-			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {
+			if (ma.symbol_reference != null && ma.symbol_reference.has_attribute ("Assert")) {
 				this.is_assert = true;
 
 				if (argument_list.size == 1) {
@@ -432,7 +432,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 		}
 
 		// concatenate stringified arguments for methods with attribute [Print]
-		if (mtype is MethodType && ((MethodType) mtype).method_symbol.get_attribute ("Print") != null) {
+		if (mtype is MethodType && ((MethodType) mtype).method_symbol.has_attribute ("Print")) {
 			var template = new Template (source_reference);
 			foreach (Expression arg in argument_list) {
 				arg.parent_node = null;

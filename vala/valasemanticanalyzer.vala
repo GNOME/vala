@@ -473,7 +473,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 
-		if (type_sym is Interface && type_sym.get_attribute ("DBus") != null) {
+		if (type_sym is Interface && type_sym.has_attribute ("DBus")) {
 			// GObject properties not currently supported in D-Bus interfaces
 			return false;
 		}
@@ -515,7 +515,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 
-		bool diag = (mtype is MethodType && ((MethodType) mtype).method_symbol.get_attribute ("Diagnostics") != null);
+		bool diag = (mtype is MethodType && ((MethodType) mtype).method_symbol.has_attribute ("Diagnostics"));
 
 		bool ellipsis = false;
 		int i = 0;
