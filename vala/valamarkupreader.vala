@@ -73,6 +73,10 @@ public class Vala.MarkupReader {
 		column = 1;
 	}
 
+	public bool has_attribute (string attr) {
+		return attributes.contains (attr);
+	}
+
 	public string? get_attribute (string attr) {
 		return attributes[attr];
 	}
