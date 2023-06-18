@@ -2198,7 +2198,7 @@ namespace GLib {
 
 	public delegate bool SourceFunc ();
 	[Version (since = "2.74")]
-	public delegate bool SourceOnceFunc ();
+	public delegate void SourceOnceFunc ();
 
 	[CCode (has_type_id = false)]
 	public errordomain ThreadError {
