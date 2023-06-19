@@ -18,6 +18,9 @@ namespace GirTest {
 		public BoxedStruct ret () {
 			return this;
 		}
+
+		public void @set (BoxedStruct param1) {
+		}
 	}
 
 	[CCode (has_type_id = false)]
@@ -38,6 +41,9 @@ namespace GirTest {
 
 		public Struct ret () {
 			return this;
+		}
+
+		public void @set (Struct param1) {
 		}
 	}
 
@@ -191,6 +197,8 @@ namespace GirTest {
 		public signal void skipped_signal (int param);
 
 		public int field = 42;
+
+		public Struct struct_field;
 
 		internal int internal_field = 23;
 

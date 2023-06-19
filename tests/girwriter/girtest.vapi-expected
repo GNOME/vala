@@ -65,6 +65,7 @@ namespace GirTest {
 		public int field;
 		public int fixed_array_field[23];
 		public string? nullable_field;
+		public GirTest.Struct struct_field;
 		public ObjectTest ();
 		public void array_in (int[] array);
 		public void array_inout (ref int[] array);
@@ -177,6 +178,7 @@ namespace GirTest {
 		public BoxedStruct.foo (int param1, int param2);
 		public void inv ();
 		public GirTest.BoxedStruct ret ();
+		public void @set (GirTest.BoxedStruct param1);
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	[GIR (name = "RenamedStruct")]
@@ -196,6 +198,7 @@ namespace GirTest {
 		public Struct.foo (int param1, int param2);
 		public void inv ();
 		public GirTest.Struct ret ();
+		public void @set (GirTest.Struct param1);
 	}
 	[CCode (cheader_filename = "girtest.h")]
 	public enum EnumTest {

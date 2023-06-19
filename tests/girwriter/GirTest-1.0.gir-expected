@@ -141,6 +141,9 @@
 		<field name="field" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
+		<field name="struct_field" writable="1">
+			<type name="GirTest.Struct" c:type="GirTestStruct"/>
+		</field>
 		<field name="internal_field" writable="1">
 			<type name="gint" c:type="gint"/>
 		</field>
@@ -2823,6 +2826,19 @@
 				</parameter>
 			</parameters>
 		</method>
+		<method name="set" c:identifier="gir_test_boxed_struct_set">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" nullable="1">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
+					<type name="GirTest.BoxedStruct" c:type="GirTestBoxedStruct*"/>
+				</parameter>
+			</parameters>
+		</method>
 	</record>
 	<record name="Struct" c:type="GirTestStruct" c:symbol-prefix="struct">
 		<field name="field_name" writable="1">
@@ -2876,6 +2892,19 @@
 					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
 				</instance-parameter>
 				<parameter name="result" direction="out" transfer-ownership="full" caller-allocates="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</parameter>
+			</parameters>
+		</method>
+		<method name="set" c:identifier="gir_test_struct_set">
+			<return-value transfer-ownership="full">
+				<type name="none" c:type="void"/>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none" nullable="1">
+					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
+				</instance-parameter>
+				<parameter name="param1" transfer-ownership="none">
 					<type name="GirTest.Struct" c:type="GirTestStruct*"/>
 				</parameter>
 			</parameters>
@@ -3019,7 +3048,7 @@
 		</return-value>
 		<parameters>
 			<parameter name="param" transfer-ownership="none">
-				<type name="GirTest.RenamedStruct" c:type="GirTestNamedStruct"/>
+				<type name="GirTest.RenamedStruct" c:type="GirTestNamedStruct*"/>
 			</parameter>
 		</parameters>
 	</function>
