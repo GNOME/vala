@@ -74,6 +74,7 @@ namespace GirTest {
 		public int fixed_array_field[23];
 		public int internal_field;
 		public string? nullable_field;
+		public GirTest.Struct struct_field;
 		[CCode (has_construct_function = false)]
 		public ObjectTest ();
 		public void array_in ([CCode (array_length_cname = "array_length1", array_length_pos = 1.1)] int[] array);
@@ -206,6 +207,7 @@ namespace GirTest {
 		public BoxedStruct.foo (int param1, int param2);
 		public void inv ();
 		public GirTest.BoxedStruct ret ();
+		public void @set (GirTest.BoxedStruct param1);
 	}
 	[CCode (cheader_filename = "girtest.h", cname = "GirTestNamedCompactClass", has_type_id = false)]
 	public struct RenamedCompactClass {
@@ -222,6 +224,7 @@ namespace GirTest {
 		public Struct.foo (int param1, int param2);
 		public void inv ();
 		public GirTest.Struct ret ();
+		public void @set (GirTest.Struct param1);
 	}
 	[CCode (cheader_filename = "girtest.h", cprefix = "GIR_TEST_ENUM_TEST_", type_id = "gir_test_enum_test_get_type ()")]
 	public enum EnumTest {
