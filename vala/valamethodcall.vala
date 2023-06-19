@@ -300,6 +300,12 @@ public class Vala.MethodCall : Expression, CallableExpression {
 				call.value_type = new ObjectType (context.analyzer.object_type, source_reference);
 				mtype = call.value_type;
 			}
+
+			if (base_cm != null && source_reference.file != base_cm.source_reference.file && base_cm.access == SymbolAccessibility.PRIVATE) {
+				error = true;
+				Report.error (source_reference, "chain up to private `%s' not possible", base_cm.get_full_name ());
+				return false;
+			}
 		}
 
 		// check for struct construction
