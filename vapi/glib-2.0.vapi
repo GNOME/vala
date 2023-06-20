@@ -2998,7 +2998,11 @@ namespace GLib {
 		FAILED,
 		PARTIAL_INPUT,
 		BAD_URI,
-		NOT_ABSOLUTE_PATH;
+		NOT_ABSOLUTE_PATH,
+		[Version (since = "2.40")]
+		NO_MEMORY,
+		[Version (since = "2.56")]
+		EMBEDDED_NUL;
 		public static GLib.Quark quark ();
 	}
 
