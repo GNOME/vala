@@ -68,6 +68,8 @@ PropertyAction
 ActionEntry
   .*#field skip
 ActionGroup
+  .get_action_*#virtual_method virtual
+  .has_action#virtual_method virtual
   .query_action#virtual_method virtual
 Application
   .local_command_line.arguments unowned
