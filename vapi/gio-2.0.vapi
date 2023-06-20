@@ -3489,17 +3489,17 @@ namespace GLib {
 		[Version (since = "2.28")]
 		public abstract void change_action_state (string action_name, GLib.Variant value);
 		[Version (since = "2.28")]
-		public abstract bool get_action_enabled (string action_name);
+		public virtual bool get_action_enabled (string action_name);
 		[Version (since = "2.28")]
-		public abstract unowned GLib.VariantType? get_action_parameter_type (string action_name);
+		public virtual unowned GLib.VariantType? get_action_parameter_type (string action_name);
 		[Version (since = "2.28")]
-		public abstract GLib.Variant? get_action_state (string action_name);
+		public virtual GLib.Variant? get_action_state (string action_name);
 		[Version (since = "2.28")]
-		public abstract GLib.Variant? get_action_state_hint (string action_name);
+		public virtual GLib.Variant? get_action_state_hint (string action_name);
 		[Version (since = "2.28")]
-		public abstract unowned GLib.VariantType? get_action_state_type (string action_name);
+		public virtual unowned GLib.VariantType? get_action_state_type (string action_name);
 		[Version (since = "2.28")]
-		public abstract bool has_action (string action_name);
+		public virtual bool has_action (string action_name);
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (since = "2.28")]
 		public abstract string[] list_actions ();
