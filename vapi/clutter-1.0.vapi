@@ -6300,16 +6300,16 @@ namespace Clutter {
 		public void set_state (Clutter.ModifierType state);
 		[Version (since = "1.8")]
 		public void set_time (uint32 time_);
-		public Clutter.AnyEvent any {[CCode (cname = "(ClutterAnyEvent *)")]  get; }
-		public Clutter.ButtonEvent button {[CCode (cname = "(ClutterButtonEvent *)")]  get; }
-		public Clutter.CrossingEvent crossing {[CCode (cname = "(ClutterCrossingEvent *)")]  get; }
-		public Clutter.KeyEvent key {[CCode (cname = "(ClutterKeyEvent *)")]  get; }
-		public Clutter.MotionEvent motion {[CCode (cname = "(ClutterMotionEvent *)")]  get; }
-		public Clutter.ScrollEvent scroll {[CCode (cname = "(ClutterScrollEvent *)")]  get; }
-		public Clutter.StageStateEvent stage_state {[CCode (cname = "(ClutterStageStateEvent *)")]  get; }
-		public Clutter.TouchEvent touch {[CCode (cname = "(ClutterTouchEvent *)")]  get; }
-		public Clutter.TouchpadPinchEvent touchpad_pinch {[CCode (cname = "(ClutterTouchpadPinchEvent *)")]  get; }
-		public Clutter.TouchpadSwipeEvent touchpad_swipe {[CCode (cname = "(ClutterTouchpadSwipeEvent *)")]  get; }
+		public Clutter.AnyEvent any { [CCode (cname = "(ClutterAnyEvent *)")] get; }
+		public Clutter.ButtonEvent button { [CCode (cname = "(ClutterButtonEvent *)")] get; }
+		public Clutter.CrossingEvent crossing { [CCode (cname = "(ClutterCrossingEvent *)")] get; }
+		public Clutter.KeyEvent key { [CCode (cname = "(ClutterKeyEvent *)")] get; }
+		public Clutter.MotionEvent motion { [CCode (cname = "(ClutterMotionEvent *)")] get; }
+		public Clutter.ScrollEvent scroll { [CCode (cname = "(ClutterScrollEvent *)")] get; }
+		public Clutter.StageStateEvent stage_state { [CCode (cname = "(ClutterStageStateEvent *)")] get; }
+		public Clutter.TouchEvent touch { [CCode (cname = "(ClutterTouchEvent *)")] get; }
+		public Clutter.TouchpadPinchEvent touchpad_pinch { [CCode (cname = "(ClutterTouchpadPinchEvent *)")] get; }
+		public Clutter.TouchpadSwipeEvent touchpad_swipe { [CCode (cname = "(ClutterTouchpadSwipeEvent *)")] get; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_event_sequence_get_type ()")]
 	[Compact]
