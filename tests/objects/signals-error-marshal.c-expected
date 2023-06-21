@@ -70,7 +70,7 @@ struct _FooClass {
 static gpointer foo_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);

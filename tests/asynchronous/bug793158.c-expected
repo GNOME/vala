@@ -64,7 +64,7 @@ VALA_EXTERN GMainLoop* loop;
 GMainLoop* loop = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static void foo_bar_data_free (gpointer _data);

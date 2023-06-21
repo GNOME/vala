@@ -60,7 +60,7 @@ struct _ParamSpecFoo {
 static gpointer foo_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void foo (GError** error,
           const gchar* _first_array,
           ...);

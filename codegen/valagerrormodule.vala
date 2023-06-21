@@ -78,6 +78,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			regfun.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.UNUSED;
 		} else if (context.hide_internal && edomain.is_internal_symbol ()) {
 			regfun.modifiers |= CCodeModifiers.INTERNAL;
+		} else {
+			regfun.modifiers |= CCodeModifiers.EXTERN;
+			requires_vala_extern = true;
 		}
 
 		decl_space.add_function_declaration (regfun);

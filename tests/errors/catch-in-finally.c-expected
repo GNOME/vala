@@ -29,7 +29,7 @@ typedef enum  {
 #define FOO_ERROR foo_error_quark ()
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void fail (GError** error);
 VALA_EXTERN void may_fail (GError** error);
 VALA_EXTERN void foo (GError** error);

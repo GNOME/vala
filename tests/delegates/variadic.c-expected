@@ -35,7 +35,7 @@ typedef enum  {
 #define BAZ_ERROR baz_error_quark ()
 
 VALA_EXTERN GQuark baz_error_quark (void);
-GType baz_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN void foo (const gchar* first,
           ...);
 VALA_EXTERN void baz (const gchar* first,
