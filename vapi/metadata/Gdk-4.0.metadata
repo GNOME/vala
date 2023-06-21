@@ -43,8 +43,6 @@ Surface
         .destroy destroys_instance
         .translate_coordinates.x ref
         .translate_coordinates.y ref
-Toplevel
-        .compute_size.size nullable unowned
 ToplevelSize type_id="gdk_toplevel_size_get_type ()"
 toplevel_size_get_type skip
 

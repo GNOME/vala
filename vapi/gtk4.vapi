@@ -5410,7 +5410,7 @@ namespace Gdk {
 		public abstract string title { owned get; set; }
 		[NoAccessorMethod]
 		public abstract Gdk.Surface transient_for { owned get; set; }
-		public signal void compute_size (out unowned Gdk.ToplevelSize? size);
+		public signal void compute_size (Gdk.ToplevelSize size);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
 	public struct KeymapKey {
