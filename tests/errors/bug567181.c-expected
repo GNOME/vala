@@ -58,7 +58,7 @@ static gpointer foo_parent_class = NULL;
 VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN GQuark error_quark (void);
-GType error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN Foo* foo_new (GError** error);
 VALA_EXTERN Foo* foo_construct (GType object_type,
                     GError** error);

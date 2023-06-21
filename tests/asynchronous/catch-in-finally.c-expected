@@ -80,7 +80,7 @@ VALA_EXTERN GMainLoop* loop;
 GMainLoop* loop = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 static void fail_data_free (gpointer _data);
 VALA_EXTERN void fail (GAsyncReadyCallback _callback_,
            gpointer _user_data_);

@@ -101,7 +101,7 @@ static gint Foo_private_offset;
 static gpointer foo_parent_class = NULL;
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN gpointer bar_ref (gpointer instance);
 VALA_EXTERN void bar_unref (gpointer instance);
 VALA_EXTERN GParamSpec* param_spec_bar (const gchar* name,

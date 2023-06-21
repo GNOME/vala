@@ -52,7 +52,7 @@ struct _Block1Data {
 };
 
 VALA_EXTERN GQuark foo_error_quark (void);
-GType foo_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
 static void foo_data_free (gpointer _data);
 VALA_EXTERN void foo (GAsyncReadyCallback _callback_,
           gpointer _user_data_);

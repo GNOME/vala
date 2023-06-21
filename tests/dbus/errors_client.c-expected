@@ -55,7 +55,7 @@ struct _TestIface {
 };
 
 VALA_EXTERN GQuark test_error_quark (void);
-GType test_error_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_error_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
