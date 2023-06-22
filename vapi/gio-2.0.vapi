@@ -2247,6 +2247,8 @@ namespace GLib {
 		protected Resolver ();
 		[Version (since = "2.22")]
 		public static GLib.Resolver get_default ();
+		[Version (since = "2.78")]
+		public uint get_timeout ();
 		[Version (since = "2.22")]
 		public virtual string lookup_by_address (GLib.InetAddress address, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
@@ -2275,6 +2277,10 @@ namespace GLib {
 		public virtual async GLib.List<GLib.SrvTarget> lookup_service_fn_async (string rrname, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.22")]
 		public void set_default ();
+		[Version (since = "2.78")]
+		public void set_timeout (uint timeout_ms);
+		[Version (since = "2.78")]
+		public uint timeout { get; set; }
 		public virtual signal void reload ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", ref_function = "g_resource_ref", type_id = "g_resource_get_type ()", unref_function = "g_resource_unref")]
@@ -3525,6 +3531,8 @@ namespace GLib {
 		public void add_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.5)] GLib.ActionEntry[] entries, void* user_data);
 		public abstract unowned GLib.Action? lookup_action (string action_name);
 		public abstract void remove_action (string action_name);
+		[Version (since = "2.78")]
+		public void remove_action_entries ([CCode (array_length_cname = "n_entries", array_length_pos = 1.1)] GLib.ActionEntry[] entries);
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_app_info_get_type ()")]
 	public interface AppInfo : GLib.Object {
@@ -3891,6 +3899,8 @@ namespace GLib {
 		public virtual async bool move_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null, GLib.FileProgressCallback? progress_callback) throws GLib.Error;
 		[Version (since = "2.56")]
 		public static GLib.File new_build_filename (string first_element, ...);
+		[Version (since = "2.78")]
+		public static GLib.File new_build_filenamev ([CCode (array_length = false, array_null_terminated = true)] string[] args);
 		public static GLib.File new_for_commandline_arg (string arg);
 		[Version (since = "2.36")]
 		public static GLib.File new_for_commandline_arg_and_cwd (string arg, string cwd);

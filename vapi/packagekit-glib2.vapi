@@ -86,6 +86,8 @@ namespace Pk {
 		[CCode (finish_name = "pk_client_generic_finish")]
 		[Version (since = "0.8.17")]
 		public async Pk.Results get_details_local_async ([CCode (array_length = false, array_null_terminated = true)] string[] files, GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
+		[Version (since = "1.2.7")]
+		public bool get_details_with_deps_size ();
 		[Version (since = "0.5.3")]
 		public Pk.Results get_distro_upgrades (GLib.Cancellable? cancellable, Pk.ProgressCallback progress_callback) throws GLib.Error;
 		[CCode (finish_name = "pk_client_generic_finish")]
@@ -215,6 +217,8 @@ namespace Pk {
 		public void set_background (bool background);
 		[Version (since = "0.6.10")]
 		public void set_cache_age (uint cache_age);
+		[Version (since = "1.2.7")]
+		public void set_details_with_deps_size (bool details_with_deps_size);
 		[Version (since = "0.6.10")]
 		public void set_interactive (bool interactive);
 		[Version (since = "0.6.10")]
@@ -237,6 +241,8 @@ namespace Pk {
 		public bool background { get; set; }
 		[Version (since = "0.6.10")]
 		public uint cache_age { get; set; }
+		[Version (since = "1.2.7")]
+		public bool details_with_deps_size { get; set; }
 		[Version (since = "0.5.4")]
 		public bool idle { get; }
 		[Version (since = "0.5.4")]
@@ -1509,6 +1515,7 @@ namespace Pk {
 		COLLECTIONS,
 		VENDOR,
 		NEWEST,
+		DESKTOP_DDE,
 		LAST;
 		[CCode (cname = "pk_group_enum_from_string")]
 		[Version (since = "0.5.0")]

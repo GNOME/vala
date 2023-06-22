@@ -988,7 +988,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_param_list (GLib.HashTable<string,string> param_list);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static void header_g_string_append_param (GLib.StringBuilder string, string name, string value);
+	public static void header_g_string_append_param (GLib.StringBuilder string, string name, string? value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_g_string_append_param_quoted (GLib.StringBuilder string, string name, string value);
 	[CCode (cheader_filename = "libsoup/soup.h")]
