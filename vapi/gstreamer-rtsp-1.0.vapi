@@ -72,9 +72,9 @@ namespace Gst {
 			[Version (since = "1.18")]
 			public Gst.RTSP.Result read_usec ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "guint")] uint8[] data, int64 timeout);
 			[Version (deprecated = true, deprecated_since = "1.18")]
-			public Gst.RTSP.Result receive (out unowned Gst.RTSP.Message message, GLib.TimeVal timeout);
+			public Gst.RTSP.Result receive (Gst.RTSP.Message message, GLib.TimeVal timeout);
 			[Version (since = "1.18")]
-			public Gst.RTSP.Result receive_usec (out unowned Gst.RTSP.Message message, int64 timeout);
+			public Gst.RTSP.Result receive_usec (Gst.RTSP.Message message, int64 timeout);
 			public Gst.RTSP.Result reset_timeout ();
 			[Version (deprecated = true, deprecated_since = "1.18")]
 			public Gst.RTSP.Result send (Gst.RTSP.Message message, GLib.TimeVal timeout);
@@ -157,6 +157,14 @@ namespace Gst {
 			[CCode (cname = "gst_rtsp_message_has_body_buffer")]
 			[Version (since = "1.16")]
 			public bool has_body_buffer ();
+			[CCode (cname = "gst_rtsp_message_init")]
+			public Gst.RTSP.Result init ();
+			[CCode (cname = "gst_rtsp_message_init_data")]
+			public Gst.RTSP.Result init_data (uint8 channel);
+			[CCode (cname = "gst_rtsp_message_init_request")]
+			public Gst.RTSP.Result init_request (Gst.RTSP.Method method, string uri);
+			[CCode (cname = "gst_rtsp_message_init_response")]
+			public Gst.RTSP.Result init_response (Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
 			[CCode (array_length = false, array_null_terminated = true, cname = "gst_rtsp_message_parse_auth_credentials")]
 			[Version (since = "1.12")]
 			public Gst.RTSP.AuthCredential[] parse_auth_credentials (Gst.RTSP.HeaderField field);
@@ -632,14 +640,6 @@ namespace Gst {
 		public static bool header_allow_multiple (Gst.RTSP.HeaderField field);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static unowned string? header_as_text (Gst.RTSP.HeaderField field);
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result message_init (out unowned Gst.RTSP.Message msg);
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result message_init_data (out unowned Gst.RTSP.Message msg, uint8 channel);
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result message_init_request (out unowned Gst.RTSP.Message msg, Gst.RTSP.Method method, string uri);
-		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
-		public static Gst.RTSP.Result message_init_response (out unowned Gst.RTSP.Message msg, Gst.RTSP.StatusCode code, string? reason, Gst.RTSP.Message? request);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]
 		public static Gst.RTSP.Result message_new (out Gst.RTSP.Message msg);
 		[CCode (cheader_filename = "gst/rtsp/rtsp.h")]

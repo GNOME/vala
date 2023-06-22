@@ -424,6 +424,23 @@ namespace Gst {
 			[Version (since = "1.20")]
 			public Info.with_caps (Gst.Caps caps);
 		}
+		[CCode (cheader_filename = "gst/video/video.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_video_info_dma_drm_get_type ()")]
+		[Compact]
+		[GIR (name = "VideoInfoDmaDrm")]
+		[Version (since = "1.24")]
+		public class InfoDmaDrm {
+			public uint32 drm_fourcc;
+			public uint64 drm_modifier;
+			public weak Gst.Video.Info vinfo;
+			[CCode (has_construct_function = false)]
+			public InfoDmaDrm ();
+			public void free ();
+			[CCode (has_construct_function = false)]
+			public InfoDmaDrm.from_caps (Gst.Caps caps);
+			public bool from_video_info (Gst.Video.Info info, uint64 modifier);
+			public void init ();
+			public Gst.Caps? to_caps ();
+		}
 		[CCode (cheader_filename = "gst/video/video.h", lower_case_cprefix = "gst_video_multiview_flagset_", type_id = "gst_video_multiview_flagset_get_type ()")]
 		[GIR (name = "VideoMultiviewFlagsSet")]
 		public sealed class MultiviewFlagsSet : Gst.FlagSet {
@@ -1409,7 +1426,9 @@ namespace Gst {
 			[Version (since = "1.22")]
 			NV12_8L128,
 			[Version (since = "1.22")]
-			NV12_10BE_8L128;
+			NV12_10BE_8L128,
+			[Version (since = "1.24")]
+			NV12_10LE40_4L4;
 			public static Gst.Video.Format from_fourcc (uint32 fourcc);
 			public static Gst.Video.Format from_masks (int depth, int bpp, int endianness, uint red_mask, uint green_mask, uint blue_mask, uint alpha_mask);
 			public static Gst.Video.Format from_string (string format);
@@ -2060,7 +2079,7 @@ namespace Gst {
 		[Version (deprecated = true, deprecated_since = "1.20", since = "1.6")]
 		public static double color_transfer_encode (Gst.Video.TransferFunction func, double val);
 		[CCode (cheader_filename = "gst/video/video.h")]
-		public static Gst.Sample convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
+		public static Gst.Sample? convert_sample (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout) throws GLib.Error;
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static void convert_sample_async (Gst.Sample sample, Gst.Caps to_caps, Gst.ClockTime timeout, owned Gst.Video.ConvertSampleCallback callback);
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -2068,6 +2087,18 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoCropMeta.get_info")]
 		public static unowned Gst.MetaInfo? crop_meta_get_info ();
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.24")]
+		public static uint32 dma_drm_fourcc_from_format (Gst.Video.Format format);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.24")]
+		public static uint32 dma_drm_fourcc_from_string (string format_str, out uint64 modifier);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.24")]
+		public static Gst.Video.Format dma_drm_fourcc_to_format (uint32 fourcc);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.24")]
+		public static string? dma_drm_fourcc_to_string (uint32 fourcc, uint64 modifier);
 		[CCode (cheader_filename = "gst/video/video.h")]
 		public static bool event_is_force_key_unit (Gst.Event event);
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -2127,6 +2158,15 @@ namespace Gst {
 		[Version (since = "1.6")]
 		public static bool guess_framerate (Gst.ClockTime duration, out int dest_n, out int dest_d);
 		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoInfoDmaDrm.from_caps", since = "1.24")]
+		public static bool info_dma_drm_from_caps (out unowned Gst.Video.InfoDmaDrm drm_info, Gst.Caps caps);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoInfoDmaDrm.from_video_info", since = "1.24")]
+		public static bool info_dma_drm_from_video_info (out unowned Gst.Video.InfoDmaDrm drm_info, Gst.Video.Info info, uint64 modifier);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (replacement = "VideoInfoDmaDrm.init", since = "1.24")]
+		public static void info_dma_drm_init (out unowned Gst.Video.InfoDmaDrm drm_info);
+		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (replacement = "VideoInfo.from_caps")]
 		public static bool info_from_caps (out unowned Gst.Video.Info info, Gst.Caps caps);
 		[CCode (cheader_filename = "gst/video/video.h")]
@@ -2141,6 +2181,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h")]
 		[Version (since = "1.22")]
 		public static bool is_common_aspect_ratio (int width, int height, int par_n, int par_d);
+		[CCode (cheader_filename = "gst/video/video.h")]
+		[Version (since = "1.24")]
+		public static bool is_dma_drm_caps (Gst.Caps caps);
 		[CCode (cheader_filename = "gst/video/video.h", cname = "gst_is_video_overlay_prepare_window_handle_message")]
 		public static bool is_video_overlay_prepare_window_handle_message (Gst.Message msg);
 		[CCode (cheader_filename = "gst/video/video.h")]

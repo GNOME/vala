@@ -36,6 +36,8 @@ namespace Gst {
 			public virtual signal Gst.FlowReturn new_sample ();
 			[Version (since = "1.20")]
 			public signal bool new_serialized_event ();
+			[Version (since = "1.24")]
+			public signal bool propose_allocation (Gst.Query query);
 			[HasEmitter]
 			public virtual signal Gst.Sample? pull_preroll ();
 			[HasEmitter]

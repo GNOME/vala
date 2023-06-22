@@ -185,6 +185,21 @@ namespace GES {
 		public virtual signal void child_added (GES.TimelineElement element);
 		public virtual signal void child_removed (GES.TimelineElement element);
 	}
+	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_discoverer_manager_get_type ()")]
+	[Version (since = "1.24")]
+	public sealed class DiscovererManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected DiscovererManager ();
+		public static GES.DiscovererManager get_default ();
+		public Gst.ClockTime get_timeout ();
+		public bool get_use_cache ();
+		public void set_timeout (Gst.ClockTime timeout);
+		public void set_use_cache (bool use_cache);
+		public uint64 timeout { get; set construct; }
+		public bool use_cache { get; set construct; }
+		public signal void discovered (Gst.PbUtils.DiscovererInfo info, GLib.Error? error);
+		public signal Gst.PbUtils.DiscovererInfo? load_serialized_info (string uri);
+	}
 	[CCode (cheader_filename = "ges/ges.h", type_id = "ges_effect_get_type ()")]
 	public class Effect : GES.BaseEffect, GES.Extractable, GES.MetaContainer {
 		[CCode (has_construct_function = false)]
@@ -865,6 +880,7 @@ namespace GES {
 		[CCode (cname = "ges_uri_clip_asset_request_sync", has_construct_function = false)]
 		public UriClipAsset.request_sync (string uri) throws GLib.Error;
 		[CCode (cname = "ges_uri_clip_asset_class_set_timeout")]
+		[Version (deprecated = true, deprecated_since = "1.24")]
 		public class void set_timeout (Gst.ClockTime timeout);
 		[NoAccessorMethod]
 		public uint64 duration { get; set; }

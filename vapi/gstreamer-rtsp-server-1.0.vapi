@@ -186,6 +186,8 @@ namespace Gst {
 		public class Media : GLib.Object {
 			[CCode (has_construct_function = false)]
 			public Media (owned Gst.Element element);
+			[Version (since = "1.24")]
+			public bool can_be_shared ();
 			public void collect_streams ();
 			[Version (since = "1.14")]
 			public bool complete_pipeline (GLib.GenericArray<Gst.RTSP.Transport?> transports);

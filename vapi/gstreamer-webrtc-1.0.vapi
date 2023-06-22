@@ -72,7 +72,7 @@ namespace Gst {
 		public Gst.WebRTCICEGatheringState ice_gathering_state;
 		[CCode (has_construct_function = false)]
 		protected WebRTCICE ();
-		public virtual void add_candidate (Gst.WebRTCICEStream stream, string candidate);
+		public virtual void add_candidate (Gst.WebRTCICEStream stream, string candidate, Gst.Promise? promise);
 		public virtual Gst.WebRTCICEStream? add_stream (uint session_id);
 		public virtual bool add_turn_server (string uri);
 		public virtual Gst.WebRTCICETransport? find_transport (Gst.WebRTCICEStream stream, Gst.WebRTCICEComponent component);

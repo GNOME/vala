@@ -3,6 +3,23 @@
 [CCode (cprefix = "Gst", gir_namespace = "GstAllocators", gir_version = "1.0", lower_case_cprefix = "gst_")]
 namespace Gst {
 	namespace Allocators {
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstDRMDumbAllocator", lower_case_cprefix = "gst_drm_dumb_allocator_", type_id = "gst_drm_dumb_allocator_get_type ()")]
+		[GIR (name = "DRMDumbAllocator")]
+		[Version (since = "1.24")]
+		public sealed class DRMDumbAllocator : Gst.Allocator {
+			[CCode (has_construct_function = false)]
+			protected DRMDumbAllocator ();
+			public Gst.Memory alloc (uint32 drm_fourcc, uint32 width, uint32 height, out uint32 out_pitch);
+			public bool has_prime_export ();
+			[CCode (has_construct_function = false, type = "GstAllocator*")]
+			public DRMDumbAllocator.with_device_path (string drm_device_path);
+			[CCode (has_construct_function = false, type = "GstAllocator*")]
+			public DRMDumbAllocator.with_fd (int drm_fd);
+			[NoAccessorMethod]
+			public string drm_device_path { owned get; construct; }
+			[NoAccessorMethod]
+			public int drm_fd { get; construct; }
+		}
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "GstDmaBufAllocator", lower_case_cprefix = "gst_dmabuf_allocator_", lower_case_csuffix = "dmabuf_allocator", type_id = "gst_dmabuf_allocator_get_type ()")]
 		[GIR (name = "DmaBufAllocator")]
 		[Version (since = "1.12")]
@@ -50,12 +67,21 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_dmabuf_memory_get_fd")]
 		[Version (since = "1.2")]
 		public static int dmabuf_memory_get_fd (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_drm_dumb_memory_export_dmabuf")]
+		[Version (since = "1.24")]
+		public static Gst.Memory drm_dumb_memory_export_dmabuf (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_drm_dumb_memory_get_handle")]
+		[Version (since = "1.24")]
+		public static uint32 drm_dumb_memory_get_handle (Gst.Memory mem);
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_fd_memory_get_fd")]
 		[Version (since = "1.6")]
 		public static int fd_memory_get_fd (Gst.Memory mem);
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_dmabuf_memory")]
 		[Version (since = "1.2")]
 		public static bool is_dmabuf_memory (Gst.Memory mem);
+		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_drm_dumb_memory")]
+		[Version (since = "1.24")]
+		public static bool is_drm_dumb_memory (Gst.Memory mem);
 		[CCode (cheader_filename = "gst/allocators/allocators.h", cname = "gst_is_fd_memory")]
 		[Version (since = "1.6")]
 		public static bool is_fd_memory (Gst.Memory mem);

@@ -763,6 +763,8 @@ namespace Gst {
 			public bool new_segment (Gst.Segment segment);
 			[NoWrapper]
 			public virtual bool prepare_seek_segment (Gst.Event seek, Gst.Segment segment);
+			[Version (since = "1.24")]
+			public bool push_segment (Gst.Segment segment);
 			[NoWrapper]
 			public virtual bool query (Gst.Query query);
 			public bool query_latency (out bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);

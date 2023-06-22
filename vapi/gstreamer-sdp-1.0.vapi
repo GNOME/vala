@@ -259,6 +259,8 @@ namespace Gst {
 			public Gst.SDP.Result remove_bandwidth (uint idx);
 			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_email (uint idx);
+			[Version (since = "1.24")]
+			public Gst.SDP.Result remove_media (uint idx);
 			[Version (since = "1.2")]
 			public Gst.SDP.Result remove_phone (uint idx);
 			[Version (since = "1.2")]

@@ -476,6 +476,9 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static void set_value_from_string (ref GLib.Value value, string value_str);
 		[CCode (cheader_filename = "gst/gst.h")]
+		[Version (since = "1.24")]
+		public static void simplify_fraction (int numerator, int denominator, uint n_terms, uint threshold);
+		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint64 uint64_scale (uint64 val, uint64 num, uint64 denom);
 		[CCode (cheader_filename = "gst/gst.h")]
 		public static uint64 uint64_scale_ceil (uint64 val, uint64 num, uint64 denom);

@@ -70,6 +70,9 @@ namespace Gst {
 			public Discoverer (Gst.ClockTime timeout) throws GLib.Error;
 			public Gst.PbUtils.DiscovererInfo discover_uri (string uri) throws GLib.Error;
 			public bool discover_uri_async (string uri);
+			[NoWrapper]
+			[Version (since = "1.24")]
+			public virtual Gst.PbUtils.DiscovererInfo load_serialize_info (string uri);
 			public void start ();
 			public void stop ();
 			[NoAccessorMethod]
@@ -78,6 +81,8 @@ namespace Gst {
 			public bool use_cache { get; set construct; }
 			public virtual signal void discovered (Gst.PbUtils.DiscovererInfo info, GLib.Error? err);
 			public virtual signal void finished ();
+			[Version (since = "1.24")]
+			public signal Gst.PbUtils.DiscovererInfo? load_serialized_info (string uri);
 			public virtual signal void source_setup (Gst.Element source);
 			public virtual signal void starting ();
 		}
@@ -146,7 +151,7 @@ namespace Gst {
 			public unowned Gst.Structure? get_misc ();
 			public Gst.PbUtils.DiscovererStreamInfo? get_next ();
 			public Gst.PbUtils.DiscovererStreamInfo? get_previous ();
-			public unowned string get_stream_id ();
+			public unowned string? get_stream_id ();
 			[Version (since = "1.20")]
 			public int get_stream_number ();
 			public unowned string get_stream_type_nick ();
