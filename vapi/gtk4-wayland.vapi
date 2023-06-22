@@ -62,9 +62,12 @@ namespace Gdk {
 		public sealed class Toplevel : Gdk.Wayland.Surface, Gdk.Toplevel {
 			[CCode (has_construct_function = false)]
 			protected Toplevel ();
+			[Version (since = "4.12")]
+			public void drop_exported_handle (string handle);
 			public bool export_handle (owned Gdk.Wayland.ToplevelExported callback);
 			public void set_application_id (string application_id);
 			public bool set_transient_for_exported (string parent_handle_str);
+			[Version (deprecated = true, deprecated_since = "4.12")]
 			public void unexport_handle ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", instance_pos = 2.9)]
