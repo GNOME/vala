@@ -163,10 +163,10 @@ InputStream
   .read_finish throws="GLib.IOError"
   .skip throws="GLib.IOError"
   .skip_finish throws="GLib.IOError"
-ListModel
+ListModel type_parameters="GLib.Object:G"
   .get_item#virtual_method skip
   .get_item#method skip=false abstract type="GLib.Object?"
-ListStore
+ListStore type_parameters="GLib.Object:G" implements="GLib.ListModel<G>"
   .find_with_equal_func.equal_func type_arguments="GLib.Object"
   .find_with_equal_func_full.equal_func type_arguments="GLib.Object"
   .insert_sorted.compare_func type_arguments="GLib.Object"

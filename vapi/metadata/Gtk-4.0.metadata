@@ -27,6 +27,270 @@ Requisition struct
 TextIter struct
 TreeIter struct
 
+// Generics
+
+BookmarkList implements="GLib.ListModel<GLib.FileInfo>"
+DirectoryList implements="GLib.ListModel<GLib.FileInfo>"
+StringList implements="GLib.ListModel<Gtk.StringObject>"
+
+Filter type_parameters="GLib.Object:G"
+  .match.item type="G?"
+
+CustomFilterFunc type_parameters="GLib.Object:G"
+  .item type="G"
+
+BoolFilter type_parameters="GLib.Object:G" implements="Filter<G>"
+CustomFilter type_parameters="GLib.Object:G" implements="Filter<G>"
+  .*.match_func type_arguments="G"
+FileFilter implements="Filter<GLib.FileInfo>"
+StringFilter type_parameters="GLib.Object:G" implements="Filter<G>"
+
+AnyFilter type_parameters="GLib.Object:G" implements="MultiFilter<G>,GLib.ListModel<G>"
+
+EveryFilter type_parameters="GLib.Object:G" implements="MultiFilter<G>,GLib.ListModel<G>"
+
+MultiFilter type_parameters="GLib.Object:G" implements="Filter<G>,GLib.ListModel<G>"
+  .append.filter type_arguments="G"
+
+SelectionFilterModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+
+FilterListModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+  .filter type_arguments="G"
+  .*.filter type_arguments="G"
+  .get_filter* type_arguments="G"
+
+FlattenListModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="GLib.ListModel<G>"
+  .*.model type_arguments="GLib.ListModel<G>"
+  .get_model type_arguments="GLib.ListModel<G>"
+  .get_model_for_item type_arguments="G"
+
+SliceListModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+
+Sorter type_parameters="GLib.Object:G"
+  .compare.item* type="G?"
+
+MultiSorter type_parameters="GLib.Object:G" implements="Sorter<G>,GLib.ListModel<G>"
+  .append.sorter type_arguments="G"
+
+ColumnViewSorter type_parameters="GLib.Object:G" implements="Sorter<G>"
+  .get_*_sort_column type_arguments="G"
+  .primary_sort_column type_arguments="G"
+CustomSorter type_parameters="GLib.Object:G" implements="Sorter<G>"
+  .*.sort_func type_arguments="G"
+NumericSorter type_parameters="GLib.Object:G" implements="Sorter<G>"
+StringSorter type_parameters="GLib.Object:G" implements="Sorter<G>"
+TreeListRowSorter type_parameters="GLib.Object:G" implements="Sorter<G>"
+  .sorter type_arguments="G"
+  .*.sorter type_arguments="G"
+  .get_sorter type_arguments="G"
+
+SortListModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+  .sorter type_arguments="G"
+  .*.sorter type_arguments="G"
+  .get_sorter* type_arguments="G"
+
+TreeListRow type_parameters="GLib.Object:G" implements="GLib.ListModel<TreeListRow<G>>"
+  .item type="G"
+  .get_item type="G?"
+  .children type_arguments="TreeListRow<G>"
+  .get_children type_arguments="TreeListRow<G>"
+  .get_parent type_arguments="G"
+  .get_child_row type_arguments="G"
+
+TreeListModelCreateModelFunc type_parameters="GLib.Object:G" type_arguments="G"
+  .item type="G"
+
+//with passthrough=true it would implement "GLib.ListModel<G>", with passthrough=false "GLib.ListModel<TreeListRow<G>>"
+TreeListModel type_parameters="GLib.Object:G" implements="GLib.ListModel<G>"
+  .model type_arguments="G"
+  .new.root type_arguments="G"
+  .new.create_func type_arguments="G"
+  .get_model* type_arguments="G"
+  .get_row type_arguments="G"
+  .get_child_row type_arguments="G"
+
+MapListModelMapFunc type_parameters="GLib.Object:K,GLib.Object:V" type="V"
+  .item type="K"
+
+MapListModel type_parameters="GLib.Object:K,GLib.Object:V" implements="GLib.ListModel<V>"
+  .model type_arguments="K"
+  .*.model type_arguments="K"
+  .get_model* type_arguments="K"
+  .*.map_func type_arguments="K,V"
+
+MultiSelection type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SelectionModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+
+NoSelection type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SelectionModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+
+SelectionModel type_parameters="GLib.Object:G" prerequisites="GLib.ListModel<G>"
+
+ShortcutController implements="GLib.ListModel<Gtk.Shortcut>"
+  .model type_arguments="Gtk.Shortcut"
+  .*.model type_arguments="Gtk.Shortcut"
+
+SingleSelection type_parameters="GLib.Object:G" implements="GLib.ListModel<G>,Gtk.SelectionModel<G>,Gtk.SectionModel<G>"
+  .model type_arguments="G"
+  .*.model type_arguments="G"
+  .get_model* type_arguments="G"
+  .selected_item type="unowned G"
+  .get_selected_item type="unowned G"
+
+Widget
+  .observe_children type_arguments="Gtk.Widget"
+  .observe_controllers type_arguments="Gtk.EventController"
+
+Assistant
+  .get_pages type_arguments="Gtk.AssistantPage"
+  .pages type_arguments="Gtk.AssistantPage"
+
+ColumnView type_parameters="GLib.Object:G"
+  .*.column type_arguments="G"
+  .*.model type_arguments="G"
+  .model type_arguments="G"
+  .get_model type_arguments="G"
+  .get_sorter  type_arguments="G"
+  .sorter type_arguments="G"
+  .get_columns type_arguments="G"
+  .columns type_arguments="G"
+
+ColumnViewColumn type_parameters="GLib.Object:G"
+  .factory type_arguments="G"
+  .*.factory type_arguments="G"
+  .get_factory type_arguments="G"
+  .sorter type_arguments="G"
+  .*.sorter type_arguments="G"
+  .get_sorter type_arguments="G"
+  .column_view type_arguments="G"
+  .get_column_view type_arguments="G"
+
+ConstraintLayout
+  .observe_constraints type_arguments="Gtk.Constraint"
+  .observe_guides type_arguments="Gtk.ConstraintGuide"
+
+DropDown type_parameters="GLib.Object:G"
+  .*.model type_arguments="G"
+  .model type_arguments="G"
+  .get_model type_arguments="G"
+  .set_factory.factory type_arguments="G"
+  .factory type_arguments="G"
+  .get_factory type_arguments="G"
+  .set_list_factory.factory type_arguments="G"
+  .list_factory type_arguments="G"
+  .get_list_factory type_arguments="G"
+
+FileDialog
+  .open_multiple_finish type_arguments="GLib.File"
+  .select_multiple_folders_finish type_arguments="GLib.File"
+  .get_filters type_arguments="Gtk.FileFilter"
+  .set_filters.filters type_arguments="Gtk.FileFilter"
+  .filters type_arguments="Gtk.FileFilter"
+
+FlowBoxForeachFunc type_parameters="GLib.Object:G"
+  .box type_arguments="G"
+
+FlowBoxCreateWidgetFunc type_parameters="GLib.Object:G"
+  .item type="G"
+
+// if no model is used the type parameter is not used
+FlowBox type_parameters="GLib.Object:G"
+  .bind_model.model type_arguments="G"
+  .bind_model.create_widget_func type_arguments="G"
+  .selected_foreach.func type_arguments="G"
+
+// filter can be either Filter<Pango.FontFamily> or Filter<Pango.FontFace>
+FontDialog
+  .get_filter type_arguments="GLib.Object"
+  .set_filter.filter type_arguments="GLib.Object"
+  .filter type_arguments="GLib.Object"
+
+ListItemFactory type_parameters="GLib.Object:G"
+
+ListItem type_parameters="GLib.Object:G"
+  .item type="G"
+  .get_item type="G"
+
+SignalListItemFactory type_parameters="GLib.Object:G" implements="Gtk.ListItemFactory<G>"
+  .*.object type="Gtk.ListItem<G>"
+
+BuilderListItemFactory type_parameters="GLib.Object:G" implements="Gtk.ListItemFactory<G>"
+
+GridView type_parameters="GLib.Object:G"
+  .*.model type_arguments="G"
+  .model type_arguments="G"
+  .get_model type_arguments="G"
+  .*.factory type_arguments="G"
+  .factory type_arguments="G"
+  .get_factory type_arguments="G"
+
+ListBoxForeachFunc type_parameters="GLib.Object:G"
+  .box type_arguments="G"
+
+ListBoxCreateWidgetFunc type_parameters="GLib.Object:G"
+  .item type="G"
+
+ListBox type_parameters="GLib.Object:G"
+  .bind_model.model type_arguments="G"
+  .bind_model.create_widget_func type_arguments="G"
+  .selected_foreach.func type_arguments="G"
+
+ListView type_parameters="GLib.Object:G"
+  .*.model type_arguments="G"
+  .model type_arguments="G"
+  .get_model type_arguments="G"
+  .*.factory type_arguments="G"
+  .factory type_arguments="G"
+  .get_factory type_arguments="G"
+
+Notebook
+  .get_pages type_arguments="Gtk.NotebookPage"
+  .pages type_arguments="Gtk.NotebookPage"
+
+Stack
+  .get_pages type_arguments="Gtk.StackPage"
+  .pages type_arguments="Gtk.StackPage"
+
+TreeExpander type_parameters="GLib.Object:G"
+  .item type="G"
+  .get_item type="G"
+  .list_row type_arguments="G"
+  .get_list_row type_arguments="G"
+  .set_list_row.list_row type_arguments="G"
+
+Window
+  .get_toplevels type_arguments="Gtk.Window"
+
+FileChooser
+  .get_files type_arguments="GLib.File"
+  .get_filters type_arguments="Gtk.FileFilter"
+  .get_shortcut_folders type_arguments="GLib.File"
+  .filters type_arguments="Gtk.FileFilter"
+  .shortcut_folders type_arguments="GLib.File"
+
+ColumnViewCell type_parameters="GLib.Object:G" implements="Gtk.ListItem<G>"
+  .get_item type="G?"
+  .item type="G?"
+
+SectionModel type_parameters="GLib.Object:G" prerequisites="GLib.ListModel<G>"
+
 // Hide dedicated constructors of former compact classes
 Border
   .new skip
@@ -222,7 +486,6 @@ FlowBox
   .bind_model skip=false
   .bind_model.create_widget_func nullable
 FlowBoxCreateWidgetFunc skip=false
-  .item type="GLib.Object"
 IMContextSimple
   .add_table skip=false
 TreeSelection

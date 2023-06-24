@@ -322,7 +322,7 @@ namespace Pango {
 		public virtual void list_sizes ([CCode (array_length_cname = "n_sizes", array_length_pos = 1.1)] out int[]? sizes);
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_family_get_type ()")]
-	public abstract class FontFamily : GLib.Object, GLib.ListModel {
+	public abstract class FontFamily : GLib.Object, GLib.ListModel<Pango.FontFace> {
 		[CCode (has_construct_function = false)]
 		protected FontFamily ();
 		[Version (since = "1.46")]
@@ -339,7 +339,7 @@ namespace Pango {
 		public uint n_items { get; }
 	}
 	[CCode (cheader_filename = "pango/pango.h", type_id = "pango_font_map_get_type ()")]
-	public abstract class FontMap : GLib.Object, GLib.ListModel {
+	public abstract class FontMap : GLib.Object, GLib.ListModel<Pango.FontFamily> {
 		[CCode (has_construct_function = false)]
 		protected FontMap ();
 		[Version (since = "1.34")]

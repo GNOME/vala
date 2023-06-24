@@ -41,6 +41,10 @@ Coverage
 Font
   .get_coverage skip=false
 
+// Generics
+FontMap implements="GLib.ListModel<Pango.FontFamily>"
+FontFamily implements="GLib.ListModel<Pango.FontFace>"
+
 // Variadic
 TabArray
   .new_with_positions skip=false

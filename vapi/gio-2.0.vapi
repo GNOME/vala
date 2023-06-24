@@ -1790,8 +1790,8 @@ namespace GLib {
 		public virtual ssize_t skip (size_t count, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public virtual async ssize_t skip_async (size_t count, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
-	[CCode (cheader_filename = "gio/gio.h", type_id = "g_list_store_get_type ()")]
-	public sealed class ListStore : GLib.Object, GLib.ListModel {
+	[CCode (cheader_filename = "gio/gio.h", no_generic_args = true, type_id = "g_list_store_get_type ()")]
+	public sealed class ListStore<G> : GLib.Object, GLib.ListModel<G> where G : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.44")]
 		public ListStore (GLib.Type item_type);
@@ -3999,8 +3999,8 @@ namespace GLib {
 		[Version (deprecated = true, deprecated_since = "2.54", since = "2.22")]
 		public static GLib.Object newv (GLib.Type object_type, [CCode (array_length_cname = "n_parameters", array_length_pos = 1.5, array_length_type = "guint")] GLib.Parameter[] parameters, GLib.Cancellable? cancellable = null) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "gio/gio.h", type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
-	public interface ListModel : GLib.Object {
+	[CCode (cheader_filename = "gio/gio.h", no_generic_args = true, type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
+	public interface ListModel<G> : GLib.Object where G : GLib.Object {
 		[Version (since = "2.44")]
 		public abstract GLib.Object? get_item (uint position);
 		[Version (since = "2.44")]
