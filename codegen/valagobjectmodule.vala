@@ -74,6 +74,9 @@ public class Vala.GObjectModule : GTypeModule {
 
 		/* create type, dup_func, and destroy_func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			if (type_param.no_generic_args) {
+				continue;
+			}
 			string func_name, enum_value;
 			CCodeConstant func_name_constant;
 			CCodeFunctionCall cinst, cspec;
@@ -304,6 +307,9 @@ public class Vala.GObjectModule : GTypeModule {
 
 		/* type, dup func, and destroy func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			if (type_param.no_generic_args) {
+				continue;
+			}
 			string func_name, enum_value;
 			CCodeMemberAccess cfield;
 			CCodeFunctionCall csetcall;
@@ -439,6 +445,9 @@ public class Vala.GObjectModule : GTypeModule {
 
 		/* type, dup func, and destroy func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			if (type_param.no_generic_args) {
+				continue;
+			}
 			string func_name, enum_value;
 			CCodeMemberAccess cfield;
 			CCodeFunctionCall cgetcall;

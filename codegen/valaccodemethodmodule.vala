@@ -535,6 +535,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 					// allow capturing generic type parameters
 					var data_var = get_variable_cexpression ("_data%d_".printf (block_id));
 					foreach (var type_param in m.get_type_parameters ()) {
+						if (type_param.no_generic_args) {
+							continue;
+						}
 						var type = get_ccode_type_id (type_param);
 						var dup_func = get_ccode_copy_function (type_param);
 						var destroy_func = get_ccode_destroy_function (type_param);
@@ -635,6 +638,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 							/* type, dup func, and destroy func fields for generic types */
 							var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 							foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+								if (type_param.no_generic_args) {
+									continue;
+								}
 								var type = get_ccode_type_id (type_param);
 								var dup_func = get_ccode_copy_function (type_param);
 								var destroy_func = get_ccode_destroy_function (type_param);
@@ -1080,6 +1086,9 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		if (type_parameters != null) {
 			int type_param_index = 0;
 			foreach (var type_param in type_parameters) {
+				if (type_param.no_generic_args) {
+					continue;
+				}
 				cfile.add_include ("glib-object.h");
 				var type = get_ccode_type_id (type_param);
 				var dup_func = get_ccode_copy_function (type_param);

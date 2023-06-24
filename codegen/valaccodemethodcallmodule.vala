@@ -165,6 +165,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// chain up to base class
 					foreach (DataType base_type in current_class.get_base_types ()) {
 						if (base_type.type_symbol is Class) {
+							if (((Class) base_type.type_symbol).get_attribute_bool ("CCode", "no_generic_args", false)) {
+								break;
+							}
 							List<TypeParameter> type_parameters = null;
 							if (get_ccode_real_name (m) == "g_object_new") {
 								// gobject-style chainup
@@ -179,6 +182,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// chain up to other constructor in same class
 					var cl = (Class) m.parent_symbol;
 					foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+						if (type_param.no_generic_args) {
+							continue;
+						}
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeIdentifier (get_ccode_type_id (type_param)));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (get_ccode_copy_function (type_param)));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeIdentifier (get_ccode_destroy_function (type_param)));
@@ -188,6 +194,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				if (current_class.has_type_parameters () && get_ccode_real_name (m) == "g_object_new") {
 					// gobject-style construction
 					foreach (var type_param in current_class.get_type_parameters ()) {
+						if (type_param.no_generic_args) {
+							continue;
+						}
 						var type_param_name = type_param.name.ascii_down ().replace ("_", "-");
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeConstant ("\"%s-type\"".printf (type_param_name)));
 						in_arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeIdentifier (get_ccode_type_id (type_param)));
@@ -380,6 +389,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				/* type, dup func, and destroy func fields for generic types */
 				var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
 				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+					if (type_param.no_generic_args) {
+						continue;
+					}
 					var type = get_ccode_type_id (type_param);
 					var dup_func = get_ccode_copy_function (type_param);
 					var destroy_func = get_ccode_destroy_function (type_param);

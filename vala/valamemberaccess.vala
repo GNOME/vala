@@ -977,7 +977,7 @@ public class Vala.MemberAccess : Expression {
 			// that subtype might not be generic, so do not report an error in that case
 			unowned ObjectType? object_type = instance_type as ObjectType;
 			if (object_type != null && object_type.object_type_symbol.has_type_parameters ()
-			    && !instance_type.has_type_arguments ()) {
+			    && !instance_type.check_type_arguments (context) && !instance_type.has_type_arguments ()) {
 				error = true;
 				Report.error (inner.source_reference, "missing generic type arguments");
 				return false;

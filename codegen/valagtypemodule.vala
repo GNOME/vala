@@ -549,6 +549,9 @@ public class Vala.GTypeModule : GErrorModule {
 		if (is_gtypeinstance) {
 			/* create type, dup_func, and destroy_func fields for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+				if (type_param.no_generic_args) {
+					continue;
+				}
 				instance_priv_struct.add_field ("GType", get_ccode_type_id (type_param));
 				instance_priv_struct.add_field ("GBoxedCopyFunc", get_ccode_copy_function (type_param));
 				instance_priv_struct.add_field ("GDestroyNotify", get_ccode_destroy_function (type_param));

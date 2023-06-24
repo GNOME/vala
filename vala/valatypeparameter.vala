@@ -29,6 +29,12 @@ public class Vala.TypeParameter : TypeSymbol {
 	List<DataType> type_constraint_list;
 	static List<DataType> _empty_type_list;
 
+	public bool no_generic_args {
+		get {
+			return parent_symbol.get_attribute_bool ("CCode", "no_generic_args", false);
+		}
+	}
+
 	/**
 	 * Creates a new generic type parameter.
 	 *
@@ -164,6 +170,12 @@ public class Vala.TypeParameter : TypeSymbol {
 			Report.error (source_reference, "currently it is only supported to constrain a type parameter with one type");
 			error = true;
 		}
+
+		if (no_generic_args && !has_type_constraints ()) {
+			Report.error (source_reference, "type parameters need to be constrained for using `no_generic_args'");
+			error = true;
+		}
+
 		return !error;
 	}
 }

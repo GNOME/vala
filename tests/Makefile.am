@@ -842,6 +842,10 @@ TESTS = \
 	generics/method-to-delegate-incompatible-2.test \
 	generics/method-to-delegate-incompatible-3.test \
 	generics/multiple-classes-constraints.test \
+	generics/no-generic-args.vala \
+	generics/no-generic-args-use-with-proper-generic-type.test \
+	generics/no-generic-args-use-with-proper-generic-type-2.test \
+	generics/no-generic-args-with-no-constraint.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \
@@ -851,6 +855,7 @@ TESTS = \
 	generics/type-parameter-properties.vala \
 	generics/type-parameter-property-clash.vala \
 	generics/type-parameter-static-in-runtime.test \
+	generics/typeof-with-no-generic-args.test \
 	generics/value-pointer-type-access.vala \
 	generics/bug640330.vala \
 	generics/bug640330-2.test \
@@ -1493,6 +1498,7 @@ TESTS = \
 	genie/while.gs \
 	glib/conditional-glib-api.vala \
 	bindings/gio/memoryoutputstream.vala \
+	bindings/gio/listmodel-compatibility.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
 

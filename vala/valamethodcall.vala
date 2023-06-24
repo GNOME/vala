@@ -381,8 +381,9 @@ public class Vala.MethodCall : Expression, CallableExpression {
 				}
 			}
 
+			unowned List<DataType> type_args = ma.get_type_arguments ();
 			int n_type_params = m.get_type_parameters ().size;
-			int n_type_args = ma.get_type_arguments ().size;
+			int n_type_args = type_args.size;
 			if (n_type_args > 0 && n_type_args < n_type_params) {
 				error = true;
 				Report.error (ma.source_reference, "too few type arguments for `%s'", m.to_string ());
@@ -390,6 +391,12 @@ public class Vala.MethodCall : Expression, CallableExpression {
 			} else if (n_type_args > 0 && n_type_args > n_type_params) {
 				error = true;
 				Report.error (ma.source_reference, "too many type arguments for `%s'", m.to_string ());
+				return false;
+			}
+
+			if (n_type_args >= 1 && type_args[0] is GenericType && ((TypeParameter) type_args[0].type_symbol).no_generic_args) {
+				error = true;
+				Report.error (ma.source_reference, "Cannot retrieve runtime information from type-parameter with `[CCode (no_generic_args = true)]' attribute");
 				return false;
 			}
 		}

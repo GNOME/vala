@@ -1848,6 +1848,8 @@ public class Vala.GirParser : CodeVisitor {
 		var type_parameters_length = type_parameters.length;
 		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_parameters_length);
 
+		type_symbol.set_attribute_bool ("CCode", "no_generic_args", true);
+
 		string? constraint = null;
 		for (var c = 0 ; c < type_parameters_length ; c++) {
 			if (type_parameters[c] == ',') {

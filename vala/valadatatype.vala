@@ -733,6 +733,13 @@ public abstract class Vala.DataType : CodeNode {
 			}
 
 			it.next ();
+
+			if (!it.get ().no_generic_args && type is GenericType && !(type_symbol is Delegate) && ((TypeParameter) type.type_symbol).no_generic_args) {
+				error = true;
+				Report.error (source_reference, "Cannot retrieve runtime information from type-parameter with `[CCode (no_generic_args = true)]' attribute");
+				return false;
+			}
+
 			unowned List<DataType> type_constraints = it.get ().get_type_constraints ();
 			foreach (DataType type_constraint in type_constraints) {
 				if (!type.compatible (type_constraint)) {

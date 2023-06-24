@@ -3879,9 +3879,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				return new CCodeConstant ("NULL");
 			}
 
-			// unref functions are optional for type parameters
-			var cunrefisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_destroy_func_expression (type), new CCodeConstant ("NULL"));
-			cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
+			if (!((GenericType) type).type_parameter.no_generic_args) {
+				// unref functions are optional for type parameters
+				var cunrefisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_destroy_func_expression (type), new CCodeConstant ("NULL"));
+				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
+			}
 		}
 
 		// glib collections already have the free_func argument, so make sure the instance parameter gets first
@@ -4821,7 +4823,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				ccallarg = cexpr;
 			}
 			var cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cexpr, new CCodeConstant ("NULL"));
-			if (type is GenericType) {
+			if (type is GenericType && !((GenericType) type).type_parameter.no_generic_args) {
 				// dup functions are optional for type parameters
 				var cdupnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_dup_func_expression (type, node.source_reference), new CCodeConstant ("NULL"));
 				cnotnull = new CCodeBinaryExpression (CCodeBinaryOperator.AND, cnotnull, cdupnotnull);
@@ -5077,7 +5079,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				out_arg_map.set (get_param_pos (get_ccode_async_result_pos (m)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_res_"));
 			}
 
-			if (cl != null && (!cl.is_compact || get_ccode_simple_generics (m))) {
+			if (cl != null && !cl.get_attribute_bool ("CCode", "no_generic_args", false) && (!cl.is_compact || get_ccode_simple_generics (m))) {
 				add_generic_type_arguments (m, in_arg_map, expr.type_reference.get_type_arguments (), expr);
 			}
 

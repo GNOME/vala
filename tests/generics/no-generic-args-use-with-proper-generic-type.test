@@ -1,0 +1,14 @@
+Invalid Code
+
+class Foo<G> : Object {
+}
+
+[CCode (no_generic_args = true)]
+class Bar<K> : Object {
+	public Bar () {
+		var foo = new Foo<K> ();
+	}
+}
+
+void main () {
+}
