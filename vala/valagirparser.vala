@@ -1848,10 +1848,18 @@ public class Vala.GirParser : CodeVisitor {
 		var type_parameters_length = type_parameters.length;
 		GLib.StringBuilder current = new GLib.StringBuilder.sized (type_parameters_length);
 
+		string? constraint = null;
 		for (var c = 0 ; c < type_parameters_length ; c++) {
 			if (type_parameters[c] == ',') {
 				var p = new TypeParameter (current.str, source_reference);
+				if (constraint != null) {
+					p.add_type_constraint (parse_type_from_string (constraint, true, source_reference));
+					constraint = null;
+				}
 				type_symbol.add_type_parameter (p);
+				current.truncate ();
+			} else if (type_parameters[c] == ':') {
+				constraint = current.str;
 				current.truncate ();
 			} else {
 				current.append_unichar (type_parameters[c]);
@@ -1859,6 +1867,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		var p = new TypeParameter (current.str, source_reference);
+		if (constraint != null) {
+			p.add_type_constraint (parse_type_from_string (constraint, true, source_reference));
+		}
 		type_symbol.add_type_parameter (p);
 
 		return true;
