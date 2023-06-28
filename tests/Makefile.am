@@ -1513,5 +1513,6 @@ EXTRA_DIST = \
 	$(TESTS) \
 	$(LINUX_TESTS) \
 	$(wildcard $(srcdir)/*/*.c-expected) \
+	$(wildcard $(srcdir)/*/*.h-expected) \
 	$(wildcard $(srcdir)/*/*.vapi-expected) \
 	$(NULL)
