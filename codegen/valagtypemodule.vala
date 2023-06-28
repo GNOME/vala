@@ -64,37 +64,35 @@ public class Vala.GTypeModule : GErrorModule {
 			generate_class_declaration (cl.base_class, decl_space);
 		}
 
+		bool final_not_public = (cl.is_opaque || cl.is_sealed) && context.header_filename != null && decl_space.file_type != CCodeFileType.PUBLIC_HEADER;
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 		bool is_gsource = cl.is_subtype_of (gsource_type);
 
-		if (is_gtypeinstance) {
+		if (final_not_public) {
+			// nothing to do
+		} else if (is_gtypeinstance) {
 			decl_space.add_include ("glib-object.h");
 
 			decl_space.add_type_declaration (new CCodeNewline ());
+
 			var macro = "(%s_get_type ())".printf (get_ccode_lower_case_name (cl, null));
 			decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (cl), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_name (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_cast_function (cl)), macro));
 
-			if (!(cl.is_sealed && decl_space.file_type == CCodeFileType.PUBLIC_HEADER)) {
-				macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_type_name (cl));
-				decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_function (cl)), macro));
-			}
+			macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_type_name (cl));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_function (cl)), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (get_ccode_type_id (cl));
 			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_check_function (cl)), macro));
 
-			if (!(cl.is_sealed && decl_space.file_type == CCodeFileType.PUBLIC_HEADER)) {
-				macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (get_ccode_type_id (cl));
-				decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_check_function (cl)), macro));
-			}
+			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (get_ccode_type_id (cl));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(klass)".printf (get_ccode_class_type_check_function (cl)), macro));
 
-			if (!(cl.is_sealed && decl_space.file_type == CCodeFileType.PUBLIC_HEADER)) {
-				macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_type_name (cl));
-				decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_get_function (cl)), macro));
-			}
+			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %s))".printf (get_ccode_type_id (cl), get_ccode_type_name (cl));
+			decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_ccode_type_get_function (cl)), macro));
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
@@ -104,7 +102,9 @@ public class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_name (cl)), new CCodeVariableDeclarator (get_ccode_name (cl))));
 		}
 
-		if (is_fundamental) {
+		if (final_not_public) {
+			// nothing to do
+		} else if (is_fundamental) {
 			var ref_fun = new CCodeFunction (get_ccode_ref_function (cl), "gpointer");
 			var unref_fun = new CCodeFunction (get_ccode_unref_function (cl), "void");
 			if (cl.is_private_symbol ()) {
@@ -211,14 +211,21 @@ public class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (is_gtypeinstance && !(cl.is_sealed && decl_space.file_type == CCodeFileType.PUBLIC_HEADER)) {
+		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (get_ccode_type_name (cl)), new CCodeVariableDeclarator (get_ccode_type_name (cl))));
 
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (context, in_plugin, true);
-			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+			if (!final_not_public) {
+				decl_space.add_type_member_declaration (type_fun.get_declaration ());
+			}
 
 			requires_vala_extern = true;
+		}
+
+		if (final_not_public) {
+			// nothing to do
+			return;
 		}
 
 		var base_class = cl;
@@ -265,10 +272,6 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		generate_class_declaration (cl, decl_space);
-
-		if (cl.is_sealed && decl_space.file_type == CCodeFileType.PUBLIC_HEADER) {
-			return;
-		}
 
 		bool is_gtypeinstance = !cl.is_compact;
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
@@ -673,7 +676,7 @@ public class Vala.GTypeModule : GErrorModule {
 		}
 
 		if (!cl.is_internal_symbol () || cl.is_sealed) {
-			if (!cl.is_opaque) {
+			if (!cl.is_opaque && !cl.is_sealed) {
 				generate_class_struct_declaration (cl, header_file);
 			} else {
 				generate_class_declaration (cl, header_file);

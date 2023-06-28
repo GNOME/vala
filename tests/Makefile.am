@@ -693,6 +693,7 @@ TESTS = \
 	objects/with-nested-method.vala \
 	objects/with-nested-signal.vala \
 	objects/with-nested-unambigous-signal.vala \
+	headers/sealed-class.vala \
 	errors/catch-error-code.vala \
 	errors/catch-in-finally.vala \
 	errors/catch-no-error-type.test \
@@ -1473,6 +1474,7 @@ EXTRA_DIST = \
 	girwriter/tests-extra-environment.sh \
 	girwriter/combined.vapi \
 	gtktemplate/tests-extra-environment.sh \
+	headers/tests-extra-environment.sh \
 	parser-keep-going/tests-extra-environment.sh \
 	linux/tests-extra-environment.sh \
 	nullability/tests-extra-environment.sh \
