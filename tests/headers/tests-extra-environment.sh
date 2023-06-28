@@ -1,0 +1,1 @@
+VALAFLAGS="--header test.h"
