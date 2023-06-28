@@ -167,8 +167,14 @@ case "$testfile" in
 	$VALAC $VALAFLAGS $PACKAGEFLAGS -o $testpath$EXEEXT $SOURCEFILE
 	if [ -n "$UPDATE_EXPECTED" ]; then
 		cp -p ${SOURCEFILE%.*}.c $abs_srcdir/${testfile%.*}.c-expected
+		if [ -f test.h ]; then
+			cp -p test.h $abs_srcdir/${testfile%.*}.h-expected || exit 1
+		fi
 	elif [ -f $abs_srcdir/${testfile%.*}.c-expected ]; then
 		diff -wu $abs_srcdir/${testfile%.*}.c-expected ${SOURCEFILE%.*}.c || exit 1
+		if [ -f $abs_srcdir/${testfile%.*}.h-expected ]; then
+			diff -wu $abs_srcdir/${testfile%.*}.h-expected test.h || exit 1
+		fi
 	fi
 	./$testpath$EXEEXT
 	;;
