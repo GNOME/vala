@@ -1,3 +1,24 @@
+Vala 0.56.9
+===========
+ * Various improvements and bug fixes:
+  - codegen: Add missing EXTERN flag for GType function of error domains
+    [#1449]
+  - codegen: Improve handling of sealed classes [#1451]
+  - vala: Report an error when trying to chain up to inaccessible private
+    ctor [#1445]
+  - vala: Fix spaces for attributes when writing property accessors
+  - girwriter: Fix c:type attribute for real struct parameters [#1444]
+  - testrunner: Add support to check generated header
+  - manual: Update from wiki.gnome.org
+
+ * Bindings:
+  - gio-2.0: Ease implemention of GLib.ActionGroup [#1447]
+  - glib-2.0: Fix return-type of GLib.SourceOnceFunc [#1446]
+  - glib-2.0: Add ConvertError.{NO_MEMORY,EMBEDDED_NUL}
+  - gtk4: Pick up fix for Gdk.Toplevel.compute_size.size parameter
+  - vapi: Add documentation to GLib.Math that '-X -lm' may be needed when
+    compiling [#1388]
+
 Vala 0.56.8
 ===========
  * Various improvements and bug fixes:
