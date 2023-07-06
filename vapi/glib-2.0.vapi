@@ -4160,10 +4160,10 @@ namespace GLib {
 		public static int create_with_parents (string pathname, int mode);
 		[Version (since = "2.30")]
 		[CCode (cname = "mkdtemp")]
-		public static string mkdtemp (owned string template);
+		public static string? mkdtemp (owned string template);
 		[Version (since = "2.30")]
 		[CCode (cname = "g_dir_make_tmp")]
-		public static string make_tmp (string tmpl) throws FileError;
+		public static string make_tmp (string? tmpl = null) throws FileError;
 		[Version (since = "2.6")]
 		[CCode (cname = "g_rmdir")]
 		public static int remove (string filename);
