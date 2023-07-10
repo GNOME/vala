@@ -47,6 +47,12 @@ public class Vala.MethodType : CallableType {
 			return false;
 		}
 
+		// FIXME delegates don't provide dedicated parameters for generic arguments,
+		// therefore they are never compatible
+		if (!(method_symbol.parent_node is LambdaExpression) && method_symbol.has_type_parameters ()) {
+			return false;
+		}
+
 		return dt.delegate_symbol.matches_method (method_symbol, dt);
 	}
 

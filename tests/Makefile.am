@@ -822,6 +822,11 @@ TESTS = \
 	generics/method-return-type-missing.test \
 	generics/method-return-unknown-type-parameter.test \
 	generics/method-return-unknown-type-parameter-2.test \
+	generics/method-to-delegate.vala \
+	generics/method-to-delegate-2.vala \
+	generics/method-to-delegate-incompatible.test \
+	generics/method-to-delegate-incompatible-2.test \
+	generics/method-to-delegate-incompatible-3.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \

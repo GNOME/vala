@@ -1,0 +1,10 @@
+Invalid Code
+
+delegate void FooFunc (string s);
+
+void foo<G> (G g) {
+}
+
+void main () {
+	FooFunc f = foo;
+}
