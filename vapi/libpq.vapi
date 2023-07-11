@@ -97,7 +97,7 @@ namespace Postgres {
 	public enum Ping {
 		OK,
 		REJECT,
-		NO_RESPONCE,
+		NO_RESPONSE,
 		NO_ATTEMPT
 	}
 
@@ -111,13 +111,13 @@ namespace Postgres {
 		private Notify ();
 	}
 
-	[CCode (cname = "PQnoticeReceiver")]
+	[CCode (cname = "PQnoticeReceiver", has_target = false)]
 	public delegate void NoticeReceiverFunc (void* arg, Result res);
 
-	[CCode (cname = "PQnoticeProcessor")]
+	[CCode (cname = "PQnoticeProcessor", has_target = false)]
 	public delegate void NoticeProcessorFunc (void* arg, string message);
 
-	[CCode (cname = "PQprintOpt", has_type_id = false)]
+	[CCode (cname = "PQprintOpt", has_type_id = false, destroy_function = "")]
 	public struct PrintOpt {
 		public bool     header;
 		public bool     align;
@@ -128,6 +128,7 @@ namespace Postgres {
 		public string   fieldSep;
 		public string   tableOpt;
 		public string   caption;
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] fieldName;
 	}
 
@@ -185,7 +186,7 @@ namespace Postgres {
 	[CCode (free_function = "PQfreeCancel", cname = "PGcancel", cprefix = "PQ")]
 	public class Cancel {
 		[CCode (cname = "PQcancel")]
-		public bool cancel (char[] errbuf, int errbufsize);
+		public bool cancel (char[] errbuf);
 	}
 
 	/* Database Connection Handle */
@@ -322,13 +323,13 @@ namespace Postgres {
 		public Notify get_notifies ();
 
 		[CCode (cname = "PQputCopyData")]
-		public int put_copy_data (string buffer, int nbytes);
+		public int put_copy_data (uint8[] buffer);
 
 		[CCode (cname = "PQputCopyEnd")]
 		public int put_copy_end (string error_msg);
 
 		[CCode (cname = "PQgetCopyData")]
-		public int get_copy_data (string[] buffer, int async);
+		public int get_copy_data ([CCode (array_length = false)] ref char[] buffer, int async);
 
 		[CCode (cname = "PQsetnonblocking")]
 		public int set_non_blocking (int arg);
@@ -340,13 +341,13 @@ namespace Postgres {
 		public Ping ping();
 		 
 		[CCode (cname = "PQpingParams")]
-		public Ping ping_params(string keywords, string values, int expand_dbname);
+		public static Ping ping_params([CCode (array_length = false)] string[] keywords, [CCode (array_length = false)] string[] values, int expand_dbname);
 
 		[CCode (cname = "PQflush")]
 		public int flush ();
 
 		[CCode (cname = "PQfn")]
-		public Result fn (int fnid, int[] result_buf, out int result_len, int result_is_int, ArgBlock args, int nargs);
+		public Result fn (int fnid, [CCode (array_length = false)] int[] result_buf, out int result_len, int result_is_int, ArgBlock[] args);
 
 		[CCode (cname = "PQdescribePrepared")]
 		public Result describe_prepared (string stmt);
@@ -366,8 +367,8 @@ namespace Postgres {
 		[CCode (cname = "PQescapeStringConn")]
 		public size_t escape_string_conn (string to, string from, size_t length, out int error);
 
-		[CCode (cname = "PQescapeByteaConn")]
-		public uchar[] escape_bytea_conn (string from, size_t from_length, out size_t to_length);
+		[CCode (cname = "PQescapeByteaConn", array_length_type = "size_t")]
+		public uchar[] escape_bytea_conn ([CCode (array_length_type = "size_t")] uchar[] from);
 
 		[CCode (cname = "lo_open")]
 		public int lo_open (int lobj_id, int mode);
@@ -406,14 +407,14 @@ namespace Postgres {
 		public int lo_export (int lobj_id, string filename);
 	}
 
-	[CCode (cname = "pgthreadlock_t")]
+	[CCode (cname = "pgthreadlock_t", has_target = false)]
 	public delegate void ThreadLockFunc (int acquire);
 
 	[CCode (cname = "PQregisterThreadLock")]
 	public ThreadLockFunc register_thread_lock (ThreadLockFunc newhandler);
 
-	[CCode (cname = "PQunescapeBytea")]
-	public uchar[] unescape_bytea (uchar[] strtext, out size_t retbuflen);
+	[CCode (cname = "PQunescapeBytea", array_length_type = "size_t")]
+	public uchar[] unescape_bytea ([CCode (array_length = false, array_null_terminated = true)] uchar[] strtext);
 
 	[Compact]
 	[CCode (free_function = "PQclear", cname = "PGresult", cprefix = "PQ")]
