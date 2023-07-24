@@ -2980,8 +2980,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 				Report.error (type.source_reference, "static type-parameter `%s' can not be used in runtime context", type.type_symbol.get_full_name ());
 				return new CCodeInvalidExpression();
 			}
-			string identifier = get_ccode_type_id (type_parameter);
-			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			if (!type_parameter.no_generic_args) {
+				string identifier = get_ccode_type_id (type_parameter);
+				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			} else {
+				var constrained_type = type_parameter.get_constrained_type ();
+				return new CCodeIdentifier (get_ccode_type_id (constrained_type));
+			}
 		} else {
 			string type_id = get_ccode_type_id (type);
 			if (type_id == "") {
@@ -2998,8 +3003,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier ("g_error_copy");
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string identifier = get_ccode_copy_function (type_parameter);
-			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			if (!type_parameter.no_generic_args) {
+				string identifier = get_ccode_copy_function (type_parameter);
+				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			} else {
+				var constrained_type = type_parameter.get_constrained_type ();
+				return new CCodeIdentifier (get_ccode_ref_function (constrained_type.type_symbol));
+			}
 		} else if (type.type_symbol != null) {
 			string dup_function;
 			unowned Class? cl = type.type_symbol as Class;
@@ -3552,8 +3562,13 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			return new CCodeIdentifier ("g_error_free");
 		} else if (type is GenericType) {
 			var type_parameter = ((GenericType) type).type_parameter;
-			string identifier = get_ccode_destroy_function (type_parameter);
-			return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			if (!type_parameter.no_generic_args) {
+				string identifier = get_ccode_destroy_function (type_parameter);
+				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
+			} else {
+				var constrained_type = type_parameter.get_constrained_type ();
+				return new CCodeIdentifier (get_ccode_unref_function ((ObjectTypeSymbol) constrained_type.type_symbol));
+			}
 		} else if (type.type_symbol != null) {
 			string unref_function;
 			if (type is ReferenceType) {

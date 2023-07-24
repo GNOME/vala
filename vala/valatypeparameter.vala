@@ -171,8 +171,8 @@ public class Vala.TypeParameter : TypeSymbol {
 			error = true;
 		}
 
-		if (no_generic_args && !has_type_constraints ()) {
-			Report.error (source_reference, "type parameters need to be constrained for using `no_generic_args'");
+		if (no_generic_args && (!has_type_constraints () || !(get_constrained_type ().type_symbol is ObjectTypeSymbol))) {
+			Report.error (source_reference, "type parameters need to be constrained with an object type for using `no_generic_args'");
 			error = true;
 		}
 
