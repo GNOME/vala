@@ -29,6 +29,9 @@ TreeIter struct
 
 // Generics
 
+Builder
+  .get_*object type_parameters="GLib.Object:G" type="unowned G?"
+
 BookmarkList implements="GLib.ListModel<GLib.FileInfo>"
 DirectoryList implements="GLib.ListModel<GLib.FileInfo>"
 StringList implements="GLib.ListModel<Gtk.StringObject>"

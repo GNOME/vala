@@ -6939,8 +6939,10 @@ namespace Gtk {
 		public Builder.from_resource (string resource_path);
 		[CCode (has_construct_function = false)]
 		public Builder.from_string (string str, ssize_t length);
-		public unowned GLib.Object? get_current_object ();
-		public unowned GLib.Object? get_object (string name);
+		[CCode (no_generic_args = true)]
+		public unowned G? get_current_object<G> () where G : GLib.Object;
+		[CCode (no_generic_args = true)]
+		public unowned G? get_object<G> (string name) where G : GLib.Object;
 		public GLib.SList<weak GLib.Object> get_objects ();
 		public unowned Gtk.BuilderScope get_scope ();
 		public unowned string? get_translation_domain ();
