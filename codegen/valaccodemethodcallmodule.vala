@@ -253,7 +253,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		} else if (m is CreationMethod && m.parent_symbol is Struct) {
 			ccall.add_argument (get_this_cexpression ());
-		} else if (m != null && m.has_type_parameters () && !get_ccode_has_generic_type_parameter (m) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
+		} else if (m != null && m.has_type_parameters () && !get_ccode_has_generic_type_parameter (m) && !m.get_attribute_bool ("CCode", "no_generic_args", false) && !get_ccode_simple_generics (m) && (ccall != finish_call || expr.is_yield_expression)) {
 			// generic method
 			// don't add generic arguments for .end() calls
 			add_generic_type_arguments (m, in_arg_map, ma.get_type_arguments (), expr);
