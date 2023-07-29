@@ -2983,9 +2983,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!type_parameter.no_generic_args) {
 				string identifier = get_ccode_type_id (type_parameter);
 				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
-			} else {
+			} else if (type_parameter.has_type_constraints ()) {
 				var constrained_type = type_parameter.get_constrained_type ();
-				return new CCodeIdentifier (get_ccode_type_id (constrained_type));
+				return get_type_id_expression (constrained_type, is_chainup);
+			} else {
+				Report.error (null, "internal error: No useable type_id for generic found");
+				return new CCodeInvalidExpression ();
 			}
 		} else {
 			string type_id = get_ccode_type_id (type);
@@ -3006,9 +3009,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!type_parameter.no_generic_args) {
 				string identifier = get_ccode_copy_function (type_parameter);
 				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
-			} else {
+			} else if (type_parameter.has_type_constraints ()) {
 				var constrained_type = type_parameter.get_constrained_type ();
-				return new CCodeIdentifier (get_ccode_ref_function (constrained_type.type_symbol));
+				return get_dup_func_expression (constrained_type, source_reference, is_chainup);
+			} else {
+				Report.error (null, "internal error: No useable dup_function for generic found");
+				return new CCodeInvalidExpression ();
 			}
 		} else if (type.type_symbol != null) {
 			string dup_function;
@@ -3565,9 +3571,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			if (!type_parameter.no_generic_args) {
 				string identifier = get_ccode_destroy_function (type_parameter);
 				return get_generic_type_expression (identifier, (GenericType) type, is_chainup);
-			} else {
+			} else if (type_parameter.has_type_constraints ()) {
 				var constrained_type = type_parameter.get_constrained_type ();
-				return new CCodeIdentifier (get_ccode_unref_function ((ObjectTypeSymbol) constrained_type.type_symbol));
+				return get_destroy_func_expression (constrained_type, is_chainup);
+			} else {
+				Report.error (null, "internal error: No useable generic destroy_function found");
+				return new CCodeInvalidExpression ();
 			}
 		} else if (type.type_symbol != null) {
 			string unref_function;
