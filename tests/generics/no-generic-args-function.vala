@@ -1,12 +1,7 @@
-class Test : Object {
-	[CCode (no_generic_args=true)]
-	public int foo<G> () where G : Object {
-		return 10;
-	}
+[CCode (no_generic_args = true)]
+public void foo<G> () where G : string {
 }
 
-
 void main () {
-	Test t = new Test ();
-	assert (t.foo<Object> () == 10);
+	foo<string> ();
 }
