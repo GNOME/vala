@@ -843,6 +843,7 @@ TESTS = \
 	generics/method-to-delegate-incompatible-3.test \
 	generics/multiple-classes-constraints.test \
 	generics/no-generic-args.vala \
+	generics/no-generic-args-compact-class.vala \
 	generics/no-generic-args-function.vala \
 	generics/no-generic-args-use-with-proper-generic-type.test \
 	generics/no-generic-args-use-with-proper-generic-type-2.test \
