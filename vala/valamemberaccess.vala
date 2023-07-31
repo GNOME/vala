@@ -615,6 +615,9 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			Report.error (source_reference, "The name `%s' does not exist in the context of `%s'%s%s", member_name, base_type_name, base_type_package, visited_types_string);
+			if (inner != null && inner.symbol_reference != null && inner.symbol_reference.source_reference != null) {
+				Report.notice (inner.symbol_reference.source_reference, "`%s' was declared here", inner.symbol_reference.name);
+			}
 			value_type = new InvalidType ();
 			return false;
 		} else if (symbol_reference.error) {
