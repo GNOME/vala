@@ -5551,10 +5551,10 @@ namespace GLib {
 		public HashTable.full (HashFunc<K>? hash_func, EqualFunc<K>? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		[Version (since = "2.72")]
 		public HashTable.similar (HashTable<K,V> other_hash_table);
-		public void insert (owned K key, owned V value);
-		public void replace (owned K key, owned V value);
+		public bool insert (owned K key, owned V value);
+		public bool replace (owned K key, owned V value);
 		[Version (since = "2.32", deprecated_since = "vala-0.26", replacement = "GenericSet.add")]
-		public void add (owned K key);
+		public bool add (owned K key);
 		public unowned V? lookup (K key);
 		public bool lookup_extended (K lookup_key, out unowned K orig_key, out unowned V value);
 		[Version (since = "2.32")]
@@ -5567,7 +5567,7 @@ namespace GLib {
 		[CCode (cname = "g_hash_table_lookup")]
 		public unowned V? @get (K key);
 		[CCode (cname = "g_hash_table_insert")]
-		public void @set (owned K key, owned V value);
+		public bool @set (owned K key, owned V value);
 		[Version (since = "2.14")]
 		public List<unowned K> get_keys ();
 #if VALA_0_26
@@ -5625,7 +5625,7 @@ namespace GLib {
 	public class GenericSet<T> {
 		[CCode (cname = "g_hash_table_new_full", simple_generics = true)]
 		public GenericSet (HashFunc<T>? hash_func, EqualFunc<T>? equal_func, GLib.DestroyNotify? always_pass_null_here = null);
-		public void add (owned T value);
+		public bool add (owned T value);
 		public bool contains (T valule);
 		public bool remove (T value);
 		public void remove_all ();
