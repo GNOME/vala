@@ -224,7 +224,8 @@ public class Vala.ElementAccess : Expression {
 			if (lvalue) {
 				var set_method = container.value_type.get_member ("set") as Method;
 				unowned Assignment? assignment = parent_node as Assignment;
-				if (set_method != null && set_method.return_type is VoidType && assignment != null) {
+				if (assignment != null && set_method != null
+				    && (set_method.return_type is VoidType || set_method.return_type is BooleanType)) {
 					return !error;
 				}
 			} else {
