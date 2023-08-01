@@ -1012,6 +1012,7 @@ TESTS = \
 	parser/statement-keyword-as-identifier.vala \
 	parser/statement-outside-root.test \
 	parser/switch-statement.vala \
+	parser/switch-section-missing-colon.test \
 	parser/switch-section-outside-switch.test \
 	parser/template.vala \
 	parser/try-catch-in-switch-case-invalid.test \
