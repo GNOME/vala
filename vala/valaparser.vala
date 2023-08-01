@@ -406,6 +406,7 @@ public class Vala.Parser : CodeVisitor {
 		scanner = new Scanner (source_file);
 		parse_file_comments ();
 
+		tokens = new TokenInfo[BUFFER_SIZE];
 		index = -1;
 		size = 0;
 
