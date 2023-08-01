@@ -411,6 +411,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		scanner = new Scanner (source_file);
 		scanner.parse_file_comments ();
 		scanner.indent_spaces = 0;
+
+		tokens = new TokenInfo[BUFFER_SIZE];
 		index = -1;
 		size = 0;
 
