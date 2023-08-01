@@ -233,7 +233,10 @@ public class Vala.Report {
 	 */
 	private void report_source (SourceReference source) {
 		for (int idx = source.begin.line; idx <= source.end.line; idx++) {
-			string offending_line = source.file.get_source_line (idx);
+			string? offending_line = source.file.get_source_line (idx);
+			if (offending_line == null) {
+				break;
+			}
 			printerr ("%5d | %s\n", idx, offending_line);
 			printerr ("      | ");
 			stderr.puts (caret_color_start);
