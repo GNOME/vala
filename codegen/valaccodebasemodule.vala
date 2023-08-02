@@ -1346,7 +1346,12 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			if (!f.external) {
 				var var_decl = new CCodeVariableDeclarator (get_ccode_name (f), null, get_ccode_declarator_suffix (f.variable_type));
-				var_decl.initializer = default_value_for_type (f.variable_type, true);
+				var initializer = default_value_for_type (f.variable_type, true);
+				// error: initializer element is not constant (-std=c99 -pedantic-errors)
+				while (initializer is CCodeCastExpression) {
+					initializer = ((CCodeCastExpression) initializer).inner;
+				}
+				var_decl.initializer = initializer;
 
 				if (class_init_context != null) {
 					push_context (class_init_context);
