@@ -1802,6 +1802,7 @@ namespace Linux {
             public int32 maximum;
             public int32 fuzz;
             public int32 flat;
+            public int32 resolution;
         }
 
         [CCode (cname = "struct input_keymap_entry", has_type_id = false, cheader_filename = "linux/input.h")]
