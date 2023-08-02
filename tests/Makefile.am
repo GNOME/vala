@@ -401,6 +401,7 @@ TESTS = \
 	structs/struct-no-gtype-inherit.vala \
 	structs/struct-static-field-initializer.vala \
 	structs/struct-static-field-initializer-2.test \
+	structs/struct-static-field-initializer-3.vala \
 	structs/struct-static-property-initializer.test \
 	structs/structs.vala \
 	structs/constructor-params-array.vala \
