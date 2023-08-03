@@ -1,25 +1,22 @@
-
-void main () {
-	var b = new Baz<Bar> ();
-	unowned Bar z = b.test ();
-}
-
 [Compact]
 class Foo {
-	public int l;
+	public int i;
 }
 
 [Compact]
 class Bar : Foo {
-	public void t () {
+}
+
+[CCode (no_generic_args = true)]
+class Baz<G> : Object where G : Foo {
+	G g;
+
+	public unowned G foo () {
+		return g;
 	}
 }
 
-[CCode (no_generic_args=true)]
-class Baz<J> : Object where J : Foo {
-	J x;
-
-	public unowned J test () {
-		return this.x;
-	}
+void main () {
+	var baz = new Baz<Bar> ();
+	unowned Bar bar = baz.foo ();
 }
