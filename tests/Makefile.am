@@ -843,6 +843,7 @@ TESTS = \
 	generics/method-to-delegate-incompatible-3.test \
 	generics/multiple-classes-constraints.test \
 	generics/no-generic-args.vala \
+	generics/no-generic-args-invalid.test \
 	generics/no-generic-args-compact-class.vala \
 	generics/no-generic-args-function.vala \
 	generics/no-generic-args-use-with-proper-generic-type.test \
@@ -856,7 +857,6 @@ TESTS = \
 	generics/type-parameter-properties.vala \
 	generics/type-parameter-property-clash.vala \
 	generics/type-parameter-static-in-runtime.test \
-	generics/typeof-with-no-generic-args.test \
 	generics/value-pointer-type-access.vala \
 	generics/bug640330.vala \
 	generics/bug640330-2.test \

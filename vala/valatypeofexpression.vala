@@ -90,11 +90,6 @@ public class Vala.TypeofExpression : Expression {
 			Report.warning (_data_type.source_reference, "Arrays do not have a `GLib.Type', with the exception of `string[]'");
 		}
 
-		if (type_reference.type_symbol is TypeParameter && ((TypeParameter) type_reference.type_symbol).no_generic_args) {
-			Report.error (_data_type.source_reference, "You cannot retrieve type parameters of types with the `[CCode (no_generic_args=true)]' attribute");
-			error = true;
-		}
-
 		return !error;
 	}
 

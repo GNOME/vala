@@ -1,4 +1,3 @@
-
 [CCode (no_generic_args = true)]
 class Foo<G> : Object where G : Object {
 	public G bar { get; set; }
