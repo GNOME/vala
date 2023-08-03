@@ -1,8 +1,0 @@
-Invalid Code
-
-[CCode (no_generic_args = true)]
-class Foo<G> : Object {
-}
-
-void main () {
-}

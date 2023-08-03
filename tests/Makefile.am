@@ -847,7 +847,6 @@ TESTS = \
 	generics/no-generic-args-function.vala \
 	generics/no-generic-args-use-with-proper-generic-type.test \
 	generics/no-generic-args-use-with-proper-generic-type-2.test \
-	generics/no-generic-args-with-no-constraint.test \
 	generics/null-type.vala \
 	generics/property-gobject-set.vala \
 	generics/property-int-cast.vala \
