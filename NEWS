@@ -1,3 +1,19 @@
+Vala 0.56.10
+============
+ * Various improvements and bug fixes:
+  - codegen: Don't emit casts in static field initializers [#1459]
+  - parser: Reset tokens buffer when parsing a new source file
+  - vala: Output additional information when accessing unknown member
+  - vala: Allow "set" method of an container to return void or bool
+  - vala: Correctly handle possible null from SourceFile.get_source_line()
+    [#1464]
+
+ * Bindings:
+  - glib-2.0: Update return-type of HashTable.add/insert/replace() and
+    GenericSet.add() [#1465]
+  - linux: Add resolution field to Input.AbsInfo
+  - libpq: Fix a few binding errors
+
 Vala 0.56.9
 ===========
  * Various improvements and bug fixes:
