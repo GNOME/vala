@@ -590,7 +590,16 @@ public class Vala.MethodCall : Expression, CallableExpression {
 							if (arg_it.next ()) {
 								Expression arg = arg_it.get ();
 
-								type_arg = param.variable_type.infer_type_argument (type_param, arg.value_type);
+								if (param.initializer is SizeofExpression && arg is SizeofExpression
+								    && ((SizeofExpression) param.initializer).type_reference.type_symbol == type_param) {
+									type_arg = ((SizeofExpression) arg).type_reference.copy ();
+								} else if (param.initializer is TypeofExpression && arg is TypeofExpression
+								    && ((TypeofExpression) param.initializer).type_reference.type_symbol == type_param) {
+									type_arg = ((TypeofExpression) arg).type_reference.copy ();
+								} else {
+									type_arg = param.variable_type.infer_type_argument (type_param, arg.value_type);
+								}
+
 								if (type_arg != null) {
 									break;
 								}
@@ -645,12 +654,17 @@ public class Vala.MethodCall : Expression, CallableExpression {
 			return false;
 		}
 
-		//Resolve possible generic-type in SizeofExpression used as parameter default-value
+		//Resolve possible generic-type in certain Expressions used as parameter default-value
 		foreach (Expression arg in argument_list) {
 			unowned SizeofExpression? sizeof_expr = arg as SizeofExpression;
 			if (sizeof_expr != null && sizeof_expr.type_reference is GenericType) {
 				var sizeof_type = sizeof_expr.type_reference.get_actual_type (target_object_type, method_type_args, this);
 				replace_expression (arg, new SizeofExpression (sizeof_type, source_reference));
+			}
+			unowned TypeofExpression? typeof_expr = arg as TypeofExpression;
+			if (typeof_expr != null && typeof_expr.type_reference is GenericType) {
+				var typeof_type = typeof_expr.type_reference.get_actual_type (target_object_type, method_type_args, this);
+				replace_expression (arg, new TypeofExpression (typeof_type, source_reference));
 			}
 		}
 
