@@ -170,6 +170,7 @@ ListStore type_parameters="GLib.Object:G" implements="GLib.ListModel<G>"
   .find_with_equal_func.equal_func type_arguments="GLib.Object"
   .find_with_equal_func_full.equal_func type_arguments="GLib.Object"
   .insert_sorted.compare_func type_arguments="GLib.Object"
+  .new.item_type default=typeof(G)
   .sort.compare_func type_arguments="GLib.Object"
 MemoryInputStream
   .add_data.destroy default=GLib.g_free

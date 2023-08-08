@@ -1794,7 +1794,7 @@ namespace GLib {
 	public sealed class ListStore<G> : GLib.Object, GLib.ListModel<G> where G : GLib.Object {
 		[CCode (has_construct_function = false)]
 		[Version (since = "2.44")]
-		public ListStore (GLib.Type item_type);
+		public ListStore (GLib.Type item_type = typeof (G));
 		[Version (since = "2.44")]
 		public void append (GLib.Object item);
 		[Version (since = "2.64")]
