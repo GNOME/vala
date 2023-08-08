@@ -414,6 +414,16 @@ public class Vala.GirParser : CodeVisitor {
 			return metadata;
 		}
 
+		UnresolvedSymbol parse_symbol_name () {
+			var begin = this.begin;
+			UnresolvedSymbol sym = null;
+			do {
+				next ();
+				sym = new UnresolvedSymbol (sym, get_string (), get_src (begin));
+			} while (current == TokenType.DOT);
+			return sym;
+		}
+
 		Expression? parse_expression () {
 			var begin = this.begin;
 			var src = get_current_src ();
@@ -463,6 +473,16 @@ public class Vala.GirParser : CodeVisitor {
 					break;
 				}
 				expr = new Tuple (src);
+				break;
+			case TokenType.TYPEOF:
+				if (next () != TokenType.OPEN_PARENS) {
+					Report.error (get_current_src (), "expected `(', got `%s'", current.to_string ());
+					break;
+				}
+				expr = new TypeofExpression (new UnresolvedType.from_symbol (parse_symbol_name (), src), src);
+				if (next () != TokenType.CLOSE_PARENS) {
+					Report.error (get_current_src (), "expected `)', got `%s'", current.to_string ());
+				}
 				break;
 			default:
 				Report.error (src, "expected literal or symbol got %s", current.to_string ());
