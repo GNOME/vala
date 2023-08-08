@@ -469,7 +469,7 @@ foo_g_list_model_interface_init (GListModelInterface * iface,
 {
 	foo_g_list_model_parent_iface = g_type_interface_peek_parent (iface);
 	iface->get_item_type = (GType (*) (GListModel*)) foo_real_get_item_type;
-	iface->get_item = (GObject* (*) (GListModel*, guint)) foo_real_get_item;
+	iface->get_item = (gpointer (*) (GListModel*, guint)) foo_real_get_item;
 	iface->get_n_items = (guint (*) (GListModel*)) foo_real_get_n_items;
 }
 
@@ -563,19 +563,19 @@ _vala_main (void)
 	GListStore* _tmp0_;
 	GObject* o = NULL;
 	GListModel* _tmp1_;
-	GObject* _tmp2_;
+	gpointer _tmp2_;
 	Foo* foo = NULL;
 	Foo* _tmp3_;
 	GListModel* _tmp4_;
 	GListModel* _tmp5_;
 	GListModel* _tmp6_;
-	GObject* _tmp7_;
+	gpointer _tmp7_;
 	NotAListView* n = NULL;
 	NotAListView* _tmp8_;
 	NotAListView* _tmp9_;
 	GListModel* _tmp10_;
 	GListModel* _tmp11_;
-	GObject* _tmp12_;
+	gpointer _tmp12_;
 	GListModel* _tmp13_;
 	NotAListView* _tmp14_;
 	NotAListView* _tmp15_;
@@ -588,7 +588,7 @@ _vala_main (void)
 	l = G_TYPE_CHECK_INSTANCE_CAST (_tmp0_, g_list_model_get_type (), GListModel);
 	_tmp1_ = l;
 	_tmp2_ = g_list_model_get_item (_tmp1_, (guint) 10);
-	o = _tmp2_;
+	o = (GObject*) _tmp2_;
 	_tmp3_ = foo_new ();
 	foo = _tmp3_;
 	_tmp4_ = l;
@@ -597,7 +597,7 @@ _vala_main (void)
 	_tmp6_ = _tmp5_;
 	_tmp7_ = g_list_model_get_item (_tmp6_, (guint) 0);
 	_g_object_unref0 (o);
-	o = _tmp7_;
+	o = (GObject*) _tmp7_;
 	_tmp8_ = not_alist_view_new ();
 	n = _tmp8_;
 	_tmp9_ = n;
@@ -605,7 +605,7 @@ _vala_main (void)
 	_tmp11_ = _tmp10_;
 	_tmp12_ = g_list_model_get_item (_tmp11_, (guint) 0);
 	_g_object_unref0 (o);
-	o = _tmp12_;
+	o = G_TYPE_CHECK_INSTANCE_CAST (_tmp12_, G_TYPE_OBJECT, GObject);
 	_tmp13_ = _g_object_ref0 (G_TYPE_CHECK_INSTANCE_CAST (foo, g_list_model_get_type (), GListModel));
 	_g_object_unref0 (l);
 	l = _tmp13_;
