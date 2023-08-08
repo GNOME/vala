@@ -614,7 +614,7 @@ public class Vala.MethodCall : Expression, CallableExpression {
 						}
 
 						DataType? ct = type_param.get_constrained_type ();
-						if (ct != null) {
+						if (type_arg == null && ct != null) {
 							Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", m.to_string (), type_param.name, ct.to_qualified_string ());
 							type_arg = ct;
 						}
