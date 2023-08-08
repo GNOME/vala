@@ -165,13 +165,19 @@ InputStream
   .skip_finish throws="GLib.IOError"
 ListModel type_parameters="GLib.Object:G"
   .get_item#virtual_method skip
-  .get_item#method skip=false abstract type="GLib.Object?"
+  .get_item#method skip=false abstract type="G?"
+  .get_object type="G?"
 ListStore type_parameters="GLib.Object:G" implements="GLib.ListModel<G>"
-  .find_with_equal_func.equal_func type_arguments="GLib.Object"
-  .find_with_equal_func_full.equal_func type_arguments="GLib.Object"
-  .insert_sorted.compare_func type_arguments="GLib.Object"
+  .append.item type="G"
+  .find.item type="G"
+  .find_*.item type="G?"
+  .find_with_equal_func.equal_func type_arguments="G"
+  .find_with_equal_func_full.equal_func type_arguments="G"
+  .insert*.item type="G"
+  .insert_sorted.compare_func type_arguments="G"
   .new.item_type default=typeof(G)
-  .sort.compare_func type_arguments="GLib.Object"
+  .sort.compare_func type_arguments="G"
+  .splice.additions type="G[]"
 MemoryInputStream
   .add_data.destroy default=GLib.g_free
 MemoryInputStream

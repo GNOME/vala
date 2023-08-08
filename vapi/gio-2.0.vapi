@@ -1796,25 +1796,25 @@ namespace GLib {
 		[Version (since = "2.44")]
 		public ListStore (GLib.Type item_type = typeof (G));
 		[Version (since = "2.44")]
-		public void append (GLib.Object item);
+		public void append ([CCode (type = "gpointer")] G item);
 		[Version (since = "2.64")]
-		public bool find (GLib.Object item, out uint position);
+		public bool find ([CCode (type = "gpointer")] G item, out uint position);
 		[Version (since = "2.64")]
-		public bool find_with_equal_func (GLib.Object? item, GLib.EqualFunc<GLib.Object> equal_func, out uint position);
+		public bool find_with_equal_func ([CCode (type = "gpointer")] G? item, GLib.EqualFunc<G> equal_func, out uint position);
 		[Version (since = "2.74")]
-		public bool find_with_equal_func_full (GLib.Object? item, [CCode (delegate_target_pos = 2.5)] GLib.EqualFuncFull<GLib.Object> equal_func, out uint position);
+		public bool find_with_equal_func_full ([CCode (type = "gpointer")] G? item, [CCode (delegate_target_pos = 2.5)] GLib.EqualFuncFull<G> equal_func, out uint position);
 		[Version (since = "2.44")]
-		public void insert (uint position, GLib.Object item);
+		public void insert (uint position, [CCode (type = "gpointer")] G item);
 		[Version (since = "2.44")]
-		public uint insert_sorted (GLib.Object item, GLib.CompareDataFunc<GLib.Object> compare_func);
+		public uint insert_sorted ([CCode (type = "gpointer")] G item, GLib.CompareDataFunc<G> compare_func);
 		[Version (since = "2.44")]
 		public void remove (uint position);
 		[Version (since = "2.44")]
 		public void remove_all ();
 		[Version (since = "2.46")]
-		public void sort (GLib.CompareDataFunc<GLib.Object> compare_func);
+		public void sort (GLib.CompareDataFunc<G> compare_func);
 		[Version (since = "2.44")]
-		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] GLib.Object[] additions);
+		public void splice (uint position, uint n_removals, [CCode (array_length_cname = "n_additions", array_length_pos = 3.1, array_length_type = "guint")] G[] additions);
 		[NoAccessorMethod]
 		[Version (since = "2.44")]
 		public GLib.Type item_type { get; construct; }
@@ -4002,13 +4002,13 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", no_generic_args = true, type_cname = "GListModelInterface", type_id = "g_list_model_get_type ()")]
 	public interface ListModel<G> : GLib.Object where G : GLib.Object {
 		[Version (since = "2.44")]
-		public abstract GLib.Object? get_item (uint position);
+		public abstract G? get_item (uint position);
 		[Version (since = "2.44")]
 		public abstract GLib.Type get_item_type ();
 		[Version (since = "2.44")]
 		public abstract uint get_n_items ();
 		[Version (since = "2.44")]
-		public GLib.Object? get_object (uint position);
+		public G? get_object (uint position);
 		[HasEmitter]
 		[Version (since = "2.44")]
 		public signal void items_changed (uint position, uint removed, uint added);
