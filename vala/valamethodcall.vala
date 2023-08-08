@@ -613,10 +613,9 @@ public class Vala.MethodCall : Expression, CallableExpression {
 							type_arg = m.return_type.infer_type_argument (type_param, target_type);
 						}
 
-						DataType? ct = type_param.get_constrained_type ();
-						if (type_arg == null && ct != null) {
-							Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", m.to_string (), type_param.name, ct.to_qualified_string ());
-							type_arg = ct;
+						if (type_arg == null && type_param.has_type_constraints ()) {
+							type_arg = type_param.get_constrained_type ();
+							Report.notice (source_reference, "`%s' requires type arguments, constraining `%s' to `%s'", m.to_string (), type_param.name, type_arg.to_qualified_string ());
 						}
 
 						if (type_arg == null) {
