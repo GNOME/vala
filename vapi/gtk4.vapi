@@ -5698,6 +5698,8 @@ namespace Gdk {
 		G16,
 		A8,
 		A16,
+		A16_FLOAT,
+		A32_FLOAT,
 		N_FORMATS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_modifier_type_get_type ()")]
@@ -5802,7 +5804,8 @@ namespace Gdk {
 		BOTTOM_TILED,
 		BOTTOM_RESIZABLE,
 		LEFT_TILED,
-		LEFT_RESIZABLE
+		LEFT_RESIZABLE,
+		SUSPENDED
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_TOUCHPAD_GESTURE_PHASE_", type_id = "gdk_touchpad_gesture_phase_get_type ()")]
 	public enum TouchpadGesturePhase {
@@ -7621,6 +7624,8 @@ namespace Gtk {
 		public Gtk.ListTabBehavior get_tab_behavior ();
 		public void insert_column (uint position, Gtk.ColumnViewColumn column);
 		public void remove_column (Gtk.ColumnViewColumn column);
+		[Version (since = "4.12")]
+		public void scroll_to (uint pos, Gtk.ColumnViewColumn? column, Gtk.ListScrollFlags flags, owned Gtk.ScrollInfo? scroll);
 		public void set_enable_rubberband (bool enable_rubberband);
 		[Version (since = "4.12")]
 		public void set_header_factory (Gtk.ListItemFactory? factory);
@@ -8072,6 +8077,8 @@ namespace Gtk {
 		public unowned Gtk.ListItemFactory? get_header_factory ();
 		public unowned Gtk.ListItemFactory? get_list_factory ();
 		public unowned GLib.ListModel? get_model ();
+		[Version (since = "4.12")]
+		public Gtk.StringFilterMatchMode get_search_match_mode ();
 		public uint get_selected ();
 		public unowned GLib.Object? get_selected_item ();
 		[Version (since = "4.6")]
@@ -8083,6 +8090,8 @@ namespace Gtk {
 		public void set_header_factory (Gtk.ListItemFactory? factory);
 		public void set_list_factory (Gtk.ListItemFactory? factory);
 		public void set_model (GLib.ListModel? model);
+		[Version (since = "4.12")]
+		public void set_search_match_mode (Gtk.StringFilterMatchMode search_match_mode);
 		public void set_selected (uint position);
 		[Version (since = "4.6")]
 		public void set_show_arrow (bool show_arrow);
@@ -8093,6 +8102,8 @@ namespace Gtk {
 		public Gtk.ListItemFactory header_factory { get; set; }
 		public Gtk.ListItemFactory list_factory { get; set; }
 		public GLib.ListModel model { get; set; }
+		[Version (since = "4.12")]
+		public Gtk.StringFilterMatchMode search_match_mode { get; set; }
 		public uint selected { get; set; }
 		public GLib.Object selected_item { get; }
 		[Version (since = "4.6")]
@@ -8411,7 +8422,7 @@ namespace Gtk {
 		public signal void im_update ();
 		public signal bool key_pressed (uint keyval, uint keycode, Gdk.ModifierType state);
 		public signal void key_released (uint keyval, uint keycode, Gdk.ModifierType state);
-		public signal bool modifiers (Gdk.ModifierType keyval);
+		public signal bool modifiers (Gdk.ModifierType state);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_legacy_get_type ()")]
 	public sealed class EventControllerLegacy : Gtk.EventController {
@@ -8618,10 +8629,16 @@ namespace Gtk {
 	public sealed class FileLauncher : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public FileLauncher (GLib.File? file);
+		[Version (since = "4.12")]
+		public bool get_always_ask ();
 		public unowned GLib.File? get_file ();
 		public async bool launch (Gtk.Window? parent, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async bool open_containing_folder (Gtk.Window? parent, GLib.Cancellable? cancellable) throws GLib.Error;
+		[Version (since = "4.12")]
+		public void set_always_ask (bool always_ask);
 		public void set_file (GLib.File? file);
+		[Version (since = "4.12")]
+		public bool always_ask { get; set; }
 		public GLib.File file { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_filter_get_type ()")]
@@ -9122,6 +9139,8 @@ namespace Gtk {
 		public bool get_single_click_activate ();
 		[Version (since = "4.12")]
 		public Gtk.ListTabBehavior get_tab_behavior ();
+		[Version (since = "4.12")]
+		public void scroll_to (uint pos, Gtk.ListScrollFlags flags, owned Gtk.ScrollInfo? scroll);
 		public void set_enable_rubberband (bool enable_rubberband);
 		public void set_factory (Gtk.ListItemFactory? factory);
 		public void set_max_columns (uint max_columns);
@@ -9809,6 +9828,8 @@ namespace Gtk {
 		public bool get_single_click_activate ();
 		[Version (since = "4.12")]
 		public Gtk.ListTabBehavior get_tab_behavior ();
+		[Version (since = "4.12")]
+		public void scroll_to (uint pos, Gtk.ListScrollFlags flags, owned Gtk.ScrollInfo? scroll);
 		public void set_enable_rubberband (bool enable_rubberband);
 		public void set_factory (Gtk.ListItemFactory? factory);
 		[Version (since = "4.12")]
@@ -9849,7 +9870,7 @@ namespace Gtk {
 		public string tooltip_unlock { owned get; set construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_map_list_model_get_type ()")]
-	public sealed class MapListModel : GLib.Object, GLib.ListModel {
+	public sealed class MapListModel : GLib.Object, GLib.ListModel, Gtk.SectionModel {
 		[CCode (has_construct_function = false)]
 		public MapListModel (owned GLib.ListModel? model, owned Gtk.MapListModelMapFunc? map_func);
 		public unowned GLib.ListModel? get_model ();
@@ -10934,6 +10955,19 @@ namespace Gtk {
 		public signal void popdown ();
 		public signal void popup ();
 		public virtual signal void value_changed (double value);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_scroll_info_ref", type_id = "gtk_scroll_info_get_type ()", unref_function = "gtk_scroll_info_unref")]
+	[Compact]
+	[Version (since = "4.12")]
+	public class ScrollInfo {
+		[CCode (has_construct_function = false)]
+		public ScrollInfo ();
+		public bool get_enable_horizontal ();
+		public bool get_enable_vertical ();
+		public unowned Gtk.ScrollInfo @ref ();
+		public void set_enable_horizontal (bool horizontal);
+		public void set_enable_vertical (bool vertical);
+		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_scrollbar_get_type ()")]
 	public sealed class Scrollbar : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget, Gtk.Orientable {
@@ -12810,6 +12844,8 @@ namespace Gtk {
 		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public unowned Gtk.Widget? get_child ();
 		public bool get_scroll_to_focus ();
+		[Version (since = "4.12")]
+		public void scroll_to (Gtk.Widget descendant, owned Gtk.ScrollInfo? scroll);
 		public void set_child (Gtk.Widget? child);
 		public void set_scroll_to_focus (bool scroll_to_focus);
 		public Gtk.Widget child { get; set; }
@@ -13149,6 +13185,8 @@ namespace Gtk {
 		public bool has_group ();
 		public bool is_fullscreen ();
 		public bool is_maximized ();
+		[Version (since = "4.12")]
+		public bool is_suspended ();
 		public static GLib.List<weak Gtk.Window> list_toplevels ();
 		public void maximize ();
 		public void minimize ();
@@ -13213,6 +13251,9 @@ namespace Gtk {
 		public bool modal { get; set; }
 		public bool resizable { get; set; }
 		public string startup_id { set; }
+		[NoAccessorMethod]
+		[Version (since = "4.12")]
+		public bool suspended { get; }
 		public string title { get; set; }
 		[Version (since = "4.6")]
 		public Gtk.Widget titlebar { get; set; }
@@ -14185,7 +14226,6 @@ namespace Gtk {
 		SIZE_REQUEST,
 		NO_CSS_CACHE,
 		INTERACTIVE,
-		TOUCHSCREEN,
 		ACTIONS,
 		LAYOUT,
 		SNAPSHOT,
@@ -14390,6 +14430,14 @@ namespace Gtk {
 		BSD_3,
 		APACHE_2_0,
 		MPL_2_0
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_LIST_SCROLL_", type_id = "gtk_list_scroll_flags_get_type ()")]
+	[Flags]
+	[Version (since = "4.12")]
+	public enum ListScrollFlags {
+		NONE,
+		FOCUS,
+		SELECT
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_LIST_TAB_", type_id = "gtk_list_tab_behavior_get_type ()")]
 	[Version (since = "4.12")]
