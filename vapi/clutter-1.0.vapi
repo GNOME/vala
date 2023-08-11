@@ -6776,7 +6776,7 @@ namespace Clutter {
 		public double period { get; set; }
 		public float radius { get; set; }
 	}
-	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_paint_node_get_type ()")]
+	[CCode (cheader_filename = "clutter/clutter.h", ref_function = "clutter_paint_node_ref", type_id = "clutter_paint_node_get_type ()", unref_function = "clutter_paint_node_unref")]
 	[Version (since = "1.10")]
 	public abstract class PaintNode {
 		[CCode (has_construct_function = false)]

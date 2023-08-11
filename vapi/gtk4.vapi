@@ -4934,7 +4934,7 @@ namespace Gdk {
 		public Gdk.ContentFormats formats { get; construct; }
 		public Gdk.Surface surface { get; construct; }
 	}
-	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_event_get_type ()")]
+	[CCode (cheader_filename = "gdk/gdk.h", ref_function = "gdk_event_ref", type_id = "gdk_event_get_type ()", unref_function = "gdk_event_unref")]
 	public abstract class Event {
 		[CCode (has_construct_function = false)]
 		protected Event ();
@@ -6137,7 +6137,7 @@ namespace Gsk {
 		public float get_start ();
 		public float get_vradius ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_render_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_render_node_ref", type_id = "gsk_render_node_get_type ()", unref_function = "gsk_render_node_unref")]
 	public abstract class RenderNode {
 		[CCode (has_construct_function = false)]
 		protected RenderNode ();
@@ -8490,7 +8490,7 @@ namespace Gtk {
 		public bool use_underline { get; set construct; }
 		public signal void activate ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_expression_get_type ()")]
+	[CCode (cheader_filename = "gtk/gtk.h", ref_function = "gtk_expression_ref", type_id = "gtk_expression_get_type ()", unref_function = "gtk_expression_unref")]
 	public abstract class Expression {
 		[CCode (has_construct_function = false)]
 		protected Expression ();
