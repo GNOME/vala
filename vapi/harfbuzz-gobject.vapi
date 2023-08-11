@@ -1983,6 +1983,7 @@ namespace HarfBuzz {
 	[Version (since = "0.9.31")]
 	public const int BUFFER_REPLACEMENT_CODEPOINT_DEFAULT;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_CODEPOINT_INVALID")]
+	[Version (since = "8.0.0")]
 	public const HarfBuzz.Codepoint CODEPOINT_INVALID;
 	[CCode (cheader_filename = "hb-gobject.h", cname = "HB_FEATURE_GLOBAL_START")]
 	[Version (since = "2.0.0")]
@@ -2121,6 +2122,9 @@ namespace HarfBuzz {
 	[Version (since = "1.8.5")]
 	public static void ot_layout_collect_features (HarfBuzz.Face face, HarfBuzz.Tag table_tag, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? scripts, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? languages, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? features, out unowned HarfBuzz.Set feature_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "8.1.0")]
+	public static void ot_layout_collect_features_map (HarfBuzz.Face face, HarfBuzz.Tag table_tag, uint script_index, uint language_index, out unowned HarfBuzz.Map feature_map);
+	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.8")]
 	public static void ot_layout_collect_lookups (HarfBuzz.Face face, HarfBuzz.Tag table_tag, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? scripts, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? languages, [CCode (array_length = false, array_null_terminated = true)] HarfBuzz.Tag[]? features, out unowned HarfBuzz.Set lookup_indexes);
 	[CCode (cheader_filename = "hb-gobject.h")]
@@ -2141,15 +2145,19 @@ namespace HarfBuzz {
 	[Version (since = "2.6.0")]
 	public static HarfBuzz.Bool ot_layout_get_baseline (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out HarfBuzz.Position coord);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "8.0.0")]
 	public static HarfBuzz.Bool ot_layout_get_baseline2 (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Script script, HarfBuzz.Language? language, out HarfBuzz.Position coord);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "4.0.0")]
 	public static void ot_layout_get_baseline_with_fallback (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out HarfBuzz.Position coord);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "8.0.0")]
 	public static void ot_layout_get_baseline_with_fallback2 (HarfBuzz.Font font, HarfBuzz.OtLayoutBaselineTag baseline_tag, HarfBuzz.Direction direction, HarfBuzz.Script script, HarfBuzz.Language? language, out HarfBuzz.Position coord);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "8.0.0")]
 	public static HarfBuzz.Bool ot_layout_get_font_extents (HarfBuzz.Font font, HarfBuzz.Direction direction, HarfBuzz.Tag script_tag, HarfBuzz.Tag language_tag, out unowned HarfBuzz.FontExtents? extents);
 	[CCode (cheader_filename = "hb-gobject.h")]
+	[Version (since = "8.0.0")]
 	public static HarfBuzz.Bool ot_layout_get_font_extents2 (HarfBuzz.Font font, HarfBuzz.Direction direction, HarfBuzz.Script script, HarfBuzz.Language? language, out unowned HarfBuzz.FontExtents? extents);
 	[CCode (cheader_filename = "hb-gobject.h")]
 	[Version (since = "0.9.7")]

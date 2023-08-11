@@ -230,6 +230,8 @@ namespace Graphene {
 		public float x;
 		public float y;
 		public float distance (Graphene.Point b, out float d_x, out float d_y);
+		[Version (since = "1.12")]
+		public float distance_squared (Graphene.Point b);
 		public bool equal (Graphene.Point b);
 		public unowned Graphene.Point? init (float x, float y);
 		public unowned Graphene.Point? init_from_point (Graphene.Point src);

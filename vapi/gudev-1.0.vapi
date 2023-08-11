@@ -21,6 +21,9 @@ namespace GUdev {
 		[CCode (has_construct_function = false)]
 		protected Device ();
 		public unowned string get_action ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		[Version (since = "238")]
+		public unowned string[] get_current_tags ();
 		public unowned string? get_device_file ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_device_file_symlinks ();
