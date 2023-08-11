@@ -92,6 +92,12 @@ namespace WebKit {
 		public unowned string get_title ();
 		public unowned string get_uri ();
 	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_clipboard_permission_request_get_type ()")]
+	[Version (since = "2.42")]
+	public class ClipboardPermissionRequest : GLib.Object, WebKit.PermissionRequest {
+		[CCode (has_construct_function = false)]
+		protected ClipboardPermissionRequest ();
+	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_color_chooser_request_get_type ()")]
 	public class ColorChooserRequest : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -173,11 +179,15 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public void delete_cookies_for_domain (string domain);
 		public async WebKit.CookieAcceptPolicy get_accept_policy (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.42")]
+		public async GLib.List<Soup.Cookie> get_all_cookies (GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.20")]
 		public async GLib.List<Soup.Cookie> get_cookies (string uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[CCode (array_length = false, array_null_terminated = true)]
 		[Version (deprecated = true, deprecated_since = "2.16")]
 		public async string[] get_domains_with_cookies (GLib.Cancellable? cancellable = null) throws GLib.Error;
+		[Version (since = "2.42")]
+		public async bool replace_cookies (GLib.List<Soup.Cookie> cookies, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_accept_policy (WebKit.CookieAcceptPolicy policy);
 		public void set_persistent_storage (string filename, WebKit.CookiePersistentStorage storage);
 		public signal void changed ();
@@ -263,6 +273,28 @@ namespace WebKit {
 		public async Cairo.Surface get_favicon (string page_uri, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public string get_favicon_uri (string page_uri);
 		public signal void favicon_changed (string page_uri, string favicon_uri);
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_feature_ref", type_id = "webkit_feature_get_type ()", unref_function = "webkit_feature_unref")]
+	[Compact]
+	[Version (since = "2.42")]
+	public class Feature {
+		public unowned string get_category ();
+		public bool get_default_value ();
+		public unowned string? get_details ();
+		public unowned string get_identifier ();
+		public unowned string? get_name ();
+		public WebKit.FeatureStatus get_status ();
+		public unowned WebKit.Feature @ref ();
+		public void unref ();
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", ref_function = "webkit_feature_list_ref", type_id = "webkit_feature_list_get_type ()", unref_function = "webkit_feature_list_unref")]
+	[Compact]
+	[Version (since = "2.42")]
+	public class FeatureList {
+		public unowned WebKit.Feature @get (size_t index);
+		public size_t get_length ();
+		public unowned WebKit.FeatureList @ref ();
+		public void unref ();
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", type_id = "webkit_file_chooser_request_get_type ()")]
 	public class FileChooserRequest : GLib.Object {
@@ -748,6 +780,8 @@ namespace WebKit {
 		public static uint32 font_size_to_pixels (uint32 points);
 		[Version (since = "2.20")]
 		public static uint32 font_size_to_points (uint32 pixels);
+		[Version (since = "2.42")]
+		public static WebKit.FeatureList get_all_features ();
 		[Version (since = "2.10")]
 		public bool get_allow_file_access_from_file_urls ();
 		public bool get_allow_modal_dialogs ();
@@ -761,6 +795,8 @@ namespace WebKit {
 		public unowned string get_default_font_family ();
 		public uint32 get_default_font_size ();
 		public uint32 get_default_monospace_font_size ();
+		[Version (since = "2.42")]
+		public static WebKit.FeatureList get_development_features ();
 		[Version (since = "2.40")]
 		public bool get_disable_web_security ();
 		public bool get_draw_compositing_indicators ();
@@ -814,11 +850,16 @@ namespace WebKit {
 		public bool get_enable_write_console_messages_to_stdout ();
 		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public bool get_enable_xss_auditor ();
+		[Version (since = "2.42")]
+		public static WebKit.FeatureList get_experimental_features ();
 		public unowned string get_fantasy_font_family ();
+		[Version (since = "2.42")]
+		public bool get_feature_enabled (WebKit.Feature feature);
 		[Version (since = "2.16")]
 		public WebKit.HardwareAccelerationPolicy get_hardware_acceleration_policy ();
 		public bool get_javascript_can_access_clipboard ();
 		public bool get_javascript_can_open_windows_automatically ();
+		[Version (deprecated = true, deprecated_since = "2.42")]
 		public bool get_load_icons_ignoring_image_load_setting ();
 		[Version (since = "2.30")]
 		public unowned string get_media_content_types_requiring_hardware_support ();
@@ -899,10 +940,13 @@ namespace WebKit {
 		[Version (deprecated = true, deprecated_since = "2.38.")]
 		public void set_enable_xss_auditor (bool enabled);
 		public void set_fantasy_font_family (string fantasy_font_family);
+		[Version (since = "2.42")]
+		public void set_feature_enabled (WebKit.Feature feature, bool enabled);
 		[Version (since = "2.16")]
 		public void set_hardware_acceleration_policy (WebKit.HardwareAccelerationPolicy policy);
 		public void set_javascript_can_access_clipboard (bool enabled);
 		public void set_javascript_can_open_windows_automatically (bool enabled);
+		[Version (deprecated = true, deprecated_since = "2.42")]
 		public void set_load_icons_ignoring_image_load_setting (bool enabled);
 		[Version (since = "2.30")]
 		public void set_media_content_types_requiring_hardware_support (string? content_types);
@@ -988,6 +1032,7 @@ namespace WebKit {
 		public WebKit.HardwareAccelerationPolicy hardware_acceleration_policy { get; set construct; }
 		public bool javascript_can_access_clipboard { get; set construct; }
 		public bool javascript_can_open_windows_automatically { get; set construct; }
+		[Version (deprecated = true, deprecated_since = "2.42")]
 		public bool load_icons_ignoring_image_load_setting { get; set construct; }
 		[Version (since = "2.30")]
 		public string media_content_types_requiring_hardware_support { get; set construct; }
@@ -1645,8 +1690,14 @@ namespace WebKit {
 		public string local_storage_directory { get; construct; }
 		[Version (deprecated = true, deprecated_since = "2.40.", since = "2.10")]
 		public string offline_application_cache_directory { get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.42")]
+		public double origin_storage_ratio { construct; }
 		[Version (deprecated = true, deprecated_since = "2.40.", since = "2.30")]
 		public string service_worker_registrations_directory { get; construct; }
+		[NoAccessorMethod]
+		[Version (since = "2.42")]
+		public double total_storage_ratio { construct; }
 		[Version (deprecated = true, deprecated_since = "2.24.", since = "2.10")]
 		public string websql_directory { get; construct; }
 	}
@@ -1795,6 +1846,18 @@ namespace WebKit {
 		ITALIC,
 		UNDERLINE,
 		STRIKETHROUGH
+	}
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_FEATURE_STATUS_", type_id = "webkit_feature_status_get_type ()")]
+	[Version (since = "2.42")]
+	public enum FeatureStatus {
+		EMBEDDER,
+		UNSTABLE,
+		INTERNAL,
+		DEVELOPER,
+		TESTABLE,
+		PREVIEW,
+		STABLE,
+		MATURE
 	}
 	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_FIND_OPTIONS_", type_id = "webkit_find_options_get_type ()")]
 	[Flags]
