@@ -1,3 +1,13 @@
+Vala 0.56.11
+============
+ * Various improvements and bug fixes:
+  - vala: Infer generic type from typeof() initializer of parameters
+  - girparser: Support glib:ref-func, glib:unref-func, copy-function
+    and free-function
+
+ * Bindings:
+  - gtk4: Update to 4.12.0
+
 Vala 0.56.10
 ============
  * Various improvements and bug fixes:
