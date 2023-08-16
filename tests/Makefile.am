@@ -816,6 +816,7 @@ TESTS = \
 	generics/parameter-out-cast.vala \
 	generics/parameter-sizeof-initializer.vala \
 	generics/parameter-sizeof-initializer-2.vala \
+	generics/parameter-typeof.vala \
 	generics/parameter-typeof-initializer.vala \
 	generics/member-dup-destroy.vala \
 	generics/method-parameter-type-missing.test \
