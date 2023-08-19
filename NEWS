@@ -1,3 +1,11 @@
+Vala 0.56.12
+============
+ * Regression fix:
+  - vala: Only transform default initializers of parameters [#1474]
+
+ * Bindings:
+  - gtk4: Preserve compatibility with <= 4.8.x [#1475]
+
 Vala 0.56.11
 ============
  * Various improvements and bug fixes:
