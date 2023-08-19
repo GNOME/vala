@@ -59,7 +59,7 @@ namespace Notify {
 		EXPIRED,
 		DISMISSED,
 		API_REQUEST,
-		UNDEFIEND
+		UNDEFINED
 	}
 	[CCode (cheader_filename = "libnotify/notify.h", cprefix = "NOTIFY_URGENCY_", type_id = "notify_urgency_get_type ()")]
 	public enum Urgency {
