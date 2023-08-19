@@ -299,6 +299,9 @@ Snapshot
   .free_to_paintable destroys_instance
 render_* parent="Gtk.StyleContext"
 render_* symbol_type="method" instance_idx=0
+SearchEntry
+  // gtk4 < 4.10
+  .placeholder_text no_accessor_method
 TextBuffer
   .backspace.iter ref
   .delete.start ref
