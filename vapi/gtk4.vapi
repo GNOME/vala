@@ -11070,7 +11070,8 @@ namespace Gtk {
 		public void set_search_delay (uint delay);
 		[NoAccessorMethod]
 		public bool activates_default { get; set; }
-		public string placeholder_text { get; set; }
+		[NoAccessorMethod]
+		public string placeholder_text { owned get; set; }
 		[Version (since = "4.8")]
 		public uint search_delay { get; set; }
 		public signal void activate ();
