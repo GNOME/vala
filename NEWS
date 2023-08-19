@@ -1,3 +1,37 @@
+Vala 0.56.12
+============
+ * Regression fix:
+  - vala: Only transform default initializers of parameters [#1474]
+
+ * Bindings:
+  - gtk4: Preserve compatibility with <= 4.8.x [#1475]
+
+Vala 0.56.11
+============
+ * Various improvements and bug fixes:
+  - vala: Infer generic type from typeof() initializer of parameters
+  - girparser: Support glib:ref-func, glib:unref-func, copy-function
+    and free-function
+
+ * Bindings:
+  - gtk4: Update to 4.12.0
+
+Vala 0.56.10
+============
+ * Various improvements and bug fixes:
+  - codegen: Don't emit casts in static field initializers [#1459]
+  - parser: Reset tokens buffer when parsing a new source file
+  - vala: Output additional information when accessing unknown member
+  - vala: Allow "set" method of an container to return void or bool
+  - vala: Correctly handle possible null from SourceFile.get_source_line()
+    [#1464]
+
+ * Bindings:
+  - glib-2.0: Update return-type of HashTable.add/insert/replace() and
+    GenericSet.add() [#1465]
+  - linux: Add resolution field to Input.AbsInfo
+  - libpq: Fix a few binding errors
+
 Vala 0.56.9
 ===========
  * Various improvements and bug fixes:
