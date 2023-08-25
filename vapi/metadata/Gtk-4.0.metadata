@@ -154,8 +154,6 @@ CellAreaBox
   .pack_*.align default=false
   .pack_*.fixed default=true
   .pack_*.expand default=true
-CssProvider
-  .load_from_data.length default=-1
 Editable
   .get_chars.start_pos default=0
   .get_chars.end_pos default=-1
@@ -272,6 +270,8 @@ TreeRowData skip
 CellArea
   .cell_get_property.value ref
   .get_cell_property.value ref
+CssProvider
+  .load_from_data.data type="uint8[]" array array_length_idx=1
 param_spec_expression parent="Gtk.ParamSpecExpression" name="new" symbol_type="constructor"
 value_get_expression.value ref
 value_set_expression.value ref
