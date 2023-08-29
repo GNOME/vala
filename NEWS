@@ -1,3 +1,9 @@
+Vala 0.56.13
+============
+ * Bindings:
+  - gtk4: Restore CssProvider.load_from_data() signature to take an array
+    [#1478]
+
 Vala 0.56.12
 ============
  * Regression fix:
