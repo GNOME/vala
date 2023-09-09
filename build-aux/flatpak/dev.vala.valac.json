@@ -30,8 +30,8 @@
                     "sources": [
                         {
                             "type": "archive",
-                            "url": "https://gitlab.com/graphviz/graphviz/-/archive/7.1.0/graphviz-7.1.0.tar.gz",
-                            "sha256": "8b28a283644a8442e6925b15d95055228d25172c7c30681810625616cbb23913"
+                            "url": "https://gitlab.com/graphviz/graphviz/-/archive/8.1.0/graphviz-8.1.0.tar.gz",
+                            "sha256": "2e4dfee3c24925ad51d1e76a9fb2b19b26a5a0049ef7be6d3e52667aac72eabe"
                         }
                     ]
                 }
