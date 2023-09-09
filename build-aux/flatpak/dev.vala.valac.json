@@ -6,6 +6,7 @@
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.vala"
     ],
+    "finish-args" : ["--socket=session-bus"],
     "build-options": {
         "append-path" : "/usr/lib/sdk/vala/bin",
         "append-ld-library-path" : "/usr/lib/sdk/vala/lib"
