@@ -15,6 +15,7 @@
         {
             "name": "valac",
             "buildsystem": "autotools",
+            "config-opts": ["--enable-debug"],
             "sources": [
                 {
                     "type": "git",
