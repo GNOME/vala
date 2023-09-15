@@ -39,6 +39,8 @@ lcov.info
 
 tests/_test
 
+vapi/test.vala
+
 *~
 .DS_Store
 .vscode
