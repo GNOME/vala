@@ -1328,6 +1328,9 @@ public class string {
 	public string make_valid (ssize_t len = -1);
 	[CCode (cname = "g_utf8_normalize")]
 	public string normalize (ssize_t len = -1, GLib.NormalizeMode mode = GLib.NormalizeMode.DEFAULT);
+	[Version (since = "2.78")]
+	[CCode (cname = "g_utf8_truncate_middle")]
+	public string truncate_middle (size_t truncate_length);
 
 	[CCode (cname = "g_utf8_strup")]
 	public string up (ssize_t len = -1);
@@ -2045,6 +2048,8 @@ namespace GLib {
 		public static uint add_seconds (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		[Version (since = "2.14")]
 		public static uint add_seconds_full (int priority, uint interval, owned SourceFunc function);
+		[Version (since = "2.78")]
+		public static uint add_seconds_once (uint interval, SourceOnceFunc function);
 	}
 
 	[CCode (cname = "GSource")]
@@ -5056,6 +5061,8 @@ namespace GLib {
 		public static double rand_double_range (double begin, double end);
 		[Version (since = "2.22")]
 		public static void log_set_fatal_handler (LogFatalFunc log_func);
+		[Version (since = "2.78")]
+		public static void disable_crash_reporting ();
 
 		public delegate bool LogFatalFunc (string? log_domain, LogLevelFlags log_levels, string message);
 	}
@@ -5714,8 +5721,13 @@ namespace GLib {
 	[CCode (cname = "GString", cprefix = "g_string_", free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
 	public class StringBuilder {
 		public StringBuilder (string init = "");
+		[CCode (cname = "g_string_new_len")]
+		public StringBuilder.from_buffer ([CCode (array_length_type = "gssize")] char[] init);
 		[CCode (cname = "g_string_sized_new")]
 		public StringBuilder.sized (size_t dfl_size);
+		[Version (since = "2.78")]
+		[CCode (cname = "g_string_new_take")]
+		public StringBuilder.take (owned string init);
 		public unowned StringBuilder assign (string rval);
 		public unowned StringBuilder append (string val);
 		public unowned StringBuilder append_c (char c);
@@ -6368,6 +6380,7 @@ namespace GLib {
 		public const uint @2_72;
 		public const uint @2_74;
 		public const uint @2_76;
+		public const uint @2_78;
 
 		[CCode (cname = "glib_binary_age")]
 		public const uint binary_age;
