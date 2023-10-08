@@ -142,7 +142,7 @@ A bunch of new bindings to libraries got added this release. Here is a list:
 
 - libsoup is now also available in version 3.0 and webkit2gtk in version 4.1 and 5.0 so you can start porting you Vala apps to the new releases of these libraries
 - linux-media can now be used from Vala. There were also lots of more additions and fixes in other linux kernel interface bindings.
-- During the port of the gnome-desktop library it was splitted up into gnome-desktop-4, gnome-rr-4 and gnome-bg-4. They are all now available to use in your new app.
+- During the port of the gnome-desktop library it was split up into gnome-desktop-4, gnome-rr-4 and gnome-bg-4. They are all now available to use in your new app.
 - the GLib vapi was updated to version 2.72, including the new Signal- and BindingGroups and DebugController
 
 ### GNOME Getting started tutorial
