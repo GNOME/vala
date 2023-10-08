@@ -42,7 +42,7 @@
 
 <section>
 <title>Vala source files</title>
-<para>There are two types of Vala input files.  Vala source files (with a &quot;.vala&quot; extension) contain compileable Vala code. VAPI files (with a &quot;.vapi&quot; extension) describe an interface to a library, which can be written in either Vala or C.  VAPI files are not compileable, and cannot contain any executable code - they are used when compiling Vala source files. </para>
+<para>There are two types of Vala input files.  Vala source files (with a &quot;.vala&quot; extension) contain compilable Vala code. VAPI files (with a &quot;.vapi&quot; extension) describe an interface to a library, which can be written in either Vala or C.  VAPI files are not compilable, and cannot contain any executable code - they are used when compiling Vala source files. </para>
 <para>There are no requirements for how Vala source files are named, although there are conventions that can be followed. VAPI files are usually named to matched the pkg-config name of the library they relate to; they are described more fully in the documentation about bindings. </para>
 <para>All Vala input files should be encoded in UTF-8. </para>
 </section>
