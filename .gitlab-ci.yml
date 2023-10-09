@@ -69,7 +69,7 @@ fedora-gcc-x86_64:
     - tags
   before_script:
     - dnf update -y
-    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala weasyprint
+    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala sphinx latexmk texlive-collection-latexrecommended texlive-capt-of texlive-cmap texlive-ec texlive-fncychap texlive-framed texlive-latex texlive-metafont texlive-tex-gyre texlive-upquote texlive-wrapfig python-furo
   script:
     - git fetch --tags
     - ./autogen.sh --prefix=$HOME/vala-installed --enable-coverage
@@ -84,7 +84,7 @@ fedora-gcc-x86_64:
     paths:
       - "coverage"
       - "doc/internal-apis"
-      - "doc/manual/html"
+      - "doc/manual/build/html"
       - "doc/manual/manual.pdf"
     expire_in: 2 days
 
@@ -176,7 +176,7 @@ pages:
     - mkdir public
     - mv coverage public/.
     - mv doc/internal-apis public/docs
-    - mv doc/manual/html public/manual
+    - mv doc/manual/build/html public/manual
     - mv doc/manual/manual.pdf public/manual.pdf
     - echo "<html><body><h1>Vala</h1><ul><li><a href="manual/index.html">Manual</a> [<a href="manual.pdf">pdf</a>]</li><li><a href="docs/index.html">Documentation</a></li><li><a href="coverage/index.html">Coverage</a></li></ul></body></html>" > public/index.html
   artifacts:
