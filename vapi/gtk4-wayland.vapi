@@ -9,6 +9,9 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected Device ();
 			public unowned string? get_node_path ();
+			public unowned Wl.Keyboard get_wl_keyboard ();
+			public unowned Wl.Pointer get_wl_pointer ();
+			public unowned Wl.Seat get_wl_seat ();
 			[Version (since = "4.4")]
 			public void* get_xkb_keymap ();
 		}
@@ -21,6 +24,8 @@ namespace Gdk {
 			public void* get_egl_display ();
 			[Version (deprecated = true, deprecated_since = "4.10.")]
 			public unowned string? get_startup_notification_id ();
+			public unowned Wl.Compositor get_wl_compositor ();
+			public unowned Wl.Display get_wl_display ();
 			public bool query_registry (string global);
 			public void set_cursor_theme (string name, int size);
 			[Version (deprecated = true, deprecated_since = "4.10.")]
@@ -37,6 +42,7 @@ namespace Gdk {
 		public sealed class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
 			protected Monitor ();
+			public unowned Wl.Output get_wl_output ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_popup_get_type ()")]
 		[GIR (name = "WaylandPopup")]
@@ -49,13 +55,14 @@ namespace Gdk {
 		public sealed class Seat : Gdk.Seat {
 			[CCode (has_construct_function = false)]
 			protected Seat ();
+			public unowned Wl.Seat get_wl_seat ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_surface_get_type ()")]
 		[GIR (name = "WaylandSurface")]
 		public sealed class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
-			public Wl.Surface get_wl_surface ();
+			public unowned Wl.Surface get_wl_surface ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
 		[GIR (name = "WaylandToplevel")]

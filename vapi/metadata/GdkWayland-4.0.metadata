@@ -1,6 +1,18 @@
 * cheader_filename = "gdk/wayland/gdkwayland.h"
 
-WaylandSurface.get_wl_surface type="Wl.Surface" skip=false
+WaylandDevice
+  .get_wl_keyboard type="unowned Wl.Keyboard" skip=false
+  .get_wl_pointer type="unowned Wl.Pointer" skip=false
+  .get_wl_seat type="unowned Wl.Seat" skip=false
+WaylandDisplay
+  .get_wl_display type="unowned Wl.Display" skip=false
+  .get_wl_compositor type="unowned Wl.Compositor" skip=false
+WaylandMonitor
+  .get_wl_output type="unowned Wl.Output" skip=false
+WaylandSeat
+  .get_wl_seat type="unowned Wl.Seat" skip=false
+WaylandSurface
+  .get_wl_surface type="unowned Wl.Surface" skip=false
 
 //wayland_* name="wayland_(.+)" parent="Gdk.Wayland"
 Wayland* name="Wayland(.+)" parent="Gdk.Wayland"
