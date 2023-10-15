@@ -50,7 +50,7 @@ manual.pdf: $(manual_SOURCE)
 	VERSION=$(VERSION) $(SPHINXBUILD) -M latexpdf $(srcdir)/source $(builddir)/build
 	mv -f $(builddir)/build/latex/valareferencemanual.pdf $@
 
-manualdir = $(docdir)
+manualdir = $(docdir)@PACKAGE_SUFFIX@
 dist_manual_DATA = \
 	manual.pdf \
 	$(NULL)
