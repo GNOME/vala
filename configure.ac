@@ -161,7 +161,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=array-parameter=2 \
 -Werror=enum-conversion"
 
-TEST_CFLAGS=
+TEST_CFLAGS="-Wno-incompatible-function-pointer-types"
 for flag in $TEST_EXTRA_CFLAGS; do
 	AX_CHECK_COMPILE_FLAG([$flag],[TEST_CFLAGS="$TEST_CFLAGS $flag"])
 done
