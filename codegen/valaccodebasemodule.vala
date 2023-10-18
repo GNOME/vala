@@ -3004,7 +3004,11 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			string dup_function;
 			unowned Class? cl = type.type_symbol as Class;
 			if (is_reference_counting (type.type_symbol)) {
-				dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.type_symbol);
+				if (is_ref_function_void (type)) {
+					dup_function = generate_ref_wrapper ((ObjectType) type);
+				} else {
+					dup_function = get_ccode_ref_function ((ObjectTypeSymbol) type.type_symbol);
+				}
 				if (type.type_symbol is Interface && dup_function == null) {
 					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure", type.type_symbol.get_full_name ());
 					return new CCodeInvalidExpression();
@@ -3231,6 +3235,39 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		cfile.add_function (function);
 
 		return equal_func;
+	}
+
+	string generate_ref_wrapper (ObjectType type) {
+		string ref_func = "_vala_%s".printf (get_ccode_ref_function (type.object_type_symbol));
+
+		if (!add_wrapper (ref_func)) {
+			// wrapper already defined
+			return ref_func;
+		}
+
+		var function = new CCodeFunction (ref_func, get_ccode_name (type));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeParameter ("self", get_ccode_name (type)));
+
+		push_function (function);
+
+		ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("self"), new CCodeConstant ("NULL")));
+
+		var ref_call = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_ref_function (type.object_type_symbol)));
+		ref_call.add_argument (new CCodeIdentifier ("self"));
+		ccode.add_expression (ref_call);
+
+		ccode.close ();
+
+		ccode.add_return (new CCodeIdentifier ("self"));
+
+		pop_function ();
+
+		cfile.add_function_declaration (function);
+		cfile.add_function (function);
+
+		return ref_func;
 	}
 
 	private string generate_struct_dup_wrapper (ValueType value_type) {
