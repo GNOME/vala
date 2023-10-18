@@ -239,32 +239,34 @@ public class Vala.MarkupReader {
 				Report.error (null, "invalid UTF-8 character");
 			} else if (u == '&') {
 				char* next_pos = current + u.to_utf8 (null);
-				if (((string) next_pos).has_prefix ("amp;")) {
+				char buffer[16];
+				Memory.copy (buffer, next_pos, (end - next_pos >= buffer.length ? buffer.length - 1 : end - next_pos));
+				if (((string) buffer).has_prefix ("amp;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('&');
 					current += 5;
 					text_begin = current;
-				} else if (((string) next_pos).has_prefix ("quot;")) {
+				} else if (((string) buffer).has_prefix ("quot;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('"');
 					current += 6;
 					text_begin = current;
-				} else if (((string) next_pos).has_prefix ("apos;")) {
+				} else if (((string) buffer).has_prefix ("apos;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('\'');
 					current += 6;
 					text_begin = current;
-				} else if (((string) next_pos).has_prefix ("lt;")) {
+				} else if (((string) buffer).has_prefix ("lt;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('<');
 					current += 4;
 					text_begin = current;
-				} else if (((string) next_pos).has_prefix ("gt;")) {
+				} else if (((string) buffer).has_prefix ("gt;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('>');
 					current += 4;
 					text_begin = current;
-				} else if (((string) next_pos).has_prefix ("percnt;")) {
+				} else if (((string) buffer).has_prefix ("percnt;")) {
 					content.append (((string) text_begin).substring (0, (int) (current - text_begin)));
 					content.append_c ('%');
 					current += 8;
