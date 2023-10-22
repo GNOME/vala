@@ -61,6 +61,7 @@ Element
 ElementFactory
   .create* skip=false floating
   .make* skip=false floating
+  .make.name default=null
 GhostPad
   .new floating
 Pad
