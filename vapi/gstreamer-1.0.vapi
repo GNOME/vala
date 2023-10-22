@@ -1444,7 +1444,7 @@ namespace Gst {
 		public static GLib.List<Gst.ElementFactory> list_get_elements (Gst.ElementFactoryListType type, Gst.Rank minrank);
 		public bool list_is_type (Gst.ElementFactoryListType type);
 		[CCode (returns_floating_reference = true)]
-		public static Gst.Element? make (string factoryname, string? name);
+		public static Gst.Element? make (string factoryname, string? name = null);
 		[CCode (returns_floating_reference = true)]
 		[Version (since = "1.20")]
 		public static Gst.Element? make_full (string factoryname, string? first, ...);
