@@ -71,7 +71,10 @@ ubuntu-gcc-x86_64:
     DEBIAN_FRONTEND: noninteractive
   before_script:
     - apt update
+    - apt install -y --no-install-recommends software-properties-common
+    - add-apt-repository -y ppa:vala-team/build-support
     - apt install -y automake autoconf-archive libtool bison dbus flex git libglib2.0-dev libgraphviz-dev libgirepository1.0-dev lcov xsltproc make valac furo latexmk python3-sphinx tex-gyre texlive-latex-extra
+    - apt install -y libcapture-tiny-perl libdatetime-perl
   script:
     - git fetch --tags
     - ./autogen.sh --prefix=$HOME/vala-installed --enable-coverage
