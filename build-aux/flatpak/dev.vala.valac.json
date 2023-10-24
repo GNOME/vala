@@ -9,7 +9,8 @@
     "finish-args" : ["--socket=session-bus"],
     "build-options": {
         "append-path" : "/usr/lib/sdk/vala/bin",
-        "append-ld-library-path" : "/usr/lib/sdk/vala/lib"
+        "append-ld-library-path" : "/usr/lib/sdk/vala/lib",
+        "build-args": ["--share=network"]
     },
     "command": "valac",
     "modules": [
@@ -36,6 +37,11 @@
                             "sha256": "2e4dfee3c24925ad51d1e76a9fb2b19b26a5a0049ef7be6d3e52667aac72eabe"
                         }
                     ]
+                },
+                {
+                    "name": "sphinx-build",
+                    "buildsystem": "simple",
+                    "build-commands": ["pip3 install --prefix=/app sphinx furo"]
                 }
             ]
         }
