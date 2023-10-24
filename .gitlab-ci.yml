@@ -62,14 +62,16 @@ nightly@24.08@aarch64:
   extends: [".publish_nightly", ".flatpak rules"]
   needs: ["flatpak-extension@24.08@aarch64"]
 
-fedora-gcc-x86_64:
+ubuntu-gcc-x86_64:
   stage: build
-  image: fedora:latest
+  image: ubuntu:23.10
   except:
     - tags
+  variables:
+    DEBIAN_FRONTEND: noninteractive
   before_script:
-    - dnf update -y
-    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala sphinx latexmk texlive-collection-latexrecommended texlive-capt-of texlive-cmap texlive-ec texlive-fncychap texlive-framed texlive-latex texlive-metafont texlive-tex-gyre texlive-upquote texlive-wrapfig python-furo
+    - apt update
+    - apt install -y automake autoconf-archive libtool bison dbus flex git libglib2.0-dev libgraphviz-dev libgirepository1.0-dev lcov xsltproc make valac furo latexmk python3-sphinx tex-gyre texlive-latex-extra
   script:
     - git fetch --tags
     - ./autogen.sh --prefix=$HOME/vala-installed --enable-coverage
@@ -87,6 +89,21 @@ fedora-gcc-x86_64:
       - "doc/manual/build/html"
       - "doc/manual/manual.pdf"
     expire_in: 2 days
+
+fedora-gcc-x86_64:
+  stage: build
+  image: fedora:latest
+  except:
+    - tags
+  before_script:
+    - dnf update -y
+    - dnf install -y autoconf autoconf-archive automake bison dbus-x11 diffutils flex gcc git glib2-devel graphviz-devel lcov libxslt make vala
+  script:
+    - git fetch --tags
+    - ./autogen.sh
+    - make -j4
+    - make -j4 bootstrap
+    - make -j4 check VERBOSE=1
 
 fedora-clang-x86_64:
   stage: build
