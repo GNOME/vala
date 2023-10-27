@@ -4,7 +4,8 @@ Vala Reference Manual
 This is the reference for all features, syntax elements, internals and generated output of Vala.
 
 It is not the best place to learn about Vala and especially for beginners might not be easy to understand.
-For learning and tutorials and for beginners the `Vala Documentation <https://lwildberg.pages.gitlab.gnome.org/vala-tutorial>`__ is a better place.
+A good first tutorial for beginners is the `Vala Tutorial <https://wiki.gnome.org/Projects/Vala/Tutorial>`__.
+If you want to write a GUI app start `here <https://developer.gnome.org/documentation/tutorials/beginners/getting_started.html>`__.
 
 To contribute to this reference you can submit merge requests to the `Gitlab repository <https://gitlab.gnome.org/GNOME/vala>`__.
 
