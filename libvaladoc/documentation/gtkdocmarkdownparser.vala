@@ -621,7 +621,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
 		comment.content.insert (1, note);
 	}
 
-	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData metadata, Importer.InternalIdRegistrar id_registrar, string? this_name = null) {
+	public Comment? parse (Api.Node element, Api.GirSourceComment gir_comment, GirMetaData metadata, Importer.InternalIdRegistrar id_registrar) {
 		this.metadata = metadata;
 		this.id_registrar = id_registrar;
 		this.gir_comment = gir_comment;
