@@ -1,3 +1,15 @@
+Vala 0.56.14
+============
+ * Various improvements and bug fixes:
+  - codegen: Generate compatible wrapper of ref-void functions [#1486]
+  - vala: Prevent usage of strlen() on non-null-terminated string [#1485]
+
+ * Bindings:
+  - glib-2.0: Add new symbols from 2.78
+  - gstreamer-1.0: Make ElementFactory.make()'s name parameter default to null
+  - gtk4-wayland: Add the missing wayland-client bindings
+  - wayland-client: Complete the binding
+
 Vala 0.56.13
 ============
  * Bindings:
