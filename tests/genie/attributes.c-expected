@@ -108,9 +108,9 @@ VALA_EXTERN gint c_test1_method (Test1* self,
                      gint c_b);
 VALA_EXTERN Test1* test1_new (void);
 VALA_EXTERN Test1* test1_construct (GType object_type);
-VALA_EXTERN gint test1_get_test1_prop (Test1* self);
-VALA_EXTERN void test1_set_test1_prop (Test1* self,
-                           gint value);
+VALA_EXTERN gint test1_get_c_test1_prop (Test1* self);
+VALA_EXTERN void test1_set_c_test1_prop (Test1* self,
+                             gint value);
 static void test1_finalize (Test1 * obj);
 static GType test1_get_type_once (void);
 VALA_EXTERN gpointer test2_ref (gpointer instance);
@@ -132,9 +132,9 @@ VALA_EXTERN gint c_test2_method (Test2* self,
                      gint c_b);
 VALA_EXTERN Test2* test2_new (void);
 VALA_EXTERN Test2* test2_construct (GType object_type);
-VALA_EXTERN gint test2_get_test2_prop (Test2* self);
-VALA_EXTERN void test2_set_test2_prop (Test2* self,
-                           gint value);
+VALA_EXTERN gint test2_get_c_test2_prop (Test2* self);
+VALA_EXTERN void test2_set_c_test2_prop (Test2* self,
+                             gint value);
 static void test2_finalize (Test2 * obj);
 static GType test2_get_type_once (void);
 static void _vala_main (gchar** args,
@@ -172,7 +172,7 @@ test1_new (void)
 }
 
 gint
-test1_get_test1_prop (Test1* self)
+test1_get_c_test1_prop (Test1* self)
 {
 	gint result;
 	g_return_val_if_fail (IS_TEST1 (self), 0);
@@ -181,8 +181,8 @@ test1_get_test1_prop (Test1* self)
 }
 
 void
-test1_set_test1_prop (Test1* self,
-                      gint value)
+test1_set_c_test1_prop (Test1* self,
+                        gint value)
 {
 	g_return_if_fail (IS_TEST1 (self));
 	self->priv->_test1_prop = value;
@@ -424,7 +424,7 @@ test2_new (void)
 }
 
 gint
-test2_get_test2_prop (Test2* self)
+test2_get_c_test2_prop (Test2* self)
 {
 	gint result;
 	g_return_val_if_fail (IS_TEST2 (self), 0);
@@ -433,8 +433,8 @@ test2_get_test2_prop (Test2* self)
 }
 
 void
-test2_set_test2_prop (Test2* self,
-                      gint value)
+test2_set_c_test2_prop (Test2* self,
+                        gint value)
 {
 	g_return_if_fail (IS_TEST2 (self));
 	self->priv->_test2_prop = value;
@@ -678,7 +678,7 @@ _vala_main (gchar** args,
 	test2 = _tmp1_;
 	_tmp2_ = g_strdup_printf ("%i", test1->c_test1_field);
 	_tmp3_ = _tmp2_;
-	_tmp4_ = test1_get_test1_prop (test1);
+	_tmp4_ = test1_get_c_test1_prop (test1);
 	_tmp5_ = _tmp4_;
 	_tmp6_ = g_strdup_printf ("%i", _tmp5_);
 	_tmp7_ = _tmp6_;
@@ -693,7 +693,7 @@ _vala_main (gchar** args,
 	_g_free0 (_tmp3_);
 	_tmp12_ = g_strdup_printf ("%i", test2->c_test2_field);
 	_tmp13_ = _tmp12_;
-	_tmp14_ = test2_get_test2_prop (test2);
+	_tmp14_ = test2_get_c_test2_prop (test2);
 	_tmp15_ = _tmp14_;
 	_tmp16_ = g_strdup_printf ("%i", _tmp15_);
 	_tmp17_ = _tmp16_;
