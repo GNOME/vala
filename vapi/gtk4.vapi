@@ -8496,7 +8496,7 @@ namespace Gtk {
 		protected Expression ();
 		[DestroysInstance]
 		public unowned Gtk.ExpressionWatch bind (GLib.Object target, string property, GLib.Object? this_);
-		public bool evaluate (GLib.Object? this_, GLib.Value value);
+		public bool evaluate (GLib.Object? this_, ref GLib.Value value);
 		public GLib.Type get_value_type ();
 		public bool is_static ();
 		public unowned Gtk.Expression @ref ();
