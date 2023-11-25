@@ -272,6 +272,8 @@ CellArea
   .get_cell_property.value ref
 CssProvider
   .load_from_data.data type="uint8[]" array array_length_idx=1
+Expression
+  .evaluate.value ref
 param_spec_expression parent="Gtk.ParamSpecExpression" name="new" symbol_type="constructor"
 value_get_expression.value ref
 value_set_expression.value ref
