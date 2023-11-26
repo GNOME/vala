@@ -1,0 +1,5 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (array_length_pos = 0.1, array_length_type = "guint", cheader_filename = "test.h")]
+	public static char[] function ();
+}

@@ -2870,7 +2870,12 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			bool known_type = true;
 			if (type_name == "utf8") {
-				type_name = "string";
+				if (ctype == null || ctype.has_suffix ("*") || ctype == "gpointer" || ctype == "gconstpointer") {
+					type_name = "string";
+				} else {
+					//FIXME Work around a g-ir-scanner bug
+					type_name = "char";
+				}
 			} else if (type_name == "gboolean") {
 				type = new BooleanType ((Struct) context.root.scope.lookup ("bool"));
 			} else if (type_name == "gchar") {

@@ -899,9 +899,11 @@ TESTS = \
 	gir/gtype-struct-name.gir \
 	gir/instance-parameter-owned.gir \
 	gir/method-array-length-type.gir \
+	gir/method-array-return.gir \
 	gir/method-class.gir \
 	gir/method-nowrapper.gir \
 	gir/parameter-array-length-type.gir \
+	gir/parameter-array-out.gir \
 	gir/parameter-nullable-out-simple-type.gir \
 	gir/property-non-readable.gir \
 	gir/signal-virtual.gir \
