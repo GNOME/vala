@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<include name="Gio" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="full">
+    <array length="0" zero-terminated="0" c:type="char*">
+      <type name="utf8" c:type="char"/>
+    </array>
+  </return-value>
+  <parameters>
+    <parameter name="size" direction="out" transfer-ownership="full">
+      <type name="guint" c:type="unsigned int*"/>
+    </parameter>
+  </parameters>
+</function>
+</namespace>
+</repository>
