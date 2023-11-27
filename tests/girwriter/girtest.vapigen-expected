@@ -84,6 +84,8 @@ namespace GirTest {
 		public int[] array_return ();
 		[CCode (array_length_pos = 2.3)]
 		public int[] array_return_int_in_delegate_out (int i1, out GirTest.DelegateTest d);
+		[CCode (array_length_pos = 2.2, array_length_type = "gsize")]
+		public int[] array_size_t_length ([CCode (array_length_cname = "array_length1", array_length_pos = 1.5, array_length_type = "gsize")] int[] array, [CCode (array_length_cname = "array2_length1", array_length_pos = 2.1, array_length_type = "gsize")] out int[] array2);
 		[CCode (array_length_pos = 0.1)]
 		public (unowned string)[] container_return ();
 		public async void coroutine_async ();

@@ -72,6 +72,7 @@ namespace GirTest {
 		public void array_out (out int[] array);
 		public int[] array_return ();
 		public int[] array_return_int_in_delegate_out (int i1, out GirTest.DelegateTest d);
+		public int[:size_t] array_size_t_length (int[:size_t] array, out int[:size_t] array2);
 		public (unowned string)[] container_return ();
 		public async void coroutine_async ();
 		public virtual async void coroutine_method_throw (int i1, out int o1) throws GirTest.ErrorTest;

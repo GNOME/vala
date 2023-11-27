@@ -399,6 +399,37 @@
 				</parameter>
 			</parameters>
 		</method>
+		<method name="array_size_t_length" c:identifier="gir_test_object_test_array_size_t_length">
+			<return-value transfer-ownership="full">
+				<array length="4" c:type="gint*">
+					<type name="gint" c:type="gint"/>
+				</array>
+			</return-value>
+			<parameters>
+				<instance-parameter name="self" transfer-ownership="none">
+					<type name="GirTest.ObjectTest" c:type="GirTestObjectTest*"/>
+				</instance-parameter>
+				<parameter name="array" transfer-ownership="none">
+					<array length="1" c:type="gint*">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array_length1" transfer-ownership="full">
+					<type name="gulong" c:type="gsize"/>
+				</parameter>
+				<parameter name="array2" direction="out" transfer-ownership="full">
+					<array length="3" c:type="gint**">
+						<type name="gint" c:type="gint"/>
+					</array>
+				</parameter>
+				<parameter name="array2_length1" direction="out" transfer-ownership="full">
+					<type name="gulong" c:type="gsize*"/>
+				</parameter>
+				<parameter name="result_length1" direction="out" transfer-ownership="full">
+					<type name="gulong" c:type="gsize*"/>
+				</parameter>
+			</parameters>
+		</method>
 		<method name="array_inout" c:identifier="gir_test_object_test_array_inout">
 			<return-value transfer-ownership="full">
 				<type name="none" c:type="void"/>

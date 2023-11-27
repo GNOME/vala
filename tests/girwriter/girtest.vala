@@ -280,6 +280,11 @@ namespace GirTest {
 		public void array_in (int[] array) {
 		}
 
+		public int[:size_t] array_size_t_length (int[:size_t] array, out int[:size_t] array2) {
+			array2 = new int[8:size_t];
+			return new int[8:size_t];
+		}
+
 		public void array_inout (ref int[] array) {
 			assert (array.length > 0);
 			array = new int[8];
