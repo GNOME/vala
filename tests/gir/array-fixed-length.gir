@@ -21,7 +21,6 @@
         <parameters>
           <parameter name="array"
                      direction="inout"
-                     caller-allocates="1"
                      transfer-ownership="full">
             <array zero-terminated="0" c:type="gpointer*" fixed-size="2">
               <type name="guint8"/>
@@ -37,7 +36,6 @@
         <parameters>
           <parameter name="array"
                      direction="out"
-                     caller-allocates="1"
                      transfer-ownership="full">
             <array zero-terminated="0" c:type="gpointer*" fixed-size="8">
               <type name="guint8"/>
