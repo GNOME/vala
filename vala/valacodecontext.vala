@@ -754,24 +754,10 @@ public class Vala.CodeContext {
 		return null;
 	}
 
-	public void write_dependencies (string filename) {
-		var stream = FileStream.open (filename, "w");
-
-		if (stream == null) {
-			Report.error (null, "unable to open `%s' for writing", filename);
-			return;
-		}
-
-		stream.printf ("%s:", filename);
-		foreach (var src in source_files) {
-			if (src.file_type == SourceFileType.FAST && src.used) {
-				stream.printf (" %s", src.filename);
-			}
-		}
-		stream.printf ("\n\n");
-	}
-
-	public void write_external_dependencies (string filename) {
+	/*
+	 * Create make-style depfile for use by build systems.
+	 */
+	void write_depfile (string filename, List<string> deps) {
 		var stream = FileStream.open (filename, "w");
 
 		if (stream == null) {
@@ -780,18 +766,40 @@ public class Vala.CodeContext {
 		}
 
 		bool first = true;
+		foreach (var dep in deps) {
+			if (first) {
+				first = false;
+				stream.printf ("%s: ", filename);
+			} else {
+				stream.puts (" \\\n\t");
+			}
+			stream.printf ("%s", dep);
+		}
+		// Don't write newlines to otherwise empty files to work around
+		// https://github.com/ninja-build/ninja/issues/2357
+		if (!first) {
+			stream.puts ("\n\n");
+		}
+	}
+
+	public void write_dependencies (string filename) {
+		List<string> fastvapi_files = new ArrayList<string> (str_equal);
 		foreach (var src in source_files) {
-			if (src.file_type != SourceFileType.SOURCE && src.used) {
-				if (first) {
-					first = false;
-					stream.printf ("%s: ", filename);
-				} else {
-					stream.puts (" \\\n\t");
-				}
-				stream.printf ("%s", src.filename);
+			if (src.file_type == SourceFileType.FAST && src.used) {
+				fastvapi_files.add (src.filename);
 			}
 		}
-		stream.puts ("\n\n");
+		write_depfile (filename, fastvapi_files);
+	}
+
+	public void write_external_dependencies (string filename) {
+		List<string> external_files = new ArrayList<string> (str_equal);
+		foreach (var src in source_files) {
+			if (src.file_type != SourceFileType.SOURCE && src.used) {
+				external_files.add (src.filename);
+			}
+		}
+		write_depfile (filename, external_files);
 	}
 
 	private static bool ends_with_dir_separator (string s) {
