@@ -1,0 +1,16 @@
+Invalid Code
+
+[CCode (cname = "gint", cheader_filename = "glib.h", default_value = "0", has_type_id = false)]
+[IntegerType (rank = -1)]
+struct FooHandle {
+}
+
+[CCode (cname = "gint", cheader_filename = "glib.h", default_value = "0", has_type_id = false)]
+[IntegerType (rank = -1)]
+struct BarHandle {
+}
+
+void main () {
+	FooHandle foo = 42;
+	BarHandle bar = foo;
+}

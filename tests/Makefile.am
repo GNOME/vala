@@ -42,8 +42,12 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	basic-types/gassert.vala \
 	basic-types/integer-literals.vala \
+	basic-types/integer-negative-rank-incompatible.test \
+	basic-types/integer-negative-rank-incompatible2.test \
+	basic-types/integer-negative-rank-incompatible3.test \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
+	basic-types/integers-negative-rank.vala \
 	basic-types/escape-chars.vala \
 	basic-types/float-literals.vala \
 	basic-types/floats.vala \
