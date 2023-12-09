@@ -42,6 +42,9 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	basic-types/gassert.vala \
 	basic-types/integer-literals.vala \
+	basic-types/integer-negative-rank-incompatible.test \
+	basic-types/integer-negative-rank-incompatible2.test \
+	basic-types/integer-negative-rank-incompatible3.test \
 	basic-types/integer-signed-binary-erange.test \
 	basic-types/integer-signed-erange.test \
 	basic-types/integer-signed-erange2.test \
@@ -54,6 +57,7 @@ TESTS = \
 	basic-types/integers-binary.vala \
 	basic-types/integers.vala \
 	basic-types/integers-boxed-cast.vala \
+	basic-types/integers-negative-rank.vala \
 	basic-types/integers-octal-invalid.test \
 	basic-types/integers-octal.vala \
 	basic-types/escape-chars.vala \
