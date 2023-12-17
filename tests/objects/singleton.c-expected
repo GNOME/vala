@@ -120,12 +120,7 @@ foo_constructor (GType type,
 	GObjectClass * parent_class;
 	static GWeakRef Foo_singleton__ref;
 	static GMutex Foo_singleton__lock;
-	static volatile gsize Foo_singleton__once = 0;
 	Foo * self;
-	if (g_once_init_enter (&Foo_singleton__once)) {
-		g_mutex_init (&Foo_singleton__lock);
-		g_once_init_leave (&Foo_singleton__once, 42);
-	}
 	g_mutex_lock (&Foo_singleton__lock);
 	obj = g_weak_ref_get (&Foo_singleton__ref);
 	if (obj != NULL) {
@@ -208,12 +203,7 @@ bar_constructor (GType type,
 	GObjectClass * parent_class;
 	static GWeakRef Bar_singleton__ref;
 	static GMutex Bar_singleton__lock;
-	static volatile gsize Bar_singleton__once = 0;
 	Bar * self;
-	if (g_once_init_enter (&Bar_singleton__once)) {
-		g_mutex_init (&Bar_singleton__lock);
-		g_once_init_leave (&Bar_singleton__once, 42);
-	}
 	g_mutex_lock (&Bar_singleton__lock);
 	obj = g_weak_ref_get (&Bar_singleton__ref);
 	if (obj != NULL) {

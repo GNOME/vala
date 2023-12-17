@@ -522,7 +522,6 @@ public class Vala.GObjectModule : GTypeModule {
 			if (cl.is_singleton) {
 				var singleton_ref_name = "%s_singleton__ref".printf (get_ccode_name (cl));
 				var singleton_lock_name = "%s_singleton__lock".printf (get_ccode_name (cl));
-				var singleton_once_name = "%s_singleton__once".printf (get_ccode_name (cl));
 
 				var singleton_ref = new CCodeDeclaration("GWeakRef");
 				singleton_ref.add_declarator (new CCodeVariableDeclarator (singleton_ref_name));
@@ -533,32 +532,6 @@ public class Vala.GObjectModule : GTypeModule {
 				mutex_lock.add_declarator (new CCodeVariableDeclarator (singleton_lock_name));
 				mutex_lock.modifiers = CCodeModifiers.STATIC;
 				ccode.add_statement (mutex_lock);
-
-				var once_lock = new CCodeDeclaration("gsize");
-				once_lock.add_declarator (new CCodeVariableDeclarator (singleton_once_name, new CCodeConstant ("0")));
-				if (context.require_glib_version (2, 68)) {
-					once_lock.modifiers = CCodeModifiers.STATIC;
-				} else {
-					once_lock.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
-				}
-				ccode.add_statement (once_lock);
-
-				var once_init = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
-				once_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_once_name)));
-
-				var once_block = new CCodeBlock();
-
-				var singleton_mutex_init = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_init"));
-				singleton_mutex_init.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
-				once_block.add_statement (new CCodeExpressionStatement (singleton_mutex_init));
-
-				var once_leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
-				once_leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_once_name)));
-				once_leave.add_argument (new CCodeConstant ("42"));
-				once_block.add_statement (new CCodeExpressionStatement (once_leave));
-
-				var if_once = new CCodeIfStatement (once_init, once_block);
-				ccode.add_statement (if_once);
 
 				var singleton_mutex_lock = new CCodeFunctionCall (new CCodeIdentifier ("g_mutex_lock"));
 				singleton_mutex_lock.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (singleton_lock_name)));
