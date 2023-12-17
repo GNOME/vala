@@ -118,7 +118,7 @@ foo_constructor (GType type,
 {
 	GObject * obj;
 	GObjectClass * parent_class;
-	static GObject * Foo_singleton__ref = NULL;
+	static GWeakRef Foo_singleton__ref;
 	static GMutex Foo_singleton__lock;
 	static volatile gsize Foo_singleton__once = 0;
 	Foo * self;
@@ -127,16 +127,15 @@ foo_constructor (GType type,
 		g_once_init_leave (&Foo_singleton__once, 42);
 	}
 	g_mutex_lock (&Foo_singleton__lock);
-	if (Foo_singleton__ref != NULL) {
-		g_object_ref (Foo_singleton__ref);
+	obj = g_weak_ref_get (&Foo_singleton__ref);
+	if (obj != NULL) {
 		g_mutex_unlock (&Foo_singleton__lock);
-		return Foo_singleton__ref;
+		return obj;
 	}
 	parent_class = G_OBJECT_CLASS (foo_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_FOO, Foo);
-	Foo_singleton__ref = obj;
-	g_object_add_weak_pointer (Foo_singleton__ref, (gpointer) (&Foo_singleton__ref));
+	g_weak_ref_set (&Foo_singleton__ref, obj);
 	g_mutex_unlock (&Foo_singleton__lock);
 	return obj;
 }
@@ -207,7 +206,7 @@ bar_constructor (GType type,
 {
 	GObject * obj;
 	GObjectClass * parent_class;
-	static GObject * Bar_singleton__ref = NULL;
+	static GWeakRef Bar_singleton__ref;
 	static GMutex Bar_singleton__lock;
 	static volatile gsize Bar_singleton__once = 0;
 	Bar * self;
@@ -216,16 +215,15 @@ bar_constructor (GType type,
 		g_once_init_leave (&Bar_singleton__once, 42);
 	}
 	g_mutex_lock (&Bar_singleton__lock);
-	if (Bar_singleton__ref != NULL) {
-		g_object_ref (Bar_singleton__ref);
+	obj = g_weak_ref_get (&Bar_singleton__ref);
+	if (obj != NULL) {
 		g_mutex_unlock (&Bar_singleton__lock);
-		return Bar_singleton__ref;
+		return obj;
 	}
 	parent_class = G_OBJECT_CLASS (bar_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_BAR, Bar);
-	Bar_singleton__ref = obj;
-	g_object_add_weak_pointer (Bar_singleton__ref, (gpointer) (&Bar_singleton__ref));
+	g_weak_ref_set (&Bar_singleton__ref, obj);
 	g_mutex_unlock (&Bar_singleton__lock);
 	return obj;
 }
