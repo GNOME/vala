@@ -1003,6 +1003,8 @@ namespace Soup {
 	public static GLib.Quark tld_error_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static unowned string tld_get_base_domain (string hostname) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h", sentinel = "SOUP_URI_NONE")]
+	public static GLib.Uri uri_copy (GLib.Uri uri, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Bytes uri_decode_data_uri (string uri, out string? content_type);
 	[CCode (cheader_filename = "libsoup/soup.h")]
