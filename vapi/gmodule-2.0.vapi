@@ -5,7 +5,12 @@ namespace GLib {
 	[CCode (cheader_filename = "gmodule.h", free_function = "g_module_close", has_type_id = false)]
 	[Compact]
 	public class Module {
+		[Version (deprecated = true, deprecated_since = "2.76")]
 		public const string SUFFIX;
+		[CCode (cname = "g_module_open_full", has_construct_function = false)]
+		[Version (since = "2.70")]
+		public Module (string? file_name, GLib.ModuleFlags flags) throws GLib.ModuleError;
+		[Version (deprecated = true, deprecated_since = "2.76")]
 		public static string build_path (string? directory, string module_name);
 		[DestroysInstance]
 		public bool close ();
@@ -13,6 +18,7 @@ namespace GLib {
 		public static GLib.Quark error_quark ();
 		public void make_resident ();
 		public unowned string name ();
+		[Version (deprecated = true, deprecated_since = "2.70", replacement = "Module.new")]
 		public static GLib.Module? open (string? file_name, GLib.ModuleFlags flags);
 		public static bool supported ();
 		public bool symbol (string symbol_name, out void* symbol);
@@ -45,7 +51,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gmodule.h", has_target = false)]
 	public delegate void ModuleUnload (GLib.Module module);
 	[CCode (cheader_filename = "gmodule.h")]
-	[Version (replacement = "Module.build_path")]
+	[Version (deprecated = true, deprecated_since = "2.76", replacement = "Module.build_path")]
 	public static string module_build_path (string? directory, string module_name);
 	[CCode (cheader_filename = "gmodule.h")]
 	[Version (replacement = "Module.error")]
