@@ -1,3 +1,6 @@
 GModule name="GLib"
 
-Module.close destroys_instance
+Module
+  .open_full skip=false name="new" symbol_type="constructor" throws="GLib.ModuleError"
+  .open skip=false unowned=false nullable deprecated_since="2.70" replacement="Module.new"
+  .close destroys_instance

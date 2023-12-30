@@ -2,8 +2,8 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_module_close")]
 	public class Module {
+		[Version (deprecated = true, deprecated_since = "2.76")]
 		public const string SUFFIX;
-		public static Module? open (string? file_name, ModuleFlags flags);
 	}
 
 	public enum ModuleFlags {
