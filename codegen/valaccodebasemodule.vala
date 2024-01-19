@@ -837,6 +837,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		decl_space.add_define (extern_define);
 	}
 
+	void append_c_compiler_mitigations (CCodeFile decl_space) {
+		var vala_strict_c = new CCodeIfSection ("!defined(VALA_STRICT_C)");
+
+		CCodeIfSection if_section;
+		if_section = new CCodeIfSection ("!defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)");
+		vala_strict_c.append (if_section);
+		if_section.append (new CCodePragma ("GCC", "diagnostic", "warning \"-Wincompatible-pointer-types\""));
+		if_section = if_section.append_else ("defined(__clang__) && (__clang_major__ >= 16)");
+		if_section.append (new CCodePragma ("clang", "diagnostic", "ignored \"-Wincompatible-function-pointer-types\""));
+		if_section.append (new CCodePragma ("clang", "diagnostic", "ignored \"-Wincompatible-pointer-types\""));
+
+		decl_space.add_define (vala_strict_c);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		cfile = new CCodeFile (CCodeFileType.SOURCE, source_file);
 
@@ -876,6 +890,8 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			}
 			return;
 		}
+
+		append_c_compiler_mitigations (cfile);
 
 		if (requires_assert) {
 			cfile.add_type_declaration (new CCodeMacroReplacement.with_expression ("_vala_assert(expr, msg)", new CCodeConstant ("if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);")));
