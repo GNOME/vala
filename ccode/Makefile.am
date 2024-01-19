@@ -64,6 +64,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodeoncesection.vala \
 	valaccodeparameter.vala \
 	valaccodeparenthesizedexpression.vala \
+	valaccodepragma.vala \
 	valaccodereturnstatement.vala \
 	valaccodestatement.vala \
 	valaccodestruct.vala \
