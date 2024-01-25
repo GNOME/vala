@@ -1705,7 +1705,9 @@ namespace GLib {
 		public static float sinhf (float x);
 		public static double tanh (double x);
 		public static float tanhf (float x);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static void sincos (double x, out double sinx, out double cosx);
+		[CCode (feature_test_macro = "_GNU_SOURCE")]
 		public static void sincosf (float x, out float sinx, out float cosx);
 		public static double acosh (double x);
 		public static float acoshf (float x);
