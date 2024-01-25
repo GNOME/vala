@@ -810,9 +810,9 @@ namespace Posix {
 	public double tanh (double x);
 	[CCode (cheader_filename = "math.h")]
 	public float tanhf (float x);
-	[CCode (cheader_filename = "math.h")]
+	[CCode (cheader_filename = "math.h", feature_test_macro = "_GNU_SOURCE")]
 	public void sincos (double x, out double sinx, out double cosx);
-	[CCode (cheader_filename = "math.h")]
+	[CCode (cheader_filename = "math.h", feature_test_macro = "_GNU_SOURCE")]
 	public void sincosf (float x, out float sinx, out float cosx);
 	[CCode (cheader_filename = "math.h")]
 	public double acosh (double x);
