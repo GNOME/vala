@@ -797,6 +797,7 @@ TESTS = \
 	generics/floating-type-cast.vala \
 	generics/gvariant-serialization.test \
 	generics/inference-argument-may-fail.vala \
+	generics/inference-argument-may-fail-2.vala \
 	generics/inference-static-function.vala \
 	generics/integer-member-access.vala \
 	generics/integer-type-cast.vala \

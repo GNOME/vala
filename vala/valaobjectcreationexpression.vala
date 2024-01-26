@@ -538,6 +538,7 @@ public class Vala.ObjectCreationExpression : Expression, CallableExpression {
 
 				var temp_access = SemanticAnalyzer.create_temp_access (local, target_type);
 				temp_access.formal_target_type = formal_target_type;
+				formal_target_type = null;
 
 				// don't set initializer earlier as this changes parent_node and parent_statement
 				local.initializer = this;
