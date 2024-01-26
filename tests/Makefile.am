@@ -768,6 +768,7 @@ TESTS = \
 	asynchronous/captured-fixed-array.vala \
 	asynchronous/catch-error-scope.vala \
 	asynchronous/catch-in-finally.vala \
+	asynchronous/creation-method-uncaught.vala \
 	asynchronous/creation-missing-yield.test \
 	asynchronous/closures.vala \
 	asynchronous/constructor-argument-check.vala \
