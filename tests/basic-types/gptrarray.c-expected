@@ -451,7 +451,7 @@ _vala_main (void)
 			element_collection = _tmp21_;
 			for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
 				Foo* element = NULL;
-				element = g_ptr_array_index (element_collection, element_index);
+				element = (Foo*) g_ptr_array_index (element_collection, element_index);
 				{
 					gint _tmp22_;
 					Foo* _tmp23_;
@@ -503,7 +503,7 @@ _vala_main (void)
 			for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
 				Foo* _tmp31_;
 				Foo* element = NULL;
-				_tmp31_ = _g_object_ref0 (g_ptr_array_index (element_collection, element_index));
+				_tmp31_ = _g_object_ref0 ((Foo*) g_ptr_array_index (element_collection, element_index));
 				element = _tmp31_;
 				{
 					gint _tmp32_;
@@ -694,7 +694,7 @@ _vala_main (void)
 			element_collection = _tmp94_;
 			for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
 				Foo* element = NULL;
-				element = g_ptr_array_index (element_collection, element_index);
+				element = (Foo*) g_ptr_array_index (element_collection, element_index);
 				{
 					gint _tmp95_;
 					Foo* _tmp96_;
@@ -746,7 +746,7 @@ _vala_main (void)
 			for (element_index = 0; element_index < element_collection->len; element_index = element_index + 1) {
 				Foo* _tmp104_;
 				Foo* element = NULL;
-				_tmp104_ = _g_object_ref0 (g_ptr_array_index (element_collection, element_index));
+				_tmp104_ = _g_object_ref0 ((Foo*) g_ptr_array_index (element_collection, element_index));
 				element = _tmp104_;
 				{
 					gint _tmp105_;

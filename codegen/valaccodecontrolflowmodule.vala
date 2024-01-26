@@ -361,6 +361,7 @@ public abstract class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			get_item.add_argument (get_variable_cexpression (arr_index));
 
 			CCodeExpression element_expr = get_item;
+			element_expr = convert_from_generic_pointer (element_expr, stmt.element_variable.variable_type);
 
 			if (stmt.type_reference.value_owned) {
 				element_expr = get_cvalue_ (copy_value (new GLibValue (stmt.type_reference, element_expr), stmt.element_variable));
