@@ -178,7 +178,12 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccode.add_expression (ccritical);
 		ccode.add_expression (cclear);
 
-		if (is_in_constructor () || is_in_destructor ()) {
+		if (is_in_coroutine ()) {
+			var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			unref.add_argument (get_variable_cexpression ("_async_result"));
+			ccode.add_expression (unref);
+			ccode.add_return (new CCodeConstant ("FALSE"));
+		} else if (is_in_constructor () || is_in_destructor ()) {
 			// just print critical, do not return prematurely
 		} else if (current_method is CreationMethod) {
 			if (current_method.parent_symbol is Struct) {
@@ -186,11 +191,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			} else {
 				ccode.add_return (new CCodeConstant ("NULL"));
 			}
-		} else if (is_in_coroutine ()) {
-			var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			unref.add_argument (get_variable_cexpression ("_async_result"));
-			ccode.add_expression (unref);
-			ccode.add_return (new CCodeConstant ("FALSE"));
 		} else if (current_return_type != null) {
 			return_default_value (current_return_type, true);
 		}
