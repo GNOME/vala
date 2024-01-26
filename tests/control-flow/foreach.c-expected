@@ -177,7 +177,7 @@ test_generic_array_owned (GPtrArray* array)
 		for (item_index = 0; item_index < item_collection->len; item_index = item_index + 1) {
 			GValue* _tmp0_;
 			GValue* item = NULL;
-			_tmp0_ = __g_value_dup0 (g_ptr_array_index (item_collection, item_index));
+			_tmp0_ = __g_value_dup0 ((GValue*) g_ptr_array_index (item_collection, item_index));
 			item = _tmp0_;
 			{
 				guint _tmp1_;
@@ -202,7 +202,7 @@ test_generic_array_unowned (GPtrArray* array)
 		item_collection = array;
 		for (item_index = 0; item_index < item_collection->len; item_index = item_index + 1) {
 			GValue* item = NULL;
-			item = g_ptr_array_index (item_collection, item_index);
+			item = (GValue*) g_ptr_array_index (item_collection, item_index);
 			{
 				guint _tmp0_;
 				_tmp0_ = i;
