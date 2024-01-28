@@ -319,7 +319,7 @@ namespace V4l2
 		public uint32 height;
 		public uint32 type;
 		public Fraction discrete;
-		public Fraction stepwise;
+		public FrameivalStepwise stepwise;
 	}
 
 	[CCode (cname="struct v4l2_timecode", has_type_id = false)]
