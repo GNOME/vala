@@ -941,4 +941,23 @@ public class Vala.CodeContext {
 
 		return output;
 	}
+
+	public string? pkg_config_variable (string package_name, string variable_name) {
+		string pc = pkg_config_command + " --variable="+ variable_name + " " + package_name;
+		string? output = null;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, out output, null, out exit_status);
+			if (exit_status != 0) {
+				Report.error (null, "%s exited with status %d", pkg_config_command, exit_status);
+				return null;
+			}
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
+			output = null;
+		}
+
+		return output;
+	}
 }
