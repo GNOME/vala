@@ -28,8 +28,13 @@ public class Valadoc.GirMetaData : Object {
 	private string? metadata_path = null;
 	private string? resource_dir = null;
 
+	public enum DocKind {
+		MARKDOWN,
+		DOCBOOK,
+		GI_DOCGEN
+	}
 
-	public bool is_docbook { private set; get; default = false; }
+	public DocKind doc_kind { private set; get; default = DocKind.MARKDOWN; }
 	public string index_sgml { private set; get; default = null; }
 	public string index_sgml_online { private set; get; default = null; }
 
@@ -89,7 +94,15 @@ public class Valadoc.GirMetaData : Object {
 				break;
 
 			case "is_docbook":
-				this.is_docbook = key_file.get_boolean ("General", "is_docbook");
+				if (key_file.get_boolean ("General", "is_docbook")) {
+					doc_kind = DocKind.DOCBOOK;
+				}
+				break;
+
+			case "is_gi_docgen":
+				if (key_file.get_boolean ("General", "is_gi_docgen")) {
+					doc_kind = DocKind.GI_DOCGEN;
+				}
 				break;
 
 			case "index_sgml":

@@ -24,6 +24,7 @@ AM_TESTS_ENVIRONMENT = \
 TESTS = \
 	libvaladoc/errorreporter.vala \
 	libvaladoc/markupreader.vala \
+	libvaladoc/gidocgen-scanner.vala \
 	libvaladoc/gtkdoc-scanner.vala \
 	libvaladoc/parser-manyrule.vala \
 	libvaladoc/parser-oneofrule.vala \

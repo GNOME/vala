@@ -50,7 +50,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		gtkdoc_parser = new Gtkdoc.Parser (settings, reporter, tree, modules);
 		gtkdoc_markdown_parser = new Gtkdoc.MarkdownParser (settings, reporter, tree, modules);
-
+		gidocgen_parser = new Gidocgen.Parser (settings, reporter, tree, modules);
 
 		metadata = new Vala.HashMap<Api.SourceFile, GirMetaData> ();
 		id_registrar = new Importer.InternalIdRegistrar ();
@@ -60,6 +60,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	private Gtkdoc.Parser gtkdoc_parser;
 	private Gtkdoc.MarkdownParser gtkdoc_markdown_parser;
+	private Gidocgen.Parser gidocgen_parser;
 
 	private Settings _settings;
 	private ErrorReporter _reporter;
@@ -80,12 +81,18 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			Api.GirSourceComment gir_comment = (Api.GirSourceComment) comment;
 			GirMetaData metadata = get_metadata_for_comment (gir_comment);
 
-			if (metadata.is_docbook) {
-				Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata, id_registrar);
-				return doc_comment;
-			} else {
-				Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata, id_registrar);
-				return doc_comment;
+			switch (metadata.doc_kind) {
+				case GirMetaData.DocKind.MARKDOWN:
+					Comment doc_comment = gtkdoc_markdown_parser.parse (element, gir_comment, metadata, id_registrar);
+					return doc_comment;
+				case GirMetaData.DocKind.DOCBOOK:
+					Comment doc_comment = gtkdoc_parser.parse (element, gir_comment, metadata, id_registrar);
+					return doc_comment;
+				case GirMetaData.DocKind.GI_DOCGEN:
+					Comment doc_comment = gidocgen_parser.parse (element, gir_comment, metadata, id_registrar);
+					return doc_comment;
+				default:
+					assert_not_reached ();
 			}
 		} else {
 			return parse_comment_str (element, comment.content, comment.file.get_name (),
