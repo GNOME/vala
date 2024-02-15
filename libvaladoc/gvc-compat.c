@@ -48,7 +48,7 @@ Agnode_t*
 valadoc_compat_gvc_graph_create_node (Agraph_t* graph, const char *name)
 {
 #ifdef WITH_CGRAPH
-	return agnode (graph, (char*) name, TRUE);
+	return agnode (graph, (char*) name, 1 /*TRUE*/);
 #else
 	return agnode (graph, (char*) name);
 #endif
@@ -68,7 +68,7 @@ Agedge_t*
 valadoc_compat_gvc_graph_create_edge (Agraph_t* graph, Agnode_t* from, Agnode_t* to)
 {
 #ifdef WITH_CGRAPH
-	return agedge (graph, from, to, NULL, TRUE);
+	return agedge (graph, from, to, NULL, 1 /*TRUE*/);
 #else
 	return agedge (graph, from, to);
 #endif
