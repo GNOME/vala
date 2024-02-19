@@ -24,7 +24,7 @@
 using Valadoc.Content;
 using Valadoc;
 
-public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator {
+public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentParser {
 	private Valadoc.Parser parser;
 	private Content.ContentFactory _factory;
 

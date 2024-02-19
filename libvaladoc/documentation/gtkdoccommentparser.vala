@@ -24,7 +24,7 @@
 using Valadoc.Content;
 using Valadoc.Gtkdoc;
 
-public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator {
+public class Valadoc.Gtkdoc.Parser : Object, ResourceLocator, CommentParser {
 	private Scanner scanner = new Scanner ();
 	private Token current;
 
