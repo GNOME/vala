@@ -32,7 +32,6 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		BLOCK
 	}
 
-	private Settings _settings;
 	private Valadoc.Parser parser;
 
 	private unowned string _content;
@@ -67,9 +66,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 	}
 
 
-	public MarkdownScanner (Settings settings) {
-		_settings = settings;
-
+	public MarkdownScanner () {
 		try {
 			regex_mail = new Regex ("^[A-Za-z0-9._-]+@[A-Za-z0-9._-]+$");
 		} catch (Error e) {
