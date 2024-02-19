@@ -37,6 +37,7 @@ libvaladoc_la_VALASOURCES = \
 	devhelp-markupwriter.vala \
 	ctyperesolver.vala \
 	gtkdocrenderer.vala \
+	documentation/commentparser.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \
