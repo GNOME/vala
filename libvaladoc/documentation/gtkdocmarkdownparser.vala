@@ -44,7 +44,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 
 
 	public MarkdownParser (Settings settings, ErrorReporter reporter, Api.Tree? tree, ModuleLoader _modules) {
-		MarkdownScanner scanner = new MarkdownScanner (settings);
+		MarkdownScanner scanner = new MarkdownScanner ();
 		parser = new Valadoc.Parser (settings, scanner, reporter);
 		scanner.set_parser (parser);
 
