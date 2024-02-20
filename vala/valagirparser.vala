@@ -3733,6 +3733,9 @@ public class Vala.GirParser : CodeVisitor {
 
 				if (reader.name == "field") {
 					parse_field ();
+				} else if (reader.name == "record") {
+					Report.warning (get_current_src (), "unhandled child element `%s' in `transparent union'", reader.name);
+					skip_element ();
 				} else {
 					// error
 					Report.error (get_current_src (), "unknown child element `%s' in `transparent union'", reader.name);
