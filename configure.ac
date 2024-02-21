@@ -194,6 +194,12 @@ PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(GMODULE_CFLAGS)
 AC_SUBST(GMODULE_LIBS)
 
+AC_ARG_VAR([GI_GIRDIR],[Set an alternative system location of gir files])
+AC_MSG_CHECKING([for GI_GIRDIR])
+PKG_CHECK_VAR([GI_GIRDIR], [gobject-introspection-1.0], [girdir], [], [AC_MSG_ERROR([Unable to retrieve girdir from gobject-introspection-1.0.pc])])
+AC_MSG_RESULT([$GI_GIRDIR])
+AC_DEFINE_UNQUOTED(GI_GIRDIR, "$GI_GIRDIR", [Define to system location of gir files])
+
 AC_ARG_WITH(cgraph, AS_HELP_STRING([--with-cgraph], [Required flag for cross-compilation to define capability of graphviz]), [], with_cgraph=check)
 AC_ARG_ENABLE(valadoc, AS_HELP_STRING([--disable-valadoc], [Disable valadoc]), enable_valadoc=$enableval, enable_valadoc=yes)
 AS_IF([test "$VALAC" != :], [FOUND_VALAC_VERION=`$VALAC --version | sed 's/Vala  *//'`
