@@ -50,6 +50,14 @@ namespace GLib {
 	public delegate unowned string ModuleCheckInit (GLib.Module module);
 	[CCode (cheader_filename = "gmodule.h", has_target = false)]
 	public delegate void ModuleUnload (GLib.Module module);
+	[CCode (cheader_filename = "gmodule.h", cname = "G_MODULE_IMPL_AR")]
+	public const int MODULE_IMPL_AR;
+	[CCode (cheader_filename = "gmodule.h", cname = "G_MODULE_IMPL_DL")]
+	public const int MODULE_IMPL_DL;
+	[CCode (cheader_filename = "gmodule.h", cname = "G_MODULE_IMPL_NONE")]
+	public const int MODULE_IMPL_NONE;
+	[CCode (cheader_filename = "gmodule.h", cname = "G_MODULE_IMPL_WIN32")]
+	public const int MODULE_IMPL_WIN32;
 	[CCode (cheader_filename = "gmodule.h")]
 	[Version (deprecated = true, deprecated_since = "2.76", replacement = "Module.build_path")]
 	public static string module_build_path (string? directory, string module_name);

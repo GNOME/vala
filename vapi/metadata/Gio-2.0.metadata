@@ -33,16 +33,20 @@ bus_* parent="GLib.Bus" name="bus_(.*)"
 bus_get skip
 bus_get_sync skip
 bus_get_finish skip
+bus_own_name skip
 bus_own_name_with_closures name="own_name"
   .bus_acquired_closure type="owned GLib.BusAcquiredCallback?" default=null
   .name_acquired_closure type="owned GLib.BusNameAcquiredCallback?" default=null
   .name_lost_closure type="owned GLib.BusNameLostCallback?" default=null
+bus_own_name_on_connection skip
 bus_own_name_on_connection_with_closures name="own_name_on_connection"
   .name_acquired_closure type="owned GLib.BusNameAcquiredCallback?" default=null
   .name_lost_closure type="owned GLib.BusNameLostCallback?" default=null
+bus_watch_name_on_connection skip
 bus_watch_name_on_connection_with_closures name="watch_name_on_connection"
   .name_appeared_closure type="owned GLib.BusNameAppearedCallback?" default=null
   .name_vanished_closure type="owned GLib.BusNameVanishedCallback?" default=null
+bus_watch_name skip
 bus_watch_name_with_closures name="watch_name"
   .name_appeared_closure type="owned GLib.BusNameAppearedCallback?" default=null
   .name_vanished_closure type="owned GLib.BusNameVanishedCallback?" default=null
