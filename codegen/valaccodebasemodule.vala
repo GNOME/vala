@@ -2584,7 +2584,7 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 	public CCodeExpression get_this_interface_cexpression (Interface iface, TargetValue? instance = null) {
 		unowned Class? cl = current_class;
-		if (cl != null && cl.implements (iface)) {
+		if (instance == null && cl != null && cl.implements (iface)) {
 			return new CCodeIdentifier ("%s_%s_parent_iface".printf (get_ccode_lower_case_name (cl), get_ccode_lower_case_name (iface)));
 		}
 
