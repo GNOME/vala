@@ -37,6 +37,22 @@ enum  {
 	FOO_NUM_PROPERTIES
 };
 static GParamSpec* foo_properties[FOO_NUM_PROPERTIES];
+
+#define TYPE_BAR (bar_get_type ())
+#define BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_BAR, Bar))
+#define BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_BAR, BarClass))
+#define IS_BAR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_BAR))
+#define IS_BAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_BAR))
+#define BAR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_BAR, BarClass))
+
+typedef struct _Bar Bar;
+typedef struct _BarClass BarClass;
+typedef struct _BarPrivate BarPrivate;
+enum  {
+	BAR_0_PROPERTY,
+	BAR_NUM_PROPERTIES
+};
+static GParamSpec* bar_properties[BAR_NUM_PROPERTIES];
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
@@ -57,8 +73,19 @@ struct _FooClass {
 	GObjectClass parent_class;
 };
 
+struct _Bar {
+	GObject parent_instance;
+	BarPrivate * priv;
+};
+
+struct _BarClass {
+	GObjectClass parent_class;
+};
+
 static gpointer foo_parent_class = NULL;
 static IFooIface * foo_ifoo_parent_iface = NULL;
+static gpointer bar_parent_class = NULL;
+static IFooIface * bar_ifoo_parent_iface = NULL;
 
 VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
@@ -69,6 +96,12 @@ static gint foo_real_bar (IFoo* base);
 VALA_EXTERN Foo* foo_new (void);
 VALA_EXTERN Foo* foo_construct (GType object_type);
 static GType foo_get_type_once (void);
+VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
+static gint bar_real_bar (IFoo* base);
+VALA_EXTERN Bar* bar_new (void);
+VALA_EXTERN Bar* bar_construct (GType object_type);
+static GType bar_get_type_once (void);
 static void _vala_main (void);
 
 static void
@@ -167,14 +200,93 @@ foo_get_type (void)
 	return foo_type_id__once;
 }
 
+static gint
+bar_real_bar (IFoo* base)
+{
+	Bar * self;
+	gint result;
+	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
+	result = 23;
+	return result;
+}
+
+Bar*
+bar_construct (GType object_type)
+{
+	Bar * self = NULL;
+	Foo* foo = NULL;
+	Foo* _tmp0_;
+	self = (Bar*) g_object_new (object_type, NULL);
+	_tmp0_ = foo_new ();
+	foo = _tmp0_;
+	_vala_assert (IFOO_GET_INTERFACE (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo))->bar (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo)) == 42, "foo.bar () == 42");
+	_g_object_unref0 (foo);
+	return self;
+}
+
+Bar*
+bar_new (void)
+{
+	return bar_construct (TYPE_BAR);
+}
+
+static void
+bar_class_init (BarClass * klass,
+                gpointer klass_data)
+{
+	bar_parent_class = g_type_class_peek_parent (klass);
+}
+
+static void
+bar_ifoo_interface_init (IFooIface * iface,
+                         gpointer iface_data)
+{
+	bar_ifoo_parent_iface = g_type_interface_peek_parent (iface);
+	iface->bar = (gint (*) (IFoo*)) bar_real_bar;
+}
+
+static void
+bar_instance_init (Bar * self,
+                   gpointer klass)
+{
+}
+
+static GType
+bar_get_type_once (void)
+{
+	static const GTypeInfo g_define_type_info = { sizeof (BarClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) bar_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (Bar), 0, (GInstanceInitFunc) bar_instance_init, NULL };
+	static const GInterfaceInfo ifoo_info = { (GInterfaceInitFunc) bar_ifoo_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
+	GType bar_type_id;
+	bar_type_id = g_type_register_static (G_TYPE_OBJECT, "Bar", &g_define_type_info, 0);
+	g_type_add_interface_static (bar_type_id, TYPE_IFOO, &ifoo_info);
+	return bar_type_id;
+}
+
+GType
+bar_get_type (void)
+{
+	static volatile gsize bar_type_id__once = 0;
+	if (g_once_init_enter (&bar_type_id__once)) {
+		GType bar_type_id;
+		bar_type_id = bar_get_type_once ();
+		g_once_init_leave (&bar_type_id__once, bar_type_id);
+	}
+	return bar_type_id__once;
+}
+
 static void
 _vala_main (void)
 {
 	Foo* foo = NULL;
 	Foo* _tmp0_;
+	Bar* bar = NULL;
+	Bar* _tmp1_;
 	_tmp0_ = foo_new ();
 	foo = _tmp0_;
 	_vala_assert (IFOO_GET_INTERFACE (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo))->bar (G_TYPE_CHECK_INSTANCE_CAST (foo, TYPE_IFOO, IFoo)) == 42, "foo.bar () == 42");
+	_tmp1_ = bar_new ();
+	bar = _tmp1_;
+	_g_object_unref0 (bar);
 	_g_object_unref0 (foo);
 }
 
