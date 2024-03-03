@@ -121,6 +121,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=implicit \
 -Werror=implicit-fallthrough \
 -Werror=pointer-arith \
+-Werror=pointer-sign \
 -Werror=redundant-decls \
 -Werror=return-local-addr \
 -Werror=return-stack-address \
