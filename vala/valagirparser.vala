@@ -2715,8 +2715,12 @@ public class Vala.GirParser : CodeVisitor {
 			bool changed;
 			type = element_get_type (type, direction == "out" || direction == "inout", ref no_array_length, ref array_null_terminated, out changed);
 			if (!changed) {
-				// discard ctype, duplicated information
-				ctype = null;
+				if (metadata.has_argument (ArgumentType.CTYPE)) {
+					ctype = metadata.get_string (ArgumentType.CTYPE);
+				} else {
+					// discard ctype, duplicated information
+					ctype = null;
+				}
 			}
 
 			param = new Parameter (name, type, get_src (begin));
