@@ -2751,26 +2751,26 @@ namespace GLib {
 		[Version (since = "2.56")]
 		public bool leave_multicast_group_ssm (GLib.InetAddress group, GLib.InetAddress? source_specific, string? iface) throws GLib.Error;
 		public bool listen () throws GLib.Error;
-		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "gchar*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.80")]
 		public GLib.Bytes receive_bytes (size_t size, int64 timeout_us, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.80")]
 		public GLib.Bytes receive_bytes_from (out GLib.SocketAddress address, size_t size, int64 timeout_us, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_from (out GLib.SocketAddress address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize", type = "gchar*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t receive_message (out GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.InputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] out GLib.SocketControlMessage[]? messages, ref int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.48")]
 		public int receive_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.InputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
-		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t receive_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "gchar*")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "const gchar*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public ssize_t send_message (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.60")]
 		public GLib.PollableReturn send_message_with_timeout (GLib.SocketAddress? address, [CCode (array_length_cname = "num_vectors", array_length_pos = 2.5)] GLib.OutputVector[] vectors, [CCode (array_length_cname = "num_messages", array_length_pos = 3.5)] GLib.SocketControlMessage[]? messages, int flags, int64 timeout_us, out size_t bytes_written, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.44")]
 		public int send_messages ([CCode (array_length_cname = "num_messages", array_length_pos = 1.5, array_length_type = "guint")] GLib.OutputMessage[] messages, int flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send_to (GLib.SocketAddress? address, [CCode (array_length_cname = "size", array_length_pos = 2.5, array_length_type = "gsize", type = "const gchar*")] uint8[] buffer, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		[Version (since = "2.26")]
-		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public ssize_t send_with_blocking ([CCode (array_length_cname = "size", array_length_pos = 1.5, array_length_type = "gsize", type = "const gchar*")] uint8[] buffer, bool blocking, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public void set_blocking (bool blocking);
 		[Version (since = "2.32")]
 		public void set_broadcast (bool broadcast);
@@ -3987,8 +3987,8 @@ namespace GLib {
 		public virtual async GLib.FileInputStream read_async (int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null) throws GLib.Error;
 		public virtual async GLib.FileOutputStream replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority = GLib.Priority.DEFAULT, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
-		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
+		public bool replace_contents ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "const char*")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string? new_etag, GLib.Cancellable? cancellable = null) throws GLib.Error;
+		public async bool replace_contents_async ([CCode (array_length_cname = "length", array_length_pos = 1.5, array_length_type = "gsize", type = "const char*")] uint8[] contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
 		[CCode (finish_name = "g_file_replace_contents_finish")]
 		[Version (since = "2.40")]
 		public async bool replace_contents_bytes_async (GLib.Bytes contents, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable = null, out string? new_etag) throws GLib.Error;
