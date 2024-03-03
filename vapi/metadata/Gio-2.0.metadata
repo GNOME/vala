@@ -139,6 +139,8 @@ File
   .load_contents.cancellable#parameter default=()
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
+  .replace_contents.contents ctype="const char*"
+  .replace_contents_async.contents ctype="const char*"
   .replace_contents_bytes_async finish_name="g_file_replace_contents_finish"
 IOExtension
   .ref_class skip=false
@@ -240,9 +242,12 @@ Socket
   .condition_wait throws="GLib.IOError"
   .connection_factory_create_connection parent="GLib.SocketConnection" name="factory_create_connection" symbol_type="function"
   .create_source skip=false type="GLib.SocketSource"
-  .receive.buffer out=false
-  .receive_from.buffer out=false
-  .receive_with_blocking.buffer out=false
+  .receive.buffer out=false ctype="gchar*"
+  .receive_from.buffer out=false ctype="gchar*"
+  .receive_with_blocking.buffer out=false ctype="gchar*"
+  .send.buffer ctype="const gchar*"
+  .send_to.buffer ctype="const gchar*"
+  .send_with_blocking.buffer ctype="const gchar*"
 SocketControlMessage
   .serialize.data type="uint8[]"
 SocketListener
