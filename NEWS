@@ -1,3 +1,34 @@
+Vala 0.56.15
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Use GWeakRef for [SingleInstance] constructors
+    + Remove static mutex initialization
+    + Correctly return FALSE on uncaught error in async ctor
+    + Cast generic return value from g_ptr_array_index()
+    + Don't use pre-assigned *_parent_iface field if an instance is given [#1527]
+    + Emit diagnostic pragmas for GCC 14, Clang 16 compatibility [#1408]
+  - vala:
+    + Keep depfile empty if no dependencies were written
+    + Treat negative integer/float ranks as non-compatible
+    + Move formal_target_type when transforming method-call/object-creation
+    + Follow the logic of GIrParser.locate_gir() to find gir files [#1518]
+  - girparser:
+    + Don't blindly translate utf8 to string and check the ctype too
+    + Issue a warning for `record` inside `transparent union`
+    + Don't discard explictly given ctype of parameters
+  - libvaladoc: Fix build with graphviz >= 10.0.1 [#1524]
+
+ * Bindings:
+  - glib-2.0,posix: Define _GNU_SOURCE for sincos*() [#1519]
+  - gio-2.0: Fix pointer-sign errors of some uint8[]-typed paramters [#1529]
+  - gio-2.0,gmodule-2.0: Update from 2.79.x git
+  - gmodule-2.0: Improvements and updates from 2.76
+  - gtk4: Fix GLib.Value parameter in Expression.evaluate()
+  - gtk4: Update to 4.13.9~f46fb7c6
+  - libsoup-3.0: Don't skip uri_copy
+  - v4l2: Fix FrameivalEnum.stepwise type mismatch with v4l2_frmivalenum [#1517]
+
 Vala 0.56.14
 ============
  * Various improvements and bug fixes:
