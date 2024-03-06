@@ -18,7 +18,6 @@ namespace GLib {
 		public static GLib.Quark error_quark ();
 		public void make_resident ();
 		public unowned string name ();
-		[Version (deprecated = true, deprecated_since = "2.70", replacement = "Module.new")]
 		public static GLib.Module? open (string? file_name, GLib.ModuleFlags flags);
 		public static bool supported ();
 		public bool symbol (string symbol_name, out void* symbol);
