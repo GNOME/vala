@@ -381,6 +381,9 @@ File
   .measure_disk_usage#virtual_method virtual
 
 // Back compat
+ApplicationCommandLine
+  .print_literal no_wrapper since=()
+  .printerr_literal no_wrapper since=()
 TlsCertificate abstract=false
 DataInputStream
   .read_line type="string?"
