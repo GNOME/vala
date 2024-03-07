@@ -566,12 +566,12 @@ namespace GLib {
 		[PrintfFormat]
 		[Version (since = "2.28")]
 		public void print (string format, ...);
-		[Version (since = "2.80")]
+		[NoWrapper]
 		public virtual void print_literal (string message);
 		[PrintfFormat]
 		[Version (since = "2.28")]
 		public void printerr (string format, ...);
-		[Version (since = "2.80")]
+		[NoWrapper]
 		public virtual void printerr_literal (string message);
 		[Version (since = "2.28")]
 		public void set_exit_status (int exit_status);
