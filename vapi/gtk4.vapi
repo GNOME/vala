@@ -7350,11 +7350,14 @@ namespace Gtk {
 		[Version (since = "4.14")]
 		public void set_year (int year);
 		public void unmark_day (uint day);
+		[NoAccessorMethod]
 		public int day { get; set; }
+		[NoAccessorMethod]
 		public int month { get; set; }
 		public bool show_day_names { get; set; }
 		public bool show_heading { get; set; }
 		public bool show_week_numbers { get; set; }
+		[NoAccessorMethod]
 		public int year { get; set; }
 		public signal void day_selected ();
 		public signal void next_month ();
