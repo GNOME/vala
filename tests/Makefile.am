@@ -963,8 +963,10 @@ TESTS = \
 	scanner/regex-escape-x-digit-length.test \
 	scanner/regex-escape-x-empty.test \
 	scanner/regex-escape-x.vala \
+	scanner/regex-modifier-o.vala \
 	scanner/regex-multiple-i.test \
 	scanner/regex-multiple-m.test \
+	scanner/regex-multiple-o.test \
 	scanner/regex-multiple-s.test \
 	scanner/regex-multiple-x.test \
 	scanner/string-escape-u-digit-length.test \

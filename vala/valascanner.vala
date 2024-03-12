@@ -122,7 +122,8 @@ public class Vala.Scanner {
 				var fl_s = false;
 				var fl_m = false;
 				var fl_x = false;
-				while (current[0] == 'i' || current[0] == 's' || current[0] == 'm' || current[0] == 'x') {
+				var fl_o = false;
+				while (current[0] == 'i' || current[0] == 's' || current[0] == 'm' || current[0] == 'x' || current[0] == 'o') {
 					switch (current[0]) {
 					case 'i':
 						if (fl_i) {
@@ -147,6 +148,12 @@ public class Vala.Scanner {
 							Report.error (get_source_reference (token_length_in_chars), "modifier 'x' used more than once");
 						}
 						fl_x = true;
+						break;
+					case 'o':
+						if (fl_o) {
+							Report.error (get_source_reference (token_length_in_chars), "modifier 'o' used more than once");
+						}
+						fl_o = true;
 						break;
 					}
 					current++;

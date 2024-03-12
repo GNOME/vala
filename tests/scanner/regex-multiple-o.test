@@ -1,0 +1,5 @@
+Invalid Code
+
+void main () {
+	Regex foo = /foo(.*)/oo;
+}

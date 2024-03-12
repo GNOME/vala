@@ -4494,6 +4494,9 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		if (parts[1].contains ("x")) {
 			flags += " | G_REGEX_EXTENDED";
 		}
+		if (parts[1].contains ("o")) {
+			flags += " | G_REGEX_OPTIMIZE";
+		}
 
 		var cdecl = new CCodeDeclaration ("GRegex*");
 
