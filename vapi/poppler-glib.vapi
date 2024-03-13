@@ -303,7 +303,7 @@ namespace Poppler {
 		[Version (since = "0.16")]
 		public string get_author ();
 		[Version (since = "0.16")]
-		public long get_creation_date ();
+		public time_t get_creation_date ();
 		[Version (since = "20.09.0")]
 		public GLib.DateTime? get_creation_date_time ();
 		[Version (since = "0.16")]
@@ -316,7 +316,7 @@ namespace Poppler {
 		[Version (since = "0.16")]
 		public string get_metadata ();
 		[Version (since = "0.16")]
-		public long get_modification_date ();
+		public time_t get_modification_date ();
 		[Version (since = "20.09.0")]
 		public GLib.DateTime? get_modification_date_time ();
 		[Version (since = "0.18")]
@@ -375,7 +375,7 @@ namespace Poppler {
 		[Version (since = "0.46")]
 		public void set_author (string author);
 		[Version (since = "0.46")]
-		public void set_creation_date (long creation_date);
+		public void set_creation_date (time_t creation_date);
 		[Version (since = "20.09.0")]
 		public void set_creation_date_time (GLib.DateTime? creation_datetime);
 		[Version (since = "0.46")]
@@ -383,7 +383,7 @@ namespace Poppler {
 		[Version (since = "0.46")]
 		public void set_keywords (string keywords);
 		[Version (since = "0.46")]
-		public void set_modification_date (long modification_date);
+		public void set_modification_date (time_t modification_date);
 		[Version (since = "20.09.0")]
 		public void set_modification_date_time (GLib.DateTime? modification_datetime);
 		[Version (since = "0.46")]
@@ -1618,7 +1618,7 @@ namespace Poppler {
 	public const int MINOR_VERSION;
 	[CCode (cheader_filename = "poppler.h")]
 	[Version (since = "0.12")]
-	public static bool date_parse (string date, long timet);
+	public static bool date_parse (string date, time_t timet);
 	[CCode (cheader_filename = "poppler.h")]
 	[Version (replacement = "Error.quark")]
 	public static GLib.Quark error_quark ();

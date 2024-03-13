@@ -37,13 +37,13 @@ namespace Grss {
 		public unowned string get_icon ();
 		public unowned string get_image ();
 		public unowned string get_language ();
-		public long get_publish_time ();
+		public time_t get_publish_time ();
 		public bool get_pubsubhub (string hub);
 		public bool get_rsscloud (string path, string protocol);
 		public unowned string get_source ();
 		public unowned string get_title ();
 		public int get_update_interval ();
-		public long get_update_time ();
+		public time_t get_update_time ();
 		public unowned string get_webmaster ();
 		public void set_category (string category);
 		public void set_copyright (string copyright);
@@ -56,13 +56,13 @@ namespace Grss {
 		public bool set_icon (string icon);
 		public bool set_image (string image);
 		public void set_language (string language);
-		public void set_publish_time (long publish);
+		public void set_publish_time (time_t publish);
 		public bool set_pubsubhub (string hub);
 		public void set_rsscloud (string path, string protocol);
 		public bool set_source (string source);
 		public void set_title (string title);
 		public void set_update_interval (int minutes);
-		public void set_update_time (long update);
+		public void set_update_time (time_t update);
 		public void set_webmaster (string webmaster);
 		[CCode (has_construct_function = false)]
 		public FeedChannel.with_source (string source);
@@ -108,7 +108,7 @@ namespace Grss {
 		public bool get_geo_point (out double latitude, out double longitude);
 		public unowned string get_id ();
 		public unowned Grss.FeedChannel get_parent ();
-		public long get_publish_time ();
+		public time_t get_publish_time ();
 		public void get_real_source (string realsource, string title);
 		public unowned string get_related ();
 		public unowned string get_source ();
@@ -119,7 +119,7 @@ namespace Grss {
 		public void set_description (string description);
 		public void set_geo_point (double latitude, double longitude);
 		public void set_id (string id);
-		public void set_publish_time (long publish);
+		public void set_publish_time (time_t publish);
 		public bool set_real_source (string realsource, string title);
 		public void set_related (string related);
 		public bool set_source (string source);
