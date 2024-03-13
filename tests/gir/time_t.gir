@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GLib" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="none">
+    <type name="glong" c:type="time_t"/>
+  </return-value>
+  <parameters>
+    <parameter name="time" transfer-ownership="none">
+      <type name="glong" c:type="time_t"/>
+    </parameter>
+  </parameters>
+</function>
+</namespace>
+</repository>
