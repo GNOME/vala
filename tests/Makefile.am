@@ -918,6 +918,7 @@ TESTS = \
 	gir/symbol-redefined.gir \
 	gir/symbol-type-csuffix.gir \
 	gir/symbol-without-name.gir \
+	gir/time_t.gir \
 	gir/union.gir \
 	gir/union-transparent.gir \
 	girwriter/class-final.test \

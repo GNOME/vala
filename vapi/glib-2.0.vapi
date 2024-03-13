@@ -1018,6 +1018,7 @@ public struct double {
 	}
 }
 
+//FIXME [GIR (name = "time_t")]
 [GIR (name = "glong")]
 [CCode (cheader_filename = "time.h", has_type_id = false, default_value = "0")]
 [IntegerType (rank = 8)]

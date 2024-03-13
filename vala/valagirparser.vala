@@ -2897,6 +2897,8 @@ public class Vala.GirParser : CodeVisitor {
 					type_name = "ssize_t";
 				} else if (ctype != null && ctype.has_prefix ("gintptr")) {
 					type_name = "intptr";
+				} else if (ctype != null && ctype.has_prefix ("time_t")) {
+					type_name = "time_t";
 				} else {
 					type_name = "long";
 				}
