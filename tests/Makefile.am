@@ -909,6 +909,7 @@ TESTS = \
 	gir/method-array-return.gir \
 	gir/method-class.gir \
 	gir/method-nowrapper.gir \
+	gir/off_t.gir \
 	gir/parameter-array-length-type.gir \
 	gir/parameter-array-out.gir \
 	gir/parameter-nullable-out-simple-type.gir \

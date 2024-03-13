@@ -1018,6 +1018,13 @@ public struct double {
 	}
 }
 
+//FIXME [GIR (name = "off_t")]
+[GIR (name = "gsize")]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+[IntegerType (rank = 9)]
+public struct off_t {
+}
+
 //FIXME [GIR (name = "time_t")]
 [GIR (name = "glong")]
 [CCode (cheader_filename = "time.h", has_type_id = false, default_value = "0")]
