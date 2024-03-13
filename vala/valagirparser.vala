@@ -2889,7 +2889,11 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "GLib.offset") {
 				type_name = "int64";
 			} else if (type_name == "gsize") {
-				type_name = "size_t";
+				if (ctype != null && ctype.has_prefix ("off_t")) {
+					type_name = "off_t";
+				} else {
+					type_name = "size_t";
+				}
 			} else if (type_name == "gssize") {
 				type_name = "ssize_t";
 			} else if (type_name == "guintptr") {
