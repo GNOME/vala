@@ -99,7 +99,7 @@ FooSource*
 foo_source_new (void)
 {
 	FooSource* self;
-	static const GSourceFuncs _source_funcs = { foo_source_real_prepare, foo_source_real_check, foo_source_real_dispatch, foo_source_finalize};
+	static const GSourceFuncs _source_funcs = { foo_source_real_prepare, foo_source_real_check, foo_source_real_dispatch, foo_source_finalize, NULL, NULL};
 	self = (FooSource*) g_source_new ((GSourceFuncs *) (&_source_funcs), sizeof (FooSource));
 	foo_source_instance_init (self);
 	return self;
@@ -121,7 +121,7 @@ BarSource*
 bar_source_new (gint timeout)
 {
 	BarSource* self;
-	static const GSourceFuncs _source_funcs = { bar_source_real_prepare, bar_source_real_check, bar_source_real_dispatch, bar_source_finalize};
+	static const GSourceFuncs _source_funcs = { bar_source_real_prepare, bar_source_real_check, bar_source_real_dispatch, bar_source_finalize, NULL, NULL};
 	self = (BarSource*) g_source_new ((GSourceFuncs *) (&_source_funcs), sizeof (BarSource));
 	bar_source_instance_init (self);
 	self->custom_timeout = timeout;
@@ -194,7 +194,7 @@ ManamSource*
 manam_source_new (void)
 {
 	ManamSource* self;
-	static const GSourceFuncs _source_funcs = { NULL, NULL, manam_source_real_dispatch, manam_source_finalize};
+	static const GSourceFuncs _source_funcs = { NULL, NULL, manam_source_real_dispatch, manam_source_finalize, NULL, NULL};
 	self = (ManamSource*) g_source_new ((GSourceFuncs *) (&_source_funcs), sizeof (ManamSource));
 	manam_source_instance_init (self);
 	return self;
