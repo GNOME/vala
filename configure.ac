@@ -135,6 +135,7 @@ TEST_EXTRA_CFLAGS="-Werror=init-self \
 -Werror=compare-distinct-pointer-types \
 -Werror=empty-body \
 -Werror=comment \
+-Werror=null-dereference \
 -Werror=strict-overflow \
 -Werror=shift-overflow \
 -Wformat=2 \
