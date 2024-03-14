@@ -1,3 +1,14 @@
+Vala 0.56.16
+============
+ * Various improvements and bug fixes:
+  - girparser: Recognize usage of time_t and don't rely on given GIR type
+  - girparser: Recognize usage of off_t and don't rely on given GIR type
+ * Bindings:
+  - gio-2.0: Restore ApplicationCommandLine.print*_literal() to not require 2.80
+  - gmodule-2.0: Do not mark `Module.open` as deprecated
+  - gtk4: Preserve compatibility with < 4.14 [#1531]
+  - Regenerate for GIR-based bindings to pick up time_t fix (long vs time_t)
+
 Vala 0.56.15
 ============
  * Various improvements and bug fixes:
