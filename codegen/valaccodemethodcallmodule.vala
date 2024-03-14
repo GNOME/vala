@@ -222,7 +222,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				var funcs = new CCodeDeclaration ("const GSourceFuncs");
 				funcs.modifiers = CCodeModifiers.STATIC;
-				funcs.add_declarator (new CCodeVariableDeclarator ("_source_funcs", new CCodeConstant ("{ %s, %s, %s_real_dispatch, %s_finalize}".printf (prepare_func, check_func, class_prefix, class_prefix))));
+				funcs.add_declarator (new CCodeVariableDeclarator ("_source_funcs", new CCodeConstant ("{ %s, %s, %s_real_dispatch, %s_finalize, NULL, NULL}".printf (prepare_func, check_func, class_prefix, class_prefix))));
 				ccode.add_statement (funcs);
 
 				ccall.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_source_funcs")), "GSourceFuncs *"));
