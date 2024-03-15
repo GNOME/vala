@@ -1934,6 +1934,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		try {
+			accept (TokenType.STATIC);
 			skip_type ();
 			if (accept (TokenType.IDENTIFIER) && accept (TokenType.OPEN_PARENS)) {
 				rollback (begin);
@@ -2166,6 +2167,7 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_local_function_declaration (Block block) throws ParseError {
 		var begin = get_location ();
+		var is_static = accept (TokenType.STATIC);
 		var type = parse_type (true, false);
 		var sym = parse_symbol_name ();
 
@@ -2181,6 +2183,7 @@ public class Vala.Parser : CodeVisitor {
 		var src = get_src (begin);
 
 		var d = new Delegate ("_LocalFunc%i_".printf (next_local_func_id++), type, src);
+		d.has_target = !is_static;
 		foreach (var param in params) {
 			d.add_parameter (param);
 		}

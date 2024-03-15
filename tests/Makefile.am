@@ -196,6 +196,7 @@ TESTS = \
 	methods/extern.vala \
 	methods/iterator.vala \
 	methods/local-functions.vala \
+	methods/local-functions-to-delegate.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-out-free-on-error.vala \
 	methods/parameter-ref-array-resize.vala \
