@@ -71,7 +71,12 @@ public class Vala.Parser : CodeVisitor {
 		VIRTUAL,
 		ASYNC,
 		SEALED,
-		PARTIAL
+		PARTIAL;
+
+		public unowned string to_string () {
+			var flags_class = (FlagsClass) typeof(ModifierFlags).class_ref ();
+			return flags_class.get_first_value (this).value_nick;
+		}
 	}
 
 	public Parser () {
@@ -1941,7 +1946,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		try {
-			accept (TokenType.STATIC);
+			skip_modifier_keyword ();
 			skip_type ();
 			if (accept (TokenType.IDENTIFIER) && accept (TokenType.OPEN_PARENS)) {
 				rollback (begin);
@@ -2174,7 +2179,7 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_local_function_declaration (Block block) throws ParseError {
 		var begin = get_location ();
-		var is_static = accept (TokenType.STATIC);
+		var flags = parse_member_declaration_modifiers ("local functions", ModifierFlags.STATIC);
 		var type = parse_type (true, false);
 		var sym = parse_symbol_name ();
 
@@ -2190,7 +2195,7 @@ public class Vala.Parser : CodeVisitor {
 		var src = get_src (begin);
 
 		var d = new Delegate ("_LocalFunc%i_".printf (next_local_func_id++), type, src);
-		d.has_target = !is_static;
+		d.has_target = !(ModifierFlags.STATIC in flags);
 		foreach (var param in params) {
 			d.add_parameter (param);
 		}
@@ -3102,7 +3107,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_constant_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("constants", ModifierFlags.EXTERN | ModifierFlags.NEW | ModifierFlags.STATIC);
 		expect (TokenType.CONST);
 		var type = parse_type (false, false);
 		string id = parse_identifier ();
@@ -3146,7 +3151,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_field_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ((parent is Struct) ? SymbolAccessibility.PUBLIC : SymbolAccessibility.PRIVATE);
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("fields", ModifierFlags.CLASS | ModifierFlags.EXTERN | ModifierFlags.NEW | ModifierFlags.STATIC );
 		var type = parse_type (true, true);
 		do {
 			string id = parse_identifier ();
@@ -3172,11 +3177,6 @@ public class Vala.Parser : CodeVisitor {
 				Report.warning (f.source_reference, "accessibility of struct fields can only be `public`");
 			}
 
-			if (ModifierFlags.ABSTRACT in flags
-				|| ModifierFlags.VIRTUAL in flags
-				|| ModifierFlags.OVERRIDE in flags) {
-				Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
-			}
 			if (ModifierFlags.EXTERN in flags) {
 				f.is_extern = true;
 			}
@@ -3222,7 +3222,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_method_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("methods", ModifierFlags.ABSTRACT | ModifierFlags.ASYNC | ModifierFlags.CLASS | ModifierFlags.EXTERN | ModifierFlags.NEW | ModifierFlags.INLINE | ModifierFlags.OVERRIDE | ModifierFlags.STATIC | ModifierFlags.VIRTUAL);
 		var type = parse_type (true, false);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -3315,7 +3315,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_property_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("properties", ModifierFlags.ABSTRACT | ModifierFlags.CLASS | ModifierFlags.EXTERN | ModifierFlags.NEW | ModifierFlags.OVERRIDE | ModifierFlags.STATIC | ModifierFlags.VIRTUAL);
 		var type = parse_type (true, true);
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src (begin), comment);
@@ -3339,9 +3339,6 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.NEW in flags) {
 			prop.hides = true;
-		}
-		if (ModifierFlags.ASYNC in flags) {
-			Report.error (prop.source_reference, "async properties are not supported yet");
 		}
 		if (ModifierFlags.EXTERN in flags) {
 			prop.is_extern = true;
@@ -3430,18 +3427,13 @@ public class Vala.Parser : CodeVisitor {
 	void parse_signal_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("signals", ModifierFlags.NEW | ModifierFlags.VIRTUAL);
 		expect (TokenType.SIGNAL);
 		var type = parse_type (true, false);
 		string id = parse_identifier ();
 		var sig = new Signal (id, type, get_src (begin), comment);
 		sig.access = access;
 		set_attributes (sig, attrs);
-		if (ModifierFlags.STATIC in flags) {
-			throw new ParseError.SYNTAX ("`static' modifier not allowed on signals");
-		} else if (ModifierFlags.CLASS in flags) {
-			throw new ParseError.SYNTAX ("`class' modifier not allowed on signals");
-		}
 		if (ModifierFlags.VIRTUAL in flags) {
 			sig.is_virtual = true;
 		}
@@ -3465,11 +3457,8 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_constructor_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("constructors", ModifierFlags.CLASS | ModifierFlags.STATIC);
 		expect (TokenType.CONSTRUCT);
-		if (ModifierFlags.NEW in flags) {
-			throw new ParseError.SYNTAX ("`new' modifier not allowed on constructor");
-		}
 		var c = new Constructor (get_src (begin));
 		if (ModifierFlags.STATIC in flags && ModifierFlags.CLASS in flags) {
 			Report.error (c.source_reference, "only one of `static' or `class' may be specified");
@@ -3485,14 +3474,11 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_destructor_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("destructors", ModifierFlags.CLASS | ModifierFlags.STATIC);
 		expect (TokenType.TILDE);
 		string identifier = parse_identifier ();
 		expect (TokenType.OPEN_PARENS);
 		expect (TokenType.CLOSE_PARENS);
-		if (ModifierFlags.NEW in flags) {
-			throw new ParseError.SYNTAX ("`new' modifier not allowed on destructor");
-		}
 		var d = new Destructor (get_src (begin));
 		if (identifier != parent.name) {
 			Report.error (d.source_reference, "destructor and parent symbol name do not match");
@@ -3769,9 +3755,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	ModifierFlags parse_member_declaration_modifiers () {
+	ModifierFlags parse_member_declaration_modifiers (string symbol_type, ModifierFlags supported) {
 		ModifierFlags flags = 0;
 		while (true) {
+			var begin = get_location ();
 			switch (current ()) {
 			case TokenType.ABSTRACT:
 				next ();
@@ -3815,6 +3802,12 @@ public class Vala.Parser : CodeVisitor {
 				break;
 			default:
 				return flags;
+			}
+			if (supported > 0) {
+				ModifierFlags unsupported = (flags | supported) ^ supported;
+				if (unsupported > 0) {
+					Report.error (get_src (begin), "`%s' modifier not applicable on %s", unsupported.to_string (), symbol_type);
+				}
 			}
 		}
 	}
@@ -3862,7 +3855,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_creation_method_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("creation methods", ModifierFlags.ASYNC | ModifierFlags.EXTERN);
 		var sym = parse_symbol_name ();
 		if (ModifierFlags.NEW in flags) {
 			throw new ParseError.SYNTAX ("`new' modifier not allowed on creation method");
@@ -3920,11 +3913,8 @@ public class Vala.Parser : CodeVisitor {
 	void parse_delegate_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ("delegates", ModifierFlags.EXTERN | ModifierFlags.STATIC);
 		expect (TokenType.DELEGATE);
-		if (ModifierFlags.NEW in flags) {
-			throw new ParseError.SYNTAX ("`new' modifier not allowed on delegates");
-		}
 		var type = parse_type (true, false);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -4114,6 +4104,26 @@ public class Vala.Parser : CodeVisitor {
 			return true;
 		default:
 			return false;
+		}
+	}
+
+	void skip_modifier_keyword () {
+		while (true) {
+			switch (current ()) {
+			case TokenType.ABSTRACT:
+			case TokenType.ASYNC:
+			case TokenType.CLASS:
+			case TokenType.EXTERN:
+			case TokenType.INLINE:
+			case TokenType.NEW:
+			case TokenType.OVERRIDE:
+			case TokenType.STATIC:
+			case TokenType.VIRTUAL:
+				next ();
+				break;
+			default:
+				return;
+			}
 		}
 	}
 }
