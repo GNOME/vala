@@ -2889,9 +2889,21 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "gushort") {
 				type_name = "ushort";
 			} else if (type_name == "gint") {
-				type_name = "int";
+				if (ctype != null && ctype.has_prefix ("dev_t")) {
+					type_name = "dev_t";
+				} else if (ctype != null && ctype.has_prefix ("pid_t")) {
+					type_name = "pid_t";
+				} else {
+					type_name = "int";
+				}
 			} else if (type_name == "guint") {
-				type_name = "uint";
+				if (ctype != null && ctype.has_prefix ("gid_t")) {
+					type_name = "gid_t";
+				} else if (ctype != null && ctype.has_prefix ("uid_t")) {
+					type_name = "uid_t";
+				} else {
+					type_name = "uint";
+				}
 			} else if (type_name == "glong") {
 				if (ctype != null && ctype.has_prefix ("gssize")) {
 					type_name = "ssize_t";
@@ -2919,7 +2931,11 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (type_name == "guint16") {
 				type_name = "uint16";
 			} else if (type_name == "gint32") {
-				type_name = "int32";
+				if (ctype != null && ctype.has_prefix ("socklen_t")) {
+					type_name = "socklen_t";
+				} else {
+					type_name = "int32";
+				}
 			} else if (type_name == "guint32") {
 				type_name = "uint32";
 			} else if (type_name == "gint64") {

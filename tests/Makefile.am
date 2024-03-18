@@ -902,8 +902,10 @@ TESTS = \
 	gir/delegate-array-length-type.gir \
 	gir/delegate-closure-destroy-index-conflict.gir \
 	gir/delegate-error-pos.gir \
+	gir/dev_t.gir \
 	gir/enum.gir \
 	gir/errordomain.gir \
+	gir/gid_t.gir \
 	gir/gtype-struct-name.gir \
 	gir/instance-parameter-owned.gir \
 	gir/method-array-length-type.gir \
@@ -914,13 +916,16 @@ TESTS = \
 	gir/parameter-array-length-type.gir \
 	gir/parameter-array-out.gir \
 	gir/parameter-nullable-out-simple-type.gir \
+	gir/pid_t.gir \
 	gir/property-non-readable.gir \
 	gir/signal-virtual.gir \
 	gir/record-copy-free-func.gir \
+	gir/socklen_t.gir \
 	gir/symbol-redefined.gir \
 	gir/symbol-type-csuffix.gir \
 	gir/symbol-without-name.gir \
 	gir/time_t.gir \
+	gir/uid_t.gir \
 	gir/union.gir \
 	gir/union-transparent.gir \
 	girwriter/class-final.test \

@@ -1,0 +1,7 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h")]
+	public static socklen_t function (socklen_t msg);
+	[CCode (cheader_filename = "test.h")]
+	public static socklen_t function_compat (socklen_t msg);
+}

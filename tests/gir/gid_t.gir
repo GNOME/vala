@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GLib" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<function name="function" c:identifier="test_function">
+  <return-value transfer-ownership="none">
+    <type name="gid_t" c:type="gid_t"/>
+  </return-value>
+  <parameters>
+    <parameter name="group" transfer-ownership="none">
+      <type name="gid_t" c:type="gid_t"/>
+    </parameter>
+  </parameters>
+</function>
+<function name="function_compat" c:identifier="test_function_compat">
+  <return-value transfer-ownership="none">
+    <type name="guint" c:type="gid_t"/>
+  </return-value>
+  <parameters>
+    <parameter name="group" transfer-ownership="none">
+      <type name="guint" c:type="gid_t"/>
+    </parameter>
+  </parameters>
+</function>
+</namespace>
+</repository>
