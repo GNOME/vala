@@ -1025,6 +1025,41 @@ public struct double {
 public struct off_t {
 }
 
+//FIXME [GIR (name = "pid_t")]
+[GIR (name = "gint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct pid_t {
+}
+
+//FIXME [GIR (name = "uid_t")]
+[GIR (name = "guint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct uid_t {
+}
+
+//FIXME [GIR (name = "gid_t")]
+[GIR (name = "guint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct gid_t {
+}
+
+//FIXME [GIR (name = "dev_t")]
+[GIR (name = "gint")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/types.h", has_type_id = false, default_value = "0")]
+public struct dev_t {
+}
+
+//FIXME [GIR (name = "socklen_t")]
+[GIR (name = "gint32")]
+[IntegerType (rank = 9)]
+[CCode (cheader_filename = "sys/socket.h", has_type_id = false, default_value = "0")]
+public struct socklen_t {
+}
+
 //FIXME [GIR (name = "time_t")]
 [GIR (name = "glong")]
 [CCode (cheader_filename = "time.h", has_type_id = false, default_value = "0")]
