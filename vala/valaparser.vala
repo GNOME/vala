@@ -3107,7 +3107,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_constant_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_member_declaration_modifiers ("constants", ModifierFlags.EXTERN | ModifierFlags.NEW | ModifierFlags.STATIC);
+		var flags = parse_member_declaration_modifiers ("constants", ModifierFlags.EXTERN | ModifierFlags.NEW);
 		expect (TokenType.CONST);
 		var type = parse_type (false, false);
 		string id = parse_identifier ();
@@ -3136,10 +3136,6 @@ public class Vala.Parser : CodeVisitor {
 			c.hides = true;
 		}
 		set_attributes (c, attrs);
-
-		if (ModifierFlags.STATIC in flags) {
-			Report.warning (c.source_reference, "the modifier `static' is not applicable to constants");
-		}
 
 		if (type.value_owned) {
 			Report.error (c.source_reference, "`owned' is not allowed on constants");
