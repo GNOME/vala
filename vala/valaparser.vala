@@ -2981,7 +2981,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_class_declaration (Symbol parent, List<Attribute>? attrs, bool partial_reparse = false) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ("classes", ModifierFlags.ABSTRACT | ModifierFlags.EXTERN | ModifierFlags.PARTIAL | ModifierFlags.SEALED);
 		expect (TokenType.CLASS);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -3498,7 +3498,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_struct_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ("structs", ModifierFlags.EXTERN);
 		expect (TokenType.STRUCT);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -3538,7 +3538,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_interface_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ("interfaces", ModifierFlags.EXTERN);
 		expect (TokenType.INTERFACE);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -3581,7 +3581,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_enum_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ("enums", ModifierFlags.EXTERN);
 		expect (TokenType.ENUM);
 		var sym = parse_symbol_name ();
 		var en = new Enum (sym.name, get_src (begin), comment);
@@ -3648,7 +3648,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_errordomain_declaration (Symbol parent, List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		var flags = parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ("errordomains", ModifierFlags.EXTERN);
 		expect (TokenType.ERRORDOMAIN);
 		var sym = parse_symbol_name ();
 		var ed = new ErrorDomain (sym.name, get_src (begin), comment);
@@ -3729,9 +3729,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	ModifierFlags parse_type_declaration_modifiers () {
+	ModifierFlags parse_type_declaration_modifiers (string symbol_type, ModifierFlags supported) {
 		ModifierFlags flags = 0;
 		while (true) {
+			var begin = get_location ();
 			switch (current ()) {
 			case TokenType.ABSTRACT:
 				next ();
@@ -3751,6 +3752,12 @@ public class Vala.Parser : CodeVisitor {
 				break;
 			default:
 				return flags;
+			}
+			if (supported > 0) {
+				ModifierFlags unsupported = (flags | supported) ^ supported;
+				if (unsupported > 0) {
+					Report.error (get_src (begin), "`%s' modifier not applicable on %s", unsupported.to_string (), symbol_type);
+				}
 			}
 		}
 	}
