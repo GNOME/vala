@@ -726,13 +726,13 @@ public class Vala.CodeContext {
 		}
 
 		// Search $GI_GIRDIR set by user or retrieved from gobject-introspection-1.0.pc
-		path = Path.build_path (Config.GI_GIRDIR, girname);
+		path = Path.build_path ("/", Config.GI_GIRDIR, girname);
 		if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			return path;
 		}
 
 		// Search /usr/share
-		path = Path.build_path ("/", "usr", "share", GIR_SUFFIX, girname);
+		path = Path.build_path ("/", "/usr", "share", GIR_SUFFIX, girname);
 		if (FileUtils.test (path, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			return path;
 		}
