@@ -7,12 +7,12 @@ namespace Oobs {
 		public Group (string name);
 		public void add_user (Oobs.User user);
 		public void clear_users ();
-		public long get_gid ();
+		public gid_t get_gid ();
 		public unowned string get_name ();
 		public unowned GLib.List get_users ();
 		public bool is_root ();
 		public void remove_user (Oobs.User user);
-		public void set_gid (long gid);
+		public void set_gid (gid_t gid);
 		public void set_password (string password);
 		public uint gid { get; set; }
 		public string name { get; construct; }
@@ -25,12 +25,12 @@ namespace Oobs {
 		protected GroupsConfig ();
 		public Oobs.Result add_group (Oobs.Group group);
 		public Oobs.Result delete_group (Oobs.Group group);
-		public long find_free_gid (long gid_min, long gid_max);
+		public gid_t find_free_gid (gid_t gid_min, gid_t gid_max);
 		public static unowned Oobs.Object @get ();
-		public unowned Oobs.Group get_from_gid (long gid);
+		public unowned Oobs.Group get_from_gid (gid_t gid);
 		public unowned Oobs.Group get_from_name (string name);
 		public unowned Oobs.List get_groups ();
-		public bool is_gid_used (long gid);
+		public bool is_gid_used (gid_t gid);
 		public bool is_name_used (string name);
 		[NoAccessorMethod]
 		public int maximum_gid { get; set; }
@@ -411,7 +411,7 @@ namespace Oobs {
 		public bool get_password_empty ();
 		public unowned string get_room_number ();
 		public unowned string get_shell ();
-		public long get_uid ();
+		public uid_t get_uid ();
 		public unowned string get_work_phone_number ();
 		public bool is_in_group (Oobs.Group group);
 		public bool is_root ();
@@ -428,7 +428,7 @@ namespace Oobs {
 		public void set_password_empty (bool empty);
 		public void set_room_number (string room_number);
 		public void set_shell (string shell);
-		public void set_uid (long uid);
+		public void set_uid (uid_t uid);
 		public void set_work_phone_number (string phone_number);
 		public bool active { get; }
 		public bool encrypted_home { get; set; }
@@ -458,7 +458,7 @@ namespace Oobs {
 		protected UsersConfig ();
 		public Oobs.Result add_user (Oobs.User user);
 		public Oobs.Result delete_user (Oobs.User user);
-		public long find_free_uid (long uid_min, long uid_max);
+		public uid_t find_free_uid (uid_t uid_min, uid_t uid_max);
 		public static unowned Oobs.Object @get ();
 		public unowned GLib.List get_available_locales ();
 		public unowned GLib.List get_available_shells ();
@@ -467,16 +467,16 @@ namespace Oobs {
 		public unowned string get_default_shell ();
 		public bool get_encrypted_home_support ();
 		public unowned Oobs.User get_from_login (string login);
-		public unowned Oobs.User get_from_uid (long uid);
-		public long get_maximum_users_uid ();
-		public long get_minimum_users_uid ();
+		public unowned Oobs.User get_from_uid (uid_t uid);
+		public uid_t get_maximum_users_uid ();
+		public uid_t get_minimum_users_uid ();
 		public unowned Oobs.List get_users ();
 		public bool is_login_used (string login);
-		public bool is_uid_used (long uid);
+		public bool is_uid_used (uid_t uid);
 		public void set_default_home_dir (string home_dir);
 		public void set_default_shell (string shell);
-		public void set_maximum_users_uid (long uid);
-		public void set_minimum_users_uid (long uid);
+		public void set_maximum_users_uid (uid_t uid);
+		public void set_minimum_users_uid (uid_t uid);
 		public Oobs.Group default_group { get; }
 		[NoAccessorMethod]
 		public string default_home { owned get; set; }
