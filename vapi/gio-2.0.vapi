@@ -701,11 +701,11 @@ namespace GLib {
 		public Credentials ();
 		public void* get_native (GLib.CredentialsType native_type);
 		[Version (since = "2.36")]
-		public int get_unix_pid () throws GLib.Error;
-		public uint get_unix_user () throws GLib.Error;
+		public pid_t get_unix_pid () throws GLib.Error;
+		public uid_t get_unix_user () throws GLib.Error;
 		public bool is_same_user (GLib.Credentials other_credentials) throws GLib.Error;
 		public void set_native (GLib.CredentialsType native_type, void* native);
-		public bool set_unix_user (uint uid) throws GLib.Error;
+		public bool set_unix_user (uid_t uid) throws GLib.Error;
 		public string to_string ();
 	}
 	[CCode (cheader_filename = "gio/gio.h", type_id = "g_dbus_action_group_get_type ()")]
