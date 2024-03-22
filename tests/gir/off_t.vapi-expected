@@ -1,5 +1,7 @@
 [CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
 namespace Test {
 	[CCode (cheader_filename = "test.h")]
-	public static off_t function (off_t time);
+	public static off_t function (off_t offset);
+	[CCode (cheader_filename = "test.h")]
+	public static off_t function_compat (off_t offset);
 }

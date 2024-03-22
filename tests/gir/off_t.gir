@@ -6,10 +6,20 @@
 <namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
 <function name="function" c:identifier="test_function">
   <return-value transfer-ownership="none">
+    <type name="off_t" c:type="off_t"/>
+  </return-value>
+  <parameters>
+    <parameter name="offset" transfer-ownership="none">
+      <type name="off_t" c:type="off_t"/>
+    </parameter>
+  </parameters>
+</function>
+<function name="function_compat" c:identifier="test_function_compat">
+  <return-value transfer-ownership="none">
     <type name="gsize" c:type="off_t"/>
   </return-value>
   <parameters>
-    <parameter name="time" transfer-ownership="none">
+    <parameter name="offset" transfer-ownership="none">
       <type name="gsize" c:type="off_t"/>
     </parameter>
   </parameters>
