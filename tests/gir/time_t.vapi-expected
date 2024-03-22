@@ -2,4 +2,6 @@
 namespace Test {
 	[CCode (cheader_filename = "test.h")]
 	public static time_t function (time_t time);
+	[CCode (cheader_filename = "test.h")]
+	public static time_t function_compat (time_t time);
 }
