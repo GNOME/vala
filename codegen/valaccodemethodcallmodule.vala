@@ -980,9 +980,22 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			var unary = arg as UnaryExpression;
 
+			// handle ref null terminated arrays
+			if (unary != null && unary.operator == UnaryOperator.REF
+			    && unary.inner.symbol_reference != null && get_ccode_array_length (unary.inner.symbol_reference)) {
+				if (param != null && get_ccode_array_null_terminated (param)
+				    && param.variable_type is ArrayType && ((ArrayType) param.variable_type).rank == 1) {
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+					len_call.add_argument (get_cvalue_ (unary.inner.target_value));
+					ccode.add_assignment (get_array_length_cvalue (unary.inner.target_value, 1), len_call);
+				}
+			}
+
 			// update possible stale _*_size_ variable
-			if (unary != null && unary.operator == UnaryOperator.REF) {
-				if (param != null && get_ccode_array_length (param) && param.variable_type is ArrayType
+			if (unary != null && unary.operator == UnaryOperator.REF
+			    && unary.inner.symbol_reference != null && get_ccode_array_length (unary.inner.symbol_reference)) {
+				if (param != null && param.variable_type is ArrayType
 				    && !((ArrayType) param.variable_type).fixed_length && ((ArrayType) param.variable_type).rank == 1) {
 					unowned Variable? array_var = unary.inner.symbol_reference as Variable;
 					if ((array_var is LocalVariable || array_var is Field) && array_var.is_internal_symbol ()
