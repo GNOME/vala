@@ -1023,7 +1023,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg), expr.source_reference);
 
 			// handle out null terminated arrays
-			if (param != null && get_ccode_array_null_terminated (param)) {
+			if (param != null && get_ccode_array_null_terminated (param)
+			    && unary.inner.symbol_reference != null && get_ccode_array_length (unary.inner.symbol_reference)) {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 				len_call.add_argument (get_cvalue_ (unary.inner.target_value));
