@@ -212,6 +212,7 @@ TESTS = \
 	methods/local-functions-to-delegate.vala \
 	methods/parameter-fixed-array-initializer.vala \
 	methods/parameter-out-free-on-error.vala \
+	methods/parameter-out-array-resize-null-terminated.vala \
 	methods/parameter-ref-array-resize.vala \
 	methods/parameter-ref-array-resize-captured.vala \
 	methods/parameter-ref-array-resize-null-terminated.vala \
