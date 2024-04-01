@@ -4086,7 +4086,7 @@ namespace GLib {
 			if (ret == null) {
 				return null;
 			} else {
-				return ((!)(ret)).str;
+				return (owned) ((!)(ret)).str;
 			}
 		}
 	}
