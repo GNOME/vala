@@ -7027,6 +7027,8 @@ namespace GLib {
 		OTHER_LETTER,
 		TITLECASE_LETTER,
 		UPPERCASE_LETTER,
+		SPACING_MARK,
+		[Version (deprecated_since = "2.30", replacement = "SPACING_MARK")]
 		COMBINING_MARK,
 		ENCLOSING_MARK,
 		NON_SPACING_MARK,
