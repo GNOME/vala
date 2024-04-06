@@ -1,6 +1,6 @@
 /* gnu.vapi
  *
- * Copyright (C) 2020 Reuben Thomas
+ * Copyright (C) 2020, 2024 Reuben Thomas
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,6 +55,18 @@ namespace Gnu {
 	[CCode (cheader_filename = "error.h")]
 	[PrintfFormat]
 	public void error (int status, int errnum, string format, ...);
+
+	/**
+	 * Provides the values for the 'operation' argument of 'flock'.
+	 */
+	[CCode (cname = "int", cprefix = "LOCK_", cheader_filename = "sys/file.h", has_type_id = false)]
+	public enum FlockOperation {
+		SH,
+		EX,
+		UN
+	}
+	[CCode (cheader_filename = "sys/file.h")]
+	public int flock (int fd, FlockOperation operation);
 
 	[CCode (cheader_filename = "quote.h")]
 	public string quote (string arg);
