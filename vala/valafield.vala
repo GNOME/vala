@@ -158,7 +158,7 @@ public class Vala.Field : Variable, Lockable {
 
 			if (initializer.value_type == null) {
 				error = true;
-				Report.error (source_reference, "expression type not allowed as initializer");
+				Report.error (initializer.source_reference, "expression type not allowed as initializer");
 				return false;
 			}
 
