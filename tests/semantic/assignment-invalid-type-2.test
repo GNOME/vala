@@ -1,0 +1,14 @@
+Invalid Code
+
+enum Foo {
+	MANAM;
+}
+
+class Bar : Object {
+	public Foo foo { get; set; }
+}
+
+void main () {
+	var bar = new Bar ();
+	bar.foo = Foo;
+}
