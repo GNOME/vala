@@ -1126,6 +1126,7 @@ TESTS = \
 	semantic/assignment-signal-incompatible-method.test \
 	semantic/assignment-signal-incompatible-type.test \
 	semantic/assignment-invalid-type.test \
+	semantic/assignment-invalid-type-2.test \
 	semantic/cast-gvalue-unsupported.test \
 	semantic/cast-gvariant-unsupported.test \
 	semantic/cast-void-not-allowed.test \

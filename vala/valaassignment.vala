@@ -323,6 +323,11 @@ public class Vala.Assignment : Expression {
 		if (ma != null) {
 			if (ma.symbol_reference is Property) {
 				unowned Property prop = (Property) ma.symbol_reference;
+				if (right.value_type == null) {
+					error = true;
+					Report.error (source_reference, "Assignment: Invalid assignment attempt");
+					return false;
+				}
 
 				unowned DynamicProperty? dynamic_prop = prop as DynamicProperty;
 				if (dynamic_prop != null) {
