@@ -315,9 +315,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				continue;
 			}
 
+			var d_param = d_params.get (i);
 			CCodeExpression arg;
-			arg = new CCodeIdentifier (get_ccode_name (d_params.get (i)));
-			if (d_params.get (i).variable_type is GenericType) {
+			arg = new CCodeIdentifier (get_ccode_name (d_param));
+			if (d_param.variable_type is GenericType) {
 				arg = convert_from_generic_pointer (arg, param.variable_type);
 			}
 			carg_map.set (get_param_pos (get_ccode_pos (param)), arg);
@@ -327,15 +328,15 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					CCodeExpression clength;
-					if (get_ccode_array_null_terminated (d_params.get (i))) {
+					if (get_ccode_array_null_terminated (d_param)) {
 						requires_array_length = true;
 						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
-						len_call.add_argument (new CCodeIdentifier (d_params.get (i).name));
+						len_call.add_argument (new CCodeIdentifier (d_param.name));
 						clength = len_call;
-					} else if (!get_ccode_array_length (d_params.get (i))) {
+					} else if (!get_ccode_array_length (d_param)) {
 						clength = new CCodeConstant ("-1");
 					} else {
-						clength = new CCodeIdentifier (get_variable_array_length_cname (d_params.get (i), dim));
+						clength = new CCodeIdentifier (get_variable_array_length_cname (d_param, dim));
 					}
 					carg_map.set (get_param_pos (get_ccode_array_length_pos (param) + 0.01 * dim), clength);
 				}
@@ -343,10 +344,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var deleg_type = (DelegateType) param.variable_type;
 
 				if (deleg_type.delegate_symbol.has_target) {
-					var ctarget = new CCodeIdentifier (get_ccode_delegate_target_name (d_params.get (i)));
+					var ctarget = new CCodeIdentifier (get_ccode_delegate_target_name (d_param));
 					carg_map.set (get_param_pos (get_ccode_delegate_target_pos (param)), ctarget);
 					if (deleg_type.is_disposable ()) {
-						var ctarget_destroy_notify = new CCodeIdentifier (get_ccode_delegate_target_destroy_notify_name (d_params.get (i)));
+						var ctarget_destroy_notify = new CCodeIdentifier (get_ccode_delegate_target_destroy_notify_name (d_param));
 						carg_map.set (get_param_pos (get_ccode_destroy_notify_pos (m)), ctarget_destroy_notify);
 					}
 				}
