@@ -90,8 +90,8 @@ struct _FooPrivate {
 	gint _manam_length1;
 	gint __manam_size_;
 	gint* _manar;
-	gint _manar_length1;
-	gint __manar_size_;
+	guint8 _manar_length1;
+	guint8 __manar_size_;
 };
 
 struct _ParamSpecFoo {

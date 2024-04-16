@@ -57,8 +57,6 @@ struct _FooClass {
 
 struct _FooPrivate {
 	gchar** _bar;
-	gint _bar_length1;
-	gint __bar_size_;
 };
 
 static gint Foo_private_offset;
@@ -142,7 +140,7 @@ foo_get_bar (Foo* self)
 	gint _tmp1__length1;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->_bar;
-	_tmp0__length1 = self->priv->_bar_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_bar);
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup1 (_tmp0_, _tmp0__length1) : _tmp0_;
 	_tmp1__length1 = _tmp0__length1;
 	result = _tmp1_;
@@ -179,10 +177,8 @@ foo_set_bar (Foo* self,
 		gint _tmp0__length1;
 		_tmp0_ = (value != NULL) ? _vala_array_dup2 (value, _vala_array_length (value)) : value;
 		_tmp0__length1 = _vala_array_length (value);
-		self->priv->_bar = (_vala_array_free (self->priv->_bar, self->priv->_bar_length1, (GDestroyNotify) g_free), NULL);
+		self->priv->_bar = (_vala_array_free (self->priv->_bar, _vala_array_length (self->priv->_bar), (GDestroyNotify) g_free), NULL);
 		self->priv->_bar = _tmp0_;
-		self->priv->_bar_length1 = _tmp0__length1;
-		self->priv->__bar_size_ = self->priv->_bar_length1;
 		g_object_notify_by_pspec ((GObject *) self, foo_properties[FOO_BAR_PROPERTY]);
 	}
 	old_value = (g_free (old_value), NULL);
@@ -212,7 +208,7 @@ foo_finalize (GObject * obj)
 {
 	Foo * self;
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_FOO, Foo);
-	self->priv->_bar = (_vala_array_free (self->priv->_bar, self->priv->_bar_length1, (GDestroyNotify) g_free), NULL);
+	self->priv->_bar = (_vala_array_free (self->priv->_bar, _vala_array_length (self->priv->_bar), (GDestroyNotify) g_free), NULL);
 	G_OBJECT_CLASS (foo_parent_class)->finalize (obj);
 }
 

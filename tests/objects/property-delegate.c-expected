@@ -86,11 +86,7 @@ struct _FooPrivate {
 	gpointer _deleg_v_target;
 	GDestroyNotify _deleg_v_target_destroy_notify;
 	Manam _deleg_no_target;
-	gpointer _deleg_no_target_target;
-	GDestroyNotify _deleg_no_target_target_destroy_notify;
 	Manam _deleg_no_target_v;
-	gpointer _deleg_no_target_v_target;
-	GDestroyNotify _deleg_no_target_v_target_destroy_notify;
 };
 
 struct _ParamSpecFoo {
@@ -110,11 +106,7 @@ struct _BarClass {
 
 struct _BarPrivate {
 	Manam _deleg;
-	gpointer _deleg_target;
-	GDestroyNotify _deleg_target_destroy_notify;
 	Manam _deleg_v;
-	gpointer _deleg_v_target;
-	GDestroyNotify _deleg_v_target_destroy_notify;
 };
 
 static gint Foo_private_offset;
@@ -303,7 +295,7 @@ foo_get_deleg_no_target (Foo* self)
 	gpointer _tmp0__target;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->_deleg_no_target;
-	_tmp0__target = self->priv->_deleg_no_target_target;
+	_tmp0__target = NULL;
 	result = _tmp0_;
 	return result;
 }
@@ -313,13 +305,7 @@ foo_set_deleg_no_target (Foo* self,
                          Manam value)
 {
 	g_return_if_fail (IS_FOO (self));
-	(self->priv->_deleg_no_target_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_no_target_target_destroy_notify (self->priv->_deleg_no_target_target), NULL);
-	self->priv->_deleg_no_target = NULL;
-	self->priv->_deleg_no_target_target = NULL;
-	self->priv->_deleg_no_target_target_destroy_notify = NULL;
 	self->priv->_deleg_no_target = value;
-	self->priv->_deleg_no_target_target = NULL;
-	self->priv->_deleg_no_target_target_destroy_notify = NULL;
 }
 
 Manam
@@ -343,7 +329,7 @@ foo_real_get_deleg_no_target_v (Foo* base)
 	gpointer _tmp0__target;
 	self = base;
 	_tmp0_ = self->priv->_deleg_no_target_v;
-	_tmp0__target = self->priv->_deleg_no_target_v_target;
+	_tmp0__target = NULL;
 	result = _tmp0_;
 	return result;
 }
@@ -366,13 +352,7 @@ foo_real_set_deleg_no_target_v (Foo* base,
 {
 	Foo* self;
 	self = base;
-	(self->priv->_deleg_no_target_v_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_no_target_v_target_destroy_notify (self->priv->_deleg_no_target_v_target), NULL);
-	self->priv->_deleg_no_target_v = NULL;
-	self->priv->_deleg_no_target_v_target = NULL;
-	self->priv->_deleg_no_target_v_target_destroy_notify = NULL;
 	self->priv->_deleg_no_target_v = value;
-	self->priv->_deleg_no_target_v_target = NULL;
-	self->priv->_deleg_no_target_v_target_destroy_notify = NULL;
 }
 
 static void
@@ -543,14 +523,6 @@ foo_finalize (Foo * obj)
 	self->priv->_deleg_v = NULL;
 	self->priv->_deleg_v_target = NULL;
 	self->priv->_deleg_v_target_destroy_notify = NULL;
-	(self->priv->_deleg_no_target_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_no_target_target_destroy_notify (self->priv->_deleg_no_target_target), NULL);
-	self->priv->_deleg_no_target = NULL;
-	self->priv->_deleg_no_target_target = NULL;
-	self->priv->_deleg_no_target_target_destroy_notify = NULL;
-	(self->priv->_deleg_no_target_v_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_no_target_v_target_destroy_notify (self->priv->_deleg_no_target_v_target), NULL);
-	self->priv->_deleg_no_target_v = NULL;
-	self->priv->_deleg_no_target_v_target = NULL;
-	self->priv->_deleg_no_target_v_target_destroy_notify = NULL;
 }
 
 static GType
@@ -625,7 +597,7 @@ bar_get_deleg (Bar* self)
 	gpointer _tmp0__target;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	_tmp0_ = self->priv->_deleg;
-	_tmp0__target = self->priv->_deleg_target;
+	_tmp0__target = NULL;
 	result = _tmp0_;
 	return result;
 }
@@ -638,13 +610,7 @@ bar_set_deleg (Bar* self,
 	g_return_if_fail (IS_BAR (self));
 	old_value = bar_get_deleg (self);
 	if (old_value != value) {
-		(self->priv->_deleg_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_target_destroy_notify (self->priv->_deleg_target), NULL);
-		self->priv->_deleg = NULL;
-		self->priv->_deleg_target = NULL;
-		self->priv->_deleg_target_destroy_notify = NULL;
 		self->priv->_deleg = value;
-		self->priv->_deleg_target = NULL;
-		self->priv->_deleg_target_destroy_notify = NULL;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_DELEG_PROPERTY]);
 	}
 }
@@ -670,7 +636,7 @@ bar_real_get_deleg_v (Bar* base)
 	gpointer _tmp0__target;
 	self = base;
 	_tmp0_ = self->priv->_deleg_v;
-	_tmp0__target = self->priv->_deleg_v_target;
+	_tmp0__target = NULL;
 	result = _tmp0_;
 	return result;
 }
@@ -696,13 +662,7 @@ bar_real_set_deleg_v (Bar* base,
 	self = base;
 	old_value = bar_real_get_deleg_v (base);
 	if (old_value != value) {
-		(self->priv->_deleg_v_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_v_target_destroy_notify (self->priv->_deleg_v_target), NULL);
-		self->priv->_deleg_v = NULL;
-		self->priv->_deleg_v_target = NULL;
-		self->priv->_deleg_v_target_destroy_notify = NULL;
 		self->priv->_deleg_v = value;
-		self->priv->_deleg_v_target = NULL;
-		self->priv->_deleg_v_target_destroy_notify = NULL;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_DELEG_V_PROPERTY]);
 	}
 }
@@ -734,14 +694,6 @@ bar_finalize (GObject * obj)
 {
 	Bar * self;
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_BAR, Bar);
-	(self->priv->_deleg_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_target_destroy_notify (self->priv->_deleg_target), NULL);
-	self->priv->_deleg = NULL;
-	self->priv->_deleg_target = NULL;
-	self->priv->_deleg_target_destroy_notify = NULL;
-	(self->priv->_deleg_v_target_destroy_notify == NULL) ? NULL : (self->priv->_deleg_v_target_destroy_notify (self->priv->_deleg_v_target), NULL);
-	self->priv->_deleg_v = NULL;
-	self->priv->_deleg_v_target = NULL;
-	self->priv->_deleg_v_target_destroy_notify = NULL;
 	G_OBJECT_CLASS (bar_parent_class)->finalize (obj);
 }
 

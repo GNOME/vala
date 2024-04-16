@@ -95,17 +95,9 @@ struct _FooPrivate {
 	gint _array_v_length1;
 	gint __array_v_size_;
 	Manam** _array_no_length;
-	gint _array_no_length_length1;
-	gint __array_no_length_size_;
 	Manam** _array_no_length_v;
-	gint _array_no_length_v_length1;
-	gint __array_no_length_v_size_;
 	gchar** _strv;
-	gint _strv_length1;
-	gint __strv_size_;
 	gchar** _strv_v;
-	gint _strv_v_length1;
-	gint __strv_v_size_;
 };
 
 struct _ParamSpecFoo {
@@ -127,17 +119,9 @@ struct _BarClass {
 
 struct _BarPrivate {
 	Manam** _array;
-	gint _array_length1;
-	gint __array_size_;
 	Manam** _array_v;
-	gint _array_v_length1;
-	gint __array_v_size_;
 	gchar** _strv;
-	gint _strv_length1;
-	gint __strv_size_;
 	gchar** _strv_v;
-	gint _strv_v_length1;
-	gint __strv_v_size_;
 };
 
 static gint Foo_private_offset;
@@ -450,7 +434,7 @@ foo_get_array_no_length (Foo* self)
 	gint _tmp0__length1;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->_array_no_length;
-	_tmp0__length1 = self->priv->_array_no_length_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_array_no_length);
 	result = _tmp0_;
 	return result;
 }
@@ -482,10 +466,8 @@ foo_set_array_no_length (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_tmp0_ = (value != NULL) ? _vala_array_dup3 (value, _vala_array_length (value)) : value;
 	_tmp0__length1 = _vala_array_length (value);
-	self->priv->_array_no_length = (_vala_array_free (self->priv->_array_no_length, self->priv->_array_no_length_length1, (GDestroyNotify) manam_free), NULL);
+	self->priv->_array_no_length = (_vala_array_free (self->priv->_array_no_length, _vala_array_length (self->priv->_array_no_length), (GDestroyNotify) manam_free), NULL);
 	self->priv->_array_no_length = _tmp0_;
-	self->priv->_array_no_length_length1 = _tmp0__length1;
-	self->priv->__array_no_length_size_ = self->priv->_array_no_length_length1;
 }
 
 Manam**
@@ -509,7 +491,7 @@ foo_real_get_array_no_length_v (Foo* base)
 	gint _tmp0__length1;
 	self = base;
 	_tmp0_ = self->priv->_array_no_length_v;
-	_tmp0__length1 = self->priv->_array_no_length_v_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_array_no_length_v);
 	result = _tmp0_;
 	return result;
 }
@@ -554,10 +536,8 @@ foo_real_set_array_no_length_v (Foo* base,
 	self = base;
 	_tmp0_ = (value != NULL) ? _vala_array_dup4 (value, _vala_array_length (value)) : value;
 	_tmp0__length1 = _vala_array_length (value);
-	self->priv->_array_no_length_v = (_vala_array_free (self->priv->_array_no_length_v, self->priv->_array_no_length_v_length1, (GDestroyNotify) manam_free), NULL);
+	self->priv->_array_no_length_v = (_vala_array_free (self->priv->_array_no_length_v, _vala_array_length (self->priv->_array_no_length_v), (GDestroyNotify) manam_free), NULL);
 	self->priv->_array_no_length_v = _tmp0_;
-	self->priv->_array_no_length_v_length1 = _tmp0__length1;
-	self->priv->__array_no_length_v_size_ = self->priv->_array_no_length_v_length1;
 }
 
 gchar**
@@ -568,7 +548,7 @@ foo_get_strv (Foo* self)
 	gint _tmp0__length1;
 	g_return_val_if_fail (IS_FOO (self), NULL);
 	_tmp0_ = self->priv->_strv;
-	_tmp0__length1 = self->priv->_strv_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_strv);
 	result = _tmp0_;
 	return result;
 }
@@ -600,10 +580,8 @@ foo_set_strv (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_tmp0_ = (value != NULL) ? _vala_array_dup5 (value, _vala_array_length (value)) : value;
 	_tmp0__length1 = _vala_array_length (value);
-	self->priv->_strv = (_vala_array_free (self->priv->_strv, self->priv->_strv_length1, (GDestroyNotify) g_free), NULL);
+	self->priv->_strv = (_vala_array_free (self->priv->_strv, _vala_array_length (self->priv->_strv), (GDestroyNotify) g_free), NULL);
 	self->priv->_strv = _tmp0_;
-	self->priv->_strv_length1 = _tmp0__length1;
-	self->priv->__strv_size_ = self->priv->_strv_length1;
 }
 
 gchar**
@@ -627,7 +605,7 @@ foo_real_get_strv_v (Foo* base)
 	gint _tmp0__length1;
 	self = base;
 	_tmp0_ = self->priv->_strv_v;
-	_tmp0__length1 = self->priv->_strv_v_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_strv_v);
 	result = _tmp0_;
 	return result;
 }
@@ -672,10 +650,8 @@ foo_real_set_strv_v (Foo* base,
 	self = base;
 	_tmp0_ = (value != NULL) ? _vala_array_dup6 (value, _vala_array_length (value)) : value;
 	_tmp0__length1 = _vala_array_length (value);
-	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, self->priv->_strv_v_length1, (GDestroyNotify) g_free), NULL);
+	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, _vala_array_length (self->priv->_strv_v), (GDestroyNotify) g_free), NULL);
 	self->priv->_strv_v = _tmp0_;
-	self->priv->_strv_v_length1 = _tmp0__length1;
-	self->priv->__strv_v_size_ = self->priv->_strv_v_length1;
 }
 
 static void
@@ -842,10 +818,10 @@ foo_finalize (Foo * obj)
 	g_signal_handlers_destroy (self);
 	self->priv->_array = (_vala_array_free (self->priv->_array, self->priv->_array_length1, (GDestroyNotify) manam_free), NULL);
 	self->priv->_array_v = (_vala_array_free (self->priv->_array_v, self->priv->_array_v_length1, (GDestroyNotify) manam_free), NULL);
-	self->priv->_array_no_length = (_vala_array_free (self->priv->_array_no_length, self->priv->_array_no_length_length1, (GDestroyNotify) manam_free), NULL);
-	self->priv->_array_no_length_v = (_vala_array_free (self->priv->_array_no_length_v, self->priv->_array_no_length_v_length1, (GDestroyNotify) manam_free), NULL);
-	self->priv->_strv = (_vala_array_free (self->priv->_strv, self->priv->_strv_length1, (GDestroyNotify) g_free), NULL);
-	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, self->priv->_strv_v_length1, (GDestroyNotify) g_free), NULL);
+	self->priv->_array_no_length = (_vala_array_free (self->priv->_array_no_length, _vala_array_length (self->priv->_array_no_length), (GDestroyNotify) manam_free), NULL);
+	self->priv->_array_no_length_v = (_vala_array_free (self->priv->_array_no_length_v, _vala_array_length (self->priv->_array_no_length_v), (GDestroyNotify) manam_free), NULL);
+	self->priv->_strv = (_vala_array_free (self->priv->_strv, _vala_array_length (self->priv->_strv), (GDestroyNotify) g_free), NULL);
+	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, _vala_array_length (self->priv->_strv_v), (GDestroyNotify) g_free), NULL);
 }
 
 static GType
@@ -920,7 +896,7 @@ bar_get_array (Bar* self)
 	gint _tmp0__length1;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	_tmp0_ = self->priv->_array;
-	_tmp0__length1 = self->priv->_array_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_array);
 	result = _tmp0_;
 	return result;
 }
@@ -955,10 +931,8 @@ bar_set_array (Bar* self,
 		gint _tmp0__length1;
 		_tmp0_ = (value != NULL) ? _vala_array_dup7 (value, _vala_array_length (value)) : value;
 		_tmp0__length1 = _vala_array_length (value);
-		self->priv->_array = (_vala_array_free (self->priv->_array, self->priv->_array_length1, (GDestroyNotify) manam_free), NULL);
+		self->priv->_array = (_vala_array_free (self->priv->_array, _vala_array_length (self->priv->_array), (GDestroyNotify) manam_free), NULL);
 		self->priv->_array = _tmp0_;
-		self->priv->_array_length1 = _tmp0__length1;
-		self->priv->__array_size_ = self->priv->_array_length1;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_ARRAY_PROPERTY]);
 	}
 }
@@ -984,7 +958,7 @@ bar_real_get_array_v (Bar* base)
 	gint _tmp0__length1;
 	self = base;
 	_tmp0_ = self->priv->_array_v;
-	_tmp0__length1 = self->priv->_array_v_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_array_v);
 	result = _tmp0_;
 	return result;
 }
@@ -1032,10 +1006,8 @@ bar_real_set_array_v (Bar* base,
 		gint _tmp0__length1;
 		_tmp0_ = (value != NULL) ? _vala_array_dup8 (value, _vala_array_length (value)) : value;
 		_tmp0__length1 = _vala_array_length (value);
-		self->priv->_array_v = (_vala_array_free (self->priv->_array_v, self->priv->_array_v_length1, (GDestroyNotify) manam_free), NULL);
+		self->priv->_array_v = (_vala_array_free (self->priv->_array_v, _vala_array_length (self->priv->_array_v), (GDestroyNotify) manam_free), NULL);
 		self->priv->_array_v = _tmp0_;
-		self->priv->_array_v_length1 = _tmp0__length1;
-		self->priv->__array_v_size_ = self->priv->_array_v_length1;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_ARRAY_V_PROPERTY]);
 	}
 }
@@ -1048,7 +1020,7 @@ bar_get_strv (Bar* self)
 	gint _tmp0__length1;
 	g_return_val_if_fail (IS_BAR (self), NULL);
 	_tmp0_ = self->priv->_strv;
-	_tmp0__length1 = self->priv->_strv_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_strv);
 	result = _tmp0_;
 	return result;
 }
@@ -1083,10 +1055,8 @@ bar_set_strv (Bar* self,
 		gint _tmp0__length1;
 		_tmp0_ = (value != NULL) ? _vala_array_dup9 (value, _vala_array_length (value)) : value;
 		_tmp0__length1 = _vala_array_length (value);
-		self->priv->_strv = (_vala_array_free (self->priv->_strv, self->priv->_strv_length1, (GDestroyNotify) g_free), NULL);
+		self->priv->_strv = (_vala_array_free (self->priv->_strv, _vala_array_length (self->priv->_strv), (GDestroyNotify) g_free), NULL);
 		self->priv->_strv = _tmp0_;
-		self->priv->_strv_length1 = _tmp0__length1;
-		self->priv->__strv_size_ = self->priv->_strv_length1;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_STRV_PROPERTY]);
 	}
 }
@@ -1112,7 +1082,7 @@ bar_real_get_strv_v (Bar* base)
 	gint _tmp0__length1;
 	self = base;
 	_tmp0_ = self->priv->_strv_v;
-	_tmp0__length1 = self->priv->_strv_v_length1;
+	_tmp0__length1 = _vala_array_length (self->priv->_strv_v);
 	result = _tmp0_;
 	return result;
 }
@@ -1160,10 +1130,8 @@ bar_real_set_strv_v (Bar* base,
 		gint _tmp0__length1;
 		_tmp0_ = (value != NULL) ? _vala_array_dup10 (value, _vala_array_length (value)) : value;
 		_tmp0__length1 = _vala_array_length (value);
-		self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, self->priv->_strv_v_length1, (GDestroyNotify) g_free), NULL);
+		self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, _vala_array_length (self->priv->_strv_v), (GDestroyNotify) g_free), NULL);
 		self->priv->_strv_v = _tmp0_;
-		self->priv->_strv_v_length1 = _tmp0__length1;
-		self->priv->__strv_v_size_ = self->priv->_strv_v_length1;
 		g_object_notify_by_pspec ((GObject *) self, bar_properties[BAR_STRV_V_PROPERTY]);
 	}
 }
@@ -1199,10 +1167,10 @@ bar_finalize (GObject * obj)
 {
 	Bar * self;
 	self = G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_BAR, Bar);
-	self->priv->_array = (_vala_array_free (self->priv->_array, self->priv->_array_length1, (GDestroyNotify) manam_free), NULL);
-	self->priv->_array_v = (_vala_array_free (self->priv->_array_v, self->priv->_array_v_length1, (GDestroyNotify) manam_free), NULL);
-	self->priv->_strv = (_vala_array_free (self->priv->_strv, self->priv->_strv_length1, (GDestroyNotify) g_free), NULL);
-	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, self->priv->_strv_v_length1, (GDestroyNotify) g_free), NULL);
+	self->priv->_array = (_vala_array_free (self->priv->_array, _vala_array_length (self->priv->_array), (GDestroyNotify) manam_free), NULL);
+	self->priv->_array_v = (_vala_array_free (self->priv->_array_v, _vala_array_length (self->priv->_array_v), (GDestroyNotify) manam_free), NULL);
+	self->priv->_strv = (_vala_array_free (self->priv->_strv, _vala_array_length (self->priv->_strv), (GDestroyNotify) g_free), NULL);
+	self->priv->_strv_v = (_vala_array_free (self->priv->_strv_v, _vala_array_length (self->priv->_strv_v), (GDestroyNotify) g_free), NULL);
 	G_OBJECT_CLASS (bar_parent_class)->finalize (obj);
 }
 

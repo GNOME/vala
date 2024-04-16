@@ -130,6 +130,11 @@ public class Vala.Property : Symbol, Lockable {
 							_field.set_attribute_string ("GtkChild", "name", get_attribute_string ("GtkChild", "name", name));
 							_field.set_attribute_bool ("GtkChild", "internal", get_attribute_bool ("GtkChild", "internal"));
 						}
+						// Inherit important attributes
+						_field.copy_attribute_bool (this, "CCode", "array_length");
+						_field.copy_attribute_string (this, "CCode", "array_length_type");
+						_field.copy_attribute_bool (this, "CCode", "array_null_terminated");
+						_field.copy_attribute_bool (this, "CCode", "delegate_target");
 					}
 				}
 				_field_checked = true;
