@@ -282,7 +282,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				} else {
 					array_type = prop.property_type as ArrayType;
 					if (array_type != null) {
-						if (get_ccode_array_null_terminated (prop)) {
+						if (get_ccode_array_null_terminated (prop) && !get_ccode_array_length (prop)) {
 							requires_array_length = true;
 							var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 							len_call.add_argument (ctemp);
@@ -357,7 +357,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				set_cvalue (expr, ctemp);
 
-				if (get_ccode_array_null_terminated (prop)) {
+				if (get_ccode_array_null_terminated (prop) && !get_ccode_array_length (prop)) {
 					requires_array_length = true;
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (ctemp);
@@ -735,7 +735,7 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				result.array_length_cvalues = null;
 				result.append_array_length_cvalue (get_ccodenode (array_type.length));
 				result.lvalue = false;
-			} else if (get_ccode_array_null_terminated (variable)) {
+			} else if (get_ccode_array_null_terminated (variable) && !get_ccode_array_length (variable)) {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 				len_call.add_argument (result.cvalue);

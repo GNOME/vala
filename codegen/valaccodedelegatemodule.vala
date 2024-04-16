@@ -328,7 +328,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var array_type = (ArrayType) param.variable_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					CCodeExpression clength;
-					if (get_ccode_array_null_terminated (d_param)) {
+					if (get_ccode_array_null_terminated (d_param) && !get_ccode_array_length (d_param)) {
 						requires_array_length = true;
 						var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 						len_call.add_argument (new CCodeIdentifier (d_param.name));
