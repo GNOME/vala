@@ -585,7 +585,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.return_type is ArrayType && async_call != ccall) {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				if (get_ccode_array_null_terminated (m)) {
+				if (get_ccode_array_null_terminated (m) && !get_ccode_array_length (m)) {
 					// handle calls to methods returning null-terminated arrays
 					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
@@ -652,7 +652,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (deleg != null && deleg.return_type is ArrayType) {
 			var array_type = (ArrayType) deleg.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				if (get_ccode_array_null_terminated (deleg)) {
+				if (get_ccode_array_null_terminated (deleg) && !get_ccode_array_length (deleg)) {
 					// handle calls to methods returning null-terminated arrays
 					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
@@ -983,7 +983,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// handle ref null terminated arrays
 			if (unary != null && unary.operator == UnaryOperator.REF
 			    && unary.inner.symbol_reference != null && get_ccode_array_length (unary.inner.symbol_reference)) {
-				if (param != null && get_ccode_array_null_terminated (param)
+				if (param != null && get_ccode_array_null_terminated (param) && !get_ccode_array_length (param)
 				    && param.variable_type is ArrayType && ((ArrayType) param.variable_type).rank == 1) {
 					requires_array_length = true;
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
@@ -1023,7 +1023,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			store_value (unary.inner.target_value, transform_value (unary.target_value, unary.inner.value_type, arg), expr.source_reference);
 
 			// handle out null terminated arrays
-			if (param != null && get_ccode_array_null_terminated (param)
+			if (param != null && get_ccode_array_null_terminated (param) && !get_ccode_array_length (param)
 			    && unary.inner.symbol_reference != null && get_ccode_array_length (unary.inner.symbol_reference)) {
 				requires_array_length = true;
 				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
