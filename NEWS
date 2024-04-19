@@ -1,3 +1,25 @@
+Vala 0.56.17
+============
+ * Various improvements and bug fixes:
+  - codegen:
+    + Add missing initializers for private fields of GSourceFuncs
+    + Update array length variable passed to null-terminated ref parameter [#1536]
+    + Properly pass through a null-terminated out argument
+    + Refactor and cache parameter in loop
+    + Only handle null-terminated array as such if there is no length given
+  - vala:
+    + Allow declaration of static nested methods (local functions) [#1533]
+    + Correctly use Path.build_path()
+    + Point to the invalid initializer on error
+    + Report invalid type in property assignment attempt [#1541]
+    + Inherit important attributes for Property backing field
+
+ * Bindings:
+  - glib-2.0: Avoid unnecessary copying operations in FileStream.read_line()
+  - glib-2.0: Add SPACING_MARK, deprecate COMBINING_MARK
+  - glib-2.0: Add dev_t/gid_t/pid_t/uid_t/socklen_t types for compatibility
+  - gnu: add binding for flock(2) and its constants
+
 Vala 0.56.16
 ============
  * Various improvements and bug fixes:
