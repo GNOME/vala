@@ -70,4 +70,25 @@ namespace Gnu {
 
 	[CCode (cheader_filename = "quote.h")]
 	public string quote (string arg);
+
+	[CCode (cheader_filename = "relocatable.h", cname = "relocate", type ="const char*")]
+	char* _gnulib_relocate (char* path);
+	[CCode (cname = "_vala_gnulib_relocate")]
+	public string relocate (string path) {
+		char* newpath = _gnulib_relocate (path);
+		if (newpath == path) {
+			// If relocate malloced, then return the value, defeating Vala's
+			// attempt to strdup it.
+			return (string) (owned) newpath;
+		} else {
+			// Otherwise, allow Vala to strdup the non-malloced return value.
+			return (string) newpath;
+		}
+	}
+
+	[CCode (cheader_filename = "relocatable.h")]
+	public void set_relocation_prefix (string orig_prefix, string curr_prefix);
+
+	[CCode (cheader_filename = "relocatable.h")]
+	public string compute_curr_prefix (string orig_installprefix, string orig_installdir, string curr_pathname);
 }
