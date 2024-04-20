@@ -76,7 +76,7 @@ namespace Gnu {
 	[CCode (cname = "_vala_gnulib_relocate")]
 	public string relocate (string path) {
 		char* newpath = _gnulib_relocate (path);
-		if (newpath == path) {
+		if (newpath != path) {
 			// If relocate malloced, then return the value, defeating Vala's
 			// attempt to strdup it.
 			return (string) (owned) newpath;
