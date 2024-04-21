@@ -571,10 +571,6 @@ public class Vala.Class : ObjectTypeSymbol {
 			context.analyzer.check_type (type);
 		}
 
-		foreach (TypeParameter p in get_type_parameters ()) {
-			p.check (context);
-		}
-
 		if (base_class != null && base_class.is_singleton) {
 			error = true;
 			Report.error (source_reference, "`%s' cannot inherit from SingleInstance class `%s'", get_full_name (), base_class.get_full_name ());

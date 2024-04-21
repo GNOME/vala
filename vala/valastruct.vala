@@ -522,8 +522,10 @@ public class Vala.Struct : TypeSymbol, GenericSymbol {
 			}
 		}
 
-		foreach (TypeParameter p in type_parameters) {
-			p.check (context);
+		foreach (TypeParameter p in get_type_parameters ()) {
+			if (!p.check (context)) {
+				error = true;
+			}
 		}
 
 		foreach (Field f in fields) {

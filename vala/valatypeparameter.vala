@@ -58,4 +58,20 @@ public class Vala.TypeParameter : TypeSymbol {
 
 		return name == param2.name && parent_symbol == param2.parent_symbol;
 	}
+
+	public override bool check (CodeContext context) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (!(parent_symbol is GenericSymbol)) {
+			Report.error (source_reference, "internal error: Incompatible parent_symbol");
+			error = true;
+			return false;
+		}
+
+		return !error;
+	}
 }

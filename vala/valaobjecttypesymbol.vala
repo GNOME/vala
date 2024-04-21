@@ -386,6 +386,12 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol, GenericSymbol {
 			Report.error (source_reference, "gio-2.0 package required for DBus support");
 		}
 
+		foreach (TypeParameter p in get_type_parameters ()) {
+			if (!p.check (context)) {
+				error = true;
+			}
+		}
+
 		return !error;
 	}
 }

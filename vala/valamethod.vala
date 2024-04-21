@@ -901,6 +901,12 @@ public class Vala.Method : Subroutine, Callable, GenericSymbol {
 			return TraverseStatus.CONTINUE;
 		});
 
+		foreach (TypeParameter p in get_type_parameters ()) {
+			if (!p.check (context)) {
+				error = true;
+			}
+		}
+
 		return_type.accept (traverse);
 
 		var optional_param = false;
