@@ -3008,7 +3008,7 @@ namespace GLib {
 	[CCode (array_length = false, array_null_terminated = true)]
 	public string[] strdupv ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 
-	public void strfreev (string** str_array);
+	public void strfreev ([CCode (array_length = false, array_null_terminated = true)] owned string[] str_array);
 	[Version (since = "2.6")]
 	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 	[Version (since = "2.44")]
