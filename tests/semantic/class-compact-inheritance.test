@@ -1,0 +1,11 @@
+Invalid Code
+
+class Foo {
+}
+
+[Compact]
+class Bar : Foo {
+}
+
+void main () {
+}

@@ -1142,6 +1142,7 @@ TESTS = \
 	semantic/class-compact-field-lock.test \
 	semantic/class-compact-field-private.test \
 	semantic/class-compact-derived-instance-field.test \
+	semantic/class-compact-inheritance.test \
 	semantic/class-compact-interface.test \
 	semantic/class-compact-method-baseaccess.test \
 	semantic/class-compact-property-baseaccess.test \
