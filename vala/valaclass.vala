@@ -610,6 +610,12 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
+		if (base_class != null && !base_class.is_compact && has_attribute ("Compact")) {
+			error = true;
+			Report.error (source_reference, "Compact class `%s' cannot inherit from non-compact class `%s'", get_full_name (), base_class.get_full_name ());
+			return false;
+		}
+
 		/* process enums first to avoid order problems in C code */
 		foreach (Enum en in get_enums ()) {
 			en.check (context);
