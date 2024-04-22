@@ -2088,21 +2088,6 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		protected ParamFraction ();
 	}
-	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
-	[Compact]
-	public class ParamSpecArray : GLib.ParamSpec {
-		public weak GLib.ParamSpec element_spec;
-	}
-	[CCode (cheader_filename = "gst/gst.h", has_type_id = false)]
-	[Compact]
-	public class ParamSpecFraction : GLib.ParamSpec {
-		public int def_den;
-		public int def_num;
-		public int max_den;
-		public int max_num;
-		public int min_den;
-		public int min_num;
-	}
 	[CCode (cheader_filename = "gst/gst.h", free_function = "gst_parse_context_free", type_id = "gst_parse_context_get_type ()")]
 	[Compact]
 	public class ParseContext {

@@ -271,10 +271,9 @@ TocEntry base_type="Gst.MiniObject"
 *.make_writable returns_modified_pointer
 
 // GLib.ParamSpec inheritance
-ParamSpecArray struct=false base_type="GLib.ParamSpec"
-  .parent_instance skip
-ParamSpecFraction struct=false base_type="GLib.ParamSpec"
-  .parent_instance skip
+//FIXME Unfortunate symbol/type naming in upstream declaration
+ParamSpecArray skip
+ParamSpecFraction skip
 
 // Reparenting
 TAG_* parent="Gst.Tags" name="TAG_(.+)"
