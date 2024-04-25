@@ -36,8 +36,8 @@ modules:
         buildsystem: autotools
         sources:
           - type: archive
-            url: "https://gitlab.com/graphviz/graphviz/-/archive/7.1.0/graphviz-7.1.0.tar.gz"
-            sha256: "8b28a283644a8442e6925b15d95055228d25172c7c30681810625616cbb23913"
+            url: "https://gitlab.com/graphviz/graphviz/-/archive/10.0.1/graphviz-10.0.1.tar.gz"
+            sha256: "28f452ef1cb12288c8758a62f8c3fcfefdb91b251f7aae61d0d703f851bde931"
             x-checker-data:
               type: anitya
               project-id: 1249
@@ -47,8 +47,8 @@ modules:
       - name: dbus-run-session
         sources:
           - type: archive
-            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.15.4/dbus-dbus-1.15.4.tar.gz"
-            sha256: "dc31de363ae150d3caef7a5b5afd0b1205c74a743fe17a446a2f049a1dde5e60"
+            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.14.10/dbus-dbus-1.14.10.tar.gz"
+            sha256: "5fedcd6c17fbc62646af224e1aab11a334c463e7e7d89163a670ed24e7ab241c"
             x-checker-data:
               type: anitya
               project-id: 5356
@@ -93,8 +93,8 @@ modules:
         builddir: true
         sources:
           - type: archive
-            url: "https://github.com/uncrustify/uncrustify/archive/uncrustify-0.75.1.tar.gz"
-            sha256: "fd14acc0a31ed88b33137bdc26d32964327488c835f885696473ef07caf2e182"
+            url: "https://github.com/uncrustify/uncrustify/archive/uncrustify-0.78.1.tar.gz"
+            sha256: "ecaf4c0adca14c36dfffa30bc28e69865115ecd602c90eb16a8cddccb41caad2"
         cleanup: ["/lib/pkgconfig"]
   - name: scripts
     buildsystem: simple
