@@ -259,9 +259,6 @@ AM_CONDITIONAL(HAVE_G_IR_COMPILER, test "$G_IR_COMPILER" != :)
 AC_PATH_PROG([JING], [jing], :)
 AM_CONDITIONAL(HAVE_JING, test "$JING" != :)
 
-AC_PATH_PROG([XSLTPROC], [xsltproc], :)
-AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
-
 AC_CHECK_PROGS([SPHINXBUILD], [sphinx-build sphinx-build3 sphinx-build2], [no])
 AM_CONDITIONAL(HAVE_SPHINXBUILD, [test "x$SPHINXBUILD" != xno])
 
