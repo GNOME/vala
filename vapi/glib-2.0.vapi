@@ -3025,7 +3025,7 @@ namespace GLib {
 	public static string convert_with_iconv (string str, ssize_t len, IConv converter, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out unowned string charset);
 	[Version (since = "2.62")]
-	public static bool get_console_charset ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
+	public static bool get_console_charset (out unowned string charset);
 	public static bool get_filename_charsets ([CCode (array_length = false, array_null_terminated = true)] out unowned string[] charsets);
 
 	[SimpleType]
