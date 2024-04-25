@@ -50,6 +50,7 @@ Install the following packages:
  * a C compiler, e.g. GCC
  * a C library, e.g. glibc
  * glib (>= 2.56)
+ * gobject-introspection
  * flex
  * bison
  * Graphviz (libgvc) (>= 2.16) to build valadoc
@@ -62,8 +63,8 @@ Install the following packages:
 These additional packages are needed to generate the documentation:
 
  * help2man when updating the man pages
- * xsltproc
- * weasyprint for PDF generation
+ * sphinx, python-furo
+ * latexmk, texlive for PDF generation
 
 ### Step Two:
 Decide where the Vala compiler is to be found.
