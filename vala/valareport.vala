@@ -173,7 +173,7 @@ public class Vala.Report {
 			}
 		}
 
-		if (colored_output == Report.Colored.ALWAYS || (colored_output == Report.Colored.AUTO && is_atty (stderr.fileno ()))) {
+		if (colored_output == Report.Colored.ALWAYS || (colored_output == Report.Colored.AUTO && Log.writer_supports_color (stderr.fileno ()))) {
 			if (error_color != null) {
 				this.error_color_start = "\x1b[0" + error_color + "m";
 				this.error_color_end = ANSI_COLOR_END;
@@ -398,28 +398,5 @@ public class Vala.Report {
 	[PrintfFormat]
 	public static void error (SourceReference? source, string msg_format, ...) {
 		CodeContext.get ().report.err (source, msg_format.vprintf (va_list ()));
-	}
-
-
-	[CCode (has_target = false)]
-	private delegate int AttyFunc (int fd);
-
-	private bool is_atty (int fd) {
-		Module module = Module.open (null, ModuleFlags.LAZY);
-		if (module == null) {
-			return false;
-		}
-
-		void* _func;
-		module.symbol ("isatty", out _func);
-		if (_func == null) {
-			module.symbol ("_isatty", out _func);
-			if (_func == null) {
-				return false;
-			}
-		}
-
-		AttyFunc? func = (AttyFunc) _func;
-		return func (fd) > 0;
 	}
 }
