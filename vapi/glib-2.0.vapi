@@ -3033,7 +3033,7 @@ namespace GLib {
 	public struct IConv {
 		public static IConv open (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
-		public size_t iconv ([CCode (array_length = false)] ref char[] inbuf, ref size_t inbytes_left, [CCode (array_length = false)] ref char[] outbuf, ref size_t outbytes_left);
+		public size_t iconv ([CCode (array_length = false, array_null_terminated = true)] ref char[] inbuf, ref size_t inbytes_left, [CCode (array_length = false, array_null_terminated = true)] ref char[] outbuf, ref size_t outbytes_left);
 		public int close ();
 	}
 
