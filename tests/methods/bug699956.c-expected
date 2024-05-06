@@ -364,7 +364,7 @@ bar_get_type (void)
 Foo*
 foo (void)
 {
-	Bar* result;
+	Foo* result;
 	result = NULL;
 	return result;
 }

@@ -831,7 +831,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			} else {
 				vardecl = new CCodeVariableDeclarator ("result");
 			}
-			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
+			ccode.add_declaration (get_creturn_type (m, get_ccode_name (m.return_type)), vardecl);
 		}
 
 		pop_context ();
@@ -1210,7 +1210,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 			} else {
 				vardecl = new CCodeVariableDeclarator ("result");
 			}
-			ccode.add_declaration (get_ccode_name (m.return_type), vardecl);
+			ccode.add_declaration (get_creturn_type (m, get_ccode_name (m.return_type)), vardecl);
 		}
 
 		// add a typecheck statement for "self"
