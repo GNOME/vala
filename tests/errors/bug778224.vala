@@ -7,10 +7,10 @@ struct Foo {
 	int i;
 }
 
-bool @true = true;
+bool truesy = true;
 
 Foo foo () throws FooError {
-	if (@true) {
+	if (truesy) {
 		throw new FooError.BAR ("");
 	}
 
