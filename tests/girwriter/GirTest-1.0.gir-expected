@@ -979,7 +979,7 @@
 				</parameter>
 			</parameters>
 		</virtual-method>
-		<property name="some-property" writable="1" construct="1">
+		<property name="some-property" writable="1" construct="1" default-value="foo">
 			<type name="utf8" c:type="gchar*"/>
 		</property>
 		<method name="get_some_property" c:identifier="gir_test_object_test_get_some_property">
@@ -2458,7 +2458,7 @@
 				<type name="none" c:type="void"/>
 			</return-value>
 		</function>
-		<property name="property" writable="1" construct="1">
+		<property name="property" writable="1" construct="1" default-value="23">
 			<type name="gint" c:type="gint"/>
 		</property>
 		<method name="get_property" c:identifier="gir_test_interface_test_get_property">

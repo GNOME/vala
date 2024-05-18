@@ -1488,6 +1488,9 @@ public class Vala.GIRWriter : CodeVisitor {
 					}
 				}
 			}
+			if (prop.initializer != null && prop.initializer is Literal) {
+				buffer.append_printf (" default-value=\"%s\"", literal_expression_to_value_string (prop.initializer));
+			}
 			write_symbol_attributes (prop);
 			buffer.append_printf (">\n");
 			indent++;
