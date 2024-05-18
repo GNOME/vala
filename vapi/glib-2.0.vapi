@@ -4070,9 +4070,9 @@ namespace GLib {
 		public static FileStream? fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
-		public void printf (string format, ...);
+		public int printf (string format, ...);
 		[CCode (cname = "vfprintf")]
-		public void vprintf (string format, va_list args);
+		public int vprintf (string format, va_list args);
 		[CCode (cname = "fputc", instance_pos = -1)]
 		public int putc (char c);
 		[CCode (cname = "fputs", instance_pos = -1)]
