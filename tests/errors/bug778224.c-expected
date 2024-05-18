@@ -34,8 +34,8 @@ struct _Foo {
 	gint i;
 };
 
-VALA_EXTERN gboolean true;
-gboolean true = TRUE;
+VALA_EXTERN gboolean truesy;
+gboolean truesy = TRUE;
 
 VALA_EXTERN GQuark foo_error_quark (void);
 VALA_EXTERN GType foo_error_get_type (void) G_GNUC_CONST ;
@@ -75,7 +75,7 @@ foo (GError** error)
 	Foo _tmp3_ = {0};
 	GError* _inner_error0_ = NULL;
 	Foo result;
-	if (true) {
+	if (truesy) {
 		GError* _tmp0_;
 		_tmp0_ = g_error_new_literal (FOO_ERROR, FOO_ERROR_BAR, "");
 		_inner_error0_ = _tmp0_;
