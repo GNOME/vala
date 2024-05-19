@@ -13,8 +13,9 @@
 #endif
 #endif
 
-typedef int32_t gint;
-typedef gint BarHandle;
+typedef int32_t FooHandle;
+typedef FooHandle BarHandle;
+typedef int32_t BazHandle;
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
 #define _vala_return_val_if_fail(expr, msg, val) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return val; }
@@ -26,30 +27,30 @@ static void
 _vala_main (void)
 {
 	{
-		gint foo = 0;
-		foo = 0;
-		_vala_assert (foo == 0, "foo == 0");
+		FooHandle foo = 0;
+		foo = (FooHandle) 0;
+		_vala_assert (((gint) foo) == 0, "foo == 0");
 	}
 	{
-		gint foo = 0;
-		foo = -1;
-		_vala_assert (foo == -1, "foo == -1");
+		FooHandle foo = 0;
+		foo = (FooHandle) -1;
+		_vala_assert (((gint) foo) == -1, "foo == -1");
 	}
 	{
-		gint foo = 0;
-		foo = 42;
-		_vala_assert (foo == 42, "foo == 42");
-		foo = 64;
-		_vala_assert (foo == 64, "foo == 64");
+		FooHandle foo = 0;
+		foo = (FooHandle) 42;
+		_vala_assert (((gint) foo) == 42, "foo == 42");
+		foo = (FooHandle) 64;
+		_vala_assert (((gint) foo) == 64, "foo == 64");
 	}
 	{
-		gint foo = 0;
+		FooHandle foo = 0;
 		BarHandle bar = 0;
-		foo = 36;
+		foo = (FooHandle) 36;
 		bar = (BarHandle) 64;
-		foo = (gint) bar;
-		_vala_assert (foo == 64, "foo == 64");
-		foo = 88;
+		foo = (FooHandle) bar;
+		_vala_assert (((gint) foo) == 64, "foo == 64");
+		foo = (FooHandle) 88;
 		bar = (BarHandle) foo;
 		_vala_assert (((gint) bar) == 88, "bar == 88");
 	}
@@ -64,11 +65,11 @@ _vala_main (void)
 		_vala_assert (baz == ((guint) 99), "baz == 99");
 	}
 	{
-		gint foo = 0;
-		gint baz = 0;
-		foo = 28;
-		baz = (gint) foo;
-		_vala_assert (baz == 28, "baz == 28");
+		FooHandle foo = 0;
+		BazHandle baz = 0;
+		foo = (FooHandle) 28;
+		baz = (BazHandle) foo;
+		_vala_assert (((gint) baz) == 28, "baz == 28");
 	}
 }
 
