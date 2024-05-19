@@ -1,4 +1,4 @@
-[CCode (cname = "gint", cheader_filename = "glib.h", default_value = "0", has_type_id = false)]
+[CCode (default_value = "0", has_type_id = false)]
 [IntegerType (rank = -1)]
 struct FooHandle {
 }
@@ -7,7 +7,7 @@ struct BarHandle : FooHandle {
 }
 
 [IntegerType (rank = -2)]
-[CCode (cname = "gint", cheader_filename = "glib.h", default_value = "0", has_type_id = false)]
+[CCode (default_value = "0", has_type_id = false)]
 struct BazHandle {
 }
 
