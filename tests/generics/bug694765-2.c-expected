@@ -400,7 +400,7 @@ static gboolean
 _g_node_free_all_node (GNode* node,
                        GDestroyNotify free_func)
 {
-	(node->data == NULL) ? NULL : free_func (node->data);
+	(node->data == NULL) ? NULL : (free_func (node->data), NULL);
 	return FALSE;
 }
 
@@ -408,7 +408,7 @@ static void
 _g_node_free_all (GNode* self,
                   GDestroyNotify free_func)
 {
-	(free_func == NULL) ? NULL : g_node_traverse (self, G_POST_ORDER, G_TRAVERSE_ALL, -1, (GNodeTraverseFunc) _g_node_free_all_node, free_func);
+	(free_func == NULL) ? NULL : (g_node_traverse (self, G_POST_ORDER, G_TRAVERSE_ALL, -1, (GNodeTraverseFunc) _g_node_free_all_node, free_func), NULL);
 	g_node_destroy (self);
 }
 
