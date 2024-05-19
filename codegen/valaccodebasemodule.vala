@@ -3686,9 +3686,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			free_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"));
 
 			var data_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier("node"), "data"), new CCodeConstant ("NULL"));
-			var ccomma_data = new CCodeCommaExpression ();
-			ccomma_data.append_expression (new CCodeConditionalExpression (data_isnull, new CCodeConstant ("NULL"), free_call));
-			ccode.add_expression (ccomma_data);
+			var ccomma_free = new CCodeCommaExpression ();
+			ccomma_free.append_expression (free_call);
+			ccomma_free.append_expression (new CCodeConstant ("NULL"));
+			ccode.add_expression (new CCodeConditionalExpression (data_isnull, new CCodeConstant ("NULL"), ccomma_free));
 
 			ccode.add_return (new CCodeConstant ("FALSE"));
 
@@ -3706,10 +3707,10 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			element_free_call.add_argument (new CCodeIdentifier ("free_func"));
 
 			var free_func_isnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("free_func"), new CCodeConstant ("NULL"));
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeConditionalExpression (free_func_isnull, new CCodeConstant ("NULL"), element_free_call));
-
-			ccode.add_expression (ccomma);
+			var ccomma_element_free = new CCodeCommaExpression ();
+			ccomma_element_free.append_expression (element_free_call);
+			ccomma_element_free.append_expression (new CCodeConstant ("NULL"));
+			ccode.add_expression (new CCodeConditionalExpression (free_func_isnull, new CCodeConstant ("NULL"), ccomma_element_free));
 
 			var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (get_ccode_free_function (gnode_type)));
 			cfreecall.add_argument (new CCodeIdentifier ("self"));
