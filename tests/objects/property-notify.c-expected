@@ -336,9 +336,14 @@ _vala_main (void)
 	Foo* foo = NULL;
 	Foo* _tmp0_;
 	GValue _tmp1_ = {0};
+	GValue _tmp2_ = {0};
 	_tmp0_ = foo_new ();
 	foo = _tmp0_;
 	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::foo", (GCallback) _fail_g_object_notify, NULL);
+	g_value_init (&_tmp1_, G_TYPE_STRING);
+	g_value_set_string (&_tmp1_, "foo");
+	g_object_set_property (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "foo", &_tmp1_);
+	G_IS_VALUE (&_tmp1_) ? (g_value_unset (&_tmp1_), NULL) : NULL;
 	foo_set_foo (foo, "foo");
 	counter = 0;
 	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::bar", (GCallback) _count_g_object_notify, NULL);
@@ -346,10 +351,10 @@ _vala_main (void)
 	_vala_assert (counter == 1, "counter == 1");
 	counter = 0;
 	g_signal_connect (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "notify::manam", (GCallback) _count_g_object_notify, NULL);
-	g_value_init (&_tmp1_, G_TYPE_STRING);
-	g_value_set_string (&_tmp1_, "manam");
-	g_object_set_property (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "manam", &_tmp1_);
-	G_IS_VALUE (&_tmp1_) ? (g_value_unset (&_tmp1_), NULL) : NULL;
+	g_value_init (&_tmp2_, G_TYPE_STRING);
+	g_value_set_string (&_tmp2_, "manam");
+	g_object_set_property (G_TYPE_CHECK_INSTANCE_CAST (foo, G_TYPE_OBJECT, GObject), "manam", &_tmp2_);
+	G_IS_VALUE (&_tmp2_) ? (g_value_unset (&_tmp2_), NULL) : NULL;
 	_vala_assert (counter == 1, "counter == 1");
 	_g_object_unref0 (foo);
 }

@@ -20,8 +20,7 @@ void main () {
 	var foo = new Foo ();
 
 	foo.notify["foo"].connect (fail);
-	//FIXME Requires --target-glib=2.42 for G_PARAM_EXPLICIT_NOTIFY to be actually added
-	//foo.set_property ("foo", "foo");
+	foo.set_property ("foo", "foo");
 	foo.foo = "foo";
 
 	counter = 0;
