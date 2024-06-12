@@ -4349,13 +4349,13 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.48")]
 	public struct InputMessage {
-		public weak GLib.SocketAddress address;
+		public GLib.SocketAddress** address;
 		[CCode (array_length_cname = "num_vectors", array_length_type = "guint")]
 		public weak GLib.InputVector[] vectors;
 		public uint num_vectors;
 		public size_t bytes_received;
 		public int flags;
-		public GLib.SocketControlMessage*** control_messages;
+		public GLib.SocketControlMessage** control_messages;
 		public uint* num_control_messages;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
@@ -4372,8 +4372,9 @@ namespace GLib {
 		public weak GLib.OutputVector[] vectors;
 		public uint num_vectors;
 		public uint bytes_sent;
-		public GLib.SocketControlMessage*** control_messages;
-		public uint* num_control_messages;
+		[CCode (array_length_cname = "num_control_messages", array_length_type = "guint")]
+		public weak GLib.SocketControlMessage[]? control_messages;
+		public uint num_control_messages;
 	}
 	[CCode (cheader_filename = "gio/gio.h", has_type_id = false)]
 	[Version (since = "2.22")]
