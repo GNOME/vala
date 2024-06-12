@@ -317,12 +317,12 @@ TlsFileDatabase
 TlsServerConnection
   .new nullable
 InputMessage
-  .control_messages type="GLib.SocketControlMessage***"
+  .address type="GLib.SocketAddress**"
+  .control_messages type="GLib.SocketControlMessage**"
   .num_control_messages type="uint*"
 OutputMessage
   .vectors array
-  .control_messages type="GLib.SocketControlMessage***"
-  .num_control_messages type="uint*"
+  .control_messages nullable
 DBusError errordomain
 DBusSubtreeEnumerateFunc unowned=false skip=false
 pollable_source_new parent="GLib.PollableSource" symbol_type="constructor" name="new"
