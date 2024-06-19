@@ -516,7 +516,7 @@ namespace LibUSB {
 		public TransferStatus status;
 	}
 
-	[CCode (cname = "libusb_transfer_cb_fn")]
+	[CCode (cname = "libusb_transfer_cb_fn", has_target = false)]
 	public delegate void TransferCb (Transfer transfer);
 
 	[CCode (cname = "struct libusb_transfer", cprefix = "libusb_", free_function = "libusb_free_transfer")]
@@ -530,8 +530,8 @@ namespace LibUSB {
 		public TransferStatus status;
 		public int length;
 		public int actual_length;
-		[CCode (delegate_target_cname = "user_data")]
 		public TransferCb @callback;
+		public void* user_data;
 		[CCode (array_length_cname = "length")]
 		public uint8[] buffer;
 		public int num_iso_packets;
@@ -550,10 +550,10 @@ namespace LibUSB {
 		public unowned ControlSetup control_get_setup ();
 
 		public static void fill_control_setup ([CCode (array_length = false)] uint8[] buffer, uint8 bmRequestType, uint8 bRequest, uint16 wValue, uint16 wIndex, uint16 wLength);
-		public void fill_control_transfer (DeviceHandle dev_handle, [CCode (array_length = false)] uint8[] buffer, TransferCb @callback, uint timeout);
-		public void fill_bulk_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, uint timeout);
-		public void fill_interrupt_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, uint timeout);
-		public void fill_iso_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, int num_iso_packets, TransferCb @callback, uint timeout);
+		public void fill_control_transfer (DeviceHandle dev_handle, [CCode (array_length = false)] uint8[] buffer, TransferCb @callback, void* user_data, uint timeout);
+		public void fill_bulk_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, void* user_data, uint timeout);
+		public void fill_interrupt_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, TransferCb @callback, void* user_data, uint timeout);
+		public void fill_iso_transfer (DeviceHandle dev_handle, uint8 endpoint, uint8[] buffer, int num_iso_packets, TransferCb @callback, void* user_data, uint timeout);
 		public void set_iso_packet_lengths (uint length);
 		[CCode (array_length = false)]
 		public unowned uint8[] get_iso_packet_buffer (uint packet);
