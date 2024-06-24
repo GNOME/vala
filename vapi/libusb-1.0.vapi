@@ -567,7 +567,7 @@ namespace LibUSB {
 	public delegate void pollfd_removed_cb (int fd, void* user_data);
 
 	[CCode (cname = "libusb_hotplug_callback_fn")]
-	public delegate void HotPlugCb (Context ctx, Device device, HotPlugEvent event);
+	public delegate int HotPlugCb (Context ctx, Device device, HotPlugEvent event);
 
 	[CCode (cname = "struct libusb_pollfd")]
 	[Compact]
