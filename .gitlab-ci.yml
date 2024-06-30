@@ -14,44 +14,44 @@ include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
     EXPORT_RUNTIME: "--runtime"
     RUN_TESTS: "no"
 
-.vars-22.08:
-  extends: [".vars-extension"]
-  # Use the image from the last stable runtime that includes 22.08 sdk
-  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-44'
-  variables:
-    BRANCH: "22.08"
-
 .vars-23.08:
   extends: [".vars-extension"]
+  # Use the image from the last stable runtime that includes 23.08 sdk
+  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-46'
   variables:
     BRANCH: "23.08"
-  before_script:
-    - sed -i "s/22.08/$BRANCH/g" $MANIFEST_PATH
 
-flatpak-extension@22.08@x86_64:
-  extends: [".flatpak@x86_64", ".vars-22.08"]
+.vars-24.08:
+  extends: [".vars-extension"]
+  variables:
+    BRANCH: "24.08beta"
+  before_script:
+    - sed -i "s/23.08/$BRANCH/g" $MANIFEST_PATH
 
 flatpak-extension@23.08@x86_64:
   extends: [".flatpak@x86_64", ".vars-23.08"]
 
-flatpak-extension@22.08@aarch64:
-  extends: [".flatpak@aarch64", ".vars-22.08"]
+flatpak-extension@24.08@x86_64:
+  extends: [".flatpak@x86_64", ".vars-24.08"]
 
 flatpak-extension@23.08@aarch64:
   extends: [".flatpak@aarch64", ".vars-23.08"]
 
-nightly@22.08@x86_64:
-  extends: [".publish_nightly", ".flatpak rules"]
-  needs: ["flatpak-extension@22.08@x86_64"]
+flatpak-extension@24.08@aarch64:
+  extends: [".flatpak@aarch64", ".vars-24.08"]
 
 nightly@23.08@x86_64:
   extends: [".publish_nightly", ".flatpak rules"]
   needs: ["flatpak-extension@23.08@x86_64"]
 
-nightly@22.08@aarch64:
+nightly@24.08@x86_64:
   extends: [".publish_nightly", ".flatpak rules"]
-  needs: ["flatpak-extension@22.08@aarch64"]
+  needs: ["flatpak-extension@24.08@x86_64"]
 
 nightly@23.08@aarch64:
   extends: [".publish_nightly", ".flatpak rules"]
   needs: ["flatpak-extension@23.08@aarch64"]
+
+nightly@24.08@aarch64:
+  extends: [".publish_nightly", ".flatpak rules"]
+  needs: ["flatpak-extension@24.08@aarch64"]

@@ -1,9 +1,9 @@
 id: "org.freedesktop.Sdk.Extension.vala-nightly"
-branch: "22.08"
+branch: "23.08"
 runtime: "org.freedesktop.Sdk"
 build-extension: true
 sdk: "org.freedesktop.Sdk"
-runtime-version: "22.08"
+runtime-version: "23.08"
 sdk-extensions: ["org.freedesktop.Sdk.Extension.vala"]
 separate-locales: false
 appstream-compose: false
@@ -77,6 +77,9 @@ modules:
         cleanup: ["/lib/pkgconfig"]
       - name: gee
         buildsystem: autotools
+        build-options:
+          # GCC 14 doesn't like this libgee release
+          cflags: -Wno-error=incompatible-pointer-types
         sources:
           - type: archive
             url: "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.6.tar.xz"
@@ -114,5 +117,4 @@ modules:
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/metainfo
       - cp ${FLATPAK_ID}.appdata.xml ${FLATPAK_DEST}/share/metainfo
-      - appstream-compose --basename ${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak
-        ${FLATPAK_ID}
+      - appstreamcli compose --components=${FLATPAK_ID} --prefix=/ --origin=${FLATPAK_ID} --result-root=${FLATPAK_DEST} --data-dir=${FLATPAK_DEST}/share/app-info/xmls ${FLATPAK_DEST}
