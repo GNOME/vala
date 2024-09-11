@@ -24,7 +24,7 @@ include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
 .vars-24.08:
   extends: [".vars-extension"]
   variables:
-    BRANCH: "24.08beta"
+    BRANCH: "24.08"
   before_script:
     - sed -i "s/23.08/$BRANCH/g" $MANIFEST_PATH
 
