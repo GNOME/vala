@@ -858,12 +858,14 @@ namespace GLib {
 		public static bool type_transformable (GLib.Type src_type, GLib.Type dest_type);
 		public void unset ();
 	}
-	[CCode (cheader_filename = "glib-object.h", destroy_function = "g_weak_ref_clear", has_type_id = false, lvalue_access = false)]
+	[CCode (cheader_filename = "glib-object.h", has_copy_function = false, destroy_function = "g_weak_ref_clear", has_type_id = false, lvalue_access = false)]
 	[Version (since = "2.32")]
 	public struct WeakRef {
 		public WeakRef (GLib.Object? object);
 		public GLib.Object? @get ();
 		public void @set (GLib.Object? object);
+		[CCode (cname = "priv.p")]
+		private void* p;
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_BINDING_", type_id = "G_TYPE_BINDING_FLAGS")]
 	[Flags]
