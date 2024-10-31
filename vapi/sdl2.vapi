@@ -3694,7 +3694,7 @@ namespace SDL {
 		[SimpleType]
 		[IntegerType (rank = 6)]
 		[CCode (cname = "SDL_JoystickID", cheader_filename = "SDL2/SDL_joystick.h")]
-		public struct JoystickID {}// JoystickID
+		public struct JoystickID : int32 {}// JoystickID
 
 		[Version (since = "2.0.4")]
 		[CCode (cname = "SDL_JoystickPowerLevel", cprefix = "SDL_JOYSTICK_POWER_", cheader_filename = "SDL2/SDL_joystick.h")]
