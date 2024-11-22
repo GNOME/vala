@@ -941,10 +941,14 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_TYPE_FLAG_", has_type_id = false)]
 	[Flags]
 	public enum TypeFlags {
+		[Version (since = "2.74")]
+		NONE,
 		ABSTRACT,
 		VALUE_ABSTRACT,
 		[Version (since = "2.70")]
-		FINAL
+		FINAL,
+		[Version (since = "2.76")]
+		DEPRECATED
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_TYPE_FLAG_", has_type_id = false)]
 	[Flags]
