@@ -694,9 +694,6 @@ Demonstrating...
 Using Properties
 ~~~~~~~~~~~~~~~~
 
-For more examples see: `Samples for Class
-Properties <https://live.gnome.org/Vala/PropertiesSample>`__
-
 Virtual Properties
 ''''''''''''''''''
 

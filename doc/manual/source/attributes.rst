@@ -606,7 +606,7 @@ Other attributes
      -
    * - ``ModuleInit``
      - method
-     - Marks the associated type as dynamic, and marks the method as a `TypeModule <https://valadoc.org/gobject-2.0/GLib.TypeModule>`__ init function. See `TypeModule example <https://wiki.gnome.org/Projects/Vala/TypeModuleSample>`__
+     - Marks the associated type as dynamic, and marks the method as a `TypeModule <https://valadoc.org/gobject-2.0/GLib.TypeModule>`__ init function. See `TypeModule example <https://docs.vala.dev/developer-guides/plugins/01-type-modules.html>`__
    * - ``NoAccessorMethod``
      - property
      -

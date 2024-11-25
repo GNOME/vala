@@ -2,7 +2,7 @@ AC_PREREQ([2.65])
 AC_INIT([vala], m4_esyscmd([build-aux/git-version-gen --prefix '' .tarball-version]),
 	[https://gitlab.gnome.org/GNOME/vala/issues],
 	[vala],
-	[https://wiki.gnome.org/Projects/Vala])
+	[https://vala.dev])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS(config.h)

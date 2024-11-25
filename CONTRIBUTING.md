@@ -1,1 +1,1 @@
-Please read our wiki page [Documentation for Contributors to Vala](https://wiki.gnome.org/Projects/Vala/DeveloperDocumentation)
+Please read our [Documentation for Contributors to Vala](https://docs.vala.dev/contributor-guide/)
