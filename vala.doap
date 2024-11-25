@@ -30,9 +30,9 @@ libraries from applications written in e.g. C# as the Vala parser is written as
 a library, so that all compile-time information is available when generating a
 binding.</description>
 
-  <homepage rdf:resource="https://wiki.gnome.org/Projects/Vala" />
+  <homepage rdf:resource="https://vala.dev" />
   <developer-forum rdf:resource="https://discourse.gnome.org/tag/vala" />
-  <download-page rdf:resource="https://wiki.gnome.org/Projects/Vala/Release" />
+  <download-page rdf:resource="https://download.gnome.org/sources/vala/" />
   <bug-database rdf:resource="https://gitlab.gnome.org/GNOME/vala/issues" />
 
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />

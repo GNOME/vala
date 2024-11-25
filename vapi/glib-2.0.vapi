@@ -4694,9 +4694,6 @@ namespace GLib {
 		public string[] fetch_all ();
 	}
 
-	/* Simple XML Subset Parser
-	   See http://live.gnome.org/Vala/MarkupSample for an example */
-
 	[CCode (has_type_id = false)]
 	public errordomain MarkupError {
 		BAD_UTF8,

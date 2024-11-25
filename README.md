@@ -37,7 +37,7 @@ bindings generator for access to Vala libraries from applications
 written in e.g. C# as the Vala parser is written as a library, so that
 all compile-time information is available when generating a binding.
 
-More information about Vala is available at [https://wiki.gnome.org/Projects/Vala/](https://wiki.gnome.org/Projects/Vala/)
+More information about Vala is available at [https://vala.dev](https://vala.dev)
 
 
 ## Building Vala
@@ -84,7 +84,7 @@ to bootstrap `valac`.
 
 Current releases of source tarballs can be downloaded via:
 
-https://wiki.gnome.org/Projects/Vala
+https://download.gnome.org/sources/vala/
 
 or the vala-bootstrap module is available at:
 

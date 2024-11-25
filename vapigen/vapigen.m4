@@ -20,7 +20,6 @@ dnl Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  US
 # --------------------------------------
 # Check vapigen existence and version
 #
-# See http://live.gnome.org/Vala/UpstreamGuide for detailed documentation
 AC_DEFUN([VAPIGEN_CHECK],
 [
   AS_IF([test "x$3" != "xyes"], [
