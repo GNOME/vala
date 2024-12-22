@@ -799,7 +799,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (!is_dbus_visible (prop)) {
 				continue;
 			}
-			if (prop.get_accessor == null) {
+			if (prop.get_accessor == null || prop.get_accessor.access == SymbolAccessibility.PRIVATE) {
 				continue;
 			}
 
@@ -864,7 +864,7 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			if (!is_dbus_visible (prop)) {
 				continue;
 			}
-			if (prop.set_accessor == null) {
+			if (prop.set_accessor == null || prop.set_accessor.access == SymbolAccessibility.PRIVATE || !prop.set_accessor.writable) {
 				continue;
 			}
 

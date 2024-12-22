@@ -429,11 +429,13 @@ public class Vala.GDBusModule : GVariantModule {
 			info.append (new CCodeConstant ("-1"));
 			info.append (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 			info.append (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature (prop))));
-			if (prop.get_accessor != null && prop.set_accessor != null) {
+			var readable = prop.get_accessor != null && prop.get_accessor.access != SymbolAccessibility.PRIVATE;
+			var writable = prop.set_accessor != null && prop.set_accessor.access != SymbolAccessibility.PRIVATE && prop.set_accessor.writable;
+			if (readable && writable) {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_READABLE | G_DBUS_PROPERTY_INFO_FLAGS_WRITABLE"));
-			} else if (prop.get_accessor != null) {
+			} else if (readable) {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_READABLE"));
-			} else if (prop.set_accessor != null) {
+			} else if (writable) {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_WRITABLE"));
 			} else {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_NONE"));
