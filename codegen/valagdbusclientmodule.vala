@@ -99,11 +99,11 @@ public class Vala.GDBusClientModule : GDBusModule {
 				continue;
 			}
 
-			if (prop.get_accessor != null) {
+			if (prop.get_accessor != null && prop.get_accessor.access != SymbolAccessibility.PRIVATE) {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)));
 			}
-			if (prop.set_accessor != null) {
+			if (prop.set_accessor != null && prop.set_accessor.access != SymbolAccessibility.PRIVATE && prop.set_accessor.writable) {
 				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
 				ccode.add_assignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)));
 			}

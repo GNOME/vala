@@ -863,6 +863,7 @@ TESTS = \
 	dbus/bug792277.vala \
 	dbus/rawvariants.test \
 	dbus/interface-info.test \
+	dbus/property-access.test \
 	gir/bug651773.gir \
 	gir/bug667751.gir \
 	gir/bug742012.gir \
