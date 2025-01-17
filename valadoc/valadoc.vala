@@ -33,7 +33,7 @@ public class ValaDoc : Object {
 	private static string[] pluginargs;
 	private static string directory = null;
 	private static string pkg_name = null;
-	private static string gir_name = null;
+	private static string gir = null;
 	private static string gir_namespace = null;
 	private static string gir_version = null;
 
@@ -109,7 +109,7 @@ public class ValaDoc : Object {
 
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "NAME" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "VERSION" },
-		{ "gir", 0, 0, OptionArg.STRING, ref gir_name, "GObject-Introspection repository file name", "NAME-VERSION.gir" },
+		{ "gir", 0, 0, OptionArg.STRING, ref gir, "GObject-Introspection repository file name", "NAME-VERSION.gir" },
 
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 
@@ -256,21 +256,22 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		if (gir_name != null) {
-			long gir_len = gir_name.length;
-			int last_hyphen = gir_name.last_index_of_char ('-');
+		if (gir != null) {
+			string gir_base = Path.get_basename (gir);
+			long gir_len = gir_base.length;
+			int last_hyphen = gir_base.last_index_of_char ('-');
 
-			if (last_hyphen == -1 || !gir_name.has_suffix (".gir")) {
-				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+			if (last_hyphen == -1 || !gir_base.has_suffix (".gir")) {
+				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir);
 				return quit (reporter);
 			}
 
-			gir_namespace = gir_name.substring (0, last_hyphen);
-			gir_version = gir_name.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
+			gir_namespace = gir_base.substring (0, last_hyphen);
+			gir_version = gir_base.substring (last_hyphen + 1, gir_len - last_hyphen - 5);
 			gir_version.canon ("0123456789.", '?');
 
 			if (gir_namespace == "" || gir_version == "" || !gir_version[0].isdigit () || gir_version.contains ("?")) {
-				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir_name);
+				reporter.simple_error (null, "GIR file name '%s' is not well-formed, expected NAME-VERSION.gir", gir);
 				return quit (reporter);
 			}
 
@@ -296,9 +297,9 @@ public class ValaDoc : Object {
 		settings.pkg_name = this.get_pkg_name ();
 		settings.gir_namespace = ValaDoc.gir_namespace;
 		settings.gir_version = ValaDoc.gir_version;
-		if (ValaDoc.gir_name != null) {
-			settings.gir_name = GLib.Path.get_basename (ValaDoc.gir_name);
-			settings.gir_directory = GLib.Path.get_dirname (ValaDoc.gir_name);
+		if (gir != null) {
+			settings.gir_name = GLib.Path.get_basename (ValaDoc.gir);
+			settings.gir_directory = GLib.Path.get_dirname (ValaDoc.gir);
 			if (settings.gir_directory == "") {
 				settings.gir_directory = GLib.Path.get_dirname (ValaDoc.directory);
 			}
@@ -379,7 +380,7 @@ public class ValaDoc : Object {
 			return quit (reporter);
 		}
 
-		if (ValaDoc.gir_name != null) {
+		if (gir != null) {
 			var gir_writer = new GirWriter (resolver);
 			gir_writer.write_file (doctree.context,
 				settings.gir_directory,
