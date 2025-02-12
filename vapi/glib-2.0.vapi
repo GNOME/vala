@@ -4650,6 +4650,8 @@ namespace GLib {
 		public int get_capture_count ();
 		public int get_string_number (string name);
 		public static string escape_string (string str, int length = -1);
+		[Version (since = "2.30")]
+		public static string escape_nul (char[] str);
 		public static bool match_simple (string pattern, string str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		public bool match (string str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
 		public bool match_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
