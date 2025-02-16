@@ -4587,6 +4587,8 @@ namespace GLib {
 	[CCode (cprefix = "G_REGEX_", has_type_id = false)]
 	[Flags]
 	public enum RegexCompileFlags {
+		[Version (since = "2.74")]
+		DEFAULT,
 		CASELESS,
 		MULTILINE,
 		DOTALL,
@@ -4603,6 +4605,7 @@ namespace GLib {
 		NEWLINE_CRLF,
 		NEWLINE_ANYCRLF,
 		BSR_ANYCRLF,
+		[Version (deprecated_since = "2.74")]
 		JAVASCRIPT_COMPAT
 	}
 
@@ -4610,6 +4613,8 @@ namespace GLib {
 	[CCode (cprefix = "G_REGEX_MATCH_", has_type_id = false)]
 	[Flags]
 	public enum RegexMatchFlags {
+		[Version (since = "2.74")]
+		DEFAULT,
 		ANCHORED,
 		NOTBOL,
 		NOTEOL,
