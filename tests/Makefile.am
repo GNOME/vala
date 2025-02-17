@@ -905,6 +905,7 @@ TESTS = \
 	gir/delegate-closure-destroy-index-conflict.gir \
 	gir/delegate-error-pos.gir \
 	gir/dev_t.gir \
+	gir/doc-format.gir \
 	gir/enum.gir \
 	gir/errordomain.gir \
 	gir/gid_t.gir \
