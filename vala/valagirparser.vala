@@ -2057,6 +2057,9 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
+			} else if (reader.name == "doc:format") {
+				//TODO Handle this format information properly
+				skip_element ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `repository'", reader.name);

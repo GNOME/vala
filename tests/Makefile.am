@@ -880,6 +880,7 @@ TESTS = \
 	gir/delegate-array-length-type.gir \
 	gir/delegate-closure-destroy-index-conflict.gir \
 	gir/delegate-error-pos.gir \
+	gir/doc-format.gir \
 	gir/enum.gir \
 	gir/errordomain.gir \
 	gir/gtype-struct-name.gir \
