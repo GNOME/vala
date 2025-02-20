@@ -8,7 +8,7 @@ check-girwriter: $(top_builddir)/valadoc/valadoc
 		--directory $(builddir)/girtest \
 		--doclet=$(top_builddir)/valadoc/doclets/html/.libs \
 		--pkg gio-2.0 \
-		--gir GirTest-1.0.gir \
+		--gir $(builddir)/GirTest-1.0.gir \
 		$(srcdir)/girtest.vala; \
 	tail -n +3 GirTest-1.0.gir | diff -wu $(srcdir)/GirTest-1.0.gir-expected - || exit 1;
 if HAVE_G_IR_COMPILER
