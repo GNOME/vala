@@ -7,7 +7,7 @@ check-girwriter: $(top_builddir)/compiler/valac
 		--disable-version-header \
 		--vapidir $(top_srcdir)/vapi \
 		--pkg gio-2.0 \
-		--gir GirTest-1.0.gir \
+		--gir $(builddir)/GirTest-1.0.gir \
 		--library girtest \
 		--shared-library girtest \
 		$(srcdir)/girtest.vala; \
