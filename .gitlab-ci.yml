@@ -1,0 +1,34 @@
+include:
+  - project: "GNOME/citemplates"
+    file: "templates/default-rules.yml"
+  - component: gitlab.gnome.org/GNOME/citemplates/release-service@master
+    inputs:
+      dist-job-name: "build-release-tarball"
+      tarball-artifact-path: "${TARBALL_ARTIFACT_PATH}"
+
+variables:
+  TARBALL_ARTIFACT_PATH: "${CI_PROJECT_NAME}-${CI_COMMIT_TAG}.tar.xz"
+
+build-release-tarball:
+  stage: build
+  image: ubuntu:24.04
+  variables:
+    DEBIAN_FRONTEND: noninteractive
+  before_script:
+    - apt update
+    - apt install -y automake autoconf-archive libtool bison dbus flex git libglib2.0-dev libgraphviz-dev libgirepository1.0-dev lcov xsltproc make valac weasyprint
+  script:
+    - git fetch --tags
+    - ./autogen.sh --prefix=/tmp/vala --enable-unversioned --disable-valadoc
+    - make --jobs=$(nproc)
+    - make install
+    - git clean -dxf
+    - ./autogen.sh LD_LIBRARY_PATH=/tmp/vala/lib/ VALAC=/tmp/vala/bin/valac --prefix=/usr --libdir=/usr/lib/$(gcc -print-multiarch) --enable-unversioned
+    - make --jobs=$(nproc)
+    - make --jobs=$(nproc) distcheck
+  artifacts:
+    expire_in: "2 days"
+    when: "always"
+    paths:
+      - "${TARBALL_ARTIFACT_PATH}"
+
