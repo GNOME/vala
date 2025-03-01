@@ -2,27 +2,36 @@
 
 [CCode (cprefix = "Pango", gir_namespace = "PangoCairo", gir_version = "1.0", lower_case_cprefix = "pango_")]
 namespace Pango {
-	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_get_type ()")]
+	[CCode (cheader_filename = "pango/pangocairo.h", lower_case_cprefix = "pango_font_", type_id = "pango_cairo_font_get_type ()")]
 	[GIR (name = "Font")]
 	[Version (since = "1.18")]
 	public interface CairoFont : Pango.Font {
+		[CCode (cname = "pango_cairo_font_get_scaled_font")]
 		public unowned Cairo.ScaledFont? get_scaled_font ();
 	}
-	[CCode (cheader_filename = "pango/pangocairo.h", type_id = "pango_cairo_font_map_get_type ()")]
+	[CCode (cheader_filename = "pango/pangocairo.h", lower_case_cprefix = "pango_font_map_", type_id = "pango_cairo_font_map_get_type ()")]
 	[GIR (name = "FontMap")]
 	[Version (since = "1.10")]
 	public interface CairoFontMap : Pango.FontMap {
+		[CCode (cname = "pango_cairo_font_map_create_context")]
 		[Version (deprecated = true, deprecated_since = "1.22", since = "1.10")]
 		public unowned Pango.Context create_context ();
+		[CCode (cname = "pango_cairo_font_map_get_default")]
 		public static unowned Pango.FontMap get_default ();
+		[CCode (cname = "pango_cairo_font_map_get_font_type")]
 		[Version (since = "1.18")]
 		public Cairo.FontType get_font_type ();
+		[CCode (cname = "pango_cairo_font_map_get_resolution")]
 		public double get_resolution ();
+		[CCode (cname = "pango_cairo_font_map_new")]
 		public static Pango.FontMap @new ();
+		[CCode (cname = "pango_cairo_font_map_new_for_font_type")]
 		[Version (since = "1.18")]
 		public static Pango.FontMap? new_for_font_type (Cairo.FontType fonttype);
+		[CCode (cname = "pango_cairo_font_map_set_default")]
 		[Version (since = "1.22")]
 		public static void set_default (Pango.CairoFontMap? fontmap);
+		[CCode (cname = "pango_cairo_font_map_set_resolution")]
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h", instance_pos = 3.9)]

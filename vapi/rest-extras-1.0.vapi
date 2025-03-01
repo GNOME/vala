@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Rest", gir_namespace = "RestExtras", gir_version = "1.0", lower_case_cprefix = "rest_")]
 namespace Rest {
-	[CCode (cheader_filename = "rest-extras/flickr-proxy.h", cname = "FlickrProxy", lower_case_cprefix = "rest_extras_flickr_proxy_", type_id = "flickr_proxy_get_type ()")]
+	[CCode (cheader_filename = "rest-extras/flickr-proxy.h", cname = "FlickrProxy", type_id = "flickr_proxy_get_type ()")]
 	public class FlickrProxy : Rest.Proxy {
 		[CCode (cname = "flickr_proxy_new", has_construct_function = false, type = "RestProxy*")]
 		public FlickrProxy (string api_key, string shared_secret);
@@ -33,14 +33,14 @@ namespace Rest {
 		[NoAccessorMethod]
 		public string token { owned get; set; }
 	}
-	[CCode (cheader_filename = "rest-extras/flickr-proxy-call.h", cname = "FlickrProxyCall", lower_case_cprefix = "rest_extras_flickr_proxy_call_", type_id = "flickr_proxy_call_get_type ()")]
+	[CCode (cheader_filename = "rest-extras/flickr-proxy-call.h", cname = "FlickrProxyCall", type_id = "flickr_proxy_call_get_type ()")]
 	public class FlickrProxyCall : Rest.ProxyCall {
 		[CCode (has_construct_function = false)]
 		protected FlickrProxyCall ();
 		[NoAccessorMethod]
 		public bool upload { construct; }
 	}
-	[CCode (cheader_filename = "rest-extras/lastfm-proxy.h", cname = "LastfmProxy", lower_case_cprefix = "rest_extras_lastfm_proxy_", type_id = "lastfm_proxy_get_type ()")]
+	[CCode (cheader_filename = "rest-extras/lastfm-proxy.h", cname = "LastfmProxy", type_id = "lastfm_proxy_get_type ()")]
 	public class LastfmProxy : Rest.Proxy {
 		[CCode (cname = "lastfm_proxy_new", has_construct_function = false, type = "RestProxy*")]
 		public LastfmProxy (string api_key, string secret);
@@ -67,12 +67,12 @@ namespace Rest {
 		[NoAccessorMethod]
 		public string session_key { owned get; set; }
 	}
-	[CCode (cheader_filename = "rest-extras/lastfm-proxy-call.h", cname = "LastfmProxyCall", lower_case_cprefix = "rest_extras_lastfm_proxy_call_", type_id = "lastfm_proxy_call_get_type ()")]
+	[CCode (cheader_filename = "rest-extras/lastfm-proxy-call.h", cname = "LastfmProxyCall", type_id = "lastfm_proxy_call_get_type ()")]
 	public class LastfmProxyCall : Rest.ProxyCall {
 		[CCode (has_construct_function = false)]
 		protected LastfmProxyCall ();
 	}
-	[CCode (cheader_filename = "rest-extras/youtube-proxy.h", cname = "YoutubeProxy", lower_case_cprefix = "rest_extras_youtube_proxy_", type_id = "youtube_proxy_get_type ()")]
+	[CCode (cheader_filename = "rest-extras/youtube-proxy.h", cname = "YoutubeProxy", type_id = "youtube_proxy_get_type ()")]
 	public class YoutubeProxy : Rest.Proxy {
 		[CCode (cname = "youtube_proxy_new", has_construct_function = false, type = "RestProxy*")]
 		public YoutubeProxy (string developer_key);
