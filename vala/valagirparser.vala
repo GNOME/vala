@@ -2224,6 +2224,8 @@ public class Vala.GirParser : CodeVisitor {
 	void parse_namespace () {
 		start_element ("namespace");
 
+		//TODO Handle all given prefixes instead of taking the first one
+
 		string? cprefix = reader.get_attribute ("c:identifier-prefixes");
 		if (cprefix != null) {
 			int idx = cprefix.index_of (",");
@@ -2285,10 +2287,14 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (ns_metadata.has_argument (ArgumentType.CPREFIX)) {
 			cprefix = ns_metadata.get_string (ArgumentType.CPREFIX);
+			//NOTE Explicitly patch our girdata while not all prefixes are handled
+			current.girdata["c:identifier-prefixes"] = cprefix;
 		}
 
 		if (ns_metadata.has_argument (ArgumentType.LOWER_CASE_CPREFIX)) {
 			lower_case_cprefix = ns_metadata.get_string (ArgumentType.LOWER_CASE_CPREFIX);
+			//NOTE Explicitly patch our girdata while not all prefixes are handled
+			current.girdata["c:symbol-prefixes"] = lower_case_cprefix.substring (0, lower_case_cprefix.length - 1);
 		} else if (lower_case_cprefix != null) {
 			lower_case_cprefix += "_";
 		}
