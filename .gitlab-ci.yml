@@ -1,4 +1,7 @@
-include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml"
+include:
+  - project: "gnome/citemplates"
+    file: "flatpak/flatpak_ci_initiative.yml"
+
 
 .flatpak rules:
   rules:
@@ -13,6 +16,7 @@ include: "https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_
     BUNDLE: "vala-extension.flatpak"
     EXPORT_RUNTIME: "--runtime"
     RUN_TESTS: "no"
+    MESON_DIST: "no"
 
 .vars-23.08:
   extends: [".vars-extension"]
