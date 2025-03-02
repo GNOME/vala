@@ -1,3 +1,31 @@
+Vala 0.56.18
+============
+ * Various improvements and bug fixes:
+  - vala: Don't allow inheritance of compact class from non-compact class
+  - vala, libvaladoc: Fix color support detection in log reporting
+  - girparser: Handle `doc:format` element in root:repository [#1586]
+  - codegen: Use correct ctype for result variable in methods in more cases
+  - codegen: Fix conditional expression with only one void side
+  - valadoc: Sync gir argument handling from valacompiler.vala
+  - Update links to GNOME Wiki project and refer to new Vala websites
+  - Add CI for tarball release service
+
+ * Bindings:
+  - gio-2.0: Improve the {Input,Output}Message bindings
+  - glib-2.0: Fix the binding of `get_console_charset`
+  - glib-2.0: Add missing CCode.array_null_terminated attributes to IConv.iconv()
+  - glib-2.0: Make FileStream.*printf() return int [#1547]
+  - glib-2.0: Update RegexMatchFlags and RegexCompileFlags's binding to 2.74
+  - glib-2.0: Add Regex.escape_nul in GLib
+  - gnu: add binding for 'relocate' APIs
+  - gobject-2.0: Add TypeFlags missing values
+  - gstreamer-1.0: Skip ParamSpecArray and ParamSpecFraction
+  - libusb-1.0: Fix the LibUSB.TransferCb declaration
+  - libusb-1.0: Fix the LibUSB.HotPlugCb declaration
+  - sdl2: Fix CCode.destroy_function of SDL.RWops and usage of
+    SDL.RWops.from_file() [#1550]
+  - sdl2: Fix missing integer type for JoystickID [#1563]
+
 Vala 0.56.17
 ============
  * Various improvements and bug fixes:
