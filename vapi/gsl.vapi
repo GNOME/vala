@@ -2021,7 +2021,9 @@ namespace Gsl
 		public static int SV_decomp_jacobi (Matrix A, Matrix V, Vector S);
 		public static int SV_solve (Matrix U, Matrix V, Vector S, Vector b, Vector x);
 
+		[Version (deprecated = true, deprecated_since = "2.2", replacement = "LinAlg.cholesky_decomp1")]
 		public static int cholesky_decomp (Matrix A);
+		public static int cholesky_decomp1 (Matrix A);
 		public static int complex_cholesky_decomp (MatrixComplex A);
 		public static int cholesky_solve (Matrix cholesky, Vector b, Vector x);
 		public static int complex_cholesky_solve (MatrixComplex cholesky, VectorComplex b, VectorComplex x);
