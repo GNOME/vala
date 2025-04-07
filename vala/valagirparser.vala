@@ -1396,6 +1396,7 @@ public class Vala.GirParser : CodeVisitor {
 	SourceLocation begin;
 	SourceLocation end;
 	MarkupTokenType current_token;
+	string? documentation_format;
 
 	string[] cheader_filenames;
 
@@ -1504,6 +1505,7 @@ public class Vala.GirParser : CodeVisitor {
 		metadata_stack = new ArrayList<Metadata> ();
 		metadata = Metadata.empty;
 		cheader_filenames = null;
+		documentation_format = null;
 
 		this.current_source_file = source_file;
 		reader = new MarkupReader (source_file.filename);
@@ -2120,8 +2122,10 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
 			} else if (reader.name == "doc:format") {
-				//TODO Handle this format information properly
-				skip_element ();
+				start_element ("doc:format");
+				documentation_format = reader.get_attribute ("name");
+				next ();
+				end_element ("doc:format");
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `repository'", reader.name);
@@ -2466,7 +2470,7 @@ public class Vala.GirParser : CodeVisitor {
 
 
 				if (current_token == MarkupTokenType.TEXT) {
-					comment = new GirComment (reader.content, current.source_reference);
+					comment = new GirComment (reader.content, current.source_reference, documentation_format);
 					next ();
 				}
 
@@ -2497,7 +2501,7 @@ public class Vala.GirParser : CodeVisitor {
 
 
 				if (current_token == MarkupTokenType.TEXT) {
-					comment = new Comment (reader.content, current.source_reference);
+					comment = new GirComment (reader.content, current.source_reference, documentation_format);
 					next ();
 				}
 
@@ -3422,7 +3426,7 @@ public class Vala.GirParser : CodeVisitor {
 			return_type = parse_return_value (out return_ctype, out return_array_length_idx, out return_no_array_length, out return_array_null_terminated, out return_comment);
 			if (return_comment != null) {
 				if (comment == null) {
-					comment = new GirComment (null, current.source_reference);
+					comment = new GirComment (null, current.source_reference, documentation_format);
 				}
 				comment.return_content = return_comment;
 			}
@@ -3701,7 +3705,7 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				if (param_comment != null) {
 					if (comment == null) {
-						comment = new GirComment (null, s.source_reference);
+						comment = new GirComment (null, s.source_reference, documentation_format);
 						s.comment = comment;
 					}
 

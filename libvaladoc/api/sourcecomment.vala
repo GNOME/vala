@@ -25,6 +25,24 @@
  * A documentation comment used by valadoc
  */
 public class Valadoc.Api.SourceComment {
+	public enum Format {
+		UNKNOWN,
+		GI_DOCGEN,
+		GTK_DOC_MARKDOWN,
+		GTK_DOC_DOCBOOK,
+		HOTDOC;
+
+		public static Format from_string (string val) {
+			var enum_class = (EnumClass) typeof(Format).class_ref ();
+			unowned GLib.EnumValue? enum_value = enum_class.get_value_by_nick (val);
+			if (enum_value != null) {
+				return (Format) enum_value.value;
+			}
+
+			return Format.UNKNOWN;
+		}
+	}
+
 	public SourceFile file {
 		private set;
 		get;
@@ -34,6 +52,14 @@ public class Valadoc.Api.SourceComment {
 	 * The text describing the referenced source code.
 	 */
 	public string content {
+		private set;
+		get;
+	}
+
+	/**
+	 * The format of the documentation comment.
+	 */
+	public Format format {
 		private set;
 		get;
 	}
@@ -70,14 +96,16 @@ public class Valadoc.Api.SourceComment {
 		get;
 	}
 
-	public SourceComment (string content, SourceFile file, int first_line, int first_column,
-						  int last_line, int last_column)
+	public SourceComment (string content, Format format, SourceFile file,
+						 int first_line, int first_column,
+						 int last_line, int last_column)
 	{
 		this.first_column = first_column;
 		this.last_column = last_column;
 		this.first_line = first_line;
 		this.last_line = last_line;
 		this.content = content;
+		this.format = format;
 		this.file = file;
 	}
 }
