@@ -85,6 +85,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 						Vala.SourceReference pos = c.source_reference;
 						if (c is Vala.GirComment) {
 							comment = new GirSourceComment (c.content,
+															Api.SourceComment.Format.UNKNOWN,
 															file,
 															pos.begin.line,
 															pos.begin.column,
@@ -92,6 +93,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 															pos.end.column);
 						} else {
 							comment = new SourceComment (c.content,
+														 Api.SourceComment.Format.UNKNOWN,
 														 file,
 														 pos.begin.line,
 														 pos.begin.column,
@@ -221,6 +223,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			SourceFile file = files.get (pos.file);
 			if (comment is Vala.GirComment) {
 				var tmp = new GirSourceComment (comment.content,
+												Api.SourceComment.Format.UNKNOWN,
 												file,
 												pos.begin.line,
 												pos.begin.column,
@@ -229,6 +232,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 				if (((Vala.GirComment) comment).return_content != null) {
 					Vala.SourceReference return_pos = ((Vala.GirComment) comment).return_content.source_reference;
 					tmp.return_comment = new SourceComment (((Vala.GirComment) comment).return_content.content,
+															Api.SourceComment.Format.UNKNOWN,
 															file,
 															return_pos.begin.line,
 															return_pos.begin.column,
@@ -241,6 +245,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 					Vala.Comment vala_param = it.get_value ();
 					Vala.SourceReference param_pos = vala_param.source_reference;
 					var param_comment = new SourceComment (vala_param.content,
+														   Api.SourceComment.Format.UNKNOWN,
 														   file,
 														   param_pos.begin.line,
 														   param_pos.begin.column,
@@ -251,6 +256,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 				return tmp;
 			} else {
 				return new SourceComment (comment.content,
+										  Api.SourceComment.Format.UNKNOWN,
 										  file,
 										  pos.begin.line,
 										  pos.begin.column,

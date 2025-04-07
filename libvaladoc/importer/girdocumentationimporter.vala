@@ -38,6 +38,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 	private Vala.SourceLocation begin;
 	private Vala.SourceLocation end;
 	private Vala.MarkupReader reader;
+	private Api.SourceComment.Format documentation_format;
 
 	private DocumentationParser parser;
 	private Api.SourceFile file;
@@ -217,6 +218,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_package ();
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
+			} else if (reader.name == "doc:format") {
+				parse_doc_format ();
 			} else {
 				// error
 				error ("unknown child element `%s' in `repository'".printf (reader.name));
@@ -245,6 +248,21 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		next ();
 
 		end_element ("c:include");
+	}
+
+	private void parse_doc_format () {
+		start_element ("doc:format");
+		var format_name = reader.get_attribute ("name");
+		if (format_name != null) {
+			documentation_format = Api.SourceComment.Format.from_string (format_name);
+
+			if (documentation_format == Api.SourceComment.Format.UNKNOWN && format_name != "unknown") {
+				warning ("Unknown documentation format `%s'".printf (format_name));
+			}
+		}
+
+		next ();
+		end_element ("doc:format");
 	}
 
 	private void skip_element () {
@@ -331,7 +349,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				next ();
 
 				if (current_token == Vala.MarkupTokenType.TEXT) {
-					comment = new Api.GirSourceComment (reader.content, file, begin.line,
+					comment = new Api.GirSourceComment (reader.content, documentation_format, file, begin.line,
 														begin.column, end.line, end.column);
 					next ();
 				}
@@ -372,7 +390,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		Api.SourceComment? comment = null;
 
 		if (current_token == Vala.MarkupTokenType.TEXT) {
-			comment = new Api.SourceComment (reader.content, file, begin.line,
+			comment = new Api.SourceComment (reader.content, documentation_format, file, begin.line,
 											 begin.column, end.line, end.column);
 			next ();
 		}
@@ -697,7 +715,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 			parse_return_value (out return_comment, out array_length_ret);
 			if (return_comment != null) {
 				if (comment == null) {
-					comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+					comment = new Api.GirSourceComment ("", documentation_format, file, begin.line, begin.column,
 														end.line, end.column);
 				}
 				comment.return_comment = return_comment;
@@ -719,7 +737,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 				if (param_comment != null) {
 					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+						comment = new Api.GirSourceComment ("", documentation_format, file, begin.line, begin.column,
 															end.line, end.column);
 					}
 
@@ -753,7 +771,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 
 				if (param_comment != null) {
 					if (comment == null) {
-						comment = new Api.GirSourceComment ("", file, begin.line, begin.column,
+						comment = new Api.GirSourceComment ("", documentation_format, file, begin.line, begin.column,
 															end.line, end.column);
 					}
 
