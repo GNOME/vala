@@ -50,8 +50,8 @@ public class Valadoc.Api.GirSourceComment : SourceComment {
 		return parameters.get (param_name);
 	}
 
-	public GirSourceComment (string content, SourceFile file, int first_line, int first_column, int last_line, int last_column) {
-		base (content, file, first_line, first_column, last_line, last_column);
+	public GirSourceComment (string content, SourceComment.Format format, SourceFile file, int first_line, int first_column, int last_line, int last_column) {
+		base (content, format, file, first_line, first_column, last_line, last_column);
 	}
 }
 

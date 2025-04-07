@@ -85,6 +85,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 						Vala.SourceReference pos = c.source_reference;
 						if (c is Vala.GirComment) {
 							comment = new GirSourceComment (c.content,
+															get_comment_format (c),
 															file,
 															pos.begin.line,
 															pos.begin.column,
@@ -92,6 +93,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 															pos.end.column);
 						} else {
 							comment = new SourceComment (c.content,
+														 Api.SourceComment.Format.UNKNOWN,
 														 file,
 														 pos.begin.line,
 														 pos.begin.column,
@@ -220,15 +222,19 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 			Vala.SourceReference pos = comment.source_reference;
 			SourceFile file = files.get (pos.file);
 			if (comment is Vala.GirComment) {
+				Api.SourceComment.Format format = get_comment_format (comment);
 				var tmp = new GirSourceComment (comment.content,
+												format,
 												file,
 												pos.begin.line,
 												pos.begin.column,
 												pos.end.line,
 												pos.end.column);
 				if (((Vala.GirComment) comment).return_content != null) {
-					Vala.SourceReference return_pos = ((Vala.GirComment) comment).return_content.source_reference;
-					tmp.return_comment = new SourceComment (((Vala.GirComment) comment).return_content.content,
+					Vala.Comment return_comment = ((Vala.GirComment) comment).return_content;
+					Vala.SourceReference return_pos = return_comment.source_reference;
+					tmp.return_comment = new SourceComment (return_comment.content,
+															get_comment_format (return_comment),
 															file,
 															return_pos.begin.line,
 															return_pos.begin.column,
@@ -241,6 +247,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 					Vala.Comment vala_param = it.get_value ();
 					Vala.SourceReference param_pos = vala_param.source_reference;
 					var param_comment = new SourceComment (vala_param.content,
+														   get_comment_format (vala_param),
 														   file,
 														   param_pos.begin.line,
 														   param_pos.begin.column,
@@ -251,6 +258,7 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 				return tmp;
 			} else {
 				return new SourceComment (comment.content,
+										  Api.SourceComment.Format.UNKNOWN,
 										  file,
 										  pos.begin.line,
 										  pos.begin.column,
@@ -260,6 +268,17 @@ public class Valadoc.TreeBuilder : Vala.CodeVisitor {
 		}
 
 		return null;
+	}
+
+	private static Api.SourceComment.Format get_comment_format (Vala.Comment comment) {
+		if (comment is Vala.GirComment) {
+			unowned string? format = ((Vala.GirComment) comment).format;
+			if (format != null) {
+				return Api.SourceComment.Format.from_string (format);
+			}
+		}
+
+		return Api.SourceComment.Format.UNKNOWN;
 	}
 
 	private string get_method_name (Vala.Method element) {

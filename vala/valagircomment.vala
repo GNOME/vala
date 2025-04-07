@@ -29,14 +29,17 @@ using GLib;
 public class Vala.GirComment : Comment {
 	private HashMap<string, Comment> parameter_content = new HashMap<string, Comment> ();
 
+	public string? format { get; set; }
+
 	public MapIterator<string, Comment> parameter_iterator () {
 		return this.parameter_content.map_iterator ();
 	}
 
 	public Comment? return_content { get; set; }
 
-	public GirComment (string? comment, SourceReference _source_reference) {
+	public GirComment (string? comment, SourceReference _source_reference, string? format = null) {
 		base (comment ?? "", _source_reference);
+		this.format = format;
 	}
 
 	internal void add_content_for_parameter (string name, Comment comment) {

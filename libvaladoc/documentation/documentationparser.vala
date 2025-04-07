@@ -81,7 +81,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			GirMetaData metadata = get_metadata_for_comment (gir_comment);
 
 			CommentParser comment_parser;
-			if (metadata.is_docbook) {
+			//TODO Handle more documentation formats
+			if (metadata.is_docbook || comment.format == Api.SourceComment.Format.GTK_DOC_DOCBOOK) {
 				comment_parser = gtkdoc_parser;
 			} else {
 				comment_parser = gtkdoc_markdown_parser;
