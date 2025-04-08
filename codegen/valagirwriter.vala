@@ -1210,7 +1210,7 @@ public class Vala.GIRWriter : CodeVisitor {
 					type.nullable = true;
 				}
 				int skip = 0;
-				if (tag_name == "callback") {
+				if (tag_name == "function" || tag_name == "callback") {
 					write_param_or_return (type, "parameter", ref skip, false, "self");
 					index++;
 				} else {

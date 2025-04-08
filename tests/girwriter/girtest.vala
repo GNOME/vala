@@ -72,7 +72,11 @@ namespace GirTest {
 	public enum EnumTest {
 		VALUE1,
 		VALUE2,
-		VALUE3 = 4711
+		VALUE3 = 4711;
+
+		public int enum_method () {
+			return this;
+		}
 	}
 
 	[Flags]
