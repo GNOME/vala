@@ -20,6 +20,7 @@ Output:
 <include name="Manam" version="1.0"/>
 <package name="test"/>
 <c:include name="test.h"/>
+<doc:format name="unknown"/>
 <namespace name="Test" version="1.2" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
 	<function name="use_combined_foo" c:identifier="test_use_combined_foo">
 		<return-value transfer-ownership="full">
