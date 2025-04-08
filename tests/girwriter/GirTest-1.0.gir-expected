@@ -15,6 +15,16 @@
 		<member name="value2" c:identifier="GIR_TEST_ENUM_TEST_VALUE2" value="1"/>
 		<member name="value3" c:identifier="GIR_TEST_ENUM_TEST_VALUE3" value="4711"/>
 	</enumeration>
+	<function name="enum_test_enum_method" c:identifier="gir_test_enum_test_enum_method">
+		<return-value transfer-ownership="full">
+			<type name="gint" c:type="gint"/>
+		</return-value>
+		<parameters>
+			<parameter name="self" transfer-ownership="none">
+				<type name="GirTest.EnumTest" c:type="GirTestEnumTest"/>
+			</parameter>
+		</parameters>
+	</function>
 	<bitfield name="FlagsTest" c:type="GirTestFlagsTest" glib:type-name="GirTestFlagsTest" glib:get-type="gir_test_flags_test_get_type">
 		<member name="value1" c:identifier="GIR_TEST_FLAGS_TEST_VALUE1" value="1"/>
 		<member name="value2" c:identifier="GIR_TEST_FLAGS_TEST_VALUE2" value="2"/>
