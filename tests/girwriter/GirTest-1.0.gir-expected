@@ -1,9 +1,10 @@
-<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
 <include name="GObject" version="2.0"/>
 <include name="GLib" version="2.0"/>
 <include name="Gio" version="2.0"/>
 <package name="girtest"/>
 <c:include name="girtest.h"/>
+<doc:format name="unknown"/>
 <namespace name="GirTest" version="1.0" shared-library="girtest" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefixes="gir_test">
 	<function name="nested_function" c:identifier="gir_test_nested_function">
 		<return-value transfer-ownership="full">

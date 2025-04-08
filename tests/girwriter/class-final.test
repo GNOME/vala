@@ -12,6 +12,7 @@ Output:
 <include name="GObject" version="2.0"/>
 <package name="test"/>
 <c:include name="test.h"/>
+<doc:format name="unknown"/>
 <namespace name="Test" version="1.2" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
 	<class name="TestFoo" c:type="TestTestFoo" c:symbol-prefix="foo" glib:type-name="TestTestFoo" glib:get-type="test_test_foo_get_type" glib:type-struct="TestFooClass" glib:fundamental="1" glib:ref-func="test_test_foo_ref" glib:unref-func="test_test_foo_unref" glib:set-value-func="test_test_value_set_foo" glib:get-value-func="test_test_value_get_foo">
 		<field name="parent_instance" readable="0" private="1">
