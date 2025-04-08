@@ -33,6 +33,7 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 	public GirWriter (SymbolResolver resolver) {
 		this.renderer = new GtkdocRenderer ();
 		this.resolver = resolver;
+		this.doc_format = "gtk-doc-markdown";
 	}
 
 	private string? translate (Content.Comment? documentation) {

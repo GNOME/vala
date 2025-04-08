@@ -1,7 +1,8 @@
-<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
 <include name="GObject" version="2.0"/>
 <package name="girtest"/>
 <c:include name="girtest.h"/>
+<doc:format name="gtk-doc-markdown"/>
 <namespace name="GirTest" version="1.0" c:prefix="GirTest" c:identifier-prefixes="GirTest" c:symbol-prefixes="gir_test">
 	<enumeration name="EnumTest" c:type="GirTestEnumTest" glib:type-name="GirTestEnumTest" glib:get-type="gir_test_enum_test_get_type">
 		<doc xml:space="preserve" filename="girtest.vala" line="40" column="2">&lt;para&gt;An example comment for an example enum.&lt;/para&gt;</doc>
