@@ -31,6 +31,7 @@ public class Valadoc.GirWriter : Vala.GIRWriter {
 	private SymbolResolver resolver;
 
 	public GirWriter (SymbolResolver resolver) {
+		base ("gtk-doc-markdown");
 		this.renderer = new GtkdocRenderer ();
 		this.resolver = resolver;
 	}

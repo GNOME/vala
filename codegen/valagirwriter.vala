@@ -31,6 +31,11 @@ public class Vala.GIRWriter : CodeVisitor {
 	private string gir_namespace;
 	private string gir_version;
 	private string gir_shared_library;
+	private string gir_doc_format;
+
+	public GIRWriter (string doc_format = "unknown") {
+		gir_doc_format = doc_format;
+	}
 
 	protected virtual string? get_interface_comment (Interface iface) {
 		return null;
@@ -208,6 +213,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<repository version=\"1.2\"");
 		stream.printf (" xmlns=\"http://www.gtk.org/introspection/core/1.0\"");
 		stream.printf (" xmlns:c=\"http://www.gtk.org/introspection/c/1.0\"");
+		stream.printf (" xmlns:doc=\"http://www.gtk.org/introspection/doc/1.0\"");
 		stream.printf (" xmlns:glib=\"http://www.gtk.org/introspection/glib/1.0\"");
 		stream.printf (">\n");
 		indent++;
@@ -300,6 +306,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		buffer.append_printf ("<c:include name=\"%s\"/>\n", name);
 	}
 
+	private void write_doc_format (string name) {
+		write_indent ();
+		buffer.append_printf ("<doc:format name=\"%s\"/>\n", name);
+	}
+
 	public override void visit_source_file (SourceFile source_file) {
 		if (source_file.file_type != SourceFileType.PACKAGE) {
 			return;
@@ -363,6 +374,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		ns.set_attribute_string ("CCode", "gir_version", gir_version);
 
 		write_c_includes (ns);
+		write_doc_format (gir_doc_format);
 
 		write_indent ();
 		buffer.append_printf ("<namespace name=\"%s\" version=\"%s\"", gir_namespace, gir_version);
