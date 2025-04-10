@@ -924,6 +924,15 @@ namespace Xml {
 		public SAXHandler* sax;
 		[CCode (cname = "userData")]
 		public void* user_data;
+		[CCode (cname = "myDoc")]
+		public Doc* my_doc;
+		[CCode (cname = "wellFormed")]
+		public int well_formed;
+		[CCode (type = "xmlChar*")]
+		unowned string version;
+		[CCode (type = "xmlChar*")]
+		unowned string encoding;
+		int standalone;
 
 		[CCode (cname = "xmlNewParserCtxt")]
 		public ParserCtxt ();
