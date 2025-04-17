@@ -1,0 +1,16 @@
+[CCode (cprefix = "Test", gir_namespace = "Test", gir_version = "1.0", lower_case_cprefix = "test_")]
+namespace Test {
+	[CCode (cheader_filename = "test.h", type_id = "test_foo_get_type ()")]
+	public class Foo : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected Foo ();
+		public int get_the_property ();
+		public string get_the_readonly_property ();
+		public unowned string get_the_third_property ();
+		public void set_the_property (int value);
+		public void set_third_prop (string value);
+		public int prop { [CCode (cname = "test_foo_get_the_property")] get; [CCode (cname = "test_foo_set_the_property")] set; }
+		public string read_only_prop { [CCode (cname = "test_foo_get_the_readonly_property")] owned get; }
+		public string third_prop { [CCode (cname = "test_foo_get_the_third_property")] get; set; }
+	}
+}

@@ -1041,22 +1041,32 @@ public class Vala.GirParser : CodeVisitor {
 
 					// find virtual/abstract accessors to handle abstract properties properly
 
+					var getter_name = girdata["getter"];
 					Node getter = null;
-					var getters = parent.lookup_all ("get_%s".printf (name));
-					if (getters != null) {
-						foreach (var g in getters) {
-							if ((getter == null || !g.merged) && g.get_cname () == "%sget_%s".printf (parent.get_lower_case_cprefix (), name)) {
-								getter = g;
+					if (getter_name != null) {
+						getter = parent.lookup (getter_name);
+					} else {
+						var getters = parent.lookup_all ("get_%s".printf (name));
+						if (getters != null) {
+							foreach (var g in getters) {
+								if ((getter == null || !g.merged) && g.get_cname () == "%sget_%s".printf (parent.get_lower_case_cprefix (), name)) {
+									getter = g;
+								}
 							}
 						}
 					}
 
+					var setter_name = girdata["setter"];
 					Node setter = null;
-					var setters = parent.lookup_all ("set_%s".printf (name));
-					if (setters != null) {
-						foreach (var s in setters) {
-							if ((setter == null || !s.merged) && s.get_cname () == "%sset_%s".printf (parent.get_lower_case_cprefix (), name)) {
-								setter = s;
+					if (setter_name != null) {
+						setter = parent.lookup (setter_name);
+					} else {
+						var setters = parent.lookup_all ("set_%s".printf (name));
+						if (setters != null) {
+							foreach (var s in setters) {
+								if ((setter == null || !s.merged) && s.get_cname () == "%sset_%s".printf (parent.get_lower_case_cprefix (), name)) {
+									setter = s;
+								}
 							}
 						}
 					}
@@ -1084,6 +1094,9 @@ public class Vala.GirParser : CodeVisitor {
 									prop.set_attribute ("ConcreteAccessor", true);
 								}
 							}
+							if (getter.get_cname () != "%sget_%s".printf (parent.get_lower_case_cprefix (), name)) {
+								prop.get_accessor.set_attribute_string ("CCode", "cname", getter.get_cname ());
+							}
 						} else {
 							prop.set_attribute ("NoAccessorMethod", true);
 						}
@@ -1103,6 +1116,9 @@ public class Vala.GirParser : CodeVisitor {
 									prop.set_attribute ("ConcreteAccessor", true);
 									prop.set_attribute ("NoAccessorMethod", false);
 								}
+							}
+							if (setter.get_cname () != "%sset_%s".printf (parent.get_lower_case_cprefix (), name)) {
+								prop.set_accessor.set_attribute_string ("CCode", "cname", setter.get_cname ());
 							}
 						} else {
 							prop.set_attribute ("NoAccessorMethod", true);

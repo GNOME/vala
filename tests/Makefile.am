@@ -924,6 +924,7 @@ TESTS = \
 	gir/parameter-array-out.gir \
 	gir/parameter-nullable-out-simple-type.gir \
 	gir/pid_t.gir \
+	gir/property-getter-setter.gir \
 	gir/property-non-readable.gir \
 	gir/signal-virtual.gir \
 	gir/record-copy-free-func.gir \

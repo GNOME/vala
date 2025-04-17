@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<repository version="1.2" xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+<include name="GObject" version="2.0"/>
+<include name="GLib" version="2.0"/>
+<package name="test"/>
+<c:include name="test.h"/>
+<namespace name="Test" version="1.0" shared-library="test" c:prefix="Test" c:identifier-prefixes="Test" c:symbol-prefixes="test">
+<class name="Foo" c:type="TestFoo" glib:type-name="TestFoo" glib:get-type="test_foo_get_type" glib:type-struct="FooClass" parent="GObject.Object">
+  <field name="parent_instance">
+    <type name="GObject.Object" c:type="GObject"/>
+  </field>
+  <method name="get_the_property" c:identifier="test_foo_get_the_property" glib:get-property="prop">
+    <return-value transfer-ownership="none">
+      <type name="gint" c:type="gint"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="TestFoo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+  <method name="set_the_property" c:identifier="test_foo_set_the_property" glib:set-property="prop">
+    <return-value transfer-ownership="none">
+      <type name="none" c:type="void"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="TestFoo" c:type="TestFoo*"/>
+      </instance-parameter>
+      <parameter name="value" transfer-ownership="none">
+        <type name="gint" c:type="gint"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="prop" readable="1" writable="1" getter="get_the_property" setter="set_the_property">
+    <type name="gint" c:type="gint"/>
+  </property>
+  <method name="get_the_readonly_property" c:identifier="test_foo_get_the_readonly_property" glib:get-property="read-only-prop">
+    <return-value transfer-ownership="full">
+      <type name="utf8" c:type="gchar*"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="TestFoo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+  <property name="read-only-prop" readable="1" getter="get_the_readonly_property">
+    <type name="utf8" c:type="gchar*"/>
+  </property>
+  <method name="get_the_third_property" c:identifier="test_foo_get_the_third_property" glib:get-property="third-prop">
+    <return-value transfer-ownership="none">
+      <type name="utf8" c:type="gchar*"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="TestFoo" c:type="TestFoo*"/>
+      </instance-parameter>
+    </parameters>
+  </method>
+  <method name="set_third_prop" c:identifier="test_foo_set_third_prop">
+    <return-value transfer-ownership="none">
+      <type name="none" c:type="void"/>
+    </return-value>
+    <parameters>
+      <instance-parameter name="self" transfer-ownership="none">
+        <type name="TestFoo" c:type="TestFoo*"/>
+      </instance-parameter>
+      <parameter name="value" transfer-ownership="none">
+        <type name="utf8" c:type="const gchar*"/>
+      </parameter>
+    </parameters>
+  </method>
+  <property name="third-prop" readable="1" writable="1" getter="get_the_third_property">
+    <type name="utf8" c:type="gchar*"/>
+  </property>
+</class>
+<record name="FooClass" c:type="TestFooClass" glib:is-gtype-struct-for="Foo"/>
+</namespace>
+</repository>
