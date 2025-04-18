@@ -3,7 +3,7 @@
  * Copyright (C) 2008-2009  Jürg Billeter
  * Copyright (C) 2010 Marco Trevisan (Treviño)
  * Copyright (C) 2013 Nikolay Orliuk
- * Copyright (C) 2020 Reuben Thomas
+ * Copyright (C) 2020-2025 Reuben Thomas
  * Copyright (C) 2021 Nikola Hadžić
  *
  * This library is free software; you can redistribute it and/or
@@ -2308,6 +2308,10 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/stat.h", feature_test_macro = "_GNU_SOURCE")]
 	public int mknodat (int dirfd, string pathname, mode_t mode, dev_t dev);
 
+	[CCode (cheader_filename = "sys/stat.h")]
+	public const long UTIME_NOW;
+	[CCode (cheader_filename = "sys/stat.h")]
+	public const long UTIME_OMIT;
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int utimensat (int dirfd, string pathname, [CCode (array_length = false)] timespec[] times, int flags = 0);
 	[CCode (cheader_filename = "sys/stat.h")]
