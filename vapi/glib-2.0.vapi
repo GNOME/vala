@@ -4134,7 +4134,7 @@ namespace GLib {
 		[CCode (cname = "g_file_set_contents")]
 		public static bool set_data (string filename, [CCode (type = "const char*", array_length_type = "gsize")] uint8[] contents) throws FileError;
 		public static bool test (string filename, FileTest test);
-		public static int open_tmp (string tmpl, out string name_used) throws FileError;
+		public static int open_tmp (string? tmpl, out string name_used) throws FileError;
 		[Version (since = "2.4")]
 		public static string read_link (string filename) throws FileError;
 		public static int error_from_errno (int err_no);
