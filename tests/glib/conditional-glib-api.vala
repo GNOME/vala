@@ -33,6 +33,7 @@ void use_g_memdup2 () {
 
 // glib 2.68 drop volatile
 // glib 2.74 G_TYPE_FLAG_NONE
+// glib 2.80 g_once_init_{enter,leave}_pointer
 [SingleInstance]
 class FooVolatile : Object {
 }
