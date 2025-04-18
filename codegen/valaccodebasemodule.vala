@@ -4511,10 +4511,15 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 
 			push_function (fun);
 
-			var once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
-			if (context.require_glib_version (2, 68)) {
+			CCodeFunctionCall once_enter_call;
+			if (context.require_glib_version (2, 80)) {
+				once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter_pointer"));
+				once_enter_call.add_argument (new CCodeConstant ("re"));
+			} else if (context.require_glib_version (2, 68)) {
+				once_enter_call	= new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
 				once_enter_call.add_argument (new CCodeConstant ("(gsize*) re"));
 			} else {
+				once_enter_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
 				once_enter_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
 			}
 			ccode.open_if (once_enter_call);
@@ -4526,13 +4531,20 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 			regex_new_call.add_argument (new CCodeConstant ("NULL"));
 			ccode.add_assignment (new CCodeIdentifier ("GRegex* val"), regex_new_call);
 
-			var once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
-			if (context.require_glib_version (2, 68)) {
+			CCodeFunctionCall once_leave_call;
+			if (context.require_glib_version (2, 80)) {
+				once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave_pointer"));
+				once_leave_call.add_argument (new CCodeConstant ("re"));
+				once_leave_call.add_argument (new CCodeConstant ("val"));
+			} else if (context.require_glib_version (2, 68)) {
+				once_leave_call	= new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
 				once_leave_call.add_argument (new CCodeConstant ("(gsize*) re"));
+				once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
 			} else {
+				once_leave_call = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
 				once_leave_call.add_argument (new CCodeConstant ("(volatile gsize*) re"));
+				once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
 			}
-			once_leave_call.add_argument (new CCodeConstant ("(gsize) val"));
 			ccode.add_expression (once_leave_call);
 
 			ccode.close ();
