@@ -643,22 +643,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				}
 
-				// weak variables can only be used with weak ref parameters
-				if (arg.target_type.is_disposable ()) {
-					if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
-						/* variable doesn't own the value */
-						Report.error (arg.source_reference, "Argument %d: Cannot pass unowned ref argument to owned reference parameter", i + 1);
-						return false;
-					}
+				// unowned variables can only be used with unowned ref parameters
+				if (!arg.target_type.transfer_compatible (arg.value_type)) {
+					/* variable doesn't own the value */
+					Report.error (arg.source_reference, "Argument %d: Cannot pass unowned ref argument to owned reference parameter", i + 1);
+					return false;
 				}
 
 				// owned variables can only be used with owned ref parameters
-				if (arg.value_type.is_disposable ()) {
-					if (!arg.target_type.value_owned) {
-						/* parameter doesn't own the value */
-						Report.error (arg.source_reference, "Argument %d: Cannot pass owned ref argument to unowned reference parameter", i + 1);
-						return false;
-					}
+				if (!arg.value_type.transfer_compatible (arg.target_type)) {
+					/* parameter doesn't own the value */
+					Report.error (arg.source_reference, "Argument %d: Cannot pass owned ref argument to unowned reference parameter", i + 1);
+					return false;
 				}
 			} else if (arg_type == 3) {
 				if (direction != ParameterDirection.OUT) {
@@ -666,13 +662,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				}
 
-				// weak variables can only be used with weak out parameters
-				if (arg.target_type.is_disposable ()) {
-					if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
-						/* variable doesn't own the value */
-						Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
-						return false;
-					}
+				// unowned variables can only be used with unowned out parameters
+				if (!arg.target_type.transfer_compatible (arg.value_type)) {
+					/* variable doesn't own the value */
+					Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+					return false;
 				}
 			}
 		}

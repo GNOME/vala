@@ -403,6 +403,21 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
+	public virtual bool transfer_compatible (DataType target_type) {
+		// Check if an instance of this type can transfer ownership (if any)
+		// to an instance of the target type.
+		if (!compatible (target_type)) {
+			return false;
+		}
+		if (target_type is PointerType) {
+			return true;
+		}
+		if (is_disposable () && !target_type.value_owned) {
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Returns whether instances of this type are invokable.
 	 *

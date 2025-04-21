@@ -267,6 +267,22 @@ public class Vala.ArrayType : ReferenceType {
 		return false;
 	}
 
+	public override bool transfer_compatible (DataType target_type) {
+		if (!compatible (target_type)) {
+			return false;
+		}
+		if (!(target_type is ArrayType)) {
+			// Allow pointers etc.
+			return true;
+		}
+		if (value_owned && !target_type.value_owned) {
+			return false;
+		}
+
+		ArrayType target_array_type = (ArrayType) target_type;
+		return element_type.transfer_compatible (target_array_type.element_type);
+	}
+
 	public override bool is_reference_type_or_type_parameter () {
 		return true;
 	}

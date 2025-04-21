@@ -123,16 +123,14 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (return_expression.value_type.is_disposable () &&
-		    !context.analyzer.current_return_type.value_owned) {
+		if (!return_expression.value_type.transfer_compatible (context.analyzer.current_return_type)) {
 			error = true;
 			Report.error (source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
 			return false;
 		}
 
 		unowned LocalVariable? local = return_expression.symbol_reference as LocalVariable;
-		if (local != null && local.variable_type.is_disposable () &&
-		    !context.analyzer.current_return_type.value_owned) {
+		if (local != null && !local.variable_type.transfer_compatible (context.analyzer.current_return_type)) {
 			error = true;
 			Report.error (source_reference, "Local variable with strong reference used as return value and method return type has not been declared to transfer ownership");
 			return false;

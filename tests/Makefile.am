@@ -176,6 +176,9 @@ TESTS = \
 	arrays/slice-invalid-start.test \
 	arrays/slice-invalid-stop.test \
 	arrays/slice-no-array.test \
+	arrays/transfer-container-field.test \
+	arrays/transfer-container-local.test \
+	arrays/transfer-container-return.test \
 	chainup/base-arguments.test \
 	chainup/base-class-invalid.test \
 	chainup/base-enum-invalid.test \

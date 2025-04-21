@@ -360,7 +360,7 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'", element_type.to_string (), type_reference.to_string ());
 			return false;
-		} else if (element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
+		} else if (!element_type.transfer_compatible (type_reference)) {
 			error = true;
 			Report.error (source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
 			return false;

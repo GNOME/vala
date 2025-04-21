@@ -1,0 +1,12 @@
+Invalid Code
+
+class Foo {
+	private (unowned string)[] field;
+
+	public Foo () {
+		field = new string[] { "what" };
+	}
+}
+
+void main () {
+}

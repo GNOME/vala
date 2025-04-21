@@ -385,18 +385,9 @@ public class Vala.Assignment : Expression {
 				}
 
 				if (!(ma.symbol_reference is Property)) {
-					if (right.value_type.is_disposable ()) {
-						/* rhs transfers ownership of the expression */
-						if (!(left.value_type is PointerType) && !left.value_type.value_owned) {
-							/* lhs doesn't own the value */
-							error = true;
-							Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
-						}
-					} else if (left.value_type.value_owned) {
-						/* lhs wants to own the value
-						 * rhs doesn't transfer the ownership
-						 * code generator needs to add reference
-						 * increment calls */
+					if (!right.value_type.transfer_compatible (left.value_type)) {
+						error = true;
+						Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
 					}
 				}
 			}
@@ -426,31 +417,24 @@ public class Vala.Assignment : Expression {
 				return false;
 			}
 
-			if (right.value_type.is_disposable ()) {
-				/* rhs transfers ownership of the expression */
+			DataType element_type;
 
-				DataType element_type;
+			if (ea.container.value_type is ArrayType) {
+				unowned ArrayType array_type = (ArrayType) ea.container.value_type;
+				element_type = array_type.element_type;
+			} else if (ea.container.value_type is PointerType) {
+				unowned PointerType pointer_type = (PointerType) ea.container.value_type;
+				element_type = pointer_type.base_type;
+			} else {
+				var args = ea.container.value_type.get_type_arguments ();
+				assert (args.size == 1);
+				element_type = args.get (0);
+			}
 
-				if (ea.container.value_type is ArrayType) {
-					unowned ArrayType array_type = (ArrayType) ea.container.value_type;
-					element_type = array_type.element_type;
-				} else {
-					var args = ea.container.value_type.get_type_arguments ();
-					assert (args.size == 1);
-					element_type = args.get (0);
-				}
-
-				if (!(element_type is PointerType) && !element_type.value_owned) {
-					/* lhs doesn't own the value */
-					error = true;
-					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
-					return false;
-				}
-			} else if (left.value_type.value_owned) {
-				/* lhs wants to own the value
-				 * rhs doesn't transfer the ownership
-				 * code generator needs to add reference
-				 * increment calls */
+			if (!right.value_type.transfer_compatible (element_type)) {
+				error = true;
+				Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+				return false;
 			}
 		} else {
 			return true;

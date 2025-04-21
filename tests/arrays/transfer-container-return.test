@@ -1,0 +1,8 @@
+Invalid Code
+
+(unowned string)[] return_string_array () {
+	return new string[] { "foo" };
+}
+
+void main () {
+}
