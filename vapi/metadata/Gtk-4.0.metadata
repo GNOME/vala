@@ -290,6 +290,8 @@ Calendar
   .day no_accessor_method
   .month no_accessor_method
   .year no_accessor_method
+DropTarget
+  .drop#property skip
 EntryBuffer
   .new.initial_chars type="uint8[]?" array_length_idx=1
   .emit_inserted_text.chars type="uint8[]" array_length_idx=2
@@ -366,6 +368,8 @@ test_init.argvp unowned
 ///////////////////
 GLArea
   .create_context skip=false
+IMContext
+  .activate_osk#method vfunc_name="activate_osk_with_event" skip=false
 Notebook
   .create_window skip=false
 PrintOperation
