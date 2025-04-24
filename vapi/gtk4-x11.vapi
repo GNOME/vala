@@ -15,6 +15,7 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected DeviceManagerXI2 ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_manager_lookup")]
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public unowned Gdk.X11.DeviceXI2? lookup_for_device_manager (int device_id);
 			[NoAccessorMethod]
 			public Gdk.Display display { owned get; construct; }
@@ -31,6 +32,7 @@ namespace Gdk {
 			[CCode (has_construct_function = false)]
 			protected DeviceXI2 ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_device_get_id")]
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public int get_id ();
 			[NoAccessorMethod]
 			public int device_id { get; construct; }
@@ -45,10 +47,11 @@ namespace Gdk {
 			public void error_trap_pop_ignored ();
 			public void error_trap_push ();
 			public unowned Gdk.Surface get_default_group ();
-			[Version (since = "4.4")]
+			[Version (deprecated = true, deprecated_since = "4.18", since = "4.4")]
 			public void* get_egl_display ();
-			[Version (since = "4.4")]
+			[Version (deprecated = true, deprecated_since = "4.18", since = "4.4")]
 			public bool get_egl_version (out int major, out int minor);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public bool get_glx_version (out int major, out int minor);
 			public unowned Gdk.Monitor get_primary_monitor ();
 			public unowned Gdk.X11.Screen get_screen ();
@@ -56,9 +59,12 @@ namespace Gdk {
 			public unowned string get_startup_notification_id ();
 			public uint32 get_user_time ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_xatom_by_name_for_display")]
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public X.Atom get_xatom_by_name (string atom_name);
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_xatom_name_for_display")]
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public unowned string get_xatom_name (X.Atom xatom);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public X.Cursor get_xcursor (Gdk.Cursor cursor);
 			public unowned X.Display get_xdisplay ();
 			public X.Window get_xrootwindow ();
@@ -66,15 +72,20 @@ namespace Gdk {
 			public void grab ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_lookup_xdisplay")]
 			public static unowned Gdk.X11.Display lookup_for_xdisplay (X.Display xdisplay);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public static Gdk.Display? open (string? display_name);
+			[Version (deprecated = true, deprecated_since = "4.16")]
 			public void set_cursor_theme (string? theme, int size);
 			public static void set_program_class (Gdk.Display display, string program_class);
 			[Version (deprecated = true, deprecated_since = "4.10")]
 			public void set_startup_notification_id (string startup_id);
 			public void set_surface_scale (int scale);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public int string_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public int text_property_to_text_list (string encoding, int format, [CCode (type = "const guchar*")] string text, int length, [CCode (array_length = false, type = "char***")] out string[] list);
 			public void ungrab ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public bool utf8_to_compound_text (string str, out unowned string encoding, out int format, [CCode (array_length_cname = "length", array_length_pos = 4.1)] out uint8[] ctext);
 			public signal bool xevent ([CCode (type = "gpointer")] X.Event xevent);
 		}
@@ -95,7 +106,9 @@ namespace Gdk {
 		public sealed class Monitor : Gdk.Monitor {
 			[CCode (has_construct_function = false)]
 			protected Monitor ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public X.ID get_output ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public Gdk.Rectangle get_workarea ();
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", type_id = "gdk_x11_screen_get_type ()")]
@@ -103,12 +116,19 @@ namespace Gdk {
 		public sealed class Screen : GLib.Object {
 			[CCode (has_construct_function = false)]
 			protected Screen ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public uint32 get_current_desktop ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public X.ID get_monitor_output (int monitor_num);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public uint32 get_number_of_desktops ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public int get_screen_number ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public unowned string get_window_manager_name ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public unowned X.Screen get_xscreen ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public bool supports_net_wm_hint (string property_name);
 			public signal void window_manager_changed ();
 		}
@@ -117,21 +137,36 @@ namespace Gdk {
 		public sealed class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public uint32 get_desktop ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public unowned Gdk.Surface? get_group ();
 			[CCode (cheader_filename = "gdk/x11/gdkx.h", cname = "gdk_x11_get_server_time")]
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public uint32 get_server_time ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public X.Window get_xid ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public static unowned Gdk.X11.Surface lookup_for_display (Gdk.X11.Display display, X.Window window);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void move_to_current_desktop ();
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void move_to_desktop (uint32 desktop);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_frame_sync_enabled (bool frame_sync_enabled);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_group (Gdk.Surface leader);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_skip_pager_hint (bool skips_pager);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_skip_taskbar_hint (bool skips_taskbar);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_theme_variant (string variant);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_urgency_hint (bool urgent);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_user_time (uint32 timestamp);
+			[Version (deprecated = true, deprecated_since = "4.18")]
 			public void set_utf8_property (string name, string? value);
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h", cprefix = "GDK_X11_DEVICE_TYPE_", has_type_id = false)]
@@ -142,8 +177,10 @@ namespace Gdk {
 			FLOATING
 		}
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
+		[Version (deprecated = true, deprecated_since = "4.18")]
 		public static void free_compound_text ([CCode (array_length = false, type = "guchar*")] owned uint8[] ctext);
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
+		[Version (deprecated = true, deprecated_since = "4.18")]
 		public static void free_text_list ([CCode (array_length = false, type = "char**")] owned string[] list);
 		[CCode (cheader_filename = "gdk/x11/gdkx.h")]
 		public static void set_sm_client_id (string? sm_client_id);

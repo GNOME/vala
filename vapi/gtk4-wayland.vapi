@@ -27,6 +27,7 @@ namespace Gdk {
 			public unowned Wl.Compositor get_wl_compositor ();
 			public unowned Wl.Display get_wl_display ();
 			public bool query_registry (string global);
+			[Version (deprecated = true, deprecated_since = "4.16")]
 			public void set_cursor_theme (string name, int size);
 			[Version (deprecated = true, deprecated_since = "4.10.")]
 			public void set_startup_notification_id (string startup_id);
@@ -62,6 +63,8 @@ namespace Gdk {
 		public sealed class Surface : Gdk.Surface {
 			[CCode (has_construct_function = false)]
 			protected Surface ();
+			[Version (since = "4.18")]
+			public void force_next_commit ();
 			public unowned Wl.Surface get_wl_surface ();
 		}
 		[CCode (cheader_filename = "gdk/wayland/gdkwayland.h", type_id = "gdk_wayland_toplevel_get_type ()")]
