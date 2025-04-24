@@ -26,3 +26,6 @@
 
 /* Version number of package */
 #mesondefine VERSION
+
+/* Define to system location of gir files */
+#mesondefine GI_GIRDIR

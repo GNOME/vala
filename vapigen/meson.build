@@ -10,7 +10,7 @@ vapigen_exe = executable(
 	vapigen_sources,
 	dependencies: [glib_dep, valagee_dep, valacore_dep, gidl_dep],
 	install: true,
-	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.source_root(), 'gobject-introspection')],
+	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.project_source_root(), 'gobject-introspection')],
 )
 
 # https://github.com/mesonbuild/meson/issues/1602
@@ -27,7 +27,7 @@ executable(
 	vapicheck_sources,
 	dependencies: [glib_dep, valagee_dep, valacore_dep, gidl_dep],
 	install: true,
-	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.source_root(), 'gobject-introspection')],
+	vala_args: ['--pkg', 'gidl', '--vapidir', join_paths(meson.project_source_root(), 'gobject-introspection')],
 )
 
 # https://github.com/mesonbuild/meson/issues/1602

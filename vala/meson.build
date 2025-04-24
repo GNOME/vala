@@ -64,6 +64,7 @@ valacore_sources = files(
 	'valaforstatement.vala',
 	'valagenericdestroyfield.vala',
 	'valagenericdupfield.vala',
+	'valagenericsymbol.vala',
 	'valagenerictype.vala',
 	'valagenieparser.vala',
 	'valageniescanner.vala',
@@ -198,7 +199,7 @@ custom_target(
 	'libvala@0@.vapi'.format(vala_version_suffix),
 	command: [
 		find_program('cat'),
-		join_paths(meson.build_root(), 'gee', 'gee.vapi'),
+		join_paths(meson.project_build_root(), 'gee', 'gee.vapi'),
 		join_paths(meson.current_build_dir(), 'vala.vapi'),
 	],
 	depends: [valagee_lib, valacore_lib],

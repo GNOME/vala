@@ -1,7 +1,7 @@
 project('vala',
 	'c', 'vala',
 	version: '0.57.0',
-	meson_version: '>= 0.49',
+	meson_version: '>= 0.58',
 	license: 'LGPL2.1'
 )
 
@@ -25,6 +25,7 @@ endif
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), 'vala@0@'.format(vala_version_suffix))
 pkglibdir = join_paths(get_option('prefix'), get_option('libdir'), 'vala@0@'.format(vala_version_suffix))
 
+gi_dep = dependency('gobject-introspection-1.0')
 
 conf = configuration_data()
 conf.set_quoted('PACKAGE', meson.project_name())
@@ -39,6 +40,7 @@ conf.set_quoted('PACKAGE_VERSION', vala_version)
 conf.set_quoted('VERSION', vala_version)
 conf.set_quoted('API_VERSION', vala_api_version)
 conf.set_quoted('BUILD_VERSION', vala_version)
+conf.set_quoted('GI_GIRDIR', gi_dep.get_variable('girdir'))
 configure_file(input: 'config.h.meson', output: 'config.h', configuration: conf)
 
 pkgconf = configuration_data()
@@ -132,7 +134,7 @@ supported_test_cflags = cc.get_supported_arguments(test_cflags)
 
 # https://github.com/mesonbuild/meson/issues/3407
 if valac.version().version_compare('>= @0@'.format(vala_version))
-	add_project_arguments(supported_test_cflags, language: 'c')
+	#add_project_arguments(supported_test_cflags, language: 'c')
 endif
 
 add_project_arguments([
