@@ -13,6 +13,8 @@ namespace Notify {
 		[Version (since = "0.7.10")]
 		public unowned string? get_activation_token ();
 		public int get_closed_reason ();
+		[Version (since = "0.8.4")]
+		public void set_app_icon (string? app_icon);
 		[Version (since = "0.7.3")]
 		public void set_app_name (string? app_name);
 		public void set_category (string category);
@@ -38,6 +40,9 @@ namespace Notify {
 		public void set_urgency (Notify.Urgency urgency);
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string? body, string? icon);
+		[NoAccessorMethod]
+		[Version (since = "0.8.4")]
+		public string app_icon { owned get; set; }
 		[NoAccessorMethod]
 		[Version (since = "0.7.3")]
 		public string app_name { owned get; set; }
@@ -80,6 +85,9 @@ namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h", cname = "NOTIFY_VERSION_MINOR")]
 	public const int VERSION_MINOR;
 	[CCode (cheader_filename = "libnotify/notify.h")]
+	[Version (since = "0.8.4")]
+	public static unowned string get_app_icon ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static unowned string get_app_name ();
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static GLib.List<string> get_server_caps ();
@@ -89,6 +97,9 @@ namespace Notify {
 	public static bool init (string? app_name);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool is_initted ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
+	[Version (since = "0.8.4")]
+	public static void set_app_icon (string? app_icon);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static void set_app_name (string app_name);
 	[CCode (cheader_filename = "libnotify/notify.h")]
