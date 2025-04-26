@@ -190,6 +190,7 @@ foo_query_async (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_data_ = g_slice_new0 (FooQueryAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_query_async);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_query_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -202,6 +203,8 @@ foo_query_finish (Foo* self,
                   GError** error)
 {
 	FooQueryAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo_query_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -337,6 +340,7 @@ foo_internal_query_async (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_data_ = g_slice_new0 (FooInternalQueryAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_internal_query_async);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_internal_query_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -350,6 +354,8 @@ foo_internal_query_finish (Foo* self,
 {
 	gboolean result;
 	FooInternalQueryAsyncData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), FALSE);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, foo_internal_query_async), FALSE);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		gboolean _tmp0_ = FALSE;
@@ -399,6 +405,7 @@ foo_close_query_async (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_data_ = g_slice_new0 (FooCloseQueryAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_close_query_async);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_close_query_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -411,6 +418,8 @@ foo_close_query_finish (Foo* self,
                         GError** error)
 {
 	FooCloseQueryAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo_close_query_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -499,6 +508,7 @@ go_async (GAsyncReadyCallback _callback_,
 	GoAsyncData* _data_;
 	_data_ = g_slice_new0 (GoAsyncData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, go_async);
 	g_task_set_task_data (_data_->_async_result, _data_, go_async_data_free);
 	go_async_co (_data_);
 }
@@ -507,6 +517,8 @@ void
 go_finish (GAsyncResult* _res_)
 {
 	GoAsyncData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, go_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

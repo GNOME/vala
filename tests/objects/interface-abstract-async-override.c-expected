@@ -186,6 +186,7 @@ bar_real_foo (IFoo* base,
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	_data_ = g_slice_new0 (BarFooData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar_real_foo);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_real_foo_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -198,6 +199,8 @@ bar_foo_finish (IFoo* base,
 {
 	gint result;
 	BarFooData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (base)), 0);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, bar_real_foo), 0);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	result = _data_->result;
 	return result;

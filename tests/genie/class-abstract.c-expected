@@ -384,6 +384,7 @@ test2_construct (GType object_type,
 	Test2NewData* _data_;
 	_data_ = g_slice_new0 (Test2NewData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test2_construct);
 	g_task_set_task_data (_data_->_async_result, _data_, test2_construct_data_free);
 	_data_->object_type = object_type;
 	test2_construct_co (_data_);
@@ -394,6 +395,8 @@ test2_construct_finish (GAsyncResult* _res_)
 {
 	Test2* result;
 	Test2NewData* _data_;
+	g_return_val_if_fail (G_IS_TASK (_res_), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test2_construct), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	result = _data_->self;
 	_data_->self = NULL;

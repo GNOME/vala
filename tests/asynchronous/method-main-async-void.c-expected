@@ -52,6 +52,7 @@ _vala_main_async (gchar** args,
 	ValaMainAsyncData* _data_;
 	_data_ = g_slice_new0 (ValaMainAsyncData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, _vala_main_async);
 	g_task_set_task_data (_data_->_async_result, _data_, _vala_main_async_data_free);
 	_data_->args = args;
 	_data_->args_length1 = args_length1;
@@ -62,6 +63,8 @@ void
 _vala_main_finish (GAsyncResult* _res_)
 {
 	ValaMainAsyncData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, _vala_main_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

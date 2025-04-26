@@ -261,6 +261,11 @@ public class Vala.GAsyncModule : GtkModule {
 
 		ccode.add_assignment (new CCodeMemberAccess.pointer (data_var, "_async_result"), create_result);
 
+		var set_source_tag_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_set_source_tag"));
+		set_source_tag_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
+		set_source_tag_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m)));
+		ccode.add_expression (set_source_tag_call);
+
 		var attach_data_call = new CCodeFunctionCall (new CCodeIdentifier ("g_task_set_task_data"));
 
 		attach_data_call.add_argument (new CCodeMemberAccess.pointer (data_var, "_async_result"));
@@ -573,6 +578,49 @@ public class Vala.GAsyncModule : GtkModule {
 			}
 		} else if (!(return_type is VoidType) && !return_type.is_real_non_null_struct_type ()) {
 			ccode.add_declaration (get_ccode_name (m.return_type), new CCodeVariableDeclarator ("result"));
+		}
+
+		if (context.assert) {
+			var cdefault = default_value_for_type (return_type, false);
+
+			var task_is_valid_call = new CCodeFunctionCall ();
+			task_is_valid_call.add_argument (new CCodeIdentifier ("_res_"));
+
+			unowned TypeSymbol? t = m.parent_symbol as TypeSymbol;
+			if (!(m is CreationMethod) && m.binding == MemberBinding.INSTANCE
+			    && get_ccode_finish_instance (m) && t != null && t.is_subtype_of (gobject_type)) {
+				task_is_valid_call.call = new CCodeIdentifier ("g_task_is_valid");
+				var instance_param = cparam_map.get (get_param_pos (get_ccode_instance_pos (m)));
+				var gobject_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
+				gobject_cast.add_argument (new CCodeIdentifier (instance_param.name));
+
+				task_is_valid_call.add_argument (gobject_cast);
+			} else {
+				task_is_valid_call.call	= new CCodeIdentifier ("G_IS_TASK");
+			}
+			var return_unless_valid_call = new CCodeFunctionCall ();
+			return_unless_valid_call.add_argument (task_is_valid_call);
+			if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
+				return_unless_valid_call.call = new CCodeIdentifier ("g_return_if_fail");
+			} else {
+				return_unless_valid_call.call = new CCodeIdentifier ("g_return_val_if_fail");
+				return_unless_valid_call.add_argument (cdefault);
+			}
+			ccode.add_expression (return_unless_valid_call);
+
+			var is_tagged_call = new CCodeFunctionCall (new CCodeIdentifier ("g_async_result_is_tagged"));
+			is_tagged_call.add_argument (new CCodeIdentifier ("_res_"));
+			is_tagged_call.add_argument (new CCodeIdentifier (get_ccode_real_name (m)));
+
+			var return_unless_tagged_call = new CCodeFunctionCall ();
+			return_unless_tagged_call.add_argument (is_tagged_call);
+			if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
+				return_unless_tagged_call.call = new CCodeIdentifier ("g_return_if_fail");
+			} else {
+				return_unless_tagged_call.call = new CCodeIdentifier ("g_return_val_if_fail");
+				return_unless_tagged_call.add_argument (cdefault);
+			}
+			ccode.add_expression (return_unless_tagged_call);
 		}
 
 		var data_var = new CCodeIdentifier ("_data_");

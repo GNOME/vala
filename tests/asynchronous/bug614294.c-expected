@@ -417,6 +417,7 @@ bar_real_foo_async (Bar* self,
 	Bar* _tmp0_;
 	_data_ = g_slice_new0 (BarFooAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar_real_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_real_foo_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -429,6 +430,8 @@ bar_real_foo_finish (Bar* self,
                      GError** error)
 {
 	BarFooAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, bar_real_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -577,6 +580,7 @@ sub_bar_real_foo_async (Bar* base,
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_SUB_BAR, SubBar);
 	_data_ = g_slice_new0 (SubBarFooAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, sub_bar_real_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, sub_bar_real_foo_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -589,6 +593,8 @@ sub_bar_foo_finish (Bar* base,
                     GError** error)
 {
 	SubBarFooAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (base)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, sub_bar_real_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -778,6 +784,7 @@ baz_real_foo_async (AFoo* base,
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAZ, Baz);
 	_data_ = g_slice_new0 (BazFooAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, baz_real_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, baz_real_foo_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -790,6 +797,8 @@ baz_foo_finish (AFoo* base,
                 GError** error)
 {
 	BazFooAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (base)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, baz_real_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -892,6 +901,7 @@ sub_baz_real_foo_async (AFoo* base,
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_SUB_BAZ, SubBaz);
 	_data_ = g_slice_new0 (SubBazFooAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, sub_baz_real_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, sub_baz_real_foo_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -904,6 +914,8 @@ sub_baz_foo_finish (AFoo* base,
                     GError** error)
 {
 	SubBazFooAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (base)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, sub_baz_real_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -1001,6 +1013,7 @@ run (GAsyncReadyCallback _callback_,
 	RunData* _data_;
 	_data_ = g_slice_new0 (RunData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, run);
 	g_task_set_task_data (_data_->_async_result, _data_, run_data_free);
 	run_co (_data_);
 }
@@ -1009,6 +1022,8 @@ void
 run_finish (GAsyncResult* _res_)
 {
 	RunData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, run));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

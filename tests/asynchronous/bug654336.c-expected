@@ -79,6 +79,7 @@ foo (GType t_type,
 	FooData* _data_;
 	_data_ = g_slice_new0 (FooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_data_free);
 	_data_->t_type = t_type;
 	_data_->t_dup_func = t_dup_func;
@@ -90,6 +91,8 @@ void
 foo_finish (GAsyncResult* _res_)
 {
 	FooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -128,6 +131,7 @@ bar (GAsyncReadyCallback _callback_,
 	BarData* _data_;
 	_data_ = g_slice_new0 (BarData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_data_free);
 	bar_co (_data_);
 }
@@ -136,6 +140,8 @@ void
 bar_finish (GAsyncResult* _res_)
 {
 	BarData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, bar));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

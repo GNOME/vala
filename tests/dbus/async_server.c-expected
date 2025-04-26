@@ -253,6 +253,7 @@ test_test_void (Test* self,
 	g_return_if_fail (IS_TEST (self));
 	_data_ = g_slice_new0 (TestTestVoidData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_test_void);
 	g_task_set_task_data (_data_->_async_result, _data_, test_test_void_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -264,6 +265,8 @@ test_test_void_finish (Test* self,
                        GAsyncResult* _res_)
 {
 	TestTestVoidData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, test_test_void));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -322,6 +325,7 @@ test_test_int (Test* self,
 	g_return_if_fail (IS_TEST (self));
 	_data_ = g_slice_new0 (TestTestIntData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_test_int);
 	g_task_set_task_data (_data_->_async_result, _data_, test_test_int_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -336,6 +340,8 @@ test_test_int_finish (Test* self,
 {
 	gint result;
 	TestTestIntData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), 0);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test_test_int), 0);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	if (j) {
 		*j = _data_->j;
@@ -406,6 +412,7 @@ test_test_string (Test* self,
 	g_return_if_fail (s != NULL);
 	_data_ = g_slice_new0 (TestTestStringData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_test_string);
 	g_task_set_task_data (_data_->_async_result, _data_, test_test_string_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -422,6 +429,8 @@ test_test_string_finish (Test* self,
 {
 	gchar* result;
 	TestTestStringData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test_test_string), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	if (t) {
 		*t = _data_->t;

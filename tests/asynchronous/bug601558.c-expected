@@ -161,6 +161,7 @@ foo_real_do_foo (Foo* self,
 	Foo* _tmp0_;
 	_data_ = g_slice_new0 (FooDoFooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_real_do_foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_real_do_foo_data_free);
 	_tmp0_ = _foo_ref0 (self);
 	_data_->self = _tmp0_;
@@ -172,6 +173,8 @@ foo_real_do_foo_finish (Foo* self,
                         GAsyncResult* _res_)
 {
 	FooDoFooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo_real_do_foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -453,6 +456,7 @@ bar_real_do_foo (Foo* base,
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_BAR, Bar);
 	_data_ = g_slice_new0 (BarDoFooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar_real_do_foo);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_real_do_foo_data_free);
 	_tmp0_ = _foo_ref0 (self);
 	_data_->self = _tmp0_;
@@ -464,6 +468,8 @@ bar_do_foo_finish (Foo* base,
                    GAsyncResult* _res_)
 {
 	BarDoFooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, bar_real_do_foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
