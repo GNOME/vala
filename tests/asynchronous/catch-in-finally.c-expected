@@ -178,6 +178,7 @@ fail (GAsyncReadyCallback _callback_,
 	FailData* _data_;
 	_data_ = g_slice_new0 (FailData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, fail);
 	g_task_set_task_data (_data_->_async_result, _data_, fail_data_free);
 	fail_co (_data_);
 }
@@ -187,6 +188,8 @@ fail_finish (GAsyncResult* _res_,
              GError** error)
 {
 	FailData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, fail));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -240,6 +243,7 @@ may_fail (GAsyncReadyCallback _callback_,
 	MayFailData* _data_;
 	_data_ = g_slice_new0 (MayFailData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, may_fail);
 	g_task_set_task_data (_data_->_async_result, _data_, may_fail_data_free);
 	may_fail_co (_data_);
 }
@@ -249,6 +253,8 @@ may_fail_finish (GAsyncResult* _res_,
                  GError** error)
 {
 	MayFailData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, may_fail));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -290,6 +296,7 @@ foo (GAsyncReadyCallback _callback_,
 	FooData* _data_;
 	_data_ = g_slice_new0 (FooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_data_free);
 	foo_co (_data_);
 }
@@ -299,6 +306,8 @@ foo_finish (GAsyncResult* _res_,
             GError** error)
 {
 	FooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -413,6 +422,7 @@ bar (GAsyncReadyCallback _callback_,
 	BarData* _data_;
 	_data_ = g_slice_new0 (BarData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_data_free);
 	bar_co (_data_);
 }
@@ -422,6 +432,8 @@ bar_finish (GAsyncResult* _res_,
             GError** error)
 {
 	BarData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, bar));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return;
@@ -595,6 +607,7 @@ run (GAsyncReadyCallback _callback_,
 	RunData* _data_;
 	_data_ = g_slice_new0 (RunData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, run);
 	g_task_set_task_data (_data_->_async_result, _data_, run_data_free);
 	run_co (_data_);
 }
@@ -603,6 +616,8 @@ void
 run_finish (GAsyncResult* _res_)
 {
 	RunData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, run));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

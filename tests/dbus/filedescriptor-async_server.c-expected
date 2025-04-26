@@ -227,6 +227,7 @@ test_test_in (Test* self,
 	g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (i, G_TYPE_UNIX_INPUT_STREAM));
 	_data_ = g_slice_new0 (TestTestInData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_test_in);
 	g_task_set_task_data (_data_->_async_result, _data_, test_test_in_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -244,6 +245,8 @@ test_test_in_finish (Test* self,
 {
 	GUnixInputStream* result;
 	TestTestInData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test_test_in), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return NULL;

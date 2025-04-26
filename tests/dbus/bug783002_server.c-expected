@@ -211,6 +211,7 @@ test_test_array_lifetime (Test* self,
 	g_return_if_fail (IS_TEST (self));
 	_data_ = g_slice_new0 (TestTestArrayLifetimeData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_test_array_lifetime);
 	g_task_set_task_data (_data_->_async_result, _data_, test_test_array_lifetime_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -226,6 +227,8 @@ test_test_array_lifetime_finish (Test* self,
 {
 	gchar* result;
 	TestTestArrayLifetimeData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test_test_array_lifetime), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), error);
 	if (NULL == _data_) {
 		return NULL;

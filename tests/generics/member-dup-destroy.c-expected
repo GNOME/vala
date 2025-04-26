@@ -227,6 +227,7 @@ foo_foo_async (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_data_ = g_slice_new0 (FooFooAsyncData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_foo_async_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -238,6 +239,8 @@ foo_foo_finish (Foo* self,
                 GAsyncResult* _res_)
 {
 	FooFooAsyncData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
@@ -428,6 +431,7 @@ bar_async (GType t_type,
 	gpointer _tmp0_;
 	_data_ = g_slice_new0 (BarAsyncData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, bar_async);
 	g_task_set_task_data (_data_->_async_result, _data_, bar_async_data_free);
 	_tmp0_ = ((t != NULL) && (t_dup_func != NULL)) ? t_dup_func ((gpointer) t) : ((gpointer) t);
 	((_data_->t == NULL) || (_data_->t_destroy_func == NULL)) ? NULL : (_data_->t = (_data_->t_destroy_func (_data_->t), NULL));
@@ -442,6 +446,8 @@ void
 bar_finish (GAsyncResult* _res_)
 {
 	BarAsyncData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, bar_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

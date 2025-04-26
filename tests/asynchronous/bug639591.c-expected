@@ -80,6 +80,7 @@ foo (Deleg deleg,
 	FooData* _data_;
 	_data_ = g_slice_new0 (FooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_data_free);
 	(_data_->deleg_target_destroy_notify == NULL) ? NULL : (_data_->deleg_target_destroy_notify (_data_->deleg_target), NULL);
 	_data_->deleg = NULL;
@@ -95,6 +96,8 @@ void
 foo_finish (GAsyncResult* _res_)
 {
 	FooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

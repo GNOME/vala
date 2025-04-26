@@ -236,6 +236,7 @@ test_list_messages (Test* self,
 	g_return_if_fail (IS_TEST (self));
 	_data_ = g_slice_new0 (TestListMessagesData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_list_messages);
 	g_task_set_task_data (_data_->_async_result, _data_, test_list_messages_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -249,6 +250,8 @@ test_list_messages_finish (Test* self,
 {
 	gchar** result;
 	TestListMessagesData* _data_;
+	g_return_val_if_fail (g_task_is_valid (_res_, G_OBJECT (self)), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, test_list_messages), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	result = _data_->result;
 	*result_length1 = _data_->result_length1;
@@ -325,6 +328,7 @@ test_post_message (Test* self,
 	g_return_if_fail (message != NULL);
 	_data_ = g_slice_new0 (TestPostMessageData);
 	_data_->_async_result = g_task_new (G_OBJECT (self), NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, test_post_message);
 	g_task_set_task_data (_data_->_async_result, _data_, test_post_message_data_free);
 	_tmp0_ = _g_object_ref0 (self);
 	_data_->self = _tmp0_;
@@ -339,6 +343,8 @@ test_post_message_finish (Test* self,
                           GAsyncResult* _res_)
 {
 	TestPostMessageData* _data_;
+	g_return_if_fail (g_task_is_valid (_res_, G_OBJECT (self)));
+	g_return_if_fail (g_async_result_is_tagged (_res_, test_post_message));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 

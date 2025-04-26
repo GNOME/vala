@@ -102,6 +102,7 @@ do_foo_async (GAsyncReadyCallback _callback_,
 	DoFooAsyncData* _data_;
 	_data_ = g_slice_new0 (DoFooAsyncData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, do_foo_async);
 	g_task_set_task_data (_data_->_async_result, _data_, do_foo_async_data_free);
 	do_foo_async_co (_data_);
 }
@@ -111,6 +112,8 @@ do_foo_finish (GAsyncResult* _res_,
                Foo* result)
 {
 	DoFooAsyncData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, do_foo_async));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	*result = _data_->result;
 }

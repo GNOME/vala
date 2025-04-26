@@ -93,6 +93,7 @@ foo (GType t_type,
 	gpointer _tmp0_;
 	_data_ = g_slice_new0 (FooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_data_free);
 	_tmp0_ = ((bar != NULL) && (t_dup_func != NULL)) ? t_dup_func ((gpointer) bar) : ((gpointer) bar);
 	((_data_->bar == NULL) || (_data_->t_destroy_func == NULL)) ? NULL : (_data_->bar = (_data_->t_destroy_func (_data_->bar), NULL));
@@ -108,6 +109,8 @@ foo_finish (GAsyncResult* _res_)
 {
 	gpointer result;
 	FooData* _data_;
+	g_return_val_if_fail (G_IS_TASK (_res_), NULL);
+	g_return_val_if_fail (g_async_result_is_tagged (_res_, foo), NULL);
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 	result = _data_->result;
 	_data_->result = NULL;

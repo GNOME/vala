@@ -122,6 +122,7 @@ foo_do_foo (Foo* self,
 	g_return_if_fail (IS_FOO (self));
 	_data_ = g_slice_new0 (FooDoFooData);
 	_data_->_async_result = g_task_new (NULL, NULL, _callback_, _user_data_);
+	g_task_set_source_tag (_data_->_async_result, foo_do_foo);
 	g_task_set_task_data (_data_->_async_result, _data_, foo_do_foo_data_free);
 	_tmp0_ = _foo_ref0 (self);
 	_data_->self = _tmp0_;
@@ -133,6 +134,8 @@ foo_do_foo_finish (Foo* self,
                    GAsyncResult* _res_)
 {
 	FooDoFooData* _data_;
+	g_return_if_fail (G_IS_TASK (_res_));
+	g_return_if_fail (g_async_result_is_tagged (_res_, foo_do_foo));
 	_data_ = g_task_propagate_pointer (G_TASK (_res_), NULL);
 }
 
