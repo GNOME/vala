@@ -2506,7 +2506,7 @@ public class Vala.GTypeModule : GErrorModule {
 		} else {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 
-			var cdefault = default_value_for_type (ret_type, false);
+			var cdefault = default_value_for_type (ret_type, false, true);
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else if (ret_type.type_symbol is Struct && !((Struct) ret_type.type_symbol).is_simple_type ()) {
