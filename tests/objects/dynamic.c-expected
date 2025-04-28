@@ -193,7 +193,7 @@ gint
 foo_get_prop2 (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_prop2;
 	return result;
 }

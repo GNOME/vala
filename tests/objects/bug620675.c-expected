@@ -540,7 +540,7 @@ static gint
 vala_g_ptr_array_get_length (GPtrArray* self)
 {
 	gint result;
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	result = (gint) self->len;
 	return result;
 }

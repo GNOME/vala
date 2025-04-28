@@ -284,7 +284,7 @@ test_h (gint i,
         Test* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	result = i;
 	return result;
 }

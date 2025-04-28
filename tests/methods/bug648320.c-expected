@@ -125,7 +125,7 @@ gint
 foo_get_i (Foo* self)
 {
 	FooIface* _iface_;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	_iface_ = FOO_GET_INTERFACE (self);
 	if (_iface_->get_i) {
 		return _iface_->get_i (self);

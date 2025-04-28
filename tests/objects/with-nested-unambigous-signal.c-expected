@@ -98,7 +98,7 @@ gint
 foo_bar (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = 23;
 	return result;
 }

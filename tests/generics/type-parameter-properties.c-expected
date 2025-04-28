@@ -384,10 +384,10 @@ _vala_main (void)
 	_tmp0_ = bar_new (G_TYPE_STRING, (GBoxedCopyFunc) g_strdup, (GDestroyNotify) g_free);
 	bar = _tmp0_;
 	{
-		GType type = 0UL;
+		GType type = G_TYPE_NONE;
 		GBoxedCopyFunc dup_func = NULL;
 		GDestroyNotify destroy_func = NULL;
-		GType _tmp1_ = 0UL;
+		GType _tmp1_ = G_TYPE_NONE;
 		GBoxedCopyFunc _tmp2_ = NULL;
 		GDestroyNotify _tmp3_ = NULL;
 		g_object_get (G_TYPE_CHECK_INSTANCE_CAST (bar, G_TYPE_OBJECT, GObject), "t-type", &_tmp1_, "t-dup-func", &_tmp2_, "t-destroy-func", &_tmp3_, NULL);
@@ -399,10 +399,10 @@ _vala_main (void)
 		_vala_assert (destroy_func == ((GDestroyNotify) g_free), "destroy_func == (DestroyNotify) free");
 	}
 	{
-		GType type = 0UL;
+		GType type = G_TYPE_NONE;
 		GBoxedCopyFunc dup_func = NULL;
 		GDestroyNotify destroy_func = NULL;
-		GType _tmp4_ = 0UL;
+		GType _tmp4_ = G_TYPE_NONE;
 		GBoxedCopyFunc _tmp5_ = NULL;
 		GDestroyNotify _tmp6_ = NULL;
 		g_object_get (G_TYPE_CHECK_INSTANCE_CAST (bar, G_TYPE_OBJECT, GObject), "g-type", &_tmp4_, "g-dup-func", &_tmp5_, "g-destroy-func", &_tmp6_, NULL);

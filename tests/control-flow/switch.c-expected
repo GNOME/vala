@@ -305,7 +305,7 @@ maman_foo_inc (MamanFoo* self)
 {
 	gint _tmp0_;
 	gint result;
-	g_return_val_if_fail (MAMAN_IS_FOO (self), 0);
+	g_return_val_if_fail (MAMAN_IS_FOO (self), -1);
 	_tmp0_ = self->priv->counter;
 	self->priv->counter = _tmp0_ + 1;
 	result = _tmp0_;

@@ -219,7 +219,7 @@ gint
 iface1_foo (Iface1* self)
 {
 	Iface1Iface* _iface_;
-	g_return_val_if_fail (IS_IFACE1 (self), 0);
+	g_return_val_if_fail (IS_IFACE1 (self), -1);
 	_iface_ = IFACE1_GET_INTERFACE (self);
 	if (_iface_->foo) {
 		return _iface_->foo (self);
@@ -259,7 +259,7 @@ gint
 iface2_foo (Iface2* self)
 {
 	Iface2Iface* _iface_;
-	g_return_val_if_fail (IS_IFACE2 (self), 0);
+	g_return_val_if_fail (IS_IFACE2 (self), -1);
 	_iface_ = IFACE2_GET_INTERFACE (self);
 	if (_iface_->foo) {
 		return _iface_->foo (self);
@@ -475,7 +475,7 @@ gint
 base_foo (Base* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_BASE (self), 0);
+	g_return_val_if_fail (IS_BASE (self), -1);
 	result = 42;
 	return result;
 }
@@ -532,7 +532,7 @@ gint
 iface_foo (Iface* self)
 {
 	IfaceIface* _iface_;
-	g_return_val_if_fail (IS_IFACE (self), 0);
+	g_return_val_if_fail (IS_IFACE (self), -1);
 	_iface_ = IFACE_GET_INTERFACE (self);
 	if (_iface_->foo) {
 		return _iface_->foo (self);

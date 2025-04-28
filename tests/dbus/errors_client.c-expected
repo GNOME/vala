@@ -203,7 +203,7 @@ test_test_int (Test* self,
                GError** error)
 {
 	TestIface* _iface_;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	_iface_ = TEST_GET_INTERFACE (self);
 	if (_iface_->test_int) {
 		return _iface_->test_int (self, i, j, error);

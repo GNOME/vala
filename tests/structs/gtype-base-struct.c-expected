@@ -173,7 +173,7 @@ foo_int
 foo_get_prop_int (Foo* self)
 {
 	foo_int result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_prop_int;
 	return result;
 }
@@ -217,7 +217,7 @@ foo_int64
 foo_get_prop_int64 (Foo* self)
 {
 	foo_int64 result;
-	g_return_val_if_fail (IS_FOO (self), 0LL);
+	g_return_val_if_fail (IS_FOO (self), -1LL);
 	result = self->priv->_prop_int64;
 	return result;
 }
@@ -261,7 +261,7 @@ foo_long
 foo_get_prop_long (Foo* self)
 {
 	foo_long result;
-	g_return_val_if_fail (IS_FOO (self), 0L);
+	g_return_val_if_fail (IS_FOO (self), -1L);
 	result = self->priv->_prop_long;
 	return result;
 }
@@ -371,7 +371,7 @@ foo_float
 foo_get_prop_float (Foo* self)
 {
 	foo_float result;
-	g_return_val_if_fail (IS_FOO (self), 0.0F);
+	g_return_val_if_fail (IS_FOO (self), -1.0F);
 	result = self->priv->_prop_float;
 	return result;
 }
@@ -393,7 +393,7 @@ foo_double
 foo_get_prop_double (Foo* self)
 {
 	foo_double result;
-	g_return_val_if_fail (IS_FOO (self), 0.0);
+	g_return_val_if_fail (IS_FOO (self), -1.0);
 	result = self->priv->_prop_double;
 	return result;
 }
@@ -415,7 +415,7 @@ foo_gtype
 foo_get_prop_gtype (Foo* self)
 {
 	foo_gtype result;
-	g_return_val_if_fail (IS_FOO (self), 0UL);
+	g_return_val_if_fail (IS_FOO (self), G_TYPE_INVALID);
 	result = self->priv->_prop_gtype;
 	return result;
 }

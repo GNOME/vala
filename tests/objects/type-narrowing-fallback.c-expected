@@ -118,7 +118,7 @@ gint
 foo_get_foo (Foo* self)
 {
 	FooIface* _iface_;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	_iface_ = FOO_GET_INTERFACE (self);
 	if (_iface_->get_foo) {
 		return _iface_->get_foo (self);
@@ -158,7 +158,7 @@ gint
 bar_get_bar (Bar* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_BAR (self), 0);
+	g_return_val_if_fail (IS_BAR (self), -1);
 	result = 23;
 	return result;
 }
@@ -223,7 +223,7 @@ gint
 manam_get_foo (Manam* self)
 {
 	ManamClass* _klass_;
-	g_return_val_if_fail (IS_MANAM (self), 0);
+	g_return_val_if_fail (IS_MANAM (self), -1);
 	_klass_ = MANAM_GET_CLASS (self);
 	if (_klass_->get_foo) {
 		return _klass_->get_foo (self);

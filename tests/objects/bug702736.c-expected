@@ -183,7 +183,7 @@ gint
 class_a_get_flags (ClassA* self)
 {
 	ClassAClass* _klass_;
-	g_return_val_if_fail (IS_CLASS_A (self), 0);
+	g_return_val_if_fail (IS_CLASS_A (self), -1);
 	_klass_ = CLASS_A_GET_CLASS (self);
 	if (_klass_->get_flags) {
 		return _klass_->get_flags (self);

@@ -67,7 +67,7 @@ static gdouble
 double_parse (const gchar* str)
 {
 	gdouble result;
-	g_return_val_if_fail (str != NULL, 0.0);
+	g_return_val_if_fail (str != NULL, -1.0);
 	result = g_ascii_strtod (str, NULL);
 	return result;
 }
@@ -223,7 +223,7 @@ static gfloat
 float_parse (const gchar* str)
 {
 	gfloat result;
-	g_return_val_if_fail (str != NULL, 0.0F);
+	g_return_val_if_fail (str != NULL, -1.0F);
 	result = strtof (str, NULL);
 	return result;
 }

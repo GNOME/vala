@@ -152,7 +152,7 @@ gint
 maman_foo_get_p1 (MamanFoo* self)
 {
 	gint result;
-	g_return_val_if_fail (MAMAN_IS_FOO (self), 0);
+	g_return_val_if_fail (MAMAN_IS_FOO (self), -1);
 	result = self->priv->_p1;
 	return result;
 }
@@ -174,7 +174,7 @@ gint
 maman_foo_get_p2 (MamanFoo* self)
 {
 	gint result;
-	g_return_val_if_fail (MAMAN_IS_FOO (self), 0);
+	g_return_val_if_fail (MAMAN_IS_FOO (self), -1);
 	result = self->priv->_p2;
 	return result;
 }

@@ -516,7 +516,7 @@ gdouble
 foo_get_double_prop (Foo* self)
 {
 	gdouble result;
-	g_return_val_if_fail (IS_FOO (self), 0.0);
+	g_return_val_if_fail (IS_FOO (self), -1.0);
 	result = self->priv->_double_prop;
 	return result;
 }
@@ -538,7 +538,7 @@ gdouble
 foo_get_double_prop2 (Foo* self)
 {
 	gdouble result;
-	g_return_val_if_fail (IS_FOO (self), 0.0);
+	g_return_val_if_fail (IS_FOO (self), -1.0);
 	result = self->priv->_double_prop2;
 	return result;
 }
@@ -648,7 +648,7 @@ gfloat
 foo_get_float_prop (Foo* self)
 {
 	gfloat result;
-	g_return_val_if_fail (IS_FOO (self), 0.0F);
+	g_return_val_if_fail (IS_FOO (self), -1.0F);
 	result = self->priv->_float_prop;
 	return result;
 }
@@ -670,7 +670,7 @@ gfloat
 foo_get_float_prop2 (Foo* self)
 {
 	gfloat result;
-	g_return_val_if_fail (IS_FOO (self), 0.0F);
+	g_return_val_if_fail (IS_FOO (self), -1.0F);
 	result = self->priv->_float_prop2;
 	return result;
 }
@@ -692,7 +692,7 @@ gint
 foo_get_int_prop (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_int_prop;
 	return result;
 }
@@ -714,7 +714,7 @@ gint
 foo_get_int_prop2 (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_int_prop2;
 	return result;
 }
@@ -736,7 +736,7 @@ gint64
 foo_get_int64_prop (Foo* self)
 {
 	gint64 result;
-	g_return_val_if_fail (IS_FOO (self), 0LL);
+	g_return_val_if_fail (IS_FOO (self), -1LL);
 	result = self->priv->_int64_prop;
 	return result;
 }
@@ -758,7 +758,7 @@ gint64
 foo_get_int64_prop2 (Foo* self)
 {
 	gint64 result;
-	g_return_val_if_fail (IS_FOO (self), 0LL);
+	g_return_val_if_fail (IS_FOO (self), -1LL);
 	result = self->priv->_int64_prop2;
 	return result;
 }
@@ -780,7 +780,7 @@ glong
 foo_get_long_prop (Foo* self)
 {
 	glong result;
-	g_return_val_if_fail (IS_FOO (self), 0L);
+	g_return_val_if_fail (IS_FOO (self), -1L);
 	result = self->priv->_long_prop;
 	return result;
 }
@@ -802,7 +802,7 @@ glong
 foo_get_long_prop2 (Foo* self)
 {
 	glong result;
-	g_return_val_if_fail (IS_FOO (self), 0L);
+	g_return_val_if_fail (IS_FOO (self), -1L);
 	result = self->priv->_long_prop2;
 	return result;
 }
@@ -1166,7 +1166,7 @@ GType
 foo_get_gtype_prop (Foo* self)
 {
 	GType result;
-	g_return_val_if_fail (IS_FOO (self), 0UL);
+	g_return_val_if_fail (IS_FOO (self), G_TYPE_INVALID);
 	result = self->priv->_gtype_prop;
 	return result;
 }
@@ -1188,7 +1188,7 @@ GType
 foo_get_gtype_prop2 (Foo* self)
 {
 	GType result;
-	g_return_val_if_fail (IS_FOO (self), 0UL);
+	g_return_val_if_fail (IS_FOO (self), G_TYPE_INVALID);
 	result = self->priv->_gtype_prop2;
 	return result;
 }

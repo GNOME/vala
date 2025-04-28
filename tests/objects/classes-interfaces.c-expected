@@ -232,7 +232,7 @@ gint
 ibar_foo (IBar* self)
 {
 	IBarIface* _iface_;
-	g_return_val_if_fail (IS_IBAR (self), 0);
+	g_return_val_if_fail (IS_IBAR (self), -1);
 	_iface_ = IBAR_GET_INTERFACE (self);
 	if (_iface_->foo) {
 		return _iface_->foo (self);

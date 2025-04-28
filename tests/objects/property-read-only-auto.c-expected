@@ -211,7 +211,7 @@ gint
 foo_get_read_only (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_read_only;
 	return result;
 }
@@ -443,7 +443,7 @@ gint
 bar_get_read_only (Bar* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_BAR (self), 0);
+	g_return_val_if_fail (IS_BAR (self), -1);
 	result = self->priv->_read_only;
 	return result;
 }
@@ -519,7 +519,7 @@ gint
 ibaz_get_read_only (IBaz* self)
 {
 	IBazIface* _iface_;
-	g_return_val_if_fail (IS_IBAZ (self), 0);
+	g_return_val_if_fail (IS_IBAZ (self), -1);
 	_iface_ = IBAZ_GET_INTERFACE (self);
 	if (_iface_->get_read_only) {
 		return _iface_->get_read_only (self);

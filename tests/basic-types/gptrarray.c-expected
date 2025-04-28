@@ -162,8 +162,8 @@ compare_foo (Foo* a,
              Foo* b)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (a), 0);
-	g_return_val_if_fail (IS_FOO (b), 0);
+	g_return_val_if_fail (IS_FOO (a), -1);
+	g_return_val_if_fail (IS_FOO (b), -1);
 	result = b->i - a->i;
 	return result;
 }
@@ -184,7 +184,7 @@ static gint
 vala_g_ptr_array_get_length (GPtrArray* self)
 {
 	gint result;
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	result = (gint) self->len;
 	return result;
 }

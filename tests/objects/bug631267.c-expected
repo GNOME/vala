@@ -358,7 +358,7 @@ gint
 foo_get_i (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = self->priv->_i;
 	return result;
 }
@@ -483,7 +483,7 @@ foo_get_foo (Foo* self)
 {
 	gint result;
 	gint _tmp0_;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	_tmp0_ = self->priv->_i;
 	result = _tmp0_;
 	return result;

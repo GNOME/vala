@@ -189,8 +189,8 @@ foo_bar_pre (Foo* self,
              gint i)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
-	_vala_return_val_if_fail (i > 42, "i > 42", 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
+	_vala_return_val_if_fail (i > 42, "i > 42", -1);
 	_vala_assert (i == 4711, "i == 4711");
 	result = i;
 	return result;
@@ -201,7 +201,7 @@ foo_faz (Foo* self,
          gint i)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	switch (i) {
 		case 42:
 		{
@@ -221,8 +221,8 @@ foo_faz_pre (Foo* self,
              gint i)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
-	_vala_return_val_if_fail (i > 23, "i > 23", 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
+	_vala_return_val_if_fail (i > 23, "i > 23", -1);
 	switch (i) {
 		case 4711:
 		{
@@ -260,7 +260,7 @@ foo_manam (Foo* self,
            gint i)
 {
 	FooClass* _klass_;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	_klass_ = FOO_GET_CLASS (self);
 	if (_klass_->manam) {
 		gint result;
@@ -276,7 +276,7 @@ foo_real_manam_pre (Foo* self,
                     gint i)
 {
 	gint result;
-	_vala_return_val_if_fail (i > 23, "i > 23", 0);
+	_vala_return_val_if_fail (i > 23, "i > 23", -1);
 	switch (i) {
 		case 231:
 		{
@@ -295,8 +295,8 @@ foo_manam_pre (Foo* self,
                gint i)
 {
 	FooClass* _klass_;
-	g_return_val_if_fail (IS_FOO (self), 0);
-	_vala_return_val_if_fail (i > 23, "i > 23", 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
+	_vala_return_val_if_fail (i > 23, "i > 23", -1);
 	_klass_ = FOO_GET_CLASS (self);
 	if (_klass_->manam_pre) {
 		return _klass_->manam_pre (self, i);

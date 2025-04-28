@@ -294,7 +294,7 @@ gint
 bar_get_bar (Bar* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_BAR (self), 0);
+	g_return_val_if_fail (IS_BAR (self), -1);
 	result = self->priv->_bar;
 	return result;
 }

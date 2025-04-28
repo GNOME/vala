@@ -285,7 +285,7 @@ test_test_method (Test* self,
                   gint k)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	_vala_assert (j == 23, "j == 23");
 	_vala_assert (k == 11, "k == 11");
 	g_signal_emit (self, test_signals[TEST_TEST_SIGNAL_SIGNAL], 0, 46);
