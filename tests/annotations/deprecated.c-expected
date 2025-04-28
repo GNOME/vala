@@ -232,7 +232,7 @@ gint
 fooclass_foo (FooClass* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOOCLASS (self), 0);
+	g_return_val_if_fail (IS_FOOCLASS (self), -1);
 	result = 42;
 	return result;
 }
@@ -249,7 +249,7 @@ gint
 fooclass_foov (FooClass* self)
 {
 	FooClassClass* _klass_;
-	g_return_val_if_fail (IS_FOOCLASS (self), 0);
+	g_return_val_if_fail (IS_FOOCLASS (self), -1);
 	_klass_ = FOOCLASS_GET_CLASS (self);
 	if (_klass_->foov) {
 		return _klass_->foov (self);
@@ -275,7 +275,7 @@ gint
 fooclass_get_bar (FooClass* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOOCLASS (self), 0);
+	g_return_val_if_fail (IS_FOOCLASS (self), -1);
 	result = self->priv->_bar;
 	return result;
 }
@@ -388,7 +388,7 @@ gint
 afoo_foo (AFoo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_AFOO (self), 0);
+	g_return_val_if_fail (IS_AFOO (self), -1);
 	result = 42;
 	return result;
 }
@@ -405,7 +405,7 @@ gint
 afoo_fooa (AFoo* self)
 {
 	AFooClass* _klass_;
-	g_return_val_if_fail (IS_AFOO (self), 0);
+	g_return_val_if_fail (IS_AFOO (self), -1);
 	_klass_ = AFOO_GET_CLASS (self);
 	if (_klass_->fooa) {
 		return _klass_->fooa (self);

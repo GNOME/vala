@@ -140,7 +140,7 @@ gint
 ifoo_foo (IFoo* self)
 {
 	IFooIface* _iface_;
-	g_return_val_if_fail (IS_IFOO (self), 0);
+	g_return_val_if_fail (IS_IFOO (self), -1);
 	_iface_ = IFOO_GET_INTERFACE (self);
 	if (_iface_->foo) {
 		return _iface_->foo (self);
@@ -228,7 +228,7 @@ gint
 foo_foo (Foo* self)
 {
 	FooClass* _klass_;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	_klass_ = FOO_GET_CLASS (self);
 	if (_klass_->foo) {
 		return _klass_->foo (self);

@@ -1076,7 +1076,7 @@ gint
 maman_base_access_ifoo_interface_method (MamanBaseAccessIFoo* self)
 {
 	MamanBaseAccessIFooIface* _iface_;
-	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_IFOO (self), 0);
+	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_IFOO (self), -1);
 	_iface_ = MAMAN_BASE_ACCESS_IFOO_GET_INTERFACE (self);
 	if (_iface_->interface_method) {
 		return _iface_->interface_method (self);
@@ -1088,7 +1088,7 @@ gint
 maman_base_access_ifoo_virtual_interface_method (MamanBaseAccessIFoo* self)
 {
 	MamanBaseAccessIFooIface* _iface_;
-	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_IFOO (self), 0);
+	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_IFOO (self), -1);
 	_iface_ = MAMAN_BASE_ACCESS_IFOO_GET_INTERFACE (self);
 	if (_iface_->virtual_interface_method) {
 		return _iface_->virtual_interface_method (self);
@@ -1136,7 +1136,7 @@ gint
 maman_base_access_foo_virtual_method (MamanBaseAccessFoo* self)
 {
 	MamanBaseAccessFooClass* _klass_;
-	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_FOO (self), 0);
+	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_FOO (self), -1);
 	_klass_ = MAMAN_BASE_ACCESS_FOO_GET_CLASS (self);
 	if (_klass_->virtual_method) {
 		return _klass_->virtual_method (self);
@@ -1166,7 +1166,7 @@ gint
 maman_base_access_foo_virtual_interface_method (MamanBaseAccessFoo* self)
 {
 	MamanBaseAccessFooClass* _klass_;
-	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_FOO (self), 0);
+	g_return_val_if_fail (MAMAN_BASE_ACCESS_IS_FOO (self), -1);
 	_klass_ = MAMAN_BASE_ACCESS_FOO_GET_CLASS (self);
 	if (_klass_->virtual_interface_method) {
 		return _klass_->virtual_interface_method (self);

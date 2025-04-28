@@ -176,7 +176,7 @@ GType
 foo_get_foo_g_type (Foo* self)
 {
 	GType result;
-	g_return_val_if_fail (IS_FOO (self), 0UL);
+	g_return_val_if_fail (IS_FOO (self), G_TYPE_INVALID);
 	result = self->priv->g_type;
 	return result;
 }
@@ -307,7 +307,7 @@ GType
 bar_get_bar_g_type (Bar* self)
 {
 	GType result;
-	g_return_val_if_fail (IS_BAR (self), 0UL);
+	g_return_val_if_fail (IS_BAR (self), G_TYPE_INVALID);
 	result = self->priv->g_type;
 	return result;
 }

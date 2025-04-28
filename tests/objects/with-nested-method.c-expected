@@ -130,7 +130,7 @@ gint
 foo_foo (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO (self), 0);
+	g_return_val_if_fail (IS_FOO (self), -1);
 	result = 23;
 	return result;
 }
@@ -352,7 +352,7 @@ gint
 bar_foo (Bar* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_BAR (self), 0);
+	g_return_val_if_fail (IS_BAR (self), -1);
 	result = 42;
 	return result;
 }

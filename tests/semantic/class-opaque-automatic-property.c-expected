@@ -65,7 +65,7 @@ gint
 foo_get_bar (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	result = self->_bar;
 	return result;
 }

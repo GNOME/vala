@@ -133,7 +133,7 @@ GType
 init_plugin (GTypeModule* m)
 {
 	GType result;
-	g_return_val_if_fail ((m == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (m, g_type_module_get_type ()), 0UL);
+	g_return_val_if_fail ((m == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (m, g_type_module_get_type ()), G_TYPE_INVALID);
 	module_register_type (m);
 	result = TYPE_MODULE;
 	return result;

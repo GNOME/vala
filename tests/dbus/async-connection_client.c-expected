@@ -116,7 +116,7 @@ test_get_test (Test* self,
                GError** error)
 {
 	TestIface* _iface_;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	_iface_ = TEST_GET_INTERFACE (self);
 	if (_iface_->get_test) {
 		return _iface_->get_test (self, error);

@@ -160,7 +160,7 @@ c_test1_method (Test1* self,
                 gint c_b)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST1 (self), 0);
+	g_return_val_if_fail (IS_TEST1 (self), -1);
 	result = c_a + c_b;
 	return result;
 }
@@ -183,7 +183,7 @@ gint
 test1_get_test1_prop (Test1* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST1 (self), 0);
+	g_return_val_if_fail (IS_TEST1 (self), -1);
 	result = self->priv->_test1_prop;
 	return result;
 }
@@ -412,7 +412,7 @@ c_test2_method (Test2* self,
                 gint c_b)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST2 (self), 0);
+	g_return_val_if_fail (IS_TEST2 (self), -1);
 	result = c_a + c_b;
 	return result;
 }
@@ -435,7 +435,7 @@ gint
 test2_get_test2_prop (Test2* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST2 (self), 0);
+	g_return_val_if_fail (IS_TEST2 (self), -1);
 	result = self->priv->_test2_prop;
 	return result;
 }

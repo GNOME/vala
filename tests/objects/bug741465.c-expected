@@ -113,7 +113,7 @@ abstract_foo_new (void)
 gint
 abstract_foo_get_prop (AbstractFoo* self)
 {
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	if (self->get_prop) {
 		return self->get_prop (self);
 	}
@@ -287,7 +287,7 @@ manam_new (void)
 gint
 manam_get_prop (Manam* self)
 {
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	if (self->get_prop) {
 		return self->get_prop (self);
 	}

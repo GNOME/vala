@@ -1739,7 +1739,7 @@ gint
 foo_collection3_get_size (FooCollection3* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO_COLLECTION3 (self), 0);
+	g_return_val_if_fail (IS_FOO_COLLECTION3 (self), -1);
 	result = 1;
 	return result;
 }
@@ -2556,7 +2556,7 @@ gint
 foo_collection4_get_size (FooCollection4* self)
 {
 	gint result;
-	g_return_val_if_fail (IS_FOO_COLLECTION4 (self), 0);
+	g_return_val_if_fail (IS_FOO_COLLECTION4 (self), -1);
 	result = 1;
 	return result;
 }

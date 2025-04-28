@@ -109,7 +109,7 @@ gint
 foo_destroy (Foo* self)
 {
 	gint result;
-	g_return_val_if_fail (self != NULL, 0);
+	g_return_val_if_fail (self != NULL, -1);
 	g_slice_free1 ((gsize) sizeof (gint), self);
 	result = 42;
 	return result;

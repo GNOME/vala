@@ -139,7 +139,7 @@ test_get_test (Test* self,
                GError** error)
 {
 	gint result;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	result = 23;
 	return result;
 }

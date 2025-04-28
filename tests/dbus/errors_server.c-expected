@@ -209,7 +209,7 @@ test_test_int (Test* self,
 	GError* _tmp0_;
 	gint _tmp1_ = -1;
 	GError* _inner_error0_ = NULL;
-	g_return_val_if_fail (IS_TEST (self), 0);
+	g_return_val_if_fail (IS_TEST (self), -1);
 	_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "Operation failed");
 	_inner_error0_ = _tmp0_;
 	g_propagate_error (error, _inner_error0_);

@@ -79,7 +79,7 @@ foo_output_stream_real_write (GOutputStream* base,
 	GError* _tmp0_;
 	GError* _inner_error0_ = NULL;
 	self = G_TYPE_CHECK_INSTANCE_CAST (base, TYPE_FOO_OUTPUT_STREAM, FooOutputStream);
-	g_return_val_if_fail ((cancellable == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (cancellable, g_cancellable_get_type ()), 0L);
+	g_return_val_if_fail ((cancellable == NULL) || G_TYPE_CHECK_INSTANCE_TYPE (cancellable, g_cancellable_get_type ()), -1L);
 	_tmp0_ = g_error_new_literal (G_IO_ERROR, G_IO_ERROR_FAILED, "");
 	_inner_error0_ = _tmp0_;
 	if (_inner_error0_->domain == G_IO_ERROR) {

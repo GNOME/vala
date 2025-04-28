@@ -831,7 +831,7 @@ _vala_lambda2_ (MamanReturnBar* self,
 	FILE* _tmp0_;
 	gint _tmp1_;
 	gint result;
-	g_return_val_if_fail (MAMAN_IS_RETURN_FOO (foo), 0);
+	g_return_val_if_fail (MAMAN_IS_RETURN_FOO (foo), -1);
 	_tmp0_ = stdout;
 	fprintf (_tmp0_, " %d", arg);
 	counter = counter + 1;
