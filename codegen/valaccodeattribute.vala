@@ -426,7 +426,7 @@ public class Vala.CCodeAttribute : AttributeCache {
 					_default_value_on_error = ccode.get_string ("default_value_on_error");
 				}
 				if (_default_value_on_error == null) {
-					_default_value_on_error = default_value;
+					_default_value_on_error = get_default_default_value_on_error ();
 				}
 			}
 			return _default_value_on_error;
@@ -1468,6 +1468,16 @@ public class Vala.CCodeAttribute : AttributeCache {
 			}
 		}
 		return "";
+	}
+
+	private string get_default_default_value_on_error () {
+		if (sym is Struct) {
+			unowned Struct? base_st = ((Struct) sym).base_struct;
+			if (base_st != null) {
+				return get_ccode_default_value_on_error (base_st);
+			}
+		}
+		return default_value;
 	}
 
 	private string get_finish_name_for_basename (string basename) {
