@@ -1321,7 +1321,7 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 		} else {
 			ccheck.call = new CCodeIdentifier ("_vala_return_val_if_fail");
 
-			var cdefault = default_value_for_type (ret_type, false);
+			var cdefault = default_value_for_type (ret_type, false, true);
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
