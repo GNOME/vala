@@ -217,6 +217,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_package ();
 			} else if (reader.name == "c:include") {
 				parse_c_include ();
+			} else if (reader.name == "doc:format") {
+				parse_doc_format ();
 			} else {
 				// error
 				error ("unknown child element `%s' in `repository'".printf (reader.name));
@@ -245,6 +247,13 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		next ();
 
 		end_element ("c:include");
+	}
+
+	private void parse_doc_format () {
+		start_element ("doc:format");
+		next ();
+
+		end_element ("doc:format");
 	}
 
 	private void skip_element () {
