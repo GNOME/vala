@@ -38,20 +38,6 @@ binding.</description>
   <category rdf:resource="http://api.gnome.org/doap-extensions#core" />
   <programming-language>Vala</programming-language>
 
-  <author>
-    <foaf:Person>
-      <foaf:name>Jürg Billeter</foaf:name>
-      <foaf:mbox rdf:resource="mailto:j@bitron.ch" />
-      <gnome:userid>juergbi</gnome:userid>
-    </foaf:Person>
-  </author>
-  <author>
-    <foaf:Person>
-      <foaf:name>Raffaele Sandrini</foaf:name>
-      <foaf:mbox rdf:resource="mailto:rasa@gmx.ch" />
-      <gnome:userid></gnome:userid>
-    </foaf:Person>
-  </author>
   <maintainer>
     <foaf:Person>
       <foaf:name>Rico Tzschichholz</foaf:name>
