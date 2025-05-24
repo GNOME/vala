@@ -1,0 +1,10 @@
+Invalid Code
+
+void main () {
+	try {
+		this.connection = new Gda.Connection.from_string ("", @"DB_DIR=$db_path;DB_NAME=revala", null, Gda.ConnectionOptions.NONE);
+	} catch (GLib.Error as error) {
+		stdout.printf("Error creating the connection to the database");
+		throw error;
+	}
+}
