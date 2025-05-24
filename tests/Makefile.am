@@ -1073,6 +1073,7 @@ TESTS = \
 	parser/switch-section-missing-colon.test \
 	parser/switch-section-outside-switch.test \
 	parser/template.vala \
+	parser/try-catch-format-string.test \
 	parser/try-catch-in-switch-case-invalid.test \
 	parser/tuple.vala \
 	parser/unsupported-property-async.test \
