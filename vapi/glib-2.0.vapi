@@ -2091,14 +2091,14 @@ namespace GLib {
 		public static uint add (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		public static uint add_full (int priority, uint interval, owned SourceFunc function);
 		[Version (since = "2.74")]
-		public static uint add_once (uint interval, SourceOnceFunc function);
+		public static uint add_once (uint interval, [CCode (scope = "async")] owned SourceOnceFunc function);
 		[Version (since = "2.14")]
 		[CCode (cname = "g_timeout_add_seconds_full")]
 		public static uint add_seconds (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		[Version (since = "2.14")]
 		public static uint add_seconds_full (int priority, uint interval, owned SourceFunc function);
 		[Version (since = "2.78")]
-		public static uint add_seconds_once (uint interval, SourceOnceFunc function);
+		public static uint add_seconds_once (uint interval, [CCode (scope = "async")] owned SourceOnceFunc function);
 	}
 
 	[CCode (cname = "GSource")]
@@ -2111,7 +2111,7 @@ namespace GLib {
 		public static uint add (owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT_IDLE);
 		public static uint add_full (int priority, owned SourceFunc function);
 		[Version (since = "2.74")]
-		public static uint add_once (SourceOnceFunc function);
+		public static uint add_once ([CCode (scope = "async")] owned SourceOnceFunc function);
 		public static bool remove_by_data (void* data);
 	}
 
