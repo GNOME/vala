@@ -681,7 +681,7 @@ namespace GLib {
 		public GLib.Type[] children ();
 		public unowned GLib.TypeClass? class_peek ();
 		public unowned GLib.TypeClass? class_peek_static ();
-		public unowned GLib.TypeClass? default_interface_peek ();
+		public unowned GLib.TypeInterface? default_interface_peek ();
 		public GLib.TypeInterface default_interface_ref ();
 		public GLib.TypeClass class_ref ();
 		public uint depth ();
