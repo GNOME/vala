@@ -739,6 +739,8 @@ namespace GLib {
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
 		public unowned string name ();
+		[CCode (cname = "g_type_name")]
+		public unowned string to_string ();
 		public GLib.Type parent ();
 		public GLib.Quark qname ();
 		public void query (out GLib.TypeQuery query);
