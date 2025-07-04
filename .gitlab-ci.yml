@@ -5,7 +5,7 @@ include:
 
 .flatpak rules:
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $REPO_TOKEN && ($CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "schedule")
+    - if: $CI_COMMIT_BRANCH == "main" && $REPO_TOKEN_FILE && ($CI_PIPELINE_SOURCE == "web" || $CI_PIPELINE_SOURCE == "schedule")
 
 .vars-extension:
   extends: ".flatpak rules"
