@@ -1,9 +1,9 @@
 id: "org.freedesktop.Sdk.Extension.vala-nightly"
-branch: "23.08"
+branch: "24.08"
 runtime: "org.freedesktop.Sdk"
 build-extension: true
 sdk: "org.freedesktop.Sdk"
-runtime-version: "23.08"
+runtime-version: "24.08"
 sdk-extensions: ["org.freedesktop.Sdk.Extension.vala"]
 separate-locales: false
 appstream-compose: false
