@@ -47,8 +47,8 @@ modules:
       - name: dbus-run-session
         sources:
           - type: archive
-            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.14.10/dbus-dbus-1.14.10.tar.gz"
-            sha256: "5fedcd6c17fbc62646af224e1aab11a334c463e7e7d89163a670ed24e7ab241c"
+            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.16.2/dbus-dbus-1.16.2.tar.gz"
+            sha256: "d77cc71acd93e85f2bd2a6fe3a40e5bd023519e3e9fa9b5361e7109f42b74060"
             x-checker-data:
               type: anitya
               project-id: 5356
@@ -77,13 +77,10 @@ modules:
         cleanup: ["/lib/pkgconfig"]
       - name: gee
         buildsystem: autotools
-        build-options:
-          # GCC 14 doesn't like this libgee release
-          cflags: -Wno-error=incompatible-pointer-types
         sources:
           - type: archive
-            url: "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.6.tar.xz"
-            sha256: "1bf834f5e10d60cc6124d74ed3c1dd38da646787fbf7872220b8b4068e476d4d"
+            url: "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.8.tar.xz"
+            sha256: "189815ac143d89867193b0c52b7dc31f3aa108a15f04d6b5dca2b6adfad0b0ee"
             x-checker-data:
               type: gnome
               name: libgee
