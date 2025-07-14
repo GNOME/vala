@@ -54,7 +54,7 @@ modules:
               project-id: 5356
               stable-only: true
               url-template: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-$version/dbus-dbus-$version.tar.gz"
-        buildsystem: autotools
+        buildsystem: meson
         cleanup: ["*"]
   - name: vls
     buildsystem: meson
