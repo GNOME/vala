@@ -44,18 +44,6 @@ modules:
               stable-only: true
               url-template: "https://gitlab.com/graphviz/graphviz/-/archive/$version/graphviz-$version.tar.gz"
         cleanup: ["/include", "*.pc", "/share/graphviz/doc", "/bin", "/lib/pkgconfig"]
-      - name: dbus-run-session
-        sources:
-          - type: archive
-            url: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-1.16.2/dbus-dbus-1.16.2.tar.gz"
-            sha256: "d77cc71acd93e85f2bd2a6fe3a40e5bd023519e3e9fa9b5361e7109f42b74060"
-            x-checker-data:
-              type: anitya
-              project-id: 5356
-              stable-only: true
-              url-template: "https://gitlab.freedesktop.org/dbus/dbus/-/archive/dbus-$version/dbus-dbus-$version.tar.gz"
-        buildsystem: meson
-        cleanup: ["*"]
   - name: vls
     buildsystem: meson
     sources:
