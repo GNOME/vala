@@ -64,7 +64,7 @@ nightly@24.08@aarch64:
 
 ubuntu-gcc-x86_64:
   stage: build
-  image: ubuntu:23.10
+  image: ubuntu:24.04
   except:
     - tags
   variables:
