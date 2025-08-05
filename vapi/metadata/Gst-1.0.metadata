@@ -83,6 +83,7 @@ parse_bin_from_description_full floating
 *.*_valist_* skip=false
 debug_log skip=false printf_format
 Caps
+  .new_full_valist.structure owned
   .new_simple skip=false
   .set_simple skip=false
 CapsFeatures
