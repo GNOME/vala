@@ -31,7 +31,7 @@ namespace Gst {
 	[Compact, CCode (ref_function = "gst_caps_ref", type_id = "gst_caps_get_type ()", unref_function = "gst_caps_unref")]
 	public class Caps {
 		[CCode (has_construct_function = false)]
-		public Caps.full (params Gst.Structure[] structure);
+		public Caps.full (params owned Gst.Structure[] structure);
 	}
 
 	[Compact, CCode (copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gst_caps_features_get_type ()")]

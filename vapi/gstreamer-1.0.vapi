@@ -920,9 +920,9 @@ namespace Gst {
 		public bool @foreach (Gst.CapsForeachFunc func);
 		public static Gst.Caps? from_string (string string);
 		[CCode (has_construct_function = false)]
-		public Caps.full (params Gst.Structure[] structure);
+		public Caps.full (params owned Gst.Structure[] structure);
 		[CCode (has_construct_function = false)]
-		public Caps.full_valist (Gst.Structure structure, va_list var_args);
+		public Caps.full_valist (owned Gst.Structure structure, va_list var_args);
 		[Version (since = "1.2")]
 		public unowned Gst.CapsFeatures? get_features (uint index);
 		public uint get_size ();
