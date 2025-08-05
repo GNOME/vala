@@ -489,6 +489,7 @@ TESTS = \
 	delegates/params-array-with-throws.vala \
 	delegates/reference_transfer.vala \
 	delegates/return-array-null-terminated.vala \
+	delegates/scope-async.vala \
 	delegates/variadic.vala \
 	delegates/wrapper.vala \
 	delegates/bug519949.test \
