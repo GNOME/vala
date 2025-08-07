@@ -61,7 +61,7 @@ public class Vala.VersionAttribute {
 					|| symbol.has_attribute_argument ("Version", "replacement")
 					// [Deprecated] is deprecated
 					|| symbol.has_attribute ("Deprecated");
-			} else if (symbol.parent_symbol != null) {
+			} else if (symbol.parent_symbol is TypeSymbol) {
 				_deprecated = symbol.parent_symbol.version.deprecated;
 			} else {
 				_deprecated = false;
