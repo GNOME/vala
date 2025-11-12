@@ -224,5 +224,5 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindGetMapping")]
 	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false, cname = "GSettingsBindSetMapping")]
-	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
+	public delegate GLib.Variant? SettingsBindSetMappingShared ([CCode (type = "const GValue*")] GLib.Value value, GLib.VariantType expected_type, void* user_data);
 }

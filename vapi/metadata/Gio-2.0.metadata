@@ -326,7 +326,8 @@ pollable_source_new_full parent="GLib.PollableSource" symbol_type="constructor" 
   .child_source default=null
 pollable_stream_read
   .buffer type="uint8[]" array_length_idx=2
-
+SettingsBindSetMapping
+  .value ctype="const GValue*"
 
 content_types_get_registered parent="GLib.ContentType" name="list_registered"
 io_modules_* parent="GLib.IOModule" name="io_modules_(.*)"

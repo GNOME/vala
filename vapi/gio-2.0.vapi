@@ -5388,9 +5388,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSettingsBindGetMapping", has_target = false)]
 	public delegate bool SettingsBindGetMappingShared (GLib.Value value, GLib.Variant variant, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
-	public delegate GLib.Variant? SettingsBindSetMapping (GLib.Value value, GLib.VariantType expected_type);
+	public delegate GLib.Variant? SettingsBindSetMapping ([CCode (type = "const GValue*")] GLib.Value value, GLib.VariantType expected_type);
 	[CCode (cheader_filename = "gio/gio.h", cname = "GSettingsBindSetMapping", has_target = false)]
-	public delegate GLib.Variant SettingsBindSetMappingShared (GLib.Value value, GLib.VariantType expected_type, void* user_data);
+	public delegate GLib.Variant? SettingsBindSetMappingShared ([CCode (type = "const GValue*")] GLib.Value value, GLib.VariantType expected_type, void* user_data);
 	[CCode (cheader_filename = "gio/gio.h", instance_pos = 2.9)]
 	public delegate bool SettingsGetMapping (GLib.Variant? value, out void* result);
 	[CCode (cheader_filename = "gio/gio.h", has_typedef = false)]
