@@ -719,9 +719,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		push_function (cfunc);
 
-		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-
 		bool first = true;
 
 		foreach (Method m in sym.get_methods ()) {
@@ -731,6 +728,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 			if (!is_dbus_visible (m)) {
 				continue;
+			}
+
+			if (first) {
+				ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+				ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 			}
 
 			cfile.add_include ("string.h");
@@ -787,10 +789,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		push_function (cfunc);
 
-		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-
-		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-
 		bool firstif = true;
 
 		foreach (Property prop in sym.get_properties ()) {
@@ -803,6 +801,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 			if (prop.get_accessor == null) {
 				continue;
+			}
+
+			if (firstif) {
+				ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+				ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 			}
 
 			cfile.add_include ("string.h");
@@ -851,10 +854,6 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 
 		push_function (cfunc);
 
-		ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
-
-		ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
-
 		bool firstif = true;
 
 		foreach (Property prop in sym.get_properties ()) {
@@ -867,6 +866,11 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 			}
 			if (prop.set_accessor == null) {
 				continue;
+			}
+
+			if (firstif) {
+				ccode.add_declaration ("gpointer*", new CCodeVariableDeclarator ("data", new CCodeIdentifier ("user_data")));
+				ccode.add_declaration ("gpointer", new CCodeVariableDeclarator ("object", new CCodeElementAccess (new CCodeIdentifier ("data"), new CCodeConstant ("0"))));
 			}
 
 			cfile.add_include ("string.h");

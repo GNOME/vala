@@ -691,10 +691,6 @@ test_dbus_interface_get_property (GDBusConnection* connection,
                                   GError** error,
                                   gpointer user_data)
 {
-	gpointer* data;
-	gpointer object;
-	data = user_data;
-	object = data[0];
 	return NULL;
 }
 
@@ -708,10 +704,6 @@ test_dbus_interface_set_property (GDBusConnection* connection,
                                   GError** error,
                                   gpointer user_data)
 {
-	gpointer* data;
-	gpointer object;
-	data = user_data;
-	object = data[0];
 	return FALSE;
 }
 
