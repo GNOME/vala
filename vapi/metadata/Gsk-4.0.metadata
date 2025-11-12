@@ -1,9 +1,11 @@
 *.ref unowned
 *.unref destroys_instance=false
 
-BroadwayRenderer cheader_filename="gsk/broadway/gskbroadwayrenderer.h"
-GLRenderer cheader_filename="gsk/gl/gskglrenderer.h"
+BroadwayRenderer cname="GskRenderer" cheader_filename="gsk/broadway/gskbroadwayrenderer.h"
+CairoRenderer cname="GskRenderer"
+GLRenderer cname="GskRenderer" cheader_filename="gsk/gl/gskglrenderer.h"
 NglRenderer cname="GskRenderer" cheader_filename="gsk/gl/gskglrenderer.h"
+VulkanRenderer cname="GskRenderer" cheader_filename="gsk/gpu/gskvulkanrenderer.h"
 
 Renderer
 	// Factory method
@@ -20,3 +22,39 @@ RenderNode
 value_get_render_node.value ref
 value_set_render_node.value ref
 value_take_render_node.value ref
+
+BlendNode cname="GskRenderNode"
+BlurNode cname="GskRenderNode"
+BorderNode cname="GskRenderNode"
+CairoNode cname="GskRenderNode"
+ClipNode cname="GskRenderNode"
+ColorMatrixNode cname="GskRenderNode"
+ColorNode cname="GskRenderNode"
+CopyNode cname="GskRenderNode"
+ComponentTransferNode cname="GskRenderNode"
+CompositeNode cname="GskRenderNode"
+ConicGradientNode cname="GskRenderNode"
+ContainerNode cname="GskRenderNode"
+CrossFadeNode cname="GskRenderNode"
+DebugNode cname="GskRenderNode"
+FillNode cname="GskRenderNode"
+GLShaderNode cname="GskRenderNode"
+InsetShadowNode cname="GskRenderNode"
+IsolationNode cname="GskRenderNode"
+LinearGradientNode cname="GskRenderNode"
+MaskNode cname="GskRenderNode"
+OpacityNode cname="GskRenderNode"
+OutsetShadowNode cname="GskRenderNode"
+PasteNode cname="GskRenderNode"
+RadialGradientNode cname="GskRenderNode"
+RepeatNode cname="GskRenderNode"
+RepeatingLinearGradientNode cname="GskRenderNode"
+RepeatingRadialGradientNode cname="GskRenderNode"
+RoundedClipNode cname="GskRenderNode"
+ShadowNode cname="GskRenderNode"
+StrokeNode cname="GskRenderNode"
+SubsurfaceNode cname="GskRenderNode"
+TextNode cname="GskRenderNode"
+TextureNode cname="GskRenderNode"
+TextureScaleNode cname="GskRenderNode"
+TransformNode cname="GskRenderNode"
