@@ -6646,24 +6646,24 @@ namespace Gdk {
 }
 [CCode (cprefix = "Gsk", gir_namespace = "Gsk", gir_version = "4.0", lower_case_cprefix = "gsk_")]
 namespace Gsk {
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_blend_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_blend_node_get_type ()")]
 	public sealed class BlendNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public BlendNode (Gsk.RenderNode bottom, Gsk.RenderNode top, Gsk.BlendMode blend_mode);
 		public Gsk.BlendMode get_blend_mode ();
 		public unowned Gsk.RenderNode get_bottom_child ();
 		public unowned Gsk.RenderNode get_top_child ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_blur_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_blur_node_get_type ()")]
 	public sealed class BlurNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public BlurNode (Gsk.RenderNode child, float radius);
 		public unowned Gsk.RenderNode get_child ();
 		public float get_radius ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_border_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_border_node_get_type ()")]
 	public sealed class BorderNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public BorderNode (Gsk.RoundedRect outline, [CCode (array_length = false)] float border_width[4], [CCode (array_length = false)] Gdk.RGBA border_color[4]);
 		[CCode (array_length = false, array_length_cexpr = "4")]
 		public unowned Gdk.RGBA[] get_colors ();
@@ -6671,42 +6671,42 @@ namespace Gsk {
 		[CCode (array_length = false, array_length_cexpr = "4")]
 		public unowned float[] get_widths ();
 	}
-	[CCode (cheader_filename = "gsk/broadway/gskbroadwayrenderer.h", type_id = "gsk_broadway_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/broadway/gskbroadwayrenderer.h", cname = "GskRenderer", type_cname = "GskBroadwayRendererClass", type_id = "gsk_broadway_renderer_get_type ()")]
 	public sealed class BroadwayRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[CCode (has_construct_function = false)]
 		[Version (deprecated = true, deprecated_since = "4.20")]
 		public BroadwayRenderer ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cairo_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_cairo_node_get_type ()")]
 	public sealed class CairoNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public CairoNode (Graphene.Rect bounds);
 		public Cairo.Context get_draw_context ();
 		public unowned Cairo.Surface get_surface ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cairo_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderer", type_cname = "GskCairoRendererClass", type_id = "gsk_cairo_renderer_get_type ()")]
 	public sealed class CairoRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[CCode (has_construct_function = false)]
 		public CairoRenderer ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_clip_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_clip_node_get_type ()")]
 	public sealed class ClipNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ClipNode (Gsk.RenderNode child, Graphene.Rect clip);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Rect? get_clip ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_color_matrix_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_color_matrix_node_get_type ()")]
 	public sealed class ColorMatrixNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ColorMatrixNode (Gsk.RenderNode child, Graphene.Matrix color_matrix, Graphene.Vec4 color_offset);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Matrix? get_color_matrix ();
 		public unowned Graphene.Vec4? get_color_offset ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_color_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_color_node_get_type ()")]
 	public sealed class ColorNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ColorNode (Gdk.RGBA rgba, Graphene.Rect bounds);
 		public unowned Gdk.RGBA? get_color ();
 	}
@@ -6730,26 +6730,26 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		public ComponentTransfer.table ([CCode (array_length_cname = "n", array_length_pos = 0.5, array_length_type = "guint")] float[] values);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_component_transfer_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_component_transfer_node_get_type ()")]
 	[Version (since = "4.20")]
 	public sealed class ComponentTransferNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ComponentTransferNode (Gsk.RenderNode child, Gsk.ComponentTransfer r, Gsk.ComponentTransfer g, Gsk.ComponentTransfer b, Gsk.ComponentTransfer a);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.ComponentTransfer get_transfer (Gdk.ColorChannel component);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_composite_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_composite_node_get_type ()")]
 	[Version (since = "4.22")]
 	public sealed class CompositeNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public CompositeNode (Gsk.RenderNode child, Gsk.RenderNode mask, Gsk.PorterDuff op);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.RenderNode get_mask ();
 		public Gsk.PorterDuff get_operator ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_conic_gradient_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_conic_gradient_node_get_type ()")]
 	public sealed class ConicGradientNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ConicGradientNode (Graphene.Rect bounds, Graphene.Point center, float rotation, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 		[Version (since = "4.2")]
 		public float get_angle ();
@@ -6759,48 +6759,48 @@ namespace Gsk {
 		public size_t get_n_color_stops ();
 		public float get_rotation ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_container_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_container_node_get_type ()")]
 	public sealed class ContainerNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ContainerNode ([CCode (array_length_cname = "n_children", array_length_pos = 1.1, array_length_type = "guint")] Gsk.RenderNode[] children);
 		public unowned Gsk.RenderNode get_child (uint idx);
 		public uint get_n_children ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_copy_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_copy_node_get_type ()")]
 	[Version (since = "4.22")]
 	public sealed class CopyNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public CopyNode (Gsk.RenderNode child);
 		public unowned Gsk.RenderNode get_child ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_cross_fade_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_cross_fade_node_get_type ()")]
 	public sealed class CrossFadeNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public CrossFadeNode (Gsk.RenderNode start, Gsk.RenderNode end, float progress);
 		public unowned Gsk.RenderNode get_end_child ();
 		public float get_progress ();
 		public unowned Gsk.RenderNode get_start_child ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_debug_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_debug_node_get_type ()")]
 	public sealed class DebugNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public DebugNode (Gsk.RenderNode child, owned string message);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned string get_message ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_fill_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_fill_node_get_type ()")]
 	[Version (since = "4.14")]
 	public sealed class FillNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public FillNode (Gsk.RenderNode child, Gsk.Path path, Gsk.FillRule fill_rule);
 		public unowned Gsk.RenderNode get_child ();
 		public Gsk.FillRule get_fill_rule ();
 		public unowned Gsk.Path get_path ();
 	}
-	[CCode (cheader_filename = "gsk/gl/gskglrenderer.h", type_id = "gsk_gl_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/gl/gskglrenderer.h", cname = "GskRenderer", type_cname = "GskGLRendererClass", type_id = "gsk_gl_renderer_get_type ()")]
 	[Version (since = "4.2")]
 	public sealed class GLRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[CCode (has_construct_function = false)]
 		public GLRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_get_type ()")]
@@ -6834,9 +6834,9 @@ namespace Gsk {
 		public string resource { get; construct; }
 		public GLib.Bytes source { get; construct; }
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_gl_shader_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_gl_shader_node_get_type ()")]
 	public sealed class GLShaderNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		[Version (deprecated = true, deprecated_since = "4.16")]
 		public GLShaderNode (Gsk.GLShader shader, Graphene.Rect bounds, GLib.Bytes args, [CCode (array_length_cname = "n_children", array_length_pos = 4.1, array_length_type = "guint")] Gsk.RenderNode[]? children);
 		[Version (deprecated = true, deprecated_since = "4.16")]
@@ -6847,9 +6847,9 @@ namespace Gsk {
 		public uint get_n_children ();
 		public unowned Gsk.GLShader get_shader ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_inset_shadow_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_inset_shadow_node_get_type ()")]
 	public sealed class InsetShadowNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public InsetShadowNode (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public float get_blur_radius ();
 		public unowned Gdk.RGBA? get_color ();
@@ -6858,17 +6858,17 @@ namespace Gsk {
 		public unowned Gsk.RoundedRect? get_outline ();
 		public float get_spread ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_isolation_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_isolation_node_get_type ()")]
 	[Version (since = "4.22")]
 	public sealed class IsolationNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public IsolationNode (Gsk.RenderNode child, Gsk.Isolation isolations);
 		public unowned Gsk.RenderNode get_child ();
 		public Gsk.Isolation get_isolations ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_linear_gradient_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_linear_gradient_node_get_type ()")]
 	public sealed class LinearGradientNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public LinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
 		public unowned Gsk.ColorStop[] get_color_stops ();
@@ -6876,10 +6876,10 @@ namespace Gsk {
 		public size_t get_n_color_stops ();
 		public unowned Graphene.Point? get_start ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_mask_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_mask_node_get_type ()")]
 	[Version (since = "4.10")]
 	public sealed class MaskNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public MaskNode (Gsk.RenderNode source, Gsk.RenderNode mask, Gsk.MaskMode mask_mode);
 		public unowned Gsk.RenderNode get_mask ();
 		public Gsk.MaskMode get_mask_mode ();
@@ -6891,16 +6891,16 @@ namespace Gsk {
 		[Version (deprecated = true, deprecated_since = "4.18")]
 		public NglRenderer ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_opacity_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_opacity_node_get_type ()")]
 	public sealed class OpacityNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public OpacityNode (Gsk.RenderNode child, float opacity);
 		public unowned Gsk.RenderNode get_child ();
 		public float get_opacity ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_outset_shadow_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_outset_shadow_node_get_type ()")]
 	public sealed class OutsetShadowNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public OutsetShadowNode (Gsk.RoundedRect outline, Gdk.RGBA color, float dx, float dy, float spread, float blur_radius);
 		public float get_blur_radius ();
 		public unowned Gdk.RGBA? get_color ();
@@ -6909,10 +6909,10 @@ namespace Gsk {
 		public unowned Gsk.RoundedRect? get_outline ();
 		public float get_spread ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_paste_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_paste_node_get_type ()")]
 	[Version (since = "4.22")]
 	public sealed class PasteNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public PasteNode (Graphene.Rect bounds, size_t depth);
 		public size_t get_depth ();
 	}
@@ -7014,9 +7014,9 @@ namespace Gsk {
 		public float get_rotation (Gsk.Path path, Gsk.PathDirection direction);
 		public Graphene.Vec2 get_tangent (Gsk.Path path, Gsk.PathDirection direction);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_radial_gradient_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_radial_gradient_node_get_type ()")]
 	public sealed class RadialGradientNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public RadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 		public unowned Graphene.Point? get_center ();
 		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
@@ -7077,26 +7077,26 @@ namespace Gsk {
 		public bool realized { get; }
 		public Gdk.Surface surface { get; }
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeat_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_repeat_node_get_type ()")]
 	public sealed class RepeatNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public RepeatNode (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect? child_bounds);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Rect? get_child_bounds ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_linear_gradient_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_repeating_linear_gradient_node_get_type ()")]
 	public sealed class RepeatingLinearGradientNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public RepeatingLinearGradientNode (Graphene.Rect bounds, Graphene.Point start, Graphene.Point end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 4.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_repeating_radial_gradient_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_repeating_radial_gradient_node_get_type ()")]
 	public sealed class RepeatingRadialGradientNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public RepeatingRadialGradientNode (Graphene.Rect bounds, Graphene.Point center, float hradius, float vradius, float start, float end, [CCode (array_length_cname = "n_color_stops", array_length_pos = 7.1, array_length_type = "gsize")] Gsk.ColorStop[] color_stops);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_rounded_clip_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_rounded_clip_node_get_type ()")]
 	public sealed class RoundedClipNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public RoundedClipNode (Gsk.RenderNode child, Gsk.RoundedRect clip);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.RoundedRect? get_clip ();
@@ -7118,9 +7118,9 @@ namespace Gsk {
 		public GLib.Bytes to_args ();
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_shadow_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_shadow_node_get_type ()")]
 	public sealed class ShadowNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public ShadowNode (Gsk.RenderNode child, [CCode (array_length_cname = "n_shadows", array_length_pos = 2.1, array_length_type = "gsize")] Gsk.Shadow[] shadows);
 		public unowned Gsk.RenderNode get_child ();
 		public size_t get_n_shadows ();
@@ -7150,25 +7150,25 @@ namespace Gsk {
 		public void set_miter_limit (float limit);
 		public void to_cairo (Cairo.Context cr);
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_stroke_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_stroke_node_get_type ()")]
 	[Version (since = "4.14")]
 	public sealed class StrokeNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public StrokeNode (Gsk.RenderNode child, Gsk.Path path, Gsk.Stroke stroke);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.Path get_path ();
 		public unowned Gsk.Stroke get_stroke ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_subsurface_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_subsurface_node_get_type ()")]
 	[Version (since = "4.14")]
 	public sealed class SubsurfaceNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		protected SubsurfaceNode ();
 		public unowned Gsk.RenderNode get_child ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_text_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_text_node_get_type ()")]
 	public sealed class TextNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public TextNode (Pango.Font font, Pango.GlyphString glyphs, Gdk.RGBA color, Graphene.Point offset);
 		public unowned Gdk.RGBA? get_color ();
 		public unowned Pango.Font get_font ();
@@ -7179,16 +7179,16 @@ namespace Gsk {
 		[Version (since = "4.2")]
 		public bool has_color_glyphs ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_texture_node_get_type ()")]
 	public sealed class TextureNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public TextureNode (Gdk.Texture texture, Graphene.Rect bounds);
 		public unowned Gdk.Texture get_texture ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_texture_scale_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_texture_scale_node_get_type ()")]
 	[Version (since = "4.10")]
 	public sealed class TextureScaleNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public TextureScaleNode (Gdk.Texture texture, Graphene.Rect bounds, Gsk.ScalingFilter filter);
 		public Gsk.ScalingFilter get_filter ();
 		public unowned Gdk.Texture get_texture ();
@@ -7240,16 +7240,16 @@ namespace Gsk {
 		public Gsk.Transform? translate_3d (Graphene.Point3D point);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_transform_node_get_type ()")]
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_transform_node_get_type ()")]
 	public sealed class TransformNode : Gsk.RenderNode {
-		[CCode (has_construct_function = false, type = "GskRenderNode*")]
+		[CCode (has_construct_function = false)]
 		public TransformNode (Gsk.RenderNode child, Gsk.Transform? transform);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.Transform get_transform ();
 	}
-	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_vulkan_renderer_get_type ()")]
+	[CCode (cheader_filename = "gsk/gpu/gskvulkanrenderer.h", cname = "GskRenderer", type_cname = "GskVulkanRendererClass", type_id = "gsk_vulkan_renderer_get_type ()")]
 	public sealed class VulkanRenderer : Gsk.Renderer {
-		[CCode (has_construct_function = false, type = "GskRenderer*")]
+		[CCode (has_construct_function = false)]
 		public VulkanRenderer ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
