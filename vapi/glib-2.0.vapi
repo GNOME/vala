@@ -5682,7 +5682,7 @@ namespace GLib {
 		[CCode (cname = "g_hash_table_new_full", simple_generics = true)]
 		public GenericSet (HashFunc<T>? hash_func, EqualFunc<T>? equal_func, GLib.DestroyNotify? always_pass_null_here = null);
 		public bool add (owned T value);
-		public bool contains (T valule);
+		public bool contains (T value);
 		public bool remove (T value);
 		public void remove_all ();
 		public GLib.List<unowned T> get_values ();
