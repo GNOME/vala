@@ -685,12 +685,12 @@ namespace Cairo {
 		public Cairo.PathDataHeader header;
 		public Cairo.PathDataPoint point;
 	}
-	[CCode (cname = "struct { cairo_path_data_type_t type; int length; }", has_type_id = false)]
+	[CCode (cname = "struct { cairo_path_data_type_t type; int length; }", has_type_id = false, has_typedef = false)]
 	public struct PathDataHeader {
 		public Cairo.PathDataType type;
 		public int length;
 	}
-	[CCode (cname = "struct { double x, y; }", has_type_id = false)]
+	[CCode (cname = "struct { double x, y; }", has_type_id = false, has_typedef = false)]
 	public struct PathDataPoint {
 		public double x;
 		public double y;

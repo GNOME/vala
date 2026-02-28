@@ -1512,6 +1512,7 @@ TESTS = \
 	genie/while.gs \
 	glib/conditional-glib-api.vala \
 	bindings/gio/memoryoutputstream.vala \
+	cairo/anonymous_type.vala \
 	$(LINUX_TESTS) \
 	$(NULL)
 
@@ -1547,6 +1548,7 @@ XFAIL_TESTS = \
 endif
 
 EXTRA_DIST = \
+	cairo/tests-extra-environment.sh \
 	glib/tests-extra-environment.sh \
 	girwriter/tests-extra-environment.sh \
 	girwriter/combined.vapi \
