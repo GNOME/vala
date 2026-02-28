@@ -3515,6 +3515,19 @@ public class Vala.Parser : CodeVisitor {
 		if (base_type != null) {
 			st.base_type = base_type;
 		}
+		var cname = st.get_attribute_string ("CCode", "cname");
+		if (cname != null) { // check for an anonymous cname type
+			var regex = /(union|struct|enum)\s*{/;
+			if (regex.match (cname)) {
+				st.anonymous = true;
+				if (st.get_attribute_bool ("CCode", "has_typedef", true)) {
+					Report.error (get_last_src (), "Anonymous cname types must have [CCode (has_typedef = false)]");
+				} else {
+					// having an anonymous struct for PathDataPoint and PathDataHeader is quite a hack
+					Report.warning (get_last_src (), "Anonymous cname types for a vala struct should be avoided.");
+				}
+			}
+		}
 
 		parse_declarations (st);
 
@@ -3587,6 +3600,18 @@ public class Vala.Parser : CodeVisitor {
 			en.is_extern = true;
 		}
 		set_attributes (en, attrs);
+		var cname = en.get_attribute_string ("CCode", "cname");
+		if (cname != null) { // check for an anonymous cname type
+			var regex = /(union|struct|enum)\s*{/;
+			if (regex.match (cname)) {
+				en.anonymous = true;
+				if (en.get_attribute_bool ("CCode", "has_typedef", true)) {
+					Report.error (get_last_src (), "Anonymous cname types must have [CCode (has_typedef = false)]");
+				} else {
+					Report.warning (get_last_src (), "Anonymous cname types for a vala enum should be avoided.");
+				}
+			}
+		}
 
 		expect (TokenType.OPEN_BRACE);
 		var inner_begin = get_location ();

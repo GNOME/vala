@@ -809,7 +809,14 @@ public abstract class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			// and safe to access without temporary variable
 			use_temp = false;
 		}
-
+		if (expr is MemberAccess &&
+			(result.value_type is StructValueType || result.value_type is EnumValueType) &&
+			result.value_type.symbol.anonymous) {
+			// An anonymous C struct/union/enum must be accessed directly as its
+			// not possible to create a local variable of an anonymous type.
+			// fix https://gitlab.gnome.org/GNOME/vala/-/issues/1643
+			use_temp = false;
+		}
 		if (use_temp) {
 			result = (GLibValue) store_temp_value (result, variable);
 		}
