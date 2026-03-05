@@ -59,12 +59,6 @@ get_floating_variant_with_error (GError** error)
 	return result;
 }
 
-static gpointer
-_g_variant_ref0 (gpointer self)
-{
-	return self ? g_variant_ref (self) : NULL;
-}
-
 static gchar*
 _variant_get1 (GVariant* value)
 {
@@ -139,7 +133,8 @@ test_variant (void)
 			_g_variant_unref0 (_tmp11_);
 			_tmp11_ = _tmp14_;
 		}
-		_tmp15_ = _g_variant_ref0 (_tmp11_);
+		_tmp15_ = _tmp11_;
+		_tmp11_ = NULL;
 		variant = _tmp15_;
 		_tmp16_ = variant;
 		_tmp17_ = G_VARIANT_TYPE_STRING;
