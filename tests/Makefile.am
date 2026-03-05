@@ -797,6 +797,7 @@ TESTS = \
 	generics/arrays-not-supported-2.test \
 	generics/arrays-not-supported-3.test \
 	generics/class-property-override.vala \
+	generics/conditional-expression.vala \
 	generics/constructor-chain-up.vala \
 	generics/floating-type-cast.vala \
 	generics/gvariant-serialization.test \
@@ -1131,6 +1132,7 @@ TESTS = \
 	semantic/compare-type-check.vala \
 	semantic/conditional-expression-incompatible.test \
 	semantic/conditional-expression-no-block.test \
+	semantic/conditional-expression-ownership.vala \
 	semantic/constant-extern.test \
 	semantic/constant-pointer.test \
 	semantic/constant-reassignment-element.test \
