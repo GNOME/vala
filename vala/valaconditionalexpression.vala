@@ -218,12 +218,10 @@ public class Vala.ConditionalExpression : Expression {
 		true_stmt.check (context);
 		false_stmt.check (context);
 
-		var ma = new MemberAccess.simple (local.name, source_reference);
-		ma.formal_target_type = formal_target_type;
-		ma.target_type = target_type;
+		var replace_expr = SemanticAnalyzer.create_temp_access (local, target_type);
 
-		parent_node.replace_expression (this, ma);
-		ma.check (context);
+		parent_node.replace_expression (this, replace_expr);
+		replace_expr.check (context);
 
 		return true;
 	}

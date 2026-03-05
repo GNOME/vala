@@ -64,6 +64,7 @@ Foo*
 get_foo (gint* i)
 {
 	Foo* _tmp0_ = NULL;
+	Foo* _tmp2_;
 	Foo* result;
 	if (i != NULL) {
 		Foo* _tmp1_;
@@ -74,7 +75,10 @@ get_foo (gint* i)
 		_foo_free0 (_tmp0_);
 		_tmp0_ = NULL;
 	}
-	result = _tmp0_;
+	_tmp2_ = _tmp0_;
+	_tmp0_ = NULL;
+	result = _tmp2_;
+	_foo_free0 (_tmp0_);
 	return result;
 }
 

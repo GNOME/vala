@@ -1172,6 +1172,7 @@ TESTS = \
 	semantic/compare-type-check.vala \
 	semantic/conditional-expression-incompatible.test \
 	semantic/conditional-expression-no-block.test \
+	semantic/conditional-expression-ownership.vala \
 	semantic/constant-extern.test \
 	semantic/constant-pointer.test \
 	semantic/constant-reassignment-element.test \
