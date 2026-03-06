@@ -83,8 +83,7 @@ namespace Gtk {
 		public bool has_selection { get; set; }
 		public Gtk.PrintCapabilities manual_capabilities { get; set; }
 		public Gtk.PageSetup page_setup { get; set; }
-		[NoAccessorMethod]
-		public Gtk.PrintSettings print_settings { owned get; set; }
+		public Gtk.PrintSettings print_settings { [CCode (cname = "gtk_print_unix_dialog_get_settings")] owned get; [CCode (cname = "gtk_print_unix_dialog_set_settings")] set; }
 		public Gtk.Printer selected_printer { get; }
 		public bool support_selection { get; set; }
 	}
@@ -117,21 +116,16 @@ namespace Gtk {
 		public bool is_paused ();
 		public GLib.List<Gtk.PageSetup> list_papers ();
 		public void request_details ();
-		[NoAccessorMethod]
-		public bool accepting_jobs { get; }
-		[NoAccessorMethod]
-		public bool accepts_pdf { get; construct; }
-		[NoAccessorMethod]
-		public bool accepts_ps { get; construct; }
+		public bool accepting_jobs { [CCode (cname = "gtk_printer_is_accepting_jobs")] get; }
+		public bool accepts_pdf { [CCode (cname = "gtk_printer_accepts_pdf")] get; construct; }
+		public bool accepts_ps { [CCode (cname = "gtk_printer_accepts_ps")] get; construct; }
 		public Gtk.PrintBackend backend { get; construct; }
 		public string icon_name { get; }
-		[NoAccessorMethod]
-		public bool is_virtual { get; construct; }
+		public bool is_virtual { [CCode (cname = "gtk_printer_is_virtual")] get; construct; }
 		public int job_count { get; }
 		public string location { get; }
 		public string name { get; construct; }
-		[NoAccessorMethod]
-		public bool paused { get; }
+		public bool paused { [CCode (cname = "gtk_printer_is_paused")] get; }
 		public string state_message { get; }
 		public signal void details_acquired (bool success);
 	}

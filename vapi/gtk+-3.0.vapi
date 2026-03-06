@@ -5140,8 +5140,7 @@ namespace Gtk {
 		public void set_parent (Gtk.Window? parent);
 		[Version (since = "2.14")]
 		public void set_screen (Gdk.Screen screen);
-		[NoAccessorMethod]
-		public bool is_showing { get; }
+		public bool is_showing { [CCode (cname = "gtk_mount_operation_is_showing")] get; }
 		public Gtk.Window parent { get; set; }
 		public Gdk.Screen screen { get; set; }
 	}
@@ -10216,17 +10215,14 @@ namespace Gtk {
 		public Gdk.Gravity gravity { get; set; }
 		[Version (deprecated = true, deprecated_since = "3.14", since = "3.0")]
 		public bool has_resize_grip { get; set; }
-		[NoAccessorMethod]
-		public bool has_toplevel_focus { get; }
+		public bool has_toplevel_focus { [CCode (cname = "gtk_window_has_toplevel_focus")] get; }
 		[Version (since = "3.4")]
 		public bool hide_titlebar_when_maximized { get; set; }
 		public Gdk.Pixbuf icon { get; set; }
 		[Version (since = "2.6")]
 		public string icon_name { get; set; }
-		[NoAccessorMethod]
-		public bool is_active { get; }
-		[NoAccessorMethod]
-		public bool is_maximized { get; }
+		public bool is_active { [CCode (cname = "gtk_window_is_active")] get; }
+		public bool is_maximized { [CCode (cname = "gtk_window_is_maximized")] get; }
 		[Version (since = "2.20")]
 		public bool mnemonics_visible { get; set; }
 		public bool modal { get; set; }
@@ -10404,7 +10400,6 @@ namespace Gtk {
 		public bool get_use_alpha ();
 		public abstract void set_rgba (Gdk.RGBA color);
 		public void set_use_alpha (bool use_alpha);
-		[ConcreteAccessor]
 		public abstract Gdk.RGBA rgba { get; set; }
 		public bool use_alpha { get; set; }
 		public virtual signal void color_activated (Gdk.RGBA color);

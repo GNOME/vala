@@ -26,12 +26,9 @@ namespace Rest {
 		public string sign (GLib.HashTable<void*,void*> @params);
 		[CCode (cname = "flickr_proxy_new_with_token", has_construct_function = false, type = "RestProxy*")]
 		public FlickrProxy.with_token (string api_key, string shared_secret, string token);
-		[NoAccessorMethod]
-		public string api_key { owned get; construct; }
-		[NoAccessorMethod]
-		public string shared_secret { owned get; construct; }
-		[NoAccessorMethod]
-		public string token { owned get; set; }
+		public string api_key { [CCode (cname = "flickr_proxy_get_api_key")] get; construct; }
+		public string shared_secret { [CCode (cname = "flickr_proxy_get_shared_secret")] get; construct; }
+		public string token { [CCode (cname = "flickr_proxy_get_token")] get; [CCode (cname = "flickr_proxy_set_token")] set; }
 	}
 	[CCode (cheader_filename = "rest-extras/flickr-proxy-call.h", cname = "FlickrProxyCall", type_id = "flickr_proxy_call_get_type ()")]
 	public class FlickrProxyCall : Rest.ProxyCall {
@@ -60,12 +57,9 @@ namespace Rest {
 		public string sign (GLib.HashTable<void*,void*> @params);
 		[CCode (cname = "lastfm_proxy_new_with_session", has_construct_function = false, type = "RestProxy*")]
 		public LastfmProxy.with_session (string api_key, string secret, string session_key);
-		[NoAccessorMethod]
-		public string api_key { owned get; construct; }
-		[NoAccessorMethod]
-		public string secret { owned get; construct; }
-		[NoAccessorMethod]
-		public string session_key { owned get; set; }
+		public string api_key { [CCode (cname = "lastfm_proxy_get_api_key")] get; construct; }
+		public string secret { [CCode (cname = "lastfm_proxy_get_secret")] get; construct; }
+		public string session_key { [CCode (cname = "lastfm_proxy_get_session_key")] get; [CCode (cname = "lastfm_proxy_set_session_key")] set; }
 	}
 	[CCode (cheader_filename = "rest-extras/lastfm-proxy-call.h", cname = "LastfmProxyCall", type_id = "lastfm_proxy_call_get_type ()")]
 	public class LastfmProxyCall : Rest.ProxyCall {

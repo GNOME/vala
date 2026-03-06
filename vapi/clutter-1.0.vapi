@@ -5194,8 +5194,7 @@ namespace Clutter {
 		[NoAccessorMethod]
 		[Version (since = "0.8")]
 		public float fixed_y { get; set; }
-		[NoAccessorMethod]
-		public bool has_clip { get; }
+		public bool has_clip { [CCode (cname = "clutter_actor_has_clip")] get; }
 		[NoAccessorMethod]
 		[Version (since = "1.2")]
 		public bool has_pointer { get; }

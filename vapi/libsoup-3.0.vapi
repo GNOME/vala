@@ -34,10 +34,8 @@ namespace Soup {
 		public virtual bool update (Soup.Message msg, GLib.HashTable<void*,void*> auth_header);
 		[NoAccessorMethod]
 		public string authority { owned get; set; }
-		[NoAccessorMethod]
-		public virtual bool is_authenticated { get; }
-		[NoAccessorMethod]
-		public bool is_cancelled { get; }
+		public virtual bool is_authenticated { [CCode (cname = "soup_auth_is_authenticated")] get; }
+		public bool is_cancelled { [CCode (cname = "soup_auth_is_cancelled")] get; }
 		[NoAccessorMethod]
 		public bool is_for_proxy { get; set; }
 		[NoAccessorMethod]

@@ -1516,13 +1516,11 @@ namespace WebKit {
 		[NoAccessorMethod]
 		[Version (since = "2.16")]
 		public bool is_ephemeral { get; construct; }
-		[NoAccessorMethod]
-		public bool is_loading { get; }
+		public bool is_loading { [CCode (cname = "webkit_web_view_is_loading")] get; }
 		[Version (since = "2.30")]
 		public bool is_muted { get; set; }
-		[NoAccessorMethod]
 		[Version (since = "2.8")]
-		public bool is_playing_audio { get; }
+		public bool is_playing_audio { [CCode (cname = "webkit_web_view_is_playing_audio")] get; }
 		[Version (since = "2.34")]
 		public bool is_web_process_responsive { get; }
 		[Version (since = "2.34")]

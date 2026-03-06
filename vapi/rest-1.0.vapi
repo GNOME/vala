@@ -49,22 +49,14 @@ namespace Rest {
 		public void set_refresh_token (string refresh_token);
 		[CCode (cname = "rest_oauth2_proxy_set_token_url")]
 		public void set_token_url (string tokenurl);
-		[NoAccessorMethod]
-		public string access_token { owned get; set; }
-		[NoAccessorMethod]
-		public string auth_url { owned get; set; }
-		[NoAccessorMethod]
-		public string client_id { owned get; set; }
-		[NoAccessorMethod]
-		public string client_secret { owned get; set; }
-		[NoAccessorMethod]
-		public GLib.DateTime expiration_date { owned get; set; }
-		[NoAccessorMethod]
-		public string redirect_uri { owned get; set; }
-		[NoAccessorMethod]
-		public string refresh_token { owned get; set; }
-		[NoAccessorMethod]
-		public string token_url { owned get; set; }
+		public string access_token { [CCode (cname = "rest_oauth2_proxy_get_access_token")] get; [CCode (cname = "rest_oauth2_proxy_set_access_token")] set; }
+		public string auth_url { [CCode (cname = "rest_oauth2_proxy_get_auth_url")] get; [CCode (cname = "rest_oauth2_proxy_set_auth_url")] set; }
+		public string client_id { [CCode (cname = "rest_oauth2_proxy_get_client_id")] get; [CCode (cname = "rest_oauth2_proxy_set_client_id")] set; }
+		public string client_secret { [CCode (cname = "rest_oauth2_proxy_get_client_secret")] get; [CCode (cname = "rest_oauth2_proxy_set_client_secret")] set; }
+		public GLib.DateTime expiration_date { [CCode (cname = "rest_oauth2_proxy_get_expiration_date")] owned get; [CCode (cname = "rest_oauth2_proxy_set_expiration_date")] set; }
+		public string redirect_uri { [CCode (cname = "rest_oauth2_proxy_get_redirect_uri")] get; [CCode (cname = "rest_oauth2_proxy_set_redirect_uri")] set; }
+		public string refresh_token { [CCode (cname = "rest_oauth2_proxy_get_refresh_token")] get; [CCode (cname = "rest_oauth2_proxy_set_refresh_token")] set; }
+		public string token_url { [CCode (cname = "rest_oauth2_proxy_get_token_url")] get; [CCode (cname = "rest_oauth2_proxy_set_token_url")] set; }
 	}
 	[CCode (cheader_filename = "rest/rest-oauth2-proxy-call.h", lower_case_cprefix = "oauth2_proxy_call_", type_id = "rest_oauth2_proxy_call_get_type ()")]
 	public class OAuth2ProxyCall : Rest.ProxyCall {

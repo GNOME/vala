@@ -145,8 +145,7 @@ namespace Gsf {
 		public Gsf.Input uncompress ();
 		[NoAccessorMethod]
 		public Gsf.Infile container { owned get; }
-		[NoAccessorMethod]
-		public bool eof { get; }
+		public bool eof { [CCode (cname = "gsf_input_eof")] get; }
 		public GLib.DateTime modtime { get; }
 		[NoAccessorMethod]
 		public string name { owned get; }
@@ -342,8 +341,7 @@ namespace Gsf {
 		public virtual bool write ([CCode (array_length_cname = "num_bytes", array_length_pos = 0.5, array_length_type = "gsize")] uint8[] data);
 		[NoAccessorMethod]
 		public Gsf.Outfile container { owned get; set; }
-		[NoAccessorMethod]
-		public bool is_closed { get; }
+		public bool is_closed { [CCode (cname = "gsf_output_is_closed")] get; }
 		public GLib.DateTime modtime { get; construct; }
 		[NoAccessorMethod]
 		public string name { owned get; set; }
