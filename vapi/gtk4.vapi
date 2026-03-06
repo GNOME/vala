@@ -7034,6 +7034,9 @@ namespace Gsk {
 		public static Gsk.RenderNode? deserialize (GLib.Bytes bytes, Gsk.ParseErrorFunc? error_func);
 		public void draw (Cairo.Context cr);
 		public Graphene.Rect get_bounds ();
+		[CCode (array_length_pos = 0.1, array_length_type = "gsize")]
+		[Version (since = "4.22")]
+		public unowned Gsk.RenderNode[]? get_children ();
 		public Gsk.RenderNodeType get_node_type ();
 		[Version (since = "4.16")]
 		public bool get_opaque_rect (out Graphene.Rect out_opaque);
@@ -7052,11 +7055,9 @@ namespace Gsk {
 		public Pango.Font filter_font (Pango.Font font);
 		public Gsk.RenderNode? filter_node (Gsk.RenderNode node);
 		public Gdk.Texture filter_texture (Gdk.Texture texture);
-		public void foreach_node (Gsk.RenderNode node);
 		public void free ();
 		public void set_font_filter (owned Gsk.RenderReplayFontFilter? filter);
 		public void set_node_filter (owned Gsk.RenderReplayNodeFilter? filter);
-		public void set_node_foreach (owned Gsk.RenderReplayNodeForeach? @foreach);
 		public void set_texture_filter (owned Gsk.RenderReplayTextureFilter? filter);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", type_id = "gsk_renderer_get_type ()")]
@@ -7503,9 +7504,6 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", instance_pos = 2.9)]
 	[Version (since = "4.22")]
 	public delegate Gsk.RenderNode? RenderReplayNodeFilter (Gsk.RenderReplay replay, Gsk.RenderNode node);
-	[CCode (cheader_filename = "gsk/gsk.h", instance_pos = 2.9)]
-	[Version (since = "4.22")]
-	public delegate bool RenderReplayNodeForeach (Gsk.RenderReplay replay, Gsk.RenderNode node);
 	[CCode (cheader_filename = "gsk/gsk.h", instance_pos = 2.9)]
 	[Version (since = "4.22")]
 	public delegate Gdk.Texture RenderReplayTextureFilter (Gsk.RenderReplay replay, Gdk.Texture texture);
@@ -9757,6 +9755,8 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public FileFilter ();
 		public void add_mime_type (string mime_type);
+		[Version (since = "4.22")]
+		public void add_mime_types ([CCode (array_length = false, array_null_terminated = true)] string[] mime_types);
 		public void add_pattern (string pattern);
 		[Version (deprecated = true, deprecated_since = "4.20")]
 		public void add_pixbuf_formats ();
@@ -12370,6 +12370,8 @@ namespace Gtk {
 		public Gtk.InputHints input_hints { get; set; }
 		[Version (since = "4.14")]
 		public Gtk.InputPurpose input_purpose { get; set; }
+		[Version (since = "4.22")]
+		public Gtk.Widget key_capture_widget { get; set construct; }
 		[NoAccessorMethod]
 		public string placeholder_text { owned get; set; }
 		[Version (since = "4.8")]
@@ -13151,8 +13153,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Svg.from_resource (string path);
 		public Gtk.SvgFeatures get_features ();
-		public uint get_n_states ();
 		public uint get_state ();
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[]? get_state_names (out uint length);
 		public double get_weight ();
 		public void load_from_bytes (GLib.Bytes bytes);
 		public void load_from_resource (string path);
@@ -14178,6 +14181,12 @@ namespace Gtk {
 		public int x_offset { get; }
 		[HasEmitter]
 		public signal void clicked ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_try_expression_get_type ()")]
+	[Version (since = "4.22")]
+	public sealed class TryExpression : Gtk.Expression {
+		[CCode (has_construct_function = false, type = "GtkExpression*")]
+		public TryExpression ([CCode (array_length_cname = "n_expressions", array_length_pos = 0.5, array_length_type = "guint")] owned Gtk.Expression[] expressions);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_uri_launcher_get_type ()")]
 	[Version (since = "4.10")]
@@ -16436,7 +16445,8 @@ namespace Gtk {
 		ANIMATIONS,
 		SYSTEM_RESOURCES,
 		EXTERNAL_RESOURCES,
-		EXTENSIONS
+		EXTENSIONS,
+		TRADITIONAL_SYMBOLIC
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_SYMBOLIC_COLOR_", type_id = "gtk_symbolic_color_get_type ()")]
 	[Version (since = "4.6")]
@@ -17002,8 +17012,9 @@ namespace Gtk {
 	public const int STYLE_PROVIDER_PRIORITY_THEME;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_STYLE_PROVIDER_PRIORITY_USER")]
 	public const int STYLE_PROVIDER_PRIORITY_USER;
-	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_SVG_ALL_FEATURES")]
-	public const int SVG_ALL_FEATURES;
+	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_SVG_DEFAULT_FEATURES")]
+	[Version (since = "4.22")]
+	public const int SVG_DEFAULT_FEATURES;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_TEXT_VIEW_PRIORITY_VALIDATE")]
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
 	[CCode (cheader_filename = "gtk/gtk.h", cname = "GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID")]
