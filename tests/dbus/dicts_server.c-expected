@@ -40,7 +40,9 @@ enum  {
 	TEST_NUM_PROPERTIES
 };
 static GParamSpec* test_properties[TEST_NUM_PROPERTIES];
+#define _g_variant_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_unref (var), NULL)))
 #define _g_hash_table_unref0(var) ((var == NULL) ? NULL : (var = (g_hash_table_unref (var), NULL)))
+#define _g_variant_dict_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_dict_unref (var), NULL)))
 
 #define TEST_INTERFACE_TYPE_BAR (test_interface_bar_get_type ())
 #define TEST_INTERFACE_BAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TEST_INTERFACE_TYPE_BAR, TestInterfaceBar))
@@ -70,7 +72,6 @@ enum  {
 };
 static GParamSpec* test_interface_foo_properties[TEST_INTERFACE_FOO_NUM_PROPERTIES];
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
-#define _g_variant_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_unref (var), NULL)))
 #define _g_main_loop_unref0(var) ((var == NULL) ? NULL : (var = (g_main_loop_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
 #define _vala_return_if_fail(expr, msg) if G_LIKELY (expr) ; else { g_return_if_fail_warning (G_LOG_DOMAIN, G_STRFUNC, msg); return; }
@@ -117,12 +118,17 @@ static void _g_free0_ (gpointer var);
 static void _g_variant_unref0_ (gpointer var);
 static GVariant* _variant_new1 (gchar** value,
                          gint value_length1);
+VALA_EXTERN GVariantDict* test_test_variant_dict (Test* self);
+static GVariant* _variant_new2 (gdouble value);
 VALA_EXTERN Test* test_new (void);
 VALA_EXTERN Test* test_construct (GType object_type);
 static GType test_get_type_once (void);
 static void _dbus_test_test_dict (Test* self,
                            GVariant* _parameters_,
                            GDBusMethodInvocation* invocation);
+static void _dbus_test_test_variant_dict (Test* self,
+                                   GVariant* _parameters_,
+                                   GDBusMethodInvocation* invocation);
 static void test_dbus_interface_method_call (GDBusConnection* connection,
                                       const gchar* sender,
                                       const gchar* object_path,
@@ -216,7 +222,11 @@ static const GDBusArgInfo _test_dbus_arg_info_test_dict_result = {-1, "result", 
 static const GDBusArgInfo * const _test_dbus_arg_info_test_dict_in[] = {NULL};
 static const GDBusArgInfo * const _test_dbus_arg_info_test_dict_out[] = {&_test_dbus_arg_info_test_dict_result, NULL};
 static const GDBusMethodInfo _test_dbus_method_info_test_dict = {-1, "TestDict", (GDBusArgInfo **) (&_test_dbus_arg_info_test_dict_in), (GDBusArgInfo **) (&_test_dbus_arg_info_test_dict_out), NULL};
-static const GDBusMethodInfo * const _test_dbus_method_info[] = {&_test_dbus_method_info_test_dict, NULL};
+static const GDBusArgInfo _test_dbus_arg_info_test_variant_dict_result = {-1, "result", "a{sv}", NULL};
+static const GDBusArgInfo * const _test_dbus_arg_info_test_variant_dict_in[] = {NULL};
+static const GDBusArgInfo * const _test_dbus_arg_info_test_variant_dict_out[] = {&_test_dbus_arg_info_test_variant_dict_result, NULL};
+static const GDBusMethodInfo _test_dbus_method_info_test_variant_dict = {-1, "TestVariantDict", (GDBusArgInfo **) (&_test_dbus_arg_info_test_variant_dict_in), (GDBusArgInfo **) (&_test_dbus_arg_info_test_variant_dict_out), NULL};
+static const GDBusMethodInfo * const _test_dbus_method_info[] = {&_test_dbus_method_info_test_dict, &_test_dbus_method_info_test_variant_dict, NULL};
 static const GDBusSignalInfo * const _test_dbus_signal_info[] = {NULL};
 static const GDBusPropertyInfo * const _test_dbus_property_info[] = {NULL};
 static const GDBusInterfaceInfo _test_dbus_interface_info = {-1, "org.example.Test", (GDBusMethodInfo **) (&_test_dbus_method_info), (GDBusSignalInfo **) (&_test_dbus_signal_info), (GDBusPropertyInfo **) (&_test_dbus_property_info), NULL};
@@ -288,6 +298,36 @@ test_test_dict (Test* self)
 	g_hash_table_insert (dict, _tmp4_, _tmp8_);
 	result = dict;
 	s = (_vala_array_free (s, s_length1, (GDestroyNotify) g_free), NULL);
+	return result;
+}
+
+static GVariant*
+_variant_new2 (gdouble value)
+{
+	return g_variant_ref_sink (g_variant_new_double (value));
+}
+
+GVariantDict*
+test_test_variant_dict (Test* self)
+{
+	GVariantDict* vardict = NULL;
+	GVariantDict* _tmp0_;
+	GVariant* _tmp1_;
+	GVariant* _tmp2_;
+	GVariant* _tmp3_;
+	GVariantDict* result;
+	g_return_val_if_fail (IS_TEST (self), NULL);
+	_tmp0_ = g_variant_dict_new (NULL);
+	vardict = _tmp0_;
+	_tmp1_ = g_variant_new_int32 ((gint32) 42);
+	g_variant_ref_sink (_tmp1_);
+	_tmp2_ = _tmp1_;
+	g_variant_dict_insert_value (vardict, "hello", _tmp2_);
+	_g_variant_unref0 (_tmp2_);
+	_tmp3_ = _variant_new2 (47.11);
+	g_variant_dict_insert_value (vardict, "hello again", _tmp3_);
+	_g_variant_unref0 (_tmp3_);
+	result = vardict;
 	return result;
 }
 
@@ -378,6 +418,30 @@ _dbus_test_test_dict (Test* self,
 }
 
 static void
+_dbus_test_test_variant_dict (Test* self,
+                              GVariant* _parameters_,
+                              GDBusMethodInvocation* invocation)
+{
+	GError* error = NULL;
+	GVariantIter _arguments_iter;
+	GDBusMessage* _reply_message = NULL;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	GVariantDict* result;
+	g_variant_iter_init (&_arguments_iter, _parameters_);
+	result = test_test_variant_dict (self);
+	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	g_variant_builder_add_value (&_reply_builder, g_variant_dict_end (result));
+	_g_variant_dict_unref0 (result);
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_message_set_body (_reply_message, _reply);
+	g_dbus_connection_send_message (g_dbus_method_invocation_get_connection (invocation), _reply_message, G_DBUS_SEND_MESSAGE_FLAGS_NONE, NULL, NULL);
+	g_object_unref (invocation);
+	g_object_unref (_reply_message);
+}
+
+static void
 test_dbus_interface_method_call (GDBusConnection* connection,
                                  const gchar* sender,
                                  const gchar* object_path,
@@ -393,6 +457,8 @@ test_dbus_interface_method_call (GDBusConnection* connection,
 	object = data[0];
 	if (strcmp (method_name, "TestDict") == 0) {
 		_dbus_test_test_dict (object, parameters, invocation);
+	} else if (strcmp (method_name, "TestVariantDict") == 0) {
+		_dbus_test_test_variant_dict (object, parameters, invocation);
 	} else {
 		g_object_unref (invocation);
 	}

@@ -6,6 +6,8 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 
 #if !defined(VALA_STRICT_C)
 #if !defined(__clang__) && defined(__GNUC__) && (__GNUC__ >= 14)
@@ -37,6 +39,7 @@ typedef struct _TestIface TestIface;
 typedef GDBusProxy TestProxy;
 typedef GDBusProxyClass TestProxyClass;
 #define _g_hash_table_unref0(var) ((var == NULL) ? NULL : (var = (g_hash_table_unref (var), NULL)))
+#define _g_variant_dict_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_dict_unref (var), NULL)))
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_variant_unref0(var) ((var == NULL) ? NULL : (var = (g_variant_unref (var), NULL)))
 #define _vala_assert(expr, msg) if G_LIKELY (expr) ; else g_assertion_message_expr (G_LOG_DOMAIN, __FILE__, __LINE__, G_STRFUNC, msg);
@@ -47,6 +50,7 @@ typedef GDBusProxyClass TestProxyClass;
 struct _TestIface {
 	GTypeInterface parent_iface;
 	GHashTable* (*test_dict) (Test* self, GError** error);
+	GVariantDict* (*test_variant_dict) (Test* self, GError** error);
 };
 
 VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
@@ -58,6 +62,8 @@ VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN GHashTable* test_test_dict (Test* self,
                             GError** error);
+VALA_EXTERN GVariantDict* test_test_variant_dict (Test* self,
+                                      GError** error);
 static GType test_get_type_once (void);
 static void test_proxy_g_signal (GDBusProxy* proxy,
                           const gchar* sender_name,
@@ -65,10 +71,15 @@ static void test_proxy_g_signal (GDBusProxy* proxy,
                           GVariant* parameters);
 static GHashTable* test_proxy_test_dict (Test* self,
                                   GError** error);
+static GVariantDict* test_proxy_test_variant_dict (Test* self,
+                                            GError** error);
 static void test_proxy_test_interface_init (TestIface* iface);
 static void _dbus_test_test_dict (Test* self,
                            GVariant* _parameters_,
                            GDBusMethodInvocation* invocation);
+static void _dbus_test_test_variant_dict (Test* self,
+                                   GVariant* _parameters_,
+                                   GDBusMethodInvocation* invocation);
 static void test_dbus_interface_method_call (GDBusConnection* connection,
                                       const gchar* sender,
                                       const gchar* object_path,
@@ -96,6 +107,8 @@ static void _test_unregister_object (gpointer user_data);
 static void _vala_main (void);
 static gchar** _variant_get1 (GVariant* value,
                        gint* result_length1);
+static gint _variant_get2 (GVariant* value);
+static gdouble _variant_get3 (GVariant* value);
 static void _vala_array_destroy (gpointer array,
                           gssize array_length,
                           GDestroyNotify destroy_func);
@@ -107,7 +120,11 @@ static const GDBusArgInfo _test_dbus_arg_info_test_dict_result = {-1, "result", 
 static const GDBusArgInfo * const _test_dbus_arg_info_test_dict_in[] = {NULL};
 static const GDBusArgInfo * const _test_dbus_arg_info_test_dict_out[] = {&_test_dbus_arg_info_test_dict_result, NULL};
 static const GDBusMethodInfo _test_dbus_method_info_test_dict = {-1, "TestDict", (GDBusArgInfo **) (&_test_dbus_arg_info_test_dict_in), (GDBusArgInfo **) (&_test_dbus_arg_info_test_dict_out), NULL};
-static const GDBusMethodInfo * const _test_dbus_method_info[] = {&_test_dbus_method_info_test_dict, NULL};
+static const GDBusArgInfo _test_dbus_arg_info_test_variant_dict_result = {-1, "result", "a{sv}", NULL};
+static const GDBusArgInfo * const _test_dbus_arg_info_test_variant_dict_in[] = {NULL};
+static const GDBusArgInfo * const _test_dbus_arg_info_test_variant_dict_out[] = {&_test_dbus_arg_info_test_variant_dict_result, NULL};
+static const GDBusMethodInfo _test_dbus_method_info_test_variant_dict = {-1, "TestVariantDict", (GDBusArgInfo **) (&_test_dbus_arg_info_test_variant_dict_in), (GDBusArgInfo **) (&_test_dbus_arg_info_test_variant_dict_out), NULL};
+static const GDBusMethodInfo * const _test_dbus_method_info[] = {&_test_dbus_method_info_test_dict, &_test_dbus_method_info_test_variant_dict, NULL};
 static const GDBusSignalInfo * const _test_dbus_signal_info[] = {NULL};
 static const GDBusPropertyInfo * const _test_dbus_property_info[] = {NULL};
 static const GDBusInterfaceInfo _test_dbus_interface_info = {-1, "org.example.Test", (GDBusMethodInfo **) (&_test_dbus_method_info), (GDBusSignalInfo **) (&_test_dbus_signal_info), (GDBusPropertyInfo **) (&_test_dbus_property_info), NULL};
@@ -122,6 +139,19 @@ test_test_dict (Test* self,
 	_iface_ = TEST_GET_INTERFACE (self);
 	if (_iface_->test_dict) {
 		return _iface_->test_dict (self, error);
+	}
+	return NULL;
+}
+
+GVariantDict*
+test_test_variant_dict (Test* self,
+                        GError** error)
+{
+	TestIface* _iface_;
+	g_return_val_if_fail (IS_TEST (self), NULL);
+	_iface_ = TEST_GET_INTERFACE (self);
+	if (_iface_->test_variant_dict) {
+		return _iface_->test_variant_dict (self, error);
 	}
 	return NULL;
 }
@@ -223,10 +253,46 @@ test_proxy_test_dict (Test* self,
 	return _result;
 }
 
+static GVariantDict*
+test_proxy_test_variant_dict (Test* self,
+                              GError** error)
+{
+	GDBusMessage *_message;
+	GVariant *_arguments;
+	GVariantBuilder _arguments_builder;
+	GDBusMessage *_reply_message;
+	GVariant *_reply;
+	GVariantIter _reply_iter;
+	GVariantDict* _result = NULL;
+	GVariant* _tmp5_;
+	G_IO_ERROR;
+	_message = g_dbus_message_new_method_call (g_dbus_proxy_get_name ((GDBusProxy *) self), g_dbus_proxy_get_object_path ((GDBusProxy *) self), "org.example.Test", "TestVariantDict");
+	g_variant_builder_init (&_arguments_builder, G_VARIANT_TYPE_TUPLE);
+	_arguments = g_variant_builder_end (&_arguments_builder);
+	g_dbus_message_set_body (_message, _arguments);
+	_reply_message = g_dbus_connection_send_message_with_reply_sync (g_dbus_proxy_get_connection ((GDBusProxy *) self), _message, G_DBUS_SEND_MESSAGE_FLAGS_NONE, g_dbus_proxy_get_default_timeout ((GDBusProxy *) self), NULL, NULL, error);
+	g_object_unref (_message);
+	if (!_reply_message) {
+		return NULL;
+	}
+	if (g_dbus_message_to_gerror (_reply_message, error)) {
+		g_object_unref (_reply_message);
+		return NULL;
+	}
+	_reply = g_dbus_message_get_body (_reply_message);
+	g_variant_iter_init (&_reply_iter, _reply);
+	_tmp5_ = g_variant_iter_next_value (&_reply_iter);
+	_result = g_variant_dict_new (_tmp5_);
+	g_variant_unref (_tmp5_);
+	g_object_unref (_reply_message);
+	return _result;
+}
+
 static void
 test_proxy_test_interface_init (TestIface* iface)
 {
 	iface->test_dict = test_proxy_test_dict;
+	iface->test_variant_dict = test_proxy_test_variant_dict;
 }
 
 static void
@@ -240,10 +306,10 @@ _dbus_test_test_dict (Test* self,
 	GVariant* _reply;
 	GVariantBuilder _reply_builder;
 	GHashTable* result;
-	GVariantBuilder _tmp5_;
-	GHashTableIter _tmp6_;
-	gpointer _tmp7_;
+	GVariantBuilder _tmp6_;
+	GHashTableIter _tmp7_;
 	gpointer _tmp8_;
+	gpointer _tmp9_;
 	g_variant_iter_init (&_arguments_iter, _parameters_);
 	result = test_test_dict (self, &error);
 	if (error) {
@@ -252,17 +318,45 @@ _dbus_test_test_dict (Test* self,
 	}
 	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
 	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
-	g_hash_table_iter_init (&_tmp6_, result);
-	g_variant_builder_init (&_tmp5_, G_VARIANT_TYPE ("a{sv}"));
-	while (g_hash_table_iter_next (&_tmp6_, &_tmp7_, &_tmp8_)) {
+	g_hash_table_iter_init (&_tmp7_, result);
+	g_variant_builder_init (&_tmp6_, G_VARIANT_TYPE ("a{sv}"));
+	while (g_hash_table_iter_next (&_tmp7_, &_tmp8_, &_tmp9_)) {
 		gchar* _key;
 		GVariant* _value;
-		_key = (gchar*) _tmp7_;
-		_value = (GVariant*) _tmp8_;
-		g_variant_builder_add (&_tmp5_, "{?*}", g_variant_new_string (_key), g_variant_new_variant (_value));
+		_key = (gchar*) _tmp8_;
+		_value = (GVariant*) _tmp9_;
+		g_variant_builder_add (&_tmp6_, "{?*}", g_variant_new_string (_key), g_variant_new_variant (_value));
 	}
-	g_variant_builder_add_value (&_reply_builder, g_variant_builder_end (&_tmp5_));
+	g_variant_builder_add_value (&_reply_builder, g_variant_builder_end (&_tmp6_));
 	_g_hash_table_unref0 (result);
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_message_set_body (_reply_message, _reply);
+	g_dbus_connection_send_message (g_dbus_method_invocation_get_connection (invocation), _reply_message, G_DBUS_SEND_MESSAGE_FLAGS_NONE, NULL, NULL);
+	g_object_unref (invocation);
+	g_object_unref (_reply_message);
+}
+
+static void
+_dbus_test_test_variant_dict (Test* self,
+                              GVariant* _parameters_,
+                              GDBusMethodInvocation* invocation)
+{
+	GError* error = NULL;
+	GVariantIter _arguments_iter;
+	GDBusMessage* _reply_message = NULL;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	GVariantDict* result;
+	g_variant_iter_init (&_arguments_iter, _parameters_);
+	result = test_test_variant_dict (self, &error);
+	if (error) {
+		g_dbus_method_invocation_take_error (invocation, error);
+		return;
+	}
+	_reply_message = g_dbus_message_new_method_reply (g_dbus_method_invocation_get_message (invocation));
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	g_variant_builder_add_value (&_reply_builder, g_variant_dict_end (result));
+	_g_variant_dict_unref0 (result);
 	_reply = g_variant_builder_end (&_reply_builder);
 	g_dbus_message_set_body (_reply_message, _reply);
 	g_dbus_connection_send_message (g_dbus_method_invocation_get_connection (invocation), _reply_message, G_DBUS_SEND_MESSAGE_FLAGS_NONE, NULL, NULL);
@@ -286,6 +380,8 @@ test_dbus_interface_method_call (GDBusConnection* connection,
 	object = data[0];
 	if (strcmp (method_name, "TestDict") == 0) {
 		_dbus_test_test_dict (object, parameters, invocation);
+	} else if (strcmp (method_name, "TestVariantDict") == 0) {
+		_dbus_test_test_variant_dict (object, parameters, invocation);
 	} else {
 		g_object_unref (invocation);
 	}
@@ -380,6 +476,18 @@ _variant_get1 (GVariant* value,
 	return _tmp0_;
 }
 
+static gint
+_variant_get2 (GVariant* value)
+{
+	return g_variant_get_int32 (value);
+}
+
+static gdouble
+_variant_get3 (GVariant* value)
+{
+	return g_variant_get_double (value);
+}
+
 static void
 _vala_main (void)
 {
@@ -403,6 +511,23 @@ _vala_main (void)
 	gboolean _tmp10_ = FALSE;
 	gchar** _tmp11_;
 	gint _tmp11__length1;
+	GVariantDict* vardict = NULL;
+	Test* _tmp14_;
+	GVariantDict* _tmp15_;
+	GVariantDict* _tmp16_;
+	const GVariantType* _tmp17_;
+	GVariant* _tmp18_;
+	GVariant* _tmp19_;
+	gint i = 0;
+	GVariant* _tmp20_;
+	gint _tmp21_;
+	GVariantDict* _tmp22_;
+	const GVariantType* _tmp23_;
+	GVariant* _tmp24_;
+	GVariant* _tmp25_;
+	gdouble d = 0.0;
+	GVariant* _tmp26_;
+	gdouble _tmp27_;
 	GError* _inner_error0_ = NULL;
 	_tmp0_ = (Test*) g_initable_new (TYPE_TEST_PROXY, NULL, &_inner_error0_, "g-flags", 0, "g-name", "org.example.Test", "g-bus-type", G_BUS_TYPE_SESSION, "g-object-path", "/org/example/test", "g-interface-name", "org.example.Test", NULL);
 	test = (Test*) _tmp0_;
@@ -447,6 +572,41 @@ _vala_main (void)
 		_tmp10_ = FALSE;
 	}
 	_vala_assert (_tmp10_, "s.length == 1 && s[0] == \"hello\"");
+	_tmp14_ = test;
+	_tmp15_ = test_test_variant_dict (_tmp14_, &_inner_error0_);
+	vardict = _tmp15_;
+	if (G_UNLIKELY (_inner_error0_ != NULL)) {
+		s = (_vala_array_free (s, s_length1, (GDestroyNotify) g_free), NULL);
+		_g_variant_unref0 (v);
+		_g_hash_table_unref0 (dict);
+		_g_object_unref0 (test);
+		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error0_->message, g_quark_to_string (_inner_error0_->domain), _inner_error0_->code);
+		g_clear_error (&_inner_error0_);
+		return;
+	}
+	_tmp16_ = vardict;
+	_tmp17_ = G_VARIANT_TYPE_INT32;
+	_tmp18_ = g_variant_dict_lookup_value (_tmp16_, "hello", _tmp17_);
+	_g_variant_unref0 (v);
+	v = _tmp18_;
+	_tmp19_ = v;
+	_vala_assert (_tmp19_ != NULL, "v != null");
+	_tmp20_ = v;
+	_tmp21_ = _variant_get2 (_tmp20_);
+	i = _tmp21_;
+	_vala_assert (i == 42, "i == 42");
+	_tmp22_ = vardict;
+	_tmp23_ = G_VARIANT_TYPE_DOUBLE;
+	_tmp24_ = g_variant_dict_lookup_value (_tmp22_, "hello again", _tmp23_);
+	_g_variant_unref0 (v);
+	v = _tmp24_;
+	_tmp25_ = v;
+	_vala_assert (_tmp25_ != NULL, "v != null");
+	_tmp26_ = v;
+	_tmp27_ = _variant_get3 (_tmp26_);
+	d = _tmp27_;
+	_vala_assert (d == 47.11, "d == 47.11");
+	_g_variant_dict_unref0 (vardict);
 	s = (_vala_array_free (s, s_length1, (GDestroyNotify) g_free), NULL);
 	_g_variant_unref0 (v);
 	_g_hash_table_unref0 (dict);

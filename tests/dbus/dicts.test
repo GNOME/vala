@@ -6,6 +6,7 @@ Program: client
 [DBus (name = "org.example.Test")]
 interface Test : Object {
 	public abstract HashTable<string, Variant> test_dict () throws IOError;
+	public abstract VariantDict test_variant_dict () throws IOError;
 }
 
 void main () {
@@ -18,6 +19,16 @@ void main () {
 	assert (v != null);
 	string[] s = (string[]) v;
 	assert (s.length == 1 && s[0] == "hello");
+
+	VariantDict vardict = test.test_variant_dict ();
+	v = vardict.lookup_value ("hello", VariantType.INT32);
+	assert (v != null);
+	int i = (int) v;
+	assert (i == 42);
+	v = vardict.lookup_value ("hello again", VariantType.DOUBLE);
+	assert (v != null);
+	double d = (double) v;
+	assert (d == 47.11);
 }
 
 Program: server
@@ -29,6 +40,13 @@ class Test : Object {
 		HashTable<string, Variant> dict = new HashTable<string, Variant> (str_hash, null);
 		dict.insert ("hello", s);
 		return dict;
+	}
+
+	public VariantDict test_variant_dict () {
+		var vardict = new VariantDict ();
+		vardict.insert_value ("hello", new Variant.int32 (42));
+		vardict.insert_value ("hello again", 47.11);
+		return vardict;
 	}
 }
 
