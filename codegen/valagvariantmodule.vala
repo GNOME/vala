@@ -590,6 +590,10 @@ public class Vala.GVariantModule : GValueModule {
 				result = variant_get;
 			} else if (type.type_symbol.get_full_name () == "GLib.HashTable") {
 				result = deserialize_hash_table ((ObjectType) type, variant_expr);
+			} else if (type.type_symbol.get_full_name () == "GLib.VariantDict") {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_dict_new"));
+				ccall.add_argument (variant_expr);
+				result = ccall;
 			}
 		}
 
@@ -894,6 +898,10 @@ public class Vala.GVariantModule : GValueModule {
 				result = variant_new;
 			} else if (type.type_symbol.get_full_name () == "GLib.HashTable") {
 				result = serialize_hash_table ((ObjectType) type, expr);
+			} else if (type.type_symbol.get_full_name () == "GLib.VariantDict") {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_dict_end"));
+				ccall.add_argument (expr);
+				result = ccall;
 			}
 		}
 

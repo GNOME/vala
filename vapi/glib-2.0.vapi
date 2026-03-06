@@ -6780,7 +6780,7 @@ namespace GLib {
 	}
 
 	[Version (since = "2.40")]
-	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref", type_id = "G_TYPE_VARIANT_DICT")]
+	[Compact, CCode (ref_function = "g_variant_dict_ref", unref_function = "g_variant_dict_unref", type_id = "G_TYPE_VARIANT_DICT", type_signature = "a{sv}")]
 	public class VariantDict {
 		public VariantDict (GLib.Variant? from_asv = null);
 		public bool lookup (string key, string format_string, ...);
