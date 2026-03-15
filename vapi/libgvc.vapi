@@ -91,7 +91,11 @@ namespace Gvc {
 		public int render_jobs (Graph graph);
 
 		[CCode (cname = "gvRenderData")]
+#if LIBGVC_13_0_0
+		public int render_data (Graph graph, [CCode (type = "char*")] string file_type, [CCode (array_length_type = "size_t", type = "char**")] out uint8[] output_data);
+#else
 		public int render_data (Graph graph, [CCode (type = "char*")] string file_type, [CCode (array_length_type = "unsigned int", type = "char**")] out uint8[] output_data);
+#endif
 	}
 
 	[Compact]

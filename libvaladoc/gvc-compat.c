@@ -36,6 +36,9 @@ valadoc_compat_gvc_graph_new (const char *name);
 Agedge_t*
 valadoc_compat_gvc_graph_create_edge (Agraph_t* graph, Agnode_t* from, Agnode_t* to);
 
+int
+valadoc_compat_gvc_context_render_data (GVC_t *gvc, graph_t *g, const char *format, char **result, size_t *length);
+
 void
 valadoc_compat_gvc_init (void)
 {
@@ -71,5 +74,21 @@ valadoc_compat_gvc_graph_create_edge (Agraph_t* graph, Agnode_t* from, Agnode_t*
 	return agedge (graph, from, to, NULL, 1 /*TRUE*/);
 #else
 	return agedge (graph, from, to);
+#endif
+}
+
+/* Compat-layer for API breaks in Graphviz */
+
+int
+valadoc_compat_gvc_context_render_data (GVC_t *gvc, graph_t *g, const char *format, char **result, size_t *length)
+{
+#ifdef LIBGVC_13_0_0
+  return gvRenderData (gvc, g, format, result, length);
+#else
+  unsigned int _length;
+  int res;
+  res = gvRenderData (gvc, g, format, result, &_length);
+  *length = (size_t) _length;
+  return res;
 #endif
 }

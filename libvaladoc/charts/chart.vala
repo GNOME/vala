@@ -23,6 +23,9 @@
 [CCode (cname = "valadoc_compat_gvc_init")]
 extern void valadoc_gvc_init ();
 
+[CCode (cname = "valadoc_compat_gvc_context_render_data")]
+extern int valadoc_gvc_context_render_data (Gvc.Context context, Gvc.Graph graph, [CCode (type = "char*")] string file_type, [CCode (array_length_type = "size_t", type = "char**")] out uint8[] output_data);
+
 public class Valadoc.Charts.Chart : Api.Visitor {
 	protected Gvc.Context context;
 	protected Gvc.Graph graph;
@@ -60,7 +63,7 @@ public class Valadoc.Charts.Chart : Api.Visitor {
 		uint8[]? data;
 
 		/* This will return null in data if it fails. */
-		context.render_data (graph, file_type, out data);
+		valadoc_gvc_context_render_data (context, graph, file_type, out data);
 		return data;
 	}
 
