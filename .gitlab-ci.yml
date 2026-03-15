@@ -104,6 +104,7 @@ fedora-gcc-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
 
 fedora-clang-x86_64:
   stage: build
@@ -121,6 +122,7 @@ fedora-clang-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
 
 ubuntu-clang-x86_64:
   stage: build
@@ -139,6 +141,7 @@ ubuntu-clang-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
 
 ubuntu-lts-18-gcc-x86_64:
   stage: build
@@ -156,6 +159,7 @@ ubuntu-lts-18-gcc-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
   allow_failure: true
 
 archlinux-gcc-x86_64:
@@ -169,6 +173,7 @@ archlinux-gcc-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
   allow_failure: true
 
 alpinelinux-gcc-x86_64:
@@ -183,6 +188,7 @@ alpinelinux-gcc-x86_64:
     - make -j4
     - make -j4 bootstrap
     - make -j4 check VERBOSE=1
+    - make -C doc internal-api-docs
   allow_failure: true
 
 pages:
