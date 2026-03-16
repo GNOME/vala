@@ -13,7 +13,7 @@ vala_api_version = '0.58'
 vala_version_suffix = '-@0@'.format(vala_api_version)
 
 # Minimal required version for an initial build
-vala_version_required = '0.16.1'
+vala_version_required = '0.18.1'
 valac = meson.get_compiler('vala')
 if not valac.version().version_compare('>= @0@'.format(vala_version_required))
 	error('valac >= @0@ required!'.format(vala_version_required))
@@ -147,7 +147,7 @@ add_project_arguments([
 	language: 'c',
 )
 
-glib_version_required = '2.48'
+glib_version_required = '2.56'
 libgvc_version_required = '2.16'
 
 valadoc_enabled = get_option('valadoc')
@@ -168,6 +168,11 @@ if valadoc_enabled and cc.run('''#include <gvc.h>
 		}''',
 		dependencies: libgvc_dep).returncode() == 0
 	add_project_arguments('-D', 'WITH_CGRAPH', language: 'vala')
+endif
+# Check for API breaking libgvc
+if valadoc_enabled and dependency('libgvc', version: '>= 13.0.0', required: false).found()
+	add_project_arguments('-D', 'LIBGVC_13_0_0', language: 'c')
+	add_project_arguments('-D', 'LIBGVC_13_0_0', language: 'vala')
 endif
 
 add_test_setup('default', is_default: true, env: 'G_SLICE=debug-blocks G_DEBUG=fatal-warnings')
