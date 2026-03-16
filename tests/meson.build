@@ -1413,7 +1413,7 @@ test_cases += [
 ]
 
 vala_flags = [
-	'--vapidir', join_paths(meson.source_root(), 'vapi'),
+	'--vapidir', join_paths(meson.project_source_root(), 'vapi'),
 	'--enable-checking',
 	'--disable-version-header',
 	'--disable-warnings',
@@ -1429,7 +1429,7 @@ vala_flags = [
 
 test_envars = [
 	'G_DEBUG=fatal-warnings',
-	'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
+	'LD_LIBRARY_PATH=' + join_paths(meson.project_build_root(), 'vala') + ':' + join_paths(meson.project_build_root(), 'codegen'),
 ]
 
 foreach flag : supported_test_cflags

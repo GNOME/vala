@@ -10,8 +10,8 @@ test_cases = [
 ]
 
 vala_flags = [
-	'-X', '-DTOP_SRC_DIR="@0@"'.format(meson.source_root()),
-	'--vapidir', join_paths(meson.source_root(), 'vapi'),
+	'-X', '-DTOP_SRC_DIR="@0@"'.format(meson.project_source_root()),
+	'--vapidir', join_paths(meson.project_source_root(), 'vapi'),
 	'--pkg', 'gio-2.0',
 	'--disable-warnings',
 	'--main', 'main', '--save-temps',
@@ -21,25 +21,25 @@ vala_flags = [
 	'-X', '-pipe',
 	'-X', '-lm',
 	'--pkg', 'libgvc',
-	'--vapidir', join_paths(meson.build_root(), 'vala'),
+	'--vapidir', join_paths(meson.project_build_root(), 'vala'),
 	'--pkg', 'libvala@0@'.format(vala_version_suffix),
-	'--vapidir', join_paths(meson.build_root(), 'libvaladoc'),
+	'--vapidir', join_paths(meson.project_build_root(), 'libvaladoc'),
 	'--pkg', 'valadoc@0@'.format(vala_version_suffix),
-	'-X', '-L' + join_paths(meson.build_root(), 'vala'),
+	'-X', '-L' + join_paths(meson.project_build_root(), 'vala'),
 	'-X', '-lvala@0@'.format(vala_version_suffix),
-	'-X', '-L' + join_paths(meson.build_root(), 'libvaladoc'),
+	'-X', '-L' + join_paths(meson.project_build_root(), 'libvaladoc'),
 	'-X', '-lvaladoc@0@'.format(vala_version_suffix),
-	'-X', '-L' + join_paths(meson.build_root(), 'libvaladoc'),
+	'-X', '-L' + join_paths(meson.project_build_root(), 'libvaladoc'),
 	'-X', '-lvaladoc@0@'.format(vala_version_suffix),
-	'-X', '-I' + join_paths(meson.build_root(), 'gee'),
-	'-X', '-I' + join_paths(meson.build_root(), 'vala'),
-	'-X', '-I' + join_paths(meson.build_root(), 'libvaladoc'),
-	join_paths(meson.source_root(), 'valadoc', 'tests', 'libvaladoc', 'parser-generic-scanner.vala'),
+	'-X', '-I' + join_paths(meson.project_build_root(), 'gee'),
+	'-X', '-I' + join_paths(meson.project_build_root(), 'vala'),
+	'-X', '-I' + join_paths(meson.project_build_root(), 'libvaladoc'),
+	join_paths(meson.project_source_root(), 'valadoc', 'tests', 'libvaladoc', 'parser-generic-scanner.vala'),
 ]
 
 test_envars = [
 	'G_DEBUG=fatal-warnings',
-	'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen') + ':' + join_paths(meson.build_root(), 'libvaladoc'),
+	'LD_LIBRARY_PATH=' + join_paths(meson.project_build_root(), 'vala') + ':' + join_paths(meson.project_build_root(), 'codegen') + ':' + join_paths(meson.project_build_root(), 'libvaladoc'),
 ]
 
 foreach flag : supported_test_cflags
@@ -62,12 +62,12 @@ driver_exe = executable('driver',
 	files(
 		'drivers/driver-test.vala',
 		'drivers/generic-api-test.vala',
-		join_paths(meson.source_root(), 'valadoc/girwriter.vala'),
-		join_paths(meson.source_root(), 'valadoc/initializerbuilder.vala'),
-		join_paths(meson.source_root(), 'valadoc/symbolresolver.vala'),
-		join_paths(meson.source_root(), 'valadoc/treebuilder.vala'),
+		join_paths(meson.project_source_root(), 'valadoc/girwriter.vala'),
+		join_paths(meson.project_source_root(), 'valadoc/initializerbuilder.vala'),
+		join_paths(meson.project_source_root(), 'valadoc/symbolresolver.vala'),
+		join_paths(meson.project_source_root(), 'valadoc/treebuilder.vala'),
 	),
-	c_args: '-DTOP_SRC_DIR="@0@"'.format(meson.source_root()),
+	c_args: '-DTOP_SRC_DIR="@0@"'.format(meson.project_source_root()),
 	dependencies: [gobject_dep, valacodegen_dep, libvaladoc_dep],
 	install: false,
 )
