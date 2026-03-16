@@ -76,7 +76,7 @@ versionconf.set('PACKAGE_VERSION', '@VCS_TAG@')
 
 add_project_arguments([
 		'--disable-version-header',
-		'--vapidir', join_paths(meson.source_root(), 'vapi'),
+		'--vapidir', join_paths(meson.project_source_root(), 'vapi'),
 		'--pkg', 'config',
 	],
 	language: 'vala'
