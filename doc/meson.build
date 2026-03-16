@@ -17,7 +17,7 @@ if help2man.found() and get_option('manpages')
 			'--include', join_paths(meson.current_source_dir(), 'valac.h2m'),
 			'--no-info', '--output=@OUTPUT@', valac_exe
 		],
-		env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
+		env: 'LD_LIBRARY_PATH=' + join_paths(meson.project_build_root(), 'vala') + ':' + join_paths(meson.project_build_root(), 'codegen'),
 		install: true,
 		install_dir: man_1_dir,
 	)
@@ -27,7 +27,7 @@ if help2man.found() and get_option('manpages')
 			'--include', join_paths(meson.current_source_dir(), 'vapigen.h2m'),
 			'--no-info', '--output=@OUTPUT@', vapigen_exe
 		],
-		env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen'),
+		env: 'LD_LIBRARY_PATH=' + join_paths(meson.project_build_root(), 'vala') + ':' + join_paths(meson.project_build_root(), 'codegen'),
 		install: true,
 		install_dir: man_1_dir,
 	)
@@ -38,7 +38,7 @@ if help2man.found() and get_option('manpages')
 				'--include', join_paths(meson.current_source_dir(), 'valadoc.h2m'),
 				'--no-info', '--output=@OUTPUT@', valadoc_exe
 			],
-			env: 'LD_LIBRARY_PATH=' + join_paths(meson.build_root(), 'vala') + ':' + join_paths(meson.build_root(), 'codegen') + ':' + join_paths(meson.build_root(), 'libvaladoc'),
+			env: 'LD_LIBRARY_PATH=' + join_paths(meson.project_build_root(), 'vala') + ':' + join_paths(meson.project_build_root(), 'codegen') + ':' + join_paths(meson.project_build_root(), 'libvaladoc'),
 			install: true,
 			install_dir: man_1_dir,
 		)
@@ -72,11 +72,11 @@ valadoc_flags = [
 	'--internal',
 	'--deps',
 	'--use-svg-images',
-	'--vapidir', join_paths(meson.source_root(), 'vapi'),
+	'--vapidir', join_paths(meson.project_source_root(), 'vapi'),
 	'--pkg', 'config',
 	'--pkg', 'gmodule-2.0',
 	'--directory', join_paths(meson.current_build_dir(), 'internal-apis'),
-	'--doclet', join_paths(meson.build_root(), 'valadoc', 'doclets', 'html'),
+	'--doclet', join_paths(meson.project_build_root(), 'valadoc', 'doclets', 'html'),
 	'--doclet-arg', '"--no-browsable-check"',
 	'--basedir', join_paths(meson.current_build_dir(), 'internal-apis')
 ]
@@ -99,7 +99,7 @@ vala_doc = custom_target('vala_doc',
 		valadoc_exe,
 		valadoc_flags + [
 			'--package-name', 'vala', '--package-version', meson.project_version(),
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.project_build_root(), 'gee'), '--pkg', 'gee',
 		],
 		'@INPUT@'
 	],
@@ -114,8 +114,8 @@ ccode_doc = custom_target('ccode_doc',
 		valadoc_exe,
 		valadoc_flags + [
 			'--package-name', 'ccode', '--package-version', meson.project_version(),
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
-			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
+			'--vapidir', join_paths(meson.project_build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.project_build_root(), 'vala'), '--pkg', 'vala',
 		],
 		'@INPUT@'
 	],
@@ -130,9 +130,9 @@ codegen_doc = custom_target('codegen_doc',
 		valadoc_exe,
 		valadoc_flags + [
 			'--package-name', 'codegen', '--package-version', meson.project_version(),
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
-			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
-			'--vapidir', join_paths(meson.build_root(), 'ccode'), '--pkg', 'valaccode',
+			'--vapidir', join_paths(meson.project_build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.project_build_root(), 'vala'), '--pkg', 'vala',
+			'--vapidir', join_paths(meson.project_build_root(), 'ccode'), '--pkg', 'valaccode',
 		],
 		'@INPUT@'
 	],
@@ -148,10 +148,10 @@ valadoc_doc = custom_target('valadoc_doc',
 		valadoc_flags + [
 			'--package-name', 'codegen', '--package-version', meson.project_version(),
 			'--pkg', 'libgvc',
-			'--vapidir', join_paths(meson.build_root(), 'gee'), '--pkg', 'gee',
-			'--vapidir', join_paths(meson.build_root(), 'vala'), '--pkg', 'vala',
-			'--vapidir', join_paths(meson.build_root(), 'ccode'), '--pkg', 'valaccode',
-			'--vapidir', join_paths(meson.build_root(), 'codegen'), '--pkg', 'valacodegen',
+			'--vapidir', join_paths(meson.project_build_root(), 'gee'), '--pkg', 'gee',
+			'--vapidir', join_paths(meson.project_build_root(), 'vala'), '--pkg', 'vala',
+			'--vapidir', join_paths(meson.project_build_root(), 'ccode'), '--pkg', 'valaccode',
+			'--vapidir', join_paths(meson.project_build_root(), 'codegen'), '--pkg', 'valacodegen',
 		],
 		'@INPUT@'
 	],
