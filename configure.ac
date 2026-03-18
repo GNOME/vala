@@ -250,7 +250,7 @@ if test x$enable_valadoc = xyes; then
 	LIBADD="$cgraph_tmp_LIBADD"
 	CFLAGS="$cgraph_tmp_CFLAGS"
 	PKG_CHECK_MODULES(LIBGVC13, [libgvc >= 13.0.0], [
-		VALAFLAGS="$VALAFLAGS -D DLIBGVC_13_0_0"
+		VALAFLAGS="$VALAFLAGS -D LIBGVC_13_0_0"
 		CFLAGS="$CFLAGS -DLIBGVC_13_0_0"
 	], [1])
 fi
