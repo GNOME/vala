@@ -139,7 +139,7 @@ test_test (Test* self,
 	gint _buffer_size_;
 	GError* _inner_error0_ = NULL;
 	g_return_if_fail (IS_TEST (self));
-	g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (output_stream, G_TYPE_UNIX_OUTPUT_STREAM));
+	g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (output_stream, g_unix_output_stream_get_type ()));
 	_tmp0_ = g_new0 (guint8, 1);
 	buffer = _tmp0_;
 	buffer_length1 = 1;
