@@ -540,7 +540,7 @@ gio-2.0:
 	$(GENVAPI) --library $(srcdir)/gio-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/Gio-2.0-custom.vala $(GIRDIR)/Gio-2.0.gir
 
 gio-unix-2.0:
-	$(GENVAPI) --library $(srcdir)/gio-unix-2.0 $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0-custom.vala $(PACKAGESDIR)/gio-unix-2.0/gio-unix-2.0.gi
+	$(GENVAPI) --library $(srcdir)/gio-unix-2.0 --pkg gio-2.0 --metadatadir $(METADATADIR) $(GIRDIR)/GioUnix-2.0.gir
 
 gmodule-2.0:
 	$(GENVAPI) --library $(srcdir)/gmodule-2.0 --metadatadir $(METADATADIR) $(METADATADIR)/GModule-2.0-custom.vala $(GIRDIR)/GModule-2.0.gir

@@ -1,0 +1,22 @@
+GioUnix name="GLib"
+
+DesktopAppInfo cheader_filename="gio/gdesktopappinfo.h"
+DesktopAppInfoLookup cheader_filename = "gio/gdesktopappinfo.h"
+DesktopAppLaunchCallback cheader_filename = "gio/gdesktopappinfo.h"
+DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME cheader_filename = "gio/gdesktopappinfo.h"
+
+FDMessage name="UnixFDMessage" cheader_filename="gio/gunixfdmessage.h"
+FileDescriptorBased cheader_filename="gio/gfiledescriptorbased.h"
+InputStream name="UnixInputStream" cheader_filename="gio/gunixinputstream.h"
+
+is_mount_* cheader_filename = "gio/gunixmounts.h"
+is_system_* cheader_filename = "gio/gunixmounts.h"
+mount_* cheader_filename = "gio/gunixmounts.h"
+mounts_* cheader_filename = "gio/gunixmounts.h"
+MountEntry name="UnixMountEntry" cheader_filename="gio/gunixmounts.h"
+MountMonitor name="UnixMountMonitor" cheader_filename="gio/gunixmounts.h"
+MountPoint name="UnixMountPoint" cheader_filename="gio/gunixmounts.h"
+OutputStream name="UnixOutputStream" cheader_filename="gio/gunixoutputstream.h"
+
+DesktopAppInfo
+  .search type="string**[]"
