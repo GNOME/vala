@@ -5,15 +5,6 @@ Gio name="GLib"
 *.*.cancellable#parameter nullable default=null
 *.*.io_priority#parameter default=GLib.Priority.DEFAULT
 
-// Needs to be in gio-unix-2.0
-DesktopAppInfo* skip
-DesktopAppLaunchCallback skip
-FileDescriptorBased* skip
-Unix* skip
-UnixSocketAddressType skip=false
-UnixFDList skip=false cheader_filename="gio/gunixfdlist.h"
-unix_* skip
-// UnixSocketAddress.abstract#property skip
 DBusConnection
 	.call_with_unix_fd_list*.fd_list default=null
 	.call_with_unix_fd_list*.out_fd_list nullable default=null
@@ -109,6 +100,7 @@ DBusConnection
   .send_message_with_reply_finish throws="GLib.IOError"
   .send_message_with_reply_sync throws="GLib.IOError"
 DBusInterfaceSkeleton
+  .get_info nullable
   .get_vtable skip=false nullable unowned=false
 DBusMessage
   .new_* skip=false symbol_type="constructor"
@@ -135,10 +127,12 @@ DBusServer
 Drive
   .get_sort_key#virtual_method virtual
 File
+  .copy_async_with_closures.*#parameter default=()
   .load_bytes.etag_out default=null
   .load_contents.cancellable#parameter default=()
   .monitor_dir* throws="GLib.IOError"
   .monitor_file throws="GLib.IOError"
+  .move_async_with_closures.*#parameter default=()
   .replace_contents.contents ctype="const char*"
   .replace_contents_async.contents ctype="const char*"
   .replace_contents_bytes_async finish_name="g_file_replace_contents_finish"
@@ -272,6 +266,8 @@ Task
 TlsPassword
   .set_value#virtual_method.value owned
   .set_value#virtual_method.destroy default=GLib.free
+UnixSocketAddress
+  .new_abstract replacement="UnixSocketAddress.with_type"
 Vfs
   .deserialize_icon skip=false unowned=false
   // TODO: should probably be a simple generic
@@ -413,6 +409,7 @@ Application
 Converter
   .convert.inbuf nullable=false
 DBusSubtreeVTable.enumerate skip=false
+dbus_error_register_error_domain.quark_volatile ref
 DtlsConnection
   .get_channel_binding_data#method virtual vfunc_name="get_binding_data" throws="GLib.TlsChannelBindingError"
 File
