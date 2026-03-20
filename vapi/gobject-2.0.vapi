@@ -55,7 +55,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_BINDING")]
 	[Version (since = "2.26")]
-	public class Binding : GLib.Object {
+	public sealed class Binding : GLib.Object {
 		[Version (since = "2.68")]
 		public GLib.Object? dup_source ();
 		[Version (since = "2.68")]
@@ -78,7 +78,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_BINDING_GROUP")]
 	[Version (since = "2.72")]
-	public class BindingGroup : GLib.Object {
+	public sealed class BindingGroup : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public BindingGroup ();
 		public void bind (string source_property, GLib.Object target, string target_property, GLib.BindingFlags flags);
@@ -120,11 +120,11 @@ namespace GLib {
 		public uint n_values;
 		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
 		public weak GLib.EnumValue[] values;
-		public static void complete_type_info (GLib.Type g_enum_type, out GLib.TypeInfo info, [CCode (array_length = false, type = "const GEnumValue*")] GLib.EnumValue[] const_values);
+		public static void complete_type_info (GLib.Type g_enum_type, out GLib.TypeInfo info, [CCode (array_length = false, array_null_terminated = true, type = "const GEnumValue*")] GLib.EnumValue[] const_values);
 		public unowned GLib.EnumValue? get_value (int value);
 		public unowned GLib.EnumValue? get_value_by_name (string name);
 		public unowned GLib.EnumValue? get_value_by_nick (string nick);
-		public static GLib.Type register_static (string name, [CCode (array_length = false, type = "const GEnumValue*")] GLib.EnumValue[] const_static_values);
+		public static GLib.Type register_static (string name, [CCode (array_length = false, array_null_terminated = true, type = "const GEnumValue*")] GLib.EnumValue[] const_static_values);
 		[Version (since = "2.54")]
 		public static string to_string (GLib.Type g_enum_type, int value);
 	}
@@ -134,11 +134,11 @@ namespace GLib {
 		public uint n_values;
 		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
 		public weak GLib.FlagsValue[] values;
-		public static void complete_type_info (GLib.Type g_flags_type, out GLib.TypeInfo info, [CCode (array_length = false, type = "const GFlagsValue*")] GLib.FlagsValue[] const_values);
+		public static void complete_type_info (GLib.Type g_flags_type, out GLib.TypeInfo info, [CCode (array_length = false, array_null_terminated = true, type = "const GFlagsValue*")] GLib.FlagsValue[] const_values);
 		public unowned GLib.FlagsValue? get_first_value (uint value);
 		public unowned GLib.FlagsValue? get_value_by_name (string name);
 		public unowned GLib.FlagsValue? get_value_by_nick (string nick);
-		public static GLib.Type register_static (string name, [CCode (array_length = false, type = "const GFlagsValue*")] GLib.FlagsValue[] const_static_values);
+		public static GLib.Type register_static (string name, [CCode (array_length = false, array_null_terminated = true, type = "const GFlagsValue*")] GLib.FlagsValue[] const_static_values);
 		[Version (since = "2.54")]
 		public static string to_string (GLib.Type flags_type, uint value);
 	}
@@ -270,7 +270,7 @@ namespace GLib {
 		public void* get_qdata (GLib.Quark quark);
 		public unowned GLib.ParamSpec get_redirect_target ();
 		[CCode (cname = "g_param_spec_internal")]
-		public ParamSpec.@internal (GLib.Type param_type, string name, string nick, string blurb, GLib.ParamFlags flags);
+		public ParamSpec.@internal (GLib.Type param_type, string name, string? nick, string? blurb, GLib.ParamFlags flags);
 		[Version (since = "2.66")]
 		public static bool is_valid_name (string name);
 		public unowned GLib.ParamSpec @ref ();
@@ -298,12 +298,12 @@ namespace GLib {
 	public class ParamSpecBoolean : GLib.ParamSpec {
 		public bool default_value;
 		[CCode (cname = "g_param_spec_boolean", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecBoolean (string name, string nick, string blurb, bool default_value, GLib.ParamFlags flags);
+		public ParamSpecBoolean (string name, string? nick, string? blurb, bool default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_BOXED")]
 	public class ParamSpecBoxed : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_boxed", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecBoxed (string name, string nick, string blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
+		public ParamSpecBoxed (string name, string? nick, string? blurb, GLib.Type boxed_type, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_CHAR")]
 	public class ParamSpecChar : GLib.ParamSpec {
@@ -311,7 +311,7 @@ namespace GLib {
 		public int8 maximum;
 		public int8 minimum;
 		[CCode (cname = "g_param_spec_char", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecChar (string name, string nick, string blurb, int8 minimum, int8 maximum, int8 default_value, GLib.ParamFlags flags);
+		public ParamSpecChar (string name, string? nick, string? blurb, int8 minimum, int8 maximum, int8 default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_DOUBLE")]
 	public class ParamSpecDouble : GLib.ParamSpec {
@@ -320,21 +320,21 @@ namespace GLib {
 		public double maximum;
 		public double minimum;
 		[CCode (cname = "g_param_spec_double", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecDouble (string name, string nick, string blurb, double minimum, double maximum, double default_value, GLib.ParamFlags flags);
+		public ParamSpecDouble (string name, string? nick, string? blurb, double minimum, double maximum, double default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_ENUM")]
 	public class ParamSpecEnum : GLib.ParamSpec {
 		public int default_value;
 		public weak GLib.EnumClass enum_class;
 		[CCode (cname = "g_param_spec_enum", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecEnum (string name, string nick, string blurb, GLib.Type enum_type, int default_value, GLib.ParamFlags flags);
+		public ParamSpecEnum (string name, string? nick, string? blurb, GLib.Type enum_type, int default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_FLAGS")]
 	public class ParamSpecFlags : GLib.ParamSpec {
 		public uint default_value;
 		public weak GLib.FlagsClass flags_class;
 		[CCode (cname = "g_param_spec_flags", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecFlags (string name, string nick, string blurb, GLib.Type flags_type, uint default_value, GLib.ParamFlags flags);
+		public ParamSpecFlags (string name, string? nick, string? blurb, GLib.Type flags_type, uint default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_FLOAT")]
 	public class ParamSpecFloat : GLib.ParamSpec {
@@ -343,13 +343,13 @@ namespace GLib {
 		public float maximum;
 		public float minimum;
 		[CCode (cname = "g_param_spec_float", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, GLib.ParamFlags flags);
+		public ParamSpecFloat (string name, string? nick, string? blurb, float minimum, float maximum, float default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_GTYPE")]
 	public class ParamSpecGType : GLib.ParamSpec {
 		public GLib.Type is_a_type;
 		[CCode (cname = "g_param_spec_gtype", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecGType (string name, string nick, string blurb, GLib.Type is_a_type, GLib.ParamFlags flags);
+		public ParamSpecGType (string name, string? nick, string? blurb, GLib.Type is_a_type, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_INT")]
 	public class ParamSpecInt : GLib.ParamSpec {
@@ -357,7 +357,7 @@ namespace GLib {
 		public int maximum;
 		public int minimum;
 		[CCode (cname = "g_param_spec_int", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, GLib.ParamFlags flags);
+		public ParamSpecInt (string name, string? nick, string? blurb, int minimum, int maximum, int default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_INT64")]
 	public class ParamSpecInt64 : GLib.ParamSpec {
@@ -365,7 +365,7 @@ namespace GLib {
 		public int64 maximum;
 		public int64 minimum;
 		[CCode (cname = "g_param_spec_int64", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecInt64 (string name, string nick, string blurb, int64 minimum, int64 maximum, int64 default_value, GLib.ParamFlags flags);
+		public ParamSpecInt64 (string name, string? nick, string? blurb, int64 minimum, int64 maximum, int64 default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_LONG")]
 	public class ParamSpecLong : GLib.ParamSpec {
@@ -373,12 +373,12 @@ namespace GLib {
 		public long maximum;
 		public long minimum;
 		[CCode (cname = "g_param_spec_long", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, GLib.ParamFlags flags);
+		public ParamSpecLong (string name, string? nick, string? blurb, long minimum, long maximum, long default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_OBJECT")]
 	public class ParamSpecObject : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_object", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecObject (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
+		public ParamSpecObject (string name, string? nick, string? blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_OVERRIDE")]
 	[Version (since = "2.4")]
@@ -390,17 +390,24 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_PARAM")]
 	public class ParamSpecParam : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_param", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecParam (string name, string nick, string blurb, GLib.Type param_type, GLib.ParamFlags flags);
+		public ParamSpecParam (string name, string? nick, string? blurb, GLib.Type param_type, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_POINTER")]
 	public class ParamSpecPointer : GLib.ParamSpec {
 		[CCode (cname = "g_param_spec_pointer", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecPointer (string name, string nick, string blurb, GLib.ParamFlags flags);
+		public ParamSpecPointer (string name, string? nick, string? blurb, GLib.ParamFlags flags);
 	}
+#if GLIB_2_80
+	[CCode (cheader_filename = "glib-object.h", free_function = "g_param_spec_pool_free", has_type_id = false)]
+#else
 	[CCode (cheader_filename = "glib-object.h", has_type_id = false)]
+#endif
 	[Compact]
 	public class ParamSpecPool {
 		public ParamSpecPool (bool type_prefixing = false);
+		[DestroysInstance]
+		[Version (since = "2.80")]
+		public void free ();
 		public void insert (GLib.ParamSpec pspec, GLib.Type owner_type);
 		[CCode (array_length_pos = 1.1, array_length_type = "guint")]
 #if VALA_0_26
@@ -409,7 +416,7 @@ namespace GLib {
 		public unowned GLib.ParamSpec[] list (GLib.Type owner_type);
 #endif
 		public GLib.List<weak GLib.ParamSpec> list_owned (GLib.Type owner_type);
-		public unowned GLib.ParamSpec lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
+		public unowned GLib.ParamSpec? lookup (string param_name, GLib.Type owner_type, bool walk_ancestors);
 		public void remove (GLib.ParamSpec pspec);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_STRING")]
@@ -421,7 +428,7 @@ namespace GLib {
 		public uint null_fold_if_empty;
 		public char substitutor;
 		[CCode (cname = "g_param_spec_string", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecString (string name, string nick, string blurb, string? default_value, GLib.ParamFlags flags);
+		public ParamSpecString (string name, string? nick, string? blurb, string? default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_UCHAR")]
 	public class ParamSpecUChar : GLib.ParamSpec {
@@ -429,7 +436,7 @@ namespace GLib {
 		public uint8 maximum;
 		public uint8 minimum;
 		[CCode (cname = "g_param_spec_uchar", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecUChar (string name, string nick, string blurb, uint8 minimum, uint8 maximum, uint8 default_value, GLib.ParamFlags flags);
+		public ParamSpecUChar (string name, string? nick, string? blurb, uint8 minimum, uint8 maximum, uint8 default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_UINT")]
 	public class ParamSpecUInt : GLib.ParamSpec {
@@ -437,7 +444,7 @@ namespace GLib {
 		public uint maximum;
 		public uint minimum;
 		[CCode (cname = "g_param_spec_uint", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, GLib.ParamFlags flags);
+		public ParamSpecUInt (string name, string? nick, string? blurb, uint minimum, uint maximum, uint default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_UINT64")]
 	public class ParamSpecUInt64 : GLib.ParamSpec {
@@ -445,7 +452,7 @@ namespace GLib {
 		public uint64 maximum;
 		public uint64 minimum;
 		[CCode (cname = "g_param_spec_uint64", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecUInt64 (string name, string nick, string blurb, uint64 minimum, uint64 maximum, uint64 default_value, GLib.ParamFlags flags);
+		public ParamSpecUInt64 (string name, string? nick, string? blurb, uint64 minimum, uint64 maximum, uint64 default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_ULONG")]
 	public class ParamSpecULong : GLib.ParamSpec {
@@ -453,13 +460,13 @@ namespace GLib {
 		public ulong maximum;
 		public ulong minimum;
 		[CCode (cname = "g_param_spec_ulong", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
+		public ParamSpecULong (string name, string? nick, string? blurb, ulong minimum, ulong maximum, ulong default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_UNICHAR")]
 	public class ParamSpecUnichar : GLib.ParamSpec {
 		public unichar default_value;
 		[CCode (cname = "g_param_spec_unichar", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecUnichar (string name, string nick, string blurb, unichar default_value, GLib.ParamFlags flags);
+		public ParamSpecUnichar (string name, string? nick, string? blurb, unichar default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_VALUE_ARRAY")]
 	[Version (deprecated = true, deprecated_since = "2.32")]
@@ -467,7 +474,7 @@ namespace GLib {
 		public GLib.ParamSpec? element_spec;
 		public uint fixed_n_elements;
 		[CCode (cname = "g_param_spec_value_array", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecValueArray (string name, string nick, string blurb, GLib.ParamSpec? element_spec, GLib.ParamFlags flags);
+		public ParamSpecValueArray (string name, string? nick, string? blurb, GLib.ParamSpec? element_spec, GLib.ParamFlags flags);
 	}
 	[Version (since = "2.26")]
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_PARAM_VARIANT")]
@@ -475,11 +482,11 @@ namespace GLib {
 		public GLib.Variant? default_value;
 		public GLib.VariantType type;
 		[CCode (cname = "g_param_spec_variant", has_construct_function = false, type = "GParamSpec*")]
-		public ParamSpecVariant (string name, string nick, string blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
+		public ParamSpecVariant (string name, string? nick, string? blurb, GLib.VariantType type, GLib.Variant? default_value, GLib.ParamFlags flags);
 	}
 	[CCode (cheader_filename = "glib-object.h", type_id = "G_TYPE_SIGNAL_GROUP")]
 	[Version (since = "2.72")]
-	public class SignalGroup : GLib.Object {
+	public sealed class SignalGroup : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public SignalGroup (GLib.Type target_type);
 		public void block ();
@@ -562,7 +569,7 @@ namespace GLib {
 		public void sort_with_data (GLib.CompareDataFunc<GLib.Value?> compare_func);
 	}
 	[CCode (cheader_filename = "glib-object.h", lower_case_csuffix = "type_plugin", type_id = "g_type_plugin_get_type ()")]
-	public interface TypePlugin {
+	public interface TypePlugin : GLib.Object {
 		public void complete_interface_info (GLib.Type instance_type, GLib.Type interface_type, GLib.InterfaceInfo info);
 		public void complete_type_info (GLib.Type g_type, GLib.TypeInfo info, GLib.TypeValueTable value_table);
 		public void unuse ();
@@ -679,10 +686,14 @@ namespace GLib {
 		public void add_class_private (size_t private_size);
 		[CCode (array_length_type = "guint")]
 		public GLib.Type[] children ();
+		[CCode (cname = "g_type_class_get")]
+		[Version (since = "2.84")]
+		public unowned GLib.TypeClass class_get ();
 		public unowned GLib.TypeClass? class_peek ();
 		public unowned GLib.TypeClass? class_peek_static ();
 		public unowned GLib.TypeInterface? default_interface_peek ();
 		public GLib.TypeInterface default_interface_ref ();
+		[Version (deprecated = true, deprecated_since = "2.84")]
 		public GLib.TypeClass class_ref ();
 		public uint depth ();
 		[Version (since = "2.34")]
@@ -774,9 +785,9 @@ namespace GLib {
 		public Value (GLib.Type g_type);
 		public void copy (ref GLib.Value dest_value);
 		public void* dup_boxed ();
-		public GLib.Object dup_object ();
+		public GLib.Object? dup_object ();
 		public GLib.ParamSpec dup_param ();
-		public string dup_string ();
+		public string? dup_string ();
 		[Version (since = "2.26")]
 		public GLib.Variant? dup_variant ();
 		public bool fits_pointer ();
@@ -793,18 +804,18 @@ namespace GLib {
 		public int get_int ();
 		public int64 get_int64 ();
 		public long get_long ();
-		public unowned GLib.Object get_object ();
+		public unowned GLib.Object? get_object ();
 		public unowned GLib.ParamSpec get_param ();
 		public void* get_pointer ();
 		[Version (since = "2.32")]
 		public int8 get_schar ();
-		public unowned string get_string ();
+		public unowned string? get_string ();
 		public uchar get_uchar ();
 		public uint get_uint ();
 		public uint64 get_uint64 ();
 		public ulong get_ulong ();
 		[Version (since = "2.26")]
-		public GLib.Variant? get_variant ();
+		public unowned GLib.Variant? get_variant ();
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (GLib.Type type);
 		public unowned GLib.Value? init (GLib.Type g_type);
@@ -843,6 +854,8 @@ namespace GLib {
 		public void set_ulong (ulong v_ulong);
 		[Version (since = "2.26")]
 		public void set_variant (GLib.Variant? variant);
+		[Version (since = "2.80")]
+		public string? steal_string ();
 		[CCode (cname = "g_strdup_value_contents")]
 		public string strdup_contents ();
 		public void take_boxed (owned void* v_boxed);
@@ -864,7 +877,9 @@ namespace GLib {
 	[Version (since = "2.32")]
 	public struct WeakRef {
 		public WeakRef (GLib.Object? object);
+		public void clear ();
 		public GLib.Object? @get ();
+		public void init (GLib.Object? object);
 		public void @set (GLib.Object? object);
 	}
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_BINDING_", type_id = "G_TYPE_BINDING_FLAGS")]
@@ -879,6 +894,8 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h", cprefix = "G_CONNECT_", has_type_id = false)]
 	[Flags]
 	public enum ConnectFlags {
+		[Version (since = "2.74")]
+		DEFAULT,
 		AFTER,
 		SWAPPED
 	}
@@ -912,7 +929,9 @@ namespace GLib {
 		DETAILED,
 		ACTION,
 		NO_HOOKS,
+		[Version (since = "2.30")]
 		MUST_COLLECT,
+		[Version (since = "2.32")]
 		DEPRECATED,
 		[Version (since = "2.68")]
 		ACCUMULATOR_FIRST_RUN,
