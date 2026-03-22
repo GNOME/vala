@@ -6535,8 +6535,8 @@ namespace Gdk {
 	public delegate void ContentDeserializeFunc (Gdk.ContentDeserializer deserializer);
 	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
 	public delegate void ContentSerializeFunc (Gdk.ContentSerializer serializer);
-	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
-	public delegate Gdk.Texture? CursorGetTextureCallback (Gdk.Cursor cursor, int cursor_size, double scale, out int width, out int height, out int hotspot_x, out int hotspot_y, void* data);
+	[CCode (cheader_filename = "gdk/gdk.h", instance_pos = 7.9)]
+	public delegate Gdk.Texture? CursorGetTextureCallback (Gdk.Cursor cursor, int cursor_size, double scale, out int width, out int height, out int hotspot_x, out int hotspot_y);
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_ACTION_ALL")]
 	public const int ACTION_ALL;
 	[CCode (cheader_filename = "gdk/gdk.h", cname = "GDK_BUTTON_MIDDLE")]
