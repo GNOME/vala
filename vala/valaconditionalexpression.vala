@@ -219,6 +219,7 @@ public class Vala.ConditionalExpression : Expression {
 		false_stmt.check (context);
 
 		var replace_expr = SemanticAnalyzer.create_temp_access (local, target_type);
+		replace_expr.formal_target_type = formal_target_type;
 
 		parent_node.replace_expression (this, replace_expr);
 		replace_expr.check (context);
