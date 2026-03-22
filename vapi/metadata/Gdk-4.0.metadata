@@ -11,6 +11,7 @@ Clipboard
 ContentProvider
         .get_value.value ref
 Cursor	abstract=false
+CursorGetTextureCallback instance_idx=7
 Device
         .get_surface_at_position skip=false
 Event
