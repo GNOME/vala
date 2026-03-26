@@ -20,3 +20,9 @@ OutputStream name="UnixOutputStream" cheader_filename="gio/gunixoutputstream.h"
 
 DesktopAppInfo
   .search type="string**[]"
+
+MountEntry
+  .at name="new" symbol_type="constructor"
+  .for symbol_type="constructor"
+MountPoint
+  .at name="new" symbol_type="constructor"

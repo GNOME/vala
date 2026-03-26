@@ -95,18 +95,18 @@ namespace GLib {
 	[Compact]
 	[GIR (name = "MountEntry")]
 	public class UnixMountEntry {
-		[CCode (cname = "g_unix_mount_entry_at")]
+		[CCode (cname = "g_unix_mount_entry_at", has_construct_function = false)]
 		[Version (since = "2.84")]
-		public static GLib.UnixMountEntry? at (string mount_path, out uint64 time_read);
+		public UnixMountEntry (string mount_path, out uint64 time_read);
 		[CCode (cname = "g_unix_mount_entry_compare")]
 		[Version (since = "2.84")]
 		public int compare (GLib.UnixMountEntry mount2);
 		[CCode (cname = "g_unix_mount_entry_copy")]
 		[Version (since = "2.84")]
 		public GLib.UnixMountEntry copy ();
-		[CCode (cname = "g_unix_mount_entry_for")]
+		[CCode (cname = "g_unix_mount_entry_for", has_construct_function = false)]
 		[Version (since = "2.84")]
-		public static GLib.UnixMountEntry? @for (string file_path, out uint64 time_read);
+		public UnixMountEntry.@for (string file_path, out uint64 time_read);
 		[CCode (cname = "g_unix_mount_entry_free")]
 		[Version (since = "2.84")]
 		public void free ();
@@ -166,9 +166,9 @@ namespace GLib {
 	[Compact]
 	[GIR (name = "MountPoint")]
 	public class UnixMountPoint {
-		[CCode (cname = "g_unix_mount_point_at")]
+		[CCode (cname = "g_unix_mount_point_at", has_construct_function = false)]
 		[Version (since = "2.66")]
-		public static GLib.UnixMountPoint? at (string mount_path, out uint64 time_read);
+		public UnixMountPoint (string mount_path, out uint64 time_read);
 		[CCode (cname = "g_unix_mount_point_compare")]
 		public int compare (GLib.UnixMountPoint mount2);
 		[CCode (cname = "g_unix_mount_point_copy")]
