@@ -2757,6 +2757,7 @@ namespace Gtk {
 		public virtual signal void populate_popup (Gtk.Menu popup);
 		[Version (since = "2.20")]
 		public signal void preedit_changed (string preedit);
+		public virtual signal void toggle_direction ();
 		public virtual signal void toggle_overwrite ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h,gtk/gtk-a11y.h", type_id = "gtk_entry_accessible_get_type ()")]
@@ -7335,9 +7336,8 @@ namespace Gtk {
 		public void set_tooltip_text (string text);
 		[Version (since = "2.10")]
 		public void set_visible (bool visible);
-		[NoAccessorMethod]
 		[Version (since = "2.12")]
-		public bool embedded { get; }
+		public bool embedded { [CCode (cname = "gtk_status_icon_is_embedded")] get; }
 		[NoAccessorMethod]
 		public string file { set; }
 		[NoAccessorMethod]
@@ -7587,7 +7587,7 @@ namespace Gtk {
 		[Version (since = "3.0")]
 		public void render_arrow (Cairo.Context cr, double angle, double x, double y, double size);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background")]
-		[Version (since = "3.0.")]
+		[Version (since = "3.0")]
 		public void render_background (Cairo.Context cr, double x, double y, double width, double height);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_background_get_clip")]
 		[Version (since = "3.20")]
