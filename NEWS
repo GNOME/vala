@@ -1,3 +1,38 @@
+Vala 0.56.19
+============
+ * Various improvements and bug fixes:
+  - codegen: Minor refactoring of TypeRegisterFunction and its subclasses
+  - codegen: Use G_TYPE_FLAG_NONE when targetting glib >= 2.74
+  - codegen: Use g_once_init_{enter,leave}_pointer when targetting glib >= 2.80
+  - codegen: Propagate default_value_on_error from parent struct
+  - codegen: Return default_value_on_error on precondition failures
+  - gdbus: Avoid unused variables in method call and properties getter/setter
+  - gdbus: Allow GLib.VariantDict for a{sv}
+  - gdbus: Do not provide unintended read/write access to properties
+  - parser: Fix statement error recovery [#1590]
+  - vala: Use reference-transfer as needed when transforming
+    conditional-expression [#1648]
+  - girwriter: Don't use instance-parameter inside function elements [#1606]
+  - girwriter: Add the doc:format argument in the .gir file
+  - libvaladoc: Do not error-out on doc:format
+  - libvaladoc: Add compat layer for gvRenderData to cope with API break [#1621]
+
+ * Bindings:
+  - glib-2.0: allow FileUtils.open_tmp's first argument to be null
+  - posix: add UTIME_{NOW,OMIT} constants for utimensat
+  - gsl: Deprecate gsl_linalg_cholesky_decomp in favour of
+    gsl_linalg_cholesky_decomp1 [#1602]
+  - libxml-2.0: Add more fields to ParserCtxt
+  - gobject-2.0: Set default_value{,_on_error} for GType
+  - glib-2.0: Fix *.add_once () callbacks [#1556]
+  - gobject-2.0: Fix return type
+  - gobject-2.0: Add Type.to_string ()
+  - gstreamer-1.0: Fix ownership of Caps.full*() parameters [#1628]
+  - glib-2.0: fix a typo in a parameter name
+  - gtk4: Update to 4.21.6+83716767
+  - gtk4: Make all Gsk.RenderNode and Gsk.Renderer shadow their parent type
+  - gtk4: Fix CursorGetTextureCallback declaration
+
 Vala 0.56.18
 ============
  * Various improvements and bug fixes:
