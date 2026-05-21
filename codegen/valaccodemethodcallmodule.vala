@@ -291,6 +291,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_cvalue_ (instance_value));
 			}
 
+			string? ccode_instance_type = get_ccode_instance_type (m);
+			if (ccode_instance_type != null) {
+				instance = new CCodeCastExpression (instance, ccode_instance_type);
+			}
+
 			if (!m.coroutine) {
 				in_arg_map.set (get_param_pos (get_ccode_instance_pos (m)), instance);
 			} else if (expr.is_yield_expression) {

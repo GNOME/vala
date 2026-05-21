@@ -2659,10 +2659,11 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	Parameter parse_parameter (out bool caller_allocates, out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment = null, string? default_name = null) {
+	Parameter parse_parameter (out bool caller_allocates, out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null, out string? scope = null, out Comment? comment = null, string? default_name = null, out string? raw_ctype = null) {
 		var begin = this.begin;
 		Parameter param;
 
+		raw_ctype = null;
 		array_length_idx = -1;
 		closure_idx = -1;
 		destroy_idx = -1;
@@ -2730,6 +2731,7 @@ public class Vala.GirParser : CodeVisitor {
 			bool no_array_length;
 			bool array_null_terminated;
 			var type = parse_type (out ctype, out array_length_idx, transfer != "container", out no_array_length, out array_null_terminated);
+			raw_ctype = ctype;
 			if (transfer == "full" || transfer == "container" || destroy != null) {
 				type.value_owned = true;
 			}
@@ -3639,8 +3641,9 @@ public class Vala.GirParser : CodeVisitor {
 				string scope;
 				string default_param_name = null;
 				Comment? param_comment;
+				string? instance_raw_ctype;
 				default_param_name = "arg%d".printf (parameters.size);
-				var param = parse_parameter (out caller_allocates, out array_length_idx, out closure_idx, out destroy_idx, out scope, out param_comment, default_param_name);
+				var param = parse_parameter (out caller_allocates, out array_length_idx, out closure_idx, out destroy_idx, out scope, out param_comment, default_param_name, out instance_raw_ctype);
 
 				if (is_instance_parameter) {
 					unowned Method? m = s as Method;
@@ -3648,6 +3651,10 @@ public class Vala.GirParser : CodeVisitor {
 						if (param.direction == ParameterDirection.IN) {
 							if (param.variable_type.value_owned) {
 								m.set_attribute ("DestroysInstance", true);
+							}
+							var parent_ctype = current.parent.get_cname () + "*";
+							if (instance_raw_ctype != null && instance_raw_ctype != parent_ctype && instance_raw_ctype != "const " + parent_ctype) {
+								m.set_attribute_string ("CCode", "instance_type", instance_raw_ctype);
 							}
 							pop_metadata ();
 							continue;

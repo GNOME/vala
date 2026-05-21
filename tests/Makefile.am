@@ -924,6 +924,7 @@ TESTS = \
 	gir/method-array-length-type.gir \
 	gir/method-array-return.gir \
 	gir/method-class.gir \
+	gir/method-instance-type.gir \
 	gir/method-nowrapper.gir \
 	gir/off_t.gir \
 	gir/parameter-array-length-type.gir \
