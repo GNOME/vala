@@ -305,6 +305,10 @@ namespace Vala {
 		}
 	}
 
+	public static string? get_ccode_instance_type (CodeNode node) {
+		return get_ccode_attribute (node).instance_type;
+	}
+
 	public static double get_ccode_error_pos (Callable c) {
 		return c.get_attribute_double ("CCode", "error_pos", -1);
 	}
