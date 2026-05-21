@@ -318,6 +318,18 @@ public class Vala.CCodeAttribute : AttributeCache {
 		}
 	}
 
+	public string? instance_type {
+		get {
+			if (!instance_type_set) {
+				if (ccode != null) {
+					_instance_type = ccode.get_string ("instance_type");
+				}
+				instance_type_set = true;
+			}
+			return _instance_type;
+		}
+	}
+
 	public string type_id {
 		get {
 			if (_type_id == null) {
@@ -703,6 +715,8 @@ public class Vala.CCodeAttribute : AttributeCache {
 	private string _delegate_target_destroy_notify_name;
 	private string _ctype;
 	private bool ctype_set = false;
+	private string? _instance_type;
+	private bool instance_type_set = false;
 	private bool? _array_length;
 	private string _array_length_type;
 	private bool? _array_null_terminated;

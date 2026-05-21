@@ -1052,8 +1052,11 @@ public abstract class Vala.CCodeMethodModule : CCodeStructModule {
 				var base_type = new ObjectType ((Class) m.base_method.parent_symbol);
 				instance_param = new CCodeParameter ("base", get_ccode_name (base_type));
 			} else {
+				string? ccode_instance_type = get_ccode_instance_type (m);
 				unowned Struct? st = m.parent_symbol as Struct;
-				if (st != null && !st.is_simple_type ()) {
+				if (ccode_instance_type != null) {
+					instance_param = new CCodeParameter ("self", ccode_instance_type);
+				} else if (st != null && !st.is_simple_type ()) {
 					instance_param = new CCodeParameter ("*self", get_ccode_name (this_type));
 				} else if (st != null && st.is_simple_type () && m is CreationMethod) {
 					// constructors return simple type structs by value
