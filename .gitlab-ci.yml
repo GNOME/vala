@@ -18,10 +18,19 @@ include:
     RUN_TESTS: "no"
     MESON_DIST: "no"
 
+.vars-26.08beta:
+  extends: [".vars-extension"]
+  # Use the image from the last stable runtime that includes 26.08beta sdk
+  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-master'
+  variables:
+    BRANCH: "26.08beta"
+  before_script:
+    - sed -i "s/24.08/$BRANCH/g" $MANIFEST_PATH
+
 .vars-25.08:
   extends: [".vars-extension"]
   # Use the image from the last stable runtime that includes 25.08 sdk
-  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-master'
+  image: 'quay.io/gnome_infrastructure/gnome-runtime-images:gnome-50'
   variables:
     BRANCH: "25.08"
   before_script:
@@ -34,17 +43,27 @@ include:
   variables:
     BRANCH: "24.08"
 
+flatpak-extension@26.08beta@x86_64:
+  extends: [".flatpak@x86_64", ".vars-26.08beta"]
+
 flatpak-extension@25.08@x86_64:
   extends: [".flatpak@x86_64", ".vars-25.08"]
 
 flatpak-extension@24.08@x86_64:
   extends: [".flatpak@x86_64", ".vars-24.08"]
 
+flatpak-extension@26.08beta@aarch64:
+  extends: [".flatpak@aarch64", ".vars-26.08beta"]
+
 flatpak-extension@25.08@aarch64:
   extends: [".flatpak@aarch64", ".vars-25.08"]
 
 flatpak-extension@24.08@aarch64:
   extends: [".flatpak@aarch64", ".vars-24.08"]
+
+nightly@26.08beta@x86_64:
+  extends: [".publish_nightly", ".flatpak rules"]
+  needs: ["flatpak-extension@26.08beta@x86_64"]
 
 nightly@25.08@x86_64:
   extends: [".publish_nightly", ".flatpak rules"]
@@ -53,6 +72,10 @@ nightly@25.08@x86_64:
 nightly@24.08@x86_64:
   extends: [".publish_nightly", ".flatpak rules"]
   needs: ["flatpak-extension@24.08@x86_64"]
+
+nightly@26.08beta@aarch64:
+  extends: [".publish_nightly", ".flatpak rules"]
+  needs: ["flatpak-extension@26.08beta@aarch64"]
 
 nightly@25.08@aarch64:
   extends: [".publish_nightly", ".flatpak rules"]
