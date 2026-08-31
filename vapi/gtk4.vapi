@@ -5184,6 +5184,10 @@ namespace Gdk {
 		public signal void changed ();
 		public signal void tool_changed (Gdk.DeviceTool tool);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", has_type_id = false)]
+	[Compact]
+	public class DevicePadClass {
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", type_id = "gdk_device_tool_get_type ()")]
 	public sealed class DeviceTool : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -5480,6 +5484,8 @@ namespace Gdk {
 		public int64 get_predicted_presentation_time ();
 		public int64 get_presentation_time ();
 		public int64 get_refresh_interval ();
+		[Version (since = "4.24")]
+		public Gdk.FrameResult get_result ();
 		public unowned Gdk.FrameTimings @ref ();
 		public void unref ();
 	}
@@ -5512,6 +5518,7 @@ namespace Gdk {
 		public void set_debug_enabled (bool enabled);
 		public void set_forward_compatible (bool compatible);
 		public void set_required_version (int major, int minor);
+		[Version (deprecated = true, deprecated_since = "4.6")]
 		public void set_use_es (int use_es);
 		[Version (since = "4.6")]
 		public Gdk.GLAPI allowed_apis { get; set; }
@@ -6021,6 +6028,7 @@ namespace Gdk {
 		public bool is_clear ();
 		public bool is_opaque ();
 		public bool parse (string spec);
+		[Version (since = "4.22")]
 		public GLib.StringBuilder print (GLib.StringBuilder string);
 		public string to_string ();
 	}
@@ -6189,6 +6197,17 @@ namespace Gdk {
 		RESUME_EVENTS,
 		AFTER_PAINT
 	}
+	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FRAME_", type_id = "gdk_frame_result_get_type ()")]
+	[Version (since = "4.24")]
+	public enum FrameResult {
+		PREPARING,
+		SKIPPED,
+		EMPTY,
+		SUBMITTED,
+		OUTSTANDING,
+		DISCARDED,
+		PRESENTED
+	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_FULLSCREEN_ON_", type_id = "gdk_fullscreen_mode_get_type ()")]
 	public enum FullscreenMode {
 		CURRENT_MONITOR,
@@ -6352,6 +6371,18 @@ namespace Gdk {
 		G16_B16_R16_422,
 		[Version (since = "4.20")]
 		G16_B16_R16_444,
+		[Version (since = "4.24")]
+		ARGB2101010_PREMULTIPLIED,
+		[Version (since = "4.24")]
+		ARGB2101010,
+		[Version (since = "4.24")]
+		XRGB2101010,
+		[Version (since = "4.24")]
+		ABGR2101010_PREMULTIPLIED,
+		[Version (since = "4.24")]
+		ABGR2101010,
+		[Version (since = "4.24")]
+		XBGR2101010,
 		N_FORMATS
 	}
 	[CCode (cheader_filename = "gdk/gdk.h", cprefix = "GDK_", type_id = "gdk_modifier_type_get_type ()")]
@@ -6603,6 +6634,9 @@ namespace Gdk {
 	public static void keyval_convert_case (uint symbol, out uint lower, out uint upper);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_from_name (string keyval_name);
+	[CCode (array_length_pos = 1.1, array_length_type = "guint", cheader_filename = "gdk/gdk.h")]
+	[Version (since = "4.24")]
+	public static unowned uint[]? keyval_get_aliases (uint keyval);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool keyval_is_lower (uint keyval);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -6655,9 +6689,13 @@ namespace Gsk {
 	public sealed class BorderNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public BorderNode (Gsk.RoundedRect outline, [CCode (array_length = false)] float border_width[4], [CCode (array_length = false)] Gdk.RGBA border_color[4]);
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_border_snap ();
 		[CCode (array_length = false, array_length_cexpr = "4")]
 		public unowned Gdk.RGBA[] get_colors ();
 		public unowned Gsk.RoundedRect? get_outline ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		[CCode (array_length = false, array_length_cexpr = "4")]
 		public unowned float[] get_widths ();
 	}
@@ -6685,6 +6723,8 @@ namespace Gsk {
 		public ClipNode (Gsk.RenderNode child, Graphene.Rect clip);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Rect? get_clip ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_color_matrix_node_get_type ()")]
 	public sealed class ColorMatrixNode : Gsk.RenderNode {
@@ -6693,12 +6733,16 @@ namespace Gsk {
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Matrix? get_color_matrix ();
 		public unowned Graphene.Vec4? get_color_offset ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_color_node_get_type ()")]
 	public sealed class ColorNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public ColorNode (Gdk.RGBA rgba, Graphene.Rect bounds);
 		public unowned Gdk.RGBA? get_color ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gsk_component_transfer_get_type ()")]
 	[Compact]
@@ -6748,6 +6792,8 @@ namespace Gsk {
 		public unowned Gsk.ColorStop[] get_color_stops ();
 		public size_t get_n_color_stops ();
 		public float get_rotation ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_container_node_get_type ()")]
 	public sealed class ContainerNode : Gsk.RenderNode {
@@ -6835,6 +6881,7 @@ namespace Gsk {
 		public unowned Gsk.RenderNode get_child (uint idx);
 		[Version (deprecated = true, deprecated_since = "4.16")]
 		public uint get_n_children ();
+		[Version (deprecated = true, deprecated_since = "4.16")]
 		public unowned Gsk.GLShader get_shader ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_inset_shadow_node_get_type ()")]
@@ -6846,6 +6893,8 @@ namespace Gsk {
 		public float get_dx ();
 		public float get_dy ();
 		public unowned Gsk.RoundedRect? get_outline ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public float get_spread ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_isolation_node_get_type ()")]
@@ -6864,6 +6913,8 @@ namespace Gsk {
 		public unowned Gsk.ColorStop[] get_color_stops ();
 		public unowned Graphene.Point? get_end ();
 		public size_t get_n_color_stops ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public unowned Graphene.Point? get_start ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_mask_node_get_type ()")]
@@ -6897,6 +6948,8 @@ namespace Gsk {
 		public float get_dx ();
 		public float get_dy ();
 		public unowned Gsk.RoundedRect? get_outline ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public float get_spread ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_paste_node_get_type ()")]
@@ -6905,6 +6958,8 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		public PasteNode (Graphene.Rect bounds, size_t depth);
 		public size_t get_depth ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_path_ref", type_id = "gsk_path_get_type ()", unref_function = "gsk_path_unref")]
 	[Compact]
@@ -7014,6 +7069,8 @@ namespace Gsk {
 		public float get_end ();
 		public float get_hradius ();
 		public size_t get_n_color_stops ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public float get_start ();
 		public float get_vradius ();
 	}
@@ -7073,6 +7130,10 @@ namespace Gsk {
 		public RepeatNode (Graphene.Rect bounds, Gsk.RenderNode child, Graphene.Rect? child_bounds);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Graphene.Rect? get_child_bounds ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_child_snap ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_repeating_linear_gradient_node_get_type ()")]
 	public sealed class RepeatingLinearGradientNode : Gsk.RenderNode {
@@ -7090,6 +7151,8 @@ namespace Gsk {
 		public RoundedClipNode (Gsk.RenderNode child, Gsk.RoundedRect clip);
 		public unowned Gsk.RenderNode get_child ();
 		public unowned Gsk.RoundedRect? get_clip ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_shader_args_builder_ref", type_id = "gsk_shader_args_builder_get_type ()", unref_function = "gsk_shader_args_builder_unref")]
 	[Compact]
@@ -7173,6 +7236,8 @@ namespace Gsk {
 	public sealed class TextureNode : Gsk.RenderNode {
 		[CCode (has_construct_function = false)]
 		public TextureNode (Gdk.Texture texture, Graphene.Rect bounds);
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public unowned Gdk.Texture get_texture ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cname = "GskRenderNode", type_id = "gsk_texture_scale_node_get_type ()")]
@@ -7181,6 +7246,8 @@ namespace Gsk {
 		[CCode (has_construct_function = false)]
 		public TextureScaleNode (Gdk.Texture texture, Graphene.Rect bounds, Gsk.ScalingFilter filter);
 		public Gsk.ScalingFilter get_filter ();
+		[Version (since = "4.24")]
+		public Gsk.RectSnap get_snap ();
 		public unowned Gdk.Texture get_texture ();
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", ref_function = "gsk_transform_ref", type_id = "gsk_transform_get_type ()", unref_function = "gsk_transform_unref")]
@@ -7254,6 +7321,14 @@ namespace Gsk {
 		public size_t lines;
 		public size_t line_bytes;
 		public size_t line_chars;
+	}
+	[CCode (cheader_filename = "gsk/gsk.h")]
+	[SimpleType]
+	public struct RectSnap : uint {
+		[Version (since = "4.24")]
+		public Gsk.SnapDirection get_direction (Gsk.Side side);
+		[Version (since = "4.24")]
+		public static Gsk.RectSnap @new (Gsk.SnapDirection top, Gsk.SnapDirection right, Gsk.SnapDirection bottom, Gsk.SnapDirection left);
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", has_type_id = false)]
 	public struct RoundedRect {
@@ -7455,13 +7530,31 @@ namespace Gsk {
 		[Version (since = "4.22")]
 		DISPLACEMENT_NODE,
 		[Version (since = "4.22")]
-		ARITHMETIC_NODE
+		ARITHMETIC_NODE,
+		[Version (since = "4.24")]
+		TURBULENCE_NODE
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SCALING_FILTER_", type_id = "gsk_scaling_filter_get_type ()")]
 	public enum ScalingFilter {
 		LINEAR,
 		NEAREST,
 		TRILINEAR
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SIDE_", type_id = "gsk_side_get_type ()")]
+	[Version (since = "4.24")]
+	public enum Side {
+		TOP,
+		RIGHT,
+		BOTTOM,
+		LEFT
+	}
+	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_SNAP_", type_id = "gsk_snap_direction_get_type ()")]
+	[Version (since = "4.24")]
+	public enum SnapDirection {
+		NONE,
+		FLOOR,
+		CEIL,
+		ROUND
 	}
 	[CCode (cheader_filename = "gsk/gsk.h", cprefix = "GSK_TRANSFORM_CATEGORY_", type_id = "gsk_transform_category_get_type ()")]
 	public enum TransformCategory {
@@ -7496,6 +7589,18 @@ namespace Gsk {
 	[CCode (cheader_filename = "gsk/gsk.h", instance_pos = 2.9)]
 	[Version (since = "4.22")]
 	public delegate Gdk.Texture RenderReplayTextureFilter (Gsk.RenderReplay replay, Gdk.Texture texture);
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GSK_RECT_SNAP_GROW")]
+	[Version (since = "4.24")]
+	public const int RECT_SNAP_GROW;
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GSK_RECT_SNAP_NONE")]
+	[Version (since = "4.24")]
+	public const int RECT_SNAP_NONE;
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GSK_RECT_SNAP_ROUND")]
+	[Version (since = "4.24")]
+	public const int RECT_SNAP_ROUND;
+	[CCode (cheader_filename = "gsk/gsk.h", cname = "GSK_RECT_SNAP_SHRINK")]
+	[Version (since = "4.24")]
+	public const int RECT_SNAP_SHRINK;
 	[CCode (cheader_filename = "gsk/gsk.h")]
 	[Version (replacement = "ComponentTransfer.equal", since = "4.20")]
 	public static bool component_transfer_equal (void* self, void* other);
@@ -7538,6 +7643,9 @@ namespace Gtk {
 		public Gtk.AccessibleRole accessible_role { get; set construct; }
 		[NoAccessorMethod]
 		public Gdk.Display display { owned get; set; }
+		[NoAccessorMethod]
+		[Version (since = "4.24")]
+		public bool realized { get; }
 		public signal void state_change ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_about_dialog_get_type ()")]
@@ -7695,11 +7803,14 @@ namespace Gtk {
 		public bool modal { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_alternative_trigger_get_type ()")]
-	public sealed class AlternativeTrigger : Gtk.ShortcutTrigger {
+	public sealed class AlternativeTrigger : Gtk.ShortcutTrigger, GLib.ListModel {
 		[CCode (has_construct_function = false, type = "GtkShortcutTrigger*")]
 		public AlternativeTrigger (owned Gtk.ShortcutTrigger first, owned Gtk.ShortcutTrigger second);
 		public unowned Gtk.ShortcutTrigger get_first ();
 		public unowned Gtk.ShortcutTrigger get_second ();
+		[CCode (cname = "gtk_alternative_trigger_newv", has_construct_function = false, type = "GtkShortcutTrigger*")]
+		[Version (since = "4.24")]
+		public AlternativeTrigger.newv ([CCode (array_length_cname = "n_triggers", array_length_pos = 1.1, array_length_type = "gsize")] owned Gtk.ShortcutTrigger[] triggers);
 		public Gtk.ShortcutTrigger first { get; construct; }
 		public Gtk.ShortcutTrigger second { get; construct; }
 	}
@@ -9516,6 +9627,31 @@ namespace Gtk {
 		public signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
 		public signal void no_matches ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_enum_list_get_type ()")]
+	[Version (since = "4.24")]
+	public sealed class EnumList : GLib.Object, GLib.ListModel {
+		[CCode (has_construct_function = false)]
+		public EnumList (GLib.Type enum_type);
+		public uint find (int value);
+		public GLib.Type get_enum_type ();
+		public GLib.Type enum_type { get; construct; }
+		[NoAccessorMethod]
+		public GLib.Type item_type { get; }
+		[NoAccessorMethod]
+		public uint n_items { get; }
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_enum_list_item_get_type ()")]
+	[Version (since = "4.24")]
+	public sealed class EnumListItem : GLib.Object {
+		[CCode (has_construct_function = false)]
+		protected EnumListItem ();
+		public unowned string get_name ();
+		public unowned string get_nick ();
+		public int get_value ();
+		public string name { get; }
+		public string nick { get; }
+		public int value { get; }
+	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_event_controller_get_type ()")]
 	public abstract class EventController : GLib.Object {
 		[CCode (has_construct_function = false)]
@@ -9552,6 +9688,7 @@ namespace Gtk {
 	public sealed class EventControllerKey : Gtk.EventController {
 		[CCode (has_construct_function = false, type = "GtkEventController*")]
 		public EventControllerKey ();
+		[Version (deprecated = true, deprecated_since = "4.24")]
 		public bool forward (Gtk.Widget widget);
 		public uint get_group ();
 		public unowned Gtk.IMContext? get_im_context ();
@@ -10368,6 +10505,8 @@ namespace Gtk {
 		public virtual bool filter_keypress (Gdk.Event event);
 		public virtual void focus_in ();
 		public virtual void focus_out ();
+		[Version (since = "4.24")]
+		public unowned Gtk.Widget? get_client_widget ();
 		public virtual void get_preedit_string (out string str, out Pango.AttrList attrs, out int cursor_pos);
 		[Version (deprecated = true, deprecated_since = "4.2")]
 		public virtual bool get_surrounding (out string text, out int cursor_index);
@@ -12377,6 +12516,9 @@ namespace Gtk {
 		public static unowned Gtk.Settings get_for_display (Gdk.Display display);
 		public void reset_property (string name);
 		[NoAccessorMethod]
+		[Version (since = "4.24")]
+		public Gdk.RGBA gtk_accent_color { owned get; set; }
+		[NoAccessorMethod]
 		public bool gtk_alternative_button_order { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_alternative_sort_arrows { get; set; }
@@ -12444,6 +12586,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		[Version (since = "4.22")]
 		public Gtk.ReducedMotion gtk_interface_reduced_motion { get; set; }
+		[NoAccessorMethod]
+		public int gtk_keyboard_focus_visible_timeout { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_keynav_use_caret { get; set; }
 		[NoAccessorMethod]
@@ -12562,6 +12706,10 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		protected ShortcutTrigger ();
 		public int compare (Gtk.ShortcutTrigger trigger2);
+		[Version (since = "4.24")]
+		public static Gtk.ShortcutTrigger create_for_menu ();
+		[Version (since = "4.24")]
+		public static Gtk.ShortcutTrigger create_with_aliases (uint keyval, Gdk.ModifierType modifiers);
 		public bool equal (Gtk.ShortcutTrigger trigger2);
 		public uint hash ();
 		public static Gtk.ShortcutTrigger? parse_string (string str);
@@ -12795,6 +12943,8 @@ namespace Gtk {
 		public void save ();
 		public void scale (float factor_x, float factor_y);
 		public void scale_3d (float factor_x, float factor_y, float factor_z);
+		[Version (since = "4.24")]
+		public void set_snap (Gsk.RectSnap snap);
 		public Gsk.RenderNode? to_node ();
 		public Gdk.Paintable? to_paintable (Graphene.Size? size);
 		public void transform (Gsk.Transform? transform);
@@ -13062,7 +13212,6 @@ namespace Gtk {
 		protected StyleContext ();
 		public void add_class (string class_name);
 		public void add_provider (Gtk.StyleProvider provider, uint priority);
-		[Version (deprecated = false)]
 		public static void add_provider_for_display (Gdk.Display display, Gtk.StyleProvider provider, uint priority);
 		[NoWrapper]
 		public virtual void changed ();
@@ -13077,7 +13226,6 @@ namespace Gtk {
 		public bool lookup_color (string color_name, out Gdk.RGBA color);
 		public void remove_class (string class_name);
 		public void remove_provider (Gtk.StyleProvider provider);
-		[Version (deprecated = false)]
 		public static void remove_provider_for_display (Gdk.Display display, Gtk.StyleProvider provider);
 		[CCode (cheader_filename = "gtk/gtk.h", cname = "gtk_render_activity")]
 		public void render_activity (Cairo.Context cr, double x, double y, double width, double height);
@@ -13121,9 +13269,13 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public Svg.from_resource (string path);
 		public Gtk.SvgFeatures get_features ();
+		[Version (since = "4.24")]
+		public Gtk.Overflow get_overflow ();
 		public uint get_state ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_state_names (out uint length);
+		[Version (since = "4.24")]
+		public GLib.Bytes? get_stylesheet ();
 		public double get_weight ();
 		public void load_from_bytes (GLib.Bytes bytes);
 		public void load_from_resource (string path);
@@ -13132,16 +13284,45 @@ namespace Gtk {
 		public GLib.Bytes serialize ();
 		public void set_features (Gtk.SvgFeatures features);
 		public void set_frame_clock (Gdk.FrameClock clock);
+		[Version (since = "4.24")]
+		public void set_overflow (Gtk.Overflow overflow);
+		[Version (since = "4.24")]
+		public void set_settings (Gtk.Settings? settings);
 		public void set_state (uint state);
+		[Version (since = "4.24")]
+		public void set_stylesheet (GLib.Bytes? bytes);
 		public void set_weight (double weight);
 		public bool write_to_file (string filename) throws GLib.Error;
 		public Gtk.SvgFeatures features { get; set; }
+		[Version (since = "4.24")]
+		public Gtk.Overflow overflow { get; set; }
 		[NoAccessorMethod]
 		public bool playing { get; set; }
 		[NoAccessorMethod]
 		public string resource { owned get; set; }
 		public uint state { get; set; }
+		[Version (since = "4.24")]
+		public GLib.Bytes stylesheet { owned get; set; }
 		public double weight { get; set; }
+		public signal void error (GLib.Error error);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_svg_widget_get_type ()")]
+	[Version (since = "4.24")]
+	public sealed class SvgWidget : Gtk.Widget, Gtk.Accessible, Gtk.Buildable, Gtk.ConstraintTarget {
+		[CCode (has_construct_function = false)]
+		public SvgWidget ();
+		public uint get_state ();
+		public GLib.Bytes? get_stylesheet ();
+		public void load_from_bytes (GLib.Bytes bytes);
+		public void set_state (uint state);
+		public void set_stylesheet (GLib.Bytes? bytes);
+		[NoAccessorMethod]
+		public string resource { owned get; set; }
+		public uint state { get; set; }
+		public GLib.Bytes stylesheet { owned get; set; }
+		[NoAccessorMethod]
+		public Gtk.Svg svg { owned get; }
+		public signal void activate (string? id, string? href);
 		public signal void error (GLib.Error error);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_switch_get_type ()")]
@@ -14634,6 +14815,8 @@ namespace Gtk {
 		public virtual signal void activate_focus ();
 		public virtual signal bool close_request ();
 		public virtual signal bool enable_debugging (bool toggle);
+		[Version (since = "4.24")]
+		public virtual signal void force_close ();
 		[Version (deprecated = true, deprecated_since = "4.10")]
 		public virtual signal void keys_changed ();
 	}
@@ -14673,30 +14856,23 @@ namespace Gtk {
 		public Gtk.Widget child { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_cname = "GtkAccessibleInterface", type_id = "gtk_accessible_get_type ()")]
+	[Version (since = "4.10")]
 	public interface Accessible : GLib.Object {
 		[Version (since = "4.14")]
 		public void announce (string message, Gtk.AccessibleAnnouncementPriority priority);
 		[Version (since = "4.22")]
 		public abstract string? get_accessible_id ();
-		[Version (since = "4.10")]
 		public abstract Gtk.Accessible? get_accessible_parent ();
 		public Gtk.AccessibleRole get_accessible_role ();
-		[Version (since = "4.10")]
 		public abstract Gtk.ATContext? get_at_context ();
-		[Version (since = "4.10")]
 		public abstract bool get_bounds (out int x, out int y, out int width, out int height);
-		[Version (since = "4.10")]
 		public abstract Gtk.Accessible? get_first_accessible_child ();
-		[Version (since = "4.10")]
 		public abstract Gtk.Accessible? get_next_accessible_sibling ();
-		[Version (since = "4.10")]
 		public abstract bool get_platform_state (Gtk.AccessiblePlatformState state);
 		public void reset_property (Gtk.AccessibleProperty property);
 		public void reset_relation (Gtk.AccessibleRelation relation);
 		public void reset_state (Gtk.AccessibleState state);
-		[Version (since = "4.10")]
 		public void set_accessible_parent (Gtk.Accessible? parent, Gtk.Accessible? next_sibling);
-		[Version (since = "4.10")]
 		public void update_next_accessible_sibling (Gtk.Accessible? new_sibling);
 		[Version (since = "4.18")]
 		public void update_platform_state (Gtk.AccessiblePlatformState state);
@@ -14867,9 +15043,13 @@ namespace Gtk {
 		public void finish_delegate ();
 		public float get_alignment ();
 		public string get_chars (int start_pos = 0, int end_pos = -1);
+		[Version (since = "4.24")]
+		public abstract string get_complete_text ();
 		public abstract unowned Gtk.Editable? get_delegate ();
 		public bool get_editable ();
 		public bool get_enable_undo ();
+		[Version (since = "4.24")]
+		public Gtk.Widget? get_input_interceptor ();
 		public int get_max_width_chars ();
 		public int get_position ();
 		public abstract bool get_selection_bounds (out int start_pos, out int end_pos);
@@ -14882,16 +15062,23 @@ namespace Gtk {
 		public void set_alignment (float xalign);
 		public void set_editable (bool is_editable);
 		public void set_enable_undo (bool enable_undo);
+		[Version (since = "4.24")]
+		public void set_input_interceptor (Gtk.Widget? interceptor);
 		public void set_max_width_chars (int n_chars);
 		public void set_position (int position);
 		public void set_text (string text);
 		public void set_width_chars (int n_chars);
+		[Version (since = "4.24")]
+		public abstract string complete_text { owned get; }
 		[ConcreteAccessor]
 		public abstract int cursor_position { [CCode (cname = "gtk_editable_get_position")] get; }
 		[ConcreteAccessor]
 		public abstract bool editable { get; set; }
 		[ConcreteAccessor]
 		public abstract bool enable_undo { get; set; }
+		[ConcreteAccessor]
+		[Version (since = "4.24")]
+		public abstract Gtk.Widget input_interceptor { owned get; set; }
 		[ConcreteAccessor]
 		public abstract int max_width_chars { get; set; }
 		[NoAccessorMethod]
@@ -14903,6 +15090,8 @@ namespace Gtk {
 		public abstract float xalign { [CCode (cname = "gtk_editable_get_alignment")] get; [CCode (cname = "gtk_editable_set_alignment")] set; }
 		public virtual signal void changed ();
 		public virtual signal void delete_text (int start_pos, int end_pos);
+		[Version (since = "4.24")]
+		public signal void input_intercepted ();
 		public virtual signal void insert_text (string text, int length, ref int position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", type_id = "gtk_file_chooser_get_type ()")]
@@ -15739,7 +15928,9 @@ namespace Gtk {
 		[Version (since = "4.18")]
 		BUILDER,
 		[Version (since = "4.22")]
-		SESSION
+		SESSION,
+		[Version (since = "4.24")]
+		GENERAL_INFO
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_DELETE_", type_id = "gtk_delete_type_get_type ()")]
 	public enum DeleteType {
@@ -15779,6 +15970,8 @@ namespace Gtk {
 		PROP_MAX_WIDTH_CHARS,
 		PROP_XALIGN,
 		PROP_ENABLE_UNDO,
+		PROP_COMPLETE_TEXT,
+		PROP_INPUT_INTERCEPTOR,
 		NUM_PROPERTIES
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ENTRY_ICON_", type_id = "gtk_entry_icon_position_get_type ()")]
@@ -16051,7 +16244,6 @@ namespace Gtk {
 		SMALLER,
 		EQUAL,
 		LARGER;
-		[Version (since = "4.2")]
 		public static Gtk.Ordering from_cmpfunc (int cmpfunc_result);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h", cprefix = "GTK_ORIENTATION_", type_id = "gtk_orientation_get_type ()")]
@@ -16628,10 +16820,16 @@ namespace Gtk {
 		MISSING_ATTRIBUTE,
 		INVALID_REFERENCE,
 		FAILED_UPDATE,
-		FAILED_RENDERING;
+		FAILED_RENDERING,
+		IGNORED_ELEMENT,
+		LIMITS_EXCEEDED,
+		NOT_IMPLEMENTED,
+		FEATURE_DISABLED;
 		public static unowned string? get_attribute (GLib.Error error);
 		public static unowned string? get_element (GLib.Error error);
 		public static unowned Gtk.SvgLocation? get_end (GLib.Error error);
+		[Version (since = "4.24")]
+		public static unowned string? get_input (GLib.Error error);
 		public static unowned Gtk.SvgLocation? get_start (GLib.Error error);
 		public static GLib.Quark quark ();
 	}
@@ -17079,7 +17277,7 @@ namespace Gtk {
 	[Version (replacement = "Native.get_for_surface")]
 	public static unowned Gtk.Native? native_get_for_surface (Gdk.Surface surface);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	[Version (replacement = "Ordering.from_cmpfunc", since = "4.2")]
+	[Version (replacement = "Ordering.from_cmpfunc")]
 	public static Gtk.Ordering ordering_from_cmpfunc (int cmpfunc_result);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (replacement = "PaperSize.get_default")]
@@ -17115,6 +17313,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (replacement = "SvgError.get_end", since = "4.22")]
 	public static unowned Gtk.SvgLocation? svg_error_get_end (GLib.Error error);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	[Version (replacement = "SvgError.get_input", since = "4.24")]
+	public static unowned string? svg_error_get_input (GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	[Version (replacement = "SvgError.get_start", since = "4.22")]
 	public static unowned Gtk.SvgLocation? svg_error_get_start (GLib.Error error);
