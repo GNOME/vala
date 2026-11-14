@@ -85,7 +85,7 @@ public class Vala.UsedAttr : CodeVisitor {
 		"ModuleInit", "",
 		"Profile", "",
 
-		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "",
+		"DBus", "name", "no_reply", "result", "use_string_marshalling", "value", "signature", "visible", "timeout", "emits_changed_signal", "",
 
 		"GIR", "fullname", "name", "visible", ""
 

@@ -781,20 +781,33 @@ public class Vala.GDBusServerModule : GDBusClientModule {
 				continue;
 			}
 
+			var emits_changed_signal = get_emits_changed_signal (prop);
+			if (emits_changed_signal == "const" || emits_changed_signal == "false") {
+				continue;
+			}
+
 			var compare = new CCodeFunctionCall (new CCodeIdentifier ("g_strcmp0"));
 			compare.add_argument (new CCodeMemberAccess.pointer (new CCodeElementAccess (new CCodeIdentifier ("pspecs"), new CCodeIdentifier ("i")), "name"));
 			compare.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_ccode_name (prop))));
 			ccode.open_if (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, compare, new CCodeConstant ("0")));
 
-			var get_property = new CCodeFunctionCall (new CCodeIdentifier ("_dbus_%s".printf (get_ccode_name (prop.get_accessor))));
-			get_property.add_argument (new CCodeIdentifier ("self"));
+			if (emits_changed_signal == "invalidates") {
+				var invalidate_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
+				invalidate_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("invalidated_builder")));
+				invalidate_add.add_argument (new CCodeConstant.string ("\"s\""));
+				invalidate_add.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+				ccode.add_expression (invalidate_add);
+			} else {
+				var get_property = new CCodeFunctionCall (new CCodeIdentifier ("_dbus_%s".printf (get_ccode_name (prop.get_accessor))));
+				get_property.add_argument (new CCodeIdentifier ("self"));
 
-			var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
-			builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
-			builder_add.add_argument (new CCodeConstant.string ("\"{sv}\""));
-			builder_add.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name_for_member (prop))));
-			builder_add.add_argument (get_property);
-			ccode.add_expression (builder_add);
+				var builder_add = new CCodeFunctionCall (new CCodeIdentifier ("g_variant_builder_add"));
+				builder_add.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("changed_builder")));
+				builder_add.add_argument (new CCodeConstant.string ("\"{sv}\""));
+				builder_add.add_argument (new CCodeConstant.string ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+				builder_add.add_argument (get_property);
+				ccode.add_expression (builder_add);
+			}
 			ccode.add_assignment (new CCodeIdentifier ("has_changes"), new CCodeConstant ("TRUE"));
 
 			ccode.close ();

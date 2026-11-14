@@ -31,6 +31,15 @@ public class Vala.GDBusModule : GVariantModule {
 		return result;
 	}
 
+	// Value of org.freedesktop.DBus.Property.EmitsChangedSignal: "true" (default), "invalidates", "false" or "const"
+	protected static string get_emits_changed_signal (Property prop) {
+		var value = prop.get_attribute_string ("DBus", "emits_changed_signal", "true");
+		if (value != "invalidates" && value != "false" && value != "const") {
+			return "true";
+		}
+		return value;
+	}
+
 	public static string get_dbus_name_for_member (Symbol symbol) {
 		var dbus_name = symbol.get_attribute_string ("DBus", "name");
 		if (dbus_name != null) {
@@ -445,7 +454,41 @@ public class Vala.GDBusModule : GVariantModule {
 			} else {
 				info.append (new CCodeConstant ("G_DBUS_PROPERTY_INFO_FLAGS_NONE"));
 			}
-			info.append (new CCodeConstant ("NULL"));
+
+			var emits_changed_signal_value = prop.get_attribute_string ("DBus", "emits_changed_signal", "true");
+			var emits_changed_signal = get_emits_changed_signal (prop);
+			if (emits_changed_signal != emits_changed_signal_value) {
+				Report.error (prop.source_reference, "Invalid value `%s' for `emits_changed_signal', expected `true', `invalidates', `false' or `const'".printf (emits_changed_signal_value));
+			} else if (emits_changed_signal == "const" && prop.set_accessor != null && prop.set_accessor.writable && !prop.set_accessor.construction) {
+				Report.warning (prop.source_reference, "Property `%s' is `const' but has a non-construct setter".printf (prop.get_full_name ()));
+			}
+			if (emits_changed_signal != "true") {
+				var annotation_name = "_" + get_ccode_lower_case_prefix (sym) + "dbus_property_annotation_" + prop.name;
+
+				var annotation = new CCodeInitializerList ();
+				annotation.append (new CCodeConstant ("-1"));
+				annotation.append (new CCodeConstant ("\"org.freedesktop.DBus.Property.EmitsChangedSignal\""));
+				annotation.append (new CCodeConstant ("\"%s\"".printf (emits_changed_signal)));
+				annotation.append (new CCodeConstant ("NULL"));
+
+				var annotation_decl = new CCodeDeclaration ("const GDBusAnnotationInfo");
+				annotation_decl.add_declarator (new CCodeVariableDeclarator (annotation_name, annotation));
+				annotation_decl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_constant_declaration (annotation_decl);
+
+				var annotations = new CCodeInitializerList ();
+				annotations.append (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (annotation_name)));
+				annotations.append (new CCodeConstant ("NULL"));
+
+				var annotations_decl = new CCodeDeclaration ("const GDBusAnnotationInfo * const");
+				annotations_decl.add_declarator (new CCodeVariableDeclarator (annotation_name + "s[]", annotations));
+				annotations_decl.modifiers = CCodeModifiers.STATIC;
+				cfile.add_constant_declaration (annotations_decl);
+
+				info.append (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (annotation_name + "s")), "GDBusAnnotationInfo **"));
+			} else {
+				info.append (new CCodeConstant ("NULL"));
+			}
 
 			var cdecl = new CCodeDeclaration ("const GDBusPropertyInfo");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_" + get_ccode_lower_case_prefix (sym) + "dbus_property_info_" + prop.name, info));

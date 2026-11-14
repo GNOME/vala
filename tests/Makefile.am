@@ -879,6 +879,7 @@ TESTS = \
 	dbus/generics.test \
 	dbus/no-reply.test \
 	dbus/properties.test \
+	dbus/properties-emits-changed.test \
 	dbus/signals.test \
 	dbus/special-parameters-1.vala \
 	dbus/special-parameters-2.test \

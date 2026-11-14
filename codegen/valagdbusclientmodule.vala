@@ -1208,11 +1208,15 @@ public class Vala.GDBusClientModule : GDBusModule {
 
 		ccode.add_declaration ("GVariant", new CCodeVariableDeclarator ("*_inner_reply"));
 
-		// first try cached value
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_cached_property"));
-		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
-		ccode.add_assignment (new CCodeIdentifier ("_inner_reply"), ccall);
+		if (get_emits_changed_signal (prop) == "false") {
+			ccode.add_assignment (new CCodeIdentifier ("_inner_reply"), new CCodeConstant ("NULL"));
+		} else {
+			// first try cached value
+			var get_cached = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_get_cached_property"));
+			get_cached.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
+			get_cached.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
+			ccode.add_assignment (new CCodeIdentifier ("_inner_reply"), get_cached);
+		}
 
 		// if not successful, retrieve value via D-Bus
 		ccode.open_if (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("_inner_reply")));
@@ -1235,7 +1239,7 @@ public class Vala.GDBusClientModule : GDBusModule {
 		builder_end.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_arguments_builder")));
 		ccode.add_assignment (new CCodeIdentifier ("_arguments"), builder_end);
 
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_sync"));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_dbus_proxy_call_sync"));
 		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GDBusProxy *"));
 		ccall.add_argument (new CCodeConstant ("\"org.freedesktop.DBus.Properties.Get\""));
 		ccall.add_argument (new CCodeIdentifier ("_arguments"));
