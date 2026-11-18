@@ -78,14 +78,14 @@ struct _MamanSubBarClass {
 static gpointer maman_bar_parent_class = NULL;
 static gpointer maman_sub_bar_parent_class = NULL;
 
-VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 VALA_EXTERN void maman_bar_do_action (MamanBar* self);
 static void maman_bar_real_do_action (MamanBar* self);
 VALA_EXTERN MamanBar* maman_bar_new (void);
 VALA_EXTERN MamanBar* maman_bar_construct (GType object_type);
 static GType maman_bar_get_type_once (void);
-VALA_EXTERN GType maman_sub_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_sub_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanSubBar, g_object_unref)
 static void maman_sub_bar_real_do_action (MamanBar* base);
 VALA_EXTERN void maman_sub_bar_run (MamanSubBar* self);

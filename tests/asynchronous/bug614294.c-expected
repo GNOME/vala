@@ -238,7 +238,7 @@ static gpointer afoo_parent_class = NULL;
 static gpointer baz_parent_class = NULL;
 static gpointer sub_baz_parent_class = NULL;
 
-VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType ifoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN void ifoo_foo_async (IFoo* self,
                      GAsyncReadyCallback _callback_,
@@ -249,7 +249,7 @@ VALA_EXTERN void ifoo_foo_finish (IFoo* self,
 VALA_EXTERN void ifoo_foo (IFoo* self,
                GError** error);
 static GType ifoo_get_type_once (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN void bar_foo_async (Bar* self,
                     GAsyncReadyCallback _callback_,
@@ -269,7 +269,7 @@ static void bar_real_foo (Bar* self,
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);
 static GType bar_get_type_once (void);
-VALA_EXTERN GType sub_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType sub_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (SubBar, g_object_unref)
 static void sub_bar_real_foo_async_data_free (gpointer _data);
 static void sub_bar_real_foo_async (Bar* base,
@@ -281,7 +281,7 @@ static void sub_bar_real_foo (Bar* base,
 VALA_EXTERN SubBar* sub_bar_new (void);
 VALA_EXTERN SubBar* sub_bar_construct (GType object_type);
 static GType sub_bar_get_type_once (void);
-VALA_EXTERN GType afoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType afoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (AFoo, g_object_unref)
 VALA_EXTERN void afoo_foo (AFoo* self,
                GError** error);
@@ -295,7 +295,7 @@ static void afoo_real_foo (AFoo* self,
                     GError** error);
 VALA_EXTERN AFoo* afoo_construct (GType object_type);
 static GType afoo_get_type_once (void);
-VALA_EXTERN GType baz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Baz, g_object_unref)
 static void baz_real_foo_async_data_free (gpointer _data);
 static void baz_real_foo_async (AFoo* base,
@@ -307,7 +307,7 @@ static void baz_real_foo (AFoo* base,
 VALA_EXTERN Baz* baz_new (void);
 VALA_EXTERN Baz* baz_construct (GType object_type);
 static GType baz_get_type_once (void);
-VALA_EXTERN GType sub_baz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType sub_baz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (SubBaz, g_object_unref)
 static void sub_baz_real_foo_async_data_free (gpointer _data);
 static void sub_baz_real_foo_async (AFoo* base,

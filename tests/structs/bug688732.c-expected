@@ -32,14 +32,14 @@ struct _Foo {
 	gpointer t;
 };
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
 G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,

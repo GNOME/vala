@@ -99,7 +99,7 @@ struct _ProxyAsyncMethodReadyData {
 
 static gpointer server_parent_class = NULL;
 
-VALA_EXTERN GType server_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType server_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Server, g_object_unref)
 VALA_EXTERN guint server_register_object (void* object,
                               GDBusConnection* connection,
@@ -161,12 +161,12 @@ static gboolean server_dbus_interface_set_property (GDBusConnection* connection,
                                              GError** error,
                                              gpointer user_data);
 static void _server_unregister_object (gpointer user_data);
-VALA_EXTERN GType proxy_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType proxy_proxy_get_type (void);
 VALA_EXTERN guint proxy_register_object (void* object,
                              GDBusConnection* connection,
                              const gchar* path,
                              GError** error);
-VALA_EXTERN GType proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType proxy_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Proxy, g_object_unref)
 VALA_EXTERN void proxy_sync_method (Proxy* self,
                         const char* sender,

@@ -67,21 +67,21 @@ struct _StructWithFunc {
 	GDestroyNotify foo_target_destroy_notify;
 };
 
-VALA_EXTERN GType simple_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType simple_struct_get_type (void);
 VALA_EXTERN SimpleStruct* simple_struct_dup (const SimpleStruct* self);
 VALA_EXTERN void simple_struct_free (SimpleStruct* self);
-VALA_EXTERN GType public_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType public_struct_get_type (void);
 VALA_EXTERN PublicStruct* public_struct_dup (const PublicStruct* self);
 VALA_EXTERN void public_struct_free (PublicStruct* self);
-VALA_EXTERN GType struct_with_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType struct_with_creation_method_get_type (void);
 VALA_EXTERN StructWithCreationMethod* struct_with_creation_method_dup (const StructWithCreationMethod* self);
 VALA_EXTERN void struct_with_creation_method_free (StructWithCreationMethod* self);
 VALA_EXTERN void struct_with_creation_method_init (StructWithCreationMethod *self);
-VALA_EXTERN GType struct_with_named_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType struct_with_named_creation_method_get_type (void);
 VALA_EXTERN StructWithNamedCreationMethod* struct_with_named_creation_method_dup (const StructWithNamedCreationMethod* self);
 VALA_EXTERN void struct_with_named_creation_method_free (StructWithNamedCreationMethod* self);
 VALA_EXTERN void struct_with_named_creation_method_init_named (StructWithNamedCreationMethod *self);
-VALA_EXTERN GType struct_with_func_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType struct_with_func_get_type (void);
 VALA_EXTERN StructWithFunc* struct_with_func_dup (const StructWithFunc* self);
 VALA_EXTERN void struct_with_func_free (StructWithFunc* self);
 VALA_EXTERN void struct_with_func_copy (const StructWithFunc* self,

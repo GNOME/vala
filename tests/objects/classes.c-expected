@@ -396,13 +396,13 @@ VALA_EXTERN void value_set_simple_gtype_instanceclass (GValue* value,
 VALA_EXTERN void value_take_simple_gtype_instanceclass (GValue* value,
                                             gpointer v_object);
 VALA_EXTERN gpointer value_get_simple_gtype_instanceclass (const GValue* value);
-VALA_EXTERN GType simple_gtype_instanceclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType simple_gtype_instanceclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (SimpleGTypeInstanceClass, simple_gtype_instanceclass_unref)
 VALA_EXTERN SimpleGTypeInstanceClass* simple_gtype_instanceclass_new (void);
 VALA_EXTERN SimpleGTypeInstanceClass* simple_gtype_instanceclass_construct (GType object_type);
 static void simple_gtype_instanceclass_finalize (SimpleGTypeInstanceClass * obj);
 static GType simple_gtype_instanceclass_get_type_once (void);
-VALA_EXTERN GType derived_gtype_instanceclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType derived_gtype_instanceclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (DerivedGTypeInstanceClass, simple_gtype_instanceclass_unref)
 VALA_EXTERN DerivedGTypeInstanceClass* derived_gtype_instanceclass_new (void);
 VALA_EXTERN DerivedGTypeInstanceClass* derived_gtype_instanceclass_construct (GType object_type);
@@ -419,7 +419,7 @@ VALA_EXTERN void value_set_public_gtype_instanceclass (GValue* value,
 VALA_EXTERN void value_take_public_gtype_instanceclass (GValue* value,
                                             gpointer v_object);
 VALA_EXTERN gpointer value_get_public_gtype_instanceclass (const GValue* value);
-VALA_EXTERN GType public_gtype_instanceclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType public_gtype_instanceclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (PublicGTypeInstanceClass, public_gtype_instanceclass_unref)
 VALA_EXTERN PublicGTypeInstanceClass* public_gtype_instanceclass_new (void);
 VALA_EXTERN PublicGTypeInstanceClass* public_gtype_instanceclass_construct (GType object_type);
@@ -437,7 +437,7 @@ VALA_EXTERN void value_set_gtype_instance_class_with_creation_method (GValue* va
 VALA_EXTERN void value_take_gtype_instance_class_with_creation_method (GValue* value,
                                                            gpointer v_object);
 VALA_EXTERN gpointer value_get_gtype_instance_class_with_creation_method (const GValue* value);
-VALA_EXTERN GType gtype_instance_class_with_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gtype_instance_class_with_creation_method_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GTypeInstanceClassWithCreationMethod, gtype_instance_class_with_creation_method_unref)
 VALA_EXTERN GTypeInstanceClassWithCreationMethod* gtype_instance_class_with_creation_method_new (void);
 VALA_EXTERN GTypeInstanceClassWithCreationMethod* gtype_instance_class_with_creation_method_construct (GType object_type);
@@ -455,7 +455,7 @@ VALA_EXTERN void value_set_gtype_instance_class_with_named_creation_method (GVal
 VALA_EXTERN void value_take_gtype_instance_class_with_named_creation_method (GValue* value,
                                                                  gpointer v_object);
 VALA_EXTERN gpointer value_get_gtype_instance_class_with_named_creation_method (const GValue* value);
-VALA_EXTERN GType gtype_instance_class_with_named_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gtype_instance_class_with_named_creation_method_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GTypeInstanceClassWithNamedCreationMethod, gtype_instance_class_with_named_creation_method_unref)
 VALA_EXTERN GTypeInstanceClassWithNamedCreationMethod* gtype_instance_class_with_named_creation_method_new_named (void);
 VALA_EXTERN GTypeInstanceClassWithNamedCreationMethod* gtype_instance_class_with_named_creation_method_construct_named (GType object_type);
@@ -463,31 +463,31 @@ VALA_EXTERN GTypeInstanceClassWithNamedCreationMethod* gtype_instance_class_with
 VALA_EXTERN GTypeInstanceClassWithNamedCreationMethod* gtype_instance_class_with_named_creation_method_construct (GType object_type);
 static void gtype_instance_class_with_named_creation_method_finalize (GTypeInstanceClassWithNamedCreationMethod * obj);
 static GType gtype_instance_class_with_named_creation_method_get_type_once (void);
-VALA_EXTERN GType simple_gobjectclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType simple_gobjectclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (SimpleGObjectClass, g_object_unref)
 VALA_EXTERN SimpleGObjectClass* simple_gobjectclass_new (void);
 VALA_EXTERN SimpleGObjectClass* simple_gobjectclass_construct (GType object_type);
 static GType simple_gobjectclass_get_type_once (void);
-VALA_EXTERN GType derived_gobjectclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType derived_gobjectclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (DerivedGObjectClass, g_object_unref)
 VALA_EXTERN DerivedGObjectClass* derived_gobjectclass_new (void);
 VALA_EXTERN DerivedGObjectClass* derived_gobjectclass_construct (GType object_type);
 static GType derived_gobjectclass_get_type_once (void);
-VALA_EXTERN GType public_gobjectclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType public_gobjectclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (PublicGObjectClass, g_object_unref)
 VALA_EXTERN PublicGObjectClass* public_gobjectclass_new (void);
 VALA_EXTERN PublicGObjectClass* public_gobjectclass_construct (GType object_type);
 static GType public_gobjectclass_get_type_once (void);
-VALA_EXTERN GType abstract_gobjectclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType abstract_gobjectclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (AbstractGObjectClass, g_object_unref)
 VALA_EXTERN AbstractGObjectClass* abstract_gobjectclass_construct (GType object_type);
 static GType abstract_gobjectclass_get_type_once (void);
-VALA_EXTERN GType gobject_class_with_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gobject_class_with_creation_method_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GObjectClassWithCreationMethod, g_object_unref)
 VALA_EXTERN GObjectClassWithCreationMethod* gobject_class_with_creation_method_new (void);
 VALA_EXTERN GObjectClassWithCreationMethod* gobject_class_with_creation_method_construct (GType object_type);
 static GType gobject_class_with_creation_method_get_type_once (void);
-VALA_EXTERN GType gobject_class_with_named_creation_method_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType gobject_class_with_named_creation_method_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GObjectClassWithNamedCreationMethod, g_object_unref)
 VALA_EXTERN GObjectClassWithNamedCreationMethod* gobject_class_with_named_creation_method_new_named (void);
 VALA_EXTERN GObjectClassWithNamedCreationMethod* gobject_class_with_named_creation_method_construct_named (GType object_type);

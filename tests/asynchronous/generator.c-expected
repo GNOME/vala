@@ -143,7 +143,7 @@ VALA_EXTERN void value_set_generator (GValue* value,
 VALA_EXTERN void value_take_generator (GValue* value,
                            gpointer v_object);
 VALA_EXTERN gpointer value_get_generator (const GValue* value);
-VALA_EXTERN GType generator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType generator_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Generator, generator_unref)
 VALA_EXTERN Generator* generator_construct (GType object_type,
                                 GType g_type,
@@ -178,7 +178,7 @@ VALA_EXTERN gpointer generator_get (Generator* self);
 VALA_EXTERN Generator* generator_iterator (Generator* self);
 static void generator_finalize (Generator * obj);
 static GType generator_get_type_once (void);
-VALA_EXTERN GType int_generator_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType int_generator_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IntGenerator, generator_unref)
 static void int_generator_real_generate_data_free (gpointer _data);
 static void int_generator_real_generate (Generator* base,

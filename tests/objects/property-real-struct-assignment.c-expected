@@ -101,7 +101,7 @@ static gpointer manam_parent_class = NULL;
 static gint Bar_private_offset;
 static gpointer bar_parent_class = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
@@ -109,7 +109,7 @@ VALA_EXTERN void foo_copy (const Foo* self,
 VALA_EXTERN void foo_destroy (Foo* self);
 G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
 VALA_EXTERN Foo* get_foo (void);
-VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manam, g_object_unref)
 VALA_EXTERN void manam_get_faz (Manam* self,
                     Foo * result);
@@ -129,7 +129,7 @@ static void _vala_manam_set_property (GObject * object,
                                guint property_id,
                                const GValue * value,
                                GParamSpec * pspec);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);

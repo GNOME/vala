@@ -81,7 +81,7 @@ static GVariant* _variant_new7 (gdouble* value,
 static gdouble* _variant_get7 (GVariant* value,
                         gint* result_length1,
                         gint* result_length2);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,

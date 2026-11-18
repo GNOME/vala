@@ -343,10 +343,10 @@ static MamanIBizIface * maman_abiz_maman_ibiz_parent_iface = NULL;
 static gint MamanBiz_private_offset;
 static gpointer maman_biz_parent_class = NULL;
 
-VALA_EXTERN GType real_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType real_struct_get_type (void);
 VALA_EXTERN RealStruct* real_struct_dup (const RealStruct* self);
 VALA_EXTERN void real_struct_free (RealStruct* self);
-VALA_EXTERN GType non_priv_access_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType non_priv_access_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (NonPrivAccess, g_object_unref)
 VALA_EXTERN NonPrivAccess* non_priv_access_new (void);
 VALA_EXTERN NonPrivAccess* non_priv_access_construct (GType object_type);
@@ -366,7 +366,7 @@ static void _vala_non_priv_access_set_property (GObject * object,
                                          guint property_id,
                                          const GValue * value,
                                          GParamSpec * pspec);
-VALA_EXTERN GType sample_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType sample_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Sample, g_object_unref)
 VALA_EXTERN Sample* sample_new (const gchar* name);
 VALA_EXTERN Sample* sample_construct (GType object_type,
@@ -395,11 +395,11 @@ static void sample_set_private_prop (Sample* self,
                               gint value);
 static gint sample_main (void);
 VALA_EXTERN void maman_bar_run (void);
-VALA_EXTERN GType maman_ibaz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_ibaz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanIbaz, g_object_unref)
 VALA_EXTERN MamanBaz* maman_baz_new (void);
 VALA_EXTERN MamanBaz* maman_baz_construct (GType object_type);
-VALA_EXTERN GType maman_baz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_baz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBaz, g_object_unref)
 VALA_EXTERN void maman_ibaz_simple_method (MamanIbaz* self);
 VALA_EXTERN Delegate sample_get_deleg (Sample* self);
@@ -416,7 +416,7 @@ static void _vala_sample_set_property (GObject * object,
                                 guint property_id,
                                 const GValue * value,
                                 GParamSpec * pspec);
-VALA_EXTERN GType maman_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanFoo, g_object_unref)
 VALA_EXTERN MamanFoo* maman_foo_construct (GType object_type);
 VALA_EXTERN gint maman_foo_get_public_base_property (MamanFoo* self);
@@ -435,7 +435,7 @@ static void _vala_maman_foo_set_property (GObject * object,
                                    guint property_id,
                                    const GValue * value,
                                    GParamSpec * pspec);
-VALA_EXTERN GType foo_enum_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_enum_get_type (void);
 VALA_EXTERN gpointer maman_enum_default_ref (gpointer instance);
 VALA_EXTERN void maman_enum_default_unref (gpointer instance);
 VALA_EXTERN GParamSpec* maman_param_spec_enum_default (const gchar* name,
@@ -448,13 +448,13 @@ VALA_EXTERN void maman_value_set_enum_default (GValue* value,
 VALA_EXTERN void maman_value_take_enum_default (GValue* value,
                                     gpointer v_object);
 VALA_EXTERN gpointer maman_value_get_enum_default (const GValue* value);
-VALA_EXTERN GType maman_enum_default_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_enum_default_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanEnumDefault, maman_enum_default_unref)
 VALA_EXTERN MamanEnumDefault* maman_enum_default_construct (GType object_type);
 VALA_EXTERN FooEnum maman_enum_default_get_bar (MamanEnumDefault* self);
 static void maman_enum_default_finalize (MamanEnumDefault * obj);
 static GType maman_enum_default_get_type_once (void);
-VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 static void maman_bar_do_action (MamanBar* self);
 VALA_EXTERN gint maman_bar_get_public_property (MamanBar* self);
@@ -479,13 +479,13 @@ static void _vala_maman_baz_get_property (GObject * object,
                                    guint property_id,
                                    GValue * value,
                                    GParamSpec * pspec);
-VALA_EXTERN GType maman_ibiz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_ibiz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanIBiz, g_object_unref)
 VALA_EXTERN gint maman_ibiz_get_number (MamanIBiz* self);
 VALA_EXTERN void maman_ibiz_set_number (MamanIBiz* self,
                             gint value);
 static GType maman_ibiz_get_type_once (void);
-VALA_EXTERN GType maman_abiz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_abiz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanABiz, g_object_unref)
 VALA_EXTERN MamanABiz* maman_abiz_construct (GType object_type);
 VALA_EXTERN gint maman_abiz_get_number2 (MamanABiz* self);
@@ -501,7 +501,7 @@ static void _vala_maman_abiz_set_property (GObject * object,
                                     guint property_id,
                                     const GValue * value,
                                     GParamSpec * pspec);
-VALA_EXTERN GType maman_biz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_biz_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBiz, g_object_unref)
 VALA_EXTERN MamanBiz* maman_biz_new (void);
 VALA_EXTERN MamanBiz* maman_biz_construct (GType object_type);

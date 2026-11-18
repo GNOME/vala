@@ -94,7 +94,7 @@ static IFooIface * bar_ifoo_parent_iface = NULL;
 VALA_EXTERN GMainLoop* loop;
 GMainLoop* loop = NULL;
 
-VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType ifoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN gint ifoo_foo (IFoo* self);
 static gint ifoo_real_foo (IFoo* self);
@@ -109,7 +109,7 @@ VALA_EXTERN gint ifoo_bar_finish (IFoo* self,
                       GAsyncResult* _res_);
 static gboolean ifoo_real_bar_co (IfooBarData* _data_);
 static GType ifoo_get_type_once (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 static gint bar_real_foo (IFoo* base);
 static void bar_real_bar_data_free (gpointer _data);

@@ -61,7 +61,7 @@ struct _Block1Data {
 static gint Foo_private_offset;
 static gpointer foo_parent_class = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);

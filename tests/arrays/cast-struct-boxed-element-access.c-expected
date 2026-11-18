@@ -54,13 +54,13 @@ Bar** bar_array = NULL;
 gint bar_array_length1 = 0;
 static gint _bar_array_size_ = 0;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN Foo** foo_array_owned (gint* result_length1);
 VALA_EXTERN Foo** foo_array_unowned (gint* result_length1);
 VALA_EXTERN void test_without_destroy (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,

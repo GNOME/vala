@@ -124,11 +124,11 @@ gint fooclass_manam = 42;
 static gpointer afoo_parent_class = NULL;
 
 VALA_EXTERN void baz (void) G_GNUC_DEPRECATED ;
-VALA_EXTERN GType foo_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_struct_get_type (void);
 VALA_EXTERN FooStruct* foo_struct_dup (const FooStruct* self);
 VALA_EXTERN void foo_struct_free (FooStruct* self);
 VALA_EXTERN void test_struct_field (void);
-VALA_EXTERN GType fooclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType fooclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (FooClass, g_object_unref)
 VALA_EXTERN gint fooclass_foov (FooClass* self) G_GNUC_DEPRECATED ;
 VALA_EXTERN gint fooclass_foo (FooClass* self) G_GNUC_DEPRECATED ;
@@ -148,20 +148,20 @@ static void _vala_fooclass_set_property (GObject * object,
                                   guint property_id,
                                   const GValue * value,
                                   GParamSpec * pspec);
-VALA_EXTERN GType afoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType afoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (AFoo, g_object_unref)
 VALA_EXTERN gint afoo_fooa (AFoo* self) G_GNUC_DEPRECATED ;
 VALA_EXTERN gint afoo_foo (AFoo* self) G_GNUC_DEPRECATED ;
 static gint afoo_real_fooa (AFoo* self) G_GNUC_DEPRECATED ;
 VALA_EXTERN AFoo* afoo_construct (GType object_type) G_GNUC_DEPRECATED ;
 static GType afoo_get_type_once (void);
-VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType ifoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 VALA_EXTERN gint ifoo_foo (IFoo* self) G_GNUC_DEPRECATED ;
 VALA_EXTERN void ifoo_fooa (IFoo* self) G_GNUC_DEPRECATED ;
 static GType ifoo_get_type_once (void);
 VALA_EXTERN void test_class_property (void);
-VALA_EXTERN GType foo_enum_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_enum_get_type (void);
 VALA_EXTERN void test_enum (void);
 static void _vala_main (void);
 

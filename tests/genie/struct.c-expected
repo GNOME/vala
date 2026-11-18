@@ -38,7 +38,7 @@ struct _Test {
 
 static void _vala_main (gchar** args,
                  gint args_length1);
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 VALA_EXTERN Test* test_dup (const Test* self);
 VALA_EXTERN void test_free (Test* self);
 VALA_EXTERN void test_copy (const Test* self,

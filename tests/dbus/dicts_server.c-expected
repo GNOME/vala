@@ -107,7 +107,7 @@ static TestInterfaceBarIface * test_interface_foo_test_interface_bar_parent_ifac
 VALA_EXTERN GMainLoop* main_loop;
 GMainLoop* main_loop = NULL;
 
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
@@ -153,12 +153,12 @@ static gboolean test_dbus_interface_set_property (GDBusConnection* connection,
                                            GError** error,
                                            gpointer user_data);
 static void _test_unregister_object (gpointer user_data);
-VALA_EXTERN GType test_interface_bar_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_interface_bar_proxy_get_type (void);
 VALA_EXTERN guint test_interface_bar_register_object (void* object,
                                           GDBusConnection* connection,
                                           const gchar* path,
                                           GError** error);
-VALA_EXTERN GType test_interface_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_interface_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (TestInterfaceBar, g_object_unref)
 VALA_EXTERN GHashTable* test_interface_bar_foo (TestInterfaceBar* self,
                                     GError** error);
@@ -197,7 +197,7 @@ static gboolean test_interface_bar_dbus_interface_set_property (GDBusConnection*
                                                          GError** error,
                                                          gpointer user_data);
 static void _test_interface_bar_unregister_object (gpointer user_data);
-VALA_EXTERN GType test_interface_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_interface_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (TestInterfaceFoo, g_object_unref)
 static GHashTable* test_interface_foo_real_foo (TestInterfaceBar* base,
                                          GError** error);

@@ -58,12 +58,12 @@ struct _TestIface {
 	void (*set_test_signature_property) (Test* self, const GVariantType* value);
 };
 
-VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_proxy_get_type (void);
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
                             const gchar* path,
                             GError** error);
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN void test_test_void (Test* self,
                      GError** error);

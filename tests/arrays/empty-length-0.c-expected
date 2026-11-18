@@ -52,7 +52,7 @@ Manam* manam = NULL;
 gint manam_length1 = 0;
 static gint _manam_size_ = 0;
 
-VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_get_type (void);
 VALA_EXTERN Manam* manam_dup (const Manam* self);
 VALA_EXTERN void manam_free (Manam* self);
 VALA_EXTERN void manam_copy (const Manam* self,

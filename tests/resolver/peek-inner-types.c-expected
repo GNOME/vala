@@ -181,7 +181,7 @@ VALA_EXTERN void baz_value_set_foo (GValue* value,
 VALA_EXTERN void baz_value_take_foo (GValue* value,
                          gpointer v_object);
 VALA_EXTERN gpointer baz_value_get_foo (const GValue* value);
-VALA_EXTERN GType baz_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazFoo, baz_foo_unref)
 VALA_EXTERN BazFoo* baz_foo_new (void);
 VALA_EXTERN BazFoo* baz_foo_construct (GType object_type);
@@ -197,18 +197,18 @@ VALA_EXTERN void baz_foo_value_set_bar1 (GValue* value,
 VALA_EXTERN void baz_foo_value_take_bar1 (GValue* value,
                               gpointer v_object);
 VALA_EXTERN gpointer baz_foo_value_get_bar1 (const GValue* value);
-VALA_EXTERN GType baz_foo_bar1_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_foo_bar1_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazFooBar1, baz_foo_bar1_unref)
 VALA_EXTERN BazFooBar1* baz_foo_bar1_new (void);
 VALA_EXTERN BazFooBar1* baz_foo_bar1_construct (GType object_type);
 static void baz_foo_bar1_finalize (BazFooBar1 * obj);
 static GType baz_foo_bar1_get_type_once (void);
-VALA_EXTERN GType baz_foo_ibar1_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_foo_ibar1_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazFooIBar1, baz_foo_bar1_unref)
 static GType baz_foo_ibar1_get_type_once (void);
 static void baz_foo_finalize (BazFoo * obj);
 static GType baz_foo_get_type_once (void);
-VALA_EXTERN GType baz_ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_ifoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazIFoo, baz_foo_unref)
 VALA_EXTERN gpointer baz_ifoo_bar2_ref (gpointer instance);
 VALA_EXTERN void baz_ifoo_bar2_unref (gpointer instance);
@@ -222,17 +222,17 @@ VALA_EXTERN void baz_ifoo_value_set_bar2 (GValue* value,
 VALA_EXTERN void baz_ifoo_value_take_bar2 (GValue* value,
                                gpointer v_object);
 VALA_EXTERN gpointer baz_ifoo_value_get_bar2 (const GValue* value);
-VALA_EXTERN GType baz_ifoo_bar2_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_ifoo_bar2_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazIFooBar2, baz_ifoo_bar2_unref)
 VALA_EXTERN BazIFooBar2* baz_ifoo_bar2_new (void);
 VALA_EXTERN BazIFooBar2* baz_ifoo_bar2_construct (GType object_type);
 static void baz_ifoo_bar2_finalize (BazIFooBar2 * obj);
 static GType baz_ifoo_bar2_get_type_once (void);
-VALA_EXTERN GType baz_ifoo_ibar2_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType baz_ifoo_ibar2_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BazIFooIBar2, baz_ifoo_bar2_unref)
 static GType baz_ifoo_ibar2_get_type_once (void);
 static GType baz_ifoo_get_type_once (void);
-VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manam, baz_foo_unref)
 VALA_EXTERN BazFooBar1* manam_foo1 (Manam* self);
 VALA_EXTERN BazFooIBar1* manam_ifoo1 (Manam* self);

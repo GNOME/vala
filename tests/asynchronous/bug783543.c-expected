@@ -67,7 +67,7 @@ struct _Block1Data {
 
 static gpointer foo_parent_class = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static void foo_bar_data_free (gpointer _data);
 VALA_EXTERN void foo_bar (Foo* self,

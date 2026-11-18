@@ -35,7 +35,7 @@ struct _SimpleStruct {
 	gint field;
 };
 
-VALA_EXTERN GType simple_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType simple_struct_get_type (void);
 VALA_EXTERN SimpleStruct* simple_struct_dup (const SimpleStruct* self);
 VALA_EXTERN void simple_struct_free (SimpleStruct* self);
 VALA_EXTERN gint simple_struct_test (SimpleStruct *self);

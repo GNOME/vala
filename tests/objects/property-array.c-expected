@@ -129,7 +129,7 @@ static gpointer foo_parent_class = NULL;
 static gint Bar_private_offset;
 static gpointer bar_parent_class = NULL;
 
-VALA_EXTERN GType manam_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_get_type (void);
 VALA_EXTERN Manam* manam_dup (const Manam* self);
 VALA_EXTERN void manam_free (Manam* self);
 VALA_EXTERN gpointer foo_ref (gpointer instance);
@@ -144,7 +144,7 @@ VALA_EXTERN void value_set_foo (GValue* value,
 VALA_EXTERN void value_take_foo (GValue* value,
                      gpointer v_object);
 VALA_EXTERN gpointer value_get_foo (const GValue* value);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_unref)
 VALA_EXTERN Manam** foo_get_array_v (Foo* self,
                          gint* result_length1);
@@ -184,7 +184,7 @@ static gchar** _vala_array_dup6 (gchar** self,
                           gssize length);
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN Manam** bar_get_array_v (Bar* self);
 VALA_EXTERN void bar_set_array_v (Bar* self,

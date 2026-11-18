@@ -121,7 +121,7 @@ static gpointer fooclass_parent_class = NULL;
 static gint Bar_private_offset;
 static gpointer bar_parent_class = NULL;
 
-VALA_EXTERN GType foo_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_struct_get_type (void);
 VALA_EXTERN FooStruct* foo_struct_dup (const FooStruct* self);
 VALA_EXTERN void foo_struct_free (FooStruct* self);
 VALA_EXTERN gpointer fooclass_ref (gpointer instance);
@@ -136,7 +136,7 @@ VALA_EXTERN void value_set_fooclass (GValue* value,
 VALA_EXTERN void value_take_fooclass (GValue* value,
                           gpointer v_object);
 VALA_EXTERN gpointer value_get_fooclass (const GValue* value);
-VALA_EXTERN GType fooclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType fooclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (FooClass, fooclass_unref)
 VALA_EXTERN FooClass* fooclass_new (void);
 VALA_EXTERN FooClass* fooclass_construct (GType object_type);
@@ -154,7 +154,7 @@ VALA_EXTERN void value_set_bar (GValue* value,
 VALA_EXTERN void value_take_bar (GValue* value,
                      gpointer v_object);
 VALA_EXTERN gpointer value_get_bar (const GValue* value);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, bar_unref)
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);

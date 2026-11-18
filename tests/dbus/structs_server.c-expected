@@ -76,7 +76,7 @@ static gpointer test_parent_class = NULL;
 VALA_EXTERN GMainLoop* main_loop;
 GMainLoop* main_loop = NULL;
 
-VALA_EXTERN GType foo_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_struct_get_type (void);
 VALA_EXTERN FooStruct* foo_struct_dup (const FooStruct* self);
 VALA_EXTERN void foo_struct_free (FooStruct* self);
 VALA_EXTERN void foo_struct_copy (const FooStruct* self,
@@ -86,7 +86,7 @@ G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (FooStruct, foo_struct_destroy)
 VALA_EXTERN void foo_struct_init (FooStruct *self,
                       gint i,
                       const gchar* s);
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,

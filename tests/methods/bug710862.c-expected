@@ -56,7 +56,7 @@ struct _FooClass {
 
 static gpointer foo_parent_class = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN void foo_print (Foo* self,
                 const gchar* format,

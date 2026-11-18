@@ -81,14 +81,14 @@ struct _BarClass {
 
 static gpointer bar_parent_class = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN void foo_copy (const Foo* self,
                Foo* dest);
 VALA_EXTERN void foo_destroy (Foo* self);
 G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Foo, foo_destroy)
-VALA_EXTERN GType faz_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType faz_get_type (void);
 VALA_EXTERN Faz* faz_dup (const Faz* self);
 VALA_EXTERN void faz_free (Faz* self);
 VALA_EXTERN void faz_copy (const Faz* self,
@@ -101,7 +101,7 @@ VALA_EXTERN void baz_copy (const Baz* self,
                Baz* dest);
 VALA_EXTERN void baz_destroy (Baz* self);
 G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (Baz, baz_destroy)
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN Bar* bar_new (void);
 VALA_EXTERN Bar* bar_construct (GType object_type);

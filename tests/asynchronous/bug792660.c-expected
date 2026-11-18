@@ -106,7 +106,7 @@ VALA_EXTERN void value_set_foo (GValue* value,
 VALA_EXTERN void value_take_foo (GValue* value,
                      gpointer v_object);
 VALA_EXTERN gpointer value_get_foo (const GValue* value);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_unref)
 VALA_EXTERN void foo_foo (Foo* self,
               gchar** a,
@@ -118,7 +118,7 @@ VALA_EXTERN void foo_foo_finish (Foo* self,
 VALA_EXTERN Foo* foo_construct (GType object_type);
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, foo_unref)
 static void bar_real_foo_data_free (gpointer _data);
 static void bar_real_foo (Foo* base,

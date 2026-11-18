@@ -53,7 +53,7 @@ struct _FooOutputStreamClass {
 
 static gpointer foo_output_stream_parent_class = NULL;
 
-VALA_EXTERN GType foo_output_stream_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_output_stream_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (FooOutputStream, g_object_unref)
 static gssize foo_output_stream_real_write (GOutputStream* base,
                                      guint8* buffer,

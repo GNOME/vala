@@ -57,7 +57,7 @@ struct _MamanBarClass {
 
 static gpointer maman_bar_parent_class = NULL;
 
-VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 static gint maman_bar_do_action (MamanActionCallback cb);
 static gint maman_bar_do_out_action (MamanActionOutCallback cb);

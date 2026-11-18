@@ -93,7 +93,7 @@ VALA_EXTERN void bar_value_set_foo (GValue* value,
 VALA_EXTERN void bar_value_take_foo (GValue* value,
                          gpointer v_object);
 VALA_EXTERN gpointer bar_value_get_foo (const GValue* value);
-VALA_EXTERN GType bar_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (BarFoo, bar_foo_unref)
 VALA_EXTERN BarFoo* bar_foo_new (void);
 VALA_EXTERN BarFoo* bar_foo_construct (GType object_type);
@@ -114,7 +114,7 @@ VALA_EXTERN void value_set_foo (GValue* value,
 VALA_EXTERN void value_take_foo (GValue* value,
                      gpointer v_object);
 VALA_EXTERN gpointer value_get_foo (const GValue* value);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_unref)
 static void foo_finalize (Foo * obj);
 static GType foo_get_type_once (void);

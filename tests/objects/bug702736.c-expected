@@ -136,7 +136,7 @@ static gpointer class_b_parent_class = NULL;
 static gpointer class_c_parent_class = NULL;
 static gpointer class_d_parent_class = NULL;
 
-VALA_EXTERN GType class_a_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType class_a_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClassA, g_object_unref)
 VALA_EXTERN ClassA* class_a_construct (GType object_type);
 VALA_EXTERN gint class_a_get_flags (ClassA* self);
@@ -145,7 +145,7 @@ static void _vala_class_a_get_property (GObject * object,
                                  guint property_id,
                                  GValue * value,
                                  GParamSpec * pspec);
-VALA_EXTERN GType class_b_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType class_b_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClassB, g_object_unref)
 VALA_EXTERN ClassB* class_b_new (void);
 VALA_EXTERN ClassB* class_b_construct (GType object_type);
@@ -154,13 +154,13 @@ static void _vala_class_b_get_property (GObject * object,
                                  guint property_id,
                                  GValue * value,
                                  GParamSpec * pspec);
-VALA_EXTERN GType class_c_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType class_c_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClassC, g_object_unref)
 VALA_EXTERN void class_c_foo (ClassC* self);
 VALA_EXTERN ClassC* class_c_new (void);
 VALA_EXTERN ClassC* class_c_construct (GType object_type);
 static GType class_c_get_type_once (void);
-VALA_EXTERN GType class_d_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType class_d_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClassD, g_object_unref)
 VALA_EXTERN ClassD* class_d_new (void);
 VALA_EXTERN ClassD* class_d_construct (GType object_type);

@@ -50,13 +50,13 @@ Foo* foo = NULL;
 VALA_EXTERN Bar* bar;
 Bar* bar = NULL;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Foo* foo_dup (const Foo* self);
 VALA_EXTERN void foo_free (Foo* self);
 VALA_EXTERN Foo* foo_heap_owned (void);
 VALA_EXTERN Foo* foo_heap_unowned (void);
 VALA_EXTERN void test_without_destroy (void);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 VALA_EXTERN Bar* bar_dup (const Bar* self);
 VALA_EXTERN void bar_free (Bar* self);
 VALA_EXTERN void bar_copy (const Bar* self,

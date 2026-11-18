@@ -75,7 +75,7 @@ static gpointer test_parent_class = NULL;
 
 VALA_EXTERN GRegex* get_from_array (gint index);
 VALA_EXTERN GRegex* get_fixed (void);
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN void test_run (Test* self,
                const gchar* s);

@@ -99,7 +99,7 @@ static gpointer bar_parent_class = NULL;
 VALA_EXTERN gboolean success;
 gboolean success = FALSE;
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 VALA_EXTERN Foo* foo_new (void);
 VALA_EXTERN Foo* foo_construct (GType object_type);
@@ -119,7 +119,7 @@ static void _vala_foo_set_property (GObject * object,
                              guint property_id,
                              const GValue * value,
                              GParamSpec * pspec);
-VALA_EXTERN GType bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Bar, g_object_unref)
 VALA_EXTERN void bar_sig_cb (Bar* self);
 VALA_EXTERN void bar_sig_after_cb (Bar* self);

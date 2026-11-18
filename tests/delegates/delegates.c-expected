@@ -97,16 +97,16 @@ static gint MamanBar_private_offset;
 static gpointer maman_bar_parent_class = NULL;
 static MamanFooIface * maman_bar_maman_foo_parent_iface = NULL;
 
-VALA_EXTERN GType parameter_enum_get_type (void) G_GNUC_CONST ;
-VALA_EXTERN GType maman_delegate_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType parameter_enum_get_type (void);
+VALA_EXTERN GType maman_delegate_struct_get_type (void);
 VALA_EXTERN MamanDelegateStruct* maman_delegate_struct_dup (const MamanDelegateStruct* self);
 VALA_EXTERN void maman_delegate_struct_free (MamanDelegateStruct* self);
-VALA_EXTERN GType maman_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanFoo, g_object_unref)
 VALA_EXTERN void maman_foo_foo_method (MamanFoo* self,
                            gint i);
 static GType maman_foo_get_type_once (void);
-VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 static void maman_bar_do_void_action (void);
 static void _maman_bar_do_void_action_maman_void_callback (void);

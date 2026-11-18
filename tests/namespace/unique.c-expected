@@ -70,7 +70,7 @@ VALA_EXTERN void g_value_set_vala_foo (GValue* value,
 VALA_EXTERN void g_value_take_vala_foo (GValue* value,
                             gpointer v_object);
 VALA_EXTERN gpointer g_value_get_vala_foo (const GValue* value);
-VALA_EXTERN GType g_vala_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType g_vala_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GValaFoo, g_vala_foo_unref)
 VALA_EXTERN GValaFoo* g_vala_foo_new (void);
 VALA_EXTERN GValaFoo* g_vala_foo_construct (GType object_type);

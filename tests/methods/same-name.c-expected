@@ -71,7 +71,7 @@ struct _ParamSpecFoo {
 static gpointer foo_parent_class = NULL;
 static IFooIface * foo_ifoo_parent_iface = NULL;
 
-VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType ifoo_get_type (void);
 VALA_EXTERN gboolean ifoo_foo (IFoo* self);
 static GType ifoo_get_type_once (void);
 VALA_EXTERN gpointer foo_ref (gpointer instance);
@@ -86,7 +86,7 @@ VALA_EXTERN void value_set_foo (GValue* value,
 VALA_EXTERN void value_take_foo (GValue* value,
                      gpointer v_object);
 VALA_EXTERN gpointer value_get_foo (const GValue* value);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, foo_unref)
 static gboolean foo_real_ifoo_foo (IFoo* base);
 VALA_EXTERN gint foo_foo (Foo* self);

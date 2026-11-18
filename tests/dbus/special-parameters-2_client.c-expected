@@ -65,12 +65,12 @@ struct _UnitIface {
 	gchar* (*get_name) (Unit* self);
 };
 
-VALA_EXTERN GType manager_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manager_proxy_get_type (void);
 VALA_EXTERN guint manager_register_object (void* object,
                                GDBusConnection* connection,
                                const gchar* path,
                                GError** error);
-VALA_EXTERN GType manager_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manager_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Manager, g_object_unref)
 VALA_EXTERN char* manager_get_unit (Manager* self,
                         const gchar* name,
@@ -111,9 +111,9 @@ static gboolean manager_dbus_interface_set_property (GDBusConnection* connection
                                               GError** error,
                                               gpointer user_data);
 static void _manager_unregister_object (gpointer user_data);
-VALA_EXTERN GType unit_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType unit_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Unit, g_object_unref)
-VALA_EXTERN GType unit_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType unit_proxy_get_type (void);
 VALA_EXTERN guint unit_register_object (void* object,
                             GDBusConnection* connection,
                             const gchar* path,

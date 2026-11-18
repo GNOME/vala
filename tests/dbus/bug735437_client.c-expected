@@ -51,12 +51,12 @@ struct _TestIface {
 	gchar** (*multi_array2) (Test* self, gint* result_length1, gint* result_length2, gint* result_length3, GError** error);
 };
 
-VALA_EXTERN GType test_proxy_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_proxy_get_type (void);
 VALA_EXTERN guint test_register_object (void* object,
                             GDBusConnection* connection,
                             const gchar* path,
                             GError** error);
-VALA_EXTERN GType test_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Test, g_object_unref)
 VALA_EXTERN gdouble* test_array (Test* self,
                      gint* result_length1,

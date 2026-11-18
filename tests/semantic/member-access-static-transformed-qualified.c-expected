@@ -92,7 +92,7 @@ VALA_EXTERN void manam_value_set_manam (GValue* value,
 VALA_EXTERN void manam_value_take_manam (GValue* value,
                              gpointer v_object);
 VALA_EXTERN gpointer manam_value_get_manam (const GValue* value);
-VALA_EXTERN GType manam_manam_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_manam_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ManamManam, manam_manam_unref)
 VALA_EXTERN ManamManam* manam_manam_new (void);
 VALA_EXTERN ManamManam* manam_manam_construct (GType object_type);
@@ -110,7 +110,7 @@ VALA_EXTERN void manam_value_set_foo (GValue* value,
 VALA_EXTERN void manam_value_take_foo (GValue* value,
                            gpointer v_object);
 VALA_EXTERN gpointer manam_value_get_foo (const GValue* value);
-VALA_EXTERN GType manam_foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType manam_foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ManamFoo, manam_foo_unref)
 VALA_EXTERN void manam_foo_bar (void);
 VALA_EXTERN ManamFoo* manam_foo_new (void);

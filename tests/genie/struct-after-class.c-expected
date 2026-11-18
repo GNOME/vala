@@ -82,11 +82,11 @@ VALA_EXTERN void value_set_testclass (GValue* value,
 VALA_EXTERN void value_take_testclass (GValue* value,
                            gpointer v_object);
 VALA_EXTERN gpointer value_get_testclass (const GValue* value);
-VALA_EXTERN GType testclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType testclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (TestClass, testclass_unref)
 VALA_EXTERN TestClass* testclass_new (void);
 VALA_EXTERN TestClass* testclass_construct (GType object_type);
-VALA_EXTERN GType test_struct_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType test_struct_get_type (void);
 VALA_EXTERN TestStruct* test_struct_dup (const TestStruct* self);
 VALA_EXTERN void test_struct_free (TestStruct* self);
 VALA_EXTERN void test_struct_copy (const TestStruct* self,

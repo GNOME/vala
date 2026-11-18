@@ -176,39 +176,39 @@ static gpointer base_parent_class = NULL;
 static gpointer concrete_parent_class = NULL;
 static IfaceIface * concrete_iface_parent_iface = NULL;
 
-VALA_EXTERN GType iface1_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType iface1_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface1, g_object_unref)
 VALA_EXTERN gint iface1_foo (Iface1* self);
 static GType iface1_get_type_once (void);
-VALA_EXTERN GType iface2_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType iface2_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface2, g_object_unref)
 VALA_EXTERN gint iface2_foo (Iface2* self);
 static GType iface2_get_type_once (void);
-VALA_EXTERN GType obj1_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType obj1_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Obj1, g_object_unref)
 static gint obj1_real_iface1_foo (Iface1* base);
 static gint obj1_real_iface2_foo (Iface2* base);
 VALA_EXTERN Obj1* obj1_new (void);
 VALA_EXTERN Obj1* obj1_construct (GType object_type);
 static GType obj1_get_type_once (void);
-VALA_EXTERN GType obj2_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType obj2_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Obj2, g_object_unref)
 static gint obj2_real_iface1_foo (Iface1* base);
 static gint obj2_real_foo (Iface2* base);
 VALA_EXTERN Obj2* obj2_new (void);
 VALA_EXTERN Obj2* obj2_construct (GType object_type);
 static GType obj2_get_type_once (void);
-VALA_EXTERN GType base_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType base_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Base, g_object_unref)
 VALA_EXTERN gint base_foo (Base* self);
 VALA_EXTERN Base* base_new (void);
 VALA_EXTERN Base* base_construct (GType object_type);
 static GType base_get_type_once (void);
-VALA_EXTERN GType iface_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType iface_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Iface, g_object_unref)
 VALA_EXTERN gint iface_foo (Iface* self);
 static GType iface_get_type_once (void);
-VALA_EXTERN GType concrete_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType concrete_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Concrete, g_object_unref)
 VALA_EXTERN Concrete* concrete_new (void);
 VALA_EXTERN Concrete* concrete_construct (GType object_type);

@@ -101,10 +101,10 @@ static IFooIface * foo_ifoo_parent_iface = NULL;
 VALA_EXTERN GMainLoop* loop;
 GMainLoop* loop = NULL;
 
-VALA_EXTERN GType ifoo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType ifoo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (IFoo, g_object_unref)
 static GType ifoo_get_type_once (void);
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Foo, g_object_unref)
 static void foo_real_bar_data_free (gpointer _data);
 static void foo_real_bar (Foo* self,

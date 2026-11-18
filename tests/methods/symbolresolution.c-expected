@@ -77,7 +77,7 @@ VALA_EXTERN void value_set_class (GValue* value,
 VALA_EXTERN void value_take_class (GValue* value,
                        gpointer v_object);
 VALA_EXTERN gpointer value_get_class (const GValue* value);
-VALA_EXTERN GType class_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType class_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (Class, class_unref)
 VALA_EXTERN void class_foo (Class* self);
 VALA_EXTERN void class_test (Class* self,

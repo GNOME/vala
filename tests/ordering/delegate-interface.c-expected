@@ -36,7 +36,7 @@ struct _FooIface {
 	Func (*foo) (Foo* self, Func p);
 };
 
-VALA_EXTERN GType foo_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_get_type (void);
 VALA_EXTERN Func foo_foo (Foo* self,
               Func p);
 static GType foo_get_type_once (void);

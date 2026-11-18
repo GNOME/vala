@@ -120,7 +120,7 @@ VALA_EXTERN void value_set_global_testclass (GValue* value,
 VALA_EXTERN void value_take_global_testclass (GValue* value,
                                   gpointer v_object);
 VALA_EXTERN gpointer value_get_global_testclass (const GValue* value);
-VALA_EXTERN GType global_testclass_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType global_testclass_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GlobalTestClass, global_testclass_unref)
 VALA_EXTERN GlobalTestClass* global_testclass_new (void);
 VALA_EXTERN GlobalTestClass* global_testclass_construct (GType object_type);
@@ -140,11 +140,11 @@ VALA_EXTERN void foo_sub_value_set_class_in_nested_namespace (GValue* value,
 VALA_EXTERN void foo_sub_value_take_class_in_nested_namespace (GValue* value,
                                                    gpointer v_object);
 VALA_EXTERN gpointer foo_sub_value_get_class_in_nested_namespace (const GValue* value);
-VALA_EXTERN GType foo_sub_class_in_nested_namespace_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType foo_sub_class_in_nested_namespace_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (FooSubClassInNestedNamespace, foo_sub_class_in_nested_namespace_unref)
 VALA_EXTERN FooSubClassInNestedNamespace* foo_sub_class_in_nested_namespace_new (void);
 VALA_EXTERN FooSubClassInNestedNamespace* foo_sub_class_in_nested_namespace_construct (GType object_type);
-VALA_EXTERN GType maman_bar_get_type (void) G_GNUC_CONST ;
+VALA_EXTERN GType maman_bar_get_type (void);
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (MamanBar, g_object_unref)
 VALA_EXTERN MamanBar* maman_bar_new (void);
 VALA_EXTERN MamanBar* maman_bar_construct (GType object_type);
