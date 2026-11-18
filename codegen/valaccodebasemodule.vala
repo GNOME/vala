@@ -1002,7 +1002,6 @@ public abstract class Vala.CCodeBaseModule : CodeGenerator {
 		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (en), macro));
 
 		var regfun = new CCodeFunction (fun_name, "GType");
-		regfun.modifiers = CCodeModifiers.CONST;
 
 		if (en.is_private_symbol ()) {
 			// avoid C warning as this function is not always used

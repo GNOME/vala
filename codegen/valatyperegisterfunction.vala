@@ -78,7 +78,6 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeFunction fun_once = null;
 		if (!plugin) {
 			fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
-			fun.modifiers = CCodeModifiers.CONST;
 
 			/* Function will not be prototyped anyway */
 			if (type_symbol.access == SymbolAccessibility.PRIVATE) {
@@ -113,7 +112,7 @@ public abstract class Vala.TypeRegisterFunction {
 			fun.is_declaration = false;
 
 			var get_fun = new CCodeFunction (get_ccode_type_function (type_symbol), "GType");
-			get_fun.modifiers = CCodeModifiers.CONST | CCodeModifiers.EXTERN;
+			get_fun.modifiers = CCodeModifiers.EXTERN;
 
 			get_fun.is_declaration = true;
 			declaration_fragment.append (get_fun.copy ());

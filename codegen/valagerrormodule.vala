@@ -71,7 +71,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		decl_space.add_type_declaration (new CCodeMacroReplacement (get_ccode_type_id (edomain), macro));
 
 		var regfun = new CCodeFunction (fun_name, "GType");
-		regfun.modifiers = CCodeModifiers.CONST;
 
 		if (edomain.is_private_symbol ()) {
 			// avoid C warning as this function is not always used
