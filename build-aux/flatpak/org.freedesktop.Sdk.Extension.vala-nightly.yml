@@ -6,11 +6,12 @@ sdk: "org.freedesktop.Sdk"
 runtime-version: "24.08"
 sdk-extensions: ["org.freedesktop.Sdk.Extension.vala"]
 separate-locales: false
-appstream-compose: false
 build-options:
   prefix: "/usr/lib/sdk/vala-nightly"
   prepend-pkg-config-path: "/usr/lib/sdk/vala-nightly/lib/pkgconfig/:/usr/lib/sdk/vala/lib/pkgconfig/"
   prepend-path: "/usr/lib/sdk/vala-nightly/bin/:/usr/lib/sdk/vala/bin/"
+  env:
+    XDG_DATA_DIRS: "/usr/lib/sdk/vala/share/:/usr/lib/sdk/vala-nightly/share/"
 cleanup:
   - "/share/info"
   - "/share/man"
@@ -50,11 +51,6 @@ modules:
       - type: git
         url: "https://github.com/vala-lang/vala-language-server.git"
         branch: "master"
-    build-options:
-      env:
-        {
-          XDG_DATA_DIRS: "/usr/lib/sdk/vala/share/:/usr/lib/sdk/vala-nightly/share/",
-        }
     modules:
       - name: jsonrpc
         buildsystem: meson
@@ -62,6 +58,16 @@ modules:
           - type: git
             url: "https://gitlab.gnome.org/GNOME/jsonrpc-glib.git"
             branch: "main"
+        cleanup: ["/lib/pkgconfig"]
+      - name: lsp-glib
+        buildsystem: meson
+        config-opts:
+          - "-Denable_valadoc=false"
+          - "-Dgi-docgen=false"
+        sources:
+          - type: git
+            url: "https://github.com/vala-lang/lsp-glib.git"
+            branch: "master"
         cleanup: ["/lib/pkgconfig"]
       - name: gee
         buildsystem: autotools
@@ -102,4 +108,3 @@ modules:
     build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/metainfo
       - cp ${FLATPAK_ID}.appdata.xml ${FLATPAK_DEST}/share/metainfo
-      - appstreamcli compose --components=${FLATPAK_ID} --prefix=/ --origin=${FLATPAK_ID} --result-root=${FLATPAK_DEST} --data-dir=${FLATPAK_DEST}/share/app-info/xmls ${FLATPAK_DEST}
