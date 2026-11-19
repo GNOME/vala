@@ -74,9 +74,12 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		}
 	}
 
-	private void write_resolved_symbol_link (Api.Node symbol, string? given_symbol_name, InlineContent? label_owner = null) {
+	private void write_resolved_symbol_link (Api.Node symbol, string? given_symbol_name, InlineContent? label_owner = null, string? fragment = null) {
 		var symbol_name = (given_symbol_name == null || given_symbol_name == "") ? symbol.get_full_name () : given_symbol_name;
 		string href = (symbol == _container || symbol == _owner)? null : get_url (symbol);
+		if (fragment != null) {
+			href = (href ?? "") + "#" + fragment;
+		}
 		string css_class = cssresolver.resolve (symbol);
 		string end_tag_name;
 
@@ -352,7 +355,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		if (element.symbol == null) {
 			write_unresolved_symbol_link (element.given_symbol_name, element);
 		} else {
-			write_resolved_symbol_link (element.symbol, element.given_symbol_name, element);
+			write_resolved_symbol_link (element.symbol, element.given_symbol_name, element, element.fragment);
 		}
 	}
 

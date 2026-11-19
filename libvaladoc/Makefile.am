@@ -43,6 +43,7 @@ libvaladoc_la_VALASOURCES = \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
+	documentation/gidocgenparser.vala \
 	documentation/gtkdoccommentparser.vala \
 	documentation/gtkdoccommentscanner.vala \
 	documentation/gtkdocmarkdownparser.vala \

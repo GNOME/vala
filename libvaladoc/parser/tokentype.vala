@@ -217,7 +217,7 @@ public class Valadoc.TokenType : Object {
 		}
 	}
 
-	private TokenType.basic (string string_value, string? pretty_string = null) {
+	internal TokenType.basic (string string_value, string? pretty_string = null) {
 		_string_value = string_value;
 		_pretty_string = pretty_string;
 		_basic_value = ++_last_basic_value;

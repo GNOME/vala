@@ -44,7 +44,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 
 
 	public MarkdownParser (Settings settings, ErrorReporter reporter, Api.Tree? tree, ModuleLoader _modules) {
-		MarkdownScanner scanner = new MarkdownScanner ();
+		MarkdownScanner scanner = create_scanner ();
 		parser = new Valadoc.Parser (settings, scanner, reporter);
 		scanner.set_parser (parser);
 
@@ -61,6 +61,20 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 		} catch (Error e) {
 			assert_not_reached ();
 		}
+	}
+
+	/**
+	 * Creates the scanner used by this parser, subclasses can override it to extend the syntax.
+	 */
+	protected virtual MarkdownScanner create_scanner () {
+		return new MarkdownScanner ();
+	}
+
+	/**
+	 * Extra inline rules for subclasses extending the syntax.
+	 */
+	protected virtual Rule[] get_extra_inline_rules () {
+		return {};
 	}
 
 	public void init_rules () {
@@ -397,20 +411,14 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 		.set_name ("Text");
 
 
+		Rule[] inline_rules = { text, link, link_short, image, function, constant, param, symbol, gmember, source };
+		foreach (Rule extra_rule in get_extra_inline_rules ()) {
+			inline_rules += extra_rule;
+		}
+
 		run.set_rule (
 			Rule.many ({
-				Rule.one_of ({
-					text,
-					link,
-					link_short,
-					image,
-					function,
-					constant,
-					param,
-					symbol,
-					gmember,
-					source
-				})
+				Rule.one_of (inline_rules)
 				.set_reduce (() => {
 					var head = (Inline) pop ();
 					((InlineContent) peek ()).content.add (head);
@@ -702,9 +710,10 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 		text.content += str;
 	}
 
-	private void add_symbol_link (string symbol, bool accept_plural) {
+	protected void add_symbol_link (string symbol, bool accept_plural, string? fragment = null) {
 		var taglet = new Taglets.Link ();
 		taglet.c_accept_plural = accept_plural;
+		taglet.fragment = fragment;
 		taglet.symbol_name = symbol;
 
 		var run = _factory.create_run (Run.Style.NONE);
@@ -810,7 +819,7 @@ public class Valadoc.Gtkdoc.MarkdownParser : Object, ResourceLocator, CommentPar
 		return path;
 	}
 
-	private void push (Object element) {
+	protected void push (Object element) {
 		_stack.add (element);
 	}
 

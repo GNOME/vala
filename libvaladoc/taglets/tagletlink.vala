@@ -26,6 +26,7 @@ using Valadoc.Content;
 
 public class Valadoc.Taglets.Link : InlineTaglet {
 	public string symbol_name { internal set; get; }
+	public string? fragment { internal set; get; }
 
 	/**
 	 * Accept leading 's', e.g. #Widgets
@@ -134,6 +135,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		var link = new Content.SymbolLink ();
 		link.symbol = _symbol;
 		link.given_symbol_name = symbol_name;
+		link.fragment = fragment;
 
 		Content.Inline content;
 		switch (_context) {
@@ -182,6 +184,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		link.locator = locator;
 
 		link.symbol_name = symbol_name;
+		link.fragment = fragment;
 		link.c_accept_plural = c_accept_plural;
 		link.c_is_plural = c_is_plural;
 		link._context = _context;

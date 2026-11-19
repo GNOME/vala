@@ -33,6 +33,11 @@ public class Valadoc.Content.SymbolLink : InlineContent, Inline {
 		set;
 	}
 
+	public string? fragment {
+		get;
+		set;
+	}
+
 	internal SymbolLink (Api.Node? symbol = null, string? given_symbol_name = null) {
 		base ();
 		_symbol = symbol;
@@ -58,6 +63,7 @@ public class Valadoc.Content.SymbolLink : InlineContent, Inline {
 	public override ContentElement copy (ContentElement? new_parent = null) {
 		SymbolLink link = new SymbolLink (symbol, _given_symbol_name);
 		link.parent = new_parent;
+		link.fragment = fragment;
 
 		foreach (Inline element in content) {
 			Inline copy = element.copy (link) as Inline;

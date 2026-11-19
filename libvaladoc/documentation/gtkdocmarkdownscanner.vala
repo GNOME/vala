@@ -35,14 +35,14 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 	private Valadoc.Parser parser;
 
 	private unowned string _content;
-	private int _skip;
+	protected int _skip;
 
 	private StringBuilder _current_string = new StringBuilder ();
-	private unowned string _index;
+	protected unowned string _index;
 	private bool contains_at;
 
 	private int _line;
-	private int _column;
+	protected int _column;
 	private int _last_line;
 	private int _last_column;
 	private bool _stop;
@@ -128,7 +128,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		emit_token (Valadoc.TokenType.MARKDOWN_EOC);
 	}
 
-	private void accept (unichar c) throws ParserError {
+	protected virtual void accept (unichar c) throws ParserError {
 		_column++;
 		if (_skip > 0) {
 			_skip--;
@@ -688,7 +688,7 @@ public class Valadoc.Gtkdoc.MarkdownScanner : GLib.Object, Valadoc.Scanner {
 		return builder.str;
 	}
 
-	private void emit_token (Valadoc.TokenType type, string? value = null) throws ParserError {
+	protected void emit_token (Valadoc.TokenType type, string? value = null) throws ParserError {
 		emit_current_word ();
 
 		parser.accept_token (new Valadoc.Token.from_type (type, get_begin (), get_end (_skip), value));

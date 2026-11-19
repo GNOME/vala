@@ -50,6 +50,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		gtkdoc_parser = new Gtkdoc.Parser (settings, reporter, tree, modules);
 		gtkdoc_markdown_parser = new Gtkdoc.MarkdownParser (settings, reporter, tree, modules);
+		gidocgen_parser = new GiDocgen.Parser (settings, reporter, tree, modules);
 
 
 		metadata = new Vala.HashMap<Api.SourceFile, GirMetaData> ();
@@ -60,6 +61,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	private Gtkdoc.Parser gtkdoc_parser;
 	private Gtkdoc.MarkdownParser gtkdoc_markdown_parser;
+	private GiDocgen.Parser gidocgen_parser;
 
 	private Settings _settings;
 	private ErrorReporter _reporter;
@@ -84,6 +86,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			//TODO Handle more documentation formats
 			if (metadata.is_docbook || comment.format == Api.SourceComment.Format.GTK_DOC_DOCBOOK) {
 				comment_parser = gtkdoc_parser;
+			} else if (comment.format == Api.SourceComment.Format.GI_DOCGEN) {
+				comment_parser = gidocgen_parser;
 			} else {
 				comment_parser = gtkdoc_markdown_parser;
 			}
