@@ -833,6 +833,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("override ");
 			}
 
+			if (m.is_inline) {
+				write_string ("inline ");
+			}
+
 			if (m.coroutine) {
 				write_string ("async ");
 			}

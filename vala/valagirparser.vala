@@ -3512,6 +3512,9 @@ public class Vala.GirParser : CodeVisitor {
 
 		if (s is Method) {
 			var m = (Method) s;
+			if (element_name == "function-inline" || element_name == "method-inline") {
+				m.is_inline = true;
+			}
 			if (symbol_type == "virtual-method" || symbol_type == "callback") {
 				if (current.parent.symbol is Interface) {
 					m.is_abstract = true;
