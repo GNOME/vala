@@ -286,6 +286,8 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_bitfield ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "callback") {
@@ -401,7 +403,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		while (current_token == Vala.MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "member") {
 				parse_enumeration_member ();
-			} else if (reader.name == "function") {
+			} else if (reader.name == "function" || reader.name == "function-inline") {
 				skip_element ();
 			} else {
 				// error
@@ -526,7 +528,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
-			} else if (reader.name == "function") {
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
+			} else if (reader.name == "function" || reader.name == "function-inline") {
 				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
@@ -565,8 +569,12 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_constructor ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "virtual-method") {
 				parse_method ("virtual-method");
 			} else if (reader.name == "union") {
@@ -606,8 +614,12 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_method ("virtual-method");
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "glib:signal") {
 				parse_signal ();
 			} else {
@@ -665,7 +677,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 		switch (element_name) {
 		case "constructor":
 		case "function":
+		case "function-inline":
 		case "method":
+		case "method-inline":
 			c_identifier = reader.get_attribute ("c:identifier");
 			break;
 
@@ -807,7 +821,7 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
-			} else if (reader.name == "function") {
+			} else if (reader.name == "function" || reader.name == "function-inline") {
 				skip_element ();
 			} else if (reader.name == "union") {
 				parse_union ();
@@ -841,7 +855,9 @@ public class Valadoc.Importer.GirDocumentationImporter : DocumentationImporter {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
-			} else if (reader.name == "function") {
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
+			} else if (reader.name == "function" || reader.name == "function-inline") {
 				skip_element ();
 			} else if (reader.name == "record") {
 				parse_record ();

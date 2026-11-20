@@ -2360,6 +2360,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_bitfield ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "callback") {
@@ -2570,6 +2572,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else {
@@ -3063,8 +3067,12 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "union") {
@@ -3178,10 +3186,14 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "virtual-method") {
 				parse_method ("virtual-method");
 			} else if (reader.name == "union") {
@@ -3261,10 +3273,14 @@ public class Vala.GirParser : CodeVisitor {
 				parse_method ("virtual-method");
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "glib:signal") {
 				parse_signal ();
 			} else {
@@ -3395,7 +3411,13 @@ public class Vala.GirParser : CodeVisitor {
 		if (metadata.has_argument (ArgumentType.SYMBOL_TYPE)) {
 			symbol_type = metadata.get_string (ArgumentType.SYMBOL_TYPE);
 		} else {
-			symbol_type = element_name;
+			if (element_name == "function-inline") {
+				symbol_type = "function";
+			} else if (element_name == "method-inline") {
+				symbol_type = "method";
+			} else {
+				symbol_type = element_name;
+			}
 		}
 
 		string? ctype = null;
@@ -3589,7 +3611,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		int instance_idx = -2;
-		if (element_name == "function" && symbol_type == "method") {
+		if ((element_name == "function" || element_name == "function-inline") && symbol_type == "method") {
 			if (metadata.has_argument (ArgumentType.INSTANCE_IDX)) {
 				instance_idx = metadata.get_integer (ArgumentType.INSTANCE_IDX);
 				if (instance_idx != 0) {
@@ -3818,6 +3840,8 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "union") {
@@ -3912,8 +3936,12 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				parse_method ("method");
+			} else if (reader.name == "method-inline") {
+				parse_method ("method-inline");
 			} else if (reader.name == "function") {
 				parse_method ("function");
+			} else if (reader.name == "function-inline") {
+				parse_method ("function-inline");
 			} else if (reader.name == "function-macro") {
 				skip_element ();
 			} else if (reader.name == "record") {
